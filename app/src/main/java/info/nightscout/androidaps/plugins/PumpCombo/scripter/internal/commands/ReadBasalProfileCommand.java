@@ -1,10 +1,11 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
 
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
-public class ReadReserverLevelCommand implements Command {
+public class ReadBasalProfileCommand implements Command {
     @Override
     public CommandResult execute() {
         return null;

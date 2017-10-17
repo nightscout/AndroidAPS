@@ -5,15 +5,10 @@ import android.support.annotation.Nullable;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
 class ComboPump {
-    @NonNull
-    volatile String stateSummary = "Initializing";
-    @Nullable
-    volatile Command lastCmd;
     @Nullable
     volatile CommandResult lastCmdResult;
     @NonNull

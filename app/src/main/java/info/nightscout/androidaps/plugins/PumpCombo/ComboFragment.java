@@ -17,9 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
@@ -112,7 +111,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void run() {
                     ComboPlugin plugin = ComboPlugin.getPlugin();
-                    statusText.setText(plugin.getPump().stateSummary);
+                    statusText.setText(plugin.getPump().state.getStateSummary());
                     if (plugin.isInitialized()) {
                         PumpState ps = plugin.getPump().state;
                         if (ps != null) {
@@ -147,19 +146,19 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             }
                         }
 
-                        Command lastCmd = plugin.getPump().lastCmd;
+                        CommandResult lastCmdResult1 = plugin.getPump().lastCmdResult;
+                        String lastCmd = lastCmdResult1.request;
                         if (lastCmd != null) {
-                            lastCmdText.setText(lastCmd.toString());
+                            lastCmdText.setText(lastCmd);
                             lastCmdTimeText.setText(plugin.getPump().lastCmdTime.toLocaleString());
                         } else {
                             lastCmdText.setText("");
                             lastCmdTimeText.setText("");
                         }
 
-                        CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
-                        if (lastCmdResult != null && lastCmdResult.message != null) {
-                            lastCmdResultText.setText(lastCmdResult.message);
-                            lastCmdDurationText.setText(lastCmdResult.duration);
+                        if (lastCmdResult1.message != null) {
+                            lastCmdResultText.setText(lastCmdResult1.message);
+                            lastCmdDurationText.setText(lastCmdResult1.duration);
                         } else {
                             lastCmdResultText.setText("");
                             lastCmdDurationText.setText("");

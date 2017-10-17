@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
 
 import android.os.SystemClock;
 
@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);

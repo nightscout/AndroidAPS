@@ -1,19 +1,22 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter;
+package info.nightscout.androidaps.plugins.PumpCombo.spi;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
+import java.util.Date;
 
 /**
  * Main entry point for clients, implemented by RuffyScripter.
  */
 public interface RuffyCommands {
-    CommandResult deliverBolus(double amount, BolusCommand.ProgressReportCallback progressReportCallback);
+    CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter);
 
     void cancelBolus();
 
     CommandResult setTbr(int percent, int duraton);
 
     CommandResult cancelTbr();
+
+    boolean isPumpAvailable();
+
+    boolean isPumpBusy();
 
     CommandResult readReservoirLevel();
 
@@ -23,5 +26,7 @@ public interface RuffyCommands {
     CommandResult readBasalProfile();
 
     CommandResult setBasalProfile(BasalProfile basalProfile);
+
+    CommandResult setDateAndTime(Date date);
 }
 

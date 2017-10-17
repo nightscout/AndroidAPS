@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter;
+package info.nightscout.androidaps.plugins.PumpCombo.spi;
 
 /**
  * The history data read from "My data"

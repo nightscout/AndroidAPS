@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter;
+package info.nightscout.androidaps.plugins.PumpCombo.spi;
 
 import java.util.Date;
 
@@ -67,6 +67,14 @@ public class PumpState {
     public PumpState reservoirLevel(int reservoirLevel) {
         this.reservoirLevel = reservoirLevel;
         return this;
+    }
+
+    public String getStateSummary() {
+        if (suspended)
+            return "Suspended";
+        else if (errorMsg != null)
+            return errorMsg;
+        return "Normal";
     }
 
     @Override

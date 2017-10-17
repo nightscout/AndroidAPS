@@ -1,13 +1,13 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
 
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
-public class SetBasalProfile implements Command {
-    public SetBasalProfile(BasalProfile basalProfile) {
-
+public class ReadHistoryCommand implements Command {
+    public ReadHistoryCommand(PumpHistory knownHistory) {
     }
 
     @Override

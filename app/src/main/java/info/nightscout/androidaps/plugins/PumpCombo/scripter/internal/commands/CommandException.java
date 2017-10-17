@@ -1,4 +1,6 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
+
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
 public class CommandException extends RuntimeException {
     public boolean success = false;

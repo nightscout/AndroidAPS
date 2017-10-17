@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
 
 import android.os.SystemClock;
 
@@ -12,23 +12,21 @@ import java.util.List;
 import java.util.Locale;
 
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand.ProgressReportCallback.State.DELIVERED;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand.ProgressReportCallback.State.DELIVERING;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand.ProgressReportCallback.State.PROGRAMMING;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand.ProgressReportCallback.State.STOPPED;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand.ProgressReportCallback.State.STOPPING;
+import static info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter.State.*;
 
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
     protected final double bolus;
-    private final ProgressReportCallback progressReportCallback;
+    private final BolusProgressReporter bolusProgressReporter;
     private volatile boolean cancelRequested;
 
-    public BolusCommand(double bolus, ProgressReportCallback progressReportCallback) {
+    public BolusCommand(double bolus, BolusProgressReporter bolusProgressReporter) {
         this.bolus = bolus;
-        this.progressReportCallback = progressReportCallback;
+        this.bolusProgressReporter = bolusProgressReporter;
     }
 
     @Override
@@ -49,15 +47,15 @@ public class BolusCommand extends BaseCommand {
             // TODO also check if there's a bolus in history we're not aware of
             //      press check twice to get reservoir level and last bolus quickly
 
-            progressReportCallback.report(PROGRAMMING, 0, 0);
+            bolusProgressReporter.report(PROGRAMMING, 0, 0);
             enterBolusMenu();
             inputBolusAmount();
             verifyDisplayedBolusAmount();
 
             if (cancelRequested) {
-                progressReportCallback.report(STOPPING, 0, 0);
+                bolusProgressReporter.report(STOPPING, 0, 0);
                 scripter.returnToMainMenu();
-                progressReportCallback.report(STOPPED, 0, 0);
+                bolusProgressReporter.report(STOPPED, 0, 0);
                 return new CommandResult().success(true).enacted(false)
                         .message("Bolus cancelled as per user request with no insulin delivered");
             }
@@ -69,13 +67,13 @@ public class BolusCommand extends BaseCommand {
             // the pump displays the entered bolus and waits a few seconds to let user check and cancel
             while (scripter.getCurrentMenu().getType() == MenuType.BOLUS_ENTER) {
                 if (cancelRequested) {
-                    progressReportCallback.report(STOPPING, 0, 0);
+                    bolusProgressReporter.report(STOPPING, 0, 0);
                     scripter.pressUpKey();
                     // wait up to 1s for a BOLUS_CANCELLED alert, if it doesn't happen we missed
                     // the window, simply continue and let the next cancel attempt try its luck
                     boolean alertWasCancelled = scripter.confirmAlert("BOLUS CANCELLED", 1000);
                     if (alertWasCancelled) {
-                        progressReportCallback.report(STOPPED, 0, 0);
+                        bolusProgressReporter.report(STOPPED, 0, 0);
                         return new CommandResult().success(true).enacted(false)
                                 .message("Bolus cancelled as per user request with no insulin delivered");
                     }
@@ -86,7 +84,7 @@ public class BolusCommand extends BaseCommand {
                     "Pump did not return to MAIN_MEU from BOLUS_ENTER to deliver bolus. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
-            progressReportCallback.report(DELIVERING, 0, 0);
+            bolusProgressReporter.report(DELIVERING, 0, 0);
             Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             double lastBolusReported = 0;
             boolean lowCartdrigeAlarmTriggered = false;
@@ -100,9 +98,9 @@ public class BolusCommand extends BaseCommand {
                 if (cancelRequested) {
                     // cancel running bolus by pressing up for 3s, while raise a BOLUS CANCELLED
                     // alert, unless the bolus finished within those 3s.
-                    progressReportCallback.report(STOPPING, 0, 0);
+                    bolusProgressReporter.report(STOPPING, 0, 0);
                     scripter.pressKeyMs(RuffyScripter.Key.UP, 3000);
-                    progressReportCallback.report(STOPPED, 0, 0);
+                    bolusProgressReporter.report(STOPPED, 0, 0);
                     // if the bolus finished while we attempted to cancel it, there'll be no alarm
                     long timeout = System.currentTimeMillis() + 2000;
                     while (scripter.getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR && System.currentTimeMillis() < timeout) {
@@ -118,7 +116,7 @@ public class BolusCommand extends BaseCommand {
                 if (lastBolusReported != bolusRemaining) {
                     log.debug("Delivering bolus, remaining: " + bolusRemaining);
                     int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
-                    progressReportCallback.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
+                    bolusProgressReporter.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
                     lastBolusReported = bolusRemaining;
                 }
 
@@ -140,7 +138,7 @@ public class BolusCommand extends BaseCommand {
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
-            progressReportCallback.report(DELIVERED, 100, bolus);
+            bolusProgressReporter.report(DELIVERED, 100, bolus);
 
             /*
             // wait up to 2s for any possible warning to be raised, if not raised already
@@ -261,7 +259,7 @@ public class BolusCommand extends BaseCommand {
 
     public void requestCancellation() {
         cancelRequested = true;
-        progressReportCallback.report(STOPPING, 0, 0);
+        bolusProgressReporter.report(STOPPING, 0, 0);
     }
 
     @Override
@@ -269,17 +267,5 @@ public class BolusCommand extends BaseCommand {
         return "BolusCommand{" +
                 "bolus=" + bolus +
                 '}';
-    }
-
-    public interface ProgressReportCallback {
-        enum State {
-            PROGRAMMING,
-            DELIVERING,
-            DELIVERED,
-            STOPPING,
-            STOPPED
-        }
-
-        void report(State state, int percent, double delivered);
     }
 }

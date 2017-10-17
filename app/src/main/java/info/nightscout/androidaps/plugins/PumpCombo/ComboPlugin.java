@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
@@ -38,11 +37,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.RuffyCommands;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
@@ -57,9 +56,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private PumpDescription pumpDescription = new PumpDescription();
 
-    private RuffyScripter ruffyScripter;
+    private RuffyCommands ruffyScripter;
     private ServiceConnection mRuffyServiceConnection;
 
+    // TODO access to pump (and its members) is chaotic and needs an update
     private ComboPump pump = new ComboPump();
 
     private static ComboPlugin plugin = null;
@@ -70,9 +70,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return plugin;
     }
 
-    @Nullable
-    private volatile BolusCommand runningBolusCommand;
-
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
     static {
@@ -81,7 +78,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         OPERATION_NOT_SUPPORTED.comment = "Requested operation not supported by pump";
     }
 
-    public ComboPlugin() {
+    private ComboPlugin() {
         definePumpCapabilities();
         MainApp.bus().register(this);
         bindRuffyService();
@@ -136,7 +133,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
-                    Command localLastCmd = pump.lastCmd;
                     CommandResult localLastCmdResult = pump.lastCmdResult;
                     if (!SP.getBoolean(R.string.combo_disable_alerts, false) &&
                             localLastCmdResult != null && !localLastCmdResult.success) {
@@ -144,7 +140,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
                         if (now > fiveMinutesSinceLastAlarm && loopEnabled) {
-                            log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pump.state;
                             if (localPumpState != null && localPumpState.errorMsg != null) {
@@ -202,7 +197,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     keepUnbound = false;
-                    ruffyScripter.start(IRuffyService.Stub.asInterface(service));
+                    // TODO fine until we know whether the impl will be an Android service or not
+                    // and binds things and what not.
+                    ((RuffyScripter) ruffyScripter).start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
 
@@ -224,7 +221,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         if (!boundSucceeded) {
-            pump.stateSummary = "No connection to ruffy. Pump control unavailable.";
+            pump.state.errorMsg = "No connection to ruffy. Pump control unavailable.";
         }
         return true;
     }
@@ -233,7 +230,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private void unbindRuffyService() {
         keepUnbound = true;
-        ruffyScripter.unbind();
+        // TODO fine until we know whether the impl will be an Android service or not
+        ((RuffyScripter) ruffyScripter).unbind();
         MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
     }
 
@@ -338,7 +336,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         log.debug("RefreshDataFromPump called");
 
         // if Android is sluggish this might get called before ruffy is bound
-        if (!ruffyScripter.isRunning()) {
+        if (!ruffyScripter.isPumpAvailable()) {
             log.warn("Rejecting call to RefreshDataFromPump: scripter not ready yet.");
             return;
         }
@@ -364,10 +362,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    private static BolusCommand.ProgressReportCallback bolusProgressReportCallback =
-            new BolusCommand.ProgressReportCallback() {
+    // TODO remove dep on BolusCommand
+    private static BolusProgressReporter bolusProgressReporter =
+            new BolusProgressReporter() {
         @Override
-        public void report(BolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
+        public void report(BolusProgressReporter.State state, int percent, double delivered) {
             EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
             switch (state) {
                 case PROGRAMMING:
@@ -394,79 +393,82 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     /** Updates Treatment records with carbs and boluses and delivers a bolus if needed */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            if (detailedBolusInfo.insulin > 0) {
-                // bolus needed, ask pump to deliver it
-                if (!(SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
-                        && SP.getBoolean(R.string.key_combo_enable_experimental_split_bolus, false))) {
-                    return deliverBolus(detailedBolusInfo);
+        try {
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+                if (detailedBolusInfo.insulin > 0) {
+                    // bolus needed, ask pump to deliver it
+                    if (!(SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
+                            && SP.getBoolean(R.string.key_combo_enable_experimental_split_bolus, false))) {
+                        return deliverBolus(detailedBolusInfo);
+                    } else {
+                        // split up bolus into 2 U parts
+                        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                        pumpEnactResult.success = true;
+                        pumpEnactResult.enacted = true;
+                        pumpEnactResult.bolusDelivered = 0d;
+                        pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+
+                        double remainingBolus = detailedBolusInfo.insulin;
+                        int split = 1;
+                        while (remainingBolus > 0.05) {
+                            double bolus = remainingBolus > 2 ? 2 : remainingBolus;
+                            DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
+                            bolusInfo.insulin = bolus;
+                            bolusInfo.isValid = false;
+                            log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
+                            PumpEnactResult bolusResult = deliverBolus(bolusInfo);
+                            if (!bolusResult.success) {
+                                return bolusResult;
+                            }
+                            pumpEnactResult.bolusDelivered += bolus;
+                            remainingBolus -= 2;
+                            split++;
+                            // Programming the pump for 2 U takes ~20, so wait 20s more so the
+                            // boluses are spaced 40s apart.
+                            SystemClock.sleep(20 * 1000);
+                        }
+                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                        return pumpEnactResult;
+                    }
                 } else {
-                    // split up bolus into 2 U parts
+                    // no bolus required, carb only treatment
+
+                    // TODO the ui freezes when the calculator issues a carb-only treatment
+                    // so just wait, yeah, this is dumb. for now; proper fix via GL#10
+                    // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
+                    SystemClock.sleep(6000);
                     PumpEnactResult pumpEnactResult = new PumpEnactResult();
                     pumpEnactResult.success = true;
                     pumpEnactResult.enacted = true;
                     pumpEnactResult.bolusDelivered = 0d;
                     pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-
-                    double remainingBolus = detailedBolusInfo.insulin;
-                    int split = 1;
-                    while (remainingBolus > 0.05) {
-                        double bolus = remainingBolus > 2 ? 2 : remainingBolus;
-                        DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
-                        bolusInfo.insulin = bolus;
-                        bolusInfo.isValid = false;
-                        log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
-                        PumpEnactResult bolusResult = deliverBolus(bolusInfo);
-                        if (!bolusResult.success) {
-                            return bolusResult;
-                        }
-                        pumpEnactResult.bolusDelivered += bolus;
-                        remainingBolus -= 2;
-                        split++;
-                        // Programming the pump for 2 U takes ~20, so wait 20s more so the
-                        // boluses are spaced 40s apart.
-                        SystemClock.sleep(20 * 1000);
-                    }
+                    pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
                     MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+
+                    EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                    bolusingEvent.percent = 100;
+                    MainApp.bus().post(bolusingEvent);
                     return pumpEnactResult;
                 }
             } else {
-                // no bolus required, carb only treatment
-
-                // TODO the ui freezes when the calculator issues a carb-only treatment
-                // so just wait, yeah, this is dumb. for now; proper fix via GL#10
-                // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
-                SystemClock.sleep(6000);
+                // neither carbs nor bolus requested
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = true;
-                pumpEnactResult.enacted = true;
+                pumpEnactResult.success = false;
+                pumpEnactResult.enacted = false;
                 pumpEnactResult.bolusDelivered = 0d;
-                pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-                pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                bolusingEvent.percent = 100;
-                MainApp.bus().post(bolusingEvent);
+                pumpEnactResult.carbsDelivered = 0d;
+                pumpEnactResult.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+                log.error("deliverTreatment: Invalid input");
                 return pumpEnactResult;
             }
-        } else {
-            // neither carbs nor bolus requested
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = false;
-            pumpEnactResult.enacted = false;
-            pumpEnactResult.bolusDelivered = 0d;
-            pumpEnactResult.carbsDelivered = 0d;
-            pumpEnactResult.comment = MainApp.instance().getString(R.string.danar_invalidinput);
-            log.error("deliverTreatment: Invalid input");
-            return pumpEnactResult;
+        } finally {
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
     }
 
     @NonNull
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
-        runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
-        CommandResult bolusCmdResult = runCommand(runningBolusCommand);
+        CommandResult bolusCmdResult = ruffyScripter.deliverBolus(detailedBolusInfo.insulin, bolusProgressReporter);
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = bolusCmdResult.success;
         pumpEnactResult.enacted = bolusCmdResult.enacted;
@@ -492,41 +494,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void stopBolusDelivering() {
-        BolusCommand localRunningBolusCommand = runningBolusCommand;
-        if (localRunningBolusCommand != null) localRunningBolusCommand.requestCancellation();
-    }
-
-    private CommandResult runCommand(Command command) {
-        if (ruffyScripter == null) {
-            String msg = "No connection to ruffy. Pump control not available.";
-            pump.stateSummary = msg;
-            return new CommandResult().message(msg);
-        }
-
-        pump.stateSummary = "Executing " + command;
-        MainApp.bus().post(new EventComboPumpUpdateGUI());
-
-        CommandResult commandResult = ruffyScripter.runCommand(command);
-        log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
-        if (commandResult.exception != null) {
-            log.error("Exception received from pump", commandResult.exception);
-        }
-
-        pump.lastCmd = command;
-        pump.lastCmdTime = new Date();
-        pump.lastCmdResult = commandResult;
-        pump.state = commandResult.state;
-
-        if (commandResult.success && commandResult.state.suspended) {
-            pump.stateSummary = "Suspended";
-        } else if (commandResult.success) {
-            pump.stateSummary = "Idle";
-        } else {
-            pump.stateSummary = "Error";
-        }
-
-        MainApp.bus().post(new EventComboPumpUpdateGUI());
-        return commandResult;
+        ruffyScripter.cancelBolus();
     }
 
     // Note: AAPS calls this only to enact OpenAPS recommendations
@@ -593,6 +561,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             treatmentsInterface.addToHistoryTempBasal(tempStart);
         }
 
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
+
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
         pumpEnactResult.enacted = commandResult.enacted;
@@ -602,6 +572,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // have the command return this anyways ...
         pumpEnactResult.percent = adjustedPercent;
         pumpEnactResult.duration = durationInMinutes;
+
         return pumpEnactResult;
     }
 
@@ -685,7 +656,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             JSONObject pumpJson = new JSONObject();
             JSONObject statusJson = new JSONObject();
             JSONObject extendedJson = new JSONObject();
-            statusJson.put("status", pump.stateSummary);
+            statusJson.put("status", pump.state.getStateSummary());
             extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
                 extendedJson.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
@@ -734,7 +705,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public String shortStatus(boolean veryShort) {
         // TODO trim for wear if veryShort==true
-        return pump.stateSummary;
+        return pump.state.getStateSummary();
     }
 
     @Override

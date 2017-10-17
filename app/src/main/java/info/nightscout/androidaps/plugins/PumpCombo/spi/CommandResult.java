@@ -1,11 +1,9 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.spi;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.History;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
-
 public class CommandResult {
+    public String request;
     public boolean success;
     public boolean enacted;
     public long completionTime;
@@ -16,6 +14,11 @@ public class CommandResult {
     public String duration;
 
     public CommandResult() {
+    }
+
+    public CommandResult request(String request) {
+        this.request = request;
+        return this;
     }
 
     public CommandResult success(boolean success) {
@@ -61,7 +64,8 @@ public class CommandResult {
     @Override
     public String toString() {
         return "CommandResult{" +
-                "success=" + success +
+                "request=" + request +
+                ", success=" + success +
                 ", enacted=" + enacted +
                 ", completionTime=" + completionTime + "(" + new Date(completionTime) + ")" +
                 "' duration=" + duration +

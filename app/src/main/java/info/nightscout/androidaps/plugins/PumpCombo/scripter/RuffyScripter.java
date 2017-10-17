@@ -15,19 +15,25 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancelTbrCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandException;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadBasalProfile;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadHistoryCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadReserverLevelCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetBasalProfile;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.CancelTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.CommandException;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.BolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadBasalProfileCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadHistoryCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadReserverLevelCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.SetBasalProfileCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpHistory;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.RuffyCommands;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -81,7 +87,8 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    public boolean isRunning() {
+    @Override
+    public boolean isPumpAvailable() {
         return started;
     }
 
@@ -186,6 +193,7 @@ public class RuffyScripter implements RuffyCommands {
         }
     };
 
+    @Override
     public boolean isPumpBusy() {
         return activeCmd != null;
     }
@@ -243,6 +251,7 @@ public class RuffyScripter implements RuffyCommands {
                 ensureConnected();
                 final RuffyScripter scripter = this;
                 final Returnable returnable = new Returnable();
+                returnable.cmdResult.request = cmd.toString();
                 Thread cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -705,8 +714,8 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult deliverBolus(double amount, BolusCommand.ProgressReportCallback progressReportCallback) {
-        return runCommand(new BolusCommand(amount, progressReportCallback));
+    public CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter) {
+        return runCommand(new BolusCommand(amount, bolusProgressReporter));
     }
 
     @Override
@@ -738,11 +747,17 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readBasalProfile() {
-        return runCommand(new ReadBasalProfile());
+        return runCommand(new ReadBasalProfileCommand());
     }
 
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        return runCommand(new SetBasalProfile(basalProfile));
+        return runCommand(new SetBasalProfileCommand(basalProfile));
+    }
+
+    @Override
+    public CommandResult setDateAndTime(Date date) {
+        // TODO I'm a faker!
+        return new CommandResult().success(true).enacted(false);
     }
 }

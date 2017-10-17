@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
 
 import android.util.Log;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 
 public class GetBasalRateProfileCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(GetBasalRateProfileCommand.class);
