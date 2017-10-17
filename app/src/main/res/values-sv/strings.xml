@@ -413,7 +413,6 @@
     <string name="setting_imported">inställningar importerade</string>
     <string name="setextendedbolusquestion">Ställ in ny förlängd bolus:</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
-    <string name="send_to_pump">SKICKA TILL PUMP</string>
     <string name="send_calibration" formatted="false">Skicka kalibrering %.1f till xDrip?</string>
     <string name="send">SKICKA</string>
     <string name="save">Spara</string>

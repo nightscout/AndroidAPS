@@ -29,17 +29,25 @@ import info.nightscout.utils.SP;
 public class NSProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(NSProfilePlugin.class);
 
+    private static NSProfilePlugin nsProfilePlugin;
+
+    public static NSProfilePlugin getPlugin() {
+        if (nsProfilePlugin == null)
+            nsProfilePlugin = new NSProfilePlugin();
+        return nsProfilePlugin;
+    }
+
     @Override
     public String getFragmentClass() {
         return NSProfileFragment.class.getName();
     }
 
-    static boolean fragmentEnabled = true;
-    static boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
 
-    static ProfileStore profile = null;
+    private static ProfileStore profile = null;
 
-    public NSProfilePlugin() {
+    private NSProfilePlugin() {
         MainApp.bus().register(this);
         loadNSProfile();
 

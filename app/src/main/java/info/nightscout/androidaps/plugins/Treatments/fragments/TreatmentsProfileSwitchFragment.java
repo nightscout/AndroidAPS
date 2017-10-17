@@ -74,7 +74,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             } else {
                 holder.duration.setText("");
             }
-            holder.name.setText(profileSwitch.profileName);
+            holder.name.setText(profileSwitch.getCustomizedName());
             if (profileSwitch.isInProgress())
                 holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else

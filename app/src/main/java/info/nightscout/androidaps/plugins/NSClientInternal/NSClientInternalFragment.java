@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
@@ -37,15 +38,6 @@ import info.nightscout.utils.SP;
 public class NSClientInternalFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalFragment.class);
 
-    static NSClientInternalPlugin nsClientInternalPlugin;
-
-    static public NSClientInternalPlugin getPlugin() {
-        if (nsClientInternalPlugin == null) {
-            nsClientInternalPlugin = new NSClientInternalPlugin();
-        }
-        return nsClientInternalPlugin;
-    }
-
     private TextView logTextView;
     private TextView queueTextView;
     private TextView urlTextView;
@@ -62,38 +54,44 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.nsclientinternal_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.nsclientinternal_fragment, container, false);
 
-        logScrollview = (ScrollView) view.findViewById(R.id.nsclientinternal_logscrollview);
-        autoscrollCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_autoscroll);
-        autoscrollCheckbox.setChecked(getPlugin().autoscroll);
-        autoscrollCheckbox.setOnCheckedChangeListener(this);
-        pausedCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_paused);
-        pausedCheckbox.setChecked(getPlugin().paused);
-        pausedCheckbox.setOnCheckedChangeListener(this);
-        logTextView = (TextView) view.findViewById(R.id.nsclientinternal_log);
-        queueTextView = (TextView) view.findViewById(R.id.nsclientinternal_queue);
-        urlTextView = (TextView) view.findViewById(R.id.nsclientinternal_url);
-        statusTextView = (TextView) view.findViewById(R.id.nsclientinternal_status);
+            logScrollview = (ScrollView) view.findViewById(R.id.nsclientinternal_logscrollview);
+            autoscrollCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_autoscroll);
+            autoscrollCheckbox.setChecked(NSClientInternalPlugin.getPlugin().autoscroll);
+            autoscrollCheckbox.setOnCheckedChangeListener(this);
+            pausedCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_paused);
+            pausedCheckbox.setChecked(NSClientInternalPlugin.getPlugin().paused);
+            pausedCheckbox.setOnCheckedChangeListener(this);
+            logTextView = (TextView) view.findViewById(R.id.nsclientinternal_log);
+            queueTextView = (TextView) view.findViewById(R.id.nsclientinternal_queue);
+            urlTextView = (TextView) view.findViewById(R.id.nsclientinternal_url);
+            statusTextView = (TextView) view.findViewById(R.id.nsclientinternal_status);
 
-        clearlog = (TextView) view.findViewById(R.id.nsclientinternal_clearlog);
-        clearlog.setOnClickListener(this);
-        clearlog.setPaintFlags(clearlog.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        restart = (TextView) view.findViewById(R.id.nsclientinternal_restart);
-        restart.setOnClickListener(this);
-        restart.setPaintFlags(restart.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        delivernow = (TextView) view.findViewById(R.id.nsclientinternal_delivernow);
-        delivernow.setOnClickListener(this);
-        delivernow.setPaintFlags(delivernow.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        clearqueue = (TextView) view.findViewById(R.id.nsclientinternal_clearqueue);
-        clearqueue.setOnClickListener(this);
-        clearqueue.setPaintFlags(clearqueue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        showqueue = (TextView) view.findViewById(R.id.nsclientinternal_showqueue);
-        showqueue.setOnClickListener(this);
-        showqueue.setPaintFlags(showqueue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            clearlog = (TextView) view.findViewById(R.id.nsclientinternal_clearlog);
+            clearlog.setOnClickListener(this);
+            clearlog.setPaintFlags(clearlog.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            restart = (TextView) view.findViewById(R.id.nsclientinternal_restart);
+            restart.setOnClickListener(this);
+            restart.setPaintFlags(restart.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            delivernow = (TextView) view.findViewById(R.id.nsclientinternal_delivernow);
+            delivernow.setOnClickListener(this);
+            delivernow.setPaintFlags(delivernow.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            clearqueue = (TextView) view.findViewById(R.id.nsclientinternal_clearqueue);
+            clearqueue.setOnClickListener(this);
+            clearqueue.setPaintFlags(clearqueue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            showqueue = (TextView) view.findViewById(R.id.nsclientinternal_showqueue);
+            showqueue.setOnClickListener(this);
+            showqueue.setPaintFlags(showqueue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        updateGUI();
-        return view;
+            updateGUI();
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     @Override
@@ -104,11 +102,11 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 Answers.getInstance().logCustom(new CustomEvent("NSClientRestart"));
                 break;
             case R.id.nsclientinternal_delivernow:
-                getPlugin().resend("GUI");
+                NSClientInternalPlugin.getPlugin().resend("GUI");
                 Answers.getInstance().logCustom(new CustomEvent("NSClientDeliverNow"));
                 break;
             case R.id.nsclientinternal_clearlog:
-                getPlugin().clearLog();
+                NSClientInternalPlugin.getPlugin().clearLog();
                 break;
             case R.id.nsclientinternal_clearqueue:
                 final Context context = getContext();
@@ -127,7 +125,7 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 builder.show();
                 break;
             case R.id.nsclientinternal_showqueue:
-                MainApp.bus().post(new EventNSClientNewLog("QUEUE", getPlugin().queue().textList()));
+                MainApp.bus().post(new EventNSClientNewLog("QUEUE", NSClientInternalPlugin.getPlugin().queue().textList()));
                 Answers.getInstance().logCustom(new CustomEvent("NSClientShowQueue"));
                 break;
         }
@@ -138,14 +136,14 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
                 SP.putBoolean(R.string.key_nsclientinternal_paused, isChecked);
-                getPlugin().paused = isChecked;
+                NSClientInternalPlugin.getPlugin().paused = isChecked;
                 MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
                 updateGUI();
                 Answers.getInstance().logCustom(new CustomEvent("NSClientPause"));
                 break;
             case R.id.nsclientinternal_autoscroll:
                 SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);
-                getPlugin().autoscroll = isChecked;
+                NSClientInternalPlugin.getPlugin().autoscroll = isChecked;
                 updateGUI();
                 break;
         }
@@ -165,13 +163,13 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 public void run() {
                     NSClientInternalPlugin.updateLog();
                     logTextView.setText(NSClientInternalPlugin.textLog);
-                    if (getPlugin().autoscroll) {
+                    if (NSClientInternalPlugin.getPlugin().autoscroll) {
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
-                    urlTextView.setText(getPlugin().url());
+                    urlTextView.setText(NSClientInternalPlugin.getPlugin().url());
                     Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
                     queueTextView.setText(queuetext);
-                    statusTextView.setText(getPlugin().status);
+                    statusTextView.setText(NSClientInternalPlugin.getPlugin().status);
                 }
             });
     }

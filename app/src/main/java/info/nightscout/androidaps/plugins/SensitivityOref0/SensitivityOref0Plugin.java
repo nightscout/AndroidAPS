@@ -28,8 +28,8 @@ import info.nightscout.utils.SafeParse;
 public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface {
     private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     static SensitivityOref0Plugin plugin = null;
 

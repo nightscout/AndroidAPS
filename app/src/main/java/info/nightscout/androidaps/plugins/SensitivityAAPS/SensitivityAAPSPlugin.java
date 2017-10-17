@@ -30,8 +30,8 @@ import info.nightscout.utils.SafeParse;
 public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
     private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     static SensitivityAAPSPlugin plugin = null;
 

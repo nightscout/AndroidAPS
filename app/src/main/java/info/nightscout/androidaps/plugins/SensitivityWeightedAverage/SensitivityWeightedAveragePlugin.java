@@ -29,8 +29,8 @@ import info.nightscout.utils.SafeParse;
 public class SensitivityWeightedAveragePlugin implements PluginBase, SensitivityInterface {
     private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     static SensitivityWeightedAveragePlugin plugin = null;
 

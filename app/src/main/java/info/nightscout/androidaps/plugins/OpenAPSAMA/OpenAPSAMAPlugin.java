@@ -39,14 +39,23 @@ import info.nightscout.utils.ToastUtils;
 public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSAMAPlugin.class);
 
+    private static OpenAPSAMAPlugin openAPSAMAPlugin;
+
+    public static OpenAPSAMAPlugin getPlugin() {
+        if (openAPSAMAPlugin == null) {
+            openAPSAMAPlugin = new OpenAPSAMAPlugin();
+        }
+        return openAPSAMAPlugin;
+    }
+
     // last values
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
     Date lastAPSRun = null;
     DetermineBasalResultAMA lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     @Override
     public String getName() {
@@ -196,9 +205,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
-        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100))
+        if (!checkOnlyHardLimits(profile.getIc(Profile.secondsFromMidnight()), "carbratio", 2, 100))
             return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
@@ -213,11 +222,16 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         Profiler.log(log, "AMA data gathering", start);
 
         start = new Date();
-        determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
-                lastAutosensResult.ratio, //autosensDataRatio
-                isTempTarget,
-                SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
-        );
+
+        try {
+            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
+                    lastAutosensResult.ratio, //autosensDataRatio
+                    isTempTarget,
+                    SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
+            );
+        } catch (JSONException e) {
+            log.error("Unable to set data: " + e.toString());
+        }
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
@@ -234,8 +248,6 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         }
 
         determineBasalResultAMA.iob = iobArray[0];
-
-        determineBasalAdapterAMAJS.release();
 
         Date now = new Date();
 

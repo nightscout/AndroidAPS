@@ -18,14 +18,24 @@ public class EventPumpStatusChanged {
     public int sSecondsElapsed = 0;
     public String sPerfomingAction = "";
 
+    public static String error = "";
+
     public EventPumpStatusChanged(int status) {
         sStatus = status;
         sSecondsElapsed = 0;
+        error = "";
     }
 
     public EventPumpStatusChanged(int status, int secondsElapsed) {
         sStatus = status;
         sSecondsElapsed = secondsElapsed;
+        error = "";
+    }
+
+    public EventPumpStatusChanged(int status, String error) {
+        sStatus = status;
+        sSecondsElapsed = 0;
+        this.error = error;
     }
 
     public EventPumpStatusChanged(String action) {
