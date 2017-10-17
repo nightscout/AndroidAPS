@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.spi;
+package info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi;
 
 public interface BolusProgressReporter {
     enum State {

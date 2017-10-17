@@ -1,8 +1,8 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands;
 
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
 
 public class SetBasalRateProfileCommand extends BaseCommand {
     @Override

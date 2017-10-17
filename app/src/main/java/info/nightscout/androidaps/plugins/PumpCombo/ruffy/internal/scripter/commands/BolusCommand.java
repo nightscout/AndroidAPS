@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands;
 
 import android.os.SystemClock;
 
@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
 
-import static info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter.State.*;
+import static info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BolusProgressReporter.State.*;
 
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);

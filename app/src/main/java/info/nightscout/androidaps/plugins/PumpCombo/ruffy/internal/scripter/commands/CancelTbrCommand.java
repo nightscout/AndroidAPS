@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpState;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
 // Hm, we could just ignore TBRs that run out within the next 60s (0:01 or even 0:02

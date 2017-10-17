@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
 
 class ComboPump {
     @Nullable

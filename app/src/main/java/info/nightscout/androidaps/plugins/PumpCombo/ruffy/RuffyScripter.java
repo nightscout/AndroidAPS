@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.scripter;
+package info.nightscout.androidaps.plugins.PumpCombo.ruffy;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -24,22 +24,22 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.BolusCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.CancelTbrCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.Command;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.CommandException;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.GetPumpStateCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadBasalProfileCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadHistoryCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadReserverLevelCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.SetBasalProfileCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.SetTbrCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.BasalProfile;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpHistory;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.RuffyCommands;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.BolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.CancelTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.CommandException;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.ReadBasalProfileCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.ReadHistoryCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.ReadReserverLevelCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.SetBasalProfileCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpHistory;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.RuffyCommands;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos

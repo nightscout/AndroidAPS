@@ -29,11 +29,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.RuffyCommands;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.RuffyCommands;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
