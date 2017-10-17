@@ -152,7 +152,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
             }
             if (Config.COMBO) {
-                ComboPlugin comboPlugin = (ComboPlugin) MainApp.getSpecificPlugin(ComboPlugin.class);
+                ComboPlugin comboPlugin = MainApp.getSpecificPlugin(ComboPlugin.class);
                 if (comboPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_combo);
                 }

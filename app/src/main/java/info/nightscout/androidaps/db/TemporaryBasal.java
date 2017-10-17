@@ -252,11 +252,6 @@ public class TemporaryBasal implements Interval {
         return Math.round(msecs / 60f / 1000);
     }
 
-    public int getPlannedRemainingSeconds() {
-        Float remainingMin = (end() - System.currentTimeMillis()) / 1000f;
-        return remainingMin.intValue();
-    }
-
     public int getPlannedRemainingMinutes() {
         float remainingMin = (end() - System.currentTimeMillis()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
@@ -285,8 +280,6 @@ public class TemporaryBasal implements Interval {
                 ", isAbsolute=" + isAbsolute +
                 ", isFakeExtended=" + isFakeExtended +
                 ", netExtendedRate=" + netExtendedRate +
-                ", minutesRemaining=" + getPlannedRemainingMinutes() +
-                ", secondsRemaining=" + getPlannedRemainingSeconds() +
                 '}';
     }
 

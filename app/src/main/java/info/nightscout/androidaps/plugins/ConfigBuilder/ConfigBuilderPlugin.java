@@ -582,10 +582,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             result.comment = "Temp basal set correctly";
             result.success = true;
             if (Config.logCongigBuilderActions)
-                log.debug("applyAPSRequest: Temp basal set correctly "
-                        + "(no pump request needed, pump is still running requested rate of "
-                        + request.rate + " for "
-                        + (int) getTempBasalRemainingMinutesFromHistory() + " more minutes)");
+                log.debug("applyAPSRequest: Temp basal set correctly");
         } else {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: setTempBasalAbsolute()");
