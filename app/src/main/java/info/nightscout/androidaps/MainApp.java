@@ -48,8 +48,7 @@ import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPe
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
-import info.nightscout.androidaps.plugins.PumpCombo.ComboFragment;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -129,7 +128,7 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
-            if (Config.COMBO) pluginsList.add(ComboFragment.getPlugin());
+            if (Config.COMBO) pluginsList.add(ComboPlugin.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());

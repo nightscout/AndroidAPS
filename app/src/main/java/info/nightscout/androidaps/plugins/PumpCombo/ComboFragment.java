@@ -27,12 +27,6 @@ import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateG
 public class ComboFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
 
-    private static ComboPlugin comboPlugin = new ComboPlugin();
-
-    public static ComboPlugin getPlugin() {
-        return comboPlugin;
-    }
-
     private Button refresh;
 
     private TextView statusText;
@@ -103,7 +97,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        getPlugin().refreshDataFromPump("User request");
+                        ComboPlugin.getPlugin().refreshDataFromPump("User request");
                     }
                 });
                 thread.start();
@@ -117,9 +111,10 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    statusText.setText(getPlugin().getPump().stateSummary);
-                    if (getPlugin().isInitialized()) {
-                        PumpState ps = getPlugin().getPump().state;
+                    ComboPlugin plugin = ComboPlugin.getPlugin();
+                    statusText.setText(plugin.getPump().stateSummary);
+                    if (plugin.isInitialized()) {
+                        PumpState ps = plugin.getPump().state;
                         if (ps != null) {
                             boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
                             if (tbrActive) {
@@ -152,16 +147,16 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             }
                         }
 
-                        Command lastCmd = getPlugin().getPump().lastCmd;
+                        Command lastCmd = plugin.getPump().lastCmd;
                         if (lastCmd != null) {
                             lastCmdText.setText(lastCmd.toString());
-                            lastCmdTimeText.setText(getPlugin().getPump().lastCmdTime.toLocaleString());
+                            lastCmdTimeText.setText(plugin.getPump().lastCmdTime.toLocaleString());
                         } else {
                             lastCmdText.setText("");
                             lastCmdTimeText.setText("");
                         }
 
-                        CommandResult lastCmdResult = getPlugin().getPump().lastCmdResult;
+                        CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
                         if (lastCmdResult != null && lastCmdResult.message != null) {
                             lastCmdResultText.setText(lastCmdResult.message);
                             lastCmdDurationText.setText(lastCmdResult.duration);

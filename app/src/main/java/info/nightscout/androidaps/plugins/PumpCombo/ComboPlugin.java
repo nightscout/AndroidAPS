@@ -62,7 +62,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private ComboPump pump = new ComboPump();
 
-    private boolean ignoreLastSetTbrOrReadStateFailure = false;
+    private static ComboPlugin plugin = null;
+
+    public static ComboPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new ComboPlugin();
+        return plugin;
+    }
 
     @Nullable
     private volatile BolusCommand runningBolusCommand;
