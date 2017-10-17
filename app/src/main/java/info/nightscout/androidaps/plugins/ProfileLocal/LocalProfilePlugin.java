@@ -23,10 +23,11 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class LocalProfilePlugin implements PluginBase, ProfileInterface {
+    public static final String LOCAL_PROFILE = "LocalProfile";
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     private ProfileStore convertedProfile = null;
     private String convertedProfileName = null;
@@ -110,14 +111,14 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     public void storeSettings() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("LocalProfile" + "mmol", mmol);
-        editor.putBoolean("LocalProfile" + "mgdl", mgdl);
-        editor.putString("LocalProfile" + "dia", dia.toString());
-        editor.putString("LocalProfile" + "ic", ic.toString());
-        editor.putString("LocalProfile" + "isf", isf.toString());
-        editor.putString("LocalProfile" + "basal", basal.toString());
-        editor.putString("LocalProfile" + "targetlow", targetLow.toString());
-        editor.putString("LocalProfile" + "targethigh", targetHigh.toString());
+        editor.putBoolean(LOCAL_PROFILE + "mmol", mmol);
+        editor.putBoolean(LOCAL_PROFILE + "mgdl", mgdl);
+        editor.putString(LOCAL_PROFILE + "dia", dia.toString());
+        editor.putString(LOCAL_PROFILE + "ic", ic.toString());
+        editor.putString(LOCAL_PROFILE + "isf", isf.toString());
+        editor.putString(LOCAL_PROFILE + "basal", basal.toString());
+        editor.putString(LOCAL_PROFILE + "targetlow", targetLow.toString());
+        editor.putString(LOCAL_PROFILE + "targethigh", targetHigh.toString());
 
         editor.apply();
         createConvertedProfile();
@@ -129,11 +130,11 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
 
-        mgdl = SP.getBoolean("LocalProfile" + "mgdl", false);
-        mmol = SP.getBoolean("LocalProfile" + "mmol", true);
-        dia = SP.getDouble("LocalProfile" + "dia", Constants.defaultDIA);
+        mgdl = SP.getBoolean(LOCAL_PROFILE + "mgdl", false);
+        mmol = SP.getBoolean(LOCAL_PROFILE + "mmol", true);
+        dia = SP.getDouble(LOCAL_PROFILE + "dia", Constants.defaultDIA);
         try {
-            ic = new JSONArray(SP.getString("LocalProfile" + "ic", DEFAULTARRAY));
+            ic = new JSONArray(SP.getString(LOCAL_PROFILE + "ic", DEFAULTARRAY));
         } catch (JSONException e1) {
             try {
                 ic = new JSONArray(DEFAULTARRAY);
@@ -141,7 +142,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             }
         }
         try {
-            isf = new JSONArray(SP.getString("LocalProfile" + "isf", DEFAULTARRAY));
+            isf = new JSONArray(SP.getString(LOCAL_PROFILE + "isf", DEFAULTARRAY));
         } catch (JSONException e1) {
             try {
                 isf = new JSONArray(DEFAULTARRAY);
@@ -149,7 +150,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             }
         }
         try {
-            basal = new JSONArray(SP.getString("LocalProfile" + "basal", DEFAULTARRAY));
+            basal = new JSONArray(SP.getString(LOCAL_PROFILE + "basal", DEFAULTARRAY));
         } catch (JSONException e1) {
             try {
                 basal = new JSONArray(DEFAULTARRAY);
@@ -157,7 +158,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             }
         }
         try {
-            targetLow = new JSONArray(SP.getString("LocalProfile" + "targetlow", DEFAULTARRAY));
+            targetLow = new JSONArray(SP.getString(LOCAL_PROFILE + "targetlow", DEFAULTARRAY));
         } catch (JSONException e1) {
             try {
                 targetLow = new JSONArray(DEFAULTARRAY);
@@ -165,7 +166,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             }
         }
         try {
-            targetHigh = new JSONArray(SP.getString("LocalProfile" + "targethigh", DEFAULTARRAY));
+            targetHigh = new JSONArray(SP.getString(LOCAL_PROFILE + "targethigh", DEFAULTARRAY));
         } catch (JSONException e1) {
             try {
                 targetHigh = new JSONArray(DEFAULTARRAY);
@@ -219,7 +220,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         JSONObject profile = new JSONObject();
 
         try {
-            json.put("defaultProfile", "LocalProfile");
+            json.put("defaultProfile", LOCAL_PROFILE);
             json.put("store", store);
             profile.put("dia", dia);
             profile.put("carbratio", ic);
@@ -228,12 +229,12 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             profile.put("target_low", targetLow);
             profile.put("target_high", targetHigh);
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
-            store.put("LocalProfile", profile);
+            store.put(LOCAL_PROFILE, profile);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
         convertedProfile = new ProfileStore(json);
-        convertedProfileName = "LocalProfile";
+        convertedProfileName = LOCAL_PROFILE;
     }
 
     @Override
