@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 public class CommandException extends RuntimeException {
     public boolean success = false;

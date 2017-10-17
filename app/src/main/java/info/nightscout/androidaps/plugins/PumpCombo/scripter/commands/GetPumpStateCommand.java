@@ -1,11 +1,11 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 
 import java.util.Collections;
 import java.util.List;
 
-import static de.jotomo.ruffyscripter.commands.GetPumpStateCommand.Stepper.runStep;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand.Stepper.runStep;
 
 public class GetPumpStateCommand extends BaseCommand {
     interface Step {

@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import android.os.SystemClock;
 
@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import de.jotomo.ruffyscripter.PumpState;
 
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
@@ -108,17 +106,13 @@ public class SetTbrCommand extends BaseCommand {
 
     private boolean inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long currentPercent = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long currentPercent = readDisplayedPercentage();
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
-        boolean increasePercentage = true;
-        if (percentageSteps < 0) {
-            increasePercentage = false;
-            percentageSteps = Math.abs(percentageSteps);
-        }
+        boolean increasePercentage = percentageSteps > 0;
         log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
-        for (int i = 0; i < percentageSteps; i++) {
+        for (int i = 0; i < Math.abs(percentageSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             log.debug("Push #" + (i + 1));
             if (increasePercentage) scripter.pressUpKey();
@@ -128,29 +122,31 @@ public class SetTbrCommand extends BaseCommand {
         return increasePercentage;
     }
 
-    // TODO refactor: extract verification into a method TBR percentage, duration and bolus amount
     private void verifyDisplayedTbrPercentage(boolean increasingPercentage) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         // wait up to 5s for any scrolling to finish
-        long displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long displayedPercentage = readDisplayedPercentage();
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis()
                 && ((increasingPercentage && displayedPercentage < percentage)
                 || (!increasingPercentage && displayedPercentage > percentage))) {
             log.debug("Waiting for pump to process scrolling input for percentage, current: "
-                    + displayedPercentage + ", desired: " + percentage + ", scrolling up: " + increasingPercentage);
+                    + displayedPercentage + ", desired: " + percentage + ", scrolling "
+                    + (increasingPercentage ? "up" : "down"));
             SystemClock.sleep(50);
-            displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+            displayedPercentage = readDisplayedPercentage();
         }
         log.debug("Final displayed TBR percentage: " + displayedPercentage);
         if (displayedPercentage != percentage) {
-            throw new CommandException().message("Failed to set TBR percentage, requested: " + percentage + ", actual: " + displayedPercentage);
+            throw new CommandException().message("Failed to set TBR percentage, requested: "
+                    + percentage + ", actual: " + displayedPercentage);
         }
 
-        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        // check again to ensure the displayed value hasn't change and scrolled past the desired
+        // value due to due scrolling taking extremely long
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long refreshedDisplayedTbrPecentage = readDisplayedPercentage();
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
             throw new CommandException().message("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "
@@ -174,7 +170,7 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     private long calculateDurationSteps() {
-        long currentDuration = scripter.readDisplayedDuration();
+        long currentDuration = readDisplayedDuration();
         log.debug("Initial TBR duration: " + currentDuration);
 
         long difference = duration - currentDuration;
@@ -190,34 +186,35 @@ public class SetTbrCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
         // wait up to 5s for any scrolling to finish
-        long displayedDuration = scripter.readDisplayedDuration();
+        long displayedDuration = readDisplayedDuration();
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis()
                 && ((increasingPercentage && displayedDuration < duration)
                 || (!increasingPercentage && displayedDuration > duration))) {
             log.debug("Waiting for pump to process scrolling input for duration, current: "
-                    + displayedDuration + ", desired: " + duration + ", scrolling up: " + increasingPercentage);
+                    + displayedDuration + ", desired: " + duration
+                    + ", scrolling " + (increasingPercentage ? "up" : "down"));
             SystemClock.sleep(50);
-            displayedDuration = scripter.readDisplayedDuration();
+            displayedDuration = readDisplayedDuration();
         }
 
         log.debug("Final displayed TBR duration: " + displayedDuration);
         if (displayedDuration != duration) {
-            throw new CommandException().message("Failed to set TBR duration, requested: " + duration + ", actual: " + displayedDuration);
+            throw new CommandException().message("Failed to set TBR duration, requested: "
+                    + duration + ", actual: " + displayedDuration);
         }
 
-        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        // check again to ensure the displayed value hasn't change and scrolled past the desired
+        // value due to due scrolling taking extremely long
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long refreshedDisplayedTbrDuration = scripter.readDisplayedDuration();
+        long refreshedDisplayedTbrDuration = readDisplayedDuration();
         if (displayedDuration != refreshedDisplayedTbrDuration) {
             throw new CommandException().message("Failed to set TBR duration: " +
                     "duration changed after input stopped from "
                     + displayedDuration + " -> " + refreshedDisplayedTbrDuration);
         }
     }
-
-
 
     private void cancelTbrAndConfirmCancellationWarning() {
         // confirm entered TBR
@@ -227,35 +224,9 @@ public class SetTbrCommand extends BaseCommand {
         // A "TBR CANCELLED alert" is only raised by the pump when the remaining time is
         // greater than 60s (displayed as 0:01, the pump goes from there to finished.
         // We could read the remaining duration from MAIN_MENU, but by the time we're here,
-        // the pumup could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
+        // the pump could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
         // is raised and if so dismiss it
-        long inFiveSeconds = System.currentTimeMillis() + 5 * 1000;
-        boolean alertProcessed = false;
-        while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
-            if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelling
-                // a different alarm that might be raised at the same time.
-                // Note that the message is permanently displayed, while the error code is blinking.
-                // A wait till the error code can be read results in the code hanging, despite
-                // menu updates coming in, so just check the message.
-                // TODO v2 this only works when the pump's language is English
-                String errorMsg = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
-                if (!errorMsg.equals("TBR CANCELLED")) {
-                    throw new CommandException().success(false).enacted(false)
-                            .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
-                                    + errorMsg + ". Please check the pump.");
-                }
-                // confirm "TBR CANCELLED" alert
-                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                scripter.pressCheckKey();
-                // dismiss "TBR CANCELLED" alert
-                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                scripter.pressCheckKey();
-                scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
-                alertProcessed = true;
-            }
-            SystemClock.sleep(10);
-        }
+        scripter.confirmAlert("TBR CANCELLED", 5000);
     }
 
     private void verifyMainMenuShowsNoActiveTbr() {
@@ -283,6 +254,15 @@ public class SetTbrCommand extends BaseCommand {
         if (mmTbrPercentage != percentage || (mmTbrDurationInMinutes != duration && mmTbrDurationInMinutes + 1 != duration)) {
             throw new CommandException().message("Setting TBR failed, TBR in MAIN_MENU differs from expected");
         }
+    }
+
+    private long readDisplayedDuration() {
+        MenuTime duration = scripter.readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
+        return duration.getHour() * 60 + duration.getMinute();
+    }
+
+    private long readDisplayedPercentage() {
+        return scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
     }
 
     @Override

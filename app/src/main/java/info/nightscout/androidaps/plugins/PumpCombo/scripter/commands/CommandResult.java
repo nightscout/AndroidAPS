@@ -1,9 +1,9 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import java.util.Date;
 
-import de.jotomo.ruffyscripter.History;
-import de.jotomo.ruffyscripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.History;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
 
 public class CommandResult {
     public boolean success;

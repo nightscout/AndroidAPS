@@ -1,7 +1,8 @@
-package de.jotomo.ruffyscripter;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter;
 
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 
@@ -16,10 +17,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import de.jotomo.ruffyscripter.commands.Command;
-import de.jotomo.ruffyscripter.commands.CommandException;
-import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancelTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandException;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadBasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadHistoryCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadReserverLevelCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetBasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetTbrCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -30,12 +38,13 @@ import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
  * class and inject that into executing commands, so that commands operately solely on
  * operations and are cleanly separated from the thread management, connection management etc
  */
-public class RuffyScripter {
+public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
     private IRuffyService ruffyService;
     private String unrecoverableError = null;
 
+    @Nullable
     private volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
 
@@ -191,6 +200,23 @@ public class RuffyScripter {
             }
             */
         this.ruffyService = null;
+    }
+
+    public void returnToMainMenu() {
+        // returning to main menu using the 'back' key does not cause a vibration
+        while (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
+            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                confirmAlert(errorMsg, 1000);
+                // TODO this isn't gonna work out ... this method can't know if something was enacted ...
+                // gotta keep that state in the command instance
+                throw new CommandException().success(false).enacted(false)
+                        .message("Warning/error " + errorMsg + " raised while returning to main menu");
+            }
+            log.debug("Going back to main menu, currently at " + getCurrentMenu().getType());
+            pressBackKey();
+            waitForMenuUpdate();
+        }
     }
 
     private static class Returnable {
@@ -464,6 +490,17 @@ public class RuffyScripter {
 
     // === pump ops ===
     public Menu getCurrentMenu() {
+        long timeout = System.currentTimeMillis() + 5 * 1000;
+        // TODO this is probably due to a disconnect and rtDisconnect having nulled currentMenu.
+        // This here might just work, but needs a more controlled approach when implementing
+        // something to deal with connection loses
+        while (currentMenu == null) {
+            if (System.currentTimeMillis() > timeout) {
+                throw new CommandException().message("Unable to read current menu");
+            }
+            log.debug("currentMenu == null, waiting");
+            waitForMenuUpdate();
+        }
         return currentMenu;
     }
 
@@ -534,52 +571,44 @@ public class RuffyScripter {
         return true;
     }
 
-    public boolean goToMainTypeScreen(MenuType screen, long timeout) {
-        long start = System.currentTimeMillis();
-        while ((currentMenu == null || currentMenu.getType() != screen) && start + timeout > System.currentTimeMillis()) {
-            if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                throw new CommandException().message("Warning/errors raised by pump, please check pump");
-                // since warnings and errors can occur at any time, they should be dealt with in
-                // a more general way, see the handleMenuUpdate callback above
-                //FIXME bad thing to do :D
-                // yup, commenting this out since I don't want an occlusionn alert to hidden by this :-)
-                //pressCheckKey();
-            } else if (currentMenu != null && !currentMenu.getType().isMaintype()) {
-                pressBackKey();
-            } else
-                pressMenuKey();
-            waitForScreenUpdate(250);
-        }
-        return currentMenu != null && currentMenu.getType() == screen;
-    }
-
-    public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout) {
-        if (currentMenu.getType() == targetType)
-            return true;
-        if (currentMenu == null || currentMenu.getType() != startType)
-            return false;
-        long start = System.currentTimeMillis();
-        pressKey(key, 2000);
-        while ((currentMenu == null || currentMenu.getType() != targetType) && start + timeout > System.currentTimeMillis()) {
-            waitForScreenUpdate(100);
-        }
-        return currentMenu != null && currentMenu.getType() == targetType;
-    }
-
-    public void step(int steps, byte key, long timeout) {
-        for (int i = 0; i < Math.abs(steps); i++)
-            pressKey(key, timeout);
-    }
-
     // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
     // then anything longer than a few seconds is an error;
     // only ensureConnected() uses the method with the timeout parameter; inline that code,
     // so we can use a custom timeout and give a better error message in case of failure
 
-    /**
-     * Wait until the menu update is in
-     */
-    // TODO donn't use this in ensureConnected
+    // TODO confirmAlarms? and report back which were cancelled?
+
+    /** Confirms and dismisses the given alert if it's raised before the timeout */
+    public boolean confirmAlert(String alertMessage, int maxWaitMs) {
+        long inFiveSeconds = System.currentTimeMillis() + maxWaitMs;
+        boolean alertProcessed = false;
+        while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
+            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                // Note that the message is permanently displayed, while the error code is blinking.
+                // A wait till the error code can be read results in the code hanging, despite
+                // menu updates coming in, so just check the message.
+                // TODO quick try if the can't make reading the error code work ..
+                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                if (!errorMsg.equals(alertMessage)) {
+                    throw new CommandException().success(false).enacted(false)
+                            .message("An alert other than the expected " + alertMessage + " was raised by the pump: "
+                                    + errorMsg + ". Please check the pump.");
+                }
+                // confirm alert
+                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                pressCheckKey();
+                // dismiss alert
+                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                pressCheckKey();
+                waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+                alertProcessed = true;
+            }
+            SystemClock.sleep(10);
+        }
+        return alertProcessed;
+    }
+
+    /** Wait until the menu is updated */
     public void waitForMenuUpdate() {
         waitForMenuUpdate(60, "Timeout waiting for menu update");
     }
@@ -615,10 +644,10 @@ public class RuffyScripter {
     }
 
     public void navigateToMenu(MenuType desiredMenu) {
-        MenuType startedFrom = currentMenu.getType();
+        MenuType startedFrom = getCurrentMenu().getType();
         boolean movedOnce = false;
-        while (currentMenu.getType() != desiredMenu) {
-            MenuType currentMenuType = currentMenu.getType();
+        while (getCurrentMenu().getType() != desiredMenu) {
+            MenuType currentMenuType = getCurrentMenu().getType();
             log.debug("Navigating to menu " + desiredMenu + ", currenty menu: " + currentMenuType);
             if (movedOnce && currentMenuType == startedFrom) {
                 throw new CommandException().message("Menu not found searching for " + desiredMenu
@@ -630,12 +659,10 @@ public class RuffyScripter {
         }
     }
 
-    /**
-     * Wait till a menu changed has completed, "away" from the menu provided as argument.
-     */
+    /** Wait till a menu changed has completed, "away" from the menu provided as argument. */
     public void waitForMenuToBeLeft(MenuType menuType) {
         long timeout = System.currentTimeMillis() + 60 * 1000;
-        while (currentMenu.getType() == menuType) {
+        while (getCurrentMenu().getType() == menuType) {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Timeout waiting for menu " + menuType + " to be left");
             }
@@ -649,7 +676,7 @@ public class RuffyScripter {
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
         int retries = 600;
-        while (currentMenu.getType() != expectedMenu) {
+        while (getCurrentMenu().getType() != expectedMenu) {
             if (retries > 0) {
                 SystemClock.sleep(100);
                 retries = retries - 1;
@@ -665,9 +692,9 @@ public class RuffyScripter {
     @SuppressWarnings("unchecked")
     public <T> T readBlinkingValue(Class<T> expectedType, MenuAttribute attribute) {
         int retries = 5;
-        Object value = currentMenu.getAttribute(attribute);
+        Object value = getCurrentMenu().getAttribute(attribute);
         while (!expectedType.isInstance(value)) {
-            value = currentMenu.getAttribute(attribute);
+            value = getCurrentMenu().getAttribute(attribute);
             waitForScreenUpdate(1000);
             retries--;
             if (retries == 0) {
@@ -677,8 +704,45 @@ public class RuffyScripter {
         return (T) value;
     }
 
-    public long readDisplayedDuration() {
-        MenuTime duration = readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
-        return duration.getHour() * 60 + duration.getMinute();
+    @Override
+    public CommandResult deliverBolus(double amount, BolusCommand.ProgressReportCallback progressReportCallback) {
+        return runCommand(new BolusCommand(amount, progressReportCallback));
+    }
+
+    @Override
+    public void cancelBolus() {
+        if (activeCmd instanceof BolusCommand) {
+            ((BolusCommand) activeCmd).requestCancellation();
+        }
+    }
+
+    @Override
+    public CommandResult setTbr(int percent, int duraton) {
+        return runCommand(new SetTbrCommand(percent, duraton));
+    }
+
+    @Override
+    public CommandResult cancelTbr() {
+        return runCommand(new CancelTbrCommand());
+    }
+
+    @Override
+    public CommandResult readReservoirLevel() {
+        return runCommand(new ReadReserverLevelCommand());
+    }
+
+    @Override
+    public CommandResult readHistory(PumpHistory knownHistory) {
+        return runCommand(new ReadHistoryCommand(knownHistory));
+    }
+
+    @Override
+    public CommandResult readBasalProfile() {
+        return runCommand(new ReadBasalProfile());
+    }
+
+    @Override
+    public CommandResult setBasalProfile(BasalProfile basalProfile) {
+        return runCommand(new SetBasalProfile(basalProfile));
     }
 }

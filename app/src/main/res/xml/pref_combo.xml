@@ -4,6 +4,33 @@
         android:key="combopump"
         android:title="@string/combopump_settings">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_combo_enable_experimental_features"
+            android:title="@string/combo_enable_experimental_features"
+            android:summary="@string/combo_enable_experimental_features_summary" />
+        <SwitchPreference
+            android:dependency="@string/key_combo_enable_experimental_features"
+            android:defaultValue="false"
+            android:key="@string/key_combo_enable_experimental_split_bolus"
+            android:title="@string/combo_enable_experimental_split_bolus"
+            android:summary="@string/combo_enable_experimental_split_bolus_summary"/>
+
+        <!-- TODO add validation, to restrict values to rang 0-100, see pref_absorption_oref0.xml -->
+        <EditTextPreference
+            android:dependency="@string/key_combo_enable_experimental_features"
+            android:key="@string/key_combo_experimental_skip_tbr_changes_below_delta"
+            android:title="@string/combo_experimental_skip_tbr_changes_below_delta"
+            android:defaultValue="0"
+            android:numeric="decimal"
+            android:dialogMessage="@string/combo_experimental_skip_tbr_changes_below_delta_summary"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_combo_disable_alerts"
+            android:title="@string/combo_disable_alerts"
+            android:summary="@string/combo_disable_alerts_summary"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
