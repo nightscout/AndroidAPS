@@ -324,39 +324,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
                 if (detailedBolusInfo.insulin > 0) {
                     // bolus needed, ask pump to deliver it
-                    if (!(SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
-                            && SP.getBoolean(R.string.key_combo_enable_experimental_split_bolus, false))) {
-                        return deliverBolus(detailedBolusInfo);
-                    } else {
-                        // split up bolus into 2 U parts
-                        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                        pumpEnactResult.success = true;
-                        pumpEnactResult.enacted = true;
-                        pumpEnactResult.bolusDelivered = 0d;
-                        pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-
-                        double remainingBolus = detailedBolusInfo.insulin;
-                        int split = 1;
-                        while (remainingBolus > 0.05) {
-                            double bolus = remainingBolus > 2 ? 2 : remainingBolus;
-                            DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
-                            bolusInfo.insulin = bolus;
-                            bolusInfo.isValid = false;
-                            log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
-                            PumpEnactResult bolusResult = deliverBolus(bolusInfo);
-                            if (!bolusResult.success) {
-                                return bolusResult;
-                            }
-                            pumpEnactResult.bolusDelivered += bolus;
-                            remainingBolus -= 2;
-                            split++;
-                            // Programming the pump for 2 U takes ~20, so wait 20s more so the
-                            // boluses are spaced 40s apart.
-                            SystemClock.sleep(20 * 1000);
-                        }
-                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                        return pumpEnactResult;
-                    }
+                    return deliverBolus(detailedBolusInfo);
                 } else {
                     // no bolus required, carb only treatment
 
@@ -438,19 +406,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
         }
 
-        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (!force && activeTemp != null) {
-            int minRequiredDelta = SP.getInt(R.string.key_combo_experimental_skip_tbr_changes_below_delta, 0);
-            boolean deltaBelowThreshold = Math.abs(activeTemp.percentRate - roundedPercentage) < minRequiredDelta;
-            if (deltaBelowThreshold) {
-                log.debug("Skipping setting APS-requested TBR change, since the requested change from "
-                        + activeTemp.percentRate + " -> " + roundedPercentage + " is below the delta threshold of " + minRequiredDelta);
-                PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = true;
-                pumpEnactResult.enacted = false;
-                return pumpEnactResult;
-            }
-        }
         return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
 

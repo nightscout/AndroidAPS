@@ -754,15 +754,12 @@
     <string name="key_combo_enable_experimental_features" translatable="false">combo_enable_experimental_features</string>
     <string name="combo_enable_experimental_features">Enable experimental features</string>
     <string name="combo_enable_experimental_features_summary">Unlocks experimental features which are in development and might be broken entirely.</string>
-    <string name="key_combo_enable_experimental_split_bolus" translatable="false">combo_experimental_split_bolus</string>
-    <string name="combo_enable_experimental_split_bolus">Experimental split bolus feature</string>
-    <string name="combo_enable_experimental_split_bolus_summary">Splits boluses into 2 U parts and waits around 45s after each to slow down bolus delivery (only active with non-experimental bolus).</string>
-    <string name="key_combo_experimental_skip_tbr_changes_below_delta" translatable="false">combo_experimental_reject_tbr_changes_below_delta</string>
-    <string name="combo_experimental_skip_tbr_changes_below_delta">Skip TBR changes below threshold (%).</string>
-    <string name="combo_experimental_skip_tbr_changes_below_delta_summary">Don\'t set a TBR if the difference between the new and a running TBR is below this threshold in percent. Specifying 0 disables this option.</string>
+    <string name="key_combo_experimental_ignore_transient_errors" translatable="false">combo_ignore_transient_tbr_errors</string>
+    <string name="combo_experimental_ignore_transient_errors">Ignore transient errors</string>
+    <string name="combo_experimental_ignore_transient_errors_summary">Ignore a connect failure for a background operation untless the next attempt also fails.</string>
     <string name="key_combo_disable_alerts" translatable="false">combo_disable_alerts</string>
     <string name="combo_disable_alerts">Disable alerts</string>
-    <string name="combo_disable_alerts_summary">Ignore all errors encountered while communicating with the pump. Alerts raised by the pump (including those caused by AAPS) will still be raised.</string>
+    <string name="combo_disable_alerts_summary">Ignore all errors encountered while communicating with the pump. Alerts raised by the pump (including those caused by AndroidAPS) will still be raised on the pump.</string>
     <string name="bolusprogramming">Programming pump for bolusing</string>
 </resources>
 
