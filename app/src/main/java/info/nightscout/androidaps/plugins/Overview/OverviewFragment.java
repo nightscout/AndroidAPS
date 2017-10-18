@@ -37,9 +37,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -55,7 +53,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -100,7 +97,6 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
@@ -114,9 +110,8 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
@@ -128,7 +123,6 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
-import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -939,8 +933,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
-        Double lowLine = SP.getDouble("low_mark", 0d);
-        Double highLine = SP.getDouble("high_mark", 0d);
+        double lowLine = SP.getDouble("low_mark", 0d);
+        double highLine = SP.getDouble("high_mark", 0d);
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -1251,7 +1245,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // ****** GRAPH *******
-        //log.debug("updateGUI checkpoint 1");
 
         // allign to hours
         Calendar calendar = Calendar.getInstance();
@@ -1280,109 +1273,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             endTime = toTime;
         }
 
-        LineGraphSeries<DataPoint> basalsLineSeries = null;
-        LineGraphSeries<DataPoint> absoluteBasalsLineSeries = null;
-        LineGraphSeries<DataPoint> baseBasalsSeries = null;
-        LineGraphSeries<DataPoint> tempBasalsSeries = null;
-        AreaGraphSeries<DoubleDataPoint> areaSeries;
         LineGraphSeries<DataPoint> seriesNow, seriesNow2;
 
-        // **** TEMP BASALS graph ****
-        Double maxBasalValueFound = 0d;
-
         long now = System.currentTimeMillis();
-        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            List<DataPoint> baseBasalArray = new ArrayList<>();
-            List<DataPoint> tempBasalArray = new ArrayList<>();
-            List<DataPoint> basalLineArray = new ArrayList<>();
-            List<DataPoint> absoluteBasalLineArray = new ArrayList<>();
-            double lastLineBasal = 0;
-            double lastAbsoluteLineBasal = 0;
-            double lastBaseBasal = 0;
-            double lastTempBasal = 0;
-            for (long time = fromTime; time < now; time += 60 * 1000L) {
-                BasalData basalData = IobCobCalculatorPlugin.getBasalData(time);
-                double baseBasalValue = basalData.basal;
-                double absoluteLineValue = baseBasalValue;
-                double tempBasalValue = 0;
-                double basal = 0d;
-                if (basalData.isTempBasalRunning) {
-                    absoluteLineValue = tempBasalValue = basalData.tempBasalAbsolute;
-                    if (tempBasalValue != lastTempBasal) {
-                        tempBasalArray.add(new DataPoint(time, lastTempBasal));
-                        tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
-                    }
-                    if (lastBaseBasal != 0d) {
-                        baseBasalArray.add(new DataPoint(time, lastBaseBasal));
-                        baseBasalArray.add(new DataPoint(time, 0d));
-                        lastBaseBasal = 0d;
-                    }
-                } else {
-                    if (baseBasalValue != lastBaseBasal) {
-                        baseBasalArray.add(new DataPoint(time, lastBaseBasal));
-                        baseBasalArray.add(new DataPoint(time, basal = baseBasalValue));
-                        lastBaseBasal = baseBasalValue;
-                    }
-                    if (lastTempBasal != 0) {
-                        tempBasalArray.add(new DataPoint(time, lastTempBasal));
-                        tempBasalArray.add(new DataPoint(time, 0d));
-                    }
-                }
-
-                if (baseBasalValue != lastLineBasal) {
-                    basalLineArray.add(new DataPoint(time, lastLineBasal));
-                    basalLineArray.add(new DataPoint(time, baseBasalValue));
-                }
-                if (absoluteLineValue != lastAbsoluteLineBasal) {
-                    absoluteBasalLineArray.add(new DataPoint(time, lastAbsoluteLineBasal));
-                    absoluteBasalLineArray.add(new DataPoint(time, basal));
-                }
-
-                lastAbsoluteLineBasal = absoluteLineValue;
-                lastLineBasal = baseBasalValue;
-                lastTempBasal = tempBasalValue;
-                maxBasalValueFound = Math.max(maxBasalValueFound, basal);
-            }
-            basalLineArray.add(new DataPoint(now, lastLineBasal));
-            baseBasalArray.add(new DataPoint(now, lastBaseBasal));
-            tempBasalArray.add(new DataPoint(now, lastTempBasal));
-            absoluteBasalLineArray.add(new DataPoint(now, lastAbsoluteLineBasal));
-
-            DataPoint[] baseBasal = new DataPoint[baseBasalArray.size()];
-            baseBasal = baseBasalArray.toArray(baseBasal);
-            baseBasalsSeries = new LineGraphSeries<>(baseBasal);
-            baseBasalsSeries.setDrawBackground(true);
-            baseBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.basebasal));
-            baseBasalsSeries.setThickness(0);
-
-            DataPoint[] tempBasal = new DataPoint[tempBasalArray.size()];
-            tempBasal = tempBasalArray.toArray(tempBasal);
-            tempBasalsSeries = new LineGraphSeries<>(tempBasal);
-            tempBasalsSeries.setDrawBackground(true);
-            tempBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.tempbasal));
-            tempBasalsSeries.setThickness(0);
-
-            DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
-            basalLine = basalLineArray.toArray(basalLine);
-            basalsLineSeries = new LineGraphSeries<>(basalLine);
-            Paint paint = new Paint();
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(2);
-            paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
-            paint.setColor(MainApp.sResources.getColor(R.color.basal));
-            basalsLineSeries.setCustomPaint(paint);
-
-            DataPoint[] absoluteBasalLine = new DataPoint[absoluteBasalLineArray.size()];
-            absoluteBasalLine = absoluteBasalLineArray.toArray(absoluteBasalLine);
-            absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
-            Paint absolutePaint = new Paint();
-            absolutePaint.setStyle(Paint.Style.STROKE);
-            absolutePaint.setStrokeWidth(4);
-            absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
-            absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
-        }
-
-        //log.debug("updateGUI checkpoint 2");
 
         // **** IOB COB DEV graph ****
         class DeviationDataPoint extends DataPoint {
@@ -1545,23 +1438,21 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else {
             iobGraph.setVisibility(View.GONE);
         }
-        //log.debug("updateGUI checkpoint 3");
 
         // remove old data from graph
         bgGraph.getSecondScale().getSeries().clear();
         bgGraph.getSeries().clear();
-        //log.debug("updateGUI checkpoint 4");
 
-        // **** Area ****
-        DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
-                new DoubleDataPoint(fromTime, lowLine, highLine),
-                new DoubleDataPoint(endTime, lowLine, highLine)
-        };
-        areaSeries = new AreaGraphSeries<>(areaDataPoints);
-        addSeriesWithoutInvalidate(areaSeries, bgGraph);
-        areaSeries.setColor(0);
-        areaSeries.setDrawBackground(true);
-        areaSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.inrangebackground));
+        GraphData graphData = new GraphData(bgGraph);
+
+        // **** In range Area ****
+        graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
+
+        // **** BG ****
+        if (showPrediction)
+            graphData.addBgReadings(fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
+        else
+            graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
 
         // set manual x bounds to have nice steps
         bgGraph.getViewport().setMaxX(endTime);
@@ -1575,41 +1466,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
         iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
-        //log.debug("updateGUI checkpoint 5");
-        // **** BG graph ****
-        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
-        List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
-        if (bgReadingsArray.size() == 0) {
-            return;
-        }
-
-        Iterator<BgReading> it = bgReadingsArray.iterator();
-        Double maxBgValue = 0d;
-        while (it.hasNext()) {
-            BgReading bg = it.next();
-            if (bg.value > maxBgValue) maxBgValue = bg.value;
-            bgListArray.add(bg);
-        }
-        if (showPrediction) {
-            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
-            List<BgReading> predArray = amaResult.getPredictions();
-            bgListArray.addAll(predArray);
-        }
-
-        maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
-        maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
-        if (highLine > maxBgValue) maxBgValue = highLine;
-        Integer numOfVertLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
-
-        DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
-        bg = bgListArray.toArray(bg);
-
-        if (bg.length > 0) {
-            addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(bg), bgGraph);
-        }
-
-        //log.debug("updateGUI checkpoint 6");
         // Treatments
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
@@ -1618,11 +1475,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
             if (t.getX() < fromTime || t.getX() > endTime) continue;
-            t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+            t.setY(graphData.getNearestBg((long) t.getX()));
             filteredTreatments.add(t);
         }
 
-        //log.debug("updateGUI checkpoint 7");
         // ProfileSwitch
         List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
 
@@ -1632,7 +1488,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             filteredTreatments.add(t);
         }
 
-        //log.debug("updateGUI checkpoint 8");
         // Extended bolus
         if (!pump.isFakingTempsByExtendedBoluses()) {
             List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
@@ -1641,19 +1496,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 DataPointWithLabelInterface t = extendedBoluses.get(tx);
                 if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
                 if (t.getDuration() == 0) continue;
-                t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+                t.setY(graphData.getNearestBg((long) t.getX()));
                 filteredTreatments.add(t);
             }
         }
 
-        //log.debug("updateGUI checkpoint 9");
         // Careportal
         List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
 
         for (int tx = 0; tx < careportalEvents.size(); tx++) {
             DataPointWithLabelInterface t = careportalEvents.get(tx);
             if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
-            t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+            t.setY(graphData.getNearestBg((long) t.getX()));
             filteredTreatments.add(t);
         }
 
@@ -1662,40 +1516,22 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (treatmentsArray.length > 0) {
             addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(treatmentsArray), bgGraph);
         }
-        //log.debug("updateGUI checkpoint 10");
 
         // set manual y bounds to have nice steps
-        bgGraph.getViewport().setMaxY(maxBgValue);
+        bgGraph.getViewport().setMaxY(graphData.maxBgValue);
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
+        bgGraph.getGridLabelRenderer().setNumVerticalLabels(graphData.numOfVertLines);
 
-        // set second scale
+        // add basal data
         if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            bgGraph.getSecondScale().setMinY(0);
-            bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
-            bgGraph.getSecondScale().addSeries(baseBasalsSeries);
-            bgGraph.getSecondScale().addSeries(tempBasalsSeries);
-            bgGraph.getSecondScale().addSeries(basalsLineSeries);
-            bgGraph.getSecondScale().addSeries(absoluteBasalsLineSeries);
+            graphData.addBasalsToSecondScale(fromTime, now, graphData.maxBgValue / lowLine * 1.2d);
         }
-        bgGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                return "";
-            }
 
-            @Override
-            public void setViewport(Viewport viewport) {
-
-            }
-        });
-
-        //log.debug("updateGUI checkpoint 11");
         // **** NOW line ****
         DataPoint[] nowPoints = new DataPoint[]{
                 new DataPoint(now, 0),
-                new DataPoint(now, maxBgValue)
+                new DataPoint(now, graphData.maxBgValue)
         };
         addSeriesWithoutInvalidate(seriesNow = new LineGraphSeries<>(nowPoints), bgGraph);
         seriesNow.setDrawDataPoints(false);
@@ -1718,18 +1554,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         iobGraph.onDataChanged(false, false);
 
         Profiler.log(log, from, updateGUIStart);
-    }
-
-    public double getNearestBg(long date, List<BgReading> bgReadingsArray) {
-        double bg = 0;
-        String units = MainApp.getConfigBuilder().getProfileUnits();
-        for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
-            BgReading reading = bgReadingsArray.get(r);
-            if (reading.date > date) continue;
-            bg = Profile.fromMgdlToUnits(reading.value, units);
-            break;
-        }
-        return bg;
     }
 
     void addSeriesWithoutInvalidate(Series s, GraphView graph) {
