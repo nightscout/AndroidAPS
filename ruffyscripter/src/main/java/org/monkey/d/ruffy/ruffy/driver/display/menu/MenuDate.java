@@ -22,6 +22,6 @@ public class MenuDate {
 
     @Override
     public String toString() {
-        return day+"."+String.format("%02d",month)+".";
+        return day+"."+ String.format("%02d",month)+".";
     }
 }

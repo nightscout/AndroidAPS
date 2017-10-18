@@ -13,6 +13,7 @@ import com.google.common.base.Joiner;
 
 import org.monkey.d.ruffy.ruffy.driver.IRTHandler;
 import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
+import org.monkey.d.ruffy.ruffy.driver.Ruffy;
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
@@ -136,18 +137,7 @@ public class RuffyScripter implements RuffyCommands {
         boolean boundSucceeded = false;
 
         try {
-            Intent intent = new Intent()
-                    .setComponent(new ComponentName(
-                            // this must be the base package of the app (check package attribute in
-                            // manifest element in the manifest file of the providing app)
-                            "org.monkey.d.ruffy.ruffy",
-                            // full path to the driver;
-                            // in the logs this service is mentioned as (note the slash)
-                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
-                            // org.monkey.d.ruffy.ruffy is the base package identifier
-                            // and /.driver.Ruffy the service within the package
-                            "org.monkey.d.ruffy.ruffy.driver.Ruffy"
-                    ));
+            Intent intent = new Intent(context, Ruffy.class);
             context.startService(intent);
 
             ServiceConnection mRuffyServiceConnection = new ServiceConnection() {

@@ -105,6 +105,12 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name="org.monkey.d.ruffy.ruffy.driver.Ruffy"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
         <!-- Service processing incomming data -->
         <service
             android:name=".Services.DataService"
