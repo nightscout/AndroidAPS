@@ -2,25 +2,54 @@ package de.jotomo.ruffy.spi.history;
 
 import android.support.annotation.NonNull;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class PumpHistory {
-    public final int reservoirLevel;
+    public int reservoirLevel = -1;
     @NonNull
-    public final List<Bolus> bolusHistory;
+    public List<Bolus> bolusHistory = Collections.emptyList();
     @NonNull
-    public final List<Tbr> tbrHistory;
+    public List<Tbr> tbrHistory = Collections.emptyList();
     @NonNull
-    public final List<java.lang.Error> errorHistory;
+    public List<Error> errorHistory = Collections.emptyList();
     @NonNull
-    public final List<Tdd> tddHistory;
+    public List<Tdd> tddHistory = Collections.emptyList();
 
-    public PumpHistory(int reservoirLevel, List<Bolus> bolusHistory, List<Tbr> tbrHistory, List<java.lang.Error> errorHistory, List<Tdd> tddHistory) {
-        this.reservoirLevel = reservoirLevel;
-        this.bolusHistory = Objects.requireNonNull(bolusHistory);
-        this.tbrHistory = Objects.requireNonNull(tbrHistory);
-        this.errorHistory = Objects.requireNonNull(errorHistory);
-        this.tddHistory = Objects.requireNonNull(tddHistory);
+    public PumpHistory reservoirLevel(int reservoirLevel) {
+        this.reservoirLevel = reservoirLevel
+        ;
+        return this;
+    }
+
+    public PumpHistory bolusHistory(List<Bolus> bolusHistory) {
+        this.bolusHistory = bolusHistory;
+        return this;
+    }
+
+    public PumpHistory tbrHistory(List<Tbr> tbrHistory) {
+        this.tbrHistory = tbrHistory;
+        return this;
+    }
+
+    public PumpHistory errorHistory(List<Error> errorHistory) {
+        this.errorHistory = errorHistory;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "PumpHistory{" +
+                "reservoirLevel=" + reservoirLevel +
+                ", bolusHistory=" + bolusHistory +
+                ", tbrHistory=" + tbrHistory +
+                ", errorHistory=" + errorHistory +
+                ", tddHistory=" + tddHistory +
+                '}';
+    }
+
+    public PumpHistory tddHistory(List<Tdd> tddHistory) {
+        this.tddHistory = tddHistory;
+        return this;
     }
 }

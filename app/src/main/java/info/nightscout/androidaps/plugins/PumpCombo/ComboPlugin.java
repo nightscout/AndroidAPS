@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -258,6 +259,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     // this method is regularly called from info.nightscout.androidaps.receivers.KeepAliveReceiver
+    // TODO check this is eithor called regularly even with other commansd being fired; if not,
+    // request this periodically
     @Override
     public void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
@@ -269,12 +272,19 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         boolean notAUserRequest = !reason.toLowerCase().contains("user");
+        if (notAUserRequest) SystemClock.sleep(2000);
         boolean wasRunAtLeastOnce = pump.lastCmdTime.getTime() > 0;
         boolean ranWithinTheLastMinute = System.currentTimeMillis() < pump.lastCmdTime.getTime() + 60 * 1000;
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
-            ruffyScripter.readPumpState();
+            CommandResult commandResult = ruffyScripter.readPumpState();
+            pump.lastCmdResult = commandResult;
+            pump.lastCmdTime = new Date(commandResult.completionTime);
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
+
+            CommandResult reservoirQueryResult = ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true));
+            pump.history = reservoirQueryResult.history;
         }
     }
 
@@ -363,6 +373,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @NonNull
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
         CommandResult bolusCmdResult = ruffyScripter.deliverBolus(detailedBolusInfo.insulin, bolusProgressReporter);
+        pump.lastCmdResult = bolusCmdResult;
+        pump.lastCmdTime = new Date(bolusCmdResult.completionTime);
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
+
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = bolusCmdResult.success;
         pumpEnactResult.enacted = bolusCmdResult.enacted;
@@ -427,6 +441,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         CommandResult commandResult = ruffyScripter.setTbr(adjustedPercent, durationInMinutes);
+        pump.lastCmdResult = commandResult;
+        pump.lastCmdTime = new Date(commandResult.completionTime);
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
@@ -441,8 +458,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
         }
-
-        MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
@@ -476,6 +491,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             commandResult = ruffyScripter.cancelTbr();
+            pump.lastCmdResult = commandResult;
+            pump.lastCmdTime = new Date(commandResult.completionTime);
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
+
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(commandResult.completionTime);
                 tempBasal.durationInMinutes = 0;
@@ -498,6 +517,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
             commandResult = ruffyScripter.setTbr(percentage, 15);
+            pump.lastCmdResult = commandResult;
+            pump.lastCmdTime = new Date(commandResult.completionTime);
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
+
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(commandResult.completionTime);
                 tempBasal.durationInMinutes = 15;

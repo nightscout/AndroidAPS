@@ -147,6 +147,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                                     insulinstateText.setTextColor(Color.RED);
                                     break;
                             }
+                            int reservoirLevel = plugin.getPump().history.reservoirLevel;
+                            insulinstateText.setText(reservoirLevel == - 1 ? "" : "" + reservoirLevel);
                         }
 
                         CommandResult lastCmdResult1 = plugin.getPump().lastCmdResult;

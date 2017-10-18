@@ -11,9 +11,9 @@ public class PumpHistoryRequest {
     public static final long SKIP = -1;
     public static final long FULL = 0;
 
-    public long bolusHistory;
-    public long tbrHistory;
-    public long errorHistory;
+    public long bolusHistory = SKIP;
+    public long tbrHistory = SKIP;
+    public long errorHistory = SKIP;
 
     public PumpHistoryRequest reservoirLevel(boolean reservoirLevel) {
         this.reservoirLevel = reservoirLevel;

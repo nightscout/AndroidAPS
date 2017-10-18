@@ -20,29 +20,25 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import de.jotomo.ruffy.spi.BasalProfile;
+import de.jotomo.ruffy.spi.BolusProgressReporter;
+import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffy.spi.PumpState;
+import de.jotomo.ruffy.spi.RuffyCommands;
+import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadBasalProfileCommand;
+import de.jotomo.ruffyscripter.commands.ReadHistoryCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
-import de.jotomo.ruffy.spi.BasalProfile;
-import de.jotomo.ruffy.spi.BolusProgressReporter;
-import de.jotomo.ruffy.spi.CommandResult;
-import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpHistory;
-import de.jotomo.ruffy.spi.PumpState;
-import de.jotomo.ruffy.spi.RuffyCommands;
-import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
-import de.jotomo.ruffy.spi.history.Tbr;
-import de.jotomo.ruffy.spi.history.Tdd;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -69,91 +65,6 @@ public class RuffyScripter implements RuffyCommands {
     private boolean started = false;
 
     private final Object screenlock = new Object();
-
-    private ServiceConnection mRuffyServiceConnection;
-
-    public RuffyScripter(Context context) {
-        boolean boundSucceeded = false;
-
-        try {
-            Intent intent = new Intent()
-                    .setComponent(new ComponentName(
-                            // this must be the base package of the app (check package attribute in
-                            // manifest element in the manifest file of the providing app)
-                            "org.monkey.d.ruffy.ruffy",
-                            // full path to the driver;
-                            // in the logs this service is mentioned as (note the slash)
-                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
-                            // org.monkey.d.ruffy.ruffy is the base package identifier
-                            // and /.driver.Ruffy the service within the package
-                            "org.monkey.d.ruffy.ruffy.driver.Ruffy"
-                    ));
-            context.startService(intent);
-
-            mRuffyServiceConnection = new ServiceConnection() {
-
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    ruffyService = IRuffyService.Stub.asInterface(service);
-                    log.debug("ruffy serivce connected");
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                    log.debug("ruffy service disconnected");
-                }
-            };
-            boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
-        } catch (Exception e) {
-            log.error("Binding to ruffy service failed", e);
-        }
-
-        if (!boundSucceeded) {
-            log.error("No connection to ruffy. Pump control unavailable.");
-        } else {
-            started = true;
-        }
-    }
-
-    @Override
-    public boolean isPumpAvailable() {
-        return started;
-    }
-
-    private volatile boolean connected = false;
-    private volatile long lastDisconnected = 0;
-
-    private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while (unrecoverableError == null) {
-                try {
-                    long now = System.currentTimeMillis();
-                    long connectionTimeOutMs = 5000;
-                    if (connected && activeCmd == null
-                            && now > lastCmdExecutionTime + connectionTimeOutMs
-                            // don't disconnect too frequently, confuses ruffy?
-                            && now > lastDisconnected + 15 * 1000) {
-                        log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
-                        lastDisconnected = now;
-                        ruffyService.doRTDisconnect();
-                        connected = false;
-                        // don't attempt anything fancy in the next 10s, let the pump settle
-                        SystemClock.sleep(10 * 1000);
-                    }
-                } catch (Exception e) {
-                    // TODO do we need to catch this exception somewhere else too? right now it's
-                    // converted into a command failure, but it's not classified as unrecoverable;
-                    // eventually we might try to recover ... check docs, there's also another
-                    // execption we should watch interacting with a remote service.
-                    // SecurityException was the other, when there's an AIDL mismatch;
-                    //unrecoverableError = "Ruffy service went away";
-                    log.debug("Exception in idle disconnect monitor thread, carrying on", e);
-                }
-                SystemClock.sleep(1000);
-            }
-        }
-    }, "idle-disconnect-monitor");
 
     private IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
@@ -221,6 +132,93 @@ public class RuffyScripter implements RuffyCommands {
         }
     };
 
+    public RuffyScripter(Context context) {
+        boolean boundSucceeded = false;
+
+        try {
+            Intent intent = new Intent()
+                    .setComponent(new ComponentName(
+                            // this must be the base package of the app (check package attribute in
+                            // manifest element in the manifest file of the providing app)
+                            "org.monkey.d.ruffy.ruffy",
+                            // full path to the driver;
+                            // in the logs this service is mentioned as (note the slash)
+                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
+                            // org.monkey.d.ruffy.ruffy is the base package identifier
+                            // and /.driver.Ruffy the service within the package
+                            "org.monkey.d.ruffy.ruffy.driver.Ruffy"
+                    ));
+            context.startService(intent);
+
+            ServiceConnection mRuffyServiceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    log.debug("ruffy service connected");
+                    ruffyService = IRuffyService.Stub.asInterface(service);
+                    try {
+                        ruffyService.setHandler(mHandler);
+                    } catch (Exception e) {
+                        log.error("Ruffy handler has issues", e);
+                    }
+                    idleDisconnectMonitorThread.start();
+                    started = true;
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    log.debug("ruffy service disconnected");
+                }
+            };
+            boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            log.error("Binding to ruffy service failed", e);
+        }
+
+        if (!boundSucceeded) {
+            log.error("No connection to ruffy. Pump control unavailable.");
+        }
+    }
+
+    @Override
+    public boolean isPumpAvailable() {
+        return started;
+    }
+
+    private volatile boolean connected = false;
+    private volatile long lastDisconnected = 0;
+
+    private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (unrecoverableError == null) {
+                try {
+                    long now = System.currentTimeMillis();
+                    long connectionTimeOutMs = 5000;
+                    if (connected && activeCmd == null
+                            && now > lastCmdExecutionTime + connectionTimeOutMs
+                            // don't disconnect too frequently, confuses ruffy?
+                            && now > lastDisconnected + 15 * 1000) {
+                        log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
+                        lastDisconnected = now;
+                        ruffyService.doRTDisconnect();
+                        connected = false;
+                        // don't attempt anything fancy in the next 10s, let the pump settle
+                        SystemClock.sleep(10 * 1000);
+                    }
+                } catch (Exception e) {
+                    // TODO do we need to catch this exception somewhere else too? right now it's
+                    // converted into a command failure, but it's not classified as unrecoverable;
+                    // eventually we might try to recover ... check docs, there's also another
+                    // execption we should watch interacting with a remote service.
+                    // SecurityException was the other, when there's an AIDL mismatch;
+                    //unrecoverableError = "Ruffy service went away";
+                    log.debug("Exception in idle disconnect monitor thread, carrying on", e);
+                }
+                SystemClock.sleep(1000);
+            }
+        }
+    }, "idle-disconnect-monitor");
+
     @Override
     public boolean isPumpBusy() {
         return activeCmd != null;
@@ -266,14 +264,13 @@ public class RuffyScripter implements RuffyCommands {
             return new CommandResult().message(Joiner.on("\n").join(violations)).state(readPumpStateInternal());
         }
 
-//        synchronized (RuffyScripter.class) {
+        synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
                 final RuffyScripter scripter = this;
                 final Returnable returnable = new Returnable();
-                returnable.cmdResult.request = cmd.toString();
                 Thread cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -370,6 +367,7 @@ public class RuffyScripter implements RuffyCommands {
                 long connectDurationSec = (executionStart - connectStart) / 1000;
                 long executionDurationSec = (System.currentTimeMillis() - executionStart) / 1000;
                 returnable.cmdResult.duration = "Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s";
+                returnable.cmdResult.request = cmd.toString();
                 log.debug("Command result: " + returnable.cmdResult);
                 return returnable.cmdResult;
             } catch (CommandException e) {
@@ -381,7 +379,7 @@ public class RuffyScripter implements RuffyCommands {
             } finally {
                 activeCmd = null;
             }
-//        }
+        }
     }
 
     /**
@@ -431,8 +429,10 @@ public class RuffyScripter implements RuffyCommands {
     // TODO v2 add remaining info we can extract from the main menu, low battery and low
     // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
 
-    /** This reads the state of the, which is whatever is currently displayed on the display,
-     * no actions are performed. */
+    /**
+     * This reads the state of the, which is whatever is currently displayed on the display,
+     * no actions are performed.
+     */
     public PumpState readPumpStateInternal() {
         PumpState state = new PumpState();
         Menu menu = currentMenu;
@@ -541,9 +541,9 @@ public class RuffyScripter implements RuffyCommands {
 //        wrapNoNotTheSubwayKind(new Step() {
 //            @Override
 //            public void doStep() {
-                log.debug("Pressing up key");
-                pressKey(Key.UP, 2000);
-                log.debug("Releasing up key");
+        log.debug("Pressing up key");
+        pressKey(Key.UP, 2000);
+        log.debug("Releasing up key");
 //            }
 //        });
     }
@@ -611,7 +611,9 @@ public class RuffyScripter implements RuffyCommands {
 
     // TODO confirmAlarms? and report back which were cancelled?
 
-    /** Confirms and dismisses the given alert if it's raised before the timeout */
+    /**
+     * Confirms and dismisses the given alert if it's raised before the timeout
+     */
     public boolean confirmAlert(String alertMessage, int maxWaitMs) {
         long inFiveSeconds = System.currentTimeMillis() + maxWaitMs;
         boolean alertProcessed = false;
@@ -641,7 +643,9 @@ public class RuffyScripter implements RuffyCommands {
         return alertProcessed;
     }
 
-    /** Wait until the menu is updated */
+    /**
+     * Wait until the menu is updated
+     */
     public void waitForMenuUpdate() {
         waitForMenuUpdate(60, "Timeout waiting for menu update");
     }
@@ -692,7 +696,9 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    /** Wait till a menu changed has completed, "away" from the menu provided as argument. */
+    /**
+     * Wait till a menu changed has completed, "away" from the menu provided as argument.
+     */
     public void waitForMenuToBeLeft(MenuType menuType) {
         long timeout = System.currentTimeMillis() + 60 * 1000;
         while (getCurrentMenu().getType() == menuType) {
@@ -761,12 +767,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
-        return new CommandResult().history(
-                new PumpHistory(50,
-                        Collections.<Bolus>emptyList(),
-                        Collections.<Tbr>emptyList(),
-                        Collections.<Error>emptyList(),
-                        Collections.<Tdd>emptyList()));
+        return runCommand(new ReadHistoryCommand(request));
     }
 
     @Override

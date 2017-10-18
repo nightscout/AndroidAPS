@@ -19,4 +19,9 @@ public class ReadPumpStateCommand implements Command {
 
     @Override
     public void setScripter(RuffyScripter scripter) {}
+
+    @Override
+    public String toString() {
+        return "ReadPumpStateCommand{}";
+    }
 }

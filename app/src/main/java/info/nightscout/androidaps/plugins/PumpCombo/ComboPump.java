@@ -7,6 +7,7 @@ import java.util.Date;
 
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffy.spi.history.PumpHistory;
 
 class ComboPump {
     @Nullable
@@ -14,4 +15,5 @@ class ComboPump {
     @NonNull
     volatile Date lastCmdTime = new Date(0);
     volatile PumpState state = new PumpState();
+    volatile PumpHistory history = new PumpHistory();
 }
