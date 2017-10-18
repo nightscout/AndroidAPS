@@ -29,11 +29,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.RuffyCommandsV1Impl;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BolusProgressReporter;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.RuffyCommands;
+import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
+import de.jotomo.ruffy.spi.BolusProgressReporter;
+import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffy.spi.PumpState;
+import de.jotomo.ruffy.spi.RuffyCommands;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
@@ -73,7 +73,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         definePumpCapabilities();
         MainApp.bus().register(this);
         startAlerter();
-        ruffyScripter = RuffyCommandsV1Impl.getInstance();
+        ruffyScripter = RuffyCommandsV1Impl.getInstance(MainApp.instance());
     }
 
     private void definePumpCapabilities() {

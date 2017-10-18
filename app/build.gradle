@@ -174,4 +174,5 @@ dependencies {
     }
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:20.0'
+    compile project(path: ':ruffyscripter')
 }
