@@ -784,4 +784,19 @@ public class RuffyScripter implements RuffyCommands {
         // TODO I'm a faker!
         return new CommandResult().success(true).enacted(false);
     }
+
+    @Override
+    public void requestPairing() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void sendAuthKey(String key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void unpair() {
+        throw new UnsupportedOperationException();
+    }
 }

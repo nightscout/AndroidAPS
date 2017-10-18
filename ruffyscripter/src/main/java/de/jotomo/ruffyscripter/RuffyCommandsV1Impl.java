@@ -76,4 +76,19 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     public CommandResult setDateAndTime(Date date) {
         return delegate.setDateAndTime(date);
     }
+
+    @Override
+    public void requestPairing() {
+        delegate.requestPairing();
+    }
+
+    @Override
+    public void sendAuthKey(String key) {
+        delegate.sendAuthKey(key);
+    }
+
+    @Override
+    public void unpair() {
+        delegate.unpair();
+    }
 }

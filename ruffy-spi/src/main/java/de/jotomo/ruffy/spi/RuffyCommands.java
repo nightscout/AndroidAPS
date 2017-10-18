@@ -26,5 +26,11 @@ public interface RuffyCommands {
     CommandResult setBasalProfile(BasalProfile basalProfile);
 
     CommandResult setDateAndTime(Date date);
+
+    void requestPairing();
+
+    void sendAuthKey(String key);
+
+    void unpair();
 }
 
