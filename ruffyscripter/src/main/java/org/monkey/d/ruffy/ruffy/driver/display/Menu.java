@@ -2,6 +2,7 @@ package org.monkey.d.ruffy.ruffy.driver.display;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuBlink;
@@ -17,7 +18,7 @@ import java.util.Map;
  * Created by fishermen21 on 20.05.17.
  */
 
-public class Menu implements Parcelable {
+public class Menu implements Parcelable{
     private MenuType type;
     private Map<MenuAttribute,Object> attributes = new HashMap<>();
 
@@ -34,34 +35,43 @@ public class Menu implements Parcelable {
                 String clas = in.readString();
                 String value = in.readString();
 
-                MenuAttribute a = MenuAttribute.valueOf(attr);
-                Object o = null;
-                if (Integer.class.toString().equals(clas)) {
-                    o = new Integer(value);
-                } else if (Double.class.toString().equals(clas)) {
-                    o = new Double(value);
-                } else if (Boolean.class.toString().equals(clas)) {
-                    o = new Boolean(value);
-                } else if (MenuDate.class.toString().equals(clas)) {
-                    o = new MenuDate(value);
-                } else if (MenuTime.class.toString().equals(clas)) {
-                    o = new MenuTime(value);
-                } else if (MenuBlink.class.toString().equals(clas)) {
-                    o = new MenuBlink();
-                } else if (BolusType.class.toString().equals(clas)) {
-                    o = BolusType.valueOf(value);
-                } else if (String.class.toString().equals(clas)) {
-                    o = new String(value);
-                }
+                if(attr!=null && clas!=null && value!=null) {
+                    MenuAttribute a = MenuAttribute.valueOf(attr);
+                    Object o = null;
+                    if (Integer.class.toString().equals(clas)) {
+                        o = new Integer(value);
+                    } else if (Double.class.toString().equals(clas)) {
+                        o = new Double(value);
+                    } else if (Boolean.class.toString().equals(clas)) {
+                        o = new Boolean(value);
+                    } else if (MenuDate.class.toString().equals(clas)) {
+                        o = new MenuDate(value);
+                    } else if (MenuTime.class.toString().equals(clas)) {
+                        o = new MenuTime(value);
+                    } else if (MenuBlink.class.toString().equals(clas)) {
+                        o = new MenuBlink();
+                    } else if (BolusType.class.toString().equals(clas)) {
+                        o = BolusType.valueOf(value);
+                    } else if (String.class.toString().equals(clas)) {
+                        o = new String(value);
+                    } else {
+                        Log.e("MENU","unknown class: "+clas);
+                    }
 
-                if (o != null) {
-                    attributes.put(a, o);
-                } else {
-//                    Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
+
+                    if (o != null) {
+                        attributes.put(a, o);
+                    } else {
+                        Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
+                    }
+                }
+                else
+                {
+                    Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
                 }
             }catch(Exception e)
             {
-//                Log.e("MenuIn","Exception in read",e);
+                Log.e("MenuIn","Exception in read",e);
             }
 
         }
@@ -98,14 +108,23 @@ public class Menu implements Parcelable {
         {
             try
             {
-                dest.writeString(a.toString());
-                Object o = attributes.get(a);
 
-                dest.writeString(o.getClass().toString());
-                dest.writeString(o.toString());
+                String atr = a.toString();
+                Object o = attributes.get(a);
+                String clas = o.getClass().toString();
+                String v = o.toString();
+                if(atr != null && o != null && v != null) {
+                    dest.writeString(atr);
+                    dest.writeString(clas);
+                    dest.writeString(v);
+                }
+                else
+                {
+                    Log.e("Menu","null in write :/");
+                }
             }catch(Exception e)
             {
-//                Log.v("MenuOut","error in write",e);
+                Log.v("MenuOut","error in write",e);
             }
         }
     }
