@@ -57,6 +57,10 @@ public class Ruffy extends Service {
 
         @Override
         public int doRTConnect() throws RemoteException {
+            if(isConnected()) {
+                rtHandler.rtStarted();
+                return 0;
+            }
             step= 0;
             if(Ruffy.this.rtHandler==null)
             {
@@ -77,8 +81,10 @@ public class Ruffy extends Service {
         public void doRTDisconnect()
         {
             step = 200;
-            stopRT();
-            btConn.disconnect();
+            if(btConn!=null) {
+                stopRT();
+                btConn.disconnect();
+            }
         }
 
         public void rtSendKey(byte keyCode, boolean changed)
