@@ -541,7 +541,7 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">앱시작을 NS에 기록하기</string>
     <string name="restartingapp">설정을 적용하기위해 앱을 종료합니다.</string>
-    <string name="danarv2pump">DanaRv2</string>
+    <string name="danarv2pump">다나Rv2</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -557,7 +557,7 @@
     <string name="virtualpump_firmware_label">펌웨어</string>
     <string name="virtualpump_lastconnection_label">최근 연결</string>
     <string name="danar_bluetooth_status">블루투스 상태</string>
-    <string name="nav_about">About</string>
+    <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
     <string name="dev">DEV</string>
     <string name="xdripstatus_settings">xDrip 상태(워치)</string>
@@ -649,14 +649,14 @@
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
     
-    <string name="waitingforpairing">펌프연동위해 대기중</string>
+    <string name="waitingforpairing">펌프연동 대기중</string>
     <string name="pairingok">연동완료</string>
     <string name="pairingtimedout">연동시간초과</string>
     <string name="pairing">연동중</string>
     <string name="danars_nodeviceavailable">현재까지 발견된 기기가 없습니다.</string>
     <string name="emptyreservoir">빈 주사기</string>
     <string name="bloodsugarmeasurementalert">혈당측정알람</string>
-    <string name="remaininsulinalert">남아있는 인슐린 양</string>
+    <string name="remaininsulinalert">남은 인슐린 양</string>
     <string name="danarspump">다나RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="selectedpump">선택된 펌프</string>
@@ -673,9 +673,9 @@
     <string name="activity_target">activity 목표</string>
     <string name="danar_history_prime">교체</string>
     <string name="gettingextendedbolusstatus">확장식사주입 상태 가져오는중</string>
-    <string name="gettingbolusstatus">식사주입 상태 가져오는중</string>
-    <string name="gettingtempbasalstatus">임시기초주입 상태 가져오는중</string>
-    <string name="gettingpumpsettings">펌프 설정 가져오는중</string>
+    <string name="gettingbolusstatus">식사주입상태 가져오는중</string>
+    <string name="gettingtempbasalstatus">임시기초주입상태 가져오는중</string>
+    <string name="gettingpumpsettings">펌프설정 가져오는중</string>
     <string name="gettingpumptime">펌프시간 가져오는중</string>
     <string name="reuse">재사용</string>
     <string name="wearcontrol_title">워치로 작동하기</string>
