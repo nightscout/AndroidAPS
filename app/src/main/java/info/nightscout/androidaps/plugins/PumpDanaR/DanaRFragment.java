@@ -7,20 +7,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -58,9 +57,20 @@ public class DanaRFragment extends SubscriberFragment {
     TextView firmwareView;
     TextView basalStepView;
     TextView bolusStepView;
+    TextView serialNumberView;
     Button viewProfileButton;
     Button historyButton;
     Button statsButton;
+
+    LinearLayout pumpStatusLayout;
+    TextView pumpStatusView;
+
+    static Runnable connectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            MainApp.getConfigBuilder().refreshDataFromPump("Connect request from GUI");
+        }
+    };
 
 
     public DanaRFragment() {
@@ -89,68 +99,74 @@ public class DanaRFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.danar_fragment, container, false);
-        btConnectionView = (TextView) view.findViewById(R.id.danar_btconnection);
-        lastConnectionView = (TextView) view.findViewById(R.id.danar_lastconnection);
-        lastBolusView = (TextView) view.findViewById(R.id.danar_lastbolus);
-        dailyUnitsView = (TextView) view.findViewById(R.id.danar_dailyunits);
-        basaBasalRateView = (TextView) view.findViewById(R.id.danar_basabasalrate);
-        tempBasalView = (TextView) view.findViewById(R.id.danar_tempbasal);
-        extendedBolusView = (TextView) view.findViewById(R.id.danar_extendedbolus);
-        batteryView = (TextView) view.findViewById(R.id.danar_battery);
-        reservoirView = (TextView) view.findViewById(R.id.danar_reservoir);
-        iobView = (TextView) view.findViewById(R.id.danar_iob);
-        firmwareView = (TextView) view.findViewById(R.id.danar_firmware);
-        viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
-        historyButton = (Button) view.findViewById(R.id.danar_history);
-        statsButton = (Button) view.findViewById(R.id.danar_stats);
-        basalStepView = (TextView) view.findViewById(R.id.danar_basalstep);
-        bolusStepView = (TextView) view.findViewById(R.id.danar_bolusstep);
+        try {
+            View view = inflater.inflate(R.layout.danar_fragment, container, false);
+            btConnectionView = (TextView) view.findViewById(R.id.danar_btconnection);
+            lastConnectionView = (TextView) view.findViewById(R.id.danar_lastconnection);
+            lastBolusView = (TextView) view.findViewById(R.id.danar_lastbolus);
+            dailyUnitsView = (TextView) view.findViewById(R.id.danar_dailyunits);
+            basaBasalRateView = (TextView) view.findViewById(R.id.danar_basabasalrate);
+            tempBasalView = (TextView) view.findViewById(R.id.danar_tempbasal);
+            extendedBolusView = (TextView) view.findViewById(R.id.danar_extendedbolus);
+            batteryView = (TextView) view.findViewById(R.id.danar_battery);
+            reservoirView = (TextView) view.findViewById(R.id.danar_reservoir);
+            iobView = (TextView) view.findViewById(R.id.danar_iob);
+            firmwareView = (TextView) view.findViewById(R.id.danar_firmware);
+            viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
+            historyButton = (Button) view.findViewById(R.id.danar_history);
+            statsButton = (Button) view.findViewById(R.id.danar_stats);
+            basalStepView = (TextView) view.findViewById(R.id.danar_basalstep);
+            bolusStepView = (TextView) view.findViewById(R.id.danar_bolusstep);
+            serialNumberView = (TextView) view.findViewById(R.id.danar_serialnumber);
 
+            pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+            pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
+            pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
-        viewProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                ProfileViewDialog profileViewDialog = new ProfileViewDialog();
-                profileViewDialog.show(manager, "ProfileViewDialog");
-            }
-        });
+            viewProfileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager manager = getFragmentManager();
+                    ProfileViewDialog profileViewDialog = new ProfileViewDialog();
+                    profileViewDialog.show(manager, "ProfileViewDialog");
+                }
+            });
 
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
-            }
-        });
+            historyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
+                }
+            });
 
-        statsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), DanaRStatsActivity.class));
-            }
-        });
+            statsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getContext(), DanaRStatsActivity.class));
+                }
+            });
 
-        btConnectionView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sHandler.post(new Runnable() {
-                                  @Override
-                                  public void run() {
-                                      MainApp.getConfigBuilder().refreshDataFromPump("Connect request from GUI");
-                                  }
-                              }
-                );
-            }
-        });
+            btConnectionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    log.debug("Clicked connect to pump");
+                    sHandler.post(connectRunnable);
+                }
+            });
 
-        updateGUI();
-        return view;
+            updateGUI();
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged c) {
         Activity activity = getActivity();
+        final String status = c.textStatus();
         if (activity != null) {
             activity.runOnUiThread(
                     new Runnable() {
@@ -162,6 +178,13 @@ public class DanaRFragment extends SubscriberFragment {
                                 btConnectionView.setText("{fa-bluetooth}");
                             else if (c.sStatus == EventPumpStatusChanged.DISCONNECTED)
                                 btConnectionView.setText("{fa-bluetooth-b}");
+
+                            if (!status.equals("")) {
+                                pumpStatusView.setText(status);
+                                pumpStatusLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                pumpStatusLayout.setVisibility(View.GONE);
+                            }
                         }
                     }
             );
@@ -242,6 +265,7 @@ public class DanaRFragment extends SubscriberFragment {
                     }
                     basalStepView.setText("" + pump.basalStep);
                     bolusStepView.setText("" + pump.bolusStep);
+                    serialNumberView.setText("" + pump.serialNumber);
 
                 }
             });

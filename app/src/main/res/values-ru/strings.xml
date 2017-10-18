@@ -427,7 +427,6 @@
     <string name="save">сохранить</string>
     <string name="send">ОТПРАВИТЬ</string>
     <string name="send_calibration" formatted="false">отправить калибровку %.1f на xdrip?</string>
-    <string name="send_to_pump">ОТПРАВИТЬ НА ПОМПУ</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="setextendedbolusquestion">установить новый расширенн болюс:</string>
     <string name="setting_imported">настройки импортированы</string>

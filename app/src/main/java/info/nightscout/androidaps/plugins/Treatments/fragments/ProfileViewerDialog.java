@@ -43,7 +43,7 @@ public class ProfileViewerDialog extends DialogFragment {
     private TextView dateTextView;
     private Button refreshButton;
 
-    static ProfileViewerDialog newInstance(long time) {
+    public static ProfileViewerDialog newInstance(long time) {
         ProfileViewerDialog dialog = new ProfileViewerDialog();
 
         Bundle args = new Bundle();
@@ -63,7 +63,7 @@ public class ProfileViewerDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.nsprofileviewer_fragment, container, false);
+        View layout = inflater.inflate(R.layout.profileviewer_fragment, container, false);
 
         noProfile = (TextView) layout.findViewById(R.id.profileview_noprofile);
         units = (TextView) layout.findViewById(R.id.profileview_units);
@@ -95,7 +95,7 @@ public class ProfileViewerDialog extends DialogFragment {
             noProfile.setVisibility(View.GONE);
             units.setText(profile.getUnits());
             dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-            activeProfile.setText(profileSwitch.profileName);
+            activeProfile.setText(profileSwitch.getCustomizedName());
             dateTextView.setText(DateUtil.dateAndTimeString(profileSwitch.date));
             ic.setText(profile.getIcList());
             isf.setText(profile.getIsfList());

@@ -25,11 +25,20 @@ import info.nightscout.utils.SP;
 public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
 
+    private static ObjectivesPlugin objectivesPlugin;
+
+    public static ObjectivesPlugin getPlugin() {
+        if (objectivesPlugin == null) {
+            objectivesPlugin = new ObjectivesPlugin();
+        }
+        return objectivesPlugin;
+    }
+
     public static List<Objective> objectives;
 
-    boolean fragmentVisible = true;
+    private boolean fragmentVisible = true;
 
-    public ObjectivesPlugin() {
+    private ObjectivesPlugin() {
         initializeData();
         loadProgress();
         MainApp.bus().register(this);
@@ -95,7 +104,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         if (type == CONSTRAINTS) this.fragmentVisible = fragmentVisible;
     }
 
-    public class Objective {
+    class Objective {
         Integer num;
         String objective;
         String gate;
@@ -118,13 +127,13 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     public static boolean pumpStatusIsAvailableInNS = false;
     // Objective 1
     public static Integer manualEnacts = 0;
-    public static final Integer manualEnactsNeeded = 20;
+    private static final Integer manualEnactsNeeded = 20;
 
-    public class RequirementResult {
+    class RequirementResult {
         boolean done = false;
         String comment = "";
 
-        public RequirementResult(boolean done, String comment) {
+        RequirementResult(boolean done, String comment) {
             this.done = done;
             this.comment = comment;
         }
@@ -135,7 +144,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         else return "---";
     }
 
-    public RequirementResult requirementsMet(Integer objNum) {
+    RequirementResult requirementsMet(Integer objNum) {
         switch (objNum) {
             case 0:
                 return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
@@ -152,7 +161,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
 
-    public void initializeData() {
+    void initializeData() {
         bgIsAvailableInNS = false;
         pumpStatusIsAvailableInNS = false;
         manualEnacts = 0;
@@ -220,7 +229,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         }
     }
 
-    void loadProgress() {
+    private void loadProgress() {
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
             try {

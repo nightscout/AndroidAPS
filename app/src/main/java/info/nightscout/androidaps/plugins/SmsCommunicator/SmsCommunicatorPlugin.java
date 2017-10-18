@@ -53,12 +53,22 @@ import info.nightscout.utils.XdripCalibrations;
 public class SmsCommunicatorPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(SmsCommunicatorPlugin.class);
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = true;
+    private static SmsCommunicatorPlugin smsCommunicatorPlugin;
+
+    public static SmsCommunicatorPlugin getPlugin() {
+
+        if (smsCommunicatorPlugin == null) {
+            smsCommunicatorPlugin = new SmsCommunicatorPlugin();
+        }
+        return smsCommunicatorPlugin;
+    }
+
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private final long CONFIRM_TIMEOUT = 5 * 60 * 1000L;
 
-    private List<String> allowedNumbers = new ArrayList<String>();
+    private List<String> allowedNumbers = new ArrayList<>();
 
     class Sms {
         String phoneNumber;
@@ -110,7 +120,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
     ArrayList<Sms> messages = new ArrayList<>();
 
-    public SmsCommunicatorPlugin() {
+    private SmsCommunicatorPlugin() {
         MainApp.bus().register(this);
         processSettings(null);
     }
@@ -274,8 +284,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
                                     PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
-                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled)+ " " +
-                                            MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled) + " " +
+                                            MainApp.sResources.getString(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 }
                                 receivedSms.processed = true;
@@ -487,7 +497,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, false);
+                            PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
                                 if (danaRPlugin != null)
@@ -539,7 +549,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
                         MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                         reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
-                                MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
+                                MainApp.sResources.getString(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else {
                         sendSMS(new Sms(receivedSms.phoneNumber, MainApp.sResources.getString(R.string.smscommunicator_unknowncommand), new Date()));

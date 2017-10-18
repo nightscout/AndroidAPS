@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -31,6 +30,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -38,12 +38,11 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -67,6 +66,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
+    private static final String NEW_PREFERENCES_PATH = "/sendpreferencestowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
@@ -76,7 +76,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     SharedPreferences mPrefs;
     private static boolean lastLoopStatus;
 
-    private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(WatchUpdaterService.class);
 
 
     @Override
@@ -328,6 +328,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             entries.putDataMapArrayList("entries", dataMaps);
             new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
         }
+        sendPreferences();
         sendBasals();
         sendStatus();
     }
@@ -529,6 +530,22 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
     }
 
+    private void sendPreferences() {
+        if (googleApiClient.isConnected()) {
+
+            boolean wearcontrol = SP.getBoolean("wearcontrol",false);
+
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
+            //unique content
+            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
+            PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+        } else {
+            Log.e("SendStatus", "No connection to wearable available!");
+        }
+    }
+
     @NonNull
     private String generateStatusString() {
         String status = "";
@@ -551,8 +568,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         //Temp basal
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
-        if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
             status += activeTemp.toStringShort();
 
         }

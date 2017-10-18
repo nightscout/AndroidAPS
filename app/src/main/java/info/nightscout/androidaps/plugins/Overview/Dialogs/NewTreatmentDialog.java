@@ -7,7 +7,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,20 +38,51 @@ import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.ToastUtils;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NewTreatmentDialog.class);
 
-    NumberPicker editCarbs;
-    NumberPicker editInsulin;
+    private NumberPicker editCarbs;
+    private NumberPicker editInsulin;
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
+    private Integer maxCarbs;
+    private Double maxInsulin;
+
+    private Handler mHandler;
 
     public NewTreatmentDialog() {
-        mHandlerThread = new HandlerThread(NewTreatmentDialog.class.getSimpleName());
+        HandlerThread mHandlerThread = new HandlerThread(NewTreatmentDialog.class.getSimpleName());
         mHandlerThread.start();
         this.mHandler = new Handler(mHandlerThread.getLooper());
+    }
+
+    final private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            validateInputs();
+        }
+    };
+
+    private void validateInputs() {
+        Integer carbs = SafeParse.stringToInt(editCarbs.getText());
+        if (carbs > maxCarbs) {
+            editCarbs.setValue(0d);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));
+        }
+        Double insulin = SafeParse.stringToDouble(editInsulin.getText());
+        if (insulin > maxInsulin) {
+            editInsulin.setValue(0d);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
+        }
     }
 
     @Override
@@ -63,14 +96,14 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
-        Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
 
         editCarbs = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_carbsamount);
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
 
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
-        editInsulin.setParams(0d, 0d, maxInsulin, MainApp.getConfigBuilder().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, MainApp.getConfigBuilder().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
 
         return view;
     }

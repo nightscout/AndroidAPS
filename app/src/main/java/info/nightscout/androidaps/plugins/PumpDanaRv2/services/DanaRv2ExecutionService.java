@@ -79,7 +79,7 @@ public class DanaRv2ExecutionService extends Service {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                log.debug("Device has disconnected " + device.getName());//Device has disconnected
+                log.debug("Device was disconnected " + device.getName());//Device was disconnected
                 if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
                     if (mSerialIOThread != null) {
                         mSerialIOThread.disconnect("BT disconnection broadcast");
@@ -261,10 +261,13 @@ public class DanaRv2ExecutionService extends Service {
                 }
             }
 
-            mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
-            mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
+            mSerialIOThread.sendMessage(tempStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
+            mSerialIOThread.sendMessage(exStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
 
             if (!statusMsg.received) {
                 mSerialIOThread.sendMessage(statusMsg);
@@ -290,6 +293,7 @@ public class DanaRv2ExecutionService extends Service {
 
             Date now = new Date();
             if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
@@ -300,6 +304,7 @@ public class DanaRv2ExecutionService extends Service {
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
@@ -318,7 +323,7 @@ public class DanaRv2ExecutionService extends Service {
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
-            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning ) {
+            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.sResources.getString(R.string.approachingdailylimit), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(reportFail));
@@ -397,7 +402,12 @@ public class DanaRv2ExecutionService extends Service {
 
     public boolean bolus(double amount, int carbs, long carbtime, Treatment t) {
         bolusingTreatment = t;
-        MsgBolusStart start = new MsgBolusStart(amount);
+        int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        MessageBase start;
+        if (speed == 0)
+            start = new MsgBolusStart(amount);
+        else
+            start = new MsgBolusStartWithSpeed(amount, speed);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
 
         connect("bolus");
@@ -538,7 +548,7 @@ public class DanaRv2ExecutionService extends Service {
         connect("updateBasalsInPump");
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.updatingbasalrates)));
-        double[] basal = buildDanaRProfileRecord(profile);
+        double[] basal = DanaRPump.buildDanaRProfileRecord(profile);
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
@@ -547,17 +557,6 @@ public class DanaRv2ExecutionService extends Service {
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
-    }
-
-    private double[] buildDanaRProfileRecord(Profile nsProfile) {
-        double[] record = new double[24];
-        for (Integer hour = 0; hour < 24; hour++) {
-            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
-            if (Config.logDanaMessageDetail)
-                log.debug("NS basal value for " + hour + ":00 is " + value);
-            record[hour] = value;
-        }
-        return record;
     }
 
     private void waitMsec(long msecs) {

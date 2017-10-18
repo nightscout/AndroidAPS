@@ -562,24 +562,23 @@
                         android:id="@+id/overview_showprediction_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:text="@string/predictionshortlabel"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/prediction"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <CheckBox
                         android:id="@+id/overview_showprediction"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_marginTop="-9dp"
+                        android:layout_gravity="center"
                         app:buttonTint="@color/prediction" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:text="@string/basalshortlabel"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/basal"
@@ -589,14 +588,13 @@
                         android:id="@+id/overview_showbasals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_marginTop="-9dp"
+                        android:layout_gravity="center"
                         app:buttonTint="@color/basal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:text="@string/iob"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/iob"
@@ -606,14 +604,13 @@
                         android:id="@+id/overview_showiob"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_marginTop="-9dp"
+                        android:layout_gravity="center"
                         app:buttonTint="@color/iob" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:text="@string/cob"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/cob"
@@ -623,14 +620,13 @@
                         android:id="@+id/overview_showcob"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_marginTop="-9dp"
+                        android:layout_gravity="center"
                         app:buttonTint="@color/cob" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:text="@string/dev"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/deviations"
@@ -640,14 +636,13 @@
                         android:id="@+id/overview_showdeviations"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_marginTop="-9dp"
+                        android:layout_gravity="center"
                         app:buttonTint="@color/deviations" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:text="@string/ratio_short"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textStyle="bold" />
@@ -656,8 +651,7 @@
                         android:id="@+id/overview_showratios"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_marginTop="-9dp" />
+                        android:layout_gravity="center" />
 
                 </LinearLayout>
 

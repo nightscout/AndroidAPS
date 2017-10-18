@@ -114,7 +114,7 @@
                 android:layout_marginTop="3dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="@string/send_to_pump"
+                android:text="@string/activate_profile"
                 android:textColor="@color/colorProfileSwitchButton" />
 
 

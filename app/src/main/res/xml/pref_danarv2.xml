@@ -8,11 +8,19 @@
             android:dialogTitle="@string/danar_bt_name_title"
             android:key="@string/key_danar_bt_name"
             android:title="@string/danar_bt_name_title" />
+
         <EditTextPreference
-            android:title="@string/danar_password_title"
+            android:inputType="numberPassword"
             android:key="@string/key_danar_password"
-            android:inputType="numberPassword">
-        </EditTextPreference>
+            android:title="@string/danar_password_title"></EditTextPreference>
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/danaSpeedArray"
+            android:entryValues="@array/danaSpeedValues"
+            android:key="@string/key_danars_bolusspeed"
+            android:title="@string/bolusspeed" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
