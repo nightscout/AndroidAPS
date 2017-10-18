@@ -281,10 +281,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             CommandResult commandResult = ruffyScripter.readPumpState();
             pump.lastCmdResult = commandResult;
             pump.lastCmdTime = new Date(commandResult.completionTime);
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
-
             CommandResult reservoirQueryResult = ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true));
             pump.history = reservoirQueryResult.history;
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
     }
 
