@@ -3,13 +3,17 @@ package info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi;
 import java.util.Date;
 
 /**
- * State representing the state of the MAIN_MENU.
+ * State representing the state of the MAIN_MENU, plus reservoir level (if requested).
  */
 public class PumpState {
     public Date timestamp = new Date();
     public boolean tbrActive = false;
+    /** TBR percentage. 100% means no TBR active, just the normal basal rate running. */
     public int tbrPercent = -1;
+    /** The absolute rate the TBR is running, e.g. 0.80U/h. */
     public double tbrRate = -1;
+    /** Remaining time of an active TBR. Note that 0:01 is te lowest displayed, the pump
+     * jumps from that to TBR end, skipping 0:00(xx). */
     public int tbrRemainingDuration = -1;
     /**
      * This is the error message (if any) displayed by the pump if there is an alarm,
@@ -20,9 +24,14 @@ public class PumpState {
      */
     public String errorMsg;
     public boolean suspended;
-    public boolean lowBattery;
+
+    public static final int LOW = 1;
+    public static final int EMPTY = 2;
+
+    public int batteryState = - 1;
     public int insulinState = -1;
-    public int reservoirLevel = -1;
+
+    public int activeBasalProfileNumber;
 
     public PumpState tbrActive(boolean tbrActive) {
         this.tbrActive = tbrActive;
@@ -54,8 +63,8 @@ public class PumpState {
         return this;
     }
 
-    public PumpState lowBattery(boolean lowBattery) {
-        this.lowBattery = lowBattery;
+    public PumpState batteryState(int batteryState) {
+        this.batteryState = batteryState;
         return this;
     }
 
@@ -64,8 +73,8 @@ public class PumpState {
         return this;
     }
 
-    public PumpState reservoirLevel(int reservoirLevel) {
-        this.reservoirLevel = reservoirLevel;
+    public PumpState activeBasalProfileNumber(int activeBasalProfileNumber) {
+        this.activeBasalProfileNumber = activeBasalProfileNumber;
         return this;
     }
 
@@ -80,16 +89,16 @@ public class PumpState {
     @Override
     public String toString() {
         return "PumpState{" +
-                "tbrActive=" + tbrActive +
+                "timestamp=" + timestamp +
+                ", tbrActive=" + tbrActive +
                 ", tbrPercent=" + tbrPercent +
                 ", tbrRate=" + tbrRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
-                ", errorMsg=" + errorMsg +
+                ", errorMsg='" + errorMsg + '\'' +
                 ", suspended=" + suspended +
-                ", lowBattery=" + lowBattery +
+                ", batteryState=" + batteryState +
                 ", insulinState=" + insulinState +
-                ", reversoirLevel=" + reservoirLevel +
-                ", timestamp=" + timestamp +
+                ", activeBasalProfileNumber=" + activeBasalProfileNumber +
                 '}';
     }
 }

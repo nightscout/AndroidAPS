@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.RuffyScripter;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
 
 public class GetBasalRateProfileCommand extends BaseCommand {

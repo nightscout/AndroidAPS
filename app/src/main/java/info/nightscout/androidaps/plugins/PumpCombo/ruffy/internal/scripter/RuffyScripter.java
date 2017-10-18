@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCombo.ruffy;
+package info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,6 +20,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +38,13 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.comm
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.BolusProgressReporter;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpHistory;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.Bolus;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.RuffyCommands;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.PumpHistoryRequest;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.Tbr;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.Tdd;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -452,7 +457,8 @@ public class RuffyScripter implements RuffyCommands {
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
-            state.lowBattery = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY));
+            // ruffy doesn't support 'empty battery' flag, not sure if the pump does
+            state.batteryState = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY)) ? PumpState.LOW : -1;
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
             // TODO v2, read current base basal rate, which is shown center when no TBR is active.
             // Check if that holds true when an extended bolus is running.
@@ -462,7 +468,8 @@ public class RuffyScripter implements RuffyCommands {
             state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
         } else if (menuType == MenuType.STOP) {
             state.suspended = true;
-            state.lowBattery = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY));
+            // ruffy doesn't support 'empty battery' flag, not sure if the pump does
+            state.batteryState = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY)) ? PumpState.LOW : -1;
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else {
             StringBuilder sb = new StringBuilder();
@@ -750,8 +757,8 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult setTbr(int percent, int duraton) {
-        return runCommand(new SetTbrCommand(percent, duraton));
+    public CommandResult setTbr(int percent, int duration) {
+        return runCommand(new SetTbrCommand(percent, duration));
     }
 
     @Override
@@ -760,18 +767,18 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult readReservoirLevel() {
-        return runCommand(new ReadReserverLevelCommand());
+    public CommandResult readHistory(PumpHistoryRequest request) {
+        return new CommandResult().history(
+                new PumpHistory(50,
+                        Collections.<Bolus>emptyList(),
+                        Collections.<Tbr>emptyList(),
+                        Collections.<Error>emptyList(),
+                        Collections.<Tdd>emptyList()));
     }
 
     @Override
-    public CommandResult readHistory(PumpHistory knownHistory) {
-        return runCommand(new ReadHistoryCommand(knownHistory));
-    }
-
-    @Override
-    public CommandResult readBasalProfile() {
-        return runCommand(new ReadBasalProfileCommand());
+    public CommandResult readBasalProfile(int number) {
+        return runCommand(new ReadBasalProfileCommand(number));
     }
 
     @Override

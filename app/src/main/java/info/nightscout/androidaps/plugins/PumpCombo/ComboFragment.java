@@ -126,11 +126,14 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                                 tbrRateText.setText("");
                             }
                             pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg : "");
-                            if(ps.lowBattery){
+                            if(ps.batteryState == PumpState.EMPTY){
                                 pumpstateBatteryText.setText("{fa-battery-empty}");
                                 pumpstateBatteryText.setTextColor(Color.RED);
+                            } else if(ps.batteryState == PumpState.LOW){
+                                pumpstateBatteryText.setText("{fa-battery-quarter}");
+                                pumpstateBatteryText.setTextColor(Color.WHITE);
                             } else {
-                                pumpstateBatteryText.setText("{fa-battery-three-quarters}");
+                                pumpstateBatteryText.setText("{fa-battery-full}");
                                 pumpstateBatteryText.setTextColor(Color.WHITE);
                             }
                             switch (ps.insulinState){

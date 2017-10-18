@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.com
 
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.PumpHistory;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.PumpHistory;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.RuffyScripter;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.CommandResult;
 
 public class ReadHistoryCommand implements Command {

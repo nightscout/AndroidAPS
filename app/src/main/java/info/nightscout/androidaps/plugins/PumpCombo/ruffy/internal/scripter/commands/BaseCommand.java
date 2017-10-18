@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.commands;
 
-import info.nightscout.androidaps.plugins.PumpCombo.ruffy.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.internal.scripter.RuffyScripter;
 
 public abstract class BaseCommand implements Command {
     // RS will inject itself here

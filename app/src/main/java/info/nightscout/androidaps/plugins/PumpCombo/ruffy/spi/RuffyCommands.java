@@ -2,12 +2,14 @@ package info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.plugins.PumpCombo.ruffy.spi.history.PumpHistoryRequest;
+
 public interface RuffyCommands {
     CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter);
 
     void cancelBolus();
 
-    CommandResult setTbr(int percent, int duraton);
+    CommandResult setTbr(int percent, int duration);
 
     CommandResult cancelTbr();
 
@@ -15,12 +17,9 @@ public interface RuffyCommands {
 
     boolean isPumpBusy();
 
-    CommandResult readReservoirLevel();
+    CommandResult readHistory(PumpHistoryRequest request);
 
-    // PumpHistory.fields.*: null=don't care. empty history=we know nothing yet. filled history=this is what we know so far
-    CommandResult readHistory(PumpHistory knownHistory);
-
-    CommandResult readBasalProfile();
+    CommandResult readBasalProfile(int number);
 
     CommandResult setBasalProfile(BasalProfile basalProfile);
 
