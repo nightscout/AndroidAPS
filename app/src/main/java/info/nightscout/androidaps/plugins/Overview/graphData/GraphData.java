@@ -10,6 +10,8 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
+import org.mozilla.javascript.tools.debugger.Main;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +21,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
@@ -26,6 +32,8 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeri
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.ScaledDataPoint;
 import info.nightscout.utils.Round;
 
 /**
@@ -34,19 +42,16 @@ import info.nightscout.utils.Round;
 
 public class GraphData {
 
-    public GraphData(GraphView bgGraph) {
-        this.bgGraph = bgGraph;
+    public GraphData() {
         units = MainApp.getConfigBuilder().getProfileUnits();
     }
 
-    private GraphView bgGraph;
-    public double maxBgValue = 0d;
-    public int numOfVertLines;
+    public double maxX = 0;
     private List<BgReading> bgReadingsArray;
     private String units;
 
-    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, DetermineBasalResultAMA amaResult) {
-        maxBgValue = 0d;
+    public void addBgReadings(GraphView bgGraph, long fromTime, long toTime, double lowLine, double highLine, DetermineBasalResultAMA amaResult) {
+        double maxBgValue = 0d;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
@@ -68,18 +73,25 @@ public class GraphData {
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
         if (highLine > maxBgValue) maxBgValue = highLine;
-        numOfVertLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
+        int numOfVertLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
         DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
         bg = bgListArray.toArray(bg);
 
         if (bg.length > 0) {
-            addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(bg));
+            addSeriesWithoutInvalidate(bgGraph, new PointsWithLabelGraphSeries<>(bg));
         }
+
+        maxX = maxBgValue;
+        // set manual y bounds to have nice steps
+        bgGraph.getViewport().setMaxY(maxX);
+        bgGraph.getViewport().setMinY(0);
+        bgGraph.getViewport().setYAxisBoundsManual(true);
+        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
 
     }
 
-    public void addInRangeArea(long fromTime, long toTime, double lowLine, double highLine) {
+    public void addInRangeArea(GraphView bgGraph, long fromTime, long toTime, double lowLine, double highLine) {
         AreaGraphSeries<DoubleDataPoint> inRangeAreaSeries;
 
         DoubleDataPoint[] inRangeAreaDataPoints = new DoubleDataPoint[]{
@@ -87,24 +99,26 @@ public class GraphData {
                 new DoubleDataPoint(toTime, lowLine, highLine)
         };
         inRangeAreaSeries = new AreaGraphSeries<>(inRangeAreaDataPoints);
-        addSeriesWithoutInvalidate(inRangeAreaSeries);
+        addSeriesWithoutInvalidate(bgGraph, inRangeAreaSeries);
         inRangeAreaSeries.setColor(0);
         inRangeAreaSeries.setDrawBackground(true);
         inRangeAreaSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.inrangebackground));
     }
 
-    public void addBasalsToSecondScale(long fromTime, long toTime, double scale) {
-        LineGraphSeries<DataPoint> basalsLineSeries;
-        LineGraphSeries<DataPoint> absoluteBasalsLineSeries;
-        LineGraphSeries<DataPoint> baseBasalsSeries;
-        LineGraphSeries<DataPoint> tempBasalsSeries;
+    // scale in % of vertical size (like 0.3)
+    public void addBasals(GraphView bgGraph, long fromTime, long toTime, double scale) {
+        LineGraphSeries<ScaledDataPoint> basalsLineSeries;
+        LineGraphSeries<ScaledDataPoint> absoluteBasalsLineSeries;
+        LineGraphSeries<ScaledDataPoint> baseBasalsSeries;
+        LineGraphSeries<ScaledDataPoint> tempBasalsSeries;
 
-        Double maxBasalValueFound = 0d;
+        double maxBasalValueFound = 0d;
+        Scale basalScale = new Scale();
 
-        List<DataPoint> baseBasalArray = new ArrayList<>();
-        List<DataPoint> tempBasalArray = new ArrayList<>();
-        List<DataPoint> basalLineArray = new ArrayList<>();
-        List<DataPoint> absoluteBasalLineArray = new ArrayList<>();
+        List<ScaledDataPoint> baseBasalArray = new ArrayList<>();
+        List<ScaledDataPoint> tempBasalArray = new ArrayList<>();
+        List<ScaledDataPoint> basalLineArray = new ArrayList<>();
+        List<ScaledDataPoint> absoluteBasalLineArray = new ArrayList<>();
         double lastLineBasal = 0;
         double lastAbsoluteLineBasal = 0;
         double lastBaseBasal = 0;
@@ -118,33 +132,33 @@ public class GraphData {
             if (basalData.isTempBasalRunning) {
                 absoluteLineValue = tempBasalValue = basalData.tempBasalAbsolute;
                 if (tempBasalValue != lastTempBasal) {
-                    tempBasalArray.add(new DataPoint(time, lastTempBasal));
-                    tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
+                    tempBasalArray.add(new ScaledDataPoint(time, lastTempBasal, basalScale));
+                    tempBasalArray.add(new ScaledDataPoint(time, basal = tempBasalValue, basalScale));
                 }
                 if (lastBaseBasal != 0d) {
-                    baseBasalArray.add(new DataPoint(time, lastBaseBasal));
-                    baseBasalArray.add(new DataPoint(time, 0d));
+                    baseBasalArray.add(new ScaledDataPoint(time, lastBaseBasal, basalScale));
+                    baseBasalArray.add(new ScaledDataPoint(time, 0d, basalScale));
                     lastBaseBasal = 0d;
                 }
             } else {
                 if (baseBasalValue != lastBaseBasal) {
-                    baseBasalArray.add(new DataPoint(time, lastBaseBasal));
-                    baseBasalArray.add(new DataPoint(time, basal = baseBasalValue));
+                    baseBasalArray.add(new ScaledDataPoint(time, lastBaseBasal, basalScale));
+                    baseBasalArray.add(new ScaledDataPoint(time, basal = baseBasalValue, basalScale));
                     lastBaseBasal = baseBasalValue;
                 }
                 if (lastTempBasal != 0) {
-                    tempBasalArray.add(new DataPoint(time, lastTempBasal));
-                    tempBasalArray.add(new DataPoint(time, 0d));
+                    tempBasalArray.add(new ScaledDataPoint(time, lastTempBasal, basalScale));
+                    tempBasalArray.add(new ScaledDataPoint(time, 0d, basalScale));
                 }
             }
 
             if (baseBasalValue != lastLineBasal) {
-                basalLineArray.add(new DataPoint(time, lastLineBasal));
-                basalLineArray.add(new DataPoint(time, baseBasalValue));
+                basalLineArray.add(new ScaledDataPoint(time, lastLineBasal, basalScale));
+                basalLineArray.add(new ScaledDataPoint(time, baseBasalValue, basalScale));
             }
             if (absoluteLineValue != lastAbsoluteLineBasal) {
-                absoluteBasalLineArray.add(new DataPoint(time, lastAbsoluteLineBasal));
-                absoluteBasalLineArray.add(new DataPoint(time, basal));
+                absoluteBasalLineArray.add(new ScaledDataPoint(time, lastAbsoluteLineBasal, basalScale));
+                absoluteBasalLineArray.add(new ScaledDataPoint(time, basal, basalScale));
             }
 
             lastAbsoluteLineBasal = absoluteLineValue;
@@ -153,26 +167,26 @@ public class GraphData {
             maxBasalValueFound = Math.max(maxBasalValueFound, basal);
         }
 
-        basalLineArray.add(new DataPoint(toTime, lastLineBasal));
-        baseBasalArray.add(new DataPoint(toTime, lastBaseBasal));
-        tempBasalArray.add(new DataPoint(toTime, lastTempBasal));
-        absoluteBasalLineArray.add(new DataPoint(toTime, lastAbsoluteLineBasal));
+        basalLineArray.add(new ScaledDataPoint(toTime, lastLineBasal, basalScale));
+        baseBasalArray.add(new ScaledDataPoint(toTime, lastBaseBasal, basalScale));
+        tempBasalArray.add(new ScaledDataPoint(toTime, lastTempBasal, basalScale));
+        absoluteBasalLineArray.add(new ScaledDataPoint(toTime, lastAbsoluteLineBasal, basalScale));
 
-        DataPoint[] baseBasal = new DataPoint[baseBasalArray.size()];
+        ScaledDataPoint[] baseBasal = new ScaledDataPoint[baseBasalArray.size()];
         baseBasal = baseBasalArray.toArray(baseBasal);
         baseBasalsSeries = new LineGraphSeries<>(baseBasal);
         baseBasalsSeries.setDrawBackground(true);
         baseBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.basebasal));
         baseBasalsSeries.setThickness(0);
 
-        DataPoint[] tempBasal = new DataPoint[tempBasalArray.size()];
+        ScaledDataPoint[] tempBasal = new ScaledDataPoint[tempBasalArray.size()];
         tempBasal = tempBasalArray.toArray(tempBasal);
         tempBasalsSeries = new LineGraphSeries<>(tempBasal);
         tempBasalsSeries.setDrawBackground(true);
         tempBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.tempbasal));
         tempBasalsSeries.setThickness(0);
 
-        DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
+        ScaledDataPoint[] basalLine = new ScaledDataPoint[basalLineArray.size()];
         basalLine = basalLineArray.toArray(basalLine);
         basalsLineSeries = new LineGraphSeries<>(basalLine);
         Paint paint = new Paint();
@@ -182,7 +196,7 @@ public class GraphData {
         paint.setColor(MainApp.sResources.getColor(R.color.basal));
         basalsLineSeries.setCustomPaint(paint);
 
-        DataPoint[] absoluteBasalLine = new DataPoint[absoluteBasalLineArray.size()];
+        ScaledDataPoint[] absoluteBasalLine = new ScaledDataPoint[absoluteBasalLineArray.size()];
         absoluteBasalLine = absoluteBasalLineArray.toArray(absoluteBasalLine);
         absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
         Paint absolutePaint = new Paint();
@@ -191,27 +205,65 @@ public class GraphData {
         absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
         absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
 
-        bgGraph.getSecondScale().setMinY(0);
-        bgGraph.getSecondScale().setMaxY(scale * maxBasalValueFound);
-        bgGraph.getSecondScale().addSeries(baseBasalsSeries);
-        bgGraph.getSecondScale().addSeries(tempBasalsSeries);
-        bgGraph.getSecondScale().addSeries(basalsLineSeries);
-        bgGraph.getSecondScale().addSeries(absoluteBasalsLineSeries);
+        basalScale.setValue(maxX * scale / maxBasalValueFound);
 
-        bgGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                return "";
-            }
-
-            @Override
-            public void setViewport(Viewport viewport) {
-
-            }
-        });
+        addSeriesWithoutInvalidate(bgGraph, baseBasalsSeries);
+        addSeriesWithoutInvalidate(bgGraph, tempBasalsSeries);
+        addSeriesWithoutInvalidate(bgGraph, basalsLineSeries);
+        addSeriesWithoutInvalidate(bgGraph, absoluteBasalsLineSeries);
     }
 
-    public double getNearestBg(long date) {
+    public void addTreatmnets(GraphView bgGraph, long fromTime, long endTime) {
+        List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
+
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+
+        for (int tx = 0; tx < treatments.size(); tx++) {
+            Treatment t = treatments.get(tx);
+            if (t.getX() < fromTime || t.getX() > endTime) continue;
+            t.setY(getNearestBg((long) t.getX()));
+            filteredTreatments.add(t);
+        }
+
+        // ProfileSwitch
+        List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
+
+        for (int tx = 0; tx < profileSwitches.size(); tx++) {
+            DataPointWithLabelInterface t = profileSwitches.get(tx);
+            if (t.getX() < fromTime || t.getX() > endTime) continue;
+            filteredTreatments.add(t);
+        }
+
+        // Extended bolus
+        if (!MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+            List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
+
+            for (int tx = 0; tx < extendedBoluses.size(); tx++) {
+                DataPointWithLabelInterface t = extendedBoluses.get(tx);
+                if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
+                if (t.getDuration() == 0) continue;
+                t.setY(getNearestBg((long) t.getX()));
+                filteredTreatments.add(t);
+            }
+        }
+
+        // Careportal
+        List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
+
+        for (int tx = 0; tx < careportalEvents.size(); tx++) {
+            DataPointWithLabelInterface t = careportalEvents.get(tx);
+            if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
+            t.setY(getNearestBg((long) t.getX()));
+            filteredTreatments.add(t);
+        }
+
+        DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
+        treatmentsArray = filteredTreatments.toArray(treatmentsArray);
+        if (treatmentsArray.length > 0) {
+            addSeriesWithoutInvalidate(bgGraph, new PointsWithLabelGraphSeries<>(treatmentsArray));
+        }    }
+
+    double getNearestBg(long date) {
         double bg = 0;
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
@@ -223,7 +275,7 @@ public class GraphData {
     }
 
 
-    private void addSeriesWithoutInvalidate(Series s) {
+    private void addSeriesWithoutInvalidate(GraphView bgGraph, Series s) {
         s.onGraphViewAttached(bgGraph);
         bgGraph.getSeries().add(s);
     }

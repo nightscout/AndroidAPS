@@ -1440,19 +1440,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // remove old data from graph
-        bgGraph.getSecondScale().getSeries().clear();
         bgGraph.getSeries().clear();
 
-        GraphData graphData = new GraphData(bgGraph);
+        GraphData graphData = new GraphData();
 
         // **** In range Area ****
-        graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
+        graphData.addInRangeArea(bgGraph, fromTime, endTime, lowLine, highLine);
 
         // **** BG ****
         if (showPrediction)
-            graphData.addBgReadings(fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
+            graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
         else
-            graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
+            graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, null);
 
         // set manual x bounds to have nice steps
         bgGraph.getViewport().setMaxX(endTime);
@@ -1468,70 +1467,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
 
         // Treatments
-        List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
-
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
-
-        for (int tx = 0; tx < treatments.size(); tx++) {
-            Treatment t = treatments.get(tx);
-            if (t.getX() < fromTime || t.getX() > endTime) continue;
-            t.setY(graphData.getNearestBg((long) t.getX()));
-            filteredTreatments.add(t);
-        }
-
-        // ProfileSwitch
-        List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
-
-        for (int tx = 0; tx < profileSwitches.size(); tx++) {
-            DataPointWithLabelInterface t = profileSwitches.get(tx);
-            if (t.getX() < fromTime || t.getX() > endTime) continue;
-            filteredTreatments.add(t);
-        }
-
-        // Extended bolus
-        if (!pump.isFakingTempsByExtendedBoluses()) {
-            List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
-
-            for (int tx = 0; tx < extendedBoluses.size(); tx++) {
-                DataPointWithLabelInterface t = extendedBoluses.get(tx);
-                if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
-                if (t.getDuration() == 0) continue;
-                t.setY(graphData.getNearestBg((long) t.getX()));
-                filteredTreatments.add(t);
-            }
-        }
-
-        // Careportal
-        List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
-
-        for (int tx = 0; tx < careportalEvents.size(); tx++) {
-            DataPointWithLabelInterface t = careportalEvents.get(tx);
-            if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
-            t.setY(graphData.getNearestBg((long) t.getX()));
-            filteredTreatments.add(t);
-        }
-
-        DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
-        treatmentsArray = filteredTreatments.toArray(treatmentsArray);
-        if (treatmentsArray.length > 0) {
-            addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(treatmentsArray), bgGraph);
-        }
-
-        // set manual y bounds to have nice steps
-        bgGraph.getViewport().setMaxY(graphData.maxBgValue);
-        bgGraph.getViewport().setMinY(0);
-        bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(graphData.numOfVertLines);
+        graphData.addTreatmnets(bgGraph, fromTime, endTime);
 
         // add basal data
         if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            graphData.addBasalsToSecondScale(fromTime, now, graphData.maxBgValue / lowLine * 1.2d);
+            graphData.addBasals(bgGraph, fromTime, now,  lowLine / graphData.maxX / 1.2d);
         }
 
         // **** NOW line ****
         DataPoint[] nowPoints = new DataPoint[]{
                 new DataPoint(now, 0),
-                new DataPoint(now, graphData.maxBgValue)
+                new DataPoint(now, graphData.maxX)
         };
         addSeriesWithoutInvalidate(seriesNow = new LineGraphSeries<>(nowPoints), bgGraph);
         seriesNow.setDrawDataPoints(false);
