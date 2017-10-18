@@ -675,7 +675,7 @@ public class RuffyScripter implements RuffyCommands {
         boolean movedOnce = false;
         while (getCurrentMenu().getType() != desiredMenu) {
             MenuType currentMenuType = getCurrentMenu().getType();
-            log.debug("Navigating to menu " + desiredMenu + ", currenty menu: " + currentMenuType);
+            log.debug("Navigating to menu " + desiredMenu + ", current menu: " + currentMenuType);
             if (movedOnce && currentMenuType == startedFrom) {
                 throw new CommandException().message("Menu not found searching for " + desiredMenu
                         + ". Check menu settings on your pump to ensure it's not hidden.");
