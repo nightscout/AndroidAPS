@@ -2,9 +2,6 @@
 
     package="de.jotomo.ruffyscripter">
 
-    <!--<application android:allowBackup="true" android:label="ruffyscripter"-->
-        <!--android:supportsRtl="true">-->
-<!---->
-    <!--</application>-->
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 </manifest>
