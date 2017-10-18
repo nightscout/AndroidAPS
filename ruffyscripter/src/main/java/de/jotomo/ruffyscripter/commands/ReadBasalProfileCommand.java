@@ -1,5 +1,6 @@
 package de.jotomo.ruffyscripter.commands;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
@@ -14,12 +15,12 @@ public class ReadBasalProfileCommand implements Command {
 
     @Override
     public CommandResult execute() {
-        return null;
+        return new CommandResult().success(false).enacted(false);
     }
 
     @Override
     public List<String> validateArguments() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

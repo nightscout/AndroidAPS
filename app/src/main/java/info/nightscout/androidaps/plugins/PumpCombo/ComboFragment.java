@@ -16,9 +16,8 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffy.spi.PumpState;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
@@ -111,7 +110,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void run() {
                     ComboPlugin plugin = ComboPlugin.getPlugin();
-                    statusText.setText(plugin.getPump().state.getStateSummary());
+                    if (plugin.getPump().lastCmdResult != null)
+                        statusText.setText(plugin.getPump().state.getStateSummary());
                     if (plugin.isInitialized()) {
                         PumpState ps = plugin.getPump().state;
                         if (ps != null) {

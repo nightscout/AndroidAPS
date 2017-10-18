@@ -30,6 +30,7 @@ import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadBasalProfileCommand;
+import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffy.spi.BasalProfile;
@@ -109,6 +110,8 @@ public class RuffyScripter implements RuffyCommands {
 
         if (!boundSucceeded) {
             log.error("No connection to ruffy. Pump control unavailable.");
+        } else {
+            started = true;
         }
     }
 
@@ -223,16 +226,9 @@ public class RuffyScripter implements RuffyCommands {
         return activeCmd != null;
     }
 
-    public void unbind() {
-        /*
-        if (ruffyService != null)
-            try {
-                ruffyService.removeHandler(mHandler);
-            } catch (Exception e) {
-                // ignore
-            }
-            */
-        this.ruffyService = null;
+    @Override
+    public CommandResult readPumpState() {
+        return runCommand(new ReadPumpStateCommand());
     }
 
     public void returnToMainMenu() {
@@ -260,16 +256,17 @@ public class RuffyScripter implements RuffyCommands {
      * Always returns a CommandResult, never throws
      */
     public CommandResult runCommand(final Command cmd) {
+        log.debug("Attempting to run cmd: " + cmd);
         if (unrecoverableError != null) {
             return new CommandResult().success(false).enacted(false).message(unrecoverableError);
         }
 
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
-            return new CommandResult().message(Joiner.on("\n").join(violations)).state(readPumpState());
+            return new CommandResult().message(Joiner.on("\n").join(violations)).state(readPumpStateInternal());
         }
 
-        synchronized (RuffyScripter.class) {
+//        synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
                 long connectStart = System.currentTimeMillis();
@@ -317,7 +314,7 @@ public class RuffyScripter implements RuffyCommands {
                                 return;
                             }
                             log.debug("Connection ready to execute cmd " + cmd);
-                            PumpState pumpState = readPumpState();
+                            PumpState pumpState = readPumpStateInternal();
                             log.debug("Pump state before running command: " + pumpState);
                             long cmdStartTime = System.currentTimeMillis();
                             cmd.setScripter(scripter);
@@ -368,7 +365,7 @@ public class RuffyScripter implements RuffyCommands {
                 }
 
                 if (returnable.cmdResult.state == null) {
-                    returnable.cmdResult.state = readPumpState();
+                    returnable.cmdResult.state = readPumpStateInternal();
                 }
                 long connectDurationSec = (executionStart - connectStart) / 1000;
                 long executionDurationSec = (System.currentTimeMillis() - executionStart) / 1000;
@@ -384,7 +381,7 @@ public class RuffyScripter implements RuffyCommands {
             } finally {
                 activeCmd = null;
             }
-        }
+//        }
     }
 
     /**
@@ -436,7 +433,7 @@ public class RuffyScripter implements RuffyCommands {
 
     /** This reads the state of the, which is whatever is currently displayed on the display,
      * no actions are performed. */
-    public PumpState readPumpState() {
+    public PumpState readPumpStateInternal() {
         PumpState state = new PumpState();
         Menu menu = currentMenu;
         if (menu == null) {

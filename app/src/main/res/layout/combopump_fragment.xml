@@ -52,6 +52,7 @@
                     android:gravity="start"
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
+                    android:text="Initializing"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -460,7 +461,7 @@
                     android:textSize="20sp"
                     android:paddingLeft="5dp"
                     android:gravity="start"
-                    android:text=" - " />
+                    android:text="" />
 
             </LinearLayout>
 

@@ -17,6 +17,8 @@ public interface RuffyCommands {
 
     boolean isPumpBusy();
 
+    CommandResult readPumpState();
+
     CommandResult readHistory(PumpHistoryRequest request);
 
     CommandResult readBasalProfile(int number);

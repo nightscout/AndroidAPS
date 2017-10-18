@@ -274,8 +274,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
-            // TODO
-//            runCommand(new GetPumpStateCommand());
+            ruffyScripter.readPumpState();
         }
     }
 

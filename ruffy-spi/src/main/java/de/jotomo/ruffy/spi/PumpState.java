@@ -2,9 +2,7 @@ package de.jotomo.ruffy.spi;
 
 import java.util.Date;
 
-/**
- * State representing the state of the MAIN_MENU, plus reservoir level (if requested).
- */
+/** State displayed on the main screen of the pump. */
 public class PumpState {
     public Date timestamp = new Date();
     public boolean tbrActive = false;

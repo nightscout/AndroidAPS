@@ -25,7 +25,7 @@ public class CancelTbrCommand extends BaseCommand {
     public CommandResult execute() {
         try {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-            PumpState pumpState = scripter.readPumpState();
+            PumpState pumpState = scripter.readPumpStateInternal();
             if (!pumpState.tbrActive) {
 //                log.debug("active temp basal 90s ago: " +
 //                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 90 * 1000));

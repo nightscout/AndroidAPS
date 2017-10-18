@@ -53,6 +53,11 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
+    public CommandResult readPumpState() {
+        return delegate.readPumpState();
+    }
+
+    @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
         return delegate.readHistory(request);
     }
