@@ -562,6 +562,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // TODO handle running into WARNING_OR_ERROR ... or scripter? purge it
         CommandResult commandResult = commandExecution.execute();
         pump.lastCmdResult = commandResult;
+        pump.lastCmdResult.completionTime = System.currentTimeMillis(); // todo
         pump.state = commandResult.state;
         // TOOD
         if (commandResult.history != null)
