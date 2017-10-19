@@ -97,9 +97,9 @@
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="pump_tempbasal_label">Temp basal</string>
     <string name="visible">Sichtbar</string>
-    <string name="virtualpump_basebasalrate_label">Basis Basalrate</string>
+    <string name="pump_basebasalrate_label">Basis Basalrate</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="unsupportedclientver">Nicht unterstützte Version von NSClient</string>
     <string name="treatments_wizard_bg_label">BZ</string>
@@ -208,8 +208,8 @@
     <string name="reloadprofile">Profil neuladen</string>
     <string name="save">Speichern</string>
     <string name="success">Erfolgreich</string>
-    <string name="virtualpump_lastconnection_label">Letzte Verbindung</string>
-    <string name="danar_lastbolus">Letzter Bolus:</string>
+    <string name="pump_lastconnection_label">Letzte Verbindung</string>
+    <string name="pump_lastbolus_label">Letzter Bolus:</string>
     <string name="danar_viewprofile">Profil anzeigen</string>
     <string name="danarprofile">DanaR Profil Einstellungen</string>
     <string name="danarprofile_dia">DIA [h]</string>
@@ -242,7 +242,7 @@
     <string name="danar_carbohydrate">Kohlenhydrate</string>
     <string name="danar_error">Fehler</string>
     <string name="danar_glucose">Glucose</string>
-    <string name="danar_history">Historie</string>
+    <string name="pump_history">Historie</string>
     <string name="danar_history_alarm">Alarme</string>
     <string name="danar_history_bolus">Bolus</string>
     <string name="danar_history_carbohydrates">Kohlenhydrate</string>
@@ -334,7 +334,7 @@
     <string name="clearlog">Logs leeren</string>
     <string name="copied_to_clipboard">In den Zwischenspeicher kopiert</string>
     <string name="copy_to_clipboard">In den Zwischenspeicher kopieren</string>
-    <string name="danar_bluetooth_status">Bluetooth-Status</string>
+    <string name="pump_bluetooth_status">Bluetooth-Status</string>
     <string name="danar_stats_cumulative_tdd">Kumulative TDD</string>
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_expweight">Exponentiell Gewichtete TDD</string>
@@ -404,7 +404,7 @@
     <string name="cpp_sync_setting_missing">Aktivierung wird benötigt um Werte an die Pumpe zu senden!</string>
     <string name="cpp_valuesnotstored">Werte nicht gespeichert!</string>
     <string name="danar_enableextendedbolus">Aktiviere Extended Bolus in der Pumpe</string>
-    <string name="danar_stats">DanaR Stats</string>
+    <string name="pump_stats">DanaR Stats</string>
     <string name="danar_stats_amount_days"># Tage</string>
     <string name="danar_stats_basalrate">Basal</string>
     <string name="danar_stats_bolus">Bolus</string>

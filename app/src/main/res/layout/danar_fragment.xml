@@ -97,7 +97,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/danar_bluetooth_status"
+                        android:text="@string/pump_bluetooth_status"
                         android:textSize="14sp" />
 
                     <TextView
@@ -190,7 +190,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_lastconnection_label"
+                        android:text="@string/pump_lastconnection_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -235,7 +235,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/danar_lastbolus"
+                        android:text="@string/pump_lastbolus_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -325,7 +325,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_basebasalrate_label"
+                        android:text="@string/pump_basebasalrate_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -370,7 +370,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_tempbasal_label"
+                        android:text="@string/pump_tempbasal_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -711,7 +711,7 @@
                     android:drawableTop="@drawable/icon_danarhistory"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/danar_history" />
+                    android:text="@string/pump_history" />
 
                 <Button
                     android:id="@+id/danar_stats"
@@ -722,7 +722,7 @@
                     android:drawableTop="@drawable/icon_danarstats"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/danar_stats" />
+                    android:text="@string/pump_stats" />
 
             </LinearLayout>
 

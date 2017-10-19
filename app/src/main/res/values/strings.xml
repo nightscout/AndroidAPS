@@ -50,8 +50,8 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
-    <string name="virtualpump_basebasalrate_label">Base basal rate</string>
-    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="pump_basebasalrate_label">Base basal rate</string>
+    <string name="pump_tempbasal_label">Temp basal</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
     <string name="virtualpump_battery_label">Battery</string>
     <string name="virtualpump_reservoir_label">Reservoir</string>
@@ -235,7 +235,7 @@
     <string name="connectionerror">Pump connection error</string>
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
-    <string name="danar_lastbolus">Last bolus:</string>
+    <string name="pump_lastbolus_label">Last bolus</string>
     <string name="hoursago">h ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
@@ -269,7 +269,7 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
-    <string name="danar_history">History</string>
+    <string name="pump_history">History</string>
     <string name="danar_historyreload">Reload</string>
     <string name="uploading">Uploading</string>
     <string name="danar_ebolus">E bolus</string>
@@ -412,7 +412,7 @@
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
-    <string name="danar_stats">DanaR Stats</string>
+    <string name="pump_stats">Stats</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
     <string name="danar_stats_expweight">Exponentially Weighted TDD</string>
     <string name="danar_stats_basalrate">Basal</string>
@@ -592,8 +592,8 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="virtualpump_lastconnection_label">Last connection</string>
-    <string name="danar_bluetooth_status">Bluetooh status</string>
+    <string name="pump_lastconnection_label">Last connection</string>
+    <string name="pump_bluetooth_status">Bluetooh status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="dev">DEV</string>

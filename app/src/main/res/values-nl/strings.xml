@@ -41,13 +41,13 @@
     <string name="vitualpump_label">VIRTUELE POMP</string>
     <string name="visible">Toon</string>
     <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
-    <string name="virtualpump_tempbasal_label">Tijdelijk basaal</string>
+    <string name="pump_tempbasal_label">Tijdelijk basaal</string>
     <string name="virtualpump_sqlerror">SQL Storing</string>
     <string name="virtualpump_shortname">VP</string>
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_reservoir_label">Reservoir</string>
-    <string name="virtualpump_lastconnection_label">Laatste verbinding</string>
+    <string name="pump_lastconnection_label">Laatste verbinding</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="virtualpump_extendedbolus_label">Vertraagde bolus</string>
@@ -168,7 +168,7 @@
     <string name="cs_lang">Čeština</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">Basaal uur</string>
-    <string name="danar_bluetooth_status">Bluetooh status</string>
+    <string name="pump_bluetooth_status">Bluetooh status</string>
     <string name="danar_bt_name_title">DanaR Bluetooth toestel</string>
     <string name="danar_carbohydrate">Koolhydraten</string>
     <string name="danar_dailyunits">Dag totaal</string>
@@ -176,7 +176,7 @@
     <string name="danar_enableextendedbolus">Activeer vertraagde bolussen op de pomp</string>
     <string name="danar_error">Storing</string>
     <string name="danar_glucose">glucose</string>
-    <string name="danar_history">Geschiedenis</string>
+    <string name="pump_history">Geschiedenis</string>
     <string name="danar_history_alarm">Alarm</string>
     <string name="restart">Herstart</string>
     <string name="result">Resultaat</string>
@@ -276,7 +276,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="danar_lastbolus">Laatste bolus</string>
+    <string name="pump_lastbolus_label">Laatste bolus</string>
     <string name="danar_password_title">Pomp wachtwoord</string>
     <string name="danar_pump_settings">DanaR pomp instellingen</string>
     <string name="danar_refill">Hervullen</string>
@@ -455,7 +455,7 @@
     <string name="openapsma_maxiob_title">Maximaal basaal IOB OpenAPS kan toedienen [E]</string>
     <string name="openapsma_profile_label">Profiel</string>
     <string name="openapsma_valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
-    <string name="virtualpump_basebasalrate_label">Basis basale dosis</string>
+    <string name="pump_basebasalrate_label">Basis basale dosis</string>
     <string name="openapsma_lastrun_label">Laatse berekening</string>
     <string name="openapsma_lastenact_label">Laatste uitvoering</string>
     <string name="openapsma_glucosestatus_label">Glucose gegevens</string>
@@ -527,7 +527,7 @@
     <string name="carbsconstraintapplied">KH limiet ingesteld</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfiel</string>
     <string name="danar_sbolus">S Bolus</string>
-    <string name="danar_stats">DanaR Statistiek</string>
+    <string name="pump_stats">DanaR Statistiek</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
     <string name="danar_stats_expweight">Exponentieel verhoogt TDD</string>
     <string name="danar_stats_ratio">Ratio</string>

@@ -111,7 +111,7 @@
     <string name="cs_lang">чешский</string>
     <string name="danar_alarm">внимание!</string>
     <string name="danar_basalhour">почасовой базал</string>
-    <string name="danar_bluetooth_status">статус блутус</string>
+    <string name="pump_bluetooth_status">статус блутус</string>
     <string name="danar_bt_name_title">устройство блутус danaR</string>
     <string name="danar_carbohydrate">углеводы</string>
     <string name="danar_dailyunits">суточные единицы</string>
@@ -122,7 +122,7 @@
     <string name="danar_enableextendedbolus">активировать увеличенные болюсы на помпе</string>
     <string name="danar_error">ошибка</string>
     <string name="danar_glucose">гликемия</string>
-    <string name="danar_history">история</string>
+    <string name="pump_history">история</string>
     <string name="danar_history_alarm">оповещения об опасности</string>
     <string name="danar_history_basalhours">почасовые базалы</string>
     <string name="danar_history_bolus">болюсы</string>
@@ -136,13 +136,13 @@
     <string name="danar_historyreload">замена</string>
     <string name="danar_invalidinput">введенные данные неверны</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
-    <string name="danar_lastbolus">предыдущий болюс</string>
+    <string name="pump_lastbolus_label">предыдущий болюс</string>
     <string name="danar_model" formatted="false">модель: %02X протокол: %02X код: %02X</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="danar_pump_settings">настройки помпы DanaR</string>
     <string name="danar_refill">дозаправка</string>
     <string name="danar_sbolus">болюс S</string>
-    <string name="danar_stats">статистика DanaR</string>
+    <string name="pump_stats">статистика DanaR</string>
     <string name="danar_stats_amount_days">количество дней</string>
     <string name="danar_stats_basalrate">базал</string>
     <string name="danar_stats_bolus">болюс</string>
@@ -528,17 +528,17 @@
     <string name="updatingbasalrates">обновление значений базала</string>
     <string name="uploading">передача данных</string>
     <string name="virtualpump">виртуальная помпа</string>
-    <string name="virtualpump_basebasalrate_label">базовая величина базала</string>
+    <string name="pump_basebasalrate_label">базовая величина базала</string>
     <string name="virtualpump_battery_label">батарея</string>
     <string name="virtualpump_extendedbolus_label">продленный болюс</string>
     <string name="virtualpump_firmware_label">прошивка</string>
-    <string name="virtualpump_lastconnection_label">прошлое соединение</string>
+    <string name="pump_lastconnection_label">прошлое соединение</string>
     <string name="virtualpump_reservoir_label">резервуар</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>
     <string name="virtualpump_sqlerror">ошибка SQL</string>
-    <string name="virtualpump_tempbasal_label">врем базал</string>
+    <string name="pump_tempbasal_label">врем базал</string>
     <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
     <string name="visible">виден</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>

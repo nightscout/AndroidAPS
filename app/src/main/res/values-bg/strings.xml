@@ -47,13 +47,13 @@
     <string name="treatments_wizard_bolusiob_label">IOB от болуси</string>
     <string name="treatments_wizard_total_label">ОБШО</string>
     <string name="openapsma_run">Старт сега</string>
-    <string name="virtualpump_basebasalrate_label">Базова базална стойност</string>
+    <string name="pump_basebasalrate_label">Базова базална стойност</string>
     <string name="virtualpump_battery_label">Батерия</string>
     <string name="virtualpump_extendedbolus_label">Удължен болус</string>
     <string name="virtualpump_reservoir_label">Резервоар</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Грешка в базата данни</string>
-    <string name="virtualpump_tempbasal_label">Временен базал</string>
+    <string name="pump_tempbasal_label">Временен базал</string>
     <string name="vitualpump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="openapsma_lastrun_label">Последно изпълнение</string>
     <string name="openapsma_inputparameters_label">Параметри на входа</string>
@@ -226,7 +226,7 @@
     <string name="connectionerror">Грешка при свързване с помпата</string>
     <string name="danar_iob_label">IOB на помпата</string>
     <string name="danar_dailyunits">Инсулин за деня</string>
-    <string name="danar_lastbolus">Последен болус:</string>
+    <string name="pump_lastbolus_label">Последен болус:</string>
     <string name="hoursago">ч по-рано</string>
     <string name="danar_invalidinput">Грешни входящи данни</string>
     <string name="danar_valuenotsetproperly">Неправилна стойност</string>
@@ -260,7 +260,7 @@
     <string name="danarprofile_dia">DIA (Време на действие на инсулина) ч.:</string>
     <string name="danarprofile_dia_summary">Време на действие на инсулина</string>
     <string name="failedupdatebasalprofile">Неуспешно обноввяване на базалния профил</string>
-    <string name="danar_history">История</string>
+    <string name="pump_history">История</string>
     <string name="danar_historyreload">Презареди</string>
     <string name="uploading">Качване</string>
     <string name="danar_ebolus">E болус</string>
@@ -401,7 +401,7 @@
     <string name="eatingsoon">Преди хранене</string>
     <string name="activity">Физ.активност</string>
     <string name="removerecord">Премахни запис:</string>
-    <string name="danar_stats">DanaR статистика</string>
+    <string name="pump_stats">DanaR статистика</string>
     <string name="danar_stats_cumulative_tdd">Комулативна TDD</string>
     <string name="danar_stats_expweight">Експоненциално претеглена TDD</string>
     <string name="danar_stats_basalrate">Базал</string>
@@ -547,8 +547,8 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="virtualpump_lastconnection_label">Последно свързване</string>
-    <string name="danar_bluetooth_status">Bluetooh статус</string>
+    <string name="pump_lastconnection_label">Последно свързване</string>
+    <string name="pump_bluetooth_status">Bluetooh статус</string>
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="dev">DEV</string>
