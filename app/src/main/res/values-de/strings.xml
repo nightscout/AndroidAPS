@@ -673,5 +673,4 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="nsclientinternal_title">Interner NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
-    <string name="activity_duration">Aktivitätsdauer</string>
 </resources>
