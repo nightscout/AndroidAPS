@@ -19,6 +19,7 @@ import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
+import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
 import info.nightscout.androidaps.BuildConfig;
@@ -562,11 +563,18 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // TODO handle running into WARNING_OR_ERROR ... or scripter? purge it
         CommandResult commandResult = commandExecution.execute();
         pump.lastCmdResult = commandResult;
-        pump.lastCmdResult.completionTime = System.currentTimeMillis(); // todo
         pump.state = commandResult.state;
         // TOOD
-        if (commandResult.history != null)
+        if (commandResult.history != null) {
+            if (commandResult.history.reservoirLevel != -1) {
+                pump.reservoirLevel = commandResult.history.reservoirLevel;
+            }
             pump.history = commandResult.history;
+            if (pump.history.bolusHistory.size() > 0) {
+                pump.lastBolus = pump.history.bolusHistory.get(0);
+            }
+        }
+
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
     }

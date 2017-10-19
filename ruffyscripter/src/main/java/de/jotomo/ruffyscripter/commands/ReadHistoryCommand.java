@@ -7,6 +7,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuDate;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import de.jotomo.ruffy.spi.CommandResult;
@@ -36,25 +37,33 @@ public class ReadHistoryCommand extends BaseCommand {
             scripter.pressCheckKey();
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
             if (request.bolusHistory != PumpHistoryRequest.SKIP) {
-                // Could also be extended, multiwave:
-                BolusType bolusType = (BolusType) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-                if (!bolusType.equals(BolusType.NORMAL)) {
-                    throw new CommandException().success(false).enacted(false).message("Unsupported bolus type encountered: " + bolusType);
-                }
-                Double bolus = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
-                MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
-                MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
+                if (request.bolusHistory == PumpHistoryRequest.LAST) {
+                    // Could also be extended, multiwave:
+                    BolusType bolusType = (BolusType) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
+                    if (!bolusType.equals(BolusType.NORMAL)) {
+                        throw new CommandException().success(false).enacted(false).message("Unsupported bolus type encountered: " + bolusType);
+                    }
+                    Double bolus = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
+                    MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
+                    MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
+                    // TODO handle year changes; if current month == 1 and record date == 12, use $YEAR-1
+                    int currentMonth = new Date().getMonth() + 1;
+                    int currentYear = new Date().getYear() + 1900;
+                    if (currentMonth == 1 && date.getMonth() == 12) {
+                        currentYear -= 1;
+                    }
+                    long recordDate = new Date(currentYear - 1900, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute()).getTime();
+                    history.bolusHistory.add(new Bolus(recordDate, bolus));
 
-                history.bolusHistory.add(new Bolus(0, bolus));
-
-                int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
-                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+//                int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
+//                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
 
                 /*
                 read displayed date, bolus, add to history
                 while data > last known, press up to go through history
                  */
 
+                }
             }
             scripter.pressMenuKey();
             scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
@@ -81,6 +90,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 // TODO start or end time?
                 MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
             }
+            scripter.pressBackKey();
             scripter.returnToRootMenu();
         }
         scripter.verifyRootMenuIsDisplayed();

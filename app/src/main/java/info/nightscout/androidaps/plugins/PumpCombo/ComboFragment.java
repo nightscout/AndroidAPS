@@ -4,7 +4,6 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,11 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
@@ -36,6 +32,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView batteryView;
     private TextView reservoirView;
     private TextView lastConnectionView;
+    private TextView lastBolusView;
     private TextView tempBasalText;
 
     private Button refresh;
@@ -49,6 +46,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
+        lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
@@ -111,7 +109,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
                     if (plugin.getPump().state.errorMsg != null) {
                         statusView.setTextColor(Color.RED);
-                    } else if (plugin.getPump().state.suspended )  {
+                    } else if (plugin.getPump().state.suspended) {
                         statusView.setTextColor(Color.YELLOW);
                     } else {
                         statusView.setTextColor(Color.WHITE);
@@ -140,13 +138,26 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         } else {
                             reservoirView.setTextColor(Color.WHITE);
                         }
-                        int reservoirLevel = plugin.getPump().history.reservoirLevel;
+                        int reservoirLevel = plugin.getPump().reservoirLevel;
                         reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
 
                         // last connection
                         String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
                         String time = DateUtil.timeString(lastCmdResult.completionTime);
                         lastConnectionView.setText("" + minAgo + " (" + time + ")");
+
+                        // last bolus
+                        plugin.getPump().history.bolusHistory.add(new Bolus(System.currentTimeMillis() - 7 * 60 * 1000, 12.8d));
+                        Bolus bolus = plugin.getPump().lastBolus;
+                        if (bolus == null || bolus.timestamp + 6 * 60 * 60 * 1000 < System.currentTimeMillis()) {
+                            lastBolusView.setText("");
+                        } else {
+                            long agoMsc = System.currentTimeMillis() - bolus.timestamp;
+                            double agoHours = agoMsc / 60d / 60d / 1000d;
+                            lastBolusView.setText(DecimalFormatter.to2Decimal(bolus.amount) + " U " +
+                                    "(" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ", "
+                                    + DateUtil.timeString(bolus.timestamp) + ") ");
+                        }
 
                         // TBR
                         boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;

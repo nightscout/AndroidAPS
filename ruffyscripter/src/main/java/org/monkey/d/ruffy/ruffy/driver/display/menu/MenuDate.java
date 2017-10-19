@@ -20,6 +20,14 @@ public class MenuDate {
         month = Integer.parseInt(p[1]);
     }
 
+    public int getDay() {
+        return day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
     @Override
     public String toString() {
         return day+"."+ String.format("%02d",month)+".";

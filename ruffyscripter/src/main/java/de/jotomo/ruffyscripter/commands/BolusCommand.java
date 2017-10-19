@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.jotomo.ruffy.spi.history.Bolus;
+import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
@@ -199,9 +201,11 @@ public class BolusCommand extends BaseCommand {
                                 + "did not return the main menu successfully.");
             }
 
-
+            ArrayList<Bolus> boluses = new ArrayList<>();
+            boluses.add(new Bolus(System.currentTimeMillis(), bolus));
             return new CommandResult().success(true).enacted(true)
-                    .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
+                    .message(String.format(Locale.US, "Delivered %02.1f U", bolus))
+                    .history(new PumpHistory().bolusHistory(boluses));
         } catch (CommandException e) {
             return e.toCommandResult();
         }
