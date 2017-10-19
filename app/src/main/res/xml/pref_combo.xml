@@ -18,9 +18,9 @@
         <SwitchPreference
             android:dependency="@string/key_combo_enable_experimental_features"
             android:defaultValue="false"
-            android:key="@string/key_combo_disable_alerts"
-            android:title="@string/combo_disable_alerts"
-            android:summary="@string/combo_disable_alerts_summary"/>
+            android:key="@string/key_combo_disable_alarms"
+            android:title="@string/combo_disable_alarms"
+            android:summary="@string/combo_disable_alarms_summary"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
