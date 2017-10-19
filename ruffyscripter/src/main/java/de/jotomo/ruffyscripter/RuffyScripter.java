@@ -391,10 +391,10 @@ public class RuffyScripter implements RuffyCommands {
             // TODO v2 see if we can do this cleaner, use isDisconnected as well maybe. GL#34.
             // TODO remove this, will be in the way of quickly reconnecting after an exception and dealing
             // with an alarm; we'll then see if the pump can deal with this
-            if (System.currentTimeMillis() < lastDisconnected + 10 * 1000) {
+/*            if (System.currentTimeMillis() < lastDisconnected + 10 * 1000) {
                 log.debug("Waiting 10s to let pump settle after recent disconnect");
                 SystemClock.sleep(10 * 1000);
-            }
+            }*/
 
             boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
