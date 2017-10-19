@@ -138,4 +138,12 @@ public class Menu implements Parcelable{
                     return new Menu[size];
                 }
             };
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "type=" + type +
+                ", attributes=" + attributes +
+                '}';
+    }
 }
