@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -24,6 +26,7 @@ public interface PumpInterface {
     int setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
+    @NonNull
     Date lastDataTime();
     void refreshDataFromPump(String reason);
 

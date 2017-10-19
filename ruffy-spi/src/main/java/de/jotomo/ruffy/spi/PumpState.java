@@ -81,7 +81,7 @@ public class PumpState {
             return "Suspended";
         else if (errorMsg != null)
             return errorMsg;
-        return "Normal";
+        return "Running";
     }
 
     @Override

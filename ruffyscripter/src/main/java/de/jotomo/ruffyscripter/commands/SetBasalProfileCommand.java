@@ -6,7 +6,7 @@ import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffy.spi.CommandResult;
 
-public class SetBasalProfileCommand implements Command {
+public class SetBasalProfileCommand extends BaseCommand {
     public SetBasalProfileCommand(BasalProfile basalProfile) {
 
     }

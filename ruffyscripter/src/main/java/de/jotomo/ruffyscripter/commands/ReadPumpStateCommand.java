@@ -6,10 +6,10 @@ import java.util.List;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class ReadPumpStateCommand implements Command {
+public class ReadPumpStateCommand extends BaseCommand {
     @Override
     public CommandResult execute() {
-        return new CommandResult().success(true).enacted(false);
+        return new CommandResult().success(true).enacted(false).state(scripter.readPumpStateInternal());
     }
 
     @Override

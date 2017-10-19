@@ -189,7 +189,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getChildFragmentManager();
         final PumpInterface pump = MainApp.getConfigBuilder();
         switch (view.getId()) {
             case R.id.actions_profileswitch:

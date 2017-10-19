@@ -22,4 +22,9 @@ public abstract class BaseCommand implements Command {
     public boolean isCancellable() {
         return canBeCancelled;
     }
+
+    @Override
+    public boolean needsRunMode() {
+        return false;
+    }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffy.spi.CommandResult;
 
-public class ReadBasalProfileCommand implements Command {
+public class ReadBasalProfileCommand extends BaseCommand {
     private final int number;
 
     public ReadBasalProfileCommand(int number) {

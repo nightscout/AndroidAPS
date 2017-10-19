@@ -54,7 +54,7 @@ public class BolusCommand extends BaseCommand {
 
             if (cancelRequested) {
                 bolusProgressReporter.report(STOPPING, 0, 0);
-                scripter.returnToMainMenu();
+                scripter.returnToRootMenu();
                 bolusProgressReporter.report(STOPPED, 0, 0);
                 return new CommandResult().success(true).enacted(false)
                         .message("Bolus cancelled as per user request with no insulin delivered");
@@ -192,7 +192,7 @@ public class BolusCommand extends BaseCommand {
             log.debug("Bolus record in history confirms delivered bolus");
 
             // TODO how would this call fail? more generally ......
-            scripter.returnToMainMenu();
+            scripter.returnToRootMenu();
             if (scripter.getCurrentMenu().getType() != MenuType.MAIN_MENU) {
                 throw new CommandException().success(false).enacted(true)
                         .message("Bolus was correctly delivered and checked against history, but we "
@@ -260,6 +260,11 @@ public class BolusCommand extends BaseCommand {
     public void requestCancellation() {
         cancelRequested = true;
         bolusProgressReporter.report(STOPPING, 0, 0);
+    }
+
+    @Override
+    public boolean needsRunMode() {
+        return true;
     }
 
     @Override

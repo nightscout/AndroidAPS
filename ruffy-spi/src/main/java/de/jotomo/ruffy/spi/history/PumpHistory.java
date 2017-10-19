@@ -2,19 +2,20 @@ package de.jotomo.ruffy.spi.history;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PumpHistory {
     public int reservoirLevel = -1;
     @NonNull
-    public List<Bolus> bolusHistory = Collections.emptyList();
+    public List<Bolus> bolusHistory = new ArrayList<>();
     @NonNull
-    public List<Tbr> tbrHistory = Collections.emptyList();
+    public List<Tbr> tbrHistory = new ArrayList<>();
     @NonNull
-    public List<Error> errorHistory = Collections.emptyList();
+    public List<Error> errorHistory = new ArrayList<>();
     @NonNull
-    public List<Tdd> tddHistory = Collections.emptyList();
+    public List<Tdd> tddHistory = new ArrayList<>();
 
     public PumpHistory reservoirLevel(int reservoirLevel) {
         this.reservoirLevel = reservoirLevel

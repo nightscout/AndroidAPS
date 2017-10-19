@@ -34,7 +34,6 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
-import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.ReadHistoryCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
@@ -219,9 +218,9 @@ public class RuffyScripter implements RuffyCommands {
         return runCommand(new ReadPumpStateCommand());
     }
 
-    public void returnToMainMenu() {
+    public void returnToRootMenu() {
         // returning to main menu using the 'back' key does not cause a vibration
-        while (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
+        while (getCurrentMenu().getType() != MenuType.MAIN_MENU && getCurrentMenu().getType() != MenuType.STOP) {
             if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                 confirmAlert(errorMsg, 1000);
@@ -293,12 +292,10 @@ public class RuffyScripter implements RuffyCommands {
                             // level to handle state and logic.
                             // For now, when changing cartridges and such: tell AAPS to stop the loop, change cartridge and resume the loop.
                             if (currentMenu == null || currentMenu.getType() == MenuType.STOP) {
-                                if (cmd instanceof GetPumpStateCommand) {
-                                    returnable.cmdResult = new CommandResult().success(true).enacted(false);
-                                } else {
+                                if (cmd.needsRunMode()) {
                                     returnable.cmdResult = new CommandResult().success(false).enacted(false).message("Pump is suspended");
+                                    return;
                                 }
-                                return;
                             }
                             log.debug("Connection ready to execute cmd " + cmd);
                             PumpState pumpState = readPumpStateInternal();
@@ -714,6 +711,18 @@ public class RuffyScripter implements RuffyCommands {
                     failureMessage = "Invalid pump state, expected to be in menu " + expectedMenu + ", but current menu is " + currentMenu.getType();
                 }
                 throw new CommandException().message(failureMessage);
+            }
+        }
+    }
+
+    public void verifyRootMenuIsDisplayed() {
+        int retries = 600;
+        while (getCurrentMenu().getType() != MenuType.MAIN_MENU && getCurrentMenu().getType() != MenuType.STOP) {
+            if (retries > 0) {
+                SystemClock.sleep(100);
+                retries = retries - 1;
+            } else {
+                throw new CommandException().message("Invalid pump state, expected to be in menu MAIN or STOP but current menu is " + currentMenu.getType());
             }
         }
     }

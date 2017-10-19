@@ -13,7 +13,7 @@ class ComboPump {
     @Nullable
     volatile CommandResult lastCmdResult;
     @NonNull
-    volatile Date lastCmdTime = new Date(0);
     volatile PumpState state = new PumpState();
+    @NonNull
     volatile PumpHistory history = new PumpHistory();
 }

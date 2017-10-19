@@ -16,4 +16,5 @@ public interface Command {
     CommandResult execute();
     List<String> validateArguments();
     void setScripter(RuffyScripter scripter);
+    boolean needsRunMode();
 }

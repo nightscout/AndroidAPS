@@ -8,6 +8,7 @@ public class PumpHistoryRequest {
        Either the timestamp of the last known record to fetch all newer records,
        or one of the constants to read no history or all of it.
      */
+    public static final long LAST = -2;
     public static final long SKIP = -1;
     public static final long FULL = 0;
 

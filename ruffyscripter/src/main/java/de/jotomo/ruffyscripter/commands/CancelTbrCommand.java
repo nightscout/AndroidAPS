@@ -58,6 +58,11 @@ public class CancelTbrCommand extends BaseCommand {
     }
 
     @Override
+    public boolean needsRunMode() {
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "CancelTbrCommand{}";
     }

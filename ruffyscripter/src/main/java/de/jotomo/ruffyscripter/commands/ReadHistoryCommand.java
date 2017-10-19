@@ -16,6 +16,7 @@ import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 
 public class ReadHistoryCommand extends BaseCommand {
     private final PumpHistoryRequest request;
+    private final PumpHistory history = new PumpHistory();
 
     public ReadHistoryCommand(PumpHistoryRequest request) {
         this.request = request;
@@ -23,11 +24,10 @@ public class ReadHistoryCommand extends BaseCommand {
 
     @Override
     public CommandResult execute() {
-        PumpHistory history = new PumpHistory();
-        if (request.reservoirLevel)
-            readReservoirLevel(history);
+        if (request.reservoirLevel) {
+            readReservoirLevel();
+        }
         if (request.bolusHistory != PumpHistoryRequest.SKIP
-                || request.bolusHistory != PumpHistoryRequest.SKIP
                 || request.tbrHistory != PumpHistoryRequest.SKIP
                 || request.errorHistory != PumpHistoryRequest.SKIP
                 || request.tddHistory != PumpHistoryRequest.SKIP) {
@@ -81,19 +81,20 @@ public class ReadHistoryCommand extends BaseCommand {
                 // TODO start or end time?
                 MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
             }
-            scripter.returnToMainMenu();
+            scripter.returnToRootMenu();
         }
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        scripter.verifyRootMenuIsDisplayed();
         return new CommandResult().success(true).enacted(false).history(history);
     }
 
-    private void readReservoirLevel(PumpHistory history) {
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+    private void readReservoirLevel() {
+        scripter.verifyRootMenuIsDisplayed();
         scripter.pressCheckKey();
         scripter.waitForMenuToBeLeft(MenuType.MAIN_MENU);
+        scripter.waitForMenuToBeLeft(MenuType.STOP);
         scripter.verifyMenuIsDisplayed(MenuType.QUICK_INFO);
         int remainingInsulin = ((Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.REMAINING_INSULIN)).intValue();
-        scripter.returnToMainMenu();
+        scripter.returnToRootMenu();
         history.reservoirLevel = remainingInsulin;
     }
 
