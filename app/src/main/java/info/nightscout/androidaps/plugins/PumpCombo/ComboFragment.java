@@ -131,7 +131,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                                 pumpstateBatteryText.setTextColor(Color.RED);
                             } else if(ps.batteryState == PumpState.LOW){
                                 pumpstateBatteryText.setText("{fa-battery-quarter}");
-                                pumpstateBatteryText.setTextColor(Color.WHITE);
+                                pumpstateBatteryText.setTextColor(Color.YELLOW);
                             } else {
                                 pumpstateBatteryText.setText("{fa-battery-full}");
                                 pumpstateBatteryText.setTextColor(Color.WHITE);
@@ -148,7 +148,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                                     break;
                             }
                             int reservoirLevel = plugin.getPump().history.reservoirLevel;
-                            insulinstateText.setText(reservoirLevel == - 1 ? "" : "" + reservoirLevel);
+                            insulinstateText.setText(reservoirLevel == - 1 ? "" : "" + reservoirLevel + " U");
                         }
 
                         CommandResult lastCmdResult1 = plugin.getPump().lastCmdResult;
