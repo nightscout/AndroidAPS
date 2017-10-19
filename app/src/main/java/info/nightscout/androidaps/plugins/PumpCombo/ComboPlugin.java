@@ -272,7 +272,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         boolean notAUserRequest = !reason.toLowerCase().contains("user");
-        if (notAUserRequest) SystemClock.sleep(2000);
         boolean wasRunAtLeastOnce = pump.lastCmdTime.getTime() > 0;
         boolean ranWithinTheLastMinute = System.currentTimeMillis() < pump.lastCmdTime.getTime() + 60 * 1000;
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
