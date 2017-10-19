@@ -1165,9 +1165,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
         bgView.setPaintFlags(flag);
 
-        Long agoMsec = System.currentTimeMillis() - lastBG.date;
-        int agoMin = (int) (agoMsec / 60d / 1000d);
-        timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
+        timeAgoView.setText(DateUtil.minAgo(lastBG.date));
 
         // iob
         MainApp.getConfigBuilder().updateTotalIOBTreatments();
