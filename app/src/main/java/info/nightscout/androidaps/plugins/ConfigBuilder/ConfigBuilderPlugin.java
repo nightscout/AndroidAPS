@@ -961,7 +961,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public String getProfileUnits() {
-        return activeProfile.getUnits();
+        return getProfile().getUnits();
     }
 
     public Profile getProfile(long time) {
