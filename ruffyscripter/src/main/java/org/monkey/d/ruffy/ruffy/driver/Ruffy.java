@@ -57,11 +57,11 @@ public class Ruffy extends Service {
 
         @Override
         public int doRTConnect() throws RemoteException {
+            step= 0;
             if(isConnected()) {
                 rtHandler.rtStarted();
                 return 0;
             }
-            step= 0;
             if(Ruffy.this.rtHandler==null)
             {
                 return -2;//FIXME make errors
