@@ -287,7 +287,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     // TODO uses profile values for the time being
-    // this get's called mulitple times a minute, must absolutely be cached
+    // this get's called multiple times a minute, must absolutely be cached
     @Override
     public double getBaseBasalRate() {
         Profile profile = MainApp.getConfigBuilder().getProfile();

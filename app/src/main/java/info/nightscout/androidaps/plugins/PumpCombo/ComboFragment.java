@@ -68,15 +68,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-/*                Activity activity = getActivity();
-                if (activity != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            statusView.setText("Refreshing");
-                        }
-                    });
-                }*/
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -97,6 +88,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     @Override
                     public void run() {
                         statusView.setText(ev.status);
+                        statusView.setTextColor(Color.WHITE);
                     }
                 });
         } else {
@@ -111,6 +103,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 @Override
                 public void run() {
                     ComboPlugin plugin = ComboPlugin.getPlugin();
+                    // status
                     if (plugin.getPump().lastCmdResult == null) {
                         statusView.setText("Initializing");
                     } else {
@@ -118,57 +111,55 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
                     if (plugin.getPump().state.errorMsg != null) {
                         statusView.setTextColor(Color.RED);
+                    } else if (plugin.getPump().state.suspended )  {
+                        statusView.setTextColor(Color.YELLOW);
                     } else {
                         statusView.setTextColor(Color.WHITE);
                     }
-                    // ???
+
                     if (plugin.isInitialized()) {
+                        // TBR
                         PumpState ps = plugin.getPump().state;
-                        if (ps != null) {
-                            boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                            if (tbrActive) {
-//                                tbrPercentageText.setText("" + ps.tbrPercent + "%");
-//                                tbrDurationText.setText("" + ps.tbrRemainingDuration + " min");
-//                                tbrRateText.setText("" + ps.tbrRate + " U/h");
-                            } else {
-//                                tbrPercentageText.setText("Default basal rate running");
-//                                tbrDurationText.setText("");
-//                                tbrRateText.setText("");
-                            }
-//                            pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg : "");
-                            if (ps.batteryState == PumpState.EMPTY) {
-                                batteryView.setText("{fa-battery-empty}");
-                                batteryView.setTextColor(Color.RED);
-                            } else if (ps.batteryState == PumpState.LOW) {
-                                batteryView.setText("{fa-battery-quarter}");
-                                batteryView.setTextColor(Color.YELLOW);
-                            } else {
-                                batteryView.setText("{fa-battery-full}");
-                                batteryView.setTextColor(Color.WHITE);
-                            }
-                            switch (ps.insulinState) {
-                                case 0:
-                                    reservoirView.setText("ok");
-                                    break;
-                                case 1:
-                                    reservoirView.setText("low");
-                                    break;
-                                case 2:
-                                    reservoirView.setText("empty");
-                                    break;
-                            }
-                            int reservoirLevel = plugin.getPump().history.reservoirLevel;
-                            reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
+                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                        if (tbrActive) {
+                            String tbr = ps.tbrPercent + "% (" + ps.tbrRemainingDuration + " m remaining)";
+                            tempBasalText.setText(tbr);
+                        } else {
+                            tempBasalText.setText("");
                         }
 
-                        if (plugin.getPump().lastCmdResult != null) {
-                            CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
-                            lastConnectionView.setText(
-                                    "4 m ago (18:58)"
-//                                    new Date(lastCmdResult.completionTime).toLocaleString()
-                            );
+                        // battery
+                        if (ps.batteryState == PumpState.EMPTY) {
+                            batteryView.setText("{fa-battery-empty}");
+                            batteryView.setTextColor(Color.RED);
+                        } else if (ps.batteryState == PumpState.LOW) {
+                            batteryView.setText("{fa-battery-quarter}");
+                            batteryView.setTextColor(Color.YELLOW);
+                        } else {
+                            batteryView.setText("{fa-battery-full}");
+                            batteryView.setTextColor(Color.WHITE);
                         }
 
+                        // reservoir
+                        if (ps.insulinState == PumpState.LOW) {
+                            reservoirView.setTextColor(Color.YELLOW);
+                        } else if (ps.insulinState == PumpState.EMPTY) {
+                            reservoirView.setTextColor(Color.RED);
+                        } else {
+                            reservoirView.setTextColor(Color.WHITE);
+                        }
+                        int reservoirLevel = plugin.getPump().history.reservoirLevel;
+                        reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
+
+                        // last connection
+                        CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
+                        if (lastCmdResult != null) {
+                            String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
+                            String time = DateUtil.timeString(lastCmdResult.completionTime);
+                            lastConnectionView.setText("" + minAgo + " (" + time + ")");
+                        }
+
+                        // last bolus
                         plugin.getPump().history.bolusHistory.add(new Bolus(System.currentTimeMillis() - 7 * 60 * 1000, 12.8d));
                         if (!plugin.getPump().history.bolusHistory.isEmpty()) {
                             Bolus bolus = plugin.getPump().history.bolusHistory.get(0);
@@ -184,18 +175,20 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                                 lastBolusView.setText(DateUtil.timeString(bolus.timestamp) +
                                         " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " +
                                         DecimalFormatter.to2Decimal(bolus.amount) + " U");
-                                lastBolusView.setText("12.80 U (15 m ago, 19:04)"); // (19:04)");
+                                lastBolusView.setText("12.80 U (15.1 h ago, 19:04)"); // (19:04)");
                             }
                         }
 
+                        // basal rate
                         basaBasalRateView.setText(DecimalFormatter.to2Decimal(plugin.getBaseBasalRate()) + " U/h");
 
-                        TemporaryBasal temporaryBasal = new TemporaryBasal(System.currentTimeMillis());
-                        temporaryBasal.percentRate = 420;
-                        temporaryBasal.durationInMinutes = 20;
+                        // temp basal
+//                        TemporaryBasal temporaryBasal = new TemporaryBasal(System.currentTimeMillis());
+//                        temporaryBasal.percentRate = 420;
+//                        temporaryBasal.durationInMinutes = 20;
 
-                        tempBasalText.setText(temporaryBasal.toStringFull());
-                        tempBasalText.setText("420% 5/20' (18:45)");
+//                        tempBasalText.setText(temporaryBasal.toStringFull());
+//                        tempBasalText.setText("420% 5/20' (18:45)");
 
                         CommandResult lastCmdResult1 = plugin.getPump().lastCmdResult;
                         String lastCmd = lastCmdResult1.request;

@@ -90,14 +90,13 @@
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/combo_pumpstate_battery"
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:paddingLeft="5dp"
+                    android:layout_weight="1"
                     android:gravity="start"
-                    android:text="" />
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
 
             </LinearLayout>
 
