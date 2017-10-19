@@ -36,6 +36,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView batteryView;
     private TextView reservoirView;
     private TextView lastConnectionView;
+    private TextView tempBasalText;
 
     private Button refresh;
 
@@ -48,6 +49,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
+        tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
         refresh.setOnClickListener(this);
@@ -115,7 +117,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         statusView.setTextColor(Color.WHITE);
                     }
 
-                    if (plugin.isInitialized()) {
+                    CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
+                    if (plugin.isInitialized() && lastCmdResult != null) {
                         PumpState ps = plugin.getPump().state;
                         // battery
                         if (ps.batteryState == PumpState.EMPTY) {
@@ -141,11 +144,18 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
 
                         // last connection
-                        CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
-                        if (lastCmdResult != null) {
-                            String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
-                            String time = DateUtil.timeString(lastCmdResult.completionTime);
-                            lastConnectionView.setText("" + minAgo + " (" + time + ")");
+                        String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
+                        String time = DateUtil.timeString(lastCmdResult.completionTime);
+                        lastConnectionView.setText("" + minAgo + " (" + time + ")");
+
+                        // TBR
+                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                        if (tbrActive) {
+                            long minSinceRead = (System.currentTimeMillis() - lastCmdResult.completionTime) / 1000 / 60;
+                            String tbr = ps.tbrPercent + "% (" + (ps.tbrRemainingDuration - minSinceRead) + " min remaining)";
+                            tempBasalText.setText(tbr);
+                        } else {
+                            tempBasalText.setText("");
                         }
                     }
                 }

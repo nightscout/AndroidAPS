@@ -280,7 +280,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             runCommand("Refreshing", new CommandExecution() {
                 @Override
                 public CommandResult execute() {
-                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true));
+                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
                 }
             });
         }
