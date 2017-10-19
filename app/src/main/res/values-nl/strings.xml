@@ -527,7 +527,7 @@
     <string name="carbsconstraintapplied">KH limiet ingesteld</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfiel</string>
     <string name="danar_sbolus">S Bolus</string>
-    <string name="pump_stats">DanaR Statistiek</string>
+    <string name="danar_stats">DanaR Statistiek</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
     <string name="danar_stats_expweight">Exponentieel verhoogt TDD</string>
     <string name="danar_stats_ratio">Ratio</string>

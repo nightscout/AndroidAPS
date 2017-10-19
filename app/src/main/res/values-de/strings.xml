@@ -404,7 +404,7 @@
     <string name="cpp_sync_setting_missing">Aktivierung wird benötigt um Werte an die Pumpe zu senden!</string>
     <string name="cpp_valuesnotstored">Werte nicht gespeichert!</string>
     <string name="danar_enableextendedbolus">Aktiviere Extended Bolus in der Pumpe</string>
-    <string name="pump_stats">DanaR Stats</string>
+    <string name="danar_stats">DanaR Stats</string>
     <string name="danar_stats_amount_days"># Tage</string>
     <string name="danar_stats_basalrate">Basal</string>
     <string name="danar_stats_bolus">Bolus</string>

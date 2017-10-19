@@ -401,7 +401,7 @@
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
-    <string name="pump_stats">DanaR 통계</string>
+    <string name="danar_stats">DanaR 통계</string>
     <string name="danar_stats_cumulative_tdd">누적 일총량</string>
     <string name="danar_stats_expweight">지수가중 일총량</string>
     <string name="danar_stats_basalrate">기초주입</string>

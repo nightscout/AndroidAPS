@@ -402,7 +402,7 @@
     <string name="advancedsettings_title">Rozšířené nastavení</string>
     <string name="always_use_shortavg">Vždy používat krátkodobý průměrný rozdíl glykémií místo rozdílu posledních 2 hodnot</string>
     <string name="always_use_shortavg_summary">Výhodné, pokud data z xDripu obsahují velký šum</string>
-    <string name="pump_stats">Statistika z pumpy</string>
+    <string name="danar_stats">Statistika z pumpy</string>
     <string name="danar_stats_amount_days">Dní</string>
     <string name="danar_stats_cumulative_tdd">Kumulativní TDD</string>
     <string name="danar_stats_expweight">Exponenciálně vážené TDD</string>

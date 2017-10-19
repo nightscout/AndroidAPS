@@ -120,7 +120,7 @@
     <string name="danar_pump_settings">Setting Micro</string>
     <string name="danar_refill">ricarica</string>
     <string name="danar_sbolus">Bolo S</string>
-    <string name="pump_stats">Stato DanaR</string>
+    <string name="danar_stats">Stato DanaR</string>
     <string name="danar_stats_amount_days"># Days</string>
     <string name="danar_stats_basalrate">Basale</string>
     <string name="danar_stats_bolus">Bolo</string>

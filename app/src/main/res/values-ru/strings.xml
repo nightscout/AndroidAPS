@@ -142,7 +142,7 @@
     <string name="danar_pump_settings">настройки помпы DanaR</string>
     <string name="danar_refill">дозаправка</string>
     <string name="danar_sbolus">болюс S</string>
-    <string name="pump_stats">статистика DanaR</string>
+    <string name="danar_stats">статистика DanaR</string>
     <string name="danar_stats_amount_days">количество дней</string>
     <string name="danar_stats_basalrate">базал</string>
     <string name="danar_stats_bolus">болюс</string>

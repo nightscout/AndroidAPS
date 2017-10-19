@@ -401,7 +401,7 @@
     <string name="eatingsoon">Преди хранене</string>
     <string name="activity">Физ.активност</string>
     <string name="removerecord">Премахни запис:</string>
-    <string name="pump_stats">DanaR статистика</string>
+    <string name="danar_stats">DanaR статистика</string>
     <string name="danar_stats_cumulative_tdd">Комулативна TDD</string>
     <string name="danar_stats_expweight">Експоненциално претеглена TDD</string>
     <string name="danar_stats_basalrate">Базал</string>

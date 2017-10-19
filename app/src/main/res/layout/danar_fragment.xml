@@ -722,7 +722,7 @@
                     android:drawableTop="@drawable/icon_danarstats"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/pump_stats" />
+                    android:text="@string/danar_stats" />
 
             </LinearLayout>
 
