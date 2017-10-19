@@ -25,8 +25,13 @@ import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateG
 public class ComboFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
 
+    // TODO rename to sync, shall sync everything, purge an ongoing alert and raise an AAPS notification for it
     private Button refresh;
 
+    // TODO create tabs: Status/Overview (like Dana), Errors, Stats (TDD)
+    // boluses, tbrs, refills, battery change ... all covered already by Treatments, CP,
+    // boluses & tbrs are synced from pump;
+    // profile: will also be viewable already, no need to duplicate;
     private TextView statusText;
 
     private TextView tbrPercentageText;
