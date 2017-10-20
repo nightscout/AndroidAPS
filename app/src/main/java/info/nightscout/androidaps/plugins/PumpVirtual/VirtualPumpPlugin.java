@@ -165,6 +165,10 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public void initialize() {
+    }
+
+    @Override
     public boolean isInitialized() {
         return true;
     }

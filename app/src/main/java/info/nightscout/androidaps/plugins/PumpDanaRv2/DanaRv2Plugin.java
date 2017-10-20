@@ -210,6 +210,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     @Override
+    public void initialize() {
+        refreshDataFromPump("Initialization");
+    }
+
+    @Override
     public boolean isInitialized() {
         return pump.lastConnection.getTime() > 0;
     }

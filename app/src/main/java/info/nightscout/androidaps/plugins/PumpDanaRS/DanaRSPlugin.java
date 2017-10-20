@@ -357,6 +357,10 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     // Pump interface
+    @Override
+    public void initialize() {
+        refreshDataFromPump("Initialization");
+    }
 
     @Override
     public boolean isInitialized() {

@@ -225,6 +225,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     @Override
+    public void initialize() {
+        refreshDataFromPump("Initialization");
+    }
+
+    @Override
     public boolean isInitialized() {
         return pump.lastConnection.getTime() > 0 && !pump.isConfigUD && !pump.isEasyModeEnabled && pump.isExtendedBolusEnabled;
     }

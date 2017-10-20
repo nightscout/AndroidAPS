@@ -223,6 +223,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     }
 
     @Override
+    public void initialize() {
+        refreshDataFromPump("Initialization");
+    }
+
+    @Override
     public boolean isInitialized() {
         return pump.lastConnection.getTime() > 0 && pump.isExtendedBolusEnabled;
     }
