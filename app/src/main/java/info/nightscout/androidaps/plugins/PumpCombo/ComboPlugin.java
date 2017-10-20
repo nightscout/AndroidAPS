@@ -136,7 +136,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         if (now > fiveMinutesSinceLastAlarm && loopEnabled) {
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pump.state;
-                            if (localPumpState != null && localPumpState.errorMsg != null) {
+                            if (localPumpState.errorMsg != null) {
                                 log.warn("Pump is in error state, displaying; " + localPumpState.errorMsg);
                             }
                             long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000};
@@ -254,10 +254,34 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return false;
     }
 
+    @NonNull
     @Override
     public Date lastDataTime() {
         CommandResult lastCmdResult = pump.lastCmdResult;
         return lastCmdResult != null ? new Date(lastCmdResult.completionTime) : new Date(0);
+    }
+
+    @Override
+    public void initialize() {
+        runCommand("Syncing pump state", new CommandExecution() {
+            @Override
+            public CommandResult execute() {
+                return ruffyScripter.readHistory(
+                        new PumpHistoryRequest()
+                                .reservoirLevel(true)
+                                .bolusHistory(PumpHistoryRequest.LAST)
+                                .tbrHistory(PumpHistoryRequest.LAST)
+                                .errorHistory(PumpHistoryRequest.LAST)
+                                .tddHistory(PumpHistoryRequest.LAST));
+            }
+        });
+
+        // TODO
+        // detectStateMismatch(): expensive sync, checking everything (detectTbrMisMatch us called for every command)
+        // check 'lasts' of pump against treatment db, request full sync if needed
+        // and also remove treatments the pump doesn't have.
+        // warn about this with a notification? show what was removed on combo tab?
+
     }
 
     // this method is regularly called from info.nightscout.androidaps.receivers.KeepAliveReceiver
@@ -269,24 +293,24 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         // if Android is sluggish this might get called before ruffy is bound
         if (!ruffyScripter.isPumpAvailable()) {
-            log.warn("Rejecting call to RefreshDataFromPump: scripter not ready yet.");
+            log.error("Rejecting call to RefreshDataFromPump: scripter not ready yet.");
             return;
         }
 
         // TODO
-        boolean notAUserRequest = !reason.toLowerCase().contains("user");
-        boolean wasRunAtLeastOnce = pump.lastCmdResult != null;
-        boolean ranWithinTheLastMinute = wasRunAtLeastOnce && System.currentTimeMillis() < pump.lastCmdResult.completionTime + 60 * 1000;
-        if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
-            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
-        } else {
+//        boolean notAUserRequest = !reason.toLowerCase().contains("user");
+//        boolean wasRunAtLeastOnce = pump.lastCmdResult != null;
+//        boolean ranWithinTheLastMinute = wasRunAtLeastOnce && System.currentTimeMillis() < pump.lastCmdResult.completionTime + 60 * 1000;
+//        if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
+//            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
+//        } else {
             runCommand("Refreshing", new CommandExecution() {
                 @Override
                 public CommandResult execute() {
                     return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
                 }
             });
-        }
+//        }
     }
 
     // TODO uses profile values for the time being
@@ -576,6 +600,39 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         pump.lastCmdResult = commandResult;
         pump.state = commandResult.state;
+
+        // detectTbrMismatch(): 'quick' check with not overhead on the pump side
+        // TODO check if this works with pump suspend, esp. around pump suspend there'll be syncing to do;
+        TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (aapsTbr == null && pump.state.tbrActive) {
+            // pump runs TBR AAPS is unaware off
+            // => fetch full history so the full TBR is added to treatments
+        } else if (aapsTbr != null && !pump.state.tbrActive) {
+            // AAPS has a TBR but the pump isn't running a TBR
+            // => remove the TBR from treatments
+            // => fetch full history, so that if the TBR was cancelled but ran some time we get the IOB from that partial TBR
+        } else if (aapsTbr != null && pump.state.tbrActive) {
+            // both AAPS and pump have a TBR ...
+            if (aapsTbr.percentRate != pump.state.tbrPercent) {
+                // ... but they have different percentages
+                // => remove TBR from treatments
+                // => full history sync so we get up to date on actual IOB
+            }
+            int durationDiff = Math.abs(aapsTbr.getPlannedRemainingMinutes() - pump.state.tbrRemainingDuration);
+            if (durationDiff > 2) {
+                // ... but they have different runtimes
+                // ^ same as above, merge branches
+            }
+        }
+
+        // TODO not propely set all the time ...
+        if (pump.lastCmdResult == null) {
+            log.error("JOE: no!");
+        } else {
+            // still crashable ...
+            pump.lastCmdResult.completionTime = System.currentTimeMillis();
+        }
+
         // TOOD
         if (commandResult.history != null) {
             if (commandResult.history.reservoirLevel != -1) {
