@@ -191,11 +191,16 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     private void checkBusRegistration() {
         if (fragmentEnabled) {
-            MainApp.bus().register(this);
+            try {
+                MainApp.bus().register(this);
+            } catch (IllegalArgumentException e) {
+                // already registered
+            }
         } else {
             try {
                 MainApp.bus().unregister(this);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
+                // already unregistered
             }
         }
     }
