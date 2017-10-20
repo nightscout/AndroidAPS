@@ -43,6 +43,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     Double step = 1d;
     NumberFormat formater;
     boolean allowZero = false;
+    TextWatcher textWatcher = null;
 
     private Handler mHandler;
     private ScheduledExecutorService mUpdater;
@@ -95,9 +96,12 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         LayoutInflater.from(context).inflate(R.layout.number_picker_layout, this, true);
 
         // init ui components
-        this.minusButton = (Button) findViewById(R.id.decrement);
-        this.plusButton = (Button) findViewById(R.id.increment);
-        this.editText = (EditText) findViewById(R.id.display);
+        minusButton = (Button) findViewById(R.id.decrement);
+        minusButton.setId(View.generateViewId());
+        plusButton = (Button) findViewById(R.id.increment);
+        plusButton.setId(View.generateViewId());
+        editText = (EditText) findViewById(R.id.display);
+        editText.setId(View.generateViewId());
 
         mHandler = new Handler() {
             @Override
@@ -120,7 +124,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         plusButton.setOnTouchListener(this);
         plusButton.setOnKeyListener(this);
         plusButton.setOnClickListener(this);
-        this.addTextChangedListener(new TextWatcher() {
+        setTextWatcher(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -138,16 +142,14 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         });
     }
 
-    public void removeTextChangedListener(TextWatcher textWatcher) {
-        editText.removeTextChangedListener(textWatcher);
-    }
-
-    public void addTextChangedListener(TextWatcher textWatcher) {
+    public void setTextWatcher(TextWatcher textWatcher) {
+        this.textWatcher = textWatcher;
         editText.addTextChangedListener(textWatcher);
     }
 
     public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, TextWatcher textWatcher) {
         setParams(initValue, minValue, maxValue, step, formater, allowZero);
+        this.textWatcher = textWatcher;
         editText.addTextChangedListener(textWatcher);
     }
 
@@ -159,12 +161,20 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         this.formater = formater;
         this.allowZero = allowZero;
 
+        if (textWatcher != null)
+            editText.removeTextChangedListener(textWatcher);
         updateEditText();
+        if (textWatcher != null)
+            editText.addTextChangedListener(textWatcher);
     }
 
     public void setValue(Double value) {
+        if (textWatcher != null)
+            editText.removeTextChangedListener(textWatcher);
         this.value = value;
         updateEditText();
+        if (textWatcher != null)
+            editText.addTextChangedListener(textWatcher);
     }
 
     public Double getValue() {

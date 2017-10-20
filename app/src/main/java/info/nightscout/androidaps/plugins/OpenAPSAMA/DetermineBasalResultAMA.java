@@ -5,6 +5,7 @@ import com.eclipsesource.v8.V8Object;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,35 +26,34 @@ public class DetermineBasalResultAMA extends APSResult {
     public double snoozeBG;
     public IobTotal iob;
 
-    public DetermineBasalResultAMA(V8Object result, JSONObject j) {
+    public DetermineBasalResultAMA(NativeObject result, JSONObject j) {
         date = new Date();
         json = j;
-        if (result.contains("error")) {
-            reason = result.getString("error");
+        if (result.containsKey("error")) {
+            reason = result.get("error").toString();
             changeRequested = false;
             rate = -1;
             duration = -1;
         } else {
-            reason = result.getString("reason");
-            if (result.contains("eventualBG")) eventualBG = result.getDouble("eventualBG");
-            if (result.contains("snoozeBG")) snoozeBG = result.getDouble("snoozeBG");
-            if (result.contains("rate")) {
-                rate = result.getDouble("rate");
+            reason = result.get("reason").toString();
+            if (result.containsKey("eventualBG")) eventualBG = (Double) result.get("eventualBG");
+            if (result.containsKey("snoozeBG")) snoozeBG = (Double) result.get("snoozeBG");
+            if (result.containsKey("rate")) {
+                rate =  (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
                 changeRequested = true;
             } else {
                 rate = -1;
                 changeRequested = false;
             }
-            if (result.contains("duration")) {
-                duration = result.getInteger("duration");
+            if (result.containsKey("duration")) {
+                duration = ((Double)result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;
                 changeRequested = false;
             }
         }
-        result.release();
     }
 
     public DetermineBasalResultAMA() {

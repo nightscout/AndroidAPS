@@ -1,16 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -42,16 +37,14 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
-import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -134,15 +127,14 @@ public class DanaRStatsActivity extends Activity {
         llm = new LinearLayoutManager(this);
 
         TBB = SP.getString("TBB", "10.00");
-        totalBaseBasal.setText(TBB);
 
-        ProfileInterface pi = ConfigBuilderPlugin.getActiveProfileInterface();
-        if (pi != null && pi instanceof CircadianPercentageProfilePlugin) {
-            double cppTBB = ((CircadianPercentageProfilePlugin) pi).baseBasalSum();
-            totalBaseBasal.setText(decimalFormat.format(cppTBB));
-            SP.putString("TBB", totalBaseBasal.getText().toString());
-            TBB = SP.getString("TBB", "");
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile != null) {
+            double cppTBB = profile.baseBasalSum();
+            TBB = decimalFormat.format(cppTBB);
+            SP.putString("TBB", TBB);
         }
+        totalBaseBasal.setText(TBB);
 
         // stats table
         tl = (TableLayout) findViewById(R.id.main_table);
@@ -241,7 +233,7 @@ public class DanaRStatsActivity extends Activity {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                 if (pump.isBusy()) {
                     ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.pumpbusy));
                     return;
@@ -258,7 +250,7 @@ public class DanaRStatsActivity extends Activity {
                                 statsMessage.setText(getString(R.string.danar_stats_warning_Message));
                             }
                         });
-                        ((DanaRInterface)pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+                        ((DanaRInterface) pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
                         loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -311,15 +303,15 @@ public class DanaRStatsActivity extends Activity {
         //fill single gaps
         dummies = new LinkedList();
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        for(int i = 0; i < historyList.size()-1; i++){
+        for (int i = 0; i < historyList.size() - 1; i++) {
             DanaRHistoryRecord elem1 = historyList.get(i);
-            DanaRHistoryRecord elem2 = historyList.get(i+1);
+            DanaRHistoryRecord elem2 = historyList.get(i + 1);
 
-            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25*60*60*1000)))){
+            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25 * 60 * 60 * 1000)))) {
                 DanaRHistoryRecord dummy = new DanaRHistoryRecord();
-                dummy.recordDate = elem1.recordDate - 24*60*60*1000;
-                dummy.recordDailyBasal = elem1.recordDailyBasal/2;
-                dummy.recordDailyBolus = elem1.recordDailyBolus/2;
+                dummy.recordDate = elem1.recordDate - 24 * 60 * 60 * 1000;
+                dummy.recordDailyBasal = elem1.recordDailyBasal / 2;
+                dummy.recordDailyBolus = elem1.recordDailyBolus / 2;
                 dummies.add(dummy);
                 elem1.recordDailyBasal /= 2;
                 elem1.recordDailyBolus /= 2;
@@ -329,7 +321,7 @@ public class DanaRStatsActivity extends Activity {
         Collections.sort(historyList, new Comparator<DanaRHistoryRecord>() {
             @Override
             public int compare(DanaRHistoryRecord lhs, DanaRHistoryRecord rhs) {
-                return (int) (rhs.recordDate-lhs.recordDate);
+                return (int) (rhs.recordDate - lhs.recordDate);
             }
         });
 
@@ -363,7 +355,7 @@ public class DanaRStatsActivity extends Activity {
                     // Create the table row
                     TableRow tr = new TableRow(DanaRStatsActivity.this);
                     if (i % 2 != 0) tr.setBackgroundColor(Color.DKGRAY);
-                    if(dummies.contains(record)){
+                    if (dummies.contains(record)) {
                         tr.setBackgroundColor(Color.argb(125, 255, 0, 0));
                     }
                     tr.setId(100 + i);

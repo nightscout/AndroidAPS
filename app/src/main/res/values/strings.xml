@@ -362,7 +362,6 @@
     <string name="button3">Button 3</string>
     <string name="percentagefactor_hint">Percentage factor by which the base profile will be multiplied.</string>
     <string name="timeshift_hint">Time in hours by which the profile will be shifted round robin.</string>
-    <string name="send_to_pump">SEND TO PUMP</string>
     <string name="units">Units:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -702,19 +701,51 @@
     <string name="activate_profile">ACTIVATE PROFILE</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
-    <string name="key_wizard_include_bg">wizard_include_bg</string>
-    <string name="key_wizard_include_cob">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
-    <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
-    <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
+    <string name="waitingforpairing">Waiting for pairing on pump</string>
+    <string name="pairingok">Paring OK</string>
+    <string name="pairingtimedout">Paring timed out</string>
+    <string name="pairing">PAIRING</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_paring_key_</string>
+    <string name="key_danars_address" translatable="false">danars_address</string>
+    <string name="key_danars_name" translatable="false">danars_name</string>
+    <string name="danars_nodeviceavailable">No device found so far</string>
+    <string name="emptyreservoir">Empty reservoir</string>
+    <string name="bloodsugarmeasurementalert">Blood sugar measurement alert</string>
+    <string name="remaininsulinalert">Remaining insulin level</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="selectedpump">Selected pump</string>
+    <string name="pairpump">Pair new pump</string>
+    <string name="bolusspeed">Bolus speed</string>
+    <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
+    <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
+    <string name="serialnumber">Serial number</string>
+    <string name="key_wizard_include_bg" translatable="false">wizard_include_bg</string>
+    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
+    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
+    <string name="key_wizard_include_bolus_iob" translatable="false">wizard_include_bolus_iob</string>
+    <string name="key_wizard_include_basal_iob" translatable="false">wizard_include_basal_iob</string>
+    <string name="careportal_newnstreatment_percentage_label">Percentage</string>
+    <string name="careportal_newnstreatment_timeshift_label">Time shift</string>
     <string name="default_temptargets">Default Temp-Targets</string>
     <string name="eatingsoon_duration">eatingsoon duration</string>
     <string name="eatingsoon_target">eatingsoon target</string>
     <string name="activity_duration">activity duration</string>
     <string name="activity_target">activity target</string>
-    <string name="key_eatingsoon_duration">eatingsoon_duration</string>
-    <string name="key_eatingsoon_target">eatingsoon_target</string>
-    <string name="key_activity_duration">activity_duration</string>
-    <string name="key_activity_target">activity_target</string>
+    <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
+    <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
+    <string name="key_activity_duration" translatable="false">activity_duration</string>
+    <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="danar_history_prime">Prime</string>
+    <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
+    <string name="gettingbolusstatus">Getting bolus status</string>
+    <string name="gettingtempbasalstatus">Getting temporary basal status</string>
+    <string name="gettingpumpsettings">Gettings pump settings</string>
+    <string name="gettingpumptime">Getting pump time</string>
+    <string name="reuse">reuse</string>
+    <string name="wearcontrol_title">Controls from Watch</string>
+    <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
+    <string name="connectiontimedout">Connection timed out</string>
+    <string name="active"><![CDATA[<Active>]]></string>
 </resources>
 

@@ -5,6 +5,12 @@
         android:title="@string/wear_settings">
 
         <SwitchPreference
+            android:defaultValue="false"
+            android:key="wearcontrol"
+            android:title="@string/wearcontrol_title"
+            android:summary="@string/wearcontrol_summary"/>
+
+        <SwitchPreference
             android:defaultValue="true"
             android:key="wear_detailediob"
             android:title="@string/wear_detailedIOB_title"

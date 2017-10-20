@@ -46,22 +46,28 @@ public class BroadcastSgvs {
     }
 
     public static void handleNewSgv(JSONArray sgvs, Context context, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("sgvs", sgvs.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_SGV);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
-            bundle = new Bundle();
-            bundle.putString("sgvs", sgvs.toString());
+        List<JSONArray> splitted = BroadcastTreatment.splitArray(sgvs);
+        for (JSONArray part : splitted) {
+            Bundle bundle = new Bundle();
+            bundle.putString("sgvs", part.toString());
             bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_NEW_SGV);
+            Intent intent = new Intent(Intents.ACTION_NEW_SGV);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
+        }
+
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+            for (JSONArray part : splitted) {
+                Bundle bundle = new Bundle();
+                bundle.putString("sgvs", part.toString());
+                bundle.putBoolean("delta", isDelta);
+                Intent intent = new Intent(Intents.ACTION_NEW_SGV);
+                intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.sendBroadcast(intent);
+            }
         }
     }
 

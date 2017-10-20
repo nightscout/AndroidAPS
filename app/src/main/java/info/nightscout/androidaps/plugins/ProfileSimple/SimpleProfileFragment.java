@@ -96,7 +96,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
                 @Override
                 public void onClick(View view) {
                     NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                    final OptionsToShow profileswitch = CareportalFragment.profileswitch;
+                    final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCH;
                     profileswitch.executeProfileSwitch = true;
                     newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                     newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
@@ -158,11 +158,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
                 public void run() {
                     if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
-                    } else if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
-                        profileswitchButton.setText(MainApp.instance().getText(R.string.activate_profile));
-                        profileswitchButton.setVisibility(View.VISIBLE);
                     } else {
-                        profileswitchButton.setText(MainApp.instance().getText(R.string.send_to_pump));
                         profileswitchButton.setVisibility(View.VISIBLE);
                     }
                 }
