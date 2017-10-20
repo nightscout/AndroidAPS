@@ -13,7 +13,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
@@ -21,6 +23,7 @@ import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
+import de.jotomo.ruffy.spi.history.Tbr;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -30,6 +33,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -263,7 +267,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void initialize() {
-        runCommand("Syncing pump state", new CommandExecution() {
+        CommandResult commandResult = runCommand("Syncing pump state", new CommandExecution() {
             @Override
             public CommandResult execute() {
                 return ruffyScripter.readHistory(
@@ -271,10 +275,58 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                                 .reservoirLevel(true)
                                 .bolusHistory(PumpHistoryRequest.LAST)
                                 .tbrHistory(PumpHistoryRequest.LAST)
-                                .errorHistory(PumpHistoryRequest.LAST)
-                                .tddHistory(PumpHistoryRequest.LAST));
+                                .errorHistory(PumpHistoryRequest.LAST));
             }
         });
+
+        boolean syncNeeded = false;
+
+        // last bolus
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+        Collections.reverse(treatments);
+        Treatment aapsBolus = null;
+        for (Treatment t : treatments) {
+            if (t.insulin != 0) {
+                aapsBolus = t;
+                break;
+            }
+        }
+        Bolus pumpBolus = null;
+        List<Bolus> bolusHistory = commandResult.history.bolusHistory;
+        if (!bolusHistory.isEmpty()) {
+            pumpBolus = bolusHistory.get(0);
+        }
+
+        if (aapsBolus == null || pumpBolus == null) {
+            syncNeeded = true;
+        } else if (Math.abs(aapsBolus.insulin - pumpBolus.amount) > 0.05
+            || aapsBolus.date  != pumpBolus.timestamp) {
+            syncNeeded = true;
+        }
+
+        // last tbr
+        List<TemporaryBasal> tempBasals = MainApp.getConfigBuilder().getTemporaryBasalsFromHistory().getReversedList();
+        TemporaryBasal aapsTbr = null;
+        if (!tempBasals.isEmpty()) {
+            aapsTbr = tempBasals.get(0);
+        }
+        Tbr pumpTbr = null;
+        List<Tbr> tbrHistory = commandResult.history.tbrHistory;
+        if(!tbrHistory.isEmpty()) {
+            pumpTbr = tbrHistory.get(0);
+        }
+        if (aapsTbr == null || pumpTbr == null) {
+            syncNeeded = true;
+        } else if (aapsTbr.percentRate != pumpTbr.percent || aapsTbr.durationInMinutes != pumpTbr.duration) {
+            syncNeeded = true;
+        }
+
+        // last error
+        // TODO add DB table
+
+        if (syncNeeded) {
+            runFullSync();
+        }
 
         // TODO
         // detectStateMismatch(): expensive sync, checking everything (detectTbrMisMatch us called for every command)
@@ -304,12 +356,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 //        if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
 //            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
 //        } else {
-            runCommand("Refreshing", new CommandExecution() {
-                @Override
-                public CommandResult execute() {
-                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
-                }
-            });
+        runCommand("Refreshing", new CommandExecution() {
+            @Override
+            public CommandResult execute() {
+                return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
+            }
+        });
 //        }
     }
 
@@ -601,29 +653,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pump.lastCmdResult = commandResult;
         pump.state = commandResult.state;
 
-        // detectTbrMismatch(): 'quick' check with not overhead on the pump side
-        // TODO check if this works with pump suspend, esp. around pump suspend there'll be syncing to do;
-        TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (aapsTbr == null && pump.state.tbrActive) {
-            // pump runs TBR AAPS is unaware off
-            // => fetch full history so the full TBR is added to treatments
-        } else if (aapsTbr != null && !pump.state.tbrActive) {
-            // AAPS has a TBR but the pump isn't running a TBR
-            // => remove the TBR from treatments
-            // => fetch full history, so that if the TBR was cancelled but ran some time we get the IOB from that partial TBR
-        } else if (aapsTbr != null && pump.state.tbrActive) {
-            // both AAPS and pump have a TBR ...
-            if (aapsTbr.percentRate != pump.state.tbrPercent) {
-                // ... but they have different percentages
-                // => remove TBR from treatments
-                // => full history sync so we get up to date on actual IOB
-            }
-            int durationDiff = Math.abs(aapsTbr.getPlannedRemainingMinutes() - pump.state.tbrRemainingDuration);
-            if (durationDiff > 2) {
-                // ... but they have different runtimes
-                // ^ same as above, merge branches
-            }
-        }
+        // TODO are there cases when this check should NOT be performed? perform this explicitly or have a flag to skip this?
+        checkForTbrMismatch();
+
 
         // TODO not propely set all the time ...
         if (pump.lastCmdResult == null) {
@@ -646,6 +678,66 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
+    }
+
+    private void checkForTbrMismatch() {
+        // detectTbrMismatch(): 'quick' check with not overhead on the pump side
+        // TODO check if this works with pump suspend, esp. around pump suspend there'll be syncing to do;
+
+        TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (aapsTbr == null && pump.state.tbrActive) {
+            // pump runs TBR AAPS is unaware off
+            // => fetch full history so the full TBR is added to treatments
+            log.debug("JOE: sync required 1");
+            runFullSync();
+        } else if (aapsTbr != null && !pump.state.tbrActive) {
+            // AAPS has a TBR but the pump isn't running a TBR
+            // => remove the TBR from treatments
+            // => fetch full history, so that if the TBR was cancelled but ran some time we get the IOB from that partial TBR
+            log.debug("JOE: sync required 2");
+            MainApp.getDbHelper().delete(aapsTbr);
+            runFullSync();
+        } else if (aapsTbr != null && pump.state.tbrActive) {
+            // both AAPS and pump have a TBR ...
+            if (aapsTbr.percentRate != pump.state.tbrPercent) {
+                // ... but they have different percentages
+                // => remove TBR from treatments
+                // => full history sync so we get up to date on actual IOB
+                log.debug("JOE: sync required 3");
+                MainApp.getDbHelper().delete(aapsTbr);
+                runFullSync();
+            }
+            int durationDiff = Math.abs(aapsTbr.getPlannedRemainingMinutes() - pump.state.tbrRemainingDuration);
+            if (durationDiff > 2) {
+                // ... but they have different runtimes
+                // ^ same as above, merge branches
+                log.debug("JOE: sync required 4");
+                MainApp.getDbHelper().delete(aapsTbr);
+                runFullSync();
+            }
+        }
+
+        // TODO request a loop run to (re)apply a TBR/SMB given this new information? or just wait till next iteration?
+        // could take 15m or so if there are missed SGVs ...
+
+    }
+
+    private void runFullSync() {
+        CommandResult commandResult = runCommand("Syncing full pump history", new CommandExecution() {
+            @Override
+            public CommandResult execute() {
+                return ruffyScripter.readHistory(
+                        new PumpHistoryRequest()
+                                .reservoirLevel(true)
+                                .bolusHistory(PumpHistoryRequest.FULL)
+                                .tbrHistory(PumpHistoryRequest.FULL)
+                                .errorHistory(PumpHistoryRequest.FULL)
+                                .tddHistory(PumpHistoryRequest.FULL)
+                );
+            }
+        });
+
+
     }
 
     @Override

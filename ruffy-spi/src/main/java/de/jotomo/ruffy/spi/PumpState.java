@@ -77,10 +77,10 @@ public class PumpState {
     }
 
     public String getStateSummary() {
-        if (suspended)
-            return "Suspended";
-        else if (errorMsg != null)
+        if (errorMsg != null)
             return errorMsg;
+        else if (suspended)
+            return "Suspended";
         return "Running";
     }
 

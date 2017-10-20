@@ -101,24 +101,19 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 @Override
                 public void run() {
                     ComboPlugin plugin = ComboPlugin.getPlugin();
-                    // status
-                    if (plugin.getPump().lastCmdResult == null) {
-                        statusView.setText("Initializing");
-                    } else {
+                    if (plugin.isInitialized()) {
+                        // status
                         statusView.setText(plugin.getPump().state.getStateSummary());
-                    }
-                    if (plugin.getPump().state.errorMsg != null) {
-                        statusView.setTextColor(Color.RED);
-                    } else if (plugin.getPump().state.suspended) {
-                        statusView.setTextColor(Color.YELLOW);
-                    } else {
-                        statusView.setTextColor(Color.WHITE);
-                    }
+                        if (plugin.getPump().state.errorMsg != null) {
+                            statusView.setTextColor(Color.RED);
+                        } else if (plugin.getPump().state.suspended) {
+                            statusView.setTextColor(Color.YELLOW);
+                        } else {
+                            statusView.setTextColor(Color.WHITE);
+                        }
 
-                    CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
-                    if (plugin.isInitialized() && lastCmdResult != null) {
-                        PumpState ps = plugin.getPump().state;
                         // battery
+                        PumpState ps = plugin.getPump().state;
                         if (ps.batteryState == PumpState.EMPTY) {
                             batteryView.setText("{fa-battery-empty}");
                             batteryView.setTextColor(Color.RED);
@@ -131,6 +126,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         }
 
                         // reservoir
+                        int reservoirLevel = plugin.getPump().reservoirLevel;
+                        reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
                         if (ps.insulinState == PumpState.LOW) {
                             reservoirView.setTextColor(Color.YELLOW);
                         } else if (ps.insulinState == PumpState.EMPTY) {
@@ -138,35 +135,38 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         } else {
                             reservoirView.setTextColor(Color.WHITE);
                         }
-                        int reservoirLevel = plugin.getPump().reservoirLevel;
-                        reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
 
                         // last connection
-                        String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
-                        String time = DateUtil.timeString(lastCmdResult.completionTime);
-                        lastConnectionView.setText("" + minAgo + " (" + time + ")");
+                        CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
+                        if (lastCmdResult != null) {
+                            String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
+                            String time = DateUtil.timeString(lastCmdResult.completionTime);
+                            lastConnectionView.setText("" + minAgo + " (" + time + ")");
 
-                        // last bolus
-                        plugin.getPump().history.bolusHistory.add(new Bolus(System.currentTimeMillis() - 7 * 60 * 1000, 12.8d));
-                        Bolus bolus = plugin.getPump().lastBolus;
-                        if (bolus == null || bolus.timestamp + 6 * 60 * 60 * 1000 < System.currentTimeMillis()) {
-                            lastBolusView.setText("");
-                        } else {
-                            long agoMsc = System.currentTimeMillis() - bolus.timestamp;
-                            double agoHours = agoMsc / 60d / 60d / 1000d;
-                            lastBolusView.setText(DecimalFormatter.to2Decimal(bolus.amount) + " U " +
-                                    "(" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ", "
-                                    + DateUtil.timeString(bolus.timestamp) + ") ");
-                        }
+                            // last bolus
+                            plugin.getPump().history.bolusHistory.add(new Bolus(System.currentTimeMillis() - 7 * 60 * 1000, 12.8d));
+                            Bolus bolus = plugin.getPump().lastBolus;
+                            if (bolus == null || bolus.timestamp + 6 * 60 * 60 * 1000 < System.currentTimeMillis()) {
+                                lastBolusView.setText("");
+                            } else {
+                                long agoMsc = System.currentTimeMillis() - bolus.timestamp;
+                                double agoHours = agoMsc / 60d / 60d / 1000d;
+                                lastBolusView.setText(DecimalFormatter.to2Decimal(bolus.amount) + " U " +
+                                        "(" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ", "
+                                        + DateUtil.timeString(bolus.timestamp) + ") ");
+                            }
 
-                        // TBR
-                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                        if (tbrActive) {
-                            long minSinceRead = (System.currentTimeMillis() - lastCmdResult.completionTime) / 1000 / 60;
-                            String tbr = ps.tbrPercent + "% (" + (ps.tbrRemainingDuration - minSinceRead) + " min remaining)";
-                            tempBasalText.setText(tbr);
-                        } else {
-                            tempBasalText.setText("");
+                            // TBR
+                            boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                            String tbrStr = "";
+                            if (tbrActive) {
+                                long minSinceRead = (System.currentTimeMillis() - lastCmdResult.completionTime) / 1000 / 60;
+                                long remaining = ps.tbrRemainingDuration - minSinceRead;
+                                if (remaining >= 0) {
+                                    tbrStr = ps.tbrPercent + "% (" + remaining + " min remaining)";
+                                }
+                            }
+                            tempBasalText.setText(tbrStr);
                         }
                     }
                 }
