@@ -110,10 +110,6 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public void initialize() {
-    }
-
-    @Override
     public boolean isInitialized() {
         return true;
     }

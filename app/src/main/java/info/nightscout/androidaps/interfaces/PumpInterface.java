@@ -15,7 +15,6 @@ import info.nightscout.androidaps.data.Profile;
  */
 public interface PumpInterface {
 
-    void initialize();
     boolean isInitialized();
     boolean isSuspended();
     boolean isBusy();

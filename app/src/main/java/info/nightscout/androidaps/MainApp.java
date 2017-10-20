@@ -176,8 +176,7 @@ public class MainApp extends Application {
                 SystemClock.sleep(5000);
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {
-                    log.debug("Initializing pump");
-                    pump.initialize();
+                    pump.refreshDataFromPump("Initialization");
                 }
             }
         });
