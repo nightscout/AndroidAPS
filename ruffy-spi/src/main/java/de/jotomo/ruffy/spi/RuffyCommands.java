@@ -13,6 +13,11 @@ public interface RuffyCommands {
 
     CommandResult cancelTbr();
 
+    /** Confirms an active alarm on the pump. The state returned is the state after the alarm
+     * has been confirmed. The message field contains the displayed error message that was
+     * confirmed. */
+    CommandResult takeOverAlarm();
+
     boolean isPumpAvailable();
 
     boolean isPumpBusy();

@@ -23,6 +23,11 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
+    public CommandResult takeOverAlarm() {
+        return delegate.takeOverAlarm();
+    }
+
+    @Override
     public CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter) {
         return delegate.deliverBolus(amount, bolusProgressReporter);
     }

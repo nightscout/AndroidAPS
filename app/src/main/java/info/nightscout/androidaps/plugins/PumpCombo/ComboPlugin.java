@@ -34,6 +34,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
@@ -560,8 +562,18 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private CommandResult runCommand(String status, CommandExecution commandExecution) {
         MainApp.bus().post(new EventComboPumpUpdateGUI(status));
-        // TODO handle running into WARNING_OR_ERROR ... or scripter? purge it
         CommandResult commandResult = commandExecution.execute();
+
+        if (commandResult.state.errorMsg != null) {
+            CommandResult takeOverAlarmResult = ruffyScripter.takeOverAlarm();
+
+            Notification notification = new Notification(Notification.IC_MISSING, "Pump alarm: " + takeOverAlarmResult.message
+                    /*ainApp.sResources.getString(R.string.icmissing)*/, Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+
+            commandResult.state = takeOverAlarmResult.state;
+        }
+
         pump.lastCmdResult = commandResult;
         pump.state = commandResult.state;
         // TOOD

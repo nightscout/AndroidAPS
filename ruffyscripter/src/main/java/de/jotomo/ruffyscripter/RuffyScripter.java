@@ -765,6 +765,27 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
+    public CommandResult takeOverAlarm() {
+        if (getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR) {
+            return new CommandResult().success(false).enacted(false).message("No alarm active on the pump");
+        }
+        // confirm alert
+        verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+        pressCheckKey();
+        // dismiss alert
+        verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+        pressCheckKey();
+        waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+
+        PumpState pumpState = readPumpStateInternal();
+        return new CommandResult()
+                .success(true)
+                .enacted(false /* well, no treatments were enacted ... */)
+                .message(pumpState.errorMsg) // todo yikes?
+                .state(pumpState);
+    }
+
+    @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
         return runCommand(new ReadHistoryCommand(request));
     }
