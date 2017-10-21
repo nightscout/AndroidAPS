@@ -10,7 +10,6 @@ import com.cozmo.danar.util.BleCommandUtil;
 public class DanaRS_Packet_Basal_Set_Profile_Number extends DanaRS_Packet {
 	private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Set_Profile_Number.class);
 	private int profileNumber;
-	public int error;
 
 	public DanaRS_Packet_Basal_Set_Profile_Number() {
         super();
@@ -33,11 +32,12 @@ public class DanaRS_Packet_Basal_Set_Profile_Number extends DanaRS_Packet {
 
     @Override
 	public void handleMessage(byte[] data) {
-		int dataIndex = DATA_START;
-		int dataSize = 1;
-		error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+		int result = intFromBuff(data, 0, 1);
 		if (Config.logDanaMessageDetail) {
-			log.debug("Result: " + error);
+			if (result == 0)
+				log.debug("Result OK");
+			else
+				log.error("Result Error: " + result);
 		}
 	}
 
