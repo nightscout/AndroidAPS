@@ -25,7 +25,6 @@ public class PumpState {
 
     public static final int LOW = 1;
     public static final int EMPTY = 2;
-
     public int batteryState = - 1;
     public int insulinState = -1;
 

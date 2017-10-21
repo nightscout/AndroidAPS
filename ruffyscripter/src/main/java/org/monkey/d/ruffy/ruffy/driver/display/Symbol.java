@@ -10,6 +10,7 @@ public enum Symbol {
     LOCK_OPENED,
     CHECK,
     LOW_BAT,
+    NO_BAT,
     WARNING,
     DIVIDE,
     LOW_INSULIN,

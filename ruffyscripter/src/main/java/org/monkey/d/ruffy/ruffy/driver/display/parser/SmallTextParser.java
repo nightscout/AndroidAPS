@@ -927,6 +927,16 @@ public class SmallTextParser {
                 "██████████ "
 
         });
+        symbols.put(Symbol.NO_BAT, new String[]{
+                "██████████ ",
+                "█        █ ",
+                "█        ██",
+                "█         █",
+                "█        ██",
+                "█        █ ",
+                "██████████ "
+
+        });
         symbols.put(Symbol.LOW_INSULIN, new String[]{
                 "█████████████    ",
                 "█  █  █  █ ██ ███",

@@ -437,8 +437,7 @@ public class RuffyScripter implements RuffyCommands {
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
-            // ruffy doesn't support 'empty battery' flag, not sure if the pump does
-            state.batteryState = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY)) ? PumpState.LOW : -1;
+            state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
             // TODO v2, read current base basal rate, which is shown center when no TBR is active.
             // Check if that holds true when an extended bolus is running.
@@ -448,8 +447,7 @@ public class RuffyScripter implements RuffyCommands {
             state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
         } else if (menuType == MenuType.STOP) {
             state.suspended = true;
-            // ruffy doesn't support 'empty battery' flag, not sure if the pump does
-            state.batteryState = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY)) ? PumpState.LOW : -1;
+            state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else {
             StringBuilder sb = new StringBuilder();
