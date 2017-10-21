@@ -225,9 +225,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         VirtualPumpPlugin.setFakingStatus(true);
-        scheduleBgChange(); // trigger refresh
+        scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
-        scheduleTreatmentChange();
+        scheduleTreatmentChange(null);
         scheduleExtendedBolusChange();
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
@@ -252,7 +252,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        scheduleTreatmentChange();
+        scheduleTreatmentChange(null);
     }
 
     public void resetTempTargets() {
@@ -358,7 +358,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
-                scheduleBgChange();
+                scheduleBgChange(bgReading);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
@@ -366,7 +366,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange();
+                scheduleBgChange(bgReading);
                 return false;
             }
         } catch (SQLException e) {
@@ -384,11 +384,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private static void scheduleBgChange() {
+    private static void scheduleBgChange(@Nullable final BgReading bgReading) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG());
+                MainApp.bus().post(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }
@@ -563,7 +563,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 getDaoTreatments().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 updateEarliestDataChange(treatment.date);
-                scheduleTreatmentChange();
+                scheduleTreatmentChange(treatment);
                 return true;
             }
             if (treatment.source == Source.NIGHTSCOUT) {
@@ -580,7 +580,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
                         }
-                        scheduleTreatmentChange();
+                        scheduleTreatmentChange(treatment);
                         return true;
                     }
                     return false;
@@ -605,7 +605,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                                 updateEarliestDataChange(oldDate);
                                 updateEarliestDataChange(old.date);
                             }
-                            scheduleTreatmentChange();
+                            scheduleTreatmentChange(treatment);
                             return true;
                         }
                     }
@@ -613,14 +613,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 getDaoTreatments().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 updateEarliestDataChange(treatment.date);
-                scheduleTreatmentChange();
+                scheduleTreatmentChange(treatment);
                 return true;
             }
             if (treatment.source == Source.USER) {
                 getDaoTreatments().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 updateEarliestDataChange(treatment.date);
-                scheduleTreatmentChange();
+                scheduleTreatmentChange(treatment);
                 return true;
             }
         } catch (SQLException e) {
@@ -636,7 +636,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        scheduleTreatmentChange();
+        scheduleTreatmentChange(treatment);
     }
 
     public void update(Treatment treatment) {
@@ -646,7 +646,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        scheduleTreatmentChange();
+        scheduleTreatmentChange(treatment);
     }
 
     public void deleteTreatmentById(String _id) {
@@ -655,12 +655,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.debug("TREATMENT: Removing Treatment record from database: " + stored.toString());
             delete(stored);
             updateEarliestDataChange(stored.date);
-            scheduleTreatmentChange();
+            scheduleTreatmentChange(null);
         }
     }
 
     @Nullable
-    public Treatment findTreatmentById(String _id) {
+    private Treatment findTreatmentById(String _id) {
         try {
             Dao<Treatment, Long> daoTreatments = getDaoTreatments();
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
@@ -692,11 +692,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private static void scheduleTreatmentChange() {
+    private static void scheduleTreatmentChange(@Nullable final Treatment treatment) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventTreatmentChange");
-                MainApp.bus().post(new EventReloadTreatmentData(new EventTreatmentChange()));
+                MainApp.bus().post(new EventReloadTreatmentData(new EventTreatmentChange(treatment)));
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
