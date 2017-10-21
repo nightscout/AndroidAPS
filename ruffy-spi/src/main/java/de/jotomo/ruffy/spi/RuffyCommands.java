@@ -16,6 +16,8 @@ public interface RuffyCommands {
     /** Confirms an active alarm on the pump. The state returned is the state after the alarm
      * has been confirmed. The message field contains the displayed error message that was
      * confirmed. */
+    // TODO multiple alarms can occur -> empty battery, stops pump -> tbr cancelled
+    // return them as history.errors?
     CommandResult takeOverAlarm();
 
     boolean isPumpAvailable();

@@ -38,19 +38,19 @@ public class PumpHistory {
         return this;
     }
 
+    public PumpHistory tddHistory(List<Tdd> tddHistory) {
+        this.tddHistory = tddHistory;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PumpHistory{" +
                 "reservoirLevel=" + reservoirLevel +
-                ", bolusHistory=" + bolusHistory +
-                ", tbrHistory=" + tbrHistory +
-                ", errorHistory=" + errorHistory +
-                ", tddHistory=" + tddHistory +
+                ", bolusHistory=" + bolusHistory.size() +
+                ", tbrHistory=" + tbrHistory.size() +
+                ", errorHistory=" + errorHistory.size() +
+                ", tddHistory=" + tddHistory.size() +
                 '}';
-    }
-
-    public PumpHistory tddHistory(List<Tdd> tddHistory) {
-        this.tddHistory = tddHistory;
-        return this;
     }
 }

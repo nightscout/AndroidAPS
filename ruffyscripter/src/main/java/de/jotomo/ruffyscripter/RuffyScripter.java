@@ -61,6 +61,7 @@ public class RuffyScripter implements RuffyCommands {
 
     private volatile long lastCmdExecutionTime;
     private volatile Command activeCmd = null;
+    private volatile int retries = 0;
 
     private boolean started = false;
 
@@ -221,14 +222,14 @@ public class RuffyScripter implements RuffyCommands {
     public void returnToRootMenu() {
         // returning to main menu using the 'back' key does not cause a vibration
         while (getCurrentMenu().getType() != MenuType.MAIN_MENU && getCurrentMenu().getType() != MenuType.STOP) {
-            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
-                confirmAlert(errorMsg, 1000);
-                // TODO this isn't gonna work out ... this method can't know if something was enacted ...
-                // gotta keep that state in the command instance
-                throw new CommandException().success(false).enacted(false)
-                        .message("Warning/error " + errorMsg + " raised while returning to main menu");
-            }
+//            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+//                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+//                confirmAlert(errorMsg, 1000);
+//                // TODO this isn't gonna work out ... this method can't know if something was enacted ...
+//                // gotta keep that state in the command instance
+//                throw new CommandException().success(false).enacted(false)
+//                        .message("Warning/error " + errorMsg + " raised while returning to main menu");
+//            }
             log.debug("Going back to main menu, currently at " + getCurrentMenu().getType());
             pressBackKey();
             waitForMenuUpdate();
@@ -256,12 +257,12 @@ public class RuffyScripter implements RuffyCommands {
         synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
+                retries = 3;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
                 final RuffyScripter scripter = this;
                 final Returnable returnable = new Returnable();
-                Thread cmdThread = new Thread(new Runnable() {
-                    @Override
+                class CommandRunner {
                     public void run() {
                         try {
                             // check if pump is an an error state
@@ -315,6 +316,12 @@ public class RuffyScripter implements RuffyCommands {
                             lastCmdExecutionTime = System.currentTimeMillis();
                         }
                     }
+                }
+                Thread cmdThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CommandRunner().run();
+                    }
                 }, cmd.toString());
                 long executionStart = System.currentTimeMillis();
                 cmdThread.start();
@@ -323,6 +330,7 @@ public class RuffyScripter implements RuffyCommands {
                 // (to fail before the next loop iteration issues the next command)
                 long dynamicTimeout = System.currentTimeMillis() + 90 * 1000;
                 long overallTimeout = System.currentTimeMillis() + 4 * 60 * 1000;
+                int retries = 3;
                 while (cmdThread.isAlive()) {
                     log.trace("Waiting for running command to complete");
                     SystemClock.sleep(500);
@@ -339,6 +347,22 @@ public class RuffyScripter implements RuffyCommands {
                             SystemClock.sleep(5000);
                             log.error("Timed out thread dead yet? " + cmdThread.isAlive());
                             return new CommandResult().success(false).enacted(false).message("Command stalled, check pump!");
+                        }
+                    }
+                    if (!ruffyService.isConnected()) {
+                        if (retries > 0) {
+                            retries--;
+                            cmdThread.interrupt();
+                            reconnect();
+                            cmdThread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new CommandRunner().run();
+                                }
+                            }, cmd.toString());
+                            cmdThread.start();
+                            dynamicTimeout = System.currentTimeMillis() + 90 * 1000;
+                            overallTimeout = System.currentTimeMillis() + 4 * 60 * 1000;
                         }
                     }
                     if (now > overallTimeout) {
@@ -358,15 +382,57 @@ public class RuffyScripter implements RuffyCommands {
                 log.debug("Command result: " + returnable.cmdResult);
                 return returnable.cmdResult;
             } catch (CommandException e) {
-                return e.toCommandResult();
+                CommandResult commandResult = e.toCommandResult();
+                if (commandResult.state == null) commandResult.state = readPumpStateInternal();
+                return commandResult;
             } catch (Exception e) {
+                // TODO catching E here AND in CommandRunner?
                 // TODO detect and report pump warnings/errors differently?
                 log.error("Error in ruffyscripter/ruffy", e);
+                try {
+                    return new CommandResult()
+                            .exception(e)
+                            .message("Unexpected exception communication with ruffy: " + e.getMessage())
+                            .state(readPumpStateInternal());
+                } catch (Exception e1) {
+                    // nothing more we can try
+                }
                 return new CommandResult().exception(e).message("Unexpected exception communication with ruffy: " + e.getMessage());
             } finally {
                 activeCmd = null;
             }
         }
+    }
+
+    /** On connection lost the pump raises an error immediately (when setting a TBR or giving a bolus),
+     * there's no timeout. But: a reconnect is still possible which can then confirm the alarm and
+     * foward it to an app.*/
+    public void reconnect() {
+//        try {
+            log.debug("Connection was lost, trying to reconnect");
+            ensureConnected();
+            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                String message = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                if (activeCmd instanceof BolusCommand && message.equals("BOLUS CANCELLED")
+                        || (activeCmd instanceof CancelTbrCommand || activeCmd instanceof SetTbrCommand)
+                        && message.equals("TBR CANCELLED")) {
+                    // confirm alert
+                    verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                    pressCheckKey();
+                    // dismiss alert
+                    verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                    pressCheckKey();
+                    waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+                    // TODO multiple alarms can be raised, e.g. if pump enters STOP mode due
+                    // to battery_empty, that alert is raised and then causes a TBR CANCELLED
+                    // if one was running
+                    // TODO report those errors back!
+                    // ... need a more controlled way to 'assemble' return data
+                    // like adding a CommandResult field to a command and merge stuff into it?
+                }
+
+            }
+            returnToRootMenu();
     }
 
     /**
@@ -405,7 +471,23 @@ public class RuffyScripter implements RuffyCommands {
             // if the user just pressed a button on the combo, the screen needs to time first
             // before a connection is possible. In that case, it takes 45s before the
             // connection comes up.
-            waitForMenuUpdate(90, "Timeout connecting to pump");
+//            waitForMenuUpdate(90, "Timeout connecting to pump");
+            long timeoutExpired = System.currentTimeMillis() + 90 * 1000;
+            long initialUpdateTime = menuLastUpdated;
+            long again = System.currentTimeMillis() + 30 * 1000;
+            while (initialUpdateTime == menuLastUpdated) {
+                if (System.currentTimeMillis() > timeoutExpired) {
+                    throw new CommandException().message("Timeout connecting to pump");
+                }
+                SystemClock.sleep(50);
+                if (again < System.currentTimeMillis()) {
+                    // TODO test
+                    ruffyService.doRTDisconnect();
+                    SystemClock.sleep(2000);
+                    ruffyService.doRTConnect();
+                    again = System.currentTimeMillis() + 30 * 1000;
+                }
+            }
         } catch (CommandException e) {
             throw e;
         } catch (Exception e) {
@@ -527,7 +609,7 @@ public class RuffyScripter implements RuffyCommands {
 //            @Override
 //            public void doStep() {
         log.debug("Pressing up key");
-        pressKey(Key.UP, 2000);
+        pressKey(Key.UP);
         log.debug("Releasing up key");
 //            }
 //        });
@@ -535,25 +617,25 @@ public class RuffyScripter implements RuffyCommands {
 
     public void pressDownKey() {
         log.debug("Pressing down key");
-        pressKey(Key.DOWN, 2000);
+        pressKey(Key.DOWN);
         log.debug("Releasing down key");
     }
 
     public void pressCheckKey() {
         log.debug("Pressing check key");
-        pressKey(Key.CHECK, 2000);
+        pressKey(Key.CHECK);
         log.debug("Releasing check key");
     }
 
     public void pressMenuKey() {
         log.debug("Pressing menu key");
-        pressKey(Key.MENU, 2000);
+        pressKey(Key.MENU);
         log.debug("Releasing menu key");
     }
 
     public void pressBackKey() {
         log.debug("Pressing back key");
-        pressKey(Key.BACK, 2000);
+        pressKey(Key.BACK);
         log.debug("Releasing back key");
     }
 
@@ -646,38 +728,36 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    private void pressKey(final byte key, long timeout) {
+    private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);
             SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-//            if (timeout > 0) {
-//                synchronized (keylock) {
-//                    keylock.wait(timeout);
-//                }
-//            } else {
-//                synchronized (keylock) {
-//                    keynotwait++;
-//                }
-//            }
         } catch (Exception e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
         }
     }
 
     public void navigateToMenu(MenuType desiredMenu) {
-        MenuType startedFrom = getCurrentMenu().getType();
-        boolean movedOnce = false;
+//        MenuType startedFrom = getCurrentMenu().getType();
+//        boolean movedOnce = false;
+        int retries = 20;
         while (getCurrentMenu().getType() != desiredMenu) {
+            retries --;
             MenuType currentMenuType = getCurrentMenu().getType();
             log.debug("Navigating to menu " + desiredMenu + ", current menu: " + currentMenuType);
-            if (movedOnce && currentMenuType == startedFrom) {
+//            if (movedOnce && currentMenuType == startedFrom) {
+//                throw new CommandException().message("Menu not found searching for " + desiredMenu
+//                        + ". Check menu settings on your pump to ensure it's not hidden.");
+//            }
+            if (retries == 0) {
                 throw new CommandException().message("Menu not found searching for " + desiredMenu
                         + ". Check menu settings on your pump to ensure it's not hidden.");
             }
             pressMenuKey();
-            waitForMenuToBeLeft(currentMenuType);
-            movedOnce = true;
+//            waitForMenuToBeLeft(currentMenuType);
+            SystemClock.sleep(200);
+//            movedOnce = true;
         }
     }
 

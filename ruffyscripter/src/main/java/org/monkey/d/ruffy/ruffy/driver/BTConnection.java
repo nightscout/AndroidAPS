@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,6 +95,10 @@ public class BTConnection {
 
     public void connect(PumpData pumpData, int retries)
     {
+//        if (pumpData == null) {
+//            Log.e("JOE", "pumpdata null 1");
+//            return;
+//        }
         this.pumpData = pumpData;
         connect(pumpData.getPumpMac(),retries);
     }

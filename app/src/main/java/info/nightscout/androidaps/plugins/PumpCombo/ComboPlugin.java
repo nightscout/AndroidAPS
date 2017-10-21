@@ -161,7 +161,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // TODO would it be useful to have a 'last error' field in the ui showing the most recent
                             // failed command? the next command that runs successful with will override this error
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
-                            refreshDataFromPump("from Error Recovery");
                         }
                     }
                     SystemClock.sleep(5 * 1000);
@@ -265,9 +264,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return lastCmdResult != null ? new Date(lastCmdResult.completionTime) : new Date(0);
     }
 
-    @Override
-    public void initialize() {
-        CommandResult commandResult = runCommand("Syncing pump state", new CommandExecution() {
+    private void initializePump() {
+        CommandResult commandResult = runCommand("Checking pump history", false, new CommandExecution() {
             @Override
             public CommandResult execute() {
                 return ruffyScripter.readHistory(
@@ -279,6 +277,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
         });
 
+        if (!commandResult.success || commandResult.history == null) {
+            // TODO error case, command
+            return;
+        }
+
+        // TODO opt, construct PumpHistoryRequest to requset only what needs updating
         boolean syncNeeded = false;
 
         // last bolus
@@ -340,7 +344,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO check this is eithor called regularly even with other commansd being fired; if not,
     // request this periodically
     @Override
-    public void refreshDataFromPump(String reason) {
+    public synchronized void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
         // if Android is sluggish this might get called before ruffy is bound
@@ -356,13 +360,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 //        if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
 //            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
 //        } else {
-        runCommand("Refreshing", new CommandExecution() {
-            @Override
-            public CommandResult execute() {
-                return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
-            }
-        });
-//        }
+
+        if (pump.lastCmdResult == null) {
+           initializePump();
+        } else {
+            runCommand("Refreshing", new CommandExecution() {
+                @Override
+                public CommandResult execute() {
+                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
+                }
+            });
+        }
     }
 
     // TODO uses profile values for the time being
@@ -637,6 +645,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private CommandResult runCommand(String status, CommandExecution commandExecution) {
+        return runCommand(status, true, commandExecution);
+
+    }
+
+    private CommandResult runCommand(String status, boolean checkTbrMisMatch, CommandExecution commandExecution) {
         MainApp.bus().post(new EventComboPumpUpdateGUI(status));
         CommandResult commandResult = commandExecution.execute();
 
@@ -654,7 +667,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pump.state = commandResult.state;
 
         // TODO are there cases when this check should NOT be performed? perform this explicitly or have a flag to skip this?
-        checkForTbrMismatch();
+        if (checkTbrMisMatch) {
+            checkForTbrMismatch();
+        }
 
 
         // TODO not propely set all the time ...
@@ -685,6 +700,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // TODO check if this works with pump suspend, esp. around pump suspend there'll be syncing to do;
 
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+//        if (true) {
+//
+//            // not yet
+//        } else
         if (aapsTbr == null && pump.state.tbrActive) {
             // pump runs TBR AAPS is unaware off
             // => fetch full history so the full TBR is added to treatments
@@ -723,7 +742,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private void runFullSync() {
-        CommandResult commandResult = runCommand("Syncing full pump history", new CommandExecution() {
+        // TODO separate fetching and comparing
+        if (1 == 1 ) {
+            log.error("Skipping full sync - not implemented yet");
+            return;
+        }
+        CommandResult commandResult = runCommand("Syncing full pump history", false, new CommandExecution() {
             @Override
             public CommandResult execute() {
                 return ruffyScripter.readHistory(
