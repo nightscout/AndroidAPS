@@ -14,7 +14,7 @@ import info.nightscout.androidaps.events.Event;
 
 /** Logs events has they're being posted to and dispatched from the event bus.
  *
- * A summary of references between sender and event and event and receiver is printed
+ * A summary of event-receiver calls that occurred so far is logged
  * after 10s (after startup) and then again every 60s.
  * */
 public class LoggingBus extends Bus {
@@ -57,9 +57,9 @@ public class LoggingBus extends Bus {
             log.debug(">>> " + event);
             Field methodField = wrapper.getClass().getDeclaredField("method");
             methodField.setAccessible(true);
-            Method targcetMethod = (Method) methodField.get(wrapper);
-            String className = targcetMethod.getDeclaringClass().getSimpleName();
-            String methodName = targcetMethod.getName();
+            Method targetMethod = (Method) methodField.get(wrapper);
+            String className = targetMethod.getDeclaringClass().getSimpleName();
+            String methodName = targetMethod.getName();
             String receiverMethod = className + "." + methodName;
             log.debug("    receiver: " + receiverMethod);
 
@@ -71,14 +71,14 @@ public class LoggingBus extends Bus {
         }
 
         if (everyMinute < System.currentTimeMillis()) {
-            log.debug("***************** The story so far ****************");
+            log.debug("***************** Event -> receiver pairings seen so far ****************");
             for (Map.Entry<String, Set<String>> stringSetEntry : event2Receiver.entrySet()) {
                 log.debug("  " + stringSetEntry.getKey());
                 for (String s : stringSetEntry.getValue()) {
                     log.debug("    -> " + s);
                 }
             }
-            log.debug("***************************************************");
+            log.debug("*************************************************************************");
             everyMinute = System.currentTimeMillis() + 60 * 1000;
         }
 
