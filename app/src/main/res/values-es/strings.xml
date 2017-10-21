@@ -377,7 +377,6 @@
     <string name="pumpshutdown">Apagando Bomba</string>
     <string name="removerecord">Eliminar registro:</string>
     <string name="resend_all_data">Enviar todos los datos</string>
-    <string name="send_to_pump">ENVIAR A BOMBA</string>
     <string name="short_avgdelta">Media corta delta</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_lastbg">Último BG:</string>

@@ -32,6 +32,7 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.tools.debugger.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -344,7 +345,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                                 MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                             }
                                             pump.cancelTempBasal(true);
-                                            result = pump.setTempBasalAbsolute(0d, 120);
+                                            result = pump.setTempBasalAbsolute(0d, 120, true);
                                             if (!result.success) {
                                                 OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
                                             }
@@ -401,15 +402,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         ArrayList<CharSequence> profileList;
         profileList = profileStore.getProfileList();
+        profileList.add(0, MainApp.sResources.getString(R.string.active));
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.spinner_centered, profileList);
 
         profileSpinner.setAdapter(adapter);
-        // set selected to actual profile
-        for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
-                profileSpinner.setSelection(p);
-        }
 
         String units = profile.getUnits();
         bgUnits.setText(units);
@@ -420,15 +417,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         BgReading lastBg = DatabaseHelper.actualBg();
 
         if (lastBg != null) {
-            editBg.removeTextChangedListener(textWatcher);
-            //bgInput.setText(lastBg.valueToUnitsToString(units));
             editBg.setValue(lastBg.valueToUnits(units));
-            editBg.addTextChangedListener(textWatcher);
         } else {
-            editBg.removeTextChangedListener(textWatcher);
-            //bgInput.setText("");
             editBg.setValue(0d);
-            editBg.addTextChangedListener(textWatcher);
         }
         ttCheckbox.setEnabled(MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
 
@@ -457,7 +448,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
-        Profile specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
+        Profile specificProfile;
+        if (selectedAlternativeProfile.equals(MainApp.sResources.getString(R.string.active)))
+            specificProfile = MainApp.getConfigBuilder().getProfile();
+        else
+            specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
 
         // Entered values
         Double c_bg = SafeParse.stringToDouble(editBg.getText());
@@ -465,19 +460,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double c_correction = SafeParse.stringToDouble(editCorr.getText());
         Double corrAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(c_correction);
         if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
-            editCorr.removeTextChangedListener(textWatcher);
             editCorr.setValue(0d);
-            editCorr.addTextChangedListener(textWatcher);
-            //wizardDialogDeliverButton.setVisibility(Button.GONE);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
             return;
         }
         Integer carbsAfterConstraint = MainApp.getConfigBuilder().applyCarbsConstraints(c_carbs);
         if (c_carbs - carbsAfterConstraint != 0) {
-            editCarbs.removeTextChangedListener(textWatcher);
             editCarbs.setValue(0d);
-            editCarbs.addTextChangedListener(textWatcher);
-            //wizardDialogDeliverButton.setVisibility(Button.GONE);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));
             return;
         }

@@ -42,33 +42,6 @@ android {
 
     publishNonDefault true
 
-    productFlavors {
-        full {
-            applicationId = "info.nightscout.androidaps"
-            resValue "string", "label_xdrip", "AAPS"
-            resValue "string", "label_xdrip_large", "AAPS(Large)"
-            resValue "string", "label_xdrip_big_chart", "AAPS(BigChart)"
-            resValue "string", "label_xdrip_no_chart", "AAPS(NoChart)"
-            resValue "string", "label_xdrip_circle", "AAPS(Circle)"
-            resValue "string", "label_xdrip_activity", "AAPS Prefs."
-            resValue "string", "app_settings", "AAPS Settings"
-            buildConfigField "boolean", "WEAR_CONTROL", "true"
-
-        }
-
-        restricted {
-            applicationId = "info.nightscout.androidaps"
-            resValue "string", "label_xdrip", "AAPS"
-            resValue "string", "label_xdrip_large", "AAPS(Large)"
-            resValue "string", "label_xdrip_big_chart", "AAPS(BigChart)"
-            resValue "string", "label_xdrip_no_chart", "AAPS(NoChart)"
-            resValue "string", "label_xdrip_circle", "AAPS(Circle)"
-            resValue "string", "label_xdrip_activity", "AAPS Prefs."
-            resValue "string", "app_settings", "AAPS Settings"
-            buildConfigField "boolean", "WEAR_CONTROL", "false"
-
-        }
-    }
 }
 
 allprojects {

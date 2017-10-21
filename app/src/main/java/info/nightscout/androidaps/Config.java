@@ -11,7 +11,6 @@ public class Config {
     // PLUGINS
     public static final boolean OPENAPSENABLED = APS;
     public static final boolean LOOPENABLED = APS;
-    public static final boolean WEAR = BuildConfig.WEAR;
 
     public static final boolean NSCLIENT = BuildConfig.NSCLIENTOLNY;
 
@@ -40,10 +39,10 @@ public class Config {
     public static final boolean logNSUpload = true;
     public static final boolean logPumpActions = true;
     public static final boolean logCongigBuilderActions = true;
-    public static final boolean logAutosensData = true;
+    public static final boolean logAutosensData = false;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;
-    public static final boolean logDanaMessageDetail = true;
+    public static boolean logDanaMessageDetail = true;
     public static final boolean logDanaSerialEngine = true;
 }

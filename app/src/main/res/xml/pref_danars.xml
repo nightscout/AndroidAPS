@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/danarspump">
+
+        <Preference
+            android:key="blescannner"
+            android:title="@string/pairpump">
+             <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity"/>
+        </Preference>
+
+        <EditTextPreference
+            android:key="@string/key_danars_name"
+            android:selectable="false"
+            android:persistent="false"
+            android:title="@string/selectedpump"
+            android:summary=""/>
+
+        <EditTextPreference
+            android:title="@string/danar_password_title"
+            android:key="@string/key_danar_password"
+            android:inputType="textCapCharacters">
+        </EditTextPreference>
+
+        <ListPreference
+            android:title="@string/bolusspeed"
+            android:key="@string/key_danars_bolusspeed"
+            android:defaultValue="0"
+            android:entries="@array/danaSpeedArray"
+            android:entryValues="@array/danaSpeedValues"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

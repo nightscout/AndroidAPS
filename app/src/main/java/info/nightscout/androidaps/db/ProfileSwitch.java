@@ -10,14 +10,15 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
 public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
@@ -58,11 +59,22 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public Profile getProfileObject() {
         if (profile == null)
             try {
-                profile = new Profile(new JSONObject(profileJson));
+                profile = new Profile(new JSONObject(profileJson), percentage, timeshift);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
         return profile;
+    }
+
+    public String getCustomizedName() {
+        String name = profileName;
+        if(LocalProfilePlugin.LOCAL_PROFILE.equals(name)){
+            name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
+        }
+        if (isCPP) {
+            name += "(" + percentage + "%," + timeshift + "h)";
+        }
+        return name;
     }
 
     public boolean isEqual(ProfileSwitch other) {
@@ -179,7 +191,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @Override
     public String getLabel() {
-        return profileName;
+        return getCustomizedName();
     }
 
     @Override

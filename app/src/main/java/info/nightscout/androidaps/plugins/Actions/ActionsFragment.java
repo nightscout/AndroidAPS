@@ -194,14 +194,14 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         switch (view.getId()) {
             case R.id.actions_profileswitch:
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
+                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCH;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(manager, "NewNSTreatmentDialog");
                 break;
             case R.id.actions_temptarget:
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = CareportalFragment.temptarget;
+                final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
                 temptarget.executeTempTarget = true;
                 newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
                 newTTDialog.show(manager, "NewNSTreatmentDialog");

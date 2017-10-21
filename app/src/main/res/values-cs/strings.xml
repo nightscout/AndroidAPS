@@ -340,7 +340,6 @@
     <string name="pumpshutdown">Pumpa vypnuta</string>
     <string name="resend_all_data">Znovu poslat všechny data</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze</string>
-    <string name="send_to_pump">POSLAT DO PUMPY</string>
     <string name="target_range">Cílový rozsah:</string>
     <string name="timeshift_hint">Čas v hodinách, o který bude bazál posunutý.</string>
     <string name="units">Jednotky:</string>
@@ -448,7 +447,7 @@
     <string name="disconnecting">Odpojuji</string>
     <string name="dont_show_again">Nezobrazovat znovu</string>
     <string name="executing">Provádím</string>
-    <string name="gettingpumpstatus">Načítám stav pumpy</string>
+    <string name="gettingpumpstatus">Nahrávám stav pumpy</string>
     <string name="pumpsuspended">Pumpa pozastavena</string>
     <string name="pumpsuspendedclicktorefresh">Pumpa pozastavena. Klik pro obnovení stavu</string>
     <string name="settingextendedbolus">Nastavuji extended bolus</string>
@@ -629,4 +628,39 @@
     <string name="invalid">NEPLATNÝ</string>
     <string name="nl_lang">Nizozemština</string>
     <string name="sv_lang">Švédština</string>
+    <string name="activity_duration">trvání aktivity</string>
+    <string name="activity_target">cíl při aktivitě</string>
+    <string name="careportal_newnstreatment_percentage_label">% změna</string>
+    <string name="careportal_newnstreatment_timeshift_label">Posun času</string>
+    <string name="danar_setbasalstep001">Nastavte bazální krok 0.01U/h</string>
+    <string name="danars_nodeviceavailable">Prozatím žádné zařízení nenalezeno</string>
+    <string name="danar_history_prime">Doplňování</string>
+    <string name="bolusspeed">Rychlost bolusu</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="default_temptargets">Výchozí nastavení dočasných cílů</string>
+    <string name="eatingsoon_duration">Trvání \"blížícího se jídla\"</string>
+    <string name="eatingsoon_target">Cíl pro \"blížící se jídlo\"</string>
+    <string name="emptyreservoir">Prázdný zásobník</string>
+    <string name="gettingbolusstatus">Nahrávám bolusy</string>
+    <string name="gettingextendedbolusstatus">Nahrávám prodloužené bolusy</string>
+    <string name="gettingpumpsettings">Nahrávám nastavení pumpy</string>
+    <string name="gettingpumptime">Nahrávám čas v pumpě</string>
+    <string name="gettingtempbasalstatus">Nahrávám dočasné bazály</string>
+    <string name="pairing">PÁROVÁNÍ</string>
+    <string name="pairingok">Spárováno</string>
+    <string name="pairingtimedout">Vypršel časový limit pro párování</string>
+    <string name="pairpump">Párování pumpy</string>
+    <string name="remaininsulinalert">Zbývající inzulín</string>
+    <string name="reuse">znovu použít</string>
+    <string name="selectedpump">Vybraná pumpa</string>
+    <string name="serialnumber">Sériové číslo</string>
+    <string name="waitingforpairing">Čekání na spárování na pumpě</string>
+    <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear</string>
+    <string name="wearcontrol_title">Řízení z hodinek Wear</string>
+    <string name="danar_model" formatted="false">Model: %02X Protokol: %02X Kód: %02X</string>
+    <string name="active"><![CDATA[<Aktivní>]]></string>
+    <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
+    <string name="connectiontimedout">Vypršel čas připojování</string>
+    <string name="treatments_wizard_tt_label">DC</string>
 </resources>

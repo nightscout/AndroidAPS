@@ -1541,9 +1541,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old = getDaoProfileSwitch().queryForId(profileSwitch.date);
                 if (old != null) {
                     if (!old.isEqual(profileSwitch)) {
+                        profileSwitch.source = old.source;
+                        profileSwitch.profileName = old.profileName; // preserver profileName to prevent multiple CPP extension
                         getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
-                        old.copyFrom(profileSwitch);
-                        getDaoProfileSwitch().create(old);
+                        getDaoProfileSwitch().create(profileSwitch);
                         log.debug("PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
                         scheduleProfileSwitchChange();
                         return true;

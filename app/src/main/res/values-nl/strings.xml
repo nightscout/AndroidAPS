@@ -185,7 +185,6 @@
     <string name="safety">Veiligheid</string>
     <string name="send">VERZEND</string>
     <string name="send_calibration" formatted="false">Verzend calibratie %.1f naar xDrip?</string>
-    <string name="send_to_pump">VERZEND NAAR POMP</string>
     <string name="sensitivity_warning">Vergeet niet alle gegeten koolhydraten in te geven bij het activeren van de Autosens functie. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden!!</string>
     <string name="sensitivityaaps">Gevoeligheid AAPS</string>
     <string name="sensitivityoref0">Gevoeligheid Oref0</string>
@@ -650,4 +649,36 @@
     <string name="rapid_acting_oref">Snel-werkende Oref</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="activity_duration">Periode van inspanning</string>
+    <string name="activity_target">Activiteits doel</string>
+    <string name="bloodsugarmeasurementalert">Bloed glucose meetpunt alarm</string>
+    <string name="bolusspeed">Bolus snelheid</string>
+    <string name="careportal_newnstreatment_percentage_label">Percentage</string>
+    <string name="careportal_newnstreatment_timeshift_label">Tijd verschuiving</string>
+    <string name="connectiontimedout">Connectie verlopen</string>
+    <string name="danar_history_prime">Vullen</string>
+    <string name="danar_setbasalstep001">Zet de basale stap op 0,01 E/u</string>
+    <string name="danars_nodeviceavailable">Geen toestel gevonden</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="default_temptargets">Standaart tijdelijk basaal</string>
+    <string name="eatingsoon_duration">Eet binnenkort periode</string>
+    <string name="eatingsoon_target">Eet binnenkort doel</string>
+    <string name="gettingbolusstatus">Bolus status ophalen</string>
+    <string name="gettingextendedbolusstatus">Vertraagde bolus status ophalen</string>
+    <string name="gettingpumpsettings">Pomp instellingen ophalen</string>
+    <string name="gettingpumptime">Pomp tijd ophalen</string>
+    <string name="gettingtempbasalstatus">Ophalen van tijdelijke basaal status</string>
+    <string name="pairing">Koppelen</string>
+    <string name="pairingok">Koppeling geslaagd</string>
+    <string name="pairingtimedout">Koppeling verlopen</string>
+    <string name="pairpump">Koppel nieuwe pomp</string>
+    <string name="remaininsulinalert">Resterende insuline hoeveelheid</string>
+    <string name="reuse">Herbruik</string>
+    <string name="selectedpump">Geselecteerde pomp</string>
+    <string name="serialnumber">Serie nummer</string>
+    <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
+    <string name="wearcontrol_title">Bedieningen via horloge</string>
+    <string name="emptyreservoir">Ampull leeg</string>
+    <string name="waitingforpairing">Wachten op koppelen van de pomp</string>
 </resources>

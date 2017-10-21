@@ -53,7 +53,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     DetermineBasalResultMA lastAPSResult = null;
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     @Override
     public String getName() {
@@ -211,12 +211,16 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
         start = new Date();
-        determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        try {
+            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
         Profiler.log(log, "MA calculation", start);
 
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
-        // Fix bug determine basal
+        // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.changeRequested = false;
         // limit requests on openloop mode
@@ -229,8 +233,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         determineBasalResultMA.iob = iobTotal;
 
-        determineBasalAdapterMAJS.release();
-
         try {
             determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
@@ -241,8 +243,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         lastAPSResult = determineBasalResultMA;
         lastAPSRun = now;
         MainApp.bus().post(new EventOpenAPSUpdateGui());
-
-        //deviceStatus.suggested = determineBasalResultMA.json;
     }
 
 

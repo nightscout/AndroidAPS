@@ -55,7 +55,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     AutosensResult lastAutosensResult = null;
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     @Override
     public String getName() {
@@ -222,11 +222,16 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         Profiler.log(log, "AMA data gathering", start);
 
         start = new Date();
-        determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
-                lastAutosensResult.ratio, //autosensDataRatio
-                isTempTarget,
-                SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
-        );
+
+        try {
+            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
+                    lastAutosensResult.ratio, //autosensDataRatio
+                    isTempTarget,
+                    SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
+            );
+        } catch (JSONException e) {
+            log.error("Unable to set data: " + e.toString());
+        }
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
@@ -243,8 +248,6 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         }
 
         determineBasalResultAMA.iob = iobArray[0];
-
-        determineBasalAdapterAMAJS.release();
 
         Date now = new Date();
 

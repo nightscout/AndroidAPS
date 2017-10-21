@@ -3,9 +3,7 @@ package info.nightscout.androidaps.plugins.Careportal;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
@@ -47,27 +44,28 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
         return careportalPlugin;
     }
 
-    //                                                    bg,insulin,carbs,prebolus,duration,percent,absolute,profile,split,temptarget
-    public static final OptionsToShow bgcheck = new OptionsToShow(R.id.careportal_bgcheck, R.string.careportal_bgcheck, true, true, true, false, false, false, false, false, false, false);
-    public static final OptionsToShow snackbolus = new OptionsToShow(R.id.careportal_snackbolus, R.string.careportal_snackbolus, true, true, true, true, false, false, false, false, false, false);
-    public static final OptionsToShow mealbolus = new OptionsToShow(R.id.careportal_mealbolus, R.string.careportal_mealbolus, true, true, true, true, false, false, false, false, false, false);
-    public static final OptionsToShow correctionbolus = new OptionsToShow(R.id.careportal_correctionbolus, R.string.careportal_correctionbolus, true, true, true, true, false, false, false, false, false, false);
-    public static final OptionsToShow carbcorrection = new OptionsToShow(R.id.careportal_carbscorrection, R.string.careportal_carbscorrection, true, false, true, false, false, false, false, false, false, false);
-    public static final OptionsToShow combobolus = new OptionsToShow(R.id.careportal_combobolus, R.string.careportal_combobolus, true, true, true, true, true, false, false, false, true, false);
-    public static final OptionsToShow announcement = new OptionsToShow(R.id.careportal_announcement, R.string.careportal_announcement, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow note = new OptionsToShow(R.id.careportal_note, R.string.careportal_note, true, false, false, false, true, false, false, false, false, false);
-    public static final OptionsToShow question = new OptionsToShow(R.id.careportal_question, R.string.careportal_question, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow exercise = new OptionsToShow(R.id.careportal_exercise, R.string.careportal_exercise, false, false, false, false, true, false, false, false, false, false);
-    public static final OptionsToShow sitechange = new OptionsToShow(R.id.careportal_pumpsitechange, R.string.careportal_pumpsitechange, true, true, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow sensorstart = new OptionsToShow(R.id.careportal_cgmsensorstart, R.string.careportal_cgmsensorstart, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow sensorchange = new OptionsToShow(R.id.careportal_cgmsensorinsert, R.string.careportal_cgmsensorinsert, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow insulinchange = new OptionsToShow(R.id.careportal_insulincartridgechange, R.string.careportal_insulincartridgechange, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow pumpbatterychange = new OptionsToShow(R.id.careportal_pumpbatterychange, R.string.careportal_pumpbatterychange, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow tempbasalstart = new OptionsToShow(R.id.careportal_tempbasalstart, R.string.careportal_tempbasalstart, true, false, false, false, true, true, true, false, false, false);
-    public static final OptionsToShow tempbasalend = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend, true, false, false, false, false, false, false, false, false, false);
-    public static final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, true, false, false, true, false, false);
-    public static final OptionsToShow openapsoffline = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline, false, false, false, false, true, false, false, false, false, false);
-    public static final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
+    //                                                    date,bg,insulin,carbs,prebolus,duration,percent,absolute,profile,split,temptarget
+    public static final OptionsToShow BGCHECK = new OptionsToShow(R.id.careportal_bgcheck, R.string.careportal_bgcheck).date().bg();
+    public static final OptionsToShow SNACKBOLUS = new OptionsToShow(R.id.careportal_snackbolus, R.string.careportal_snackbolus).date().bg().insulin().carbs().prebolus();
+    public static final OptionsToShow MEALBOLUS = new OptionsToShow(R.id.careportal_mealbolus, R.string.careportal_mealbolus).date().bg().insulin().carbs().prebolus();
+    public static final OptionsToShow CORRECTIONBOLUS = new OptionsToShow(R.id.careportal_correctionbolus, R.string.careportal_correctionbolus).date().bg().insulin().carbs().prebolus();
+    public static final OptionsToShow CARBCORRECTION = new OptionsToShow(R.id.careportal_carbscorrection, R.string.careportal_carbscorrection).date().bg().carbs();
+    public static final OptionsToShow COMBOBOLUS = new OptionsToShow(R.id.careportal_combobolus, R.string.careportal_combobolus).date().bg().insulin().carbs().prebolus().duration().split();
+    public static final OptionsToShow ANNOUNCEMENT = new OptionsToShow(R.id.careportal_announcement, R.string.careportal_announcement).date().bg();
+    public static final OptionsToShow NOTE = new OptionsToShow(R.id.careportal_note, R.string.careportal_note).date().bg().duration();
+    public static final OptionsToShow QUESTION = new OptionsToShow(R.id.careportal_question, R.string.careportal_question).date().bg();
+    public static final OptionsToShow EXERCISE = new OptionsToShow(R.id.careportal_exercise, R.string.careportal_exercise).date().duration();
+    public static final OptionsToShow SITECHANGE = new OptionsToShow(R.id.careportal_pumpsitechange, R.string.careportal_pumpsitechange).date().bg();
+    public static final OptionsToShow SENSORSTART = new OptionsToShow(R.id.careportal_cgmsensorstart, R.string.careportal_cgmsensorstart).date().bg();
+    public static final OptionsToShow SENSORCHANGE = new OptionsToShow(R.id.careportal_cgmsensorinsert, R.string.careportal_cgmsensorinsert).date().bg();
+    public static final OptionsToShow INSULINCHANGE = new OptionsToShow(R.id.careportal_insulincartridgechange, R.string.careportal_insulincartridgechange).date().bg();
+    public static final OptionsToShow PUMPBATTERYCHANGE = new OptionsToShow(R.id.careportal_pumpbatterychange, R.string.careportal_pumpbatterychange).date().bg();
+    public static final OptionsToShow TEMPBASALSTART = new OptionsToShow(R.id.careportal_tempbasalstart, R.string.careportal_tempbasalstart).date().bg().duration().percent().absolute();
+    public static final OptionsToShow TEMPBASALEND = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend).date().bg();
+    public static final OptionsToShow PROFILESWITCH = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch).date().duration().profile();
+    public static final OptionsToShow PROFILESWITCHDIRECT = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch).duration().profile();
+    public static final OptionsToShow OPENAPSOFFLINE = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline).date().duration();
+    public static final OptionsToShow TEMPTARGET = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget).date().duration().tempTarget();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,66 +134,66 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
         NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
         switch (id) {
             case R.id.careportal_bgcheck:
-                newDialog.setOptions(bgcheck, R.string.careportal_bgcheck);
+                newDialog.setOptions(BGCHECK, R.string.careportal_bgcheck);
                 break;
             case R.id.careportal_announcement:
-                newDialog.setOptions(announcement, R.string.careportal_announcement);
+                newDialog.setOptions(ANNOUNCEMENT, R.string.careportal_announcement);
                 break;
             case R.id.careportal_cgmsensorinsert:
-                newDialog.setOptions(sensorchange, R.string.careportal_cgmsensorinsert);
+                newDialog.setOptions(SENSORCHANGE, R.string.careportal_cgmsensorinsert);
                 break;
             case R.id.careportal_cgmsensorstart:
-                newDialog.setOptions(sensorstart, R.string.careportal_cgmsensorstart);
+                newDialog.setOptions(SENSORSTART, R.string.careportal_cgmsensorstart);
                 break;
             case R.id.careportal_combobolus:
-                newDialog.setOptions(combobolus, R.string.careportal_combobolus);
+                newDialog.setOptions(COMBOBOLUS, R.string.careportal_combobolus);
                 break;
             case R.id.careportal_correctionbolus:
-                newDialog.setOptions(correctionbolus, R.string.careportal_correctionbolus);
+                newDialog.setOptions(CORRECTIONBOLUS, R.string.careportal_correctionbolus);
                 break;
             case R.id.careportal_carbscorrection:
-                newDialog.setOptions(carbcorrection, R.string.careportal_carbscorrection);
+                newDialog.setOptions(CARBCORRECTION, R.string.careportal_carbscorrection);
                 break;
             case R.id.careportal_exercise:
-                newDialog.setOptions(exercise, R.string.careportal_exercise);
+                newDialog.setOptions(EXERCISE, R.string.careportal_exercise);
                 break;
             case R.id.careportal_insulincartridgechange:
-                newDialog.setOptions(insulinchange, R.string.careportal_insulincartridgechange);
+                newDialog.setOptions(INSULINCHANGE, R.string.careportal_insulincartridgechange);
                 break;
             case R.id.careportal_pumpbatterychange:
-                newDialog.setOptions(pumpbatterychange, R.string.careportal_pumpbatterychange);
+                newDialog.setOptions(PUMPBATTERYCHANGE, R.string.careportal_pumpbatterychange);
                 break;
             case R.id.careportal_mealbolus:
-                newDialog.setOptions(mealbolus, R.string.careportal_mealbolus);
+                newDialog.setOptions(MEALBOLUS, R.string.careportal_mealbolus);
                 break;
             case R.id.careportal_note:
-                newDialog.setOptions(note, R.string.careportal_note);
+                newDialog.setOptions(NOTE, R.string.careportal_note);
                 break;
             case R.id.careportal_profileswitch:
-                profileswitch.executeProfileSwitch = false;
-                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
+                PROFILESWITCH.executeProfileSwitch = false;
+                newDialog.setOptions(PROFILESWITCH, R.string.careportal_profileswitch);
                 break;
             case R.id.careportal_pumpsitechange:
-                newDialog.setOptions(sitechange, R.string.careportal_pumpsitechange);
+                newDialog.setOptions(SITECHANGE, R.string.careportal_pumpsitechange);
                 break;
             case R.id.careportal_question:
-                newDialog.setOptions(question, R.string.careportal_question);
+                newDialog.setOptions(QUESTION, R.string.careportal_question);
                 break;
             case R.id.careportal_snackbolus:
-                newDialog.setOptions(snackbolus, R.string.careportal_snackbolus);
+                newDialog.setOptions(SNACKBOLUS, R.string.careportal_snackbolus);
                 break;
             case R.id.careportal_tempbasalstart:
-                newDialog.setOptions(tempbasalstart, R.string.careportal_tempbasalstart);
+                newDialog.setOptions(TEMPBASALSTART, R.string.careportal_tempbasalstart);
                 break;
             case R.id.careportal_tempbasalend:
-                newDialog.setOptions(tempbasalend, R.string.careportal_tempbasalend);
+                newDialog.setOptions(TEMPBASALEND, R.string.careportal_tempbasalend);
                 break;
             case R.id.careportal_openapsoffline:
-                newDialog.setOptions(openapsoffline, R.string.careportal_openapsoffline);
+                newDialog.setOptions(OPENAPSOFFLINE, R.string.careportal_openapsoffline);
                 break;
             case R.id.careportal_temporarytarget:
-                temptarget.executeTempTarget = false;
-                newDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
+                TEMPTARGET.executeTempTarget = false;
+                newDialog.setOptions(TEMPTARGET, R.string.careportal_temporarytarget);
                 break;
             default:
                 newDialog = null;
