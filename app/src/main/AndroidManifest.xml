@@ -58,6 +58,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
+        <activity android:name=".plugins.PumpCombo.activities.PairingActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.PumpCombo.activities.PairingActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".receivers.DataReceiver"

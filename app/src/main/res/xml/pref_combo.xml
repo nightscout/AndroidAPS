@@ -5,9 +5,9 @@
         android:title="@string/combopump_settings">
 
         <Preference
-            android:key="blescannner"
+            android:key="combo_pairing"
             android:title="@string/pairpump">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity"/>
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCombo.activities.PairActivity"/>
         </Preference>
         <SwitchPreference
             android:defaultValue="false"
