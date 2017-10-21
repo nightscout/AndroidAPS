@@ -650,7 +650,7 @@
     <string name="activity_duration">време за физ. активност</string>
     <string name="activity_target">Целева КЗ при физ. активност</string>
     <string name="bolusspeed">Скорост на болус</string>
-    <string name="careportal_newnstreatment_percentage_label">% на изменение</string>
+    <string name="careportal_newnstreatment_percentage_label">% от профила</string>
     <string name="careportal_newnstreatment_timeshift_label">Време на отместване</string>
     <string name="danars_nodeviceavailable">Все още устройството не е намерено</string>
     <string name="danarspump">DanaRS</string>
@@ -668,7 +668,7 @@
     <string name="pairingok">Сдвоени</string>
     <string name="pairingtimedout">Времето за сдвояване изтече</string>
     <string name="pairpump">Сдвояване с нова помпа</string>
-    <string name="reuse">опитва отново</string>
+    <string name="reuse">отново</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="serialnumber">Сериен номер</string>
     <string name="treatments_wizard_tt_label">ЛЕЧ</string>
