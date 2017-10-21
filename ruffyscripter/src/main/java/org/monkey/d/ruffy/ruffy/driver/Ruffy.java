@@ -2,6 +2,7 @@ package org.monkey.d.ruffy.ruffy.driver;
 
 import android.app.Activity;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.DisplayParser;
 import org.monkey.d.ruffy.ruffy.driver.display.DisplayParserHandler;
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -100,6 +102,19 @@ public class Ruffy extends Service {
         {
             SharedPreferences prefs = Ruffy.this.getSharedPreferences("pumpdata", Activity.MODE_PRIVATE);
             prefs.edit().putBoolean("paired",false).apply();
+
+            String bondedDeviceId = prefs.getString("device", null);
+            if (bondedDeviceId != null) {
+                BluetoothDevice boundedPump = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(bondedDeviceId);
+                // TODO I know!
+                try {
+                    Method removeBound = boundedPump.getClass().getMethod("removeBond", (Class<?>[]) null);
+                    removeBound.invoke(boundedPump, (Object[]) null);
+                } catch (ReflectiveOperationException e) {
+                    // it's not going better here either
+                }
+            }
+
             synRun=false;
             rtModeRunning =false;
         }
