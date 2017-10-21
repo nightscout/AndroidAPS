@@ -11,17 +11,10 @@
         </Preference>
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_combo_enable_experimental_features"
-            android:title="@string/combo_enable_experimental_features"
-            android:summary="@string/combo_enable_experimental_features_summary" />
+            android:key="@string/key_combo_ignore_transient_errors"
+            android:summary="@string/combo_ignore_transient_errors_summary"
+            android:title="@string/combo_ignore_transient_errors" />
         <SwitchPreference
-            android:dependency="@string/key_combo_enable_experimental_features"
-            android:defaultValue="false"
-            android:key="@string/key_combo_experimental_ignore_transient_errors"
-            android:summary="@string/combo_experimental_ignore_transient_errors_summary"
-            android:title="@string/combo_experimental_ignore_transient_errors" />
-        <SwitchPreference
-            android:dependency="@string/key_combo_enable_experimental_features"
             android:defaultValue="false"
             android:key="@string/key_combo_disable_alarms"
             android:title="@string/combo_disable_alarms"
