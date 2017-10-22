@@ -22,6 +22,7 @@ import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.Bolus;
+import de.jotomo.ruffy.spi.history.Error;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
@@ -103,7 +104,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
-        pumpDescription.isSetBasalProfileCapable = false; // TODO GL#14
+        pumpDescription.isSetBasalProfileCapable = false;
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.0d;
 
@@ -653,12 +654,25 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI(status));
         CommandResult commandResult = commandExecution.execute();
 
-        if (commandResult.state.errorMsg != null) {
-            CommandResult takeOverAlarmResult = ruffyScripter.takeOverAlarm();
+        // TODO hm... automatically confirm messages and return them and handle them here proper?
+        // with an option to corfirm all messages, non-critical (letting occlusion alert ring on phone and pump)
+        // or let all alarms ring and don't try to control the pump in any way
 
-            Notification notification = new Notification(Notification.IC_MISSING, "Pump alarm: " + takeOverAlarmResult.message
-                    /*ainApp.sResources.getString(R.string.icmissing)*/, Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+        // option how to deal with errors on connect; allow to explicitely be okay with e.g. TBR CANCELLED after interruption?!
+        // or a separate command to check and deal with pump state? run a check command before all operations?
+
+        // maybe think less in 'all in one command', but simpler commands?
+        // get the current state, then decide what makes sense to do further, if anything,
+        // send next request.
+        // then request state again ... ?
+        if (commandResult.state.errorMsg != null) {
+            CommandResult takeOverAlarmResult = ruffyScripter.takeOverAlarms();
+
+            for (Error error : takeOverAlarmResult.history.errorHistory) {
+                MainApp.bus().post(new EventNewNotification(
+                        new Notification(Notification.COMBO_PUMP_ERROR,
+                        "Pump alarm: " + error.message, Notification.URGENT)));
+            }
 
             commandResult.state = takeOverAlarmResult.state;
         }

@@ -23,8 +23,8 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
-    public CommandResult takeOverAlarm() {
-        return delegate.takeOverAlarm();
+    public CommandResult takeOverAlarms() {
+        return delegate.takeOverAlarms();
     }
 
     @Override

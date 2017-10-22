@@ -51,6 +51,7 @@ public class Notification {
     public static final int TOAST_ALARM = 22;
     public static final int WRONGBASALSTEP = 23;
     public static final int BOLUS_DELIVERY_ERROR = 24;
+    public static final int COMBO_PUMP_ERROR = 25;
 
     public int id;
     public Date date;

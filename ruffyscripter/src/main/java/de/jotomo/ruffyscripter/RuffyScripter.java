@@ -29,6 +29,7 @@ import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
+import de.jotomo.ruffy.spi.history.Error;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
@@ -265,16 +266,7 @@ public class RuffyScripter implements RuffyCommands {
                 class CommandRunner {
                     public void run() {
                         try {
-                            // check if pump is an an error state
-                            if (currentMenu == null || currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                                try {
-                                    returnable.cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE));
-                                    return;
-                                } catch (Exception e) {
-                                    returnable.cmdResult = new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
-                                    return;
-                                }
-                            }
+
                             // Except for GetPumpStateCommand: fail on all requests if the pump is suspended.
                             // All trickery of not executing but returning success, so that AAPS can non-sensically TBR away when suspended
                             // are dangerous in the current model where commands are dispatched without checking state beforehand, so
@@ -814,7 +806,7 @@ public class RuffyScripter implements RuffyCommands {
             waitForScreenUpdate(1000);
             retries--;
             if (retries == 0) {
-                throw new CommandException().message("Failed to read blinkng value: " + attribute + "=" + value + " type=" + value.getClass());
+                throw new CommandException().message("Failed to read blinkng value: " + attribute + "=" + value + " type=" + value);
             }
         }
         return (T) value;
@@ -843,9 +835,18 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult takeOverAlarm() {
+    public CommandResult takeOverAlarms() {
         if (getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR) {
             return new CommandResult().success(false).enacted(false).message("No alarm active on the pump");
+        }
+        while (currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+            new Error(System.currentTimeMillis(),
+                    "",
+                    // TODO
+                    // codes unqiue across W/E?
+//                    (int) currentMenu.getAttribute(MenuAttribute.WARNING),
+//                    (int) currentMenu.getAttribute(MenuAttribute.ERROR),
+                    (String) currentMenu.getAttribute(MenuAttribute.MESSAGE));
         }
         // confirm alert
         verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
