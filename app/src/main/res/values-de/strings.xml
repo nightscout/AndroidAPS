@@ -165,7 +165,7 @@
     <string name="loopdisabled">LOOP DEAKTIVIERT DURCH DIE BESCHRÄNKUNG</string>
     <string name="loop_constraintsprocessed_label">Nach Beschränkungen</string>
     <string name="loop">Loop</string>
-    <string name="objectives_manualenacts">Manual enacts</string>
+    <string name="objectives_manualenacts">Manuelle Eingriffe</string>
     <string name="carbsconstraintapplied">Kohlenhydrate Beschränkung erreicht</string>
     <string name="nav_resetdb">Reset Datenbanken</string>
     <string name="objectives_minimalduration">Minimale Dauer</string>
@@ -231,7 +231,7 @@
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="smscommunicator_remotebolusnotallowed">Remote Bolus ist nicht erlaubt</string>
     <string formatted="false" name="smscommunicator_bolusreplywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
-    <string name="ko_lang">Koreanisch</string>
+    <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
     <string name="waitingforpumpclicktorefresh">Warte auf Pumpe. Klicke zum aktualisieren.</string>
@@ -314,8 +314,8 @@
     <string name="loop_shortname">LOOP</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="configbuilder_shortname">"CONF"</string>
-    <string name="circadian_percentage_profile_shortname">"CPP"</string>
+    <string name="configbuilder_shortname">CONF</string>
+    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="careportal_shortname">CP</string>
     <string name="error_only_numeric_digits_allowed">Bitte verwenden Sie nur Ziffern.</string>
     <string name="error_field_must_not_be_empty">Pflichtfeld</string>
@@ -591,7 +591,7 @@
     <string name="configbuilder_sensitivity">Empfindlichkeitserkennung</string>
     <string name="cob">COB</string>
     <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Wizard. Nicht aktivieren, wenn du nicht weißt, was es macht! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN, WENN DU ES BLIND BENUTZT!</string>
-    <string name="objectives_2_objective">"Verstehen des OpenLoops und der Temp-Basal-Empfehlungen</string>
+    <string name="objectives_2_objective">Verstehen des OpenLoops und der Temp-Basal-Empfehlungen</string>
     <string name="openapsama_useautosens">Verwende AMA Autosense</string>
     <string formatted="false" name="smscommunicator_basalreplywithcode">Um Basal mit %.2fU/h zu starten, antworte mit dem Code %s</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>

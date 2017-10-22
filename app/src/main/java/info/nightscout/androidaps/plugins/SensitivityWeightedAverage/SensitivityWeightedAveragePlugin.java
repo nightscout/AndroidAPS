@@ -5,11 +5,9 @@ import android.support.v4.util.LongSparseArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -32,7 +30,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = false;
 
-    static SensitivityWeightedAveragePlugin plugin = null;
+    private static SensitivityWeightedAveragePlugin plugin = null;
 
     public static SensitivityWeightedAveragePlugin getPlugin() {
         if (plugin == null)
@@ -108,13 +106,15 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
-            log.debug("No autosens data available");
+            if (Config.logAutosensData)
+                log.debug("No autosens data available");
             return new AutosensResult();
         }
 
         AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime);
         if (current == null) {
-            log.debug("No autosens data available");
+            if (Config.logAutosensData)
+                log.debug("No autosens data available");
             return new AutosensResult();
         }
 
@@ -181,9 +181,10 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         double sens = profile.getIsf();
 
         String ratioLimit = "";
-        String sensResult = "";
+        String sensResult;
 
-        log.debug("Records: " + index + "   " + pastSensitivity);
+        if (Config.logAutosensData)
+            log.debug("Records: " + index + "   " + pastSensitivity);
 
         double average = weightedsum / weights;
         double basalOff = average * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
@@ -197,7 +198,8 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             sensResult = "Sensitivity normal";
         }
 
-        log.debug(sensResult);
+        if (Config.logAutosensData)
+            log.debug(sensResult);
 
         double rawRatio = ratio;
         ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
@@ -205,10 +207,12 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
 
         if (ratio != rawRatio) {
             ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
+            if (Config.logAutosensData)
+                log.debug(ratioLimit);
         }
 
-        log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio);
+        if (Config.logAutosensData)
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio);
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

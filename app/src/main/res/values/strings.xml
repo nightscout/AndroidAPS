@@ -753,5 +753,9 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="waitingforestimatedbolusend" formatted="false">Waiting for estimated bolus end. Remaining %d sec.</string>
+    <string name="processinghistory">Processing event</string>
+    <string name="startingbolus">Starting bolus delivery</string>
 </resources>
 
