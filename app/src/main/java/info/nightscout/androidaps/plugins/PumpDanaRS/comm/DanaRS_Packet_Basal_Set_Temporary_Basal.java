@@ -11,7 +11,6 @@ public class DanaRS_Packet_Basal_Set_Temporary_Basal extends DanaRS_Packet {
 
     private int temporaryBasalRatio;
     private int temporaryBasalDuration;
-    public int error;
 
     public DanaRS_Packet_Basal_Set_Temporary_Basal() {
         super();
@@ -37,11 +36,12 @@ public class DanaRS_Packet_Basal_Set_Temporary_Basal extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
-        int dataIndex = DATA_START;
-        int dataSize = 1;
-        error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+        int result = intFromBuff(data, 0, 1);
         if (Config.logDanaMessageDetail) {
-            log.debug("Result: " + error);
+            if (result == 0)
+                log.debug("Result OK");
+            else
+                log.error("Result Error: " + result);
         }
     }
 

@@ -188,12 +188,12 @@ public class SerialIOThread extends Thread {
                 scheduledDisconnection = null;
             }
         }
-        // prepare task for execution in 5 sec
+        // prepare task for execution in 10 sec
         // cancel waiting task to prevent sending multiple disconnections
         if (scheduledDisconnection != null)
             scheduledDisconnection.cancel(false);
         Runnable task = new DisconnectRunnable();
-        final int sec = 5;
+        final int sec = 10;
         scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
     }
 

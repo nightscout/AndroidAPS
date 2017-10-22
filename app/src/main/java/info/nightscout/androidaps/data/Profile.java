@@ -256,7 +256,7 @@ public class Profile {
     private String format_HH_MM(Integer timeAsSeconds) {
         String time;
         int hour = timeAsSeconds / 60 / 60;
-        int minutes = timeAsSeconds - hour * 60 * 60;
+        int minutes = (timeAsSeconds - hour * 60 * 60) / 60;
         DecimalFormat df = new DecimalFormat("00");
         time = df.format(hour) + ":" + df.format(minutes);
         return time;

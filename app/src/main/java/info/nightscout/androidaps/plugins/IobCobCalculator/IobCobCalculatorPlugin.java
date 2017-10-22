@@ -366,6 +366,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     continue;
                 }
 
+                if (profile.getIsf(bgTime) == null)
+                    return; // profile not set yet
+
                 double sens = Profile.toMgdl(profile.getIsf(bgTime), profile.getUnits());
 
                 AutosensData autosensData = new AutosensData();

@@ -72,9 +72,9 @@
     <string name="duration">Срок</string>
     <string name="reason">Основание</string>
     <string name="glucose">Кръвна захар</string>
-    <string name="delta">Промяна</string>
+    <string name="delta">Изменение (Δ)</string>
     <string name="sms_delta">Delta:</string>
-    <string name="avgdelta">Средна промяна</string>
+    <string name="avgdelta">Средно изменение (Δ),</string>
     <string name="configbuilder">Конфигурация</string>
     <string name="objectives">Цели</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -85,8 +85,6 @@
     <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="careportal">Careportal</string>
-
-
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_treatments">Treatments</string>
     <string name="configbuilder_tempbasals">Временен базал</string>
@@ -140,7 +138,7 @@
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="nsclientnotinstalled">NSClient не е открит. Записът е загубен!</string>
     <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
-    <string name="objectives_pumpstatusavailableinns">Статуса на помпа да е достъпен в NS</string>
+    <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
     <string name="objectives_manualenacts">Ръчно приложени</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="cs_lang">Czech</string>
@@ -370,7 +368,7 @@
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
     <string name="pumperror">Грешка в промпата</string>
     <string name="lowbattery">Изтощена батерия</string>
-    <string name="pumpshutdown">Помпа изключена</string>
+    <string name="pumpshutdown">Помпата е изключена</string>
     <string name="batterydischarged">Батерията на помпата е изтощена</string>
     <string name="danarkoreanpump">DanaR Korean</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
@@ -448,7 +446,7 @@
     <string name="openapsama_autosens_adjusttargets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">По подразбиране: 3.0\nТова е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл/5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
-    <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновенно вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, ПРОЧЕТЕТЕ текста и бъдете сигурни, че вие го РАЗБИРАТЕ преди да направите промени на тези стойности!</string>
+    <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">Позволени са само числа</string>
     <string name="error_only_numeric_digits_range_allowed" formatted="false">Позволени са числа между %1$s - %2$s</string>
@@ -529,7 +527,7 @@
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
     <string name="smscommunicator_loopresumed">Loop resumed</string>
-    <string name="treatments_wizard_bgtrend_label">промяна за 15мин</string>
+    <string name="treatments_wizard_bgtrend_label">Δ за 15мин</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Суперболус</string>
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
@@ -652,7 +650,7 @@
     <string name="activity_duration">време за физ. активност</string>
     <string name="activity_target">Целева КЗ при физ. активност</string>
     <string name="bolusspeed">Скорост на болус</string>
-    <string name="careportal_newnstreatment_percentage_label">% промяна</string>
+    <string name="careportal_newnstreatment_percentage_label">% от профила</string>
     <string name="careportal_newnstreatment_timeshift_label">Време на отместване</string>
     <string name="danars_nodeviceavailable">Все още устройството не е намерено</string>
     <string name="danarspump">DanaRS</string>
@@ -663,14 +661,14 @@
     <string name="emptyreservoir">Празен резервоар</string>
     <string name="gettingbolusstatus">Получава болус статус</string>
     <string name="gettingextendedbolusstatus">Получава статус на удължен болус</string>
-    <string name="gettingpumpsettings">Получава настройки на помпа</string>
-    <string name="gettingpumptime">Получава време на помпата</string>
+    <string name="gettingpumpsettings">Получава настройките на помпата</string>
+    <string name="gettingpumptime">Получава времето на помпата</string>
     <string name="gettingtempbasalstatus">Получава статус на временен базал</string>
     <string name="pairing">СДВОЯВАНЕ</string>
     <string name="pairingok">Сдвоени</string>
     <string name="pairingtimedout">Времето за сдвояване изтече</string>
     <string name="pairpump">Сдвояване с нова помпа</string>
-    <string name="reuse">опитва отново</string>
+    <string name="reuse">отново</string>
     <string name="selectedpump">Избрана помпа</string>
     <string name="serialnumber">Сериен номер</string>
     <string name="treatments_wizard_tt_label">ЛЕЧ</string>

@@ -49,6 +49,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
 import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 
@@ -218,7 +219,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             connect(from);
     }
 
-    public static synchronized void connect(String from) {
+    public static void connect(String from) {
         log.debug("RS connect from: " + from);
         if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals("")) {
             final Object o = new Object();
@@ -264,7 +265,9 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Override
     public boolean loadHistory(byte type) {
         connectIfNotConnected("loadHistory");
-        return danaRSService.loadHistory(type);
+        danaRSService.loadHistory(type);
+        disconnect("LoadHistory");
+        return true;
     }
 
     // Constraints interface
@@ -375,7 +378,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
+    public synchronized int setNewBasalProfile(Profile profile) {
         if (danaRSService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
             return FAILED;
@@ -392,10 +395,12 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         if (!danaRSService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
+            disconnect("SetNewBasalProfile");
             return FAILED;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            disconnect("SetNewBasalProfile");
             return SUCCESS;
         }
     }
@@ -426,10 +431,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public void refreshDataFromPump(String reason) {
+    public synchronized void refreshDataFromPump(String reason) {
         log.debug("Refreshing data from pump");
         if (!isConnected() && !isConnecting()) {
             connect(reason);
+            disconnect("RefreshDataFromPump");
         } else
             log.debug("Already connecting ...");
     }
@@ -440,11 +446,10 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+    public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
             int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
             int speed = 12;
             switch (preferencesSpeed) {
@@ -459,14 +464,16 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
                     break;
             }
             // v2 stores end time for bolus, we need to adjust time
-            // default delivery speed is 12 U/min
-            detailedBolusInfo.date += detailedBolusInfo.insulin / speed * 60d * 1000;
+            // default delivery speed is 12 sec/U
+            detailedBolusInfo.date += detailedBolusInfo.insulin * speed * 1000;
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;
             detailedBolusInfo.carbs = 0;
             int carbTime = detailedBolusInfo.carbTime;
             detailedBolusInfo.carbTime = 0;
+
+            DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
             boolean connectionOK = false;
@@ -480,7 +487,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
-            // remove carbs because it's get from history seprately
+            disconnect("DeliverTreatment");
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();
@@ -504,7 +511,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
+    public synchronized PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
             connect("setTempBasalAbsolute old data");
@@ -581,7 +588,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public synchronized PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         PumpEnactResult result = new PumpEnactResult();
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         percent = configBuilderPlugin.applyBasalConstraints(percent);
@@ -623,6 +630,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: OK");
+            disconnect("setTempBasalPercent");
             return result;
         }
         result.enacted = false;
@@ -632,7 +640,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         return result;
     }
 
-    public PumpEnactResult setHighTempBasalPercent(Integer percent) {
+    public synchronized PumpEnactResult setHighTempBasalPercent(Integer percent) {
         PumpEnactResult result = new PumpEnactResult();
         connectIfNotConnected("hightempbasal");
         boolean connectionOK = danaRSService.highTempBasal(percent);
@@ -646,6 +654,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setHighTempBasalPercent: OK");
+            disconnect("setHighTempBasalPercent");
             return result;
         }
         result.enacted = false;
@@ -656,7 +665,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    public synchronized PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
         // needs to be rounded
@@ -689,6 +698,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             result.isPercent = false;
             if (Config.logPumpActions)
                 log.debug("setExtendedBolus: OK");
+            disconnect("setExtendedBolus");
             return result;
         }
         result.enacted = false;
@@ -699,7 +709,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean force) {
+    public synchronized PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
@@ -707,6 +717,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             danaRSService.tempBasalStop();
             result.enacted = true;
             result.isTempCancel = true;
+            disconnect("cancelTempBasal");
         }
         if (!pump.isTempBasalInProgress) {
             result.success = true;
@@ -725,7 +736,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public PumpEnactResult cancelExtendedBolus() {
+    public synchronized PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
         ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (runningEB != null) {
@@ -733,6 +744,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             danaRSService.extendedBolusStop();
             result.enacted = true;
             result.isTempCancel = true;
+            disconnect("extendedBolusStop");
         }
         if (!pump.isExtendedInProgress) {
             result.success = true;
@@ -808,7 +820,28 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return null;
+        String ret = "";
+        if (pump.lastConnection.getTime() != 0) {
+            Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
+            int agoMin = (int) (agoMsec / 60d / 1000d);
+            ret += "LastConn: " + agoMin + " minago\n";
+        }
+        if (pump.lastBolusTime.getTime() != 0) {
+            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
+        }
+        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull() + "\n";
+        }
+        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString() + "\n";
+        }
+        if (!veryShort) {
+            ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";
+        }
+        ret += "IOB: " + pump.iob + "U\n";
+        ret += "Reserv: " + DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + "U\n";
+        ret += "Batt: " + pump.batteryRemaining + "\n";
+        return ret;
     }
 
     @Override
