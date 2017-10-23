@@ -5,13 +5,26 @@ package info.nightscout.androidaps.plugins.Overview.graphExtensions;
  */
 
 public class Scale {
-    private double value;
+    private double multiplier;
+    private double shift;
 
-    public void setValue(double value) {
-        this.value = value;
+    public Scale() {
+        shift = 0;
     }
 
-    public double getValue() {
-        return value;
+    public Scale(double shift) {
+        this.shift = shift;
+    }
+
+    public void setMultiplier(double value) {
+        this.multiplier = value;
+    }
+
+    public double transform(double original) {
+        return original * multiplier + shift;
+    }
+
+    public double getShift() {
+        return shift;
     }
 }

@@ -74,11 +74,9 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -111,9 +109,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
@@ -1273,167 +1269,40 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             endTime = toTime;
         }
 
-        LineGraphSeries<DataPoint> seriesNow, seriesNow2;
 
         long now = System.currentTimeMillis();
 
-        // **** IOB COB DEV graph ****
-        class DeviationDataPoint extends DataPoint {
-            public int color;
+        // 2nd graph
+        // remove old data
+        iobGraph.getSeries().clear();
 
-            public DeviationDataPoint(double x, double y, int color) {
-                super(x, y);
-                this.color = color;
-            }
+        GraphData secondGraphData = new GraphData();
+
+        boolean useIobForScale = false;
+        boolean useCobForScale = false;
+        boolean useDevForScale = false;
+        boolean useRatioForScale = false;
+
+        if (showIobView.isChecked()) {
+            useIobForScale = true;
+        } else if (showCobView.isChecked()) {
+            useCobForScale = true;
+        } else if (showDeviationsView.isChecked()) {
+            useDevForScale = true;
+        } else if (showRatiosView.isChecked()) {
+            useRatioForScale = true;
         }
-        FixedLineGraphSeries<DataPoint> iobSeries;
-        FixedLineGraphSeries<DataPoint> cobSeries;
-        BarGraphSeries<DeviationDataPoint> devSeries;
-        LineGraphSeries<DataPoint> ratioSeries;
-        Double maxIobValueFound = 0d;
-        Double maxCobValueFound = 0d;
-        Double maxDevValueFound = 0d;
-        Double maxRatioValueFound = 0d;
+
+        if (showIobView.isChecked())
+            secondGraphData.addIob(iobGraph, fromTime, now, useIobForScale, 1d);
+        if (showCobView.isChecked())
+            secondGraphData.addCob(iobGraph, fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
+        if (showDeviationsView.isChecked())
+            secondGraphData.addDeviations(iobGraph, fromTime, now, useDevForScale, 1d);
+        if (showRatiosView.isChecked())
+            secondGraphData.addRatio(iobGraph, fromTime, now, useRatioForScale, 1d);
 
         if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
-            //Date start = new Date();
-            List<DataPoint> iobArray = new ArrayList<>();
-            List<DataPoint> cobArray = new ArrayList<>();
-            List<DeviationDataPoint> devArray = new ArrayList<>();
-            List<DataPoint> ratioArray = new ArrayList<>();
-            double lastIob = 0;
-            int lastCob = 0;
-            for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
-                if (showIobView.isChecked()) {
-                    double iob = IobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time).iob;
-                    if (Math.abs(lastIob - iob) > 0.02) {
-                        if (Math.abs(lastIob - iob) > 0.2)
-                            iobArray.add(new DataPoint(time, lastIob));
-                        iobArray.add(new DataPoint(time, iob));
-                        maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob));
-                        lastIob = iob;
-                    }
-                }
-                if (showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
-                    AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
-                    if (autosensData != null && showCobView.isChecked()) {
-                        int cob = (int) autosensData.cob;
-                        if (cob != lastCob) {
-                            if (autosensData.carbsFromBolus > 0)
-                                cobArray.add(new DataPoint(time, lastCob));
-                            cobArray.add(new DataPoint(time, cob));
-                            maxCobValueFound = Math.max(maxCobValueFound, cob);
-                            lastCob = cob;
-                        }
-                    }
-                    if (autosensData != null && showDeviationsView.isChecked()) {
-                        int color = Color.BLACK; // "="
-                        if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
-                        if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
-                        if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
-                        devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
-                        maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
-                    }
-                    if (autosensData != null && showRatiosView.isChecked()) {
-                        ratioArray.add(new DataPoint(time, autosensData.autosensRatio));
-                        maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
-                    }
-                }
-            }
-            //Profiler.log(log, "IOB processed", start);
-            DataPoint[] iobData = new DataPoint[iobArray.size()];
-            iobData = iobArray.toArray(iobData);
-            iobSeries = new FixedLineGraphSeries<>(iobData);
-            iobSeries.setDrawBackground(true);
-            iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.iob)); //50%
-            iobSeries.setColor(MainApp.sResources.getColor(R.color.iob));
-            iobSeries.setThickness(3);
-
-
-            Double maxByScale = null;
-            int graphsToShow = 0;
-            if (showIobView.isChecked()) {
-                if (maxByScale == null) maxByScale = maxIobValueFound;
-                graphsToShow++;
-            }
-            if (showCobView.isChecked()) {
-                if (maxByScale == null) maxByScale = maxCobValueFound;
-                graphsToShow++;
-            }
-            if (showDeviationsView.isChecked()) {
-                if (maxByScale == null) maxByScale = maxDevValueFound;
-                graphsToShow++;
-            }
-            if (showRatiosView.isChecked()) {
-                if (maxByScale == null) maxByScale = maxRatioValueFound;
-                graphsToShow++;
-            }
-
-            if (graphsToShow > 1) {
-                if (!maxByScale.equals(maxCobValueFound)) {
-                    List<DataPoint> cobArrayRescaled = new ArrayList<>();
-                    for (int ci = 0; ci < cobArray.size(); ci++) {
-                        cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxByScale / maxCobValueFound / 2));
-                    }
-                    cobArray = cobArrayRescaled;
-                }
-                if (!maxByScale.equals(maxDevValueFound)) {
-                    List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
-                    for (int ci = 0; ci < devArray.size(); ci++) {
-                        devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxByScale / maxDevValueFound, devArray.get(ci).color));
-                    }
-                    devArray = devArrayRescaled;
-                }
-                if (!maxByScale.equals(maxRatioValueFound)) {
-                    List<DataPoint> ratioArrayRescaled = new ArrayList<>();
-                    for (int ci = 0; ci < ratioArray.size(); ci++) {
-                        ratioArrayRescaled.add(new DataPoint(ratioArray.get(ci).getX(), (ratioArray.get(ci).getY() - 1) * maxByScale / maxRatioValueFound));
-                    }
-                    ratioArray = ratioArrayRescaled;
-                }
-            }
-
-            // COB
-            DataPoint[] cobData = new DataPoint[cobArray.size()];
-            cobData = cobArray.toArray(cobData);
-            cobSeries = new FixedLineGraphSeries<>(cobData);
-            cobSeries.setDrawBackground(true);
-            cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
-            cobSeries.setColor(MainApp.sResources.getColor(R.color.cob));
-            cobSeries.setThickness(3);
-
-            // DEVIATIONS
-            DeviationDataPoint[] devData = new DeviationDataPoint[devArray.size()];
-            devData = devArray.toArray(devData);
-            devSeries = new BarGraphSeries<>(devData);
-            devSeries.setValueDependentColor(new ValueDependentColor<DeviationDataPoint>() {
-                @Override
-                public int get(DeviationDataPoint data) {
-                    return data.color;
-                }
-            });
-
-            // RATIOS
-            DataPoint[] ratioData = new DataPoint[ratioArray.size()];
-            ratioData = ratioArray.toArray(ratioData);
-            ratioSeries = new LineGraphSeries<>(ratioData);
-            ratioSeries.setColor(MainApp.sResources.getColor(R.color.ratio));
-            ratioSeries.setThickness(3);
-
-            iobGraph.getSeries().clear();
-
-            if (showIobView.isChecked() && iobData.length > 0) {
-                addSeriesWithoutInvalidate(iobSeries, iobGraph);
-            }
-            if (showCobView.isChecked() && cobData.length > 0) {
-                addSeriesWithoutInvalidate(cobSeries, iobGraph);
-            }
-            if (showDeviationsView.isChecked() && devData.length > 0) {
-                addSeriesWithoutInvalidate(devSeries, iobGraph);
-            }
-            if (showRatiosView.isChecked() && ratioData.length > 0) {
-                addSeriesWithoutInvalidate(ratioSeries, iobGraph);
-            }
             iobGraph.setVisibility(View.VISIBLE);
         } else {
             iobGraph.setVisibility(View.GONE);
@@ -1454,59 +1323,27 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, null);
 
         // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(endTime);
-        bgGraph.getViewport().setMinX(fromTime);
-        bgGraph.getViewport().setXAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
-        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
-        iobGraph.getViewport().setMaxX(endTime);
-        iobGraph.getViewport().setMinX(fromTime);
-        iobGraph.getViewport().setXAxisBoundsManual(true);
-        iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
-        iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
-
+        graphData.formatAxis(bgGraph, fromTime, endTime);
+        secondGraphData.formatAxis(iobGraph, fromTime, endTime);
 
         // Treatments
-        graphData.addTreatmnets(bgGraph, fromTime, endTime);
+        graphData.addTreatments(bgGraph, fromTime, endTime);
 
         // add basal data
         if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            graphData.addBasals(bgGraph, fromTime, now,  lowLine / graphData.maxX / 1.2d);
+            graphData.addBasals(bgGraph, fromTime, now, lowLine / graphData.maxY / 1.2d);
         }
 
         // **** NOW line ****
-        DataPoint[] nowPoints = new DataPoint[]{
-                new DataPoint(now, 0),
-                new DataPoint(now, graphData.maxX)
-        };
-        addSeriesWithoutInvalidate(seriesNow = new LineGraphSeries<>(nowPoints), bgGraph);
-        seriesNow.setDrawDataPoints(false);
-        DataPoint[] nowPoints2 = new DataPoint[]{
-                new DataPoint(now, 0),
-                new DataPoint(now, maxIobValueFound)
-        };
-        addSeriesWithoutInvalidate(seriesNow2 = new LineGraphSeries<>(nowPoints2), iobGraph);
-        seriesNow2.setDrawDataPoints(false);
-        //seriesNow.setThickness(1);
-        // custom paint to make a dotted line
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-        paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-        paint.setColor(Color.WHITE);
-        seriesNow.setCustomPaint(paint);
-        seriesNow2.setCustomPaint(paint);
+        graphData.addNowLine(bgGraph, now);
+        secondGraphData.addNowLine(iobGraph, now);
+
+        // finaly enforce drawing of graphs
         bgGraph.onDataChanged(false, false);
         iobGraph.onDataChanged(false, false);
 
         Profiler.log(log, from, updateGUIStart);
     }
-
-    void addSeriesWithoutInvalidate(Series s, GraphView graph) {
-        s.onGraphViewAttached(graph);
-        graph.getSeries().add(s);
-    }
-
 
     //Notifications
     static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NotificationsViewHolder> {

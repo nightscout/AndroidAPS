@@ -36,7 +36,7 @@ public class ScaledDataPoint implements DataPointInterface, Serializable {
 
     @Override
     public double getY() {
-        return y * scale.getValue();
+        return scale.transform(y);
     }
 
     @Override
