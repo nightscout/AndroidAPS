@@ -342,16 +342,15 @@
     <string name="ns_upload_only_summary">NS에 업로드만 하기. 로컬소스(xDrip)가 선택되지 않으면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
     <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
     <string name="pumpNotInitializedProfileNotSet">펌프가 초기화와 프로파일 설정이 되지 않았습니다!</string>
-    <string name="primefill">공기/채움</string>
+    <string name="primefill">교체/채움</string>
     <string name="fillwarning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
     <string name="othersettings_title">기타</string>
-    <string name="fillbolus_title">공기/채움 기본 인슐린양</string>
+    <string name="fillbolus_title">교체/채움 기본 인슐린양</string>
     <string name="button1">버튼1</string>
     <string name="button2">버튼2</string>
     <string name="button3">버튼3</string>
     <string name="percentagefactor_hint">Percentage factor by which the base profile will be multiplied.</string>
     <string name="timeshift_hint">Time in hours by which the profile will be shifted round robin.</string>
-    <string name="send_to_pump">SEND TO PUMP</string>
     <string name="units">Units:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -412,7 +411,7 @@
     <string name="danar_stats_ratio">비율</string>
     <string name="danar_stats_amount_days">#일</string>
     <string name="danar_stats_weight">가중</string>
-    <string name="danar_stats_warning_Message">공기/채움을 위해 식사주입을 사용한 경우 부정확할 수 있습니다!!</string>
+    <string name="danar_stats_warning_Message">교체/채움을 위해 식사주입을 사용한 경우 부정확할 수 있습니다!!</string>
     <string name="danar_stats_olddata_Message">오래된 데이터입니다. "새로고침"을 누르세요.</string>
     <string name="danar_stats_tbb">총기초량</string>
     <string name="danar_stats_tbb2">총기초량 * 2</string>
@@ -542,7 +541,7 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">앱시작을 NS에 기록하기</string>
     <string name="restartingapp">설정을 적용하기위해 앱을 종료합니다.</string>
-    <string name="danarv2pump">DanaRv2</string>
+    <string name="danarv2pump">다나Rv2</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -558,7 +557,7 @@
     <string name="virtualpump_firmware_label">펌웨어</string>
     <string name="virtualpump_lastconnection_label">최근 연결</string>
     <string name="danar_bluetooth_status">블루투스 상태</string>
-    <string name="nav_about">About</string>
+    <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
     <string name="dev">DEV</string>
     <string name="xdripstatus_settings">xDrip 상태(워치)</string>
@@ -649,5 +648,38 @@
     <string name="activate_profile">ACTIVATE PROFILE</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
-    <string name="app_name">AndroidAPS</string>
+    
+    <string name="waitingforpairing">펌프연동 대기중</string>
+    <string name="pairingok">연동완료</string>
+    <string name="pairingtimedout">연동시간초과</string>
+    <string name="pairing">연동중</string>
+    <string name="danars_nodeviceavailable">현재까지 발견된 기기가 없습니다.</string>
+    <string name="emptyreservoir">빈 주사기</string>
+    <string name="bloodsugarmeasurementalert">혈당측정알람</string>
+    <string name="remaininsulinalert">남은 인슐린 양</string>
+    <string name="danarspump">다나RS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="selectedpump">선택된 펌프</string>
+    <string name="pairpump">새 펌프와 연동</string>
+    <string name="bolusspeed">식사주입 속도</string>
+    <string name="danar_setbasalstep001">기초주입 단위를 0.01 U/h로 설정하세요</string>
+    <string name="serialnumber">시리얼번호</string>
+    <string name="careportal_newnstreatment_percentage_label">퍼센트</string>
+    <string name="careportal_newnstreatment_timeshift_label">시간 이동</string>
+    <string name="default_temptargets">임시목표 기본값</string>
+    <string name="eatingsoon_duration">eatingsoon 기간</string>
+    <string name="eatingsoon_target">eatingsoon 목표</string>
+    <string name="activity_duration">activity 기간</string>
+    <string name="activity_target">activity 목표</string>
+    <string name="danar_history_prime">교체</string>
+    <string name="gettingextendedbolusstatus">확장식사주입 상태 가져오는중</string>
+    <string name="gettingbolusstatus">식사주입상태 가져오는중</string>
+    <string name="gettingtempbasalstatus">임시기초주입상태 가져오는중</string>
+    <string name="gettingpumpsettings">펌프설정 가져오는중</string>
+    <string name="gettingpumptime">펌프시간 가져오는중</string>
+    <string name="reuse">재사용</string>
+    <string name="wearcontrol_title">워치로 작동하기</string>
+    <string name="wearcontrol_summary">임시목표와 관리입력을 워치로 설정합니다.</string>
+    <string name="connectiontimedout">연결시간초과</string>
+
 </resources>

@@ -11,7 +11,7 @@
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="nav_exit">Изход</string>
     <string name="danar_useextended_title">Използвай удължен болус за над 200%</string>
-	<string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
+    <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
 	<string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
     <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки или Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
     <string name="objectives_objective_label_string">Цел:</string>
@@ -71,10 +71,10 @@
     <string name="rate">Стойност</string>
     <string name="duration">Срок</string>
     <string name="reason">Основание</string>
-    <string name="glucose">КЗ</string>
-    <string name="delta">Промяна</string>
+    <string name="glucose">Кръвна захар</string>
+    <string name="delta">Изменение (Δ)</string>
     <string name="sms_delta">Delta:</string>
-    <string name="avgdelta">Средна промяна</string>
+    <string name="avgdelta">Средно изменение (Δ),</string>
     <string name="configbuilder">Конфигурация</string>
     <string name="objectives">Цели</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -85,8 +85,6 @@
     <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="careportal">Careportal</string>
-
-
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_treatments">Treatments</string>
     <string name="configbuilder_tempbasals">Временен базал</string>
@@ -140,7 +138,7 @@
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="nsclientnotinstalled">NSClient не е открит. Записът е загубен!</string>
     <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
-    <string name="objectives_pumpstatusavailableinns">Статуса на помпа да е достъпен в NS</string>
+    <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
     <string name="objectives_manualenacts">Ръчно приложени</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="cs_lang">Czech</string>
@@ -351,8 +349,7 @@
     <string name="button3">Бутон 3</string>
     <string name="percentagefactor_hint">% с който базовият профил ще бъде променен.</string>
     <string name="timeshift_hint">Точен брой часове, с които ще бъде изместен профила!</string>
-    <string name="send_to_pump">ИЗПРАТИ КЪМ ПОМПАТА</string>
-    <string name="units">Единици:</string>
+     <string name="units">Единици:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
     <string name="dia">DIA:</string>
@@ -371,7 +368,7 @@
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
     <string name="pumperror">Грешка в промпата</string>
     <string name="lowbattery">Изтощена батерия</string>
-    <string name="pumpshutdown">Помпа изключена</string>
+    <string name="pumpshutdown">Помпата е изключена</string>
     <string name="batterydischarged">Батерията на помпата е изтощена</string>
     <string name="danarkoreanpump">DanaR Korean</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
@@ -449,7 +446,7 @@
     <string name="openapsama_autosens_adjusttargets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">По подразбиране: 3.0\nТова е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл/5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
-    <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
+    <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">Позволени са само числа</string>
     <string name="error_only_numeric_digits_range_allowed" formatted="false">Позволени са числа между %1$s - %2$s</string>
@@ -530,7 +527,7 @@
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
     <string name="smscommunicator_loopresumed">Loop resumed</string>
-    <string name="treatments_wizard_bgtrend_label">промяна за 15мин</string>
+    <string name="treatments_wizard_bgtrend_label">Δ за 15мин</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Суперболус</string>
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
@@ -650,4 +647,36 @@
     <string name="sv_lang">Swedish</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
+    <string name="activity_duration">време за физ. активност</string>
+    <string name="activity_target">Целева КЗ при физ. активност</string>
+    <string name="bolusspeed">Скорост на болус</string>
+    <string name="careportal_newnstreatment_percentage_label">% на изменение</string>
+    <string name="careportal_newnstreatment_timeshift_label">Време на отместване</string>
+    <string name="danars_nodeviceavailable">Все още устройството не е намерено</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="default_temptargets">Временна цел по подразбиране</string>
+    <string name="eatingsoon_duration">Време за \"Преди хранене\"</string>
+    <string name="eatingsoon_target">Цел за \"Преди хранене\"</string>
+    <string name="emptyreservoir">Празен резервоар</string>
+    <string name="gettingbolusstatus">Получава болус статус</string>
+    <string name="gettingextendedbolusstatus">Получава статус на удължен болус</string>
+    <string name="gettingpumpsettings">Получава настройките на помпата</string>
+    <string name="gettingpumptime">Получава времето на помпата</string>
+    <string name="gettingtempbasalstatus">Получава статус на временен базал</string>
+    <string name="pairing">СДВОЯВАНЕ</string>
+    <string name="pairingok">Сдвоени</string>
+    <string name="pairingtimedout">Времето за сдвояване изтече</string>
+    <string name="pairpump">Сдвояване с нова помпа</string>
+    <string name="reuse">опитва отново</string>
+    <string name="selectedpump">Избрана помпа</string>
+    <string name="serialnumber">Сериен номер</string>
+    <string name="treatments_wizard_tt_label">ЛЕЧ</string>
+    <string name="waitingforpairing">Очаква сдвояване с помпа</string>
+    <string name="connectiontimedout">Времето за връзка изтече</string>
+    <string name="wear_overviewnotifications">Преглед на известията</string>
+    <string name="wear_overviewnotifications_summary">Изпращай известията като съобщения към часовника</string>
+    <string name="wear_settings">Настройки на часовник</string>
+    <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
+    <string name="wearcontrol_title">Контролиране от часовник</string>
 </resources>

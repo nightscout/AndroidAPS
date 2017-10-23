@@ -5,643 +5,729 @@
     tools:context="info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment">
 
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/danar_buttons"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/overview_pumpstatuslayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="2dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/overview_pumpstatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/initializing"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/serialnumber"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_serialnumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/danar_bluetooth_status"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/danar_btconnection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:text="{fa-bluetooth-b}"
+                        android:textColor="@android:color/white"
+                        android:textSize="20dp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_battery_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/danar_battery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="20dp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_lastconnection_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_lastconnection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/danar_lastbolus"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_lastbolus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/danar_dailyunits"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_dailyunits"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_basebasalrate_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_basabasalrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_tempbasal_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_tempbasal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_extendedbolus_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_extendedbolus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_reservoir_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_reservoir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/danar_iob_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_iob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/basal_step"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_basalstep"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/bolus_step"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_bolusstep"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/virtualpump_firmware_label"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/danar_firmware"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/danar_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/danar_bluetooth_status"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:id="@+id/danar_btconnection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:text="{fa-bluetooth-b}"
-                    android:textColor="@android:color/white"
-                    android:textSize="20dp" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_battery_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <com.joanzapata.iconify.widget.IconTextView
-                    android:id="@+id/danar_battery"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="20dp" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_lastconnection_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_lastconnection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/danar_lastbolus"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_lastbolus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/danar_dailyunits"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_dailyunits"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_basebasalrate_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_basabasalrate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_tempbasal_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_tempbasal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_extendedbolus_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_extendedbolus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_reservoir_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_reservoir"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/danar_iob_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_iob"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/basal_step"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_basalstep"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/bolus_step"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_bolusstep"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_firmware_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/danar_firmware"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-	 	 <Button
+                <Button
                     android:id="@+id/danar_viewprofile"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-		     android:layout_height="wrap_content"
-		     android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:drawableTop="@drawable/icon_danarprofile"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/danar_viewprofile"/>
-                
+                    android:text="@string/danar_viewprofile" />
+
 
                 <Button
                     android:id="@+id/danar_history"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:drawableTop="@drawable/icon_danarhistory"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/icon_danarhistory"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/danar_history" />
-		<Button
+
+                <Button
                     android:id="@+id/danar_stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:drawableTop="@drawable/icon_danarstats"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/icon_danarstats"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/danar_stats" />
+
             </LinearLayout>
+
         </LinearLayout>
-    </ScrollView>
+
+    </RelativeLayout>
 
 </FrameLayout>

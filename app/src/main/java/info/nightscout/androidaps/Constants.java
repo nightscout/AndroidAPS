@@ -32,6 +32,8 @@ public class Constants {
     // Circadian Percentage Profile
     public static final int CPP_MIN_PERCENTAGE = 50;
     public static final int CPP_MAX_PERCENTAGE = 200;
+    public static final int CPP_MIN_TIMESHIFT = -6;
+    public static final int CPP_MAX_TIMESHIFT = 23;
 
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define

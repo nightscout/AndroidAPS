@@ -40,6 +40,13 @@ public class MsgSettingMeal extends MessageBase {
             log.debug("Is Config U/d: " + pump.isConfigUD);
         }
 
+        if (pump.basalStep != 0.01d) {
+            Notification notification = new Notification(Notification.WRONGBASALSTEP, MainApp.sResources.getString(R.string.danar_setbasalstep001), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.WRONGBASALSTEP));
+        }
+
         if (pump.isConfigUD) {
             Notification notification = new Notification(Notification.UD_MODE_ENABLED, MainApp.sResources.getString(R.string.danar_switchtouhmode), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));

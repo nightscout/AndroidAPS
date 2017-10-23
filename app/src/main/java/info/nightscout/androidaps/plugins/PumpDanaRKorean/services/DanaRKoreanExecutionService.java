@@ -105,7 +105,7 @@ public class DanaRKoreanExecutionService extends Service {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                log.debug("Device has disconnected " + device.getName());//Device has disconnected
+                log.debug("Device was disconnected " + device.getName());//Device was disconnected
                 if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
                     if (mSerialIOThread != null) {
                         mSerialIOThread.disconnect("BT disconnection broadcast");
@@ -286,11 +286,13 @@ public class DanaRKoreanExecutionService extends Service {
                 }
             }
 
-            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
-            mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
-            mSerialIOThread.sendMessage(exStatusMsg);
             //mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
+            mSerialIOThread.sendMessage(tempStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
+            mSerialIOThread.sendMessage(exStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
 
 //            if (!statusMsg.received) {
 //                mSerialIOThread.sendMessage(statusMsg);
@@ -316,6 +318,7 @@ public class DanaRKoreanExecutionService extends Service {
 
             Date now = new Date();
             if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isInitialized()) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
                 mSerialIOThread.sendMessage(new MsgSettingBasal_k());
@@ -323,6 +326,8 @@ public class DanaRKoreanExecutionService extends Service {
                 mSerialIOThread.sendMessage(new MsgSettingMaxValues());
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumptime)));
+                mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
@@ -502,24 +507,13 @@ public class DanaRKoreanExecutionService extends Service {
         connect("updateBasalsInPump");
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.updatingbasalrates)));
-        double[] basal = buildDanaRProfileRecord(profile);
+        double[] basal = DanaRPump.buildDanaRProfileRecord(profile);
         MsgSetSingleBasalProfile msgSet = new MsgSetSingleBasalProfile(basal);
         mSerialIOThread.sendMessage(msgSet);
         danaRPump.lastSettingsRead = new Date(0); // force read full settings
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
-    }
-
-    private double[] buildDanaRProfileRecord(Profile nsProfile) {
-        double[] record = new double[24];
-        for (Integer hour = 0; hour < 24; hour++) {
-            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
-            if (Config.logDanaMessageDetail)
-                log.debug("NS basal value for " + hour + ":00 is " + value);
-            record[hour] = value;
-        }
-        return record;
     }
 
     private void waitMsec(long msecs) {

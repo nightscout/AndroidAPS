@@ -33,7 +33,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     private static ProfileStore convertedProfile = null;
 

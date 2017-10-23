@@ -68,7 +68,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     private static DanaRKoreanExecutionService sExecutionService;
 
 
-    private DanaRPump pump = DanaRPump.getInstance();
+    private static DanaRPump pump = DanaRPump.getInstance();
     private boolean useExtendedBoluses = false;
 
     private static DanaRKoreanPlugin plugin = null;
@@ -345,7 +345,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
             doConnect("setTempBasalAbsolute old data");
@@ -405,7 +405,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
                 if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
-                    if (force) {
+                    if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
                         result.success = true;
@@ -646,7 +646,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     public static void doConnect(String from) {
-        if (sExecutionService != null) sExecutionService.connect(from);
+        if (sExecutionService != null) {
+            sExecutionService.connect(from);
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+        }
     }
 
     public static boolean isConnected() {

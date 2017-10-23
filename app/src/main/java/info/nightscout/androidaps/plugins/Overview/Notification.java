@@ -49,8 +49,8 @@ public class Notification {
     public static final int NSURGENTALARM = 20;
     public static final int SHORT_DIA = 21;
     public static final int TOAST_ALARM = 22;
+    public static final int WRONGBASALSTEP = 23;
     public static final int BOLUS_DELIVERY_ERROR = 24;
-
 
     public int id;
     public Date date;

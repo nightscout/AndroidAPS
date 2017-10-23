@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -26,12 +25,11 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewTempBasalDialog extends DialogFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
@@ -74,7 +72,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
 
         PumpDescription pumpDescription = MainApp.getConfigBuilder().getPumpDescription();
 
-        basalPercent =  (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
+        basalPercent = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
         double maxTempPercent = pumpDescription.maxTempPercent;
         double tempPercentStep = pumpDescription.tempPercentStep;
         basalPercent.setParams(100d, 0d, maxTempPercent, tempPercentStep, new DecimalFormat("0"), true);
@@ -159,7 +157,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                     if (setAsPercent) {
                                         result = pump.setTempBasalPercent(finalBasalPercent, finalDurationInMinutes);
                                     } else {
-                                        result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes, false);
+                                        result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes, true);
                                     }
                                     if (!result.success) {
                                         if (context instanceof Activity) {

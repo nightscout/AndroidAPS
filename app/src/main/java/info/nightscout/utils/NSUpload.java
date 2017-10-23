@@ -265,7 +265,7 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.PROFILESWITCH);
             data.put("duration", profileSwitch.durationInMinutes);
-            data.put("profile", profileSwitch.profileName);
+            data.put("profile", profileSwitch.getCustomizedName());
             data.put("profileJson", profileSwitch.profileJson);
             data.put("profilePlugin", profileSwitch.profilePlugin);
             if (profileSwitch.isCPP) {

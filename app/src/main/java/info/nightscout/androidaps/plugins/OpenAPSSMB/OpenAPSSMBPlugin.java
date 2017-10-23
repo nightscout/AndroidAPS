@@ -224,11 +224,16 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         Profiler.log(log, "AMA data gathering", start);
 
         start = new Date();
-        determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
-                lastAutosensResult.ratio, //autosensDataRatio
-                isTempTarget,
-                true //microBolusAllowed
-        );
+        try {
+            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
+                    lastAutosensResult.ratio, //autosensDataRatio
+                    isTempTarget,
+                    true //microBolusAllowed
+            );
+        } catch (JSONException e) {
+            log.error(e.getMessage());
+            return;
+        }
 
 
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
@@ -245,9 +250,6 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         }
 
         determineBasalResultSMB.iob = iobArray[0];
-
-        determineBasalAdapterSMBJS.release();
-
         Date now = new Date();
 
         try {
