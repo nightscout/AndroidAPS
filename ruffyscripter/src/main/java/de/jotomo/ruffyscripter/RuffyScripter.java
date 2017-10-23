@@ -723,7 +723,7 @@ public class RuffyScripter implements RuffyCommands {
     private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);
-            SystemClock.sleep(200);
+            SystemClock.sleep(150);
             ruffyService.rtSendKey(Key.NO_KEY, true);
         } catch (Exception e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");

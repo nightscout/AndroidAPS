@@ -227,17 +227,14 @@ public class BolusCommand extends BaseCommand {
         for (int i = 0; i < steps; i++) {
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressUpKey();
-            SystemClock.sleep(100);
+            SystemClock.sleep(50);
         }
-        // Give the pump time to finish any scrolling that might still be going on, can take
-        // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(2000);
     }
 
     private void verifyDisplayedBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
 
-        // wait up to 5s for any scrolling to finish
+        // wait up to 10s for any scrolling to finish
         double displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis() && bolus - displayedBolus > 0.05) {

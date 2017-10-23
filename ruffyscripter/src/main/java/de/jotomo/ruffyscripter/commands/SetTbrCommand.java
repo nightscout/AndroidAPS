@@ -117,9 +117,10 @@ public class SetTbrCommand extends BaseCommand {
         for (int i = 0; i < Math.abs(percentageSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             log.debug("Push #" + (i + 1));
+            log.debug("Push #" + (i + 1) + "/" + Math.abs(percentageSteps));
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();
-            SystemClock.sleep(100);
+            SystemClock.sleep(50);
         }
         return increasePercentage;
     }
@@ -163,10 +164,10 @@ public class SetTbrCommand extends BaseCommand {
         log.debug("Pressing " + (increaseDuration ? "up" : "down") + " " + durationSteps + " times");
         for (int i = 0; i < Math.abs(durationSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-            log.debug("Push #" + (i + 1) + "/" + durationSteps);
+            log.debug("Push #" + (i + 1) + "/" + Math.abs(durationSteps));
             if (increaseDuration) scripter.pressUpKey();
             else scripter.pressDownKey();
-            SystemClock.sleep(100);
+            SystemClock.sleep(50);
         }
         return increaseDuration;
     }
