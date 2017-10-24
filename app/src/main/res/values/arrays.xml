@@ -49,9 +49,9 @@
     </string-array>
 
     <string-array name="danaSpeedArray">
-        <item>12s 1U</item>
-        <item>30s 1U</item>
-        <item>60s 1U</item>
+        <item>12 s/U</item>
+        <item>30 s/U</item>
+        <item>60 s/U</item>
     </string-array>
     <string-array name="danaSpeedValues">
         <item>0</item>

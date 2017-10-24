@@ -165,19 +165,6 @@ public class BLEComm {
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING));
         isConnecting = true;
 
-        // Following should be removed later because we close Gatt on disconnect and this should never happen
-        if ((mBluetoothDeviceAddress != null) && (address.equals(mBluetoothDeviceAddress)) && (mBluetoothGatt != null)) {
-            log.debug("Trying to use an existing mBluetoothGatt for connection.");
-            sHandler.post(updateProgress);
-            if (mBluetoothGatt.connect()) {
-                setCharacteristicNotification(getUARTReadBTGattChar(), true);
-                return true;
-            }
-            sHandler.removeCallbacks(updateProgress);
-            return false;
-        }
-        // end
-
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             log.debug("Device not found.  Unable to connect.");
@@ -201,12 +188,19 @@ public class BLEComm {
 
     public void disconnect(String from) {
         log.debug("disconnect from: " + from);
+
+        // cancel previous scheduled disconnection to prevent closing upcomming connection
+        if (scheduledDisconnection != null)
+            scheduledDisconnection.cancel(false);
+        scheduledDisconnection = null;
+
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             return;
         }
         setCharacteristicNotification(getUARTReadBTGattChar(), false);
         mBluetoothGatt.disconnect();
         isConnected = false;
+        SystemClock.sleep(2000);
     }
 
     public void close() {
@@ -214,6 +208,7 @@ public class BLEComm {
         if (mBluetoothGatt == null) {
             return;
         }
+
         mBluetoothGatt.close();
         mBluetoothGatt = null;
     }
@@ -687,18 +682,19 @@ public class BLEComm {
     }
 
     public void scheduleDisconnection() {
+
         class DisconnectRunnable implements Runnable {
             public void run() {
                 disconnect("scheduleDisconnection");
                 scheduledDisconnection = null;
             }
         }
-        // prepare task for execution in 5 sec
+        // prepare task for execution in 30 sec
         // cancel waiting task to prevent sending multiple disconnections
         if (scheduledDisconnection != null)
             scheduledDisconnection.cancel(false);
         Runnable task = new DisconnectRunnable();
-        final int sec = 5;
+        final int sec = 30;
         scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
         log.debug("Disconnection scheduled");
     }
