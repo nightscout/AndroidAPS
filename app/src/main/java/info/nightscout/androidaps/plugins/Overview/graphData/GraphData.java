@@ -429,6 +429,36 @@ public class GraphData {
     }
 
     // scale in % of vertical size (like 0.3)
+    public void addDeviationSlope(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
+        LineGraphSeries<DataPoint> dsSeries;
+        List<DataPoint> dsArray = new ArrayList<>();
+        Double maxDSValueFound = 0d;
+        Scale dsScale = new Scale();
+
+        for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
+            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            if (autosensData != null) {
+                dsArray.add(new DataPoint(time, autosensData.minDeviationSlope));
+                maxDSValueFound = Math.max(maxDSValueFound, Math.abs(autosensData.minDeviationSlope));
+            }
+        }
+
+        // RATIOS
+        DataPoint[] ratioData = new DataPoint[dsArray.size()];
+        ratioData = dsArray.toArray(ratioData);
+        dsSeries = new LineGraphSeries<>(ratioData);
+        dsSeries.setColor(Color.MAGENTA);
+        dsSeries.setThickness(3);
+
+        if (useForScale)
+            maxY = maxDSValueFound;
+
+        dsScale.setMultiplier(maxY * scale / maxDSValueFound);
+
+        addSeriesWithoutInvalidate(graph, dsSeries);
+    }
+
+    // scale in % of vertical size (like 0.3)
     public void addNowLine(GraphView graph, long now) {
         LineGraphSeries<DataPoint> seriesNow;
         DataPoint[] nowPoints = new DataPoint[]{

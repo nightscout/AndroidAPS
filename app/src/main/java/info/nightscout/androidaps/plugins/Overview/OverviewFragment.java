@@ -1281,6 +1281,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         boolean useCobForScale = false;
         boolean useDevForScale = false;
         boolean useRatioForScale = false;
+        boolean useDSForScale = false;
 
         if (showIobView.isChecked()) {
             useIobForScale = true;
@@ -1290,6 +1291,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             useDevForScale = true;
         } else if (showRatiosView.isChecked()) {
             useRatioForScale = true;
+        } else if (Config.displayDeviationSlope) {
+            useDSForScale = true;
         }
 
         if (showIobView.isChecked())
@@ -1300,8 +1303,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             secondGraphData.addDeviations(iobGraph, fromTime, now, useDevForScale, 1d);
         if (showRatiosView.isChecked())
             secondGraphData.addRatio(iobGraph, fromTime, now, useRatioForScale, 1d);
+        if (Config.displayDeviationSlope)
+            secondGraphData.addDeviationSlope(iobGraph, fromTime, now, useDSForScale, 1d);
 
-        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
+        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked() || Config.displayDeviationSlope) {
             iobGraph.setVisibility(View.VISIBLE);
         } else {
             iobGraph.setVisibility(View.GONE);

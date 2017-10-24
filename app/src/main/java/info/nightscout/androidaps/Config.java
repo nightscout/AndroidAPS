@@ -28,6 +28,8 @@ public class Config {
 
     public static final boolean ALLPREFERENCES = !BuildConfig.NSCLIENTOLNY;
 
+    public static final boolean displayDeviationSlope = true;
+
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
     public static final boolean logIncommingData = true;
