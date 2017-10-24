@@ -64,9 +64,9 @@ public class IobTotal {
         result.iob = bolusIOB.iob + basalIob.basaliob;
         result.activity = bolusIOB.activity + basalIob.activity;
         result.bolussnooze = bolusIOB.bolussnooze;
-        result.basaliob = basalIob.basaliob;
-        result.netbasalinsulin = basalIob.netbasalinsulin;
-        result.hightempinsulin = basalIob.hightempinsulin;
+        result.basaliob = bolusIOB.basaliob + basalIob.basaliob;
+        result.netbasalinsulin = bolusIOB.netbasalinsulin + basalIob.netbasalinsulin;
+        result.hightempinsulin = basalIob.hightempinsulin + bolusIOB.hightempinsulin;
         result.microBolusInsulin = bolusIOB.microBolusInsulin + basalIob.microBolusInsulin;
         result.microBolusIOB = bolusIOB.microBolusIOB + basalIob.microBolusIOB;
         result.lastBolusTime = bolusIOB.lastBolusTime;
