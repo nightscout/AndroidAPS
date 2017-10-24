@@ -11,18 +11,6 @@ public abstract class BaseCommand implements Command {
         this.scripter = scripter;
     }
 
-    // TODO upcoming
-    protected final boolean canBeCancelled = true;
-    protected volatile boolean cancelRequested = false;
-
-    public void requestCancellation() {
-        cancelRequested = true;
-    }
-
-    public boolean isCancellable() {
-        return canBeCancelled;
-    }
-
     @Override
     public boolean needsRunMode() {
         return false;
