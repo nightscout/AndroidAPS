@@ -260,6 +260,9 @@ public class DanaRSService extends Service {
         if (!(isConnected()))
             DanaRSPlugin.getPlugin().connect("loadEvents");
         loadEvents();
+        // reread bolus status
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
+        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
         bolusingEvent.percent = 100;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
         return true;
