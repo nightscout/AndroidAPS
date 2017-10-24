@@ -53,7 +53,7 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
         int result = byteArrayToInt(getBytes(data, DATA_START, 1));
         if (result != 1) {
             failed = true;
-            log.debug("Set APS temp basal start result: " + result + " FAILED!!!");
+            log.error("Set APS temp basal start result: " + result + " FAILED!!!");
         } else {
             if (Config.logDanaMessageDetail)
                 log.debug("Set APS temp basal start result: " + result);

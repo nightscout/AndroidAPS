@@ -63,7 +63,7 @@ public class DanaRS_Packet_APS_Set_Event_History extends DanaRS_Packet {
         int result = intFromBuff(data, 0, 1);
         if (result != 1) {
             failed = true;
-            log.debug("Set history entry result: " + result + " FAILED!!!");
+            log.error("Set history entry result: " + result + " FAILED!!!");
         } else {
             if (Config.logDanaMessageDetail)
                 log.debug("Set history entry result: " + result);
