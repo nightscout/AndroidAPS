@@ -12,7 +12,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -27,7 +26,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
@@ -52,7 +51,7 @@ public class GraphData {
     private List<BgReading> bgReadingsArray;
     private String units;
 
-    public void addBgReadings(GraphView bgGraph, long fromTime, long toTime, double lowLine, double highLine, DetermineBasalResultAMA amaResult) {
+    public void addBgReadings(GraphView bgGraph, long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {
         double maxBgValue = 0d;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
@@ -61,14 +60,12 @@ public class GraphData {
             return;
         }
 
-        Iterator<BgReading> it = bgReadingsArray.iterator();
-        while (it.hasNext()) {
-            BgReading bg = it.next();
+        for (BgReading bg : bgReadingsArray) {
             if (bg.value > maxBgValue) maxBgValue = bg.value;
             bgListArray.add(bg);
         }
-        if (amaResult != null) {
-            List<BgReading> predArray = amaResult.getPredictions();
+        if (apsResult != null) {
+            List<BgReading> predArray = apsResult.getPredictions();
             bgListArray.addAll(predArray);
         }
 
@@ -266,7 +263,7 @@ public class GraphData {
         }
     }
 
-    double getNearestBg(long date) {
+    private double getNearestBg(long date) {
         double bg = 0;
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
