@@ -262,13 +262,13 @@ public class DanaRv2ExecutionService extends Service {
                 }
             }
 
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
             mSerialIOThread.sendMessage(tempStatusMsg);
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
             mSerialIOThread.sendMessage(exStatusMsg);
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
 
             if (!statusMsg.received) {
                 mSerialIOThread.sendMessage(statusMsg);
@@ -471,6 +471,9 @@ public class DanaRv2ExecutionService extends Service {
         if (!(isConnected()))
             connect("loadEvents");
         loadEvents();
+        // load last bolus status
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
+        mSerialIOThread.sendMessage(new MsgStatus());
         bolusingEvent.percent = 100;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
         return true;
