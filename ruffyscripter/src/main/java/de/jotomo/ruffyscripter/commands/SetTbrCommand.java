@@ -53,6 +53,11 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     @Override
+    public String getReconnectAlarm() {
+        return "TBR CANCELLED";
+    }
+
+    @Override
     public CommandResult execute() {
         try {
             boolean cancellingTbr = percentage == 100;

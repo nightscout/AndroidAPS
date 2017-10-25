@@ -22,7 +22,7 @@ public class CancelTbrCommand extends BaseCommand {
     }
 
     @Override
-    public String reconnectAlarm() {
+    public String getReconnectAlarm() {
         return "TBR CANCELLED";
     }
 

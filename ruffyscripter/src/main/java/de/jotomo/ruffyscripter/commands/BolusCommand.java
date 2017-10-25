@@ -43,6 +43,11 @@ public class BolusCommand extends BaseCommand {
     }
 
     @Override
+    public String getReconnectAlarm() {
+        return "BOLUS CANCELLED";
+    }
+
+    @Override
     public CommandResult execute() {
         try {
             // TODO read reservoir level and reject request if reservoir < bolus
@@ -184,7 +189,7 @@ public class BolusCommand extends BaseCommand {
             }
 
             // TODO check date so we don't pick a false record if the previous bolus had the same amount;
-            // also, report back partial bolus. Just call ReadHsstory(timestamp, boluses=true) cmd ...
+            // also, report back partial bolus. Just call ReadHistory(timestamp, boluses=true) cmd ...
             double lastBolusInHistory = (double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
             if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
                 throw new CommandException().success(false).enacted(true)

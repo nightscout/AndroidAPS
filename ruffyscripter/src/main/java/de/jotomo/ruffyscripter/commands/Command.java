@@ -17,4 +17,5 @@ public interface Command {
     List<String> validateArguments();
     void setScripter(RuffyScripter scripter);
     boolean needsRunMode();
+    String getReconnectAlarm();
 }
