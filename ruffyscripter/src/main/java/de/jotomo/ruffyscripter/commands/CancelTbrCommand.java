@@ -22,22 +22,17 @@ public class CancelTbrCommand extends BaseCommand {
     }
 
     @Override
+    public String reconnectAlarm() {
+        return "TBR CANCELLED";
+    }
+
+    @Override
     public CommandResult execute() {
         try {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             PumpState pumpState = scripter.readPumpStateInternal();
             if (!pumpState.tbrActive) {
-//                log.debug("active temp basal 90s ago: " +
-//                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 90 * 1000));
-//                log.debug("active temp basal 60s ago: " +
-//                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 30 * 1000));
-//                log.debug("active temp basal 30s ago: " +
-//                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 30 * 1000));
-//                log.debug("active temp basal now:: " +
-//                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()));
-                // TODO keep checking logs to ensure this case only happens because CancelTbrCommand was called
-                // twice by AAPS
-                log.warn("No TBR active to cancel");
+                log.debug("No TBR active to cancel");
                 return new CommandResult()
                         .success(true)
                         // Technically, nothing was enacted, but AAPS needs this to recover
@@ -47,6 +42,7 @@ public class CancelTbrCommand extends BaseCommand {
                         .enacted(true)
                         .message("No TBR active");
             }
+
             log.debug("Cancelling active TBR of " + pumpState.tbrPercent
                     + "% with " + pumpState.tbrRemainingDuration + " min remaining");
             SetTbrCommand setTbrCommand = new SetTbrCommand(100, 0);
