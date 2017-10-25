@@ -22,6 +22,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -46,7 +48,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 isBasalOutdated = true;
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
+            if (isStatusOutdated && lastConnection.getTime() + 25 * 60 * 1000 < System.currentTimeMillis()) {
+                MainApp.bus().post(new EventNewNotification(
+                        new Notification(Notification.PUMP_UNREACHABLE,
+                                "Pump connection could not be established for more than 25 minutes", Notification.URGENT)));
+            } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
