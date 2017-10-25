@@ -662,6 +662,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI(status));
         CommandResult commandResult = commandExecution.execute();
 
+        if (commandResult.success) {
+            pump.lastSuccessfulConnection = System.currentTimeMillis();
+        } else {
+            pump.lastConnectionAttempt = System.currentTimeMillis();
+        }
+
         // TODO hm... automatically confirm messages and return them and handle them here proper?
         // with an option to corfirm all messages, non-critical (letting occlusion alert ring on phone and pump)
         // or let all alarms ring and don't try to control the pump in any way

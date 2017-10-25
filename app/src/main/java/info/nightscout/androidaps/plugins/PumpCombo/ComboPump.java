@@ -10,6 +10,9 @@ import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 
 class ComboPump {
+    public long lastSuccessfulConnection;
+    public long lastConnectionAttempt;
+
     @Nullable
     volatile CommandResult lastCmdResult;
     @NonNull

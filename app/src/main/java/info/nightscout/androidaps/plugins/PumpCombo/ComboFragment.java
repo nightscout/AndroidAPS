@@ -15,6 +15,8 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
@@ -141,19 +143,32 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         if (lastCmdResult != null) {
                             String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
                             String time = DateUtil.timeString(lastCmdResult.completionTime);
-                            lastConnectionView.setText("" + minAgo + " (" + time + ")");
+                            if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
+                                lastConnectionView.setText(
+                                        "No successful connection" +
+                                        "\nwithin the last " + minAgo + " min");
+                                lastConnectionView.setTextColor(Color.RED);
+                            }
+                            if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
+                                lastConnectionView.setText("" + minAgo + " (" + time + ")" +
+                                        "\nLast connect attempt failed");
+                                lastConnectionView.setTextColor(Color.YELLOW);
+                            } else {
+                                lastConnectionView.setText("" + minAgo + " (" + time + ")");
+                                lastConnectionView.setTextColor(Color.WHITE);
+                            }
 
                             // last bolus
-                            plugin.getPump().history.bolusHistory.add(new Bolus(System.currentTimeMillis() - 7 * 60 * 1000, 12.8d));
-                            Bolus bolus = plugin.getPump().lastBolus;
-                            if (bolus == null || bolus.timestamp + 6 * 60 * 60 * 1000 < System.currentTimeMillis()) {
-                                lastBolusView.setText("");
-                            } else {
+                            List<Bolus> history = plugin.getPump().history.bolusHistory;
+                            if (!history.isEmpty() && history.get(0).timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
+                                Bolus bolus = history.get(0);
                                 long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                                 double agoHours = agoMsc / 60d / 60d / 1000d;
                                 lastBolusView.setText(DecimalFormatter.to2Decimal(bolus.amount) + " U " +
                                         "(" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ", "
                                         + DateUtil.timeString(bolus.timestamp) + ") ");
+                            } else {
+                                lastBolusView.setText("");
                             }
 
                             // TBR
