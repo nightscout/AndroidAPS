@@ -57,7 +57,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private PumpDescription pumpDescription = new PumpDescription();
 
-    private RuffyCommands ruffyScripter;
+    @NonNull
+    private final RuffyCommands ruffyScripter;
 
     // TODO access to pump (and its members) is chaotic and needs an update
     private ComboPump pump = new ComboPump();
@@ -80,7 +81,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private ComboPlugin() {
         definePumpCapabilities();
-        MainApp.bus().register(this);
         ruffyScripter = RuffyCommandsV1Impl.getInstance(MainApp.instance());
     }
 
@@ -209,6 +209,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return lastCmdResult != null ? new Date(lastCmdResult.completionTime) : new Date(0);
     }
 
+    @Override
+    public synchronized void refreshDataFromPump(String reason) {
+        log.debug("RefreshDataFromPump called");
+
+        if (pump.lastCmdResult == null) {
+            initializePump();
+        } else {
+            runCommand("Refreshing", new CommandExecution() {
+                @Override
+                public CommandResult execute() {
+                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
+                }
+            });
+        }
+    }
+
     private void initializePump() {
         CommandResult commandResult = runCommand("Checking pump history", false, new CommandExecution() {
             @Override
@@ -283,39 +299,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // and also remove treatments the pump doesn't have.
         // warn about this with a notification? show what was removed on combo tab?
 
-    }
-
-    // this method is regularly called from info.nightscout.androidaps.receivers.KeepAliveReceiver
-    // TODO check this is eithor called regularly even with other commansd being fired; if not,
-    // request this periodically
-    @Override
-    public synchronized void refreshDataFromPump(String reason) {
-        log.debug("RefreshDataFromPump called");
-
-        // if Android is sluggish this might get called before ruffy is bound
-        if (!ruffyScripter.isPumpAvailable()) {
-            log.error("Rejecting call to RefreshDataFromPump: scripter not ready yet.");
-            return;
-        }
-
-        // TODO
-//        boolean notAUserRequest = !reason.toLowerCase().contains("user");
-//        boolean wasRunAtLeastOnce = pump.lastCmdResult != null;
-//        boolean ranWithinTheLastMinute = wasRunAtLeastOnce && System.currentTimeMillis() < pump.lastCmdResult.completionTime + 60 * 1000;
-//        if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
-//            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
-//        } else {
-
-        if (pump.lastCmdResult == null) {
-           initializePump();
-        } else {
-            runCommand("Refreshing", new CommandExecution() {
-                @Override
-                public CommandResult execute() {
-                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
-                }
-            });
-        }
     }
 
     // TODO uses profile values for the time being

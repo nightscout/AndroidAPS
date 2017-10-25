@@ -1,6 +1,7 @@
 package de.jotomo.ruffyscripter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 public class RuffyCommandsV1Impl implements RuffyCommands {
     private static RuffyCommands delegate;
 
+    @NonNull
     public static RuffyCommands getInstance(Context context) {
         if (delegate == null) delegate = new RuffyScripter(context);
         return delegate;
