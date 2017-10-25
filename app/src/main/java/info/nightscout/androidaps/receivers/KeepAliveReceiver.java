@@ -47,7 +47,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private void checkBg() {
         BgReading bgReading = DatabaseHelper.lastBg();
         if (bgReading != null && bgReading.date + 25 * 60 * 1000 < System.currentTimeMillis()) {
-            Notification n = new Notification(Notification.PUMP_UNREACHABLE, "Missed BG readings", Notification.URGENT);
+            Notification n = new Notification(Notification.BG_READINGS_MISSED, "Missed BG readings", Notification.URGENT);
             n.soundId = R.raw.alarm;
             MainApp.bus().post(new EventNewNotification(n));
         }
