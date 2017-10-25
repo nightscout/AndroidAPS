@@ -208,6 +208,8 @@ public class BolusCommand extends BaseCommand {
                     .history(new PumpHistory().bolusHistory(boluses));
         } catch (CommandException e) {
             return e.toCommandResult();
+        } finally {
+            bolusProgressReporter.report(null, 100, 0);
         }
     }
 

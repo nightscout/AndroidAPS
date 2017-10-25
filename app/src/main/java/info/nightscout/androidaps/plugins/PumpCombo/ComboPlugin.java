@@ -406,6 +406,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         case STOPPED:
                             event.status = MainApp.sResources.getString(R.string.bolusstopped);
                             break;
+                        default:
+                            // no state, just percent below
+                            break;
                     }
                     event.percent = percent;
                     MainApp.bus().post(event);
