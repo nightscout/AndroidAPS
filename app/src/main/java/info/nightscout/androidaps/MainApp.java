@@ -209,12 +209,6 @@ public class MainApp extends Application {
     private void startKeepAliveService() {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
-            if (Config.DANAR) {
-                startService(new Intent(this, DanaRExecutionService.class));
-                startService(new Intent(this, DanaRKoreanExecutionService.class));
-                startService(new Intent(this, DanaRv2ExecutionService.class));
-                startService(new Intent(this, DanaRSService.class));
-            }
             keepAliveReceiver.setAlarm(this);
         }
     }
