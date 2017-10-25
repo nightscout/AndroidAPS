@@ -751,12 +751,6 @@
     <string name="connectiontimedout">Connection timed out</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
-    <string name="key_combo_ignore_transient_errors" translatable="false">combo_ignore_transient_tbr_errors</string>
-    <string name="combo_ignore_transient_errors">Ignore transient errors</string>
-    <string name="combo_ignore_transient_errors_summary">Ignore a connect failure for a background operation unless the next attempt also fails.</string>
-    <string name="key_combo_disable_alarms" translatable="false">combo_disable_alerts</string>
-    <string name="combo_disable_alarms">Disable alarms</string>
-    <string name="combo_disable_alarms_summary">Ignore all errors encountered while communicating with the pump. Alarms raised by the pump (including those caused by AndroidAPS) will still be raised on the pump.</string>
     <string name="bolusprogramming">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
     <string name="combo_stats">Stats</string>

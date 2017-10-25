@@ -81,7 +81,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private ComboPlugin() {
         definePumpCapabilities();
         MainApp.bus().register(this);
-        startAlerter();
         ruffyScripter = RuffyCommandsV1Impl.getInstance(MainApp.instance());
     }
 
@@ -113,61 +112,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     public ComboPump getPump() {
         return pump;
-    }
-
-    /**
-     * The alerter frequently checks the result of the last executed command via the lastCmdResult
-     * field and shows a notification with sound and vibration if an error occurred.
-     * More details on the error can then be looked up in the Combo tab.
-     * <p>
-     * The alarm is re-raised every 5 minutes for as long as the error persist. As soon
-     * as a command succeeds no more new alerts are raised.
-     */
-    private void startAlerter() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Context context = MainApp.instance().getApplicationContext();
-                NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                int id = 1000;
-                long lastAlarmTime = 0;
-                while (true) {
-                    CommandResult localLastCmdResult = pump.lastCmdResult;
-                    if (!SP.getBoolean(R.string.combo_disable_alarms, false) &&
-                            localLastCmdResult != null && !localLastCmdResult.success) {
-                        long now = System.currentTimeMillis();
-                        long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
-                        boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
-                        if (now > fiveMinutesSinceLastAlarm && loopEnabled) {
-                            log.error("Command result: " + localLastCmdResult);
-                            PumpState localPumpState = pump.state;
-                            if (localPumpState.errorMsg != null) {
-                                log.warn("Pump is in error state, displaying; " + localPumpState.errorMsg);
-                            }
-                            long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000};
-                            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                            NotificationCompat.Builder notificationBuilder =
-                                    new NotificationCompat.Builder(context)
-                                            .setSmallIcon(R.drawable.notif_icon)
-                                            .setSmallIcon(R.drawable.icon_bolus)
-                                            .setContentTitle("Combo communication error")
-                                            .setContentText(localLastCmdResult.message)
-                                            .setPriority(NotificationCompat.PRIORITY_MAX)
-                                            .setLights(Color.BLUE, 1000, 0)
-                                            .setSound(uri)
-                                            .setVibrate(vibratePattern);
-                            mgr.notify(id, notificationBuilder.build());
-                            lastAlarmTime = now;
-                        } else {
-                            // TODO would it be useful to have a 'last error' field in the ui showing the most recent
-                            // failed command? the next command that runs successful with will override this error
-                            log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
-                        }
-                    }
-                    SystemClock.sleep(5 * 1000);
-                }
-            }
-        }, "combo-alerter").start();
     }
 
     @Override
