@@ -384,7 +384,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    // TODO remove dep on BolusCommand
+    private static BolusProgressReporter nullBolusProgressReporter = new BolusProgressReporter() {
+        @Override
+        public void report(State state, int percent, double delivered) {}
+    };
+
     private static BolusProgressReporter bolusProgressReporter =
             new BolusProgressReporter() {
                 @Override
@@ -466,7 +470,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         CommandResult bolusCmdResult = runCommand("Bolusing", new CommandExecution() {
             @Override
             public CommandResult execute() {
-                return ruffyScripter.deliverBolus(detailedBolusInfo.insulin, bolusProgressReporter);
+                return ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
+                        detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter);
             }
         });
 
