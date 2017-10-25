@@ -169,19 +169,16 @@ public class MainApp extends Application {
         else
             Answers.getInstance().logCustom(new CustomEvent("AppStart"));
 
-
-        startKeepAliveService();
-
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 SystemClock.sleep(5000);
                 PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump != null) {
+                if (pump != null)
                     pump.refreshDataFromPump("Initialization");
-                }
+                startKeepAliveService();
             }
-        });
+        }, "pump-initialization");
         t.start();
 
     }
