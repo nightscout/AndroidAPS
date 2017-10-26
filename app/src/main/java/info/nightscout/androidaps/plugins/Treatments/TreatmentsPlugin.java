@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
@@ -256,7 +257,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             result.mealCOB = autosensData.cob;
             result.minDeviationSlope = autosensData.minDeviationSlope;
         }
-        result.lastBolusTime = getLastSMBTime();
+        result.lastBolusTime = getLastBolusTime();
         return result;
     }
 
@@ -279,15 +280,16 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public long getLastSMBTime() {
+    public long getLastBolusTime() {
         long last = 0;
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             if (!t.isValid)
                 continue;
-            if (t.isSMB && t.date > last)
+            if (t.date > last)
                 last = t.date;
         }
+        log.debug("Last bolus time: " + new Date(last).toLocaleString());
         return last;
     }
 
