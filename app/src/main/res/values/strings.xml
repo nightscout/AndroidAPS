@@ -269,7 +269,7 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
-    <string name="pump_history">History</string>
+    <string name="pump_errors_history">Errors</string>
     <string name="danar_historyreload">Reload</string>
     <string name="uploading">Uploading</string>
     <string name="danar_ebolus">E bolus</string>

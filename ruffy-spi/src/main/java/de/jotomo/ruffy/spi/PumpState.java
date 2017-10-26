@@ -1,10 +1,8 @@
 package de.jotomo.ruffy.spi;
 
-import java.util.Date;
-
 /** State displayed on the main screen of the pump. */
 public class PumpState {
-    public Date timestamp = new Date();
+    public String menu = null;
     public boolean tbrActive = false;
     /** TBR percentage. 100% means no TBR active, just the normal basal rate running. */
     public int tbrPercent = -1;
@@ -29,6 +27,11 @@ public class PumpState {
     public int insulinState = -1;
 
     public int activeBasalProfileNumber;
+
+    public PumpState menu(String menu) {
+        this.menu = menu;
+        return this;
+    }
 
     public PumpState tbrActive(boolean tbrActive) {
         this.tbrActive = tbrActive;
@@ -76,17 +79,19 @@ public class PumpState {
     }
 
     public String getStateSummary() {
-        if (errorMsg != null)
-            return errorMsg;
+        if (menu == null)
+            return "Unreachable";
+        else if (suspended && (batteryState == EMPTY || insulinState == EMPTY))
+            return "Suspended due to error";
         else if (suspended)
-            return "Suspended";
+            return "Suspended by user";
         return "Running";
     }
 
     @Override
     public String toString() {
         return "PumpState{" +
-                "timestamp=" + timestamp +
+                "menu=" + menu +
                 ", tbrActive=" + tbrActive +
                 ", tbrPercent=" + tbrPercent +
                 ", tbrRate=" + tbrRate +

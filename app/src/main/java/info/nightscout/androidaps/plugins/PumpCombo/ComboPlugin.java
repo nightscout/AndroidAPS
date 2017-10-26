@@ -1,13 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpCombo;
 
-import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,7 +16,7 @@ import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.Error;
+import de.jotomo.ruffy.spi.history.PumpError;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
@@ -44,7 +38,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -205,23 +198,24 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @NonNull
     @Override
     public Date lastDataTime() {
-        CommandResult lastCmdResult = pump.lastCmdResult;
-        return lastCmdResult != null ? new Date(lastCmdResult.completionTime) : new Date(0);
+        return new Date(pump.lastSuccessfulConnection);
     }
 
     @Override
     public synchronized void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
-        if (pump.lastCmdResult == null) {
+        boolean firstRun = pump.lastCmdResult == null;
+
+        runCommand("Refreshing", new CommandExecution() {
+            @Override
+            public CommandResult execute() {
+                return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
+            }
+        });
+
+        if (firstRun) {
             initializePump();
-        } else {
-            runCommand("Refreshing", new CommandExecution() {
-                @Override
-                public CommandResult execute() {
-                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
-                }
-            });
         }
     }
 
@@ -585,8 +579,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     }
 
-    private CommandResult runCommand(String status, boolean checkTbrMisMatch, CommandExecution commandExecution) {
-        MainApp.bus().post(new EventComboPumpUpdateGUI(status));
+    private CommandResult runCommand(String activity, boolean checkTbrMisMatch, CommandExecution commandExecution) {
+        pump.activity = activity;
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
+
         CommandResult commandResult = commandExecution.execute();
 
         if (commandResult.success) {
@@ -606,17 +602,19 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // get the current state, then decide what makes sense to do further, if anything,
         // send next request.
         // then request state again ... ?
-        if (commandResult.state.errorMsg != null) {
+        // TODO rethink this errorMsg field;
+
+/*        if (commandResult.state.errorMsg != null) {
             CommandResult takeOverAlarmResult = ruffyScripter.takeOverAlarms();
 
-            for (Error error : takeOverAlarmResult.history.errorHistory) {
+            for (PumpError pumpError : takeOverAlarmResult.history.pumpErrorHistory) {
                 MainApp.bus().post(new EventNewNotification(
-                        new Notification(Notification.COMBO_PUMP_ERROR,
-                        "Pump alarm: " + error.message, Notification.URGENT)));
+                        new Notification(Notification.COMBO_PUMP_ALARM,
+                        "Pump alarm: " + pumpError.message, Notification.URGENT)));
             }
 
             commandResult.state = takeOverAlarmResult.state;
-        }
+        }*/
 
         pump.lastCmdResult = commandResult;
         pump.state = commandResult.state;
@@ -632,20 +630,21 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.error("JOE: no!");
         } else {
             // still crashable ...
+            // TODO only update if command was successful? -> KeepAliveReceiver, triggering alarm on unavaiblae pump
             pump.lastCmdResult.completionTime = System.currentTimeMillis();
         }
 
-        // TOOD
+        // TODO merge all new history here?
         if (commandResult.history != null) {
             if (commandResult.history.reservoirLevel != -1) {
                 pump.reservoirLevel = commandResult.history.reservoirLevel;
             }
             pump.history = commandResult.history;
-            if (pump.history.bolusHistory.size() > 0) {
-                pump.lastBolus = pump.history.bolusHistory.get(0);
-            }
         }
 
+        // TODO in the event of an error schedule a resync
+
+        pump.activity = null;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
     }

@@ -26,6 +26,11 @@ public class BolusCommand extends BaseCommand {
     private final BolusProgressReporter bolusProgressReporter;
     private volatile boolean cancelRequested;
 
+    // TODO make CommandResult a field that is updated as the command progress so that we can
+    // (also) see via cmdResult.enacted if something has been enacted and how safe it is to
+    // restart the command (also checking history of course, but lets double check this cruical
+    // part)
+
     public BolusCommand(double bolus, BolusProgressReporter bolusProgressReporter) {
         this.bolus = bolus;
         this.bolusProgressReporter = bolusProgressReporter;

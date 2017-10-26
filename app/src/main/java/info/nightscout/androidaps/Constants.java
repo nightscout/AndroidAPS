@@ -1,7 +1,5 @@
 package info.nightscout.androidaps;
 
-import com.j256.ormlite.stmt.query.In;
-
 /**
  * Created by mike on 07.06.2016.
  */
@@ -24,7 +22,7 @@ public class Constants {
     public static final int hoursToKeepInDatabase = 72;
     public static final int daysToKeepHistoryInDatabase = 30;
 
-    public static final long keepAliveMsecs = 5 * 60 * 1000L;
+    public static final long keepAliveMsecs = 60 * 1000L;
 
     // SMS COMMUNICATOR
     public static final long remoteBolusMinDistance = 15 * 60 * 1000L;

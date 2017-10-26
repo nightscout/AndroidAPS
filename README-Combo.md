@@ -52,3 +52,18 @@ Testing:
 - Try to reproduce and open a ticket, add tag if any, otherwise add the hash of the commit used (right-click on the branch name select
  _Copy revision number_ or use _git show_ on the command-line) the branch name. Attach the log to the issue and label it as a bug.
   The logs can be found in _/storage/emulated/0/Android/data/info.nightscout.androidaps/_
+
+v2 usage
+- When a BOLUS/TBR CANCELLED alert starts on the pump during bolusing or setting a TBR, this is caused by disconnect
+  between pump and phone. The app will try to reconnect and confirm the alert and then retry the last action. Therefore,
+  such an alarm shall be ignored (cancelling it is not a big issue, but will lead to the currently active action to
+  have to wait till the pump's display turns off before it can reconnect to the pump).
+  If the pump's alarm continues, the last action might have failed, in which case the user needs to confirm the alarm
+
+v3 TODOs
+- Reading and displaying TDDs
+
+Maybes:
+- reading/writing basal profiles to pump
+- splitted bolus/slower bolus delivery
+- extended bolus support

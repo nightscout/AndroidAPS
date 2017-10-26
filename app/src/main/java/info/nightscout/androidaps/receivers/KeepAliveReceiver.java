@@ -68,6 +68,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 // fixing the problem takes longer (or is not immediately possible because the pump was forgotten)?
                 // suppress this for another 25m if the message was dismissed?
                 // The alarm sound is played back as regular media, that means it might be muted if sound level is at 0
+                // a simple 'Enable/disable alarms' button on the actions tab?
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, "Pump unreachable", Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));

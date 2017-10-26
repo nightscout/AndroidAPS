@@ -30,7 +30,8 @@ import info.nightscout.utils.DecimalFormatter;
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
 
-    private TextView statusView;
+    private TextView stateView;
+    private TextView activityView;
     private TextView batteryView;
     private TextView reservoirView;
     private TextView lastConnectionView;
@@ -44,7 +45,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
-        statusView = (TextView) view.findViewById(R.id.combo_status);
+        stateView = (TextView) view.findViewById(R.id.combo_state);
+        activityView = (TextView) view.findViewById(R.id.combo_activity);
         batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
@@ -70,52 +72,48 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 });
                 thread.start();
                 break;
-            case R.id.combo_history:
-                // TODO show popup with warnings/errors from the pump
+            case R.id.combo_error_history:
+                // TODO show popup with pump errors and comm problems
                 break;
             case R.id.combo_stats:
-                // TODO show TDD stats from the pump
+                // TODO show TDD stats from the pump (later)
                 break;
         }
     }
 
     @Subscribe
     public void onStatusEvent(final EventComboPumpUpdateGUI ev) {
-        if (ev.status != null) {
-            Activity activity = getActivity();
-            if (activity != null)
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(ev.status);
-                        statusView.setTextColor(Color.WHITE);
-                    }
-                });
-        } else {
-            updateGUI();
-        }
+        updateGUI();
     }
 
     public void updateGUI() {
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
+        log.debug("aCtI: activity available? " + (activity != null));
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     ComboPlugin plugin = ComboPlugin.getPlugin();
+
+                    // activity
+                    String activity = plugin.getPump().activity;
+                    activityView.setText(activity != null ? activity : "Idle");
+
                     if (plugin.isInitialized()) {
                         // status
-                        statusView.setText(plugin.getPump().state.getStateSummary());
-                        if (plugin.getPump().state.errorMsg != null) {
-                            statusView.setTextColor(Color.RED);
+                        PumpState ps = plugin.getPump().state;
+                        stateView.setText(plugin.getPump().state.getStateSummary());
+                        if (plugin.getPump().state.errorMsg != null
+                                || ps.insulinState == PumpState.EMPTY
+                                || ps.batteryState == PumpState.EMPTY) {
+                            stateView.setTextColor(Color.RED);
                         } else if (plugin.getPump().state.suspended) {
-                            statusView.setTextColor(Color.YELLOW);
+                            stateView.setTextColor(Color.YELLOW);
                         } else {
-                            statusView.setTextColor(Color.WHITE);
+                            stateView.setTextColor(Color.WHITE);
                         }
 
                         // battery
-                        PumpState ps = plugin.getPump().state;
                         if (ps.batteryState == PumpState.EMPTY) {
                             batteryView.setText("{fa-battery-empty}");
                             batteryView.setTextColor(Color.RED);
@@ -143,15 +141,14 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         if (lastCmdResult != null) {
                             String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
                             String time = DateUtil.timeString(lastCmdResult.completionTime);
+                            // TODO must not be within if (lastCmdResult) so we can complain if NO command ever worked; also move from completionTime to new times
+                            // TODO check all access to completionTime. useful anymore?
                             if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
-                                lastConnectionView.setText(
-                                        "No successful connection" +
-                                        "\nwithin the last " + minAgo + " min");
+                                lastConnectionView.setText("No connection for " + minAgo + " min");
                                 lastConnectionView.setTextColor(Color.RED);
                             }
                             if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                                lastConnectionView.setText("" + minAgo + " (" + time + ")" +
-                                        "\nLast connect attempt failed");
+                                lastConnectionView.setText("Last connect attempt failed");
                                 lastConnectionView.setTextColor(Color.YELLOW);
                             } else {
                                 lastConnectionView.setText("" + minAgo + " (" + time + ")");

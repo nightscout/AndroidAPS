@@ -14,7 +14,7 @@ public class PumpHistoryRequest {
 
     public long bolusHistory = SKIP;
     public long tbrHistory = SKIP;
-    public long errorHistory = SKIP;
+    public long pumpErrorHistory = SKIP;
     public long tddHistory = SKIP;
 
     public PumpHistoryRequest reservoirLevel(boolean reservoirLevel) {
@@ -33,7 +33,7 @@ public class PumpHistoryRequest {
     }
 
     public PumpHistoryRequest errorHistory(long errorHistory) {
-        this.errorHistory = errorHistory;
+        this.pumpErrorHistory = errorHistory;
         return this;
     }
 
@@ -48,7 +48,7 @@ public class PumpHistoryRequest {
                 "reservoirLevel=" + reservoirLevel +
                 ", bolusHistory=" + bolusHistory +
                 ", tbrHistory=" + tbrHistory +
-                ", errorHistory=" + errorHistory +
+                ", pumpErrorHistory=" + pumpErrorHistory +
                 ", tddHistory=" + tddHistory +
                 '}';
     }

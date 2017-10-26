@@ -29,7 +29,6 @@ import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
-import de.jotomo.ruffy.spi.history.Error;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
@@ -40,6 +39,7 @@ import de.jotomo.ruffyscripter.commands.ReadHistoryCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
+import de.jotomo.ruffyscripter.commands.TakeOverAlarmsCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -256,12 +256,12 @@ public class RuffyScripter implements RuffyCommands {
             return new CommandResult().message(Joiner.on("\n").join(violations)).state(readPumpStateInternal());
         }
 
+        // TODO simplify, hard to reason about exists
         synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
-                final RuffyScripter scripter = this;
                 final Returnable returnable = new Returnable();
                 class CommandRunner {
                     public void run() {
@@ -294,7 +294,7 @@ public class RuffyScripter implements RuffyCommands {
                             PumpState pumpState = readPumpStateInternal();
                             log.debug("Pump state before running command: " + pumpState);
                             long cmdStartTime = System.currentTimeMillis();
-                            cmd.setScripter(scripter);
+                            cmd.setScripter(RuffyScripter.this);
                             returnable.cmdResult = cmd.execute();
                             long cmdEndTime = System.currentTimeMillis();
                             returnable.cmdResult.completionTime = cmdEndTime;
@@ -333,6 +333,11 @@ public class RuffyScripter implements RuffyCommands {
                             reconnect();
                             // TODO at least for bigger boluses we should check history after reconnect to make sure
                             // we haven't issued that bolus within the last 1-2m? in case there's a bug in the code ...
+
+                            // TODO: only do the reconnect to confirm the alert, then return and let the ComboPlugin decide what to do next;
+                            // for bolus: how ... run 'step 2': checking/reading history?! step1 being bolus delivery, so have different resume points? ggrrrmpf
+                            // less logic in scripter; just reconnect to confirm alert if needed, then return with error;
+                            // let CP read history.LAST to see what actually happened and then resume appropriately.
                             cmdThread = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -421,6 +426,11 @@ public class RuffyScripter implements RuffyCommands {
             ensureConnected();
             if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 String errorMessage = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                // TODO bolus cancelled is raised BEFORE a bolus is started. if disconnect occurs after
+                // bolus has started (or the user interacts with the pump, the bolus continues.
+                // in that case, reconnecting and restarting the command lets to a DUPLICATE bolus.
+                // add a method restartAllowed(), which accesses a flag bolusDelivering started, which
+                // is set false then?
                 if (activeCmd.getReconnectAlarm() != null && activeCmd.getReconnectAlarm().equals(errorMessage)) {
                     log.debug("Confirming alert caused by disconnect: " + errorMessage);
                     // confirm alert
@@ -454,6 +464,7 @@ public class RuffyScripter implements RuffyCommands {
             return false;
         }
 
+        // aren't at main_menu after alert anyways? unless bolus i still going (also main_menu); low cartridge on bolus needs to be handled specially, by bolus command
         returnToRootMenu();
 
         return getCurrentMenu().getType() == MenuType.MAIN_MENU;
@@ -530,9 +541,12 @@ public class RuffyScripter implements RuffyCommands {
         PumpState state = new PumpState();
         Menu menu = currentMenu;
         if (menu == null) {
-            return new PumpState().errorMsg("Menu is not available");
+            return state;
         }
+
         MenuType menuType = menu.getType();
+        state.menu = menuType.name();
+
         if (menuType == MenuType.MAIN_MENU) {
             Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
             if (tbrPercentage != 100) {
@@ -545,10 +559,6 @@ public class RuffyScripter implements RuffyCommands {
             }
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
-            // TODO v2, read current base basal rate, which is shown center when no TBR is active.
-            // Check if that holds true when an extended bolus is running.
-            // Add a field to PumpStatus, rather than renaming/overloading tbrRate to mean
-            // either TBR rate or basal rate depending on whether a TBR is active.
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
             state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
         } else if (menuType == MenuType.STOP) {
@@ -556,14 +566,7 @@ public class RuffyScripter implements RuffyCommands {
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else {
-            StringBuilder sb = new StringBuilder();
-            for (MenuAttribute menuAttribute : menu.attributes()) {
-                sb.append(menuAttribute);
-                sb.append(": ");
-                sb.append(menu.getAttribute(menuAttribute));
-                sb.append("\n");
-            }
-            state.errorMsg = "Pump is on menu " + menuType + ", listing attributes: \n" + sb.toString();
+            // just return the PumpState with the menu set
         }
         return state;
     }
@@ -619,6 +622,7 @@ public class RuffyScripter implements RuffyCommands {
         // TODO this is probably due to a disconnect and rtDisconnect having nulled currentMenu.
         // This here might just work, but needs a more controlled approach when implementing
         // something to deal with connection loses
+        // TODO force reconnect? and retry?
         while (currentMenu == null) {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Unable to read current menu");
@@ -630,14 +634,9 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     public void pressUpKey() {
-//        wrapNoNotTheSubwayKind(new Step() {
-//            @Override
-//            public void doStep() {
         log.debug("Pressing up key");
         pressKey(Key.UP);
         log.debug("Releasing up key");
-//            }
-//        });
     }
 
     public void pressDownKey() {
@@ -742,7 +741,7 @@ public class RuffyScripter implements RuffyCommands {
         waitForMenuUpdate(60, "Timeout waiting for menu update");
     }
 
-    public void waitForMenuUpdate(long timeoutInSeconds, String errorMessage) {
+    private void waitForMenuUpdate(long timeoutInSeconds, String errorMessage) {
         long timeoutExpired = System.currentTimeMillis() + timeoutInSeconds * 1000;
         long initialUpdateTime = menuLastUpdated;
         while (initialUpdateTime == menuLastUpdated) {
@@ -869,32 +868,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult takeOverAlarms() {
-        if (getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR) {
-            return new CommandResult().success(false).enacted(false).message("No alarm active on the pump");
-        }
-        while (currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-            new Error(System.currentTimeMillis(),
-                    "",
-                    // TODO
-                    // codes unqiue across W/E?
-//                    (int) currentMenu.getAttribute(MenuAttribute.WARNING),
-//                    (int) currentMenu.getAttribute(MenuAttribute.ERROR),
-                    (String) currentMenu.getAttribute(MenuAttribute.MESSAGE));
-        }
-        // confirm alert
-        verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-        pressCheckKey();
-        // dismiss alert
-        verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-        pressCheckKey();
-        waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
-
-        PumpState pumpState = readPumpStateInternal();
-        return new CommandResult()
-                .success(true)
-                .enacted(false /* well, no treatments were enacted ... */)
-                .message(pumpState.errorMsg) // todo yikes?
-                .state(pumpState);
+        return runCommand(new TakeOverAlarmsCommand());
     }
 
     @Override

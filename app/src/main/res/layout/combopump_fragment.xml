@@ -29,7 +29,7 @@
                     android:layout_weight="1.5"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Status"
+                    android:text="State"
                     android:textSize="14sp" />
 
                 <TextView
@@ -43,14 +43,13 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/combo_status"
+                    android:id="@+id/combo_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
-                    android:text="Initializating"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -135,6 +134,51 @@
 
                 <TextView
                     android:id="@+id/combo_insulinstate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/listdelimiter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="end"
+                    android:paddingRight="5dp"
+                    android:text="Activity"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingEnd="2dp"
+                    android:paddingStart="2dp"
+                    android:text=":"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/combo_activity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -317,17 +361,6 @@
                 android:text="@string/combo_refresh" />
 
             <Button
-                android:id="@+id/combo_history"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/icon_danarhistory"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/pump_history" />
-
-            <Button
                 android:id="@+id/combo_stats"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
@@ -336,7 +369,19 @@
                 android:drawableTop="@drawable/icon_danarstats"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
+                android:visibility="gone"
                 android:text="@string/combo_stats" />
+
+            <Button
+                android:id="@+id/combo_error_history"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/icon_cp_aaps_offline"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/pump_errors_history" />
 
         </LinearLayout>
 

@@ -10,16 +10,17 @@ import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 
 class ComboPump {
-    public long lastSuccessfulConnection;
-    public long lastConnectionAttempt;
-
+    // TODO actually ... this isn't about successful command execution, but whether we could connect to the pump at all
+    volatile long lastSuccessfulConnection;
+    volatile long lastConnectionAttempt;
     @Nullable
     volatile CommandResult lastCmdResult;
+
+    public volatile String activity;
     @NonNull
     volatile PumpState state = new PumpState();
-    @NonNull
-    volatile PumpHistory history = new PumpHistory();
-    @Nullable
-    volatile Bolus lastBolus;
     volatile int reservoirLevel = -1;
+    @NonNull
+
+    volatile PumpHistory history = new PumpHistory();
 }
