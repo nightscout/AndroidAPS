@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import com.eclipsesource.v8.V8Object;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;
@@ -32,7 +30,7 @@ public class DetermineBasalResultAMA extends APSResult {
             if (result.containsKey("eventualBG")) eventualBG = (Double) result.get("eventualBG");
             if (result.containsKey("snoozeBG")) snoozeBG = (Double) result.get("snoozeBG");
             if (result.containsKey("rate")) {
-                rate =  (Double) result.get("rate");
+                rate = (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
                 changeRequested = true;
             } else {
@@ -40,7 +38,7 @@ public class DetermineBasalResultAMA extends APSResult {
                 changeRequested = false;
             }
             if (result.containsKey("duration")) {
-                duration = ((Double)result.get("duration")).intValue();
+                duration = ((Double) result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;

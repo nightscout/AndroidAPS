@@ -169,9 +169,6 @@ public class MainApp extends Application {
         else
             Answers.getInstance().logCustom(new CustomEvent("AppStart"));
 
-
-        startKeepAliveService();
-
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -179,8 +176,9 @@ public class MainApp extends Application {
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null)
                     pump.refreshDataFromPump("Initialization");
+                startKeepAliveService();
             }
-        });
+        }, "pump-initialization");
         t.start();
 
     }
@@ -213,12 +211,6 @@ public class MainApp extends Application {
     private void startKeepAliveService() {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
-            if (Config.DANAR) {
-                startService(new Intent(this, DanaRExecutionService.class));
-                startService(new Intent(this, DanaRKoreanExecutionService.class));
-                startService(new Intent(this, DanaRv2ExecutionService.class));
-                startService(new Intent(this, DanaRSService.class));
-            }
             keepAliveReceiver.setAlarm(this);
         }
     }
