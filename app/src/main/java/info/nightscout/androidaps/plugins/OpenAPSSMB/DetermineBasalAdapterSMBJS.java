@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSSMB;
 
-import com.eclipsesource.v8.JavaVoidCallback;
-import com.eclipsesource.v8.V8;
-import com.eclipsesource.v8.V8Array;
-import com.eclipsesource.v8.V8Object;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -128,9 +123,8 @@ public class DetermineBasalAdapterSMBJS {
                         makeParam(mMealData, rhino, scope),
                         setTempBasalFunctionsObj,
                         new Boolean(mMicrobolusAllowed),
-                        makeParam(null,rhino,scope) // reservoir data as undefined
+                        makeParam(null, rhino, scope) // reservoir data as undefined
                 };
-
 
 
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
@@ -217,11 +211,12 @@ public class DetermineBasalAdapterSMBJS {
                         double autosensDataRatio,
                         boolean tempTargetSet,
                         boolean microBolusAllowed
-                        ) throws JSONException {
+    ) throws JSONException {
 
         String units = profile.getUnits();
 
-        mProfile = new JSONObject();;
+        mProfile = new JSONObject();
+        ;
         mProfile.put("max_iob", maxIob);
         mProfile.put("dia", profile.getDia());
         mProfile.put("type", "current");
@@ -252,7 +247,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsFraction", 1.0d); // fraction of carbs we'll assume will absorb over 4h if we don't yet see carb absorption
         mProfile.put("remainingCarbsCap", 90); // max carbs we'll assume will absorb over 4h if we don't yet see carb absorption
 
-        mCurrentTemp = new JSONObject();;
+        mCurrentTemp = new JSONObject();
+        ;
         mCurrentTemp.put("temp", "absolute");
         mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
         mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
@@ -265,7 +261,8 @@ public class DetermineBasalAdapterSMBJS {
 
         mIobData = IobCobCalculatorPlugin.convertToJSONArray(iobArray);
 
-        mGlucoseStatus = new JSONObject();;
+        mGlucoseStatus = new JSONObject();
+        ;
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
         if (SP.getBoolean("always_use_shortavg", false)) {
@@ -276,7 +273,8 @@ public class DetermineBasalAdapterSMBJS {
         mGlucoseStatus.put("short_avgdelta", glucoseStatus.short_avgdelta);
         mGlucoseStatus.put("long_avgdelta", glucoseStatus.long_avgdelta);
 
-        mMealData = new JSONObject();;
+        mMealData = new JSONObject();
+        ;
         mMealData.put("carbs", mealData.carbs);
         mMealData.put("boluses", mealData.boluses);
         mMealData.put("mealCOB", mealData.mealCOB);
@@ -284,7 +282,8 @@ public class DetermineBasalAdapterSMBJS {
         mMealData.put("lastBolusTime", mealData.lastBolusTime);
 
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
-            mAutosensData = new JSONObject();;
+            mAutosensData = new JSONObject();
+            ;
             mAutosensData.put("ratio", autosensDataRatio);
         } else {
             mAutosensData = null;
@@ -295,7 +294,7 @@ public class DetermineBasalAdapterSMBJS {
 
     public Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
 
-        if(jsonObject == null) return Undefined.instance;
+        if (jsonObject == null) return Undefined.instance;
 
         Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), new Callable() {
             @Override
