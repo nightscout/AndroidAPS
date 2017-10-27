@@ -767,7 +767,7 @@
     <string name="combo_last_connection_time">%s (%s)</string>
     <string name="combo_tbr_remaining">%d%% (%d remaining)</string>
     <string name="combo_last_bolus">%.2f U (%.1f %s, %s)</string>
-    <string name="combo_pump_state_unreachable">Unreachable</string>
+    <string name="combo_pump_state_unreachable">Pump unreachable</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
     <string name="combo_pump_state_running">Running</string>
@@ -775,5 +775,6 @@
     <string name="combo_action_cancelling_tbr">Cancelling TBR</string>
     <string name="combo_action_setting_tbr">Setting TBR</string>
     <string name="combo_action_bolusing">Bolusing</string>
+    <string name="combo_action_idle">Idle</string>
 </resources>
 

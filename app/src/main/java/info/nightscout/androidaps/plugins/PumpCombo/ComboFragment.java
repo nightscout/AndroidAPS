@@ -85,8 +85,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     }
 
     public void updateGUI() {
-        final Activity activity = getActivity();
-        log.debug("aCtI: activity available? " + (activity != null));
+        Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -95,7 +94,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
                     // activity
                     String activity = plugin.getPump().activity;
-                    activityView.setText(activity != null ? activity : "");
+                    activityView.setText(activity != null ? activity : getString(R.string.combo_action_idle));
 
                     if (plugin.isInitialized()) {
                         // state
@@ -140,8 +139,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         if (lastCmdResult != null) {
                             String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
                             String time = DateUtil.timeString(lastCmdResult.completionTime);
-                            // TODO must not be within if (lastCmdResult) so we can complain if NO command ever worked; also move from completionTime to new times
-                            // TODO check all access to completionTime. useful anymore?
                             if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
                                 lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
                                 lastConnectionView.setTextColor(Color.RED);
