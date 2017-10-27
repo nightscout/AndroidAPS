@@ -659,4 +659,8 @@
     <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear</string>
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
     <string name="danar_model" formatted="false">Model: %02X Protokol: %02X Kód: %02X</string>
+    <string name="active"><![CDATA[<Aktivní>]]></string>
+    <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
+    <string name="connectiontimedout">Vypršel čas připojování</string>
+    <string name="treatments_wizard_tt_label">DC</string>
 </resources>

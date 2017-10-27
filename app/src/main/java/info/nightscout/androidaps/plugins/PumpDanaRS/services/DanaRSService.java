@@ -26,6 +26,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
@@ -188,16 +189,16 @@ public class DanaRSService extends Service {
         while (!msg.done && bleComm.isConnected()) {
             SystemClock.sleep(100);
         }
-        SystemClock.sleep(200);
         lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded;
         return true;
     }
 
 
-    public boolean bolus(double insulin, int carbs, long carbtime, Treatment t) {
+    public boolean bolus(final double insulin, int carbs, long carbtime, Treatment t) {
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.startingbolus)));
         bolusingTreatment = t;
-        int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
-        DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, speed);
+        final int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, preferencesSpeed);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t); // initialize static variables
         DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t); // initialize static variables
 
@@ -210,28 +211,60 @@ public class DanaRSService extends Service {
             bleComm.sendMessage(msgSetHistoryEntry_v2);
             lastHistoryFetched = carbtime - 60000;
         }
-        if (insulin > 0) {
-            DanaRS_Packet_Notify_Delivery_Rate_Display progress = new DanaRS_Packet_Notify_Delivery_Rate_Display(insulin, t); // initialize static variables
 
+        final long bolusStart = System.currentTimeMillis();
+        if (insulin > 0) {
             if (!stop.stopped) {
                 bleComm.sendMessage(start);
             } else {
                 t.insulin = 0d;
                 return false;
             }
+            DanaRS_Packet_Notify_Delivery_Rate_Display progress = new DanaRS_Packet_Notify_Delivery_Rate_Display(insulin, t); // initialize static variables
+
             while (!stop.stopped && !start.failed && !complete.done) {
                 SystemClock.sleep(100);
-                if ((System.currentTimeMillis() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 20 sec expecting broken comm
                     stop.stopped = true;
                     stop.forced = true;
                     log.debug("Communication stopped");
                 }
             }
         }
-        SystemClock.sleep(3000);
+
+        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+        bolusingEvent.t = t;
+        bolusingEvent.percent = 99;
+
         bolusingTreatment = null;
-        DanaRSPlugin.connectIfNotConnected("ReadHistoryAfterBolus");
+        int speed = 12;
+        switch (preferencesSpeed) {
+            case 0:
+                speed = 12;
+                break;
+            case 1:
+                speed = 30;
+                break;
+            case 2:
+                speed = 60;
+                break;
+        }
+        long bolusDurationInMSec = (long) (insulin * speed * 1000);
+        long expectedEnd = bolusStart + bolusDurationInMSec + 2000;
+        while (System.currentTimeMillis() < expectedEnd) {
+            long waitTime = expectedEnd - System.currentTimeMillis();
+            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.waitingforestimatedbolusend), waitTime / 1000);
+            MainApp.bus().post(bolusingEvent);
+            SystemClock.sleep(1000);
+        }
+        if (!(isConnected()))
+            DanaRSPlugin.getPlugin().connect("loadEvents");
         loadEvents();
+        // reread bolus status
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
+        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+        bolusingEvent.percent = 100;
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
         return true;
     }
 

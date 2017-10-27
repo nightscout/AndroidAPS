@@ -50,7 +50,6 @@ android {
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
         ndk {
-            abiFilters "armeabi-v7a", "x86", "armeabi", "mips"
             moduleName "BleCommandUtil"
         }
     }
@@ -152,7 +151,6 @@ dependencies {
     }
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'com.jjoe64:graphview:4.0.1'
-    compile 'com.eclipsesource.j2v8:j2v8:3.1.6@aar'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
     compile 'com.google.android.gms:play-services-wearable:7.5.0'
     compile 'junit:junit:4.12'

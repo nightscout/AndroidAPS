@@ -750,6 +750,10 @@
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <!-- TODO combo: still needed? -->
     <string name="connectiontimedout">Connection timed out</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="waitingforestimatedbolusend" formatted="false">Waiting for estimated bolus end. Remaining %d sec.</string>
+    <string name="processinghistory">Processing event</string>
+    <string name="startingbolus">Starting bolus delivery</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
 

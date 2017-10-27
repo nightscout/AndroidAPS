@@ -36,6 +36,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
@@ -261,13 +262,13 @@ public class DanaRv2ExecutionService extends Service {
                 }
             }
 
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
             mSerialIOThread.sendMessage(tempStatusMsg);
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
             mSerialIOThread.sendMessage(exStatusMsg);
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
 
             if (!statusMsg.received) {
                 mSerialIOThread.sendMessage(statusMsg);
@@ -400,14 +401,15 @@ public class DanaRv2ExecutionService extends Service {
         return true;
     }
 
-    public boolean bolus(double amount, int carbs, long carbtime, Treatment t) {
+    public boolean bolus(final double amount, int carbs, long carbtime, Treatment t) {
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.startingbolus)));
         bolusingTreatment = t;
-        int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        final int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         MessageBase start;
-        if (speed == 0)
+        if (preferencesSpeed == 0)
             start = new MsgBolusStart(amount);
         else
-            start = new MsgBolusStartWithSpeed(amount, speed);
+            start = new MsgBolusStartWithSpeed(amount, preferencesSpeed);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
 
         connect("bolus");
@@ -420,6 +422,8 @@ public class DanaRv2ExecutionService extends Service {
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             lastHistoryFetched = carbtime - 60000;
         }
+
+        final long bolusStart = System.currentTimeMillis();
         if (amount > 0) {
             MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
 
@@ -431,26 +435,49 @@ public class DanaRv2ExecutionService extends Service {
             }
             while (!stop.stopped && !start.failed) {
                 waitMsec(100);
-                if ((System.currentTimeMillis() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
                     stop.stopped = true;
                     stop.forced = true;
                     log.debug("Communication stopped");
                 }
             }
         }
+
+        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+        bolusingEvent.t = t;
+        bolusingEvent.percent = 99;
+
         bolusingTreatment = null;
-        // run loading history in separate thread and allow bolus dialog to be closed
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                waitMsec(4000);
-                if (!(isConnected()))
-                    connect("loadEvents");
-                loadEvents();
-            }
-        }).start();
+        int speed = 12;
+        switch (preferencesSpeed) {
+            case 0:
+                speed = 12;
+                break;
+            case 1:
+                speed = 30;
+                break;
+            case 2:
+                speed = 60;
+                break;
+        }
+        long bolusDurationInMSec = (long) (amount * speed * 1000);
+        long expectedEnd = bolusStart + bolusDurationInMSec + 2000;
+        while (System.currentTimeMillis() < expectedEnd) {
+            long waitTime = expectedEnd - System.currentTimeMillis();
+            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.waitingforestimatedbolusend), waitTime / 1000);
+            MainApp.bus().post(bolusingEvent);
+            SystemClock.sleep(1000);
+        }
+        if (!(isConnected()))
+            connect("loadEvents");
+        loadEvents();
+        // load last bolus status
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
+        mSerialIOThread.sendMessage(new MsgStatus());
+        bolusingEvent.percent = 100;
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
         return true;
-    }
+}
 
     public void bolusStop() {
         if (Config.logDanaBTComm)

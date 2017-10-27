@@ -32,6 +32,7 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.tools.debugger.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -401,15 +402,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         ArrayList<CharSequence> profileList;
         profileList = profileStore.getProfileList();
+        profileList.add(0, MainApp.sResources.getString(R.string.active));
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.spinner_centered, profileList);
 
         profileSpinner.setAdapter(adapter);
-        // set selected to actual profile
-        for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
-                profileSpinner.setSelection(p);
-        }
 
         String units = profile.getUnits();
         bgUnits.setText(units);
@@ -451,7 +448,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
-        Profile specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
+        Profile specificProfile;
+        if (selectedAlternativeProfile.equals(MainApp.sResources.getString(R.string.active)))
+            specificProfile = MainApp.getConfigBuilder().getProfile();
+        else
+            specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
 
         // Entered values
         Double c_bg = SafeParse.stringToDouble(editBg.getText());

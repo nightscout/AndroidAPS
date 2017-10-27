@@ -10,8 +10,6 @@ import com.cozmo.danar.util.BleCommandUtil;
 public class DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal extends DanaRS_Packet {
     private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal.class);
 
-    public int error;
-
     public DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL;
@@ -22,9 +20,12 @@ public class DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal extends DanaRS_Packe
 
     @Override
     public void handleMessage(byte[] data) {
-        error = byteArrayToInt(getBytes(data, DATA_START, 1));
+        int result = intFromBuff(data, 0, 1);
         if (Config.logDanaMessageDetail) {
-            log.debug("Result " + error);
+            if (result == 0)
+                log.debug("Result OK");
+            else
+                log.error("Result Error: " + result);
         }
     }
 

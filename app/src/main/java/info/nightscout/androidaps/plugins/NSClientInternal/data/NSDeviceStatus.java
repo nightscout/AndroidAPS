@@ -254,7 +254,7 @@ public class NSDeviceStatus {
         long clockEnacted = 0L;
 
         JSONObject suggested = null;
-        JSONObject enacted = null;
+        public JSONObject enacted = null;
     }
 
     public void updateOpenApsData(JSONObject object) {
