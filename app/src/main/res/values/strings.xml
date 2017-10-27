@@ -748,10 +748,12 @@
     <string name="reuse">reuse</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
+    <!-- TODO combo: still needed? -->
     <string name="connectiontimedout">Connection timed out</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
-    <string name="bolusprogramming">Programming pump for bolusing</string>
+
+    <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
     <string name="combo_stats">Stats</string>
     <string name="combo_pump_state_label">State</string>
@@ -765,5 +767,9 @@
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
     <string name="combo_pump_state_running">Running</string>
+    <string name="combo_action_refreshing">Refreshing</string>
+    <string name="combo_action_cancelling_tbr">Cancelling TBR</string>
+    <string name="combo_action_setting_tbr">Setting TBR</string>
+    <string name="combo_action_bolusing">Bolusing</string>
 </resources>
 

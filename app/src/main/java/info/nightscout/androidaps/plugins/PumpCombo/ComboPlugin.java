@@ -332,7 +332,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
                     switch (state) {
                         case PROGRAMMING:
-                            event.status = MainApp.sResources.getString(R.string.bolusprogramming);
+                            event.status = MainApp.sResources.getString(R.string.combo_programming_bolus);
                             break;
                         case DELIVERING:
                             event.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
@@ -403,7 +403,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        CommandResult bolusCmdResult = runCommand("Bolusing", new CommandExecution() {
+        CommandResult bolusCmdResult = runCommand(MainApp.sResources.getString(R.string.combo_action_bolusing), new CommandExecution() {
             @Override
             public CommandResult execute() {
                 return ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
@@ -475,7 +475,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         final int finalAdjustedPercent = adjustedPercent;
-        CommandResult commandResult = runCommand("Setting TBR", new CommandExecution() {
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_action_setting_tbr), new CommandExecution() {
                     @Override
                     public CommandResult execute() {
                         return ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes);
@@ -528,7 +528,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (activeTemp == null || userRequested) {
             /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
-            commandResult = runCommand("Cancelling TBR", new CommandExecution() {
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_action_cancelling_tbr), new CommandExecution() {
                 @Override
                 public CommandResult execute() {
                     return ruffyScripter.cancelTbr();
@@ -555,8 +555,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
             final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
-            log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
-            commandResult = runCommand("Setting TBR", new CommandExecution() {
+            log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_action_setting_tbr), new CommandExecution() {
                 @Override
                 public CommandResult execute() {
                     return ruffyScripter.setTbr(percentage, 15);
@@ -634,7 +634,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pump.lastCmdResult = commandResult;
         pump.state = commandResult.state;
 
-        // TODO are there cases when this check should NOT be performed? perform this explicitly or have a flag to skip this?
+       // TODO call this explicitely when needed after/before calling this?
         if (checkTbrMisMatch) {
             checkForTbrMismatch();
         }

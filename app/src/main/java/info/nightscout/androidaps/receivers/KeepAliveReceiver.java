@@ -62,6 +62,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean isStatusOutdated = lastConnection.getTime() + 15 * 60 * 1000L < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
+            // TODO triggers on init already; don't (both missed readings and pump comms)
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             if (isStatusOutdated && lastConnection.getTime() + 25 * 60 * 1000 < System.currentTimeMillis()) {
                 // TODO the alarm will trigger every 5m until the problem is resolved. That can get annoying quiet quickly if
@@ -69,7 +70,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 // suppress this for another 25m if the message was dismissed?
                 // The alarm sound is played back as regular media, that means it might be muted if sound level is at 0
                 // a simple 'Enable/disable alarms' button on the actions tab?
-                Notification n = new Notification(Notification.PUMP_UNREACHABLE, "Pump unreachable", Notification.URGENT);
+                Notification n = new Notification(Notification.PUMP_UNREACHABLE,
+                        MainApp.sResources.getString(R.string.combo_pump_state_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {

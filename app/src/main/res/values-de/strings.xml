@@ -637,4 +637,9 @@
     <string name="combo_last_bolus">Letzter Bolus</string>
     <string name="combo_last_connection_time">Letzte Verbindung</string>
     <string name="combo_stats">Statistiken</string>
+    <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
+    <string name="combo_action_refreshing">Aktualisierung</string>
+    <string name="combo_action_cancelling_tbr">TBR wird abgebrochen</string>
+    <string name="combo_action_setting_tbr">TBR wird gesetzt</string>
+    <string name="combo_action_bolusing">Bolus wird abgegeben</string>
 </resources>
