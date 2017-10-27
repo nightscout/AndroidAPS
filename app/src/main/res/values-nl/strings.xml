@@ -46,12 +46,12 @@
     <string name="virtualpump_shortname">VP</string>
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_reservoir_label">Reservoir</string>
+    <string name="pump_reservoir_label">Reservoir</string>
     <string name="pump_lastconnection_label">Laatste verbinding</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="virtualpump_extendedbolus_label">Vertraagde bolus</string>
-    <string name="virtualpump_battery_label">Batterij</string>
+    <string name="pump_battery_label">Batterij</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="uploading">Uploaden</string>
     <string name="uploader_short">UPLD</string>

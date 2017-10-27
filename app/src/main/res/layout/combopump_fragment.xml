@@ -29,7 +29,7 @@
                     android:layout_weight="1.5"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="State"
+                    android:text="@string/combo_pump_state_label"
                     android:textSize="14sp" />
 
                 <TextView
@@ -74,7 +74,7 @@
                     android:layout_weight="1.5"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Battery"
+                    android:text="@string/pump_battery_label"
                     android:textSize="14sp" />
 
                 <TextView
@@ -119,7 +119,7 @@
                     android:layout_weight="1.5"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Reservoir"
+                    android:text="@string/pump_reservoir_label"
                     android:textSize="14sp" />
 
                 <TextView
@@ -164,7 +164,7 @@
                     android:layout_weight="1.5"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Activity"
+                    android:text="@string/combo_pump_activity"
                     android:textSize="14sp" />
 
                 <TextView
@@ -360,6 +360,7 @@
                 android:paddingRight="0dp"
                 android:text="@string/combo_refresh" />
 
+            <!-- TODO v3-->
             <Button
                 android:id="@+id/combo_stats"
                 style="@style/ButtonSmallFontStyle"

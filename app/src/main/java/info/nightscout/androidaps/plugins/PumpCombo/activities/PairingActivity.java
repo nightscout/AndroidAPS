@@ -36,7 +36,6 @@ public class PairingActivity extends AppCompatActivity {
     private ListView listView = null;
     private PairingActivity.ListAdapter mListAdapter = null;
     private ArrayList<PairingActivity.BluetoothDeviceItem> mDevices = new ArrayList<>();
-    ;
 
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothLeScanner mBluetoothLeScanner = null;

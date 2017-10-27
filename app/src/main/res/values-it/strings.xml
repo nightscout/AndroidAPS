@@ -439,11 +439,11 @@
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="virtualpump_settings">Impostazioni del Micro virtuale</string>
     <string name="virtualpump_resultok">ok</string>
-    <string name="virtualpump_reservoir_label">Serbatoio</string>
+    <string name="pump_reservoir_label">Serbatoio</string>
     <string name="pump_lastconnection_label">Ultima conessione</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_extendedbolus_label">Bolo Esteso</string>
-    <string name="virtualpump_battery_label">Batteria</string>
+    <string name="pump_battery_label">Batteria</string>
     <string name="pump_basebasalrate_label">Base basale</string>
     <string name="virtualpump">Micro Virtuale</string>
     <string name="uploading">UpLoading</string>

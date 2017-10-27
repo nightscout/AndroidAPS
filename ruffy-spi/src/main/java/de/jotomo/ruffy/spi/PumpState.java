@@ -78,16 +78,6 @@ public class PumpState {
         return this;
     }
 
-    public String getStateSummary() {
-        if (menu == null)
-            return "Unreachable";
-        else if (suspended && (batteryState == EMPTY || insulinState == EMPTY))
-            return "Suspended due to error";
-        else if (suspended)
-            return "Suspended by user";
-        return "Running";
-    }
-
     @Override
     public String toString() {
         return "PumpState{" +

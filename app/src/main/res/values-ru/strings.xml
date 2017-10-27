@@ -529,11 +529,11 @@
     <string name="uploading">передача данных</string>
     <string name="virtualpump">виртуальная помпа</string>
     <string name="pump_basebasalrate_label">базовая величина базала</string>
-    <string name="virtualpump_battery_label">батарея</string>
+    <string name="pump_battery_label">батарея</string>
     <string name="virtualpump_extendedbolus_label">продленный болюс</string>
     <string name="virtualpump_firmware_label">прошивка</string>
     <string name="pump_lastconnection_label">прошлое соединение</string>
-    <string name="virtualpump_reservoir_label">резервуар</string>
+    <string name="pump_reservoir_label">резервуар</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>

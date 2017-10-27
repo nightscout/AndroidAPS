@@ -48,9 +48,9 @@
     <string name="treatments_wizard_total_label">ОБШО</string>
     <string name="openapsma_run">Старт сега</string>
     <string name="pump_basebasalrate_label">Базова базална стойност</string>
-    <string name="virtualpump_battery_label">Батерия</string>
+    <string name="pump_battery_label">Батерия</string>
     <string name="virtualpump_extendedbolus_label">Удължен болус</string>
-    <string name="virtualpump_reservoir_label">Резервоар</string>
+    <string name="pump_reservoir_label">Резервоар</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Грешка в базата данни</string>
     <string name="pump_tempbasal_label">Временен базал</string>

@@ -49,8 +49,8 @@
     <string name="pump_basebasalrate_label">Dosis Basal Base</string>
     <string name="pump_tempbasal_label">Basal Temporal</string>
     <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
-    <string name="virtualpump_battery_label">Batería</string>
-    <string name="virtualpump_reservoir_label">Depósito:</string>
+    <string name="pump_battery_label">Batería</string>
+    <string name="pump_reservoir_label">Depósito:</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Error de SQL</string>
     <string name="openapsma_lastrun_label">Última ejecución</string>

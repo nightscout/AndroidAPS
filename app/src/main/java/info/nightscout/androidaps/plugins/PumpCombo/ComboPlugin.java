@@ -16,7 +16,6 @@ import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpError;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
@@ -33,8 +32,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
@@ -126,6 +123,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
         // use long name as fallback
         return getName();
+    }
+
+    String getStateSummary() {
+        PumpState ps = pump.state;
+        if (ps.menu == null)
+            return MainApp.sResources.getString(R.string.combo_pump_state_unreachable);
+        else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
+            return MainApp.sResources.getString(R.string.combo_pump_state_suspended_due_to_error);
+        else if (ps.suspended)
+            return MainApp.sResources.getString(R.string.combo_pump_state_suspended_by_user);
+        return MainApp.sResources.getString(R.string.combo_pump_state_running);
     }
 
     @Override
@@ -736,7 +744,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             JSONObject pumpJson = new JSONObject();
             JSONObject statusJson = new JSONObject();
             JSONObject extendedJson = new JSONObject();
-            statusJson.put("status", pump.state.getStateSummary());
+            statusJson.put("status", getStateSummary());
             extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
                 extendedJson.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
@@ -785,7 +793,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public String shortStatus(boolean veryShort) {
         // TODO trim for wear if veryShort==true
-        return pump.state.getStateSummary();
+        return getStateSummary();
     }
 
     @Override

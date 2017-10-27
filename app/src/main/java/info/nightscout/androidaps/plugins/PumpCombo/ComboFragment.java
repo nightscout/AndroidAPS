@@ -20,12 +20,10 @@ import java.util.List;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
 
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
@@ -97,12 +95,13 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
                     // activity
                     String activity = plugin.getPump().activity;
-                    activityView.setText(activity != null ? activity : "Idle");
+                    activityView.setText(activity != null ? activity : "");
 
                     if (plugin.isInitialized()) {
-                        // status
+                        // state
+                        stateView.setText(plugin.getStateSummary());
+
                         PumpState ps = plugin.getPump().state;
-                        stateView.setText(plugin.getPump().state.getStateSummary());
                         if (plugin.getPump().state.errorMsg != null
                                 || ps.insulinState == PumpState.EMPTY
                                 || ps.batteryState == PumpState.EMPTY) {
@@ -144,14 +143,14 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                             // TODO must not be within if (lastCmdResult) so we can complain if NO command ever worked; also move from completionTime to new times
                             // TODO check all access to completionTime. useful anymore?
                             if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
-                                lastConnectionView.setText("No connection for " + minAgo + " min");
+                                lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
                                 lastConnectionView.setTextColor(Color.RED);
                             }
                             if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                                lastConnectionView.setText("Last connect attempt failed");
+                                lastConnectionView.setText(R.string.combo_connect_attempt_failed);
                                 lastConnectionView.setTextColor(Color.YELLOW);
                             } else {
-                                lastConnectionView.setText("" + minAgo + " (" + time + ")");
+                                lastConnectionView.setText(getString(R.string.combo_last_connection_time, minAgo, time));
                                 lastConnectionView.setTextColor(Color.WHITE);
                             }
 
@@ -161,9 +160,11 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                                 Bolus bolus = history.get(0);
                                 long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                                 double agoHours = agoMsc / 60d / 60d / 1000d;
-                                lastBolusView.setText(DecimalFormatter.to2Decimal(bolus.amount) + " U " +
-                                        "(" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ", "
-                                        + DateUtil.timeString(bolus.timestamp) + ") ");
+                                lastBolusView.setText(getString(R.string.combo_last_bolus,
+                                        bolus.amount,
+                                        agoHours,
+                                        getString(R.string.hoursago),
+                                        DateUtil.timeString(bolus.timestamp)));
                             } else {
                                 lastBolusView.setText("");
                             }
@@ -175,7 +176,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                                 long minSinceRead = (System.currentTimeMillis() - lastCmdResult.completionTime) / 1000 / 60;
                                 long remaining = ps.tbrRemainingDuration - minSinceRead;
                                 if (remaining >= 0) {
-                                    tbrStr = ps.tbrPercent + "% (" + remaining + " min remaining)";
+                                    tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
                                 }
                             }
                             tempBasalText.setText(tbrStr);

@@ -51,8 +51,8 @@
     <string name="pump_basebasalrate_label">기본 기초주입량</string>
     <string name="pump_tempbasal_label">임시기초주입</string>
     <string name="virtualpump_extendedbolus_label">확장식사주입</string>
-    <string name="virtualpump_battery_label">배터리</string>
-    <string name="virtualpump_reservoir_label">인슐린 잔량</string>
+    <string name="pump_battery_label">배터리</string>
+    <string name="pump_reservoir_label">인슐린 잔량</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL 에러</string>
     <string name="openapsma_lastrun_label">최근 실행</string>

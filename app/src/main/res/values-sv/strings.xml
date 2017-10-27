@@ -313,11 +313,11 @@
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="virtualpump_settings">Virtuell pump inställningar</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_reservoir_label">Reservoir</string>
+    <string name="pump_reservoir_label">Reservoir</string>
     <string name="pump_lastconnection_label">Sista kontakt</string>
     <string name="virtualpump_firmware_label">Programversion</string>
     <string name="virtualpump_extendedbolus_label">Förlängd bolus</string>
-    <string name="virtualpump_battery_label">Batteri</string>
+    <string name="pump_battery_label">Batteri</string>
     <string name="pump_basebasalrate_label">Grund basal hastighet</string>
     <string name="virtualpump">Virtuell Pump</string>
     <string name="uploading">Uppladdning</string>

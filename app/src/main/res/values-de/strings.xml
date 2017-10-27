@@ -23,7 +23,7 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="treatmentdeliveryerror">Bolus Abgabefehler</string>
-    <string name="virtualpump_battery_label">Batterie</string>
+    <string name="pump_battery_label">Batterie</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="basal">Basal</string>
     <string name="bolus">Bolus</string>
@@ -92,12 +92,12 @@
     <string name="treatments_wizard_unit_label">E</string>
     <string name="up">Up</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
-    <string name="virtualpump_reservoir_label">Reservoir</string>
+    <string name="pump_reservoir_label">Reservoir</string>
     <string name="xdrip">xDrip</string>
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="pump_tempbasal_label">Temp basal</string>
+    <string name="pump_tempbasal_label">Temporäre Basalrate</string>
     <string name="visible">Sichtbar</string>
     <string name="pump_basebasalrate_label">Basis Basalrate</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
@@ -619,4 +619,22 @@
     <string formatted="false" name="dia_too_short">DIA von %s ist zu kurz - aaps nutzt stattdessen %s!</string>
     <string name="danar_stats_warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
     <string name="danar_stats_ratio">Verhältnis</string>
+    <string name="combo_refresh">Aktualisieren</string>
+    <string name="combo_pump_activity">Aktivität</string>
+    <string name="combo_tbr_remaining">%d%% (%d verbleibend)</string>
+    <string name="combopump_settings">Accu-Chek Combo settings Einstellungen</string>
+    <string name="combo_connect_attempt_failed">Verbindungsaufbau fehlgeschlagen</string>
+    <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %s</string>
+    <string name="bolusstopped">Bolusabgabe gestopped</string>
+    <string name="bolusstopping">Bolusabgabe wird abgebrochen</string>
+    <string name="pump_errors_history">Fehlerprotokol</string>
+    <string name="treatments_wizard_tt_label">TZ</string>
+    <string name="combo_pump_state_label">Status</string>
+    <string name="combo_pump_state_unreachable">Keine Verbindung zur Pumpe</string>
+    <string name="combo_pump_state_suspended_by_user">Durch Benuzter gestoppt</string>
+    <string name="combo_pump_state_suspended_due_to_error">Wegen Fehler gestoppt</string>
+    <string name="combo_pump_state_running">Normaler Betrieb</string>
+    <string name="combo_last_bolus">Letzter Bolus</string>
+    <string name="combo_last_connection_time">Letzte Verbindung</string>
+    <string name="combo_stats">Statistiken</string>
 </resources>

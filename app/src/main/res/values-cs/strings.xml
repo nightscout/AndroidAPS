@@ -154,9 +154,9 @@
     <string name="unsupportedclientver">Nepodporovaná verze NSClient</string>
     <string name="virtualpump">Virtualní pumpa</string>
     <string name="pump_basebasalrate_label">Základní hodnota bazálu</string>
-    <string name="virtualpump_battery_label">Baterie</string>
+    <string name="pump_battery_label">Baterie</string>
     <string name="virtualpump_extendedbolus_label">Prodloužený bolus</string>
-    <string name="virtualpump_reservoir_label">Zásobník</string>
+    <string name="pump_reservoir_label">Zásobník</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Chyba databáze</string>
     <string name="pump_tempbasal_label">Dočasný bazál</string>
