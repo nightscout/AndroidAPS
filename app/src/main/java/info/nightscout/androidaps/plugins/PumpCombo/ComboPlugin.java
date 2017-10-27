@@ -45,6 +45,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = false;
 
+    private boolean initialized = false;
+
     private PumpDescription pumpDescription = new PumpDescription();
 
     @NonNull
@@ -178,7 +180,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isInitialized() {
-        return pump.lastCmdResult != null;
+        return initialized;
     }
 
     @Override
@@ -213,21 +215,26 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public synchronized void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
-        boolean firstRun = pump.lastCmdResult == null;
-
-        runCommand("Refreshing", new CommandExecution() {
-            @Override
-            public CommandResult execute() {
-                return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
-            }
-        });
-
-        if (firstRun) {
-            initializePump();
+        if (!initialized) {
+            runCommand(MainApp.sResources.getString(R.string.connecting), new CommandExecution() {
+                @Override
+                public CommandResult execute() {
+                    return ruffyScripter.readPumpState();
+                }
+            });
+            checkPumpHistory();
+            initialized = true;
+        } else {
+            runCommand(MainApp.sResources.getString(R.string.combo_action_refreshing), new CommandExecution() {
+                @Override
+                public CommandResult execute() {
+                    return ruffyScripter.readHistory(new PumpHistoryRequest().reservoirLevel(true).bolusHistory(PumpHistoryRequest.LAST));
+                }
+            });
         }
     }
 
-    private void initializePump() {
+    private void checkPumpHistory() {
         CommandResult commandResult = runCommand("Checking pump history", false, new CommandExecution() {
             @Override
             public CommandResult execute() {
