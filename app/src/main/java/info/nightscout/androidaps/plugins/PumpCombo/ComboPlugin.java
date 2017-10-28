@@ -346,8 +346,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         case STOPPED:
                             event.status = MainApp.sResources.getString(R.string.bolusstopped);
                             break;
-                        default:
-                            // no state, just percent below
+                        case FINISHED:
+                            // no state, just percent below to close bolus progress dialog
                             break;
                     }
                     event.percent = percent;
