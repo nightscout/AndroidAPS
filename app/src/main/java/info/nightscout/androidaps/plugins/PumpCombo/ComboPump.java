@@ -9,6 +9,8 @@ import de.jotomo.ruffy.spi.history.PumpHistory;
 
 class ComboPump {
     // TODO actually ... this isn't about successful command execution, but whether we could connect to the pump at all
+    boolean initialized = false;
+
     volatile long lastSuccessfulConnection;
     volatile long lastConnectionAttempt;
     @Nullable

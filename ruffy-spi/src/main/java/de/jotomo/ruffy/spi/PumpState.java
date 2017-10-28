@@ -18,6 +18,7 @@ public class PumpState {
      * longer to read that and the pump connection gets interrupted if we're not
      * reacting quickly.
      */
+    // TODO pump errors (EXX) vs. errors talking to the pump
     public String errorMsg;
     public boolean suspended;
 

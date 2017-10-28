@@ -45,8 +45,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = false;
 
-    private boolean initialized = false;
-
     private PumpDescription pumpDescription = new PumpDescription();
 
     @NonNull
@@ -180,7 +178,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isInitialized() {
-        return initialized;
+        return pump.initialized;
     }
 
     @Override
@@ -193,13 +191,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return ruffyScripter.isPumpBusy() && !pump.state.suspended;
     }
 
-    // TODO
     @Override
     public int setNewBasalProfile(Profile profile) {
         return FAILED;
     }
 
-    // TODO
     @Override
     public boolean isThisProfileSet(Profile profile) {
         return false;
@@ -215,7 +211,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public synchronized void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
-        if (!initialized) {
+        if (!pump.initialized) {
             runCommand(MainApp.sResources.getString(R.string.connecting), new CommandExecution() {
                 @Override
                 public CommandResult execute() {
@@ -223,7 +219,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 }
             });
             checkPumpHistory();
-            initialized = true;
+            pump.initialized = true;
         } else {
             runCommand(MainApp.sResources.getString(R.string.combo_action_refreshing), new CommandExecution() {
                 @Override
