@@ -31,6 +31,7 @@ public interface RuffyCommands {
 
     CommandResult getDateAndTime();
 
+    // TODO see how dana does this, autosync on DST change
     CommandResult setDateAndTime(Date date);
 
     void requestPairing();

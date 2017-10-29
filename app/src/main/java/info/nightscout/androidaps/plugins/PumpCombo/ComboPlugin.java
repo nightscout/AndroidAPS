@@ -417,7 +417,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = bolusCmdResult.success;
         pumpEnactResult.enacted = bolusCmdResult.enacted;
-//        pumpEnactResult.comment = bolusCmdResult.message;
 
         // if enacted, add bolus and carbs to treatment history
         if (pumpEnactResult.enacted) {
@@ -500,7 +499,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
         pumpEnactResult.enacted = commandResult.enacted;
-//        pumpEnactResult.comment = commandResult.message;
         pumpEnactResult.isPercent = true;
         // Combo would have bailed if this wasn't set properly. Maybe we should
         // have the command return this anyways ...
@@ -570,7 +568,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (commandResult != null) {
             pumpEnactResult.success = commandResult.success;
             pumpEnactResult.enacted = commandResult.enacted;
-//            pumpEnactResult.comment = commandResult.message;
         }
         return pumpEnactResult;
     }
@@ -752,8 +749,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 extendedJson.put("TempBasalPercent", ps.tbrPercent);
                 extendedJson.put("TempBasalRemaining", ps.tbrRemainingDuration);
             }
-            if (ps.errorMsg != null) {
-                extendedJson.put("ErrorMessage", ps.errorMsg);
+            if (ps.alertCodes.errorCode != null) {
+                extendedJson.put("ErrorCode", ps.alertCodes.errorCode);
             }
             pumpJson.put("extended", extendedJson);
 

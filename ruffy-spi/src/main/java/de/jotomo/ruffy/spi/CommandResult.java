@@ -13,9 +13,6 @@ public class CommandResult {
     public boolean enacted;
     /** Null unless an unhandled exception was raised. */
     public Exception exception;
-    /** (Error)message describing the result of the command. */
-    // TODO work outh this message
-//    public String message;
     /** State of the pump *after* command execution. */
     public PumpState state;
     /** History if requested by the command. */
@@ -60,11 +57,6 @@ public class CommandResult {
         return this;
     }
 
-//    public CommandResult message(String message) {
-//        this.message = message;
-//        return this;
-//    }
-
     public CommandResult state(PumpState state) {
         this.state = state;
         return this;
@@ -86,7 +78,6 @@ public class CommandResult {
                 ", success=" + success +
                 ", enacted=" + enacted +
                 ", exception=" + exception +
-//                ", message='" + message + '\'' +
                 ", state=" + state +
                 ", history=" + history +
                 ", basalProfile=" + basalProfile +

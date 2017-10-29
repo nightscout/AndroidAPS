@@ -13,6 +13,7 @@ import java.util.List;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpWarningCodes;
+import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERED;
@@ -108,7 +109,11 @@ public class BolusCommand extends BaseCommand {
                 }
                 if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                     // confirm warning alerts and update the result to indicate alerts occurred
-                    int warningCode = scripter.readWarningCode();
+                    WarningOrErrorCode warningOrErrorCode = scripter.readWarningOrErrorCode();
+                    if (warningOrErrorCode.errorCode != 0) {
+                        throw new CommandException("Pump is in error state");
+                    }
+                    int warningCode = warningOrErrorCode.warningCode;
                     if (warningCode == PumpWarningCodes.BOLUS_CANCELLED) {
                         scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 2000);
                         bolusProgressReporter.report(STOPPED, 0, 0);
@@ -128,7 +133,6 @@ public class BolusCommand extends BaseCommand {
                     bolusProgressReporter.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
                     lastBolusReported = bolusRemaining;
                 }
-
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }

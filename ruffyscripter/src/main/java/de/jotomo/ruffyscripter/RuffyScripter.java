@@ -30,6 +30,7 @@ import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
+import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
@@ -218,13 +219,11 @@ public class RuffyScripter implements RuffyCommands {
     /** Always returns a CommandResult, never throws */
     private CommandResult runCommand(final Command cmd) {
         log.debug("Attempting to run cmd: " + cmd);
-        if (unrecoverableError != null) {
-            return new CommandResult().success(false).enacted(false).message(unrecoverableError).state(readPumpStateInternal());
-        }
 
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
-            return new CommandResult().message(Joiner.on("\n").join(violations)).state(readPumpStateInternal());
+            log.error("Command argument violations: " + Joiner.on(", ").join(violations));
+            return new CommandResult().state(readPumpStateInternal());
         }
 
         // TODO simplify, hard to reason about exists
@@ -240,7 +239,8 @@ public class RuffyScripter implements RuffyCommands {
                         Menu localCurrentMenu = currentMenu;
                         if (localCurrentMenu == null || localCurrentMenu.getType() == MenuType.STOP) {
                             if (cmd.needsRunMode()) {
-                                activeCmd.getResult().success(false).message("Pump is suspended but operations requires to the pump to be running");
+                                log.error("Requested command requires run mode, but pump is suspended");
+                                activeCmd.getResult().success = false;
                                 return;
                             }
                         }
@@ -255,10 +255,11 @@ public class RuffyScripter implements RuffyCommands {
                         long cmdEndTime = System.currentTimeMillis();
                         log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
                     } catch (CommandException e) {
-                        activeCmd.getResult().message(e.getMessage());
+                        log.error("CommandException running command", e);
+                        activeCmd.getResult().success = false;
                     } catch (Exception e) {
                         log.error("Unexpected exception running cmd", e);
-                        activeCmd.getResult().message("Unexpected exception running cmd");
+                        activeCmd.getResult().success = false;
                     } finally {
                         lastCmdExecutionTime = System.currentTimeMillis();
                     }
@@ -294,14 +295,13 @@ public class RuffyScripter implements RuffyCommands {
                             cmdThread.interrupt();
                             SystemClock.sleep(5000);
                             log.error("Timed out thread dead yet? " + cmdThread.isAlive());
-                            activeCmd.getResult().success(false).message("Command stalled, check pump!");
+                            activeCmd.getResult().success = false;
                             break;
                         }
                     }
                     if (now > overallTimeout) {
-                        String msg = "Command " + cmd + " timed out after 4 min, check pump!";
-                        log.error(msg);
-                        activeCmd.getResult().success(false).message(msg);
+                        log.error("Command " + cmd + " timed out");
+                        activeCmd.getResult().success = false;
                         break;
                     }
                 }
@@ -315,12 +315,13 @@ public class RuffyScripter implements RuffyCommands {
                     log.debug("Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s");
                 }
                 return result;
+                // TOD under which circumstances can these occur?
             } catch (CommandException e) {
-                return activeCmd.getResult().success(false).message(e.getMessage()).state(readPumpStateInternal());
+                log.error("CommandException while executing command", e);
+                return activeCmd.getResult().success(false).state(readPumpStateInternal());
             } catch (Exception e) {
                 log.error("Unexpected exception communication with ruffy", e);
-                return activeCmd.getResult().success(false).exception(e)
-                        .message("Unexpected exception communication with ruffy: " + e.getMessage()).state(readPumpStateInternal());
+                return activeCmd.getResult().success(false).exception(e).state(readPumpStateInternal());
             } finally {
                 activeCmd = null;
             }
@@ -473,25 +474,26 @@ public class RuffyScripter implements RuffyCommands {
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
-            state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
+            state.alertCodes = readWarningOrErrorCode();
         } else if (menuType == MenuType.STOP) {
             state.suspended = true;
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
-        } else {
-            // just return the PumpState with the menu set
         }
+
         return state;
     }
 
-    public int readWarningCode() {
+    public WarningOrErrorCode readWarningOrErrorCode() {
         verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
         Integer warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);
-        while (warningCode == null) {
+        Integer errorCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.ERROR);
+        while (warningCode == null && errorCode == null) {
             waitForScreenUpdate();
             warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);
+            errorCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.ERROR);
         }
-        return warningCode;
+        return new WarningOrErrorCode(warningCode, errorCode);
     }
 
 // below: methods to be used by commands
@@ -810,7 +812,12 @@ public class RuffyScripter implements RuffyCommands {
                 // A wait till the error code can be read results in the code hanging, despite
                 // menu updates coming in, so just check the message.
 
-                int displayedWarningCode = readWarningCode();
+                WarningOrErrorCode warningOrErrorCode = readWarningOrErrorCode();
+                if (warningOrErrorCode.errorCode != 0) {
+                    // TODO proper way to display such things in the UI;
+                    throw new CommandException("Pump is in error state");
+                }
+                int displayedWarningCode = warningOrErrorCode.warningCode;
                 String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                 if (displayedWarningCode != warningCode) {
                     throw new CommandException("An alert other than the expected warning " + warningCode+ " was raised by the pump: "

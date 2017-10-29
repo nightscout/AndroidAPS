@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import de.jotomo.ruffy.spi.PumpWarningCodes;
 
@@ -89,11 +88,10 @@ public class SetTbrCommand extends BaseCommand {
         // check main menu shows the same values we just set
         if (cancellingTbr) {
             verifyMainMenuShowsNoActiveTbr();
-            result.success(true).enacted(true).message("TBR was cancelled");
+            result.success(true).enacted(true);
         } else {
             verifyMainMenuShowsExpectedTbrActive();
-            result.success(true).enacted(true)
-                    .message(String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
+            result.success(true).enacted(true);
         }
     }
 

@@ -88,9 +88,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 // state
                 stateView.setText(plugin.getStateSummary());
                 PumpState ps = plugin.getPump().state;
-                if (plugin.getPump().state.errorMsg != null
-                        || ps.insulinState == PumpState.EMPTY
-                        || ps.batteryState == PumpState.EMPTY) {
+                if ( ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY) {
                     stateView.setTextColor(Color.RED);
                 } else if (plugin.getPump().state.suspended) {
                     stateView.setTextColor(Color.YELLOW);

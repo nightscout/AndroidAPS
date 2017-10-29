@@ -1,9 +1,13 @@
 package de.jotomo.ruffy.spi;
 
+import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
+
 /** State displayed on the main screen of the pump. */
 public class PumpState {
     public long timestamp;
     public String menu = null;
+    public boolean suspended;
+
     public boolean tbrActive = false;
     /** TBR percentage. 100% means no TBR active, just the normal basal rate running. */
     public int tbrPercent = -1;
@@ -12,16 +16,10 @@ public class PumpState {
     /** Remaining time of an active TBR. Note that 0:01 is te lowest displayed, the pump
      * jumps from that to TBR end, skipping 0:00(xx). */
     public int tbrRemainingDuration = -1;
-    /**
-     * This is the error message (if any) displayed by the pump if there is an alarm,
-     * e.g. if a "TBR cancelled alarm" is active, the value will be "TBR CANCELLED".
-     * Generally, an error code is also displayed, but it flashes and it might take
-     * longer to read that and the pump connection gets interrupted if we're not
-     * reacting quickly.
-     */
-    // TODO pump errors (EXX) vs. errors talking to the pump
-    public String errorMsg;
-    public boolean suspended;
+
+    /** Warning or error code displayed if a warning or alert alert is active,
+     * see {@link PumpWarningCodes}, {@link PumpErrorCodes} */
+    public WarningOrErrorCode alertCodes;
 
     public static final int UNKNOWN = -1;
     public static final int LOW = 1;
@@ -56,11 +54,6 @@ public class PumpState {
         return this;
     }
 
-    public PumpState errorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-        return this;
-    }
-
     public PumpState suspended(boolean suspended) {
         this.suspended = suspended;
         return this;
@@ -89,7 +82,6 @@ public class PumpState {
                 ", tbrPercent=" + tbrPercent +
                 ", tbrRate=" + tbrRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
-                ", errorMsg='" + errorMsg + '\'' +
                 ", suspended=" + suspended +
                 ", batteryState=" + batteryState +
                 ", insulinState=" + insulinState +
