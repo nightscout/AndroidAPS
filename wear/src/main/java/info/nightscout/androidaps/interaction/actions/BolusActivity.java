@@ -70,7 +70,6 @@ public class BolusActivity extends ViewSelectorActivity {
                 if (editInsulin != null){
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
-                // TODO use pump supported stet size
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
                 setLabelToPlusMinusView(view, "insulin");
                 container.addView(view);

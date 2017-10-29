@@ -510,37 +510,6 @@ public class RuffyScripter implements RuffyCommands {
         public static byte BACK = (byte) 0x33;
     }
 
-    interface Step {
-        void run(boolean waitForPumpUpdateAfterwards);
-
-    }
-/*
-
-    private long lastPumpWrite = 0;
-
-    private void wrapNoNotTheSubwayKind(Step step, boolean waitForPumpUpdateAfterwards) {
-       if (!connected) {
-          // try to reconnect, with a timeout before the pump raises a menu timeout
-           // timeout = lastPumpWrite + 15 * 1000 // avoid default pump timeout of 20s
-       }
-       step.run(waitForPumpUpdateAfterwards);
-        // TODO there's a chance the above was not executed by the pump; assume that if we're not
-        // still connected and abort the command and retry if it it's retryable
-        // isConnected
-       lastPumpWrite = System.currentTimeMillis();
-
-        // TODO: spike: source the ruffy driver package and do away with the remote service
-
-        refuse to debug and fix incomprehensive code that Sandra wrote, can't explain why she
-                did what she did nor commented on it
-
-        if (!connected) {
-//            cancelInternal();
-//          if (activeCmd.isRetriable) {
-        }
-    }
-*/
-
     // === pump ops ===
     public Menu getCurrentMenu() {
         long timeout = System.currentTimeMillis() + 5 * 1000;
