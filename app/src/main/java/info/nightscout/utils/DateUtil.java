@@ -146,4 +146,20 @@ public class DateUtil {
     }
 
 
+    public static String timeFrameString(long timeInMillis){
+        long remainingTimeMinutes = timeInMillis/(1000*60);
+        long remainingTimeHours = remainingTimeMinutes/60;
+        remainingTimeMinutes = remainingTimeMinutes%60;
+        return "(" + ((remainingTimeHours >0)?(remainingTimeHours + "h "):"") + remainingTimeMinutes + "')";
+    }
+
+    public static String sinceString(long timestamp){
+        return timeFrameString(System.currentTimeMillis()-timestamp);
+    }
+
+    public static String untilString(long timestamp){
+        return timeFrameString(timestamp- System.currentTimeMillis());
+    }
+
+
 }
