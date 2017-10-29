@@ -13,9 +13,10 @@ import de.jotomo.ruffy.spi.CommandResult;
  * sequence, letting the methods take care of waits.
  */
 public interface Command {
-    CommandResult execute();
-    List<String> validateArguments();
     void setScripter(RuffyScripter scripter);
+    List<String> validateArguments();
     boolean needsRunMode();
+    void execute();
+    CommandResult getResult();
     String getReconnectAlarm();
 }

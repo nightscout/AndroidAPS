@@ -684,13 +684,12 @@
     <string name="pump_errors_history">Fehlerprotokol</string>
     <string name="treatments_wizard_tt_label">TZ</string>
     <string name="combo_pump_state_label">Status</string>
-    <string name="combo_pump_state_unreachable">Keine Verbindung zur Pumpe</string>
+    <string name="combo_pump_state_disconnected">Keine Verbindung zur Pumpe</string>
     <string name="combo_pump_state_suspended_by_user">Durch Benuzter gestoppt</string>
     <string name="combo_pump_state_suspended_due_to_error">Wegen Fehler gestoppt</string>
-    <string name="combo_pump_state_running">Normaler Betrieb</string>
+    <string name="combo_pump_state_normal">Normaler Betrieb</string>
     <string name="combo_stats">Statistiken</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
-    <string name="combo_action_refreshing">Aktualisierung</string>
     <string name="combo_action_cancelling_tbr">TBR wird abgebrochen</string>
     <string name="combo_action_setting_tbr">TBR wird gesetzt</string>
     <string name="combo_action_bolusing">Bolus wird abgegeben</string>

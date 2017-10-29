@@ -3,10 +3,10 @@ package de.jotomo.ruffy.spi.history;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PumpHistory {
-    public int reservoirLevel = -1;
     @NonNull
     public List<Bolus> bolusHistory = new ArrayList<>();
     @NonNull
@@ -15,12 +15,6 @@ public class PumpHistory {
     public List<PumpError> pumpErrorHistory = new ArrayList<>();
     @NonNull
     public List<Tdd> tddHistory = new ArrayList<>();
-
-    public PumpHistory reservoirLevel(int reservoirLevel) {
-        this.reservoirLevel = reservoirLevel
-        ;
-        return this;
-    }
 
     public PumpHistory bolusHistory(List<Bolus> bolusHistory) {
         this.bolusHistory = bolusHistory;
@@ -32,7 +26,7 @@ public class PumpHistory {
         return this;
     }
 
-    public PumpHistory errorHistory(List<PumpError> pumpErrorHistory) {
+    public PumpHistory pumpErrorHistory(List<PumpError> pumpErrorHistory) {
         this.pumpErrorHistory = pumpErrorHistory;
         return this;
     }
@@ -45,7 +39,6 @@ public class PumpHistory {
     @Override
     public String toString() {
         return "PumpHistory{" +
-                "reservoirLevel=" + reservoirLevel +
                 ", bolusHistory=" + bolusHistory.size() +
                 ", tbrHistory=" + tbrHistory.size() +
                 ", pumpErrorHistory=" + pumpErrorHistory.size() +

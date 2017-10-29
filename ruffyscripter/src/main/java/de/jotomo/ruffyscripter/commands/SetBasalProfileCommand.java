@@ -1,28 +1,29 @@
 package de.jotomo.ruffyscripter.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.jotomo.ruffy.spi.BasalProfile;
-import de.jotomo.ruffyscripter.RuffyScripter;
-import de.jotomo.ruffy.spi.CommandResult;
 
 public class SetBasalProfileCommand extends BaseCommand {
-    public SetBasalProfileCommand(BasalProfile basalProfile) {
+    private final BasalProfile basalProfile;
 
+    public SetBasalProfileCommand(BasalProfile basalProfile) {
+        this.basalProfile = basalProfile;
     }
 
     @Override
-    public CommandResult execute() {
-        return null;
+    public void execute() {
+        // TODO
     }
 
     @Override
     public List<String> validateArguments() {
-        return null;
-    }
+        ArrayList<String> violations = new ArrayList<>();
+        if (basalProfile == null) {
+            violations.add("No basal profile supplied");
+        }
 
-    @Override
-    public void setScripter(RuffyScripter scripter) {
-
+        return violations;
     }
 }

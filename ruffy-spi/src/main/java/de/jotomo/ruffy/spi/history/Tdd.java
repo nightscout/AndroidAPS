@@ -8,4 +8,12 @@ public class Tdd extends HistoryRecord {
         super(timestamp);
         this.total = total;
     }
+
+    @Override
+    public String toString() {
+        return "Tdd{" +
+                "timestamp=" + timestamp +
+                ", total=" + total +
+                '}';
+    }
 }

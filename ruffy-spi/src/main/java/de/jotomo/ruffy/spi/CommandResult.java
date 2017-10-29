@@ -1,38 +1,43 @@
 package de.jotomo.ruffy.spi;
 
-import java.util.List;
+import java.util.Date;
 
+import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 
 public class CommandResult {
-    /** The request made made to the pump, like setting a TBR. */
-    public String request;
     /** Whether the command was executed successfully. */
     public boolean success;
     /** Whether any changes were made, e.g. if a the request was to cancel a running TBR,
      * but not TBR was active, this will be false. */
     public boolean enacted;
-    /** Time the command completed. */
-    public long completionTime;
     /** Null unless an unhandled exception was raised. */
     public Exception exception;
     /** (Error)message describing the result of the command. */
-    public String message;
+    // TODO work outh this message
+//    public String message;
     /** State of the pump *after* command execution. */
     public PumpState state;
     /** History if requested by the command. */
     public PumpHistory history;
     /** Basal rate profile if requested. */
-    public List<BasalProfile> basalProfiles;
+    public BasalProfile basalProfile;
     /** Total duration the command took. */
     public String duration;
 
-    public CommandResult() {
-    }
+    /** Whether an alert (warning only) was confirmed. This can happen during boluses.
+     * Request error history to see which errors occured. */
+    public boolean alertConfirmed;
+    /** BolusCommand: if a cancel request was successful */
+    public boolean wasSuccessfullyCancelled;
 
-    public CommandResult request(String request) {
-        this.request = request;
-        return this;
+    public int reservoirLevel = -1;
+
+    public Bolus lastBolus;
+
+    public long pumpTime;
+
+    public CommandResult() {
     }
 
     public CommandResult success(boolean success) {
@@ -42,11 +47,6 @@ public class CommandResult {
 
     public CommandResult enacted(boolean enacted) {
         this.enacted = enacted;
-        return this;
-    }
-
-    public CommandResult completionTime(long completionTime) {
-        this.completionTime = completionTime;
         return this;
     }
 
@@ -60,10 +60,10 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult message(String message) {
-        this.message = message;
-        return this;
-    }
+//    public CommandResult message(String message) {
+//        this.message = message;
+//        return this;
+//    }
 
     public CommandResult state(PumpState state) {
         this.state = state;
@@ -75,24 +75,24 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult basalProfile(List<BasalProfile> basalProfiles) {
-        this.basalProfiles = basalProfiles;
+    public CommandResult basalProfile(BasalProfile basalProfile) {
+        this.basalProfile = basalProfile;
         return this;
     }
 
     @Override
     public String toString() {
         return "CommandResult{" +
-                "request='" + request + '\'' +
                 ", success=" + success +
                 ", enacted=" + enacted +
-                ", completionTime=" + completionTime +
                 ", exception=" + exception +
-                ", message='" + message + '\'' +
+//                ", message='" + message + '\'' +
                 ", state=" + state +
                 ", history=" + history +
-                ", basalProfiles=" + basalProfiles +
+                ", basalProfile=" + basalProfile +
                 ", duration='" + duration + '\'' +
+                ", alertConfirmed='" + alertConfirmed + '\'' +
+                ", wasSuccessfullyCancelled='" + wasSuccessfullyCancelled + '\'' +
                 '}';
     }
 }

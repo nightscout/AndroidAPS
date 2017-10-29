@@ -9,4 +9,13 @@ public class Tbr extends HistoryRecord {
         this.duration = duration;
         this.percent = percent;
     }
+
+    @Override
+    public String toString() {
+        return "Tbr{" +
+                "timestamp=" + timestamp +
+                ", duration=" + duration +
+                ", percent=" + percent +
+                '}';
+    }
 }

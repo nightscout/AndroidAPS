@@ -21,12 +21,21 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
         return delegate;
     }
 
-    private RuffyCommandsV1Impl() {
+    private RuffyCommandsV1Impl() {}
+
+    @Override
+    public CommandResult getDateAndTime() {
+        return delegate.getDateAndTime();
     }
 
     @Override
-    public CommandResult takeOverAlarms() {
-        return delegate.takeOverAlarms();
+    public CommandResult readReservoirLevelAndLastBolus() {
+        return delegate.readReservoirLevelAndLastBolus();
+    }
+
+    @Override
+    public CommandResult confirmAlert(int warningCode) {
+        return delegate.confirmAlert(warningCode);
     }
 
     @Override

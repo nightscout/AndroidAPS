@@ -1,24 +1,11 @@
 package de.jotomo.ruffyscripter.commands;
 
-import java.util.Collections;
-import java.util.List;
-
-import de.jotomo.ruffy.spi.CommandResult;
-import de.jotomo.ruffyscripter.RuffyScripter;
-
 public class ReadPumpStateCommand extends BaseCommand {
     @Override
-    public CommandResult execute() {
-        return new CommandResult().success(true).enacted(false).state(scripter.readPumpStateInternal());
+    public void execute() {
+        // nothing to do, scripter adds state to all command results
+        result.success = true;
     }
-
-    @Override
-    public List<String> validateArguments() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void setScripter(RuffyScripter scripter) {}
 
     @Override
     public String toString() {

@@ -7,4 +7,12 @@ public class Bolus extends HistoryRecord {
         super(timestamp);
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "Bolus{" +
+                "timestamp=" + timestamp +
+                ", amount=" + amount +
+                '}';
+    }
 }

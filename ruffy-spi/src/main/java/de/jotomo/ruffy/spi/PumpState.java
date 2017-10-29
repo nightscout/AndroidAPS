@@ -2,6 +2,7 @@ package de.jotomo.ruffy.spi;
 
 /** State displayed on the main screen of the pump. */
 public class PumpState {
+    public long timestamp;
     public String menu = null;
     public boolean tbrActive = false;
     /** TBR percentage. 100% means no TBR active, just the normal basal rate running. */
@@ -22,10 +23,11 @@ public class PumpState {
     public String errorMsg;
     public boolean suspended;
 
+    public static final int UNKNOWN = -1;
     public static final int LOW = 1;
     public static final int EMPTY = 2;
-    public int batteryState = - 1;
-    public int insulinState = -1;
+    public int batteryState = UNKNOWN;
+    public int insulinState = UNKNOWN;
 
     public int activeBasalProfileNumber;
 

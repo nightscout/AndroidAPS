@@ -748,7 +748,6 @@
     <string name="reuse">reuse</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
-    <!-- TODO combo: still needed? -->
     <string name="connectiontimedout">Connection timed out</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="waitingforestimatedbolusend" formatted="false">Waiting for estimated bolus end. Remaining %d sec.</string>
@@ -766,12 +765,12 @@
     <string name="combo_connect_attempt_failed">Last connect attempt failed</string>
     <string name="combo_last_connection_time">%s (%s)</string>
     <string name="combo_tbr_remaining">%d%% (%d remaining)</string>
-    <string name="combo_last_bolus">%.2f U (%.1f %s, %s)</string>
-    <string name="combo_pump_state_unreachable">Pump unreachable</string>
+    <string name="combo_last_bolus">%.1f U (%.1f %s, %s)</string>
+    <string name="combo_pump_state_disconnected">Pump disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
-    <string name="combo_pump_state_running">Running</string>
-    <string name="combo_action_refreshing">Refreshing</string>
+    <string name="combo_pump_state_normal">Normal</string>
+    <string name="combo_pump_action_checking_history">Checking pump history</string>
     <string name="combo_action_cancelling_tbr">Cancelling TBR</string>
     <string name="combo_action_setting_tbr">Setting TBR</string>
     <string name="combo_action_bolusing">Bolusing</string>

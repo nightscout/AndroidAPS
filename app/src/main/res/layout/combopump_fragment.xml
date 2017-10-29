@@ -95,7 +95,7 @@
                     android:gravity="start"
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
@@ -359,19 +359,6 @@
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/combo_refresh" />
-
-            <!-- TODO v3-->
-            <Button
-                android:id="@+id/combo_stats"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/icon_danarstats"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:visibility="gone"
-                android:text="@string/combo_stats" />
 
             <Button
                 android:id="@+id/combo_error_history"

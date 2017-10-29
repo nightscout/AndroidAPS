@@ -15,8 +15,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
@@ -62,20 +60,17 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ComboPlugin.getPlugin().refreshDataFromPump("User request");
-                    }
-                });
+                Thread thread = new Thread(() -> ComboPlugin.getPlugin().refreshDataFromPump("User request"));
                 thread.start();
                 break;
             case R.id.combo_error_history:
                 // TODO show popup with pump errors and comm problems
                 break;
-            case R.id.combo_stats:
+//            case R.id.combo_stats:
                 // TODO show TDD stats from the pump (later)
-                break;
+                // how about rather making this a pump agnostic thing, it's all in the DB,
+                // add a TDD tab to Treatments?
+//                break;
         }
     }
 
@@ -85,99 +80,97 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     }
 
     public void updateGUI() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ComboPlugin plugin = ComboPlugin.getPlugin();
+        Activity fragmentActivity = getActivity();
+        if (fragmentActivity != null)
+            fragmentActivity.runOnUiThread(() -> {
+                ComboPlugin plugin = ComboPlugin.getPlugin();
 
-                    // activity
-                    String activity = plugin.getPump().activity;
-                    activityView.setText(activity != null ? activity : getString(R.string.combo_action_idle));
+                // state
+                stateView.setText(plugin.getStateSummary());
+                PumpState ps = plugin.getPump().state;
+                if (plugin.getPump().state.errorMsg != null
+                        || ps.insulinState == PumpState.EMPTY
+                        || ps.batteryState == PumpState.EMPTY) {
+                    stateView.setTextColor(Color.RED);
+                } else if (plugin.getPump().state.suspended) {
+                    stateView.setTextColor(Color.YELLOW);
+                } else {
+                    stateView.setTextColor(Color.WHITE);
+                }
 
-                    if (plugin.isInitialized()) {
-                        // state
-                        stateView.setText(plugin.getStateSummary());
+                // activity
+                String activity = plugin.getPump().activity;
+                activityView.setText(activity != null ? activity : getString(R.string.combo_action_idle));
 
-                        PumpState ps = plugin.getPump().state;
-                        if (plugin.getPump().state.errorMsg != null
-                                || ps.insulinState == PumpState.EMPTY
-                                || ps.batteryState == PumpState.EMPTY) {
-                            stateView.setTextColor(Color.RED);
-                        } else if (plugin.getPump().state.suspended) {
-                            stateView.setTextColor(Color.YELLOW);
+                if (plugin.isInitialized()) {
+                    // battery
+                    if (ps.batteryState == PumpState.EMPTY) {
+                        batteryView.setText("{fa-battery-empty}");
+                        batteryView.setTextColor(Color.RED);
+                    } else if (ps.batteryState == PumpState.LOW) {
+                        batteryView.setText("{fa-battery-quarter}");
+                        batteryView.setTextColor(Color.YELLOW);
+                    } else if (ps.batteryState == PumpState.UNKNOWN) {
+                        batteryView.setText("");
+                        batteryView.setTextColor(Color.YELLOW);
+                    } else {
+                        batteryView.setText("{fa-battery-full}");
+                        batteryView.setTextColor(Color.WHITE);
+                    }
+
+                    // reservoir
+                    int reservoirLevel = plugin.getPump().reservoirLevel;
+                    reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
+                    if (ps.insulinState == PumpState.LOW) {
+                        reservoirView.setTextColor(Color.YELLOW);
+                    } else if (ps.insulinState == PumpState.EMPTY) {
+                        reservoirView.setTextColor(Color.RED);
+                    } else {
+                        reservoirView.setTextColor(Color.WHITE);
+                    }
+
+                    // last connection
+                    CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
+                    if (lastCmdResult != null) {
+                        String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulConnection);
+                        String time = DateUtil.timeString(plugin.getPump().lastSuccessfulConnection);
+                        if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
+                            lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
+                            lastConnectionView.setTextColor(Color.RED);
+                        }
+                        if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
+                            lastConnectionView.setText(R.string.combo_connect_attempt_failed);
+                            lastConnectionView.setTextColor(Color.YELLOW);
                         } else {
-                            stateView.setTextColor(Color.WHITE);
+                            lastConnectionView.setText(getString(R.string.combo_last_connection_time, minAgo, time));
+                            lastConnectionView.setTextColor(Color.WHITE);
                         }
 
-                        // battery
-                        if (ps.batteryState == PumpState.EMPTY) {
-                            batteryView.setText("{fa-battery-empty}");
-                            batteryView.setTextColor(Color.RED);
-                        } else if (ps.batteryState == PumpState.LOW) {
-                            batteryView.setText("{fa-battery-quarter}");
-                            batteryView.setTextColor(Color.YELLOW);
+                        // last bolus
+                        Bolus bolus = plugin.getPump().lastBolus;
+                        if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
+                            long agoMsc = System.currentTimeMillis() - bolus.timestamp;
+                            double agoHours = agoMsc / 60d / 60d / 1000d;
+                            lastBolusView.setText(getString(R.string.combo_last_bolus,
+                                    bolus.amount,
+                                    agoHours,
+                                    getString(R.string.hoursago),
+                                    DateUtil.timeString(bolus.timestamp)));
                         } else {
-                            batteryView.setText("{fa-battery-full}");
-                            batteryView.setTextColor(Color.WHITE);
+                            lastBolusView.setText("");
                         }
 
-                        // reservoir
-                        int reservoirLevel = plugin.getPump().reservoirLevel;
-                        reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
-                        if (ps.insulinState == PumpState.LOW) {
-                            reservoirView.setTextColor(Color.YELLOW);
-                        } else if (ps.insulinState == PumpState.EMPTY) {
-                            reservoirView.setTextColor(Color.RED);
-                        } else {
-                            reservoirView.setTextColor(Color.WHITE);
+                        // TBR
+                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                        String tbrStr = "";
+                        if (tbrActive) {
+                            long minSinceRead = (System.currentTimeMillis() - plugin.getPump().state.timestamp) / 1000 / 60;
+                            long remaining = ps.tbrRemainingDuration - minSinceRead;
+                            if (remaining >= 0) {
+                                tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
+                            }
                         }
-
-                        // last connection
-                        CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
-                        if (lastCmdResult != null) {
-                            String minAgo = DateUtil.minAgo(lastCmdResult.completionTime);
-                            String time = DateUtil.timeString(lastCmdResult.completionTime);
-                            if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
-                                lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
-                                lastConnectionView.setTextColor(Color.RED);
-                            }
-                            if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                                lastConnectionView.setText(R.string.combo_connect_attempt_failed);
-                                lastConnectionView.setTextColor(Color.YELLOW);
-                            } else {
-                                lastConnectionView.setText(getString(R.string.combo_last_connection_time, minAgo, time));
-                                lastConnectionView.setTextColor(Color.WHITE);
-                            }
-
-                            // last bolus
-                            List<Bolus> history = plugin.getPump().history.bolusHistory;
-                            if (!history.isEmpty() && history.get(0).timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
-                                Bolus bolus = history.get(0);
-                                long agoMsc = System.currentTimeMillis() - bolus.timestamp;
-                                double agoHours = agoMsc / 60d / 60d / 1000d;
-                                lastBolusView.setText(getString(R.string.combo_last_bolus,
-                                        bolus.amount,
-                                        agoHours,
-                                        getString(R.string.hoursago),
-                                        DateUtil.timeString(bolus.timestamp)));
-                            } else {
-                                lastBolusView.setText("");
-                            }
-
-                            // TBR
-                            boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                            String tbrStr = "";
-                            if (tbrActive) {
-                                long minSinceRead = (System.currentTimeMillis() - lastCmdResult.completionTime) / 1000 / 60;
-                                long remaining = ps.tbrRemainingDuration - minSinceRead;
-                                if (remaining >= 0) {
-                                    tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
-                                }
-                            }
-                            tempBasalText.setText(tbrStr);
-                        }
+                        tempBasalText.setText(tbrStr);
                     }
                 }
             });

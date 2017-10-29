@@ -56,7 +56,9 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private void checkPump() {
         final PumpInterface pump = MainApp.getConfigBuilder();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && pump.isInitialized() && profile != null && profile.getBasal() != null) {
+        if (pump != null && /* TODO does this prevent the error in case the pump is never initialized because it was never reachable? */
+//                pump.isInitialized() &&
+                profile != null && profile.getBasal() != null) {
             Date lastConnection = pump.lastDataTime();
 
             boolean isStatusOutdated = lastConnection.getTime() + 15 * 60 * 1000L < System.currentTimeMillis();
@@ -71,7 +73,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 // The alarm sound is played back as regular media, that means it might be muted if sound level is at 0
                 // a simple 'Enable/disable alarms' button on the actions tab?
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE,
-                        MainApp.sResources.getString(R.string.combo_pump_state_unreachable), Notification.URGENT);
+                        MainApp.sResources.getString(R.string.combo_pump_state_disconnected), Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {

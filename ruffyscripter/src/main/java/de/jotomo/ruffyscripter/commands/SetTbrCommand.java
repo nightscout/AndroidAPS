@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffy.spi.PumpWarningCodes;
 
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
@@ -58,47 +58,42 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute() {
-        try {
-            boolean cancellingTbr = percentage == 100;
+    public void execute() {
+        boolean cancellingTbr = percentage == 100;
 
-            enterTbrMenu();
-            boolean increasingPercentage = inputTbrPercentage();
-            verifyDisplayedTbrPercentage(increasingPercentage);
+        enterTbrMenu();
+        boolean increasingPercentage = inputTbrPercentage();
+        verifyDisplayedTbrPercentage(increasingPercentage);
 
-            if (cancellingTbr) {
-                cancelTbrAndConfirmCancellationWarning();
-            } else {
-                // switch to TBR_DURATION menu by pressing menu key
-                scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-                scripter.pressMenuKey();
-                scripter.waitForMenuUpdate();
-                scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+        if (cancellingTbr) {
+            cancelTbrAndConfirmCancellationWarning();
+        } else {
+            // switch to TBR_DURATION menu by pressing menu key
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+            scripter.pressMenuKey();
+            scripter.waitForMenuUpdate();
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-                boolean increasingDuration = inputTbrDuration();
-                verifyDisplayedTbrDuration(increasingDuration);
+            boolean increasingDuration = inputTbrDuration();
+            verifyDisplayedTbrDuration(increasingDuration);
 
-                // confirm TBR
-                scripter.pressCheckKey();
-                scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
-            }
+            // confirm TBR
+            scripter.pressCheckKey();
+            scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
+        }
 
-            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
-                    "Pump did not return to MAIN_MEU after setting TBR. " +
-                            "Check pump manually, the TBR might not have been set/cancelled.");
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
+                "Pump did not return to MAIN_MEU after setting TBR. " +
+                        "Check pump manually, the TBR might not have been set/cancelled.");
 
-            // check main menu shows the same values we just set
-            if (cancellingTbr) {
-                verifyMainMenuShowsNoActiveTbr();
-                return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
-            } else {
-                verifyMainMenuShowsExpectedTbrActive();
-                return new CommandResult().success(true).enacted(true).message(
-                        String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
-            }
-
-        } catch (CommandException e) {
-            return e.toCommandResult();
+        // check main menu shows the same values we just set
+        if (cancellingTbr) {
+            verifyMainMenuShowsNoActiveTbr();
+            result.success(true).enacted(true).message("TBR was cancelled");
+        } else {
+            verifyMainMenuShowsExpectedTbrActive();
+            result.success(true).enacted(true)
+                    .message(String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
         }
     }
 
@@ -146,7 +141,7 @@ public class SetTbrCommand extends BaseCommand {
         }
         log.debug("Final displayed TBR percentage: " + displayedPercentage);
         if (displayedPercentage != percentage) {
-            throw new CommandException().message("Failed to set TBR percentage, requested: "
+            throw new CommandException("Failed to set TBR percentage, requested: "
                     + percentage + ", actual: " + displayedPercentage);
         }
 
@@ -156,7 +151,7 @@ public class SetTbrCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long refreshedDisplayedTbrPecentage = readDisplayedPercentage();
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
-            throw new CommandException().message("Failed to set TBR percentage: " +
+            throw new CommandException("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "
                     + displayedPercentage + " -> " + refreshedDisplayedTbrPecentage);
         }
@@ -208,7 +203,7 @@ public class SetTbrCommand extends BaseCommand {
 
         log.debug("Final displayed TBR duration: " + displayedDuration);
         if (displayedDuration != duration) {
-            throw new CommandException().message("Failed to set TBR duration, requested: "
+            throw new CommandException("Failed to set TBR duration, requested: "
                     + duration + ", actual: " + displayedDuration);
         }
 
@@ -218,7 +213,7 @@ public class SetTbrCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long refreshedDisplayedTbrDuration = readDisplayedDuration();
         if (displayedDuration != refreshedDisplayedTbrDuration) {
-            throw new CommandException().message("Failed to set TBR duration: " +
+            throw new CommandException("Failed to set TBR duration: " +
                     "duration changed after input stopped from "
                     + displayedDuration + " -> " + refreshedDisplayedTbrDuration);
         }
@@ -234,7 +229,7 @@ public class SetTbrCommand extends BaseCommand {
         // We could read the remaining duration from MAIN_MENU, but by the time we're here,
         // the pump could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
         // is raised and if so dismiss it
-        scripter.confirmAlert("TBR CANCELLED", 5000);
+        scripter.confirmAlert(PumpWarningCodes.TBR_CANCELLED, 2000);
     }
 
     private void verifyMainMenuShowsNoActiveTbr() {
@@ -242,7 +237,7 @@ public class SetTbrCommand extends BaseCommand {
         Double tbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
         boolean runtimeDisplayed = scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME);
         if (tbrPercentage != 100 || runtimeDisplayed) {
-            throw new CommandException().message("Cancelling TBR failed, TBR is still set according to MAIN_MENU");
+            throw new CommandException("Cancelling TBR failed, TBR is still set according to MAIN_MENU");
         }
     }
 
@@ -251,7 +246,7 @@ public class SetTbrCommand extends BaseCommand {
         // new TBR set; percentage and duration must be displayed ...
         if (!scripter.getCurrentMenu().attributes().contains(MenuAttribute.TBR) ||
                 !scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME)) {
-            throw new CommandException().message("Setting TBR failed, according to MAIN_MENU no TBR is active");
+            throw new CommandException("Setting TBR failed, according to MAIN_MENU no TBR is active");
         }
         Double mmTbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
         MenuTime mmTbrDuration = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
@@ -260,7 +255,7 @@ public class SetTbrCommand extends BaseCommand {
         // 29 minutes and 59 seconds, so that 29 minutes are displayed
         int mmTbrDurationInMinutes = mmTbrDuration.getHour() * 60 + mmTbrDuration.getMinute();
         if (mmTbrPercentage != percentage || (mmTbrDurationInMinutes != duration && mmTbrDurationInMinutes + 1 != duration)) {
-            throw new CommandException().message("Setting TBR failed, TBR in MAIN_MENU differs from expected");
+            throw new CommandException("Setting TBR failed, TBR in MAIN_MENU differs from expected");
         }
     }
 
