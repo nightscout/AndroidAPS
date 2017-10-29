@@ -125,7 +125,7 @@ public class BTConnection {
 
             tmp = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"));
         } catch (IOException e) {
-            handler.log("socket create() failed: "+e.getMessage());
+            handler.fail("socket create() failed: "+e.getMessage());
         }
         if(tmp != null) {
             stopDiscoverable();
@@ -133,7 +133,7 @@ public class BTConnection {
         }
         else
         {
-            handler.log("failed the pump connection( retries left: "+retry+")");
+            handler.fail("failed the pump connection( retries left: "+retry+")");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -160,7 +160,7 @@ public class BTConnection {
                     currentOutput = currentConnection.getOutputStream();
                 } catch (IOException e) {
                     //e.printStackTrace();
-                    handler.fail("no connection possible");
+                    handler.fail("no connection possible: " + e.getMessage());
 
 
                     //??????????
@@ -241,9 +241,9 @@ public class BTConnection {
             this.currentInput=null;
             this.currentOutput=null;
             this.currentConnection=null;
-            handler.log("closed current Connection");
+            handler.fail("closed current Connection");
         }
-        handler.log("got new Connection: "+newConnection);
+        handler.fail("got new Connection: "+newConnection);
         this.currentConnection = newConnection;
         if(newConnection!=null)
         {
