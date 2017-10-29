@@ -339,7 +339,7 @@ public class RuffyScripter implements RuffyCommands {
     /**
      * On connection lose the pump raises an error immediately (when setting a TBR or giving a bolus) -
      * there's no timeout before that happens. But: a reconnect is still possible which can then
-     * confirm the alarm and, return to the main menu and restart the command safely.
+     * confirm the alarm and.
      *
      * @return whether the reconnect and return to main menu was successful
      */
@@ -419,22 +419,11 @@ public class RuffyScripter implements RuffyCommands {
             log.debug("Waiting for first menu update to be sent");
             long timeoutExpired = System.currentTimeMillis() + 90 * 1000;
             long initialUpdateTime = menuLastUpdated;
-            long again = System.currentTimeMillis() + 30 * 1000;
             while (initialUpdateTime == menuLastUpdated) {
                 if (System.currentTimeMillis() > timeoutExpired) {
                     throw new CommandException("Timeout connecting to pump");
                 }
                 SystemClock.sleep(50);
-                if (again < System.currentTimeMillis()) {
-                    // TODO test
-                    log.debug("Connecting taking long, forcing disconnect first");
-                    ruffyService.doRTDisconnect();
-                    SystemClock.sleep(2000);
-                    log.debug("Connecting again");
-                    ruffyService.doRTConnect();
-                    SystemClock.sleep(1000);
-                    again = System.currentTimeMillis() + 30 * 1000;
-                }
             }
         } catch (CommandException e) {
             throw e;
