@@ -277,11 +277,19 @@ public class Ruffy extends Service {
                 }
                 while(rtModeRunning)
                 {
-                    if(System.currentTimeMillis() > lastRtMessageSent +1000L) {
-                        log("sending keep alive");
-                        synchronized (rtSequenceSemaphore) {
-                            rtSequence = Application.sendRTKeepAlive(rtSequence, btConn);
-                            lastRtMessageSent = System.currentTimeMillis();
+                    try {
+                        if (System.currentTimeMillis() > lastRtMessageSent + 1000L) {
+                            log("sending keep alive");
+                            synchronized (rtSequenceSemaphore) {
+                                rtSequence = Application.sendRTKeepAlive(rtSequence, btConn);
+                                lastRtMessageSent = System.currentTimeMillis();
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (rtModeRunning) {
+                            fail("Error sending keep alive while rtModeRunning is still true");
+                        } else {
+                            fail("Error sending keep alive. rtModeRunning is false, so this is most likely a race condition during disconnect");
                         }
                     }
                     try{
