@@ -994,14 +994,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // temp target
         TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
         if (tempTarget != null) {
-            long remainingTimeMinutes = (tempTarget.end()- System.currentTimeMillis())/(1000*60);
-            long remainingTimeHours = remainingTimeMinutes/60;
-            remainingTimeMinutes = remainingTimeMinutes%60;
-            String remaining = " (" + ((remainingTimeHours >0)?(remainingTimeHours + "h "):"") + remainingTimeMinutes + "')";
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + remaining);
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
         } else {
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
