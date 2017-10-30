@@ -29,10 +29,14 @@ import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
+    public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
 
-    private long nextPumpDisconnectedAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
-    private long nextMissedReadingsAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
+    // TODO consider moving this into an Alarms plugin that works offline and can be configured
+    // (e.g. override silent mode at night only)
+    public static final int ALARM_FREQUENCY = 25 * 60 * 1000;
+    private static long nextPumpDisconnectedAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
+    private static long nextMissedReadingsAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
 
     @Override
     public void onReceive(Context context, Intent rIntent) {
@@ -49,11 +53,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
     private void checkBg() {
         BgReading bgReading = DatabaseHelper.lastBg();
-        if (bgReading != null && bgReading.date + 25 * 60 * 1000 < System.currentTimeMillis()
+        if (bgReading != null && bgReading.date + ALARM_FREQUENCY < System.currentTimeMillis()
                 && nextMissedReadingsAlarm < System.currentTimeMillis()) {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.sResources.getString(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
-            nextMissedReadingsAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
+            nextMissedReadingsAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
             MainApp.bus().post(new EventNewNotification(n));
         }
     }
@@ -64,15 +68,17 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         if (pump != null && profile != null && profile.getBasal() != null) {
             Date lastConnection = pump.lastDataTime();
 
-            boolean isStatusOutdated = lastConnection.getTime() + 15 * 60 * 1000L < System.currentTimeMillis();
+            boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
+            boolean alarmTimeoutExpired = lastConnection.getTime() + ALARM_FREQUENCY < System.currentTimeMillis();
+            boolean nextAlarmOccurrenceReached = nextPumpDisconnectedAlarm < System.currentTimeMillis();
+
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (isStatusOutdated && lastConnection.getTime() + 25 * 60 * 1000 < System.currentTimeMillis()
-                    && nextPumpDisconnectedAlarm < System.currentTimeMillis()) {
+            if (isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
-                nextPumpDisconnectedAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
+                nextPumpDisconnectedAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
