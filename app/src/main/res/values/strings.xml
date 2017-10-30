@@ -775,5 +775,7 @@
     <string name="combo_action_setting_tbr">Setting TBR</string>
     <string name="combo_action_bolusing">Bolusing</string>
     <string name="combo_action_idle">Idle</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
 </resources>
 

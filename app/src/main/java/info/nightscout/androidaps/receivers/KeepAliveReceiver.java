@@ -31,6 +31,9 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
 
+    private long nextPumpDisconnectedAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
+    private long nextMissedReadingsAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
+
     @Override
     public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -46,9 +49,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
     private void checkBg() {
         BgReading bgReading = DatabaseHelper.lastBg();
-        if (bgReading != null && bgReading.date + 25 * 60 * 1000 < System.currentTimeMillis()) {
-            Notification n = new Notification(Notification.BG_READINGS_MISSED, "Missed BG readings", Notification.URGENT);
+        if (bgReading != null && bgReading.date + 25 * 60 * 1000 < System.currentTimeMillis()
+                && nextMissedReadingsAlarm < System.currentTimeMillis()) {
+            Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.sResources.getString(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
+            nextMissedReadingsAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
             MainApp.bus().post(new EventNewNotification(n));
         }
     }
@@ -56,25 +61,18 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private void checkPump() {
         final PumpInterface pump = MainApp.getConfigBuilder();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && /* TODO does this prevent the error in case the pump is never initialized because it was never reachable? */
-//                pump.isInitialized() &&
-                profile != null && profile.getBasal() != null) {
+        if (pump != null && profile != null && profile.getBasal() != null) {
             Date lastConnection = pump.lastDataTime();
 
             boolean isStatusOutdated = lastConnection.getTime() + 15 * 60 * 1000L < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
-            // TODO triggers on init already; don't (both missed readings and pump comms)
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (isStatusOutdated && lastConnection.getTime() + 25 * 60 * 1000 < System.currentTimeMillis()) {
-                // TODO the alarm will trigger every 5m until the problem is resolved. That can get annoying quiet quickly if
-                // fixing the problem takes longer (or is not immediately possible because the pump was forgotten)?
-                // suppress this for another 25m if the message was dismissed?
-                // The alarm sound is played back as regular media, that means it might be muted if sound level is at 0
-                // a simple 'Enable/disable alarms' button on the actions tab?
-                Notification n = new Notification(Notification.PUMP_UNREACHABLE,
-                        MainApp.sResources.getString(R.string.combo_pump_state_disconnected), Notification.URGENT);
+            if (isStatusOutdated && lastConnection.getTime() + 25 * 60 * 1000 < System.currentTimeMillis()
+                    && nextPumpDisconnectedAlarm < System.currentTimeMillis()) {
+                Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
+                nextPumpDisconnectedAlarm = System.currentTimeMillis() + 24 * 60 * 1000;
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
