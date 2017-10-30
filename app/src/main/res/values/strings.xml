@@ -777,5 +777,6 @@
     <string name="combo_action_idle">Idle</string>
     <string name="pump_unreachable">Pump unreachable</string>
     <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
 </resources>
 

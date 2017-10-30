@@ -1,6 +1,11 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,14 +13,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-//Added by Rumen for snooze time 
+//Added by Rumen for snooze time
 import info.nightscout.utils.SP;
 
 /**
@@ -49,11 +54,16 @@ public class NotificationStore {
                 return;
             }
         }
-        if (n.soundId != null) {
+
+        if (SP.getBoolean("raise_urgent_alarms_as_android_notification", false)
+                && n.level == Notification.URGENT) {
+            raiseSystemNotification(n);
+        } else if (n.soundId != null) {
             Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
             alarm.putExtra("soundid", n.soundId);
             MainApp.instance().startService(alarm);
         }
+
         store.add(n);
 
         WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
@@ -62,6 +72,20 @@ public class NotificationStore {
         }
 
         Collections.sort(store, new NotificationComparator());
+    }
+
+    private void raiseSystemNotification(Notification n) {
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Context context = MainApp.instance().getApplicationContext();
+        NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.notif_icon)
+                        .setContentTitle("Urgent alarm")
+                        .setContentText(n.text)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setSound(uri);
+        mgr.notify(Constants.urgentAlarmNotificationID, notificationBuilder.build());
     }
 
     public boolean remove(int id) {

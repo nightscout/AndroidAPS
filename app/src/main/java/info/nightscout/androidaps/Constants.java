@@ -18,6 +18,7 @@ public class Constants {
     public static final Integer carbsOnlyForCheckLimit = 10101010;
 
     public static final Integer notificationID = 556677;
+    public static final Integer urgentAlarmNotificationID = 556678;
 
     public static final int hoursToKeepInDatabase = 72;
     public static final int daysToKeepHistoryInDatabase = 30;
