@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jotomo.ruffy.spi.PumpState;
+import de.jotomo.ruffy.spi.PumpWarningCodes;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
 // Hm, we could just ignore TBRs that run out within the next 60s (0:01 or even 0:02
@@ -13,8 +14,8 @@ public class CancelTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(CancelTbrCommand.class);
 
     @Override
-    public String getReconnectAlarm() {
-        return "TBR CANCELLED";
+    public Integer getReconnectWarningId() {
+        return PumpWarningCodes.TBR_CANCELLED;
     }
 
     @Override

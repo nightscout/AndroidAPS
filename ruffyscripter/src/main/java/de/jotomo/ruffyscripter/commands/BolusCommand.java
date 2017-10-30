@@ -48,8 +48,8 @@ public class BolusCommand extends BaseCommand {
     }
 
     @Override
-    public String getReconnectAlarm() {
-        return "BOLUS CANCELLED";
+    public Integer getReconnectWarningId() {
+        return PumpWarningCodes.BOLUS_CANCELLED;
     }
 
     @Override

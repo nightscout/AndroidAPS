@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
@@ -766,29 +767,29 @@ public class RuffyScripter implements RuffyCommands {
         long timeout = System.currentTimeMillis() + maxWaitMs;
         while (System.currentTimeMillis() < timeout) {
             if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                // Note that the message is permanently displayed, while the error code is blinking.
-                // A wait till the error code can be read results in the code hanging, despite
-                // menu updates coming in, so just check the message.
-
                 WarningOrErrorCode warningOrErrorCode = readWarningOrErrorCode();
                 if (warningOrErrorCode.errorCode != 0) {
                     // TODO proper way to display such things in the UI;
                     throw new CommandException("Pump is in error state");
                 }
                 int displayedWarningCode = warningOrErrorCode.warningCode;
-                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                String errorMsg = null;
+                try {
+                    errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                } catch (Exception e) {
+                    // ignore
+                }
                 if (displayedWarningCode != warningCode) {
-                    throw new CommandException("An alert other than the expected warning " + warningCode+ " was raised by the pump: "
+                    throw new CommandException("An alert other than the expected warning " + warningCode + " was raised by the pump: "
                             + displayedWarningCode + "(" + errorMsg + "). Please check the pump.");
                 }
+
                 // confirm alert
                 verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 pressCheckKey();
                 // dismiss alert
                 verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 pressCheckKey();
-/*                // TODO multiple alerts in a row ... can this occur in non-freak circumstances?
-                waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);*/
                 return true;
             }
             SystemClock.sleep(10);

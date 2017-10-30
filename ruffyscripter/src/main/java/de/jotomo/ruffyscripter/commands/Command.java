@@ -18,5 +18,5 @@ public interface Command {
     boolean needsRunMode();
     void execute();
     CommandResult getResult();
-    String getReconnectAlarm();
+    Integer getReconnectWarningId();
 }

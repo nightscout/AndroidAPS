@@ -52,8 +52,8 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     @Override
-    public String getReconnectAlarm() {
-        return "TBR CANCELLED";
+    public Integer getReconnectWarningId() {
+        return PumpWarningCodes.TBR_CANCELLED;
     }
 
     @Override
