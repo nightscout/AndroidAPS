@@ -22,6 +22,14 @@ public class CancelTbrCommand extends BaseCommand {
     public void execute() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         PumpState pumpState = scripter.readPumpStateInternal();
+        if (!pumpState.tbrActive) {
+            // This is non-critical; when cancelling a TBR and the connection was interrupted
+            // the TBR was cancelled by that. In that case not cancelling anything is fine.
+            result.success = true;
+            result.enacted = false;
+            return;
+        }
+
         log.debug("Cancelling active TBR of " + pumpState.tbrPercent
                 + "% with " + pumpState.tbrRemainingDuration + " min remaining");
         SetTbrCommand setTbrCommand = new SetTbrCommand(100, 0);
