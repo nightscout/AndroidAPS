@@ -57,7 +57,7 @@ public class NotificationStore {
             }
         }
 
-        if (SP.getBoolean("raise_urgent_alarms_as_android_notification", false)
+        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_urgent_alarms_as_android_notification), false)
                 && n.level == Notification.URGENT) {
             raiseSystemNotification(n);
         } else if (n.soundId != null) {
