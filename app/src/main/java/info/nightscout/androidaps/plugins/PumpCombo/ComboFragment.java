@@ -94,7 +94,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
                 // activity
                 String activity = plugin.getPump().activity;
-                activityView.setText(activity != null ? activity : getString(R.string.combo_action_idle));
+                activityView.setText(activity != null ? activity : getString(R.string.combo_pump_action_idle));
 
                 if (plugin.isInitialized()) {
                     // battery

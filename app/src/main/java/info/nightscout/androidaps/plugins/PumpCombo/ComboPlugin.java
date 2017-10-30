@@ -479,7 +479,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         final int finalAdjustedPercent = adjustedPercent;
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_action_setting_tbr), () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
 
         if (commandResult.enacted) {
             pump.tbrSetTime = System.currentTimeMillis();
@@ -526,7 +526,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (activeTemp == null || userRequested) {
             /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
-            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_action_cancelling_tbr), ruffyScripter::cancelTbr);
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), ruffyScripter::cancelTbr);
 
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
@@ -549,7 +549,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // on whether the TBR we're cancelling is above or below 100%.
             final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
-            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_action_setting_tbr), () -> ruffyScripter.setTbr(percentage, 15));
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), () -> ruffyScripter.setTbr(percentage, 15));
 
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());

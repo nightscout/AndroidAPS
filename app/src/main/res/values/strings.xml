@@ -771,10 +771,11 @@
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
     <string name="combo_pump_state_normal">Normal</string>
     <string name="combo_pump_action_checking_history">Checking pump history</string>
-    <string name="combo_action_cancelling_tbr">Cancelling TBR</string>
-    <string name="combo_action_setting_tbr">Setting TBR</string>
-    <string name="combo_action_bolusing">Bolusing</string>
-    <string name="combo_action_idle">Idle</string>
+    <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
+    <string name="combo_pump_action_setting_tbr">Setting TBR</string>
+    <string name="combo_pump_action_bolusing">Bolusing</string>
+    <string name="combo_pump_action_refreshing">Refreshing</string>
+    <string name="combo_pump_action_idle">Idle</string>
     <string name="pump_unreachable">Pump unreachable</string>
     <string name="missed_bg_readings">Missed BG readings</string>
     <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
