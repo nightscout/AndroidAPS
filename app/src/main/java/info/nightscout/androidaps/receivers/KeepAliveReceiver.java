@@ -21,12 +21,13 @@ import java.util.Date;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.utils.SP;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
@@ -53,7 +54,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
     private void checkBg() {
         BgReading bgReading = DatabaseHelper.lastBg();
-        if (bgReading != null && bgReading.date + ALARM_FREQUENCY < System.currentTimeMillis()
+        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_missed_bg_readings_alert), false)
+        && bgReading != null && bgReading.date + ALARM_FREQUENCY < System.currentTimeMillis()
                 && nextMissedReadingsAlarm < System.currentTimeMillis()) {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.sResources.getString(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
@@ -75,7 +77,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean nextAlarmOccurrenceReached = nextPumpDisconnectedAlarm < System.currentTimeMillis();
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
+            if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), false)
+                    && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 nextPumpDisconnectedAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
@@ -86,7 +89,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     public void run() {
                         pump.setNewBasalProfile(profile);
                     }
-                }, "pump-refresh");
+                }, "pump-update-basal-profile");
                 t.start();
             } else if (isStatusOutdated && !pump.isBusy()) {
                 Thread t = new Thread(new Runnable() {
