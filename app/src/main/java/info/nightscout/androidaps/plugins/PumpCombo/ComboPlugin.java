@@ -763,7 +763,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 extendedJson.put("TempBasalPercent", ps.tbrPercent);
                 extendedJson.put("TempBasalRemaining", ps.tbrRemainingDuration);
             }
-            if (ps.alertCodes.errorCode != null) {
+            if (ps.alertCodes != null && ps.alertCodes.errorCode != null) {
                 extendedJson.put("ErrorCode", ps.alertCodes.errorCode);
             }
             pumpJson.put("extended", extendedJson);
