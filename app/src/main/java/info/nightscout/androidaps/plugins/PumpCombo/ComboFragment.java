@@ -65,12 +65,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 break;
             case R.id.combo_error_history:
                 // TODO show popup with pump errors and comm problems
+                // steal code from profile view, called on overview
                 break;
-//            case R.id.combo_stats:
-                // TODO show TDD stats from the pump (later)
-                // how about rather making this a pump agnostic thing, it's all in the DB,
-                // add a TDD tab to Treatments?
-//                break;
         }
     }
 
@@ -88,7 +84,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 // state
                 stateView.setText(plugin.getStateSummary());
                 PumpState ps = plugin.getPump().state;
-                if ( ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY) {
+                if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY) {
                     stateView.setTextColor(Color.RED);
                 } else if (plugin.getPump().state.suspended) {
                     stateView.setTextColor(Color.YELLOW);
@@ -132,15 +128,18 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     if (lastCmdResult != null) {
                         String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulConnection);
                         String time = DateUtil.timeString(plugin.getPump().lastSuccessfulConnection);
-                        if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() + 30 * 60 * 1000) {
+                        String timeAgo = getString(R.string.combo_last_connection_time, minAgo, time);
+                        if (plugin.getPump().lastSuccessfulConnection == 0) {
+                            lastConnectionView.setText(R.string.combo_pump_never_connected);
+                            lastConnectionView.setTextColor(Color.RED);
+                        } else if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() - 30 * 60 * 1000) {
                             lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
                             lastConnectionView.setTextColor(Color.RED);
-                        }
-                        if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                            lastConnectionView.setText(R.string.combo_connect_attempt_failed);
+                        } else if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
+                            lastConnectionView.setText(timeAgo + "\n" + R.string.combo_connect_attempt_failed);
                             lastConnectionView.setTextColor(Color.YELLOW);
                         } else {
-                            lastConnectionView.setText(getString(R.string.combo_last_connection_time, minAgo, time));
+                            lastConnectionView.setText(timeAgo);
                             lastConnectionView.setTextColor(Color.WHITE);
                         }
 
