@@ -234,7 +234,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         // TODO fuse the below into 'sync'? or make checkForTbrMismatch jut a trigger to issue a sync if needed; don't run sync twice as is nice
 //        checkForTbrMismatch();
-        checkPumpHistory();
+//        checkPumpHistory();
     }
 
     /**
@@ -582,21 +582,34 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private synchronized CommandResult runCommand(String activity, CommandExecution commandExecution) {
         if (activity != null) {
+            // danar has this is message on the overview screen, no?
             pump.activity = activity;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
+
+        // TODO should probably specialize this:
+        // smb, tbr stuff can be retried.
+        // non-smb bolus shall be blocked if same amount already delivered within last 1 min
+
+        // i need a version of this which sets activity, updates local state etc and one
+        // which just does something, read history etc.
+        // retrying: separate r/o and r/w commands? flag for it?
 
 //        CommandResult precheck = ruffyScripter.readPumpState();
         // tbrcheck?
         // check for active alert; if warning confirm; on warning confirm, read history (bolus, errors), which shall raise alerts if appropriate
         //
 //        precheck.
+        // todo don't send out commands requining run mode if pump is suspended
+        //
 
         CommandResult commandResult = commandExecution.execute();
         pump.lastCmdResult = commandResult;
         pump.lastConnectionAttempt = System.currentTimeMillis();
         if (commandResult.success) {
             pump.lastSuccessfulConnection = System.currentTimeMillis();
+        } else {
+            // TODO set flag to force sync on next connect; try to run immediately? or would this make things worse and we should just wait till the next iteratio?L
         }
 
         // copy over state (as supplied) so it will still be available when another command runs that doesn't return that data
@@ -694,6 +707,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
         }
         if (sync) {
+            // todo just return the PHR?
             runFullSync(new PumpHistoryRequest().tbrHistory(System.currentTimeMillis() - 3 * 60 * 60 * 1000));
         }
 

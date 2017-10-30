@@ -43,7 +43,7 @@ public class ReadHistoryCommand extends BaseCommand {
             if (request.bolusHistory != PumpHistoryRequest.SKIP) {
                 int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
                 if (totalRecords > 0) {
-                    if (true || request.bolusHistory == PumpHistoryRequest.LAST) {
+                    if (request.bolusHistory == PumpHistoryRequest.LAST) {
                         Bolus bolus = readBolusRecord();
                         history.bolusHistory.add(bolus);
                     } else {
@@ -58,7 +58,7 @@ public class ReadHistoryCommand extends BaseCommand {
             if (request.pumpErrorHistory != PumpHistoryRequest.SKIP) {
                 int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
                 if (totalRecords > 0) {
-                    if (true || request.pumpErrorHistory == PumpHistoryRequest.LAST) {
+                    if (request.pumpErrorHistory == PumpHistoryRequest.LAST) {
                         PumpError error = readErrorRecord();
                         history.pumpErrorHistory.add(error);
                     } else {
