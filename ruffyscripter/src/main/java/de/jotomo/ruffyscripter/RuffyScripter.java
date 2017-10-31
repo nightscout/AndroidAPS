@@ -273,15 +273,22 @@ public class RuffyScripter implements RuffyCommands {
                 // (to fail before the next loop iteration issues the next command)
                 long dynamicTimeout = calculateCmdInactivityTimeout();
                 long overallTimeout = calculateOverallCmdTimeout();
-                int maxReconnectAttempts = 3;
                 while (cmdThread.isAlive()) {
                     log.trace("Waiting for running command to complete");
                     SystemClock.sleep(500);
                     if (!ruffyService.isConnected()) {
-                        if (maxReconnectAttempts > 0) {
-                            maxReconnectAttempts--;
-                            cmdThread.interrupt();
-                            reconnect();
+                        // on connection lose try to reconnect, confirm warning alerts caused by
+                        // the disconnected and then return the command as failed (the caller
+                        // can retry if needed).
+                        cmdThread.interrupt();
+                        activeCmd.getResult().success = false;
+                        for(int attempts = 4; attempts > 0; attempts--) {
+                            boolean reconnected = recoverFromConnectionLoss();
+                            if (reconnected) {
+                                break;
+                            }
+                            // try again in 20 sec
+                            SystemClock.sleep(20 * 1000);
                         }
                     }
 
@@ -339,76 +346,47 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     /**
-     * On connection lose the pump raises an error immediately (when setting a TBR or giving a bolus) -
+     * On connection lose the pump raises an alert immediately (when setting a TBR or giving a bolus) -
      * there's no timeout before that happens. But: a reconnect is still possible which can then
-     * confirm the alarm and.
+     * confirm the alert.
      *
      * @return whether the reconnect and return to main menu was successful
      */
-    // TODO only reconnect, confirm the warning the disconnect caused ond then return to ComboPlugin, which shall decide whether/how to restart
-    // requires turning CommandResult from a return type into a command field
-
-    // TODO at least for bigger boluses we should check history after reconnect to make sure
-    // we haven't issued that bolus within the last 1-2m? in case there's a bug in the code ...
-
-    // TODO: only do the reconnect to confirm the alert, then return and let the ComboPlugin decide what to do next;
-    // for bolus: how ... run 'step 2': checking/reading history?! step1 being bolus delivery, so have different resume points? ggrrrmpf
-    // less logic in scripter; just reconnect to confirm alert if needed, then return with error;
-    // let CP read history.LAST to see what actually happened and then resume appropriately.
-
-    private boolean reconnect() {
-        try {
-            log.debug("Connection was lost, trying to reconnect");
-            ensureConnected();
-            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                String errorMessage = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
-                // TODO bolus cancelled is raised BEFORE a bolus is started. if disconnect occurs after
-                // bolus has started (or the user interacts with the pump, the bolus continues.
-                // in that case, reconnecting and restarting the command lets to a DUPLICATE bolus.
-                // add a method restartAllowed(), which accesses a flag bolusDelivering started, which
-                // is set false then?
-                if (activeCmd.getReconnectAlarm() != null && activeCmd.getReconnectAlarm().equals(errorMessage)) {
-                    log.debug("Confirming alert caused by disconnect: " + errorMessage);
-                    // confirm alert
-                    verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                    pressCheckKey();
-                    // dismiss alert
-                    verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                    pressCheckKey();
-                    waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
-                    // it's possible that multiple alarms are raised, that can happen when
-                    // a battery low/empty/occlusion alert occurs, which then causes a bolus/tbr
-                    // cancelled alert.
-                    // let's not try anything fancy, since it's non trivial to decide which of
-                    // those cases can be dealt with and it's tricky to test it. Also,
-                    // those situations aren't likely to occurs all that often, so let the alarms
-                    // ring and catch up with history later.
-                    // TODO this needs some thought though as how to propagate such errors,
-                    // esp. if a kid is carrying the pump and a supervisor is monitoring and
-                    // controlling the loop.
-                }
-            }
-        } catch (CommandException e) {
-            // TODO ...
-            return false;
-        } catch (Exception e) {
-            // TODO ...
-            return false;
-        }
-
+    private boolean recoverFromConnectionLoss() {
+        log.debug("Connection was lost, trying to reconnect");
+        ensureConnected();
         if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-            return false;
+            WarningOrErrorCode warningOrErrorCode = readWarningOrErrorCode();
+            if (Objects.equals(activeCmd.getReconnectWarningId(), warningOrErrorCode.warningCode)) {
+                log.debug("Confirming warning caused by disconnect: #" + warningOrErrorCode.warningCode);
+                // confirm alert
+                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                pressCheckKey();
+                // dismiss alert
+                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                pressCheckKey();
+            }
         }
 
-        // aren't at main_menu after alert anyways? unless bolus i still going (also main_menu); low cartridge on bolus needs to be handled specially, by bolus command
-        returnToRootMenu();
-
-        return getCurrentMenu().getType() == MenuType.MAIN_MENU;
+        // A bolus cancelled is raised BEFORE a bolus is started. If a disconnect occurs after a
+        // bolus has started (or the user interacts with the pump) the bolus continues.
+        // If that happened, wait till the pump has finished the bolus, then it can be read from
+        // the history as delivered.
+        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+        try {
+            while (ruffyService.isConnected() && bolusRemaining != null) {
+                waitForScreenUpdate();
+            }
+            boolean connected = ruffyService.isConnected();
+            log.debug("Recovery from connection loss successful:" + connected);
+            return connected;
+        } catch (RemoteException e) {
+            log.debug("Recovery from connection loss failed");
+            return false;
+        }
     }
 
-    /**
-     * If there's an issue, this times out eventually and throws a CommandException
-     */
+    /** If there's an issue, this times out eventually and throws a CommandException */
     private void ensureConnected() {
         try {
             if (ruffyService.isConnected()) {
@@ -479,12 +457,15 @@ public class RuffyScripter implements RuffyCommands {
         verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
         Integer warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);
         Integer errorCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.ERROR);
-        while (warningCode == null && errorCode == null) {
+        int retries = 3;
+        while (warningCode == null && errorCode == null && retries > 0) {
             waitForScreenUpdate();
             warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);
             errorCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.ERROR);
+            retries--;
         }
-        return new WarningOrErrorCode(warningCode, errorCode);
+        return (warningCode != null || errorCode != null)
+                ? new WarningOrErrorCode(warningCode, errorCode) : null;
     }
 
 // below: methods to be used by commands
@@ -772,23 +753,23 @@ public class RuffyScripter implements RuffyCommands {
     /**
      * Confirms and dismisses the given alert if it's raised before the timeout
      */
-    public boolean confirmAlert(int warningCode, int maxWaitMs) {
+    public boolean confirmAlert(@NonNull Integer warningCode, int maxWaitMs) {
         long timeout = System.currentTimeMillis() + maxWaitMs;
         while (System.currentTimeMillis() < timeout) {
             if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 WarningOrErrorCode warningOrErrorCode = readWarningOrErrorCode();
-                if (warningOrErrorCode.errorCode != 0) {
+                if (warningOrErrorCode.errorCode != null) {
                     // TODO proper way to display such things in the UI;
                     throw new CommandException("Pump is in error state");
                 }
-                int displayedWarningCode = warningOrErrorCode.warningCode;
+                Integer displayedWarningCode = warningOrErrorCode.warningCode;
                 String errorMsg = null;
                 try {
                     errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                 } catch (Exception e) {
                     // ignore
                 }
-                if (displayedWarningCode != warningCode) {
+                if (!Objects.equals(displayedWarningCode, warningCode)) {
                     throw new CommandException("An alert other than the expected warning " + warningCode + " was raised by the pump: "
                             + displayedWarningCode + "(" + errorMsg + "). Please check the pump.");
                 }
@@ -797,8 +778,12 @@ public class RuffyScripter implements RuffyCommands {
                 verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 pressCheckKey();
                 // dismiss alert
-                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                pressCheckKey();
+                // if the user has confirmed the alert we have dismissed it with the button press
+                // above already, so only do that if an alert is still displayed
+                waitForScreenUpdate();
+                if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                    pressCheckKey();
+                }
                 return true;
             }
             SystemClock.sleep(10);

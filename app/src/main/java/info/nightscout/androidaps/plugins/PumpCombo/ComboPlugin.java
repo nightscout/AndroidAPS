@@ -229,11 +229,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     return;
                 }
             }
-            runCommand("Initializing", () -> ruffyScripter.readHistory(new PumpHistoryRequest()));
+            runCommand("Initializing", 3, () -> ruffyScripter.readHistory(new PumpHistoryRequest()));
             pump.initialized = true;
         }
 
-        runCommand("Refreshing", ruffyScripter::readReservoirLevelAndLastBolus);
+        runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
 
         // TODO fuse the below into 'sync'? or make checkForTbrMismatch jut a trigger to issue a sync if needed; don't run sync twice as is nice
 //        checkForTbrMismatch();
@@ -245,7 +245,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
      * full pump history and update AAPS' DB.
      */
     private void checkPumpHistory() {
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), () ->
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), 3, () ->
                 ruffyScripter.readHistory(
                         new PumpHistoryRequest()
                                 .bolusHistory(PumpHistoryRequest.LAST)
@@ -410,6 +410,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
+        // TODO for non-SMB: read resorvoir level first to make sure there's enough insulin left
+        CommandResult reservoirBolusResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_refreshing), 3,
+                ruffyScripter::readReservoirLevelAndLastBolus);
+        if (!reservoirBolusResult.success) {
+            // TODO
+        }
+//        List<Bolus> bolusHistory = reservoirBolusResult.history.bolusHistory;
+//        if (bolusHistory)
         // TODO
                 // before non-SMB: check enough insulin is available, check we're up to date on boluses
                 // after bolus: update reservoir level and check the bolus we just did is actually there
@@ -495,11 +503,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         final int finalAdjustedPercent = adjustedPercent;
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
+        CommandResult commandResult= runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
 
-        if (commandResult.enacted) {
-            pump.tbrSetTime = System.currentTimeMillis();
-            TemporaryBasal tempStart = new TemporaryBasal(pump.tbrSetTime);
+        PumpState state = commandResult.state;
+        if (state.tbrActive && state.tbrPercent == percent
+                && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
+            pump.tbrSetTime = state.timestamp;
+            TemporaryBasal tempStart = new TemporaryBasal(state.timestamp);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different
             // TODO actually ... might setting 29 help with gaps between TBRs? w/o the hack in TemporaryBasal?
@@ -542,7 +552,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (activeTemp == null || userRequested) {
             /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
-            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), ruffyScripter::cancelTbr);
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
 
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
@@ -565,7 +575,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // on whether the TBR we're cancelling is above or below 100%.
             final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
-            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), () -> ruffyScripter.setTbr(percentage, 15));
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 2, () -> ruffyScripter.setTbr(percentage, 15));
 
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
@@ -634,9 +644,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pump.reservoirLevel = commandResult.reservoirLevel;
         }
 
-        if (commandResult.lastBolus != null) {
-            pump.lastBolus = commandResult.lastBolus;
-        }
+            if (!commandResult.success && retries > 0) {
+                for(int retryAttempts = 1; !commandResult.success && retryAttempts <= retries; retryAttempts++) {
+                    log.debug("Command was not successful, retries request, doing retry #" + retryAttempts);
+                    commandResult = commandExecution.execute();
+                }
+            }
 
         if (commandResult.history != null) {
             if (!commandResult.history.bolusHistory.isEmpty()) {
@@ -734,7 +747,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private void runFullSync(final PumpHistoryRequest request) {
-        CommandResult result = runCommand("Syncing full pump history", () -> ruffyScripter.readHistory(request));
+        CommandResult result = runCommand("Syncing full pump history", 3, () -> ruffyScripter.readHistory(request));
 
         // boluses
 
