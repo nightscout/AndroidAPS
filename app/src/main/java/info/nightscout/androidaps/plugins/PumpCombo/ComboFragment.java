@@ -15,7 +15,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
 import info.nightscout.androidaps.R;
@@ -124,51 +123,47 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
 
                     // last connection
-                    CommandResult lastCmdResult = plugin.getPump().lastCmdResult;
-                    if (lastCmdResult != null) {
-                        String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulConnection);
-                        String time = DateUtil.timeString(plugin.getPump().lastSuccessfulConnection);
-                        String timeAgo = getString(R.string.combo_last_connection_time, minAgo, time);
-                        if (plugin.getPump().lastSuccessfulConnection == 0) {
-                            lastConnectionView.setText(R.string.combo_pump_never_connected);
-                            lastConnectionView.setTextColor(Color.RED);
-                        } else if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() - 30 * 60 * 1000) {
-                            lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
-                            lastConnectionView.setTextColor(Color.RED);
-                        } else if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                            lastConnectionView.setText(timeAgo + "\n" + R.string.combo_connect_attempt_failed);
-                            lastConnectionView.setTextColor(Color.YELLOW);
-                        } else {
-                            lastConnectionView.setText(timeAgo);
-                            lastConnectionView.setTextColor(Color.WHITE);
-                        }
-
-                        // last bolus
-                        Bolus bolus = plugin.getPump().lastBolus;
-                        if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
-                            long agoMsc = System.currentTimeMillis() - bolus.timestamp;
-                            double agoHours = agoMsc / 60d / 60d / 1000d;
-                            lastBolusView.setText(getString(R.string.combo_last_bolus,
-                                    bolus.amount,
-                                    agoHours,
-                                    getString(R.string.hoursago),
-                                    DateUtil.timeString(bolus.timestamp)));
-                        } else {
-                            lastBolusView.setText("");
-                        }
-
-                        // TBR
-                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                        String tbrStr = "";
-                        if (tbrActive) {
-                            long minSinceRead = (System.currentTimeMillis() - plugin.getPump().state.timestamp) / 1000 / 60;
-                            long remaining = ps.tbrRemainingDuration - minSinceRead;
-                            if (remaining >= 0) {
-                                tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
-                            }
-                        }
-                        tempBasalText.setText(tbrStr);
+                    String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulConnection);
+                    String time = DateUtil.timeString(plugin.getPump().lastSuccessfulConnection);
+                    String timeAgo = getString(R.string.combo_last_connection_time, minAgo, time);
+                    if (plugin.getPump().lastSuccessfulConnection == 0) {
+                        lastConnectionView.setText(R.string.combo_pump_never_connected);
+                        lastConnectionView.setTextColor(Color.RED);
+                    } else if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() - 30 * 60 * 1000) {
+                        lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
+                        lastConnectionView.setTextColor(Color.RED);
+                    } else if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
+                        lastConnectionView.setText(timeAgo + "\n" + R.string.combo_connect_attempt_failed);
+                        lastConnectionView.setTextColor(Color.YELLOW);
+                    } else {
+                        lastConnectionView.setText(timeAgo);
+                        lastConnectionView.setTextColor(Color.WHITE);
                     }
+
+                    // last bolus
+                    Bolus bolus = plugin.getPump().lastBolus;
+                    if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
+                        long agoMsc = System.currentTimeMillis() - bolus.timestamp;
+                        double agoHours = agoMsc / 60d / 60d / 1000d;
+                        lastBolusView.setText(getString(R.string.combo_last_bolus,
+                                bolus.amount,
+                                agoHours,
+                                getString(R.string.hoursago),
+                                DateUtil.timeString(bolus.timestamp)));
+                    } else {
+                        lastBolusView.setText("");
+                    }
+
+                    // TBR
+                    String tbrStr = "";
+                    if (ps.tbrPercent != -1 && ps.tbrPercent != 100) {
+                        long minSinceRead = (System.currentTimeMillis() - plugin.getPump().state.timestamp) / 1000 / 60;
+                        long remaining = ps.tbrRemainingDuration - minSinceRead;
+                        if (remaining >= 0) {
+                            tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
+                        }
+                    }
+                    tempBasalText.setText(tbrStr);
                 }
             });
     }
