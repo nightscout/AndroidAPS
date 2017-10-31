@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +25,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -236,91 +238,23 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         CommandResult result = runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
-        if (result.reservoirLevel != PumpState.UNKNOWN)
-            pump.reservoirLevel = result.reservoirLevel;
-        pump.state = result.state;
-        MainApp.bus().post(new EventComboPumpUpdateGUI());
+        updateLocalData(result);
 
         // TODO fuse the below into 'sync'? or make checkForTbrMismatch jut a trigger to issue a sync if needed; don't run sync twice as is nice
 //        checkForTbrMismatch();
-//        checkPumpHistory();
+        checkPumpHistory();
         // checkPumpDate()
 
         pump.initialized = true;
     }
 
-    /**
-     * Checks if there are any changes on the pump AAPS isn't aware of yet and if so, read the
-     * full pump history and update AAPS' DB.
-     */
-    private void checkPumpHistory() {
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), 3, () ->
-                ruffyScripter.readHistory(
-                        new PumpHistoryRequest()
-                                .bolusHistory(PumpHistoryRequest.LAST)
-                                .tbrHistory(PumpHistoryRequest.LAST)
-                                .errorHistory(PumpHistoryRequest.LAST)));
-
-        if (!commandResult.success || commandResult.history == null) {
-            // TODO error case, command
-            return;
-        }
-
-        // TODO opt, construct PumpHistoryRequest to requset only what needs updating
-        boolean syncNeeded = false;
-        PumpHistoryRequest request = new PumpHistoryRequest();
-
-        // last bolus
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
-        Collections.reverse(treatments);
-        Treatment aapsBolus = null;
-        for (Treatment t : treatments) {
-            if (t.insulin != 0) {
-                aapsBolus = t;
-                break;
-            }
-        }
-        Bolus pumpBolus = null;
-        List<Bolus> bolusHistory = commandResult.history.bolusHistory;
-        if (!bolusHistory.isEmpty()) {
-            pumpBolus = bolusHistory.get(0);
-        }
-
-        if ((aapsBolus == null || pumpBolus == null)
-                || (Math.abs(aapsBolus.insulin - pumpBolus.amount) > 0.05 || aapsBolus.date != pumpBolus.timestamp)) {
-            syncNeeded = true;
-            request.bolusHistory = PumpHistoryRequest.FULL;
-        }
-
-        // last tbr
-        List<TemporaryBasal> tempBasals = MainApp.getConfigBuilder().getTemporaryBasalsFromHistory().getReversedList();
-        TemporaryBasal aapsTbr = null;
-        if (!tempBasals.isEmpty()) {
-            aapsTbr = tempBasals.get(0);
-        }
-        Tbr pumpTbr = null;
-        List<Tbr> tbrHistory = commandResult.history.tbrHistory;
-        if (!tbrHistory.isEmpty()) {
-            pumpTbr = tbrHistory.get(0);
-        }
-        if ((aapsTbr == null || pumpTbr == null)
-                || (aapsTbr.percentRate != pumpTbr.percent || aapsTbr.durationInMinutes != pumpTbr.duration)) {
-            syncNeeded = true;
-            request.tbrHistory = PumpHistoryRequest.FULL;
-        }
-
-        // last error
-        // TODO add DB table ... or just keep in memory? does android allow that (fragment kill frenzy) without workarounds?
-        // is comboplugin a service or a class with statics?
-        request.pumpErrorHistory = PumpHistoryRequest.FULL;
-
-        // tdd
-        // TODO; ... just fetch them on-deamand when the user opens the fragment?
-
-
-        if (syncNeeded) {
-            runFullSync(request);
-        }
+    private void updateLocalData(CommandResult result) {
+        if (result.reservoirLevel != PumpState.UNKNOWN)
+            pump.reservoirLevel = result.reservoirLevel;
+        if (result.lastBolus != null)
+            pump.lastBolus = result.lastBolus;
+        pump.state = result.state;
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
     }
 
     // TODO uses profile values for the time being
@@ -439,11 +373,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
 
             // verify we're update to date and know the most recent bolus
+            // TODO should we check against pump.lastBolus or rather the DB ...
             if (!Objects.equals(pump.lastBolus, reservoirBolusResult.lastBolus)) {
-                // TODO needs syncing with DB first
-//                new Thread(this::checkPumpHistory).start();
-//                return new PumpEnactResult().success(false).enacted(false).
-//                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
+                new Thread(this::checkPumpHistory).start();
+                return new PumpEnactResult().success(false).enacted(false).
+                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
             }
 
             if (cancelBolus) {
@@ -476,6 +410,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             if (cancelBolus) {
                 // if cancellation was requested, the delivered bolus is allowed to differ from requested
             } else if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
+                // TODO schedule forced history sync
                 return new PumpEnactResult().success(false).enacted(false).
                         comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
             }
@@ -559,7 +494,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         PumpState state = commandResult.state;
         if (state.tbrActive && state.tbrPercent == percent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
-            pump.tbrSetTime = state.timestamp;
             TemporaryBasal tempStart = new TemporaryBasal(state.timestamp);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different
@@ -571,6 +505,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             tempStart.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
+
+            pump.state = commandResult.state;
+            pump.tbrSetTime = state.timestamp;
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
@@ -649,7 +587,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return pumpEnactResult;
     }
 
-    interface CommandExecution {
+    private interface CommandExecution {
         CommandResult execute();
     }
 
@@ -737,16 +675,116 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     }
 
-    private void runFullSync(final PumpHistoryRequest request) {
-        CommandResult result = runCommand("Syncing full pump history", 3, () -> ruffyScripter.readHistory(request));
+    /**
+     * Checks if there are any changes on the pump AAPS isn't aware of yet and if so, read the
+     * full pump history and update AAPS' DB.
+     */
+    private boolean checkPumpHistory() {
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), 3, () ->
+                ruffyScripter.readHistory(
+                        new PumpHistoryRequest()
+                                .bolusHistory(PumpHistoryRequest.LAST)
+                                .tbrHistory(PumpHistoryRequest.LAST)
+                                .errorHistory(PumpHistoryRequest.LAST)));
 
+        if (!commandResult.success || commandResult.history == null) {
+            // TODO error case, command
+            return false;
+        }
+
+        // TODO opt, construct PumpHistoryRequest to requset only what needs updating
+        boolean syncNeeded = false;
+        PumpHistoryRequest request = new PumpHistoryRequest();
+
+        // last bolus
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+//        Collections.reverse(treatments);
+        Treatment aapsBolus = null;
+        for (Treatment t : treatments) {
+            if (t.insulin != 0) {
+                aapsBolus = t;
+                break;
+            }
+        }
+        Bolus pumpBolus = null;
+        List<Bolus> bolusHistory = commandResult.history.bolusHistory;
+        if (!bolusHistory.isEmpty()) {
+            pumpBolus = bolusHistory.get(0);
+        }
+
+        if ((aapsBolus == null || pumpBolus == null)
+                || (Math.abs(aapsBolus.insulin - pumpBolus.amount) > 0.05 || aapsBolus.date != pumpBolus.timestamp)) {
+            log.debug("Last bolus on pump is unknown, refreshing full bolus history");
+            syncNeeded = true;
+            request.bolusHistory = PumpHistoryRequest.FULL;
+        }
+
+        // last tbr
+        List<TemporaryBasal> tempBasals = MainApp.getConfigBuilder().getTemporaryBasalsFromHistory().getReversedList();
+        TemporaryBasal aapsTbr = null;
+        if (!tempBasals.isEmpty()) {
+            aapsTbr = tempBasals.get(0);
+        }
+        Tbr pumpTbr = null;
+        List<Tbr> tbrHistory = commandResult.history.tbrHistory;
+        if (!tbrHistory.isEmpty()) {
+            pumpTbr = tbrHistory.get(0);
+        }
+        if ((aapsTbr == null || pumpTbr == null)
+                || (aapsTbr.percentRate != pumpTbr.percent || aapsTbr.durationInMinutes != pumpTbr.duration)) {
+            // TODO
+//            log.debug("Last TBR on pump is unknown, refreshing full TBR history");
+//            syncNeeded = true;
+//            request.tbrHistory = PumpHistoryRequest.FULL;
+        }
+
+        // last error
+        // TODO add DB table ... or just keep in memory? does android allow that (fragment kill frenzy) without workarounds?
+        // is comboplugin a service or a class with statics?
+//        request.pumpErrorHistory = PumpHistoryRequest.FULL;
+
+        // tdd
+        // TODO; ... just fetch them on-deamand when the user opens the fragment?
+
+
+        if (syncNeeded) {
+            runFullSync(request);
+        }
+
+        return true;
+    }
+
+    private void runFullSync(final PumpHistoryRequest request) {
+        CommandResult result = runCommand("Syncing pump history", 3, () -> ruffyScripter.readHistory(request));
+        if (!result.success) {
+            // TODO
+        }
+
+        DatabaseHelper dbHelper = MainApp.getDbHelper();
         // boluses
+        for (Bolus pumpBolus : result.history.bolusHistory) {
+            Treatment aapsBolus = dbHelper.getTreatmentByDate(pumpBolus.timestamp);
+            if (aapsBolus == null) {
+                log.debug("Creating record from pump bolus: " + pumpBolus);
+                // info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage.findDetailedBolusInfo( ??)
+                DetailedBolusInfo dbi = new DetailedBolusInfo();
+                dbi.date = pumpBolus.timestamp;
+                dbi.insulin = pumpBolus.amount;
+                dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
+                dbi.source = Source.USER;
+                MainApp.getConfigBuilder().addToHistoryTreatment(dbi);
+                MainApp.bus().post(new EventTreatmentChange()); // <- updates treatment-bolus tab
+                // TODO another event to fforce iobcalc recalc since earliest change? hm, seems autodetected :-)
+            }
+        }
 
         // TBRs
+        // TODO tolerance for start/end deviations? temp start is based on pump time, but in ms; round to seconds, so we can find it here more easily?
 
         // errors
         // TODO
-
+        CommandResult refreshResult = runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
+        updateLocalData(refreshResult);
     }
 
     @Override
