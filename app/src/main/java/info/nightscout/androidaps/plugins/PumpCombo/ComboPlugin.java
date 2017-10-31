@@ -56,6 +56,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private static ComboPlugin plugin = null;
 
+    private volatile boolean bolusInProgress;
+    private volatile boolean cancelBolus;
+
     public static ComboPlugin getPlugin() {
         if (plugin == null)
             plugin = new ComboPlugin();
@@ -400,6 +403,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 return pumpEnactResult;
             }
         } finally {
+            cancelBolus = false;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
     }
@@ -407,12 +411,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         // TODO
-        // before non-SMB: check enough insulin is available, check we're up to date on boluses
-        // after bolus: update reservoir level and check the bolus we just did is actually there
+                // before non-SMB: check enough insulin is available, check we're up to date on boluses
+                // after bolus: update reservoir level and check the bolus we just did is actually there
 
+        if (cancelBolus) {
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = true;
+            pumpEnactResult.enacted = false;
+            return  pumpEnactResult;
+        }
+
+        bolusInProgress = true;
         // retry flag: reconnect, kill warning, check if command can be restarted, restart
-        CommandResult bolusCmdResult = runCommand(MainApp.sResources.getString(R.string.combo_action_bolusing), () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
-                detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
+        CommandResult bolusCmdResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_bolusing), 0,
+                () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
+                        detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
+        bolusInProgress = false;
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = bolusCmdResult.success;
@@ -438,9 +452,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void stopBolusDelivering() {
-        // TODO note that we requested this, so we can thandle this proper in runCommand;
-        // or is it fine if the command returns success with noting enacted and history checks as well/**/
-        ruffyScripter.cancelBolus();
+        if (bolusInProgress) {
+            ruffyScripter.cancelBolus();
+        } else {
+            cancelBolus = true;
+        }
     }
 
     // Note: AAPS calls this only to enact OpenAPS recommendations

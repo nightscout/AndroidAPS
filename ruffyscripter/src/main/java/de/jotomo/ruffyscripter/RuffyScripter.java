@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.common.base.Joiner;
@@ -502,6 +503,8 @@ public class RuffyScripter implements RuffyCommands {
 
     // === pump ops ===
     public Menu getCurrentMenu() {
+        if (Thread.currentThread().isInterrupted())
+            throw new CommandException("Interrupted");
         long timeout = System.currentTimeMillis() + 5 * 1000;
         // TODO this is probably due to a disconnect and rtDisconnect having nulled currentMenu.
         // This here might just work, but needs a more controlled approach when implementing
@@ -569,11 +572,13 @@ public class RuffyScripter implements RuffyCommands {
     // TODO sort out usages of this method and waitForMenu update, which have the same intent,
     // but approach things differently;
     private void waitForScreenUpdate() {
+        if (Thread.currentThread().isInterrupted())
+            throw new CommandException("Interrupted");
         synchronized (screenlock) {
             try {
-                screenlock.wait((long) 2000); // usually ~500, occassionally up to 1100ms
-            } catch (Exception e) {
-                log.debug("Ignoring exception in wait for screenlock", e);
+                screenlock.wait((long) 2000); // updates usually come in every ~500, occasionally up to 1100ms
+            } catch (InterruptedException e) {
+                throw new CommandException("Interrupted");
             }
         }
     }
@@ -601,6 +606,8 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     private void pressKey(final byte key) {
+        if (Thread.currentThread().isInterrupted())
+            throw new CommandException("Interrupted");
         try {
             ruffyService.rtSendKey(key, true);
             SystemClock.sleep(150);
@@ -701,6 +708,8 @@ public class RuffyScripter implements RuffyCommands {
     public void cancelBolus() {
         if (activeCmd instanceof BolusCommand) {
             ((BolusCommand) activeCmd).requestCancellation();
+        } else {
+            log.error("cancelBolus called, but active command is not a bolus:" + activeCmd);
         }
     }
 

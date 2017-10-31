@@ -104,18 +104,19 @@ public class BolusCommand extends BaseCommand {
 
             // wait for bolus delivery to complete; the remaining units to deliver are counted down
             boolean cancelInProgress = false;
-            double lastBolusReported = 0;
+            Double lastBolusReported = 0d;
             Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-            while (bolusRemaining != null) {
+            while (bolusRemaining != null || scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 if (cancelRequested && !cancelInProgress) {
                     bolusProgressReporter.report(STOPPING, 0, 0);
                     cancelInProgress = true;
-                    new Thread(() -> scripter.pressKeyMs(RuffyScripter.Key.UP, 3000), "bolus-canceller").start();
+                    new Thread(() ->
+                            scripter.pressKeyMs(RuffyScripter.Key.UP, 3000), "bolus-canceller").start();
                 }
                 if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                    // confirm warning alerts and update the result to indicate alerts occurred
+                    // confirm warning alert and update the result to indicate alerts occurred
                     WarningOrErrorCode warningOrErrorCode = scripter.readWarningOrErrorCode();
-                    if (warningOrErrorCode.errorCode != 0) {
+                    if (warningOrErrorCode.errorCode != null) {
                         throw new CommandException("Pump is in error state");
                     }
                     int warningCode = warningOrErrorCode.warningCode;
@@ -130,9 +131,11 @@ public class BolusCommand extends BaseCommand {
                     } else if (warningCode == PumpWarningCodes.BATTERY_LOW) {
                         scripter.confirmAlert(PumpWarningCodes.BATTERY_LOW, 2000);
                         result.alertConfirmed = true;
+                    } else {
+                        throw new CommandException("Pump is showing exotic warning: " + warningCode);
                     }
                 }
-                if (lastBolusReported != bolusRemaining) {
+                if (bolusRemaining != null && !bolusRemaining.equals(lastBolusReported)) {
                     log.debug("Delivering bolus, remaining: " + bolusRemaining);
                     int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
                     bolusProgressReporter.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
