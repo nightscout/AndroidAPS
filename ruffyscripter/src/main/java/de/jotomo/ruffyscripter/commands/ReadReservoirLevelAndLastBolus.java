@@ -53,4 +53,8 @@ public class ReadReservoirLevelAndLastBolus extends BaseCommand {
         return new Date(currentYear - 1900, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute()).getTime();
     }
 
+    @Override
+    public String toString() {
+        return "ReadReservoirLevelAndLastBolus{}";
+    }
 }

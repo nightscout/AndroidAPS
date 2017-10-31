@@ -9,7 +9,9 @@ public class CommandResult {
     /** Whether the command was executed successfully. */
     public boolean success;
     /** Whether any changes were made, e.g. if a the request was to cancel a running TBR,
-     * but not TBR was active, this will be false. */
+     * but not TBR was active, this will be false.
+     * @deprecated for bolus, set tbr, set basal profile, set time: check with a second command, don't rely on this*/
+    @Deprecated
     public boolean enacted;
     /** Null unless an unhandled exception was raised. */
     public Exception exception;
@@ -23,7 +25,8 @@ public class CommandResult {
     public String duration;
 
     /** Whether an alert (warning only) was confirmed. This can happen during boluses.
-     * Request error history to see which errors occured. */
+     * Request error history to see which errors occurred. */
+    // TODO check usages
     public boolean alertConfirmed;
     /** BolusCommand: if a cancel request was successful */
     public boolean wasSuccessfullyCancelled;
