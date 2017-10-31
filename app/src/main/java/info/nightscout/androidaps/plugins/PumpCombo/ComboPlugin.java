@@ -29,6 +29,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -230,16 +231,20 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     return;
                 }
             }
-            runCommand("Initializing", 3, () -> ruffyScripter.readHistory(new PumpHistoryRequest()));
-            pump.initialized = true;
         }
 
-        runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
+        CommandResult result = runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
+        if (result.reservoirLevel != PumpState.UNKNOWN)
+            pump.reservoirLevel = result.reservoirLevel;
+        pump.state = result.state;
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         // TODO fuse the below into 'sync'? or make checkForTbrMismatch jut a trigger to issue a sync if needed; don't run sync twice as is nice
 //        checkForTbrMismatch();
 //        checkPumpHistory();
         // checkPumpDate()
+
+        pump.initialized = true;
     }
 
     /**
