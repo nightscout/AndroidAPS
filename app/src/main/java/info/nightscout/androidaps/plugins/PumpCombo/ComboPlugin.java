@@ -39,6 +39,8 @@ import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateG
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
+import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
+
 /**
  * Created by mike on 05.08.2016.
  */
@@ -431,20 +433,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
 
             // check enough insulin left for bolus
-            if (Math.round(detailedBolusInfo.insulin) > pump.reservoirLevel) {
+            if (Math.round(detailedBolusInfo.insulin + 0.5) > reservoirBolusResult.reservoirLevel) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficant_for_bolus));
             }
 
             // verify we're update to date and know the most recent bolus
-            Bolus lastPumpBolus = null;
-            if (!reservoirBolusResult.history.bolusHistory.isEmpty()) {
-                lastPumpBolus = reservoirBolusResult.history.bolusHistory.get(0);
-            }
-            if (!Objects.equals(pump.lastBolus, lastPumpBolus)) {
-                checkPumpHistory();
-                return new PumpEnactResult().success(false).enacted(false).
-                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismtach));
+            if (!Objects.equals(pump.lastBolus, reservoirBolusResult.lastBolus)) {
+                // TODO needs syncing with DB first
+//                new Thread(this::checkPumpHistory).start();
+//                return new PumpEnactResult().success(false).enacted(false).
+//                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
             }
 
             if (cancelBolus) {
@@ -462,22 +461,21 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             bolusInProgress = false;
 
             if (!bolusCmdResult.success) {
+                new Thread(this::checkPumpHistory).start();
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
             }
 
             // verify delivered bolus
-            reservoirBolusResult = runCommand(null, 3,
-                    ruffyScripter::readReservoirLevelAndLastBolus);
+            reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
             if (!reservoirBolusResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
             }
-            lastPumpBolus = null;
-            if (!reservoirBolusResult.history.bolusHistory.isEmpty()) {
-                lastPumpBolus = reservoirBolusResult.history.bolusHistory.get(0);
-            }
-            if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
+            Bolus lastPumpBolus = reservoirBolusResult.lastBolus;
+            if (cancelBolus) {
+                // if cancellation was requested, the delivered bolus is allowed to differ from requested
+            } else if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
                 return new PumpEnactResult().success(false).enacted(false).
                         comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
             }
@@ -485,20 +483,29 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // update local data
             pump.reservoirLevel = reservoirBolusResult.reservoirLevel;
             pump.lastBolus = lastPumpBolus;
+            pump.state = reservoirBolusResult.state;
 
-            // add treatment record to DB
-            detailedBolusInfo.insulin = lastPumpBolus.amount;
-            detailedBolusInfo.date = lastPumpBolus.timestamp;
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-
-            return new PumpEnactResult()
-                    .success(true)
-                    .enacted(true)
-                    .bolusDelivered(lastPumpBolus.amount)
-                    .carbsDelivered(detailedBolusInfo.carbs);
+            // add treatment record to DB (if it wasn't cancelled)
+            if (lastPumpBolus != null && (lastPumpBolus.amount > 0)) {
+                detailedBolusInfo.insulin = lastPumpBolus.amount;
+                detailedBolusInfo.date = lastPumpBolus.timestamp;
+                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                return new PumpEnactResult()
+                        .success(true)
+                        .enacted(true)
+                        .bolusDelivered(lastPumpBolus.amount)
+                        .carbsDelivered(detailedBolusInfo.carbs);
+            } else {
+                return new PumpEnactResult().success(true).enacted(false);
+            }
         } finally {
+            // BolusCommand.execute() intentionally doesn't close the progress dialog if an error
+            // occurred/ so it stays open while the connection was re-established if needed and/or
+            // this method did recovery
+            bolusProgressReporter.report(FINISHED, 100, 0);
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
+            MainApp.bus().post(new EventRefreshOverview("Combo Bolus"));
         }
     }
 

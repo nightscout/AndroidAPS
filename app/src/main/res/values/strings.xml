@@ -787,9 +787,9 @@
     <string name="enable_pump_unreachable_alert">Alert if pump unreachable for 30 min</string>
     <string name="combo_pump_never_connected">Never</string>
     <string name="combo_reservoir_level_insufficant_for_bolus">Not enough insulin left in reservoir for bolus</string>
-    <string name="combo_pump_bolus_history_state_mismtach">A bolus has been given recently on the pump directly of which AndroidAPS has only just become aware of. Please verify IOB and bolus again if needed. No bolus has been given.</string>
+    <string name="combo_pump_bolus_history_state_mismatch">A bolus has been given recently on the pump directly of which AndroidAPS has only just become aware of. The pump\'s history is currently being read. Please check che Combo page, verify last bolus and IOB and bolus again if needed. No bolus has been given.</string>
     <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
-    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed.  A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
+    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
 </resources>
 

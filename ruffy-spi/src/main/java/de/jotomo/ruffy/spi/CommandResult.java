@@ -1,6 +1,6 @@
 package de.jotomo.ruffy.spi;
 
-import java.util.Date;
+import android.support.annotation.Nullable;
 
 import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
@@ -18,6 +18,7 @@ public class CommandResult {
     /** State of the pump *after* command execution. */
     public PumpState state;
     /** History if requested by the command. */
+    @Nullable
     public PumpHistory history;
     /** Basal rate profile if requested. */
     public BasalProfile basalProfile;

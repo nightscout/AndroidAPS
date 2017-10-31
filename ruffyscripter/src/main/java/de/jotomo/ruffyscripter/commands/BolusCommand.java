@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
@@ -135,7 +136,7 @@ public class BolusCommand extends BaseCommand {
                         throw new CommandException("Pump is showing exotic warning: " + warningCode);
                     }
                 }
-                if (bolusRemaining != null && !bolusRemaining.equals(lastBolusReported)) {
+                if (bolusRemaining != null && !Objects.equals(bolusRemaining, lastBolusReported)) {
                     log.debug("Delivering bolus, remaining: " + bolusRemaining);
                     int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
                     bolusProgressReporter.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
@@ -147,7 +148,12 @@ public class BolusCommand extends BaseCommand {
             bolusProgressReporter.report(DELIVERED, 100, bolus);
             result.success = true;
         } finally {
-            bolusProgressReporter.report(FINISHED, 100, 0);
+            // this is a bit messy: when there's an issue (e.g. disconnected) the dialog should
+            // stay open, since we're recovering. So leave it open and make sure in ComboPlugin.deliverBolus
+            // the dialog is closed at the end.
+            if (result.success) {
+                bolusProgressReporter.report(FINISHED, 100, 0);
+            }
         }
     }
 
