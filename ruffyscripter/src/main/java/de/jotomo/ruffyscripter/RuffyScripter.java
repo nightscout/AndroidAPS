@@ -45,12 +45,8 @@ import de.jotomo.ruffyscripter.commands.ReadReservoirLevelAndLastBolus;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 
-// TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
-// Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
-// already logs those requests somewhere ... and verify they have all been ack'd by the pump properly
-
 /**
- * provides scripting 'runtime' and operations. consider moving operations into a separate
+ * Provides scripting 'runtime' and operations. consider moving operations into a separate
  * class and inject that into executing commands, so that commands operately solely on
  * operations and are cleanly separated from the thread management, connection management etc
  */
@@ -80,8 +76,7 @@ public class RuffyScripter implements RuffyCommands {
 
         @Override
         public void fail(String message) throws RemoteException {
-//            10-28 19:50:54.059  1426  1826 W RuffyScripter: [Thread-268] WARN  [de.jotomo.ruffyscripter.RuffyScripter$1:78]: Ruffy warns: no connection possible
-
+            // TODO 10-28 19:50:54.059  1426  1826 W RuffyScripter: [Thread-268] WARN  [de.jotomo.ruffyscripter.RuffyScripter$1:78]: Ruffy warns: no connection possible
             log.warn("Ruffy warns: " + message);
         }
 
@@ -128,7 +123,7 @@ public class RuffyScripter implements RuffyCommands {
         }
     };
 
-    public RuffyScripter(Context context) {
+    RuffyScripter(Context context) {
         boolean boundSucceeded = false;
 
         try {
@@ -246,8 +241,11 @@ public class RuffyScripter implements RuffyCommands {
                                 return;
                             }
                         }
-                        if (localCurrentMenu != null && localCurrentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                            // TODO unless confirmALert command fail here and return message
+                        if (localCurrentMenu != null && localCurrentMenu.getType() == MenuType.WARNING_OR_ERROR
+                                && !(cmd instanceof ConfirmAlertCommand)) {
+                            log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
+                            activeCmd.getResult().success = false;
+                            return; // active alert is returned as part of PumpState
                         }
                         PumpState pumpState = readPumpStateInternal();
                         log.debug("Pump state before running command: " + pumpState);
@@ -440,6 +438,8 @@ public class RuffyScripter implements RuffyCommands {
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
+            MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
+            state.pumpTimeMinutesOfDay = time.getHour() * 60 + time.getMinute();
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else if (menuType == MenuType.WARNING_OR_ERROR) {

@@ -4,7 +4,10 @@ import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
 
 /** State displayed on the main screen of the pump. */
 public class PumpState {
+    /** Time the state was captured */
     public long timestamp;
+    /** The time displayed on the main menu */
+    public long pumpTimeMinutesOfDay;
     public String menu = null;
     public boolean suspended;
 
