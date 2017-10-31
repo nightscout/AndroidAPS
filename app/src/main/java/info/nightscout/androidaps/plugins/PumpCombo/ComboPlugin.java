@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
@@ -70,7 +71,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     static {
         OPERATION_NOT_SUPPORTED.success = false;
         OPERATION_NOT_SUPPORTED.enacted = false;
-        OPERATION_NOT_SUPPORTED.comment = "Requested operation not supported by pump";
+        OPERATION_NOT_SUPPORTED.comment = MainApp.sResources.getString(R.string.combo_pump_unsupported_operation);
     }
 
     private ComboPlugin() {
@@ -238,6 +239,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // TODO fuse the below into 'sync'? or make checkForTbrMismatch jut a trigger to issue a sync if needed; don't run sync twice as is nice
 //        checkForTbrMismatch();
 //        checkPumpHistory();
+        // checkPumpDate()
     }
 
     /**
@@ -371,7 +373,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
      */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        // TODO for non-SMB: read resorvoir level first to make sure there's enough insulin left
+        // TODO safety check: reject bolus if same type and amount requested within the
+        // same minute;
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
@@ -410,52 +413,88 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        // TODO for non-SMB: read resorvoir level first to make sure there's enough insulin left
-        CommandResult reservoirBolusResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_refreshing), 3,
-                ruffyScripter::readReservoirLevelAndLastBolus);
-        if (!reservoirBolusResult.success) {
-            // TODO
-        }
-//        List<Bolus> bolusHistory = reservoirBolusResult.history.bolusHistory;
-//        if (bolusHistory)
-        // TODO
-                // before non-SMB: check enough insulin is available, check we're up to date on boluses
-                // after bolus: update reservoir level and check the bolus we just did is actually there
+        try {
+            pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing);
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
 
-        if (cancelBolus) {
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = true;
-            pumpEnactResult.enacted = false;
-            return  pumpEnactResult;
-        }
+            // refresh pump data
+            CommandResult reservoirBolusResult = runCommand(null, 3,
+                    ruffyScripter::readReservoirLevelAndLastBolus);
+            if (!reservoirBolusResult.success) {
+                return new PumpEnactResult().success(false).enacted(false);
+                // todo anything else needed? persistent connection problems; escalated after 30m, interactive bolus gives generic error, should be fine
+            }
 
-        bolusInProgress = true;
-        // retry flag: reconnect, kill warning, check if command can be restarted, restart
-        CommandResult bolusCmdResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_bolusing), 0,
-                () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
-                        detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
-        bolusInProgress = false;
+            // check enough insulin left for bolus
+            if (Math.round(detailedBolusInfo.insulin) > pump.reservoirLevel) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficant_for_bolus));
+            }
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = bolusCmdResult.success;
-        pumpEnactResult.enacted = bolusCmdResult.enacted;
+            // verify we're update to date and know the most recent bolus
+            Bolus lastPumpBolus = null;
+            if (!reservoirBolusResult.history.bolusHistory.isEmpty()) {
+                lastPumpBolus = reservoirBolusResult.history.bolusHistory.get(0);
+            }
+            if (!Objects.equals(pump.lastBolus, lastPumpBolus)) {
+                checkPumpHistory();
+                return new PumpEnactResult().success(false).enacted(false).
+                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismtach));
+            }
 
-        // if enacted, add bolus and carbs to treatment history
-        if (pumpEnactResult.enacted) {
-            // TODO if no error occurred, the requested bolus is what the pump delievered,
-            // that has been checked. If an error occurred, we should check how much insulin
-            // was delivered, e.g. when the cartridge went empty mid-bolus
-            // For the first iteration, the alert the pump raises must suffice
-            pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
-            pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+            if (cancelBolus) {
+                PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                pumpEnactResult.success = true;
+                pumpEnactResult.enacted = false;
+                return pumpEnactResult;
+            }
 
-            detailedBolusInfo.date = System.currentTimeMillis();
+            // start bolus delivery
+            bolusInProgress = true;
+            CommandResult bolusCmdResult = runCommand(null, 0,
+                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
+                            detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
+            bolusInProgress = false;
+
+            if (!bolusCmdResult.success) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
+            }
+
+            // verify delivered bolus
+            reservoirBolusResult = runCommand(null, 3,
+                    ruffyScripter::readReservoirLevelAndLastBolus);
+            if (!reservoirBolusResult.success) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
+            }
+            lastPumpBolus = null;
+            if (!reservoirBolusResult.history.bolusHistory.isEmpty()) {
+                lastPumpBolus = reservoirBolusResult.history.bolusHistory.get(0);
+            }
+            if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
+                return new PumpEnactResult().success(false).enacted(false).
+                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
+            }
+
+            // update local data
+            pump.reservoirLevel = reservoirBolusResult.reservoirLevel;
+            pump.lastBolus = lastPumpBolus;
+
+            // add treatment record to DB
+            detailedBolusInfo.insulin = lastPumpBolus.amount;
+            detailedBolusInfo.date = lastPumpBolus.timestamp;
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-        } else {
-            pumpEnactResult.bolusDelivered = 0d;
-            pumpEnactResult.carbsDelivered = 0d;
+
+            return new PumpEnactResult()
+                    .success(true)
+                    .enacted(true)
+                    .bolusDelivered(lastPumpBolus.amount)
+                    .carbsDelivered(detailedBolusInfo.carbs);
+        } finally {
+            pump.activity = null;
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
-        return pumpEnactResult;
     }
 
     @Override
@@ -503,7 +542,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         final int finalAdjustedPercent = adjustedPercent;
-        CommandResult commandResult= runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
 
         PumpState state = commandResult.state;
         if (state.tbrActive && state.tbrPercent == percent
@@ -602,100 +641,40 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         CommandResult execute();
     }
 
-    // TODO if there was an error (or the pump was suspended) force a resync before a bolus;
-    // transport a message, e.g. 'new bolus found on pump, synced, check and issue bolus again'
-    // back to the user?b
+    /**
+     * Runs a command, sets an activity if provided, retries if requested and updates fields
+     * concerned with last connection.
+     * NO history, reservoir level fields are updated, this make be done separately if desired.
+     */
+    private synchronized CommandResult runCommand(String activity, int retries, CommandExecution commandExecution) {
+        CommandResult commandResult;
+        try {
+            if (activity != null) {
+                pump.activity = activity;
+                MainApp.bus().post(new EventComboPumpUpdateGUI());
+            }
 
-    private synchronized CommandResult runCommand(String activity, CommandExecution commandExecution) {
-        if (activity != null) {
-            // danar has this is message on the overview screen, no?
-            pump.activity = activity;
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
-        }
+            // TOOD check for active warning and transfer if benign (should then also work with "Refresh" button
 
-        // TODO should probably specialize this:
-        // smb, tbr stuff can be retried.
-        // non-smb bolus shall be blocked if same amount already delivered within last 1 min
-
-        // i need a version of this which sets activity, updates local state etc and one
-        // which just does something, read history etc.
-        // retrying: separate r/o and r/w commands? flag for it?
-
-//        CommandResult precheck = ruffyScripter.readPumpState();
-        // tbrcheck?
-        // check for active alert; if warning confirm; on warning confirm, read history (bolus, errors), which shall raise alerts if appropriate
-        //
-//        precheck.
-        // todo don't send out commands requining run mode if pump is suspended
-        //
-
-        CommandResult commandResult = commandExecution.execute();
-        pump.lastCmdResult = commandResult;
-        pump.lastConnectionAttempt = System.currentTimeMillis();
-        if (commandResult.success) {
-            pump.lastSuccessfulConnection = System.currentTimeMillis();
-        } else {
-            // TODO set flag to force sync on next connect; try to run immediately? or would this make things worse and we should just wait till the next iteratio?L
-        }
-
-        // copy over state (as supplied) so it will still be available when another command runs that doesn't return that data
-        pump.state = commandResult.state;
-        if (commandResult.reservoirLevel != -1) {
-            pump.reservoirLevel = commandResult.reservoirLevel;
-        }
+            commandResult = commandExecution.execute();
 
             if (!commandResult.success && retries > 0) {
-                for(int retryAttempts = 1; !commandResult.success && retryAttempts <= retries; retryAttempts++) {
+                for (int retryAttempts = 1; !commandResult.success && retryAttempts <= retries; retryAttempts++) {
                     log.debug("Command was not successful, retries request, doing retry #" + retryAttempts);
                     commandResult = commandExecution.execute();
                 }
             }
 
-        if (commandResult.history != null) {
-            if (!commandResult.history.bolusHistory.isEmpty()) {
-                pump.lastBolus = commandResult.history.bolusHistory.get(0);
+            pump.lastCmdResult = commandResult;
+            pump.lastConnectionAttempt = System.currentTimeMillis();
+            if (commandResult.success) {
+                pump.lastSuccessfulConnection = System.currentTimeMillis();
             }
-            pump.history = commandResult.history;
-        }
-
-
-        // TODO hm... automatically confirm messages and return them and handle them here proper?
-        // with an option to corfirm all messages, non-critical (letting occlusion alert ring on phone and pump)
-        // or let all alarms ring and don't try to control the pump in any way
-
-        // option how to deal with errors on connect; allow to explicitely be okay with e.g. TBR CANCELLED after interruption?!
-        // or a separate command to check and deal with pump state? run a check command before all operations?
-
-        // maybe think less in 'all in one command', but simpler commands?
-        // get the current state, then decide what makes sense to do further, if anything,
-        // send next request.
-        // then request state again ... ?
-        // TODO rethink this errorMsg field;
-
-/*        if (commandResult.state.errorMsg != null) {
-            CommandResult takeOverAlarmResult = ruffyScripter.takeOverAlarms();
-
-            for (PumpError pumpError : takeOverAlarmResult.history.pumpErrorHistory) {
-                MainApp.bus().post(new EventNewNotification(
-                        new Notification(Notification.COMBO_PUMP_ALARM,
-                        "Pump alarm: " + pumpError.message, Notification.URGENT)));
+        } finally {
+            if (activity != null) {
+                pump.activity = null;
+                MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
-
-            commandResult.state = takeOverAlarmResult.state;
-        }*/
-
-
-        // TODO call this explicitely when needed after/before calling this?
-//        if (checkTbrMisMatch) {
-//            checkForTbrMismatch();
-//        }
-
-
-        // TODO in the event of an error schedule a resync
-
-        if (activity != null) {
-            pump.activity = null;
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
         return commandResult;
     }
