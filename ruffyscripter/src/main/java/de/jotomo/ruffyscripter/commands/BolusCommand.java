@@ -55,6 +55,11 @@ public class BolusCommand extends BaseCommand {
     @Override
     public void execute() {
         try {
+            if (cancelRequested) {
+                bolusProgressReporter.report(STOPPED, 0, 0);
+                result.success = true;
+                return;
+            }
             bolusProgressReporter.report(PROGRAMMING, 0, 0);
             enterBolusMenu();
             inputBolusAmount();
@@ -191,6 +196,7 @@ public class BolusCommand extends BaseCommand {
     }
 
     public void requestCancellation() {
+        log.debug("Bolus cancellation requested");
         cancelRequested = true;
         bolusProgressReporter.report(STOPPING, 0, 0);
     }
