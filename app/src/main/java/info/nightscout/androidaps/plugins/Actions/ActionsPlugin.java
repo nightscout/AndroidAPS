@@ -74,4 +74,9 @@ public class ActionsPlugin implements PluginBase {
         if (type == GENERAL) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
 }

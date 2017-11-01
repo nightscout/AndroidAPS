@@ -87,6 +87,11 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return R.xml.pref_safety;
+    }
+
+    @Override
     public boolean isLoopEnabled() {
         return MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }

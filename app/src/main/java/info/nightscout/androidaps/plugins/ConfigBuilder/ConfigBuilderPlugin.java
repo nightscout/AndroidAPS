@@ -148,6 +148,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         // Always visible
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     public void initialize() {
         pluginList = MainApp.getPluginsList();
         loadSettings();
@@ -303,7 +308,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.PUMP);
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
         if (activePump == null)
-            activePump = VirtualPumpPlugin.getInstance(); // for NSClient build
+            activePump = VirtualPumpPlugin.getPlugin(); // for NSClient build
         if (Config.logConfigBuilder)
             log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
         for (PluginBase p : pluginsInCategory) {

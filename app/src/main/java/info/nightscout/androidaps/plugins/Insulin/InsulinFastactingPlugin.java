@@ -80,6 +80,11 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
         if (type == INSULIN) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     // Insulin interface
     @Override
     public int getId() {
