@@ -165,6 +165,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     }
                 }
 
+                if (Config.COMBO) {
+                    addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginBase.PUMP);
+                }
+
                 addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginBase.PUMP);
 
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginBase.INSULIN);
