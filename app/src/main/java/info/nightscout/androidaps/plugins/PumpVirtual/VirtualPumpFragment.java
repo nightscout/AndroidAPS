@@ -79,7 +79,7 @@ public class VirtualPumpFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    VirtualPumpPlugin virtualPump = VirtualPumpPlugin.getInstance();
+                    VirtualPumpPlugin virtualPump = VirtualPumpPlugin.getPlugin();
                     basaBasalRateView.setText(virtualPump.getBaseBasalRate() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                         tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());

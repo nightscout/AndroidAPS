@@ -68,6 +68,11 @@ public class InsulinOrefUltraRapidActingPlugin extends InsulinOrefBasePlugin {
     }
 
     @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    @Override
     int getPeak() {
         return PEAK;
     }

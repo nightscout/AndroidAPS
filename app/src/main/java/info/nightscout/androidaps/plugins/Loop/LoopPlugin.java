@@ -148,6 +148,11 @@ public class LoopPlugin implements PluginBase {
         if (type == LOOP) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_closedmode;
+    }
+
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         invoke("EventTreatmentChange", true);

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,6 +24,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -194,7 +197,7 @@ public class ConfigBuilderFragment extends Fragment {
         public PluginCustomAdapter(Context context, int textViewResourceId,
                                    ArrayList<PluginBase> pluginList, int type) {
             super(context, textViewResourceId, pluginList);
-            this.pluginList = new ArrayList<PluginBase>();
+            this.pluginList = new ArrayList<>();
             this.pluginList.addAll(pluginList);
             this.type = type;
         }
@@ -203,12 +206,14 @@ public class ConfigBuilderFragment extends Fragment {
             TextView name;
             CheckBox checkboxEnabled;
             CheckBox checkboxVisible;
+            ImageView settings;
         }
 
         @Override
         public View getView(int position, View view, ViewGroup parent) {
 
             PluginViewHolder holder = null;
+            PluginBase plugin = pluginList.get(position);
 
             if (view == null) {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.configbuilder_simpleitem, null);
@@ -217,6 +222,13 @@ public class ConfigBuilderFragment extends Fragment {
                 holder.name = (TextView) view.findViewById(R.id.configbuilder_simpleitem_name);
                 holder.checkboxEnabled = (CheckBox) view.findViewById(R.id.configbuilder_simpleitem_checkboxenabled);
                 holder.checkboxVisible = (CheckBox) view.findViewById(R.id.configbuilder_simpleitem_checkboxvisible);
+                holder.settings = (ImageView) view.findViewById(R.id.configbuilder_simpleitem_settings);
+
+                if (plugin.isEnabled(type) && plugin.getPreferencesId() != -1)
+                    holder.settings.setVisibility(View.VISIBLE);
+                else
+                    holder.settings.setVisibility(View.INVISIBLE);
+
                 view.setTag(holder);
 
                 holder.checkboxEnabled.setOnClickListener(new View.OnClickListener() {
@@ -244,17 +256,31 @@ public class ConfigBuilderFragment extends Fragment {
                         getPlugin().logPluginStatus();
                     }
                 });
+
+                holder.settings.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        final PluginBase plugin = (PluginBase) v.getTag();
+                        PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(getContext(), PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                startActivity(i);
+                            }
+                        }, null);
+                    }
+                });
             } else {
                 holder = (PluginViewHolder) view.getTag();
             }
 
-            PluginBase plugin = pluginList.get(position);
             holder.name.setText(plugin.getName());
             holder.checkboxEnabled.setChecked(plugin.isEnabled(type));
             holder.checkboxVisible.setChecked(plugin.isVisibleInTabs(type));
             holder.name.setTag(plugin);
             holder.checkboxEnabled.setTag(plugin);
             holder.checkboxVisible.setTag(plugin);
+            holder.settings.setTag(plugin);
 
             if (!plugin.canBeHidden(type)) {
                 holder.checkboxEnabled.setEnabled(false);

@@ -186,6 +186,11 @@ public class SmsCommunicatorPlugin implements PluginBase {
         if (type == GENERAL) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_smscommunicator;
+    }
+
     @Subscribe
     public void processSettings(final EventPreferenceChange ev) {
         if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {

@@ -218,6 +218,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     }
 
     @Override
+    public int getPreferencesId() {
+        return R.xml.pref_danar;
+    }
+
+    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return useExtendedBoluses;
     }

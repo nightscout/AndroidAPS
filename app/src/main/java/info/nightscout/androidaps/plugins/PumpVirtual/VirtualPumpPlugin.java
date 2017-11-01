@@ -64,12 +64,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         return fromNSAreCommingFakedExtendedBoluses;
     }
 
-    private static VirtualPumpPlugin instance = null;
-    public static VirtualPumpPlugin getInstance() {
+    private static VirtualPumpPlugin plugin = null;
+    public static VirtualPumpPlugin getPlugin() {
         loadFakingStatus();
-        if (instance == null)
-            instance = new VirtualPumpPlugin();
-        return instance;
+        if (plugin == null)
+            plugin = new VirtualPumpPlugin();
+        return plugin;
     }
 
     private VirtualPumpPlugin() {
@@ -152,6 +152,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PUMP) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_virtualpump;
     }
 
     @Override

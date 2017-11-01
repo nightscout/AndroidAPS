@@ -102,6 +102,11 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return R.xml.pref_openapsma;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == APS) this.fragmentEnabled = fragmentEnabled;
     }
