@@ -32,10 +32,13 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
@@ -46,7 +49,7 @@ import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
 /**
  * Created by mike on 05.08.2016.
  */
-public class ComboPlugin implements PluginBase, PumpInterface {
+public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
     private boolean fragmentEnabled = false;
@@ -148,7 +151,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == PUMP && fragmentEnabled;
+        if (type == PluginBase.PUMP) return fragmentEnabled;
+        else if (type == PluginBase.CONSTRAINTS) return fragmentEnabled;
+        return false;
     }
 
     @Override
@@ -249,10 +254,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private void updateLocalData(CommandResult result) {
-        if (result.reservoirLevel != PumpState.UNKNOWN)
+        if (result.reservoirLevel != PumpState.UNKNOWN) {
             pump.reservoirLevel = result.reservoirLevel;
-        if (result.lastBolus != null)
+        }
+        if (result.lastBolus != null) {
             pump.lastBolus = result.lastBolus;
+        } else if (result.history != null && !result.history.bolusHistory.isEmpty()) {
+            pump.lastBolus = result.history.bolusHistory.get(0);
+        }
         pump.state = result.state;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
     }
@@ -610,10 +619,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
             if (!commandResult.success && retries > 0) {
                 for (int retryAttempts = 1; !commandResult.success && retryAttempts <= retries; retryAttempts++) {
-                    log.debug("Command was not successful, retries request, doing retry #" + retryAttempts);
+                    log.debug("Command was not successful, retries requested, doing retry #" + retryAttempts);
                     commandResult = commandExecution.execute();
                 }
             }
+
+            checkForUnsupportedBoluses(commandResult);
 
             pump.lastCmdResult = commandResult;
             pump.lastConnectionAttempt = System.currentTimeMillis();
@@ -627,6 +638,31 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
         }
         return commandResult;
+    }
+
+    private void checkForUnsupportedBoluses(CommandResult commandResult) {
+        long lastViolation = 0;
+        if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
+            lastViolation = commandResult.lastBolus.timestamp;
+        } else if (commandResult.history != null) {
+            for (Bolus bolus : commandResult.history.bolusHistory) {
+                if (!bolus.isValid && bolus.timestamp > lastViolation) {
+                    lastViolation = bolus.timestamp;
+                }
+            }
+        }
+
+        if (lastViolation > 0) {
+            closedLoopDisabledUntil = lastViolation + 6 * 60 * 60 * 1000;
+            if (closedLoopDisabledUntil > System.currentTimeMillis()) {
+                // TODO add message to either Combo tab or its errors popup
+                Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
+                        MainApp.sResources.getString(R.string.combo_force_disabled),
+                        Notification.URGENT);
+                n.soundId = R.raw.alarm;
+                MainApp.bus().post(new EventNewNotification(n));
+            }
+        }
     }
 
     // TODO rename to checkState or so and also check time (& date) of pump
@@ -868,5 +904,53 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
+    }
+
+    // Constraints interface
+    private long closedLoopDisabledUntil = 0;
+
+    @Override
+    public boolean isLoopEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isClosedModeEnabled() {
+        return closedLoopDisabledUntil < System.currentTimeMillis();
+    }
+
+    @Override
+    public boolean isAutosensModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        return absoluteRate;
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        return percentRate;
+    }
+
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        return insulin;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        return carbs;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        return maxIob;
     }
 }

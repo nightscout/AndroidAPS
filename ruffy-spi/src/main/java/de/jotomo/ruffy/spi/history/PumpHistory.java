@@ -3,9 +3,10 @@ package de.jotomo.ruffy.spi.history;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
+/** History data as read from the pump's My Data menu.
+ * Records are ordered from newest to oldest, so the first record is always the newest. */
 public class PumpHistory {
     @NonNull
     public List<Bolus> bolusHistory = new ArrayList<>();

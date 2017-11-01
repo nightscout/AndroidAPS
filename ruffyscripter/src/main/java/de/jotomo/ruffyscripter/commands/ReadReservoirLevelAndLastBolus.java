@@ -31,14 +31,11 @@ public class ReadReservoirLevelAndLastBolus extends BaseCommand {
     @NonNull
     private Bolus readBolusRecord() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
-        // Could also be extended, multiwave
         BolusType bolusType = (BolusType) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        if (!bolusType.equals(BolusType.NORMAL)) {
-            throw new CommandException("Unsupported bolus type encountered: " + bolusType);
-        }
+        boolean isValid =  bolusType == BolusType.NORMAL;
         Double bolus = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
         long recordDate = readRecordDate();
-        return new Bolus(recordDate, bolus);
+        return new Bolus(recordDate, bolus, isValid);
     }
 
     private long readRecordDate() {

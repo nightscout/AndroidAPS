@@ -791,5 +791,6 @@
     <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
+    <string name="combo_force_disabled">Unsafe usage: extended or multiwave boluses have been delivered within the last 6h. Closed loop mode forcefully disabled. Only normal boluses are supported when running in closed loop mode.</string>
 </resources>
 
