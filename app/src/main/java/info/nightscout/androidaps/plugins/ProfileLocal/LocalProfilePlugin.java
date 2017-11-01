@@ -108,6 +108,11 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     public void storeSettings() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();

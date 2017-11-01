@@ -75,5 +75,10 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
     public void setFragmentVisible(int type, boolean fragmentVisible) {
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
 
 }

@@ -26,8 +26,6 @@ import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
 
-    static CareportalPlugin careportalPlugin;
-
     TextView iage;
     TextView cage;
     TextView sage;
@@ -36,13 +34,6 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     View statsLayout;
     LinearLayout butonsLayout;
     View noProfileView;
-
-    static public CareportalPlugin getPlugin() {
-        if (careportalPlugin == null) {
-            careportalPlugin = new CareportalPlugin();
-        }
-        return careportalPlugin;
-    }
 
     //                                                    date,bg,insulin,carbs,prebolus,duration,percent,absolute,profile,split,temptarget
     public static final OptionsToShow BGCHECK = new OptionsToShow(R.id.careportal_bgcheck, R.string.careportal_bgcheck).date().bg();

@@ -77,5 +77,10 @@ public class SourceNSClientPlugin implements PluginBase, BgSourceInterface {
 
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
 
 }

@@ -324,7 +324,7 @@ public class ActionStringHandler {
 
 
         // send result
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
+        WearPlugin.getPlugin().requestActionConfirmation(rTitle, rMessage, rAction);
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = rAction;
     }
@@ -596,7 +596,7 @@ public class ActionStringHandler {
             msg += MainApp.sResources.getString(R.string.cpp_valuesnotstored);
             String rTitle = "STATUS";
             String rAction = "statusmessage";
-            WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, msg, rAction);
+            WearPlugin.getPlugin().requestActionConfirmation(rTitle, msg, rAction);
             lastSentTimestamp = System.currentTimeMillis();
             lastConfirmActionString = rAction;
             return;
@@ -667,14 +667,14 @@ public class ActionStringHandler {
     }
 
     private synchronized static void sendError(String errormessage) {
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("ERROR", errormessage, "error");
+        WearPlugin.getPlugin().requestActionConfirmation("ERROR", errormessage, "error");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
         lastBolusWizard = null;
     }
 
     private synchronized static void sendStatusmessage(String title, String message) {
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(title, message, "statusmessage");
+        WearPlugin.getPlugin().requestActionConfirmation(title, message, "statusmessage");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
         lastBolusWizard = null;
@@ -682,7 +682,7 @@ public class ActionStringHandler {
 
     public synchronized static void expectNotificationAction(String message, int id) {
         String actionstring = "dismissoverviewnotification " + id;
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("DISMISS", message, actionstring);
+        WearPlugin.getPlugin().requestActionConfirmation("DISMISS", message, actionstring);
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = actionstring;
         lastBolusWizard = null;

@@ -27,7 +27,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
-import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
@@ -69,7 +69,7 @@ import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.Wear.WearFragment;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
@@ -130,12 +130,12 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
-            pluginsList.add(CareportalFragment.getPlugin());
+            pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
-            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());
-            if (Config.LOOPENABLED) pluginsList.add(LoopPlugin.getPlugin());
-            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAPlugin.getPlugin());
-            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
+            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
             pluginsList.add(NSProfilePlugin.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(SimpleProfilePlugin.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(LocalProfileFragment.getPlugin());
@@ -154,8 +154,8 @@ public class MainApp extends Application {
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 
-            pluginsList.add(WearFragment.getPlugin(this));
-            pluginsList.add(StatuslinePlugin.getPlugin(this));
+            pluginsList.add(WearPlugin.initPlugin(this));
+            pluginsList.add(StatuslinePlugin.initPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
             pluginsList.add(NSClientInternalPlugin.getPlugin());
 

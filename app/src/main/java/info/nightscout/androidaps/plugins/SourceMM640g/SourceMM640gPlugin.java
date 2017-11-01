@@ -75,5 +75,10 @@ public class SourceMM640gPlugin implements PluginBase, BgSourceInterface {
 
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
 
 }
