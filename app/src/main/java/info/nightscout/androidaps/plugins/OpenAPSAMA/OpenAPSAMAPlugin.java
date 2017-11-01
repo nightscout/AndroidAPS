@@ -104,6 +104,11 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return R.xml.pref_openapsama;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == APS) this.fragmentEnabled = fragmentEnabled;
     }

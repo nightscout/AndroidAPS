@@ -9,14 +9,10 @@ public class Config {
     // MAIN FUCTIONALITY
     public static final boolean APS = BuildConfig.APS;
     // PLUGINS
-    public static final boolean OPENAPSENABLED = APS;
-    public static final boolean LOOPENABLED = APS;
-
     public static final boolean NSCLIENT = BuildConfig.NSCLIENTOLNY;
 
     public static final boolean COMBO = true && BuildConfig.PUMPDRIVERS;
     public static final boolean DANAR = true && BuildConfig.PUMPDRIVERS;
-    public static final boolean DANARv2 = true && BuildConfig.PUMPDRIVERS;
 
     public static final boolean ACTION = !BuildConfig.NSCLIENTOLNY;
     public static final boolean VIRTUALPUMP = !BuildConfig.NSCLIENTOLNY;
@@ -26,8 +22,6 @@ public class Config {
 
     public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY;
 
-
-    public static final boolean ALLPREFERENCES = !BuildConfig.NSCLIENTOLNY;
 
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
@@ -41,6 +35,7 @@ public class Config {
     public static final boolean logPumpActions = true;
     public static final boolean logCongigBuilderActions = true;
     public static final boolean logAutosensData = false;
+    public static final boolean logEvents = false;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

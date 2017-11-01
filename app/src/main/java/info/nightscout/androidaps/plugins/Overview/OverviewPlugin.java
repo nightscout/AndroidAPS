@@ -104,6 +104,11 @@ public class OverviewPlugin implements PluginBase {
     }
 
     @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    @Override
     public int getType() {
         return PluginBase.GENERAL;
     }

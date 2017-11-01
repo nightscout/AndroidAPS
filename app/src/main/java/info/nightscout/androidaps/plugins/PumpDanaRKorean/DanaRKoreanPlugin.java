@@ -220,6 +220,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     @Override
+    public int getPreferencesId() {
+        return R.xml.pref_danarkorean;
+    }
+
+    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return useExtendedBoluses;
     }

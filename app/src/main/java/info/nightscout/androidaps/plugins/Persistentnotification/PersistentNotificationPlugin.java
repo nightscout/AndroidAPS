@@ -208,6 +208,11 @@ public class PersistentNotificationPlugin implements PluginBase {
         //no visible fragment
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
         String deltastring = "";
         if (deltaMGDL >= 0) {

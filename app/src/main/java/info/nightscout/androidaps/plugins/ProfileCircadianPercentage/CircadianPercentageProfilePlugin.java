@@ -119,6 +119,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");

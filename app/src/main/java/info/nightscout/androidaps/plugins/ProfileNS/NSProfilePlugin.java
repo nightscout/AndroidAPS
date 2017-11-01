@@ -105,6 +105,11 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    @Override
     public int getType() {
         return PluginBase.PROFILE;
     }

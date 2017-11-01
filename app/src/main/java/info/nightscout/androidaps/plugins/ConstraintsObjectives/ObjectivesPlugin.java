@@ -104,6 +104,11 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         if (type == CONSTRAINTS) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     class Objective {
         Integer num;
         String objective;

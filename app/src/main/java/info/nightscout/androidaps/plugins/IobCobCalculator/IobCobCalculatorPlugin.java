@@ -126,6 +126,11 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
         if (sHandlerThread == null) {

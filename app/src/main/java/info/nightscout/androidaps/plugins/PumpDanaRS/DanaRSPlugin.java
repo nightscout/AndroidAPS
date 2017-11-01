@@ -137,6 +137,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             this.fragmentPumpVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_danars;
+    }
+
     static boolean fragmentPumpEnabled = false;
     static boolean fragmentProfileEnabled = false;
     static boolean fragmentPumpVisible = false;

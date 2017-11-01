@@ -111,6 +111,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     public void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");

@@ -94,6 +94,11 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
         if (type == SENSITIVITY) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_absorption_oref0;
+    }
+
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {

@@ -336,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     @Override
                                     public void run() {
                                         Intent i = new Intent(v.getContext(), PreferencesActivity.class);
+                                        i.putExtra("id", -1);
                                         startActivity(i);
                                     }
                                 }, null);
