@@ -124,6 +124,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
             if (id != -1) {
                 addPreferencesFromResource(id);
+                addPreferencesFromResource(R.xml.pref_advanced);
             } else {
                 if (!Config.NSCLIENT) {
                     addPreferencesFromResource(R.xml.pref_password);
