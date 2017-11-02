@@ -799,5 +799,6 @@
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
     <string name="combo_force_disabled">Unsafe usage: extended or multiwave boluses have been delivered within the last 6h. Closed loop mode forcefully disabled. Only normal boluses are supported when running in closed loop mode.</string>
+    <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
 </resources>
 

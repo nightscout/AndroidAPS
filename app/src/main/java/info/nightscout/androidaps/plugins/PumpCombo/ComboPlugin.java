@@ -67,6 +67,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private volatile boolean bolusInProgress;
     private volatile boolean cancelBolus;
+    private Bolus lastRequestedBolus;
 
     public static ComboPlugin getPlugin() {
         if (plugin == null)
@@ -368,6 +369,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
+        if (lastRequestedBolus != null
+                && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.05
+                && lastRequestedBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
+            return new PumpEnactResult().success(false).enacted(false)
+                    .comment(MainApp.sResources.getString(R.string.bolus_frequency_exceeded));
+        }
+        lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
+
         try {
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
