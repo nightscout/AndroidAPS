@@ -486,17 +486,9 @@ public class RuffyScripter implements RuffyCommands {
     public Menu getCurrentMenu() {
         if (Thread.currentThread().isInterrupted())
             throw new CommandException("Interrupted");
-        long timeout = System.currentTimeMillis() + 5 * 1000;
-        // TODO this is probably due to a disconnect and rtDisconnect having nulled currentMenu.
-        // This here might just work, but needs a more controlled approach when implementing
-        // something to deal with connection loses
-        // TODO force reconnect? and retry?
-        while (currentMenu == null) {
-            if (System.currentTimeMillis() > timeout) {
-                throw new CommandException("Unable to read current menu");
-            }
-            log.debug("currentMenu == null, waiting");
-            waitForMenuUpdate();
+        if (currentMenu == null) {
+            log.error("currentMenu == null, bailing");
+            throw new CommandException("Unable to read current menu");
         }
         return currentMenu;
     }
