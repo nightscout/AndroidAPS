@@ -663,4 +663,13 @@
     <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
     <string name="connectiontimedout">Vypršel čas připojování</string>
     <string name="treatments_wizard_tt_label">DC</string>
+    <string name="free_peak_oref">Volitelný vrchol - Oref</string>
+    <string name="nsclientinternal_secret_dialogtitle">NS heslo</string>
+    <string name="nsclientinternal_secret_title">NS heslo (API secret)</string>
+    <string name="processinghistory">Zpracovávám</string>
+    <string name="rapid_acting_oref">Rychle působící - Oref</string>
+    <string name="startingbolus">Spouštím bolus</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <string name="ultrarapid_oref">Ultra rychlý - Oref</string>
+    <string name="waitingforestimatedbolusend" formatted="false">Čekání na konec bolusu. Zbývá %d sek.</string>
 </resources>
