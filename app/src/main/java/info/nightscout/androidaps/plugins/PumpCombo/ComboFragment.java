@@ -142,7 +142,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
                         lastConnectionView.setTextColor(Color.RED);
                     } else if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                        lastConnectionView.setText(timeAgo + "\n" + R.string.combo_connect_attempt_failed);
+                        lastConnectionView.setText(timeAgo + "\n" + getString(R.string.combo_connect_attempt_failed));
                         lastConnectionView.setTextColor(Color.YELLOW);
                     } else {
                         lastConnectionView.setText(timeAgo);
