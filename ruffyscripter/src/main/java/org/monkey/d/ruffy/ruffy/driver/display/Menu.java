@@ -54,20 +54,13 @@ public class Menu implements Parcelable{
                         o = BolusType.valueOf(value);
                     } else if (String.class.toString().equals(clas)) {
                         o = new String(value);
-                    } else {
-                        Log.e("MENU","unknown class: "+clas);
                     }
-
 
                     if (o != null) {
                         attributes.put(a, o);
                     } else {
                         Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
                     }
-                }
-                else
-                {
-                    Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
                 }
             }catch(Exception e)
             {
