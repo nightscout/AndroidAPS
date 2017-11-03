@@ -524,6 +524,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return OPERATION_NOT_SUPPORTED;
     }
 
+    // TODO clean this method up:
+    // check PumpState to verify TBR has been cancelled.
+    // enacted field.
     @Override
     public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
@@ -560,7 +563,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // on whether the TBR we're cancelling is above or below 100%.
             final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
-            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 2, () -> ruffyScripter.setTbr(percentage, 15));
+            commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, () -> ruffyScripter.setTbr(percentage, 15));
 
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
@@ -570,6 +573,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 tempBasal.isAbsolute = false;
             }
         }
+
+        // TODO properly check pumpstate to confirm cancellation
+
 
         if (tempBasal != null) {
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();

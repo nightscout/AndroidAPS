@@ -80,19 +80,6 @@ public class SetTbrCommand extends BaseCommand {
             scripter.pressCheckKey();
             scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
         }
-
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
-                "Pump did not return to MAIN_MEU after setting TBR. " +
-                        "Check pump manually, the TBR might not have been set/cancelled.");
-
-        // check main menu shows the same values we just set
-        if (cancellingTbr) {
-            verifyMainMenuShowsNoActiveTbr();
-            result.success(true).enacted(true);
-        } else {
-            verifyMainMenuShowsExpectedTbrActive();
-            result.success(true).enacted(true);
-        }
     }
 
     private void enterTbrMenu() {
@@ -228,33 +215,6 @@ public class SetTbrCommand extends BaseCommand {
         // the pump could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
         // is raised and if so dismiss it
         scripter.confirmAlert(PumpWarningCodes.TBR_CANCELLED, 2000);
-    }
-
-    private void verifyMainMenuShowsNoActiveTbr() {
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        Double tbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
-        boolean runtimeDisplayed = scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME);
-        if (tbrPercentage != 100 || runtimeDisplayed) {
-            throw new CommandException("Cancelling TBR failed, TBR is still set according to MAIN_MENU");
-        }
-    }
-
-    private void verifyMainMenuShowsExpectedTbrActive() {
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        // new TBR set; percentage and duration must be displayed ...
-        if (!scripter.getCurrentMenu().attributes().contains(MenuAttribute.TBR) ||
-                !scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME)) {
-            throw new CommandException("Setting TBR failed, according to MAIN_MENU no TBR is active");
-        }
-        Double mmTbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
-        MenuTime mmTbrDuration = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
-        // ... and be the same as what we set
-        // note that displayed duration might have already counted down, e.g. from 30 minutes to
-        // 29 minutes and 59 seconds, so that 29 minutes are displayed
-        int mmTbrDurationInMinutes = mmTbrDuration.getHour() * 60 + mmTbrDuration.getMinute();
-        if (mmTbrPercentage != percentage || (mmTbrDurationInMinutes != duration && mmTbrDurationInMinutes + 1 != duration)) {
-            throw new CommandException("Setting TBR failed, TBR in MAIN_MENU differs from expected");
-        }
     }
 
     private long readDisplayedDuration() {
