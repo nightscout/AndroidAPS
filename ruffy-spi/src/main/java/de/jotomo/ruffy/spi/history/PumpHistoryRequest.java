@@ -13,6 +13,7 @@ public class PumpHistoryRequest {
     public long bolusHistory = SKIP;
     public long tbrHistory = SKIP;
     public long pumpErrorHistory = SKIP;
+    public long tddHistory = SKIP;
 
     public PumpHistoryRequest bolusHistory(long bolusHistory) {
         this.bolusHistory = bolusHistory;
@@ -29,12 +30,18 @@ public class PumpHistoryRequest {
         return this;
     }
 
+    public PumpHistoryRequest tddHistory(long tddHistory) {
+        this.tddHistory = tddHistory;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PumpHistoryRequest{" +
                 ", bolusHistory=" + bolusHistory +
                 ", tbrHistory=" + tbrHistory +
                 ", pumpErrorHistory=" + pumpErrorHistory +
+                ", tddHistory=" + tddHistory +
                 '}';
     }
 }

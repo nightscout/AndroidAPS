@@ -716,7 +716,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         if (sync) {
             // todo just return the PHR?
-            runFullSync(new PumpHistoryRequest().tbrHistory(System.currentTimeMillis() - 3 * 60 * 60 * 1000));
+            syncHistory(new PumpHistoryRequest().tbrHistory(System.currentTimeMillis() - 3 * 60 * 60 * 1000));
         }
 
         // TODO request a loop run to (re)apply a TBR/SMB given this new information? or just wait till next iteration?
@@ -798,13 +798,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
 
         if (syncNeeded) {
-            runFullSync(request);
+            syncHistory(request);
         }
 
         return true;
     }
 
-    private void runFullSync(final PumpHistoryRequest request) {
+    private void syncHistory(final PumpHistoryRequest request) {
         CommandResult result = runCommand("Syncing pump history", 3, () -> ruffyScripter.readHistory(request));
         if (!result.success) {
             // TODO
@@ -833,8 +833,22 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // errors
         // TODO
+
+        // tdd
+        // TODO v3
+
         CommandResult refreshResult = runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
         updateLocalData(refreshResult);
+    }
+
+    public void forceSyncFullHistory() {
+        syncHistory(new PumpHistoryRequest()
+                .bolusHistory(PumpHistoryRequest.FULL)
+                .tbrHistory(PumpHistoryRequest.FULL)
+                .errorHistory(PumpHistoryRequest.FULL)
+                .tddHistory(PumpHistoryRequest.FULL));
+        updateLocalData(runCommand(MainApp.sResources.getString(R.string.combo_pump_action_refreshing),
+                3, ruffyScripter::readPumpState));
     }
 
     @Override

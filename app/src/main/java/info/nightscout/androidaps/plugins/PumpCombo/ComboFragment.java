@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 
-public class ComboFragment extends SubscriberFragment implements View.OnClickListener {
+public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
 
     private TextView stateView;
@@ -50,6 +50,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
         refresh.setOnClickListener(this);
+        refresh.setOnLongClickListener(this);
 
         updateGUI();
         return view;
@@ -59,14 +60,22 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-                Thread thread = new Thread(() -> ComboPlugin.getPlugin().refreshDataFromPump("User request"));
-                thread.start();
+                new Thread(() -> ComboPlugin.getPlugin().refreshDataFromPump("User request")).start();
                 break;
             case R.id.combo_error_history:
-                // TODO show popup with pump errors and comm problems
-                // steal code from profile view, called on overview
+                // TODO v2 show popup with pump errors and comm problems steal code from profile view, called on overview
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        switch (view.getId()) {
+            case R.id.combo_refresh:
+                new Thread(() -> ComboPlugin.getPlugin().forceSyncFullHistory()).start();
+                return true;
+        }
+        return false;
     }
 
     @Subscribe
