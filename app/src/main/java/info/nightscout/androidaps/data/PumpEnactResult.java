@@ -57,6 +57,11 @@ public class PumpEnactResult extends Object {
         return this;
     }
 
+    public PumpEnactResult percent(Integer percent) {
+        this.percent = percent;
+        return this;
+    }
+
     public PumpEnactResult isPercent(boolean isPercent) {
         this.isPercent = isPercent;
         return this;

@@ -75,13 +75,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return plugin;
     }
 
-    private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
-
-    static {
-        OPERATION_NOT_SUPPORTED.success = false;
-        OPERATION_NOT_SUPPORTED.enacted = false;
-        OPERATION_NOT_SUPPORTED.comment = MainApp.sResources.getString(R.string.combo_pump_unsupported_operation);
-    }
+    private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
+            .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
 
     private ComboPlugin() {
         definePumpCapabilities();
@@ -334,32 +329,24 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
-                PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = false;
-                pumpEnactResult.enacted = false;
-                pumpEnactResult.bolusDelivered = 0d;
-                pumpEnactResult.carbsDelivered = 0d;
-                pumpEnactResult.comment = MainApp.instance().getString(R.string.danar_invalidinput);
                 log.error("deliverTreatment: Invalid input");
-                return pumpEnactResult;
+                return new PumpEnactResult().success(false).enacted(false)
+                        .bolusDelivered(0d).carbsDelivered(0d)
+                        .comment(MainApp.instance().getString(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
             } else {
                 // no bolus required, carb only treatment
-                SystemClock.sleep(6000);
-                PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = true;
-                pumpEnactResult.enacted = true;
-                pumpEnactResult.bolusDelivered = 0d;
-                pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-                pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 bolusingEvent.percent = 100;
                 MainApp.bus().post(bolusingEvent);
-                return pumpEnactResult;
+
+                return new PumpEnactResult().success(true).enacted(true)
+                        .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
+                        .comment(MainApp.instance().getString(R.string.virtualpump_resultok));
             }
         } finally {
             cancelBolus = false;
@@ -399,15 +386,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // TODO should we check against pump.lastBolus or rather the DB ...
             if (!Objects.equals(pump.lastBolus, reservoirBolusResult.lastBolus)) {
                 new Thread(this::checkPumpHistory).start();
-                return new PumpEnactResult().success(false).enacted(false).
-                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
             }
 
             if (cancelBolus) {
-                PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = true;
-                pumpEnactResult.enacted = false;
-                return pumpEnactResult;
+                return new PumpEnactResult().success(true).enacted(false);
             }
 
             // start bolus delivery
@@ -448,11 +432,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 detailedBolusInfo.insulin = lastPumpBolus.amount;
                 detailedBolusInfo.date = lastPumpBolus.timestamp;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                return new PumpEnactResult()
-                        .success(true)
-                        .enacted(true)
-                        .bolusDelivered(lastPumpBolus.amount)
-                        .carbsDelivered(detailedBolusInfo.carbs);
+                return new PumpEnactResult().success(true).enacted(true)
+                        .bolusDelivered(lastPumpBolus.amount).carbsDelivered(detailedBolusInfo.carbs);
             } else {
                 return new PumpEnactResult().success(true).enacted(false);
             }
@@ -534,16 +515,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.isPercent = true;
-        // Combo would have bailed if this wasn't set properly. Maybe we should
-        // have the command return this anyways ...
-        pumpEnactResult.percent = adjustedPercent;
-        pumpEnactResult.duration = durationInMinutes;
-
-        return pumpEnactResult;
+        return new PumpEnactResult().success(true).enacted(true).isPercent(true)
+                .percent(state.tbrPercent).duration(state.tbrRemainingDuration);
     }
 
     @Override
