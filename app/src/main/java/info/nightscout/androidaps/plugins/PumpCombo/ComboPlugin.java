@@ -622,7 +622,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pump.lastCmdResult = commandResult;
             pump.lastConnectionAttempt = System.currentTimeMillis();
             if (commandResult.success) {
-                pump.lastSuccessfulConnection = System.currentTimeMillis();
+                pump.lastSuccessfulConnection = pump.lastConnectionAttempt;
             }
         } finally {
             if (activity != null) {

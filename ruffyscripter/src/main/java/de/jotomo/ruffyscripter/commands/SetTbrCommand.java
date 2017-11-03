@@ -80,6 +80,7 @@ public class SetTbrCommand extends BaseCommand {
             scripter.pressCheckKey();
             scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
         }
+        result.success = true;
     }
 
     private void enterTbrMenu() {
@@ -101,7 +102,6 @@ public class SetTbrCommand extends BaseCommand {
         log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
         for (int i = 0; i < Math.abs(percentageSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-            log.debug("Push #" + (i + 1));
             log.debug("Push #" + (i + 1) + "/" + Math.abs(percentageSteps));
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();

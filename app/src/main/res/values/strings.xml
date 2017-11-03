@@ -771,7 +771,7 @@
     <string name="combo_no_pump_connection">No connection for %s</string>
     <string name="combo_connect_attempt_failed">Last connect attempt failed</string>
     <string name="combo_last_connection_time">%s (%s)</string>
-    <string name="combo_tbr_remaining">%d%% (%d remaining)</string>
+    <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
     <string name="combo_last_bolus">%.1f U (%.1f %s, %s)</string>
     <string name="combo_pump_state_disconnected">Pump disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
