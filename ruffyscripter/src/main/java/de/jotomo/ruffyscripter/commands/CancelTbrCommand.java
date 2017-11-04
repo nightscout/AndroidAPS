@@ -26,7 +26,6 @@ public class CancelTbrCommand extends BaseCommand {
             // This is non-critical; when cancelling a TBR and the connection was interrupted
             // the TBR was cancelled by that. In that case not cancelling anything is fine.
             result.success = true;
-            result.enacted = false;
             return;
         }
 

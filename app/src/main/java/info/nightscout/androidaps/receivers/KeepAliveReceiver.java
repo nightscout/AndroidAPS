@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
+import org.mozilla.javascript.ast.Loop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.SP;
@@ -67,7 +69,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private void checkPump() {
         final PumpInterface pump = MainApp.getConfigBuilder();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && profile != null && profile.getBasal() != null) {
+        // TODO suspended?
+        if (pump != null && profile != null && profile.getBasal() != null && !LoopPlugin.getPlugin().isSuspended()) {
             Date lastConnection = pump.lastDataTime();
 
             boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();

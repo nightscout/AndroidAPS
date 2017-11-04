@@ -153,11 +153,12 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     Bolus bolus = plugin.getPump().lastBolus;
                     if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
                         long agoMsc = System.currentTimeMillis() - bolus.timestamp;
-                        double agoHours = agoMsc / 60d / 60d / 1000d;
+                        double bolusMinAgo = agoMsc / 60d / 1000d;
+                        double bolusHoursAgo = agoMsc / 60d / 60d / 1000d;
                         lastBolusView.setText(getString(R.string.combo_last_bolus,
                                 bolus.amount,
-                                agoHours,
-                                getString(R.string.hoursago),
+                                bolusMinAgo < 60 ? bolusMinAgo : bolusHoursAgo,
+                                bolusMinAgo < 60 ? getString(R.string.minago) : getString(R.string.hoursago),
                                 DateUtil.timeString(bolus.timestamp)));
                     } else {
                         lastBolusView.setText("");

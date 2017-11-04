@@ -728,13 +728,13 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult getDateAndTime() {
-        return new CommandResult().success(false).enacted(false);
+        return new CommandResult().success(false);
     }
 
     @Override
     public CommandResult setDateAndTime(Date date) {
         // TODO
-        return new CommandResult().success(false).enacted(false);
+        return new CommandResult().success(false);
     }
 
     @Override

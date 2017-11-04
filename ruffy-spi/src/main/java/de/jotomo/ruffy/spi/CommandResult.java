@@ -8,11 +8,6 @@ import de.jotomo.ruffy.spi.history.PumpHistory;
 public class CommandResult {
     /** Whether the command was executed successfully. */
     public boolean success;
-    /** Whether any changes were made, e.g. if a the request was to cancel a running TBR,
-     * but not TBR was active, this will be false.
-     * @deprecated for bolus, set tbr, set basal profile, set time: check with a second command, don't rely on this*/
-    @Deprecated
-    public boolean enacted;
     /** Null unless an unhandled exception was raised. */
     public Exception exception;
     /** State of the pump *after* command execution. */
@@ -46,11 +41,6 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult enacted(boolean enacted) {
-        this.enacted = enacted;
-        return this;
-    }
-
     public CommandResult duration(String duration) {
         this.duration = duration;
         return this;
@@ -80,7 +70,6 @@ public class CommandResult {
     public String toString() {
         return "CommandResult{" +
                 ", success=" + success +
-                ", enacted=" + enacted +
                 ", exception=" + exception +
                 ", state=" + state +
                 ", history=" + history +

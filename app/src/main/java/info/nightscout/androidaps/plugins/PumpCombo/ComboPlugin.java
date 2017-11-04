@@ -542,7 +542,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
 
-            if (commandResult.enacted) {
+            if (!commandResult.state.tbrActive) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
                 tempBasal.durationInMinutes = 0;
                 tempBasal.source = Source.USER;
@@ -565,7 +565,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
             commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, () -> ruffyScripter.setTbr(percentage, 15));
 
-            if (commandResult.enacted) {
+            if (!commandResult.state.tbrActive) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
                 tempBasal.durationInMinutes = 15;
                 tempBasal.source = Source.USER;
@@ -584,7 +584,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         if (commandResult != null) {
             pumpEnactResult.success = commandResult.success;
-            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.enacted = true;
         }
         return pumpEnactResult;
     }
@@ -599,6 +599,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * NO history, reservoir level fields are updated, this make be done separately if desired.
      */
     private synchronized CommandResult runCommand(String activity, int retries, CommandExecution commandExecution) {
+        // TODO keep stats of how many commansd failed; if >50% fail raise an alert;
+        // otherwise all commands could fail, but since we can connect to the pump no 'pump unrechable alert' would be raised.
+
         CommandResult commandResult;
         try {
             if (activity != null) {
@@ -622,6 +625,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pump.lastCmdResult = commandResult;
             pump.lastConnectionAttempt = System.currentTimeMillis();
             if (commandResult.success) {
+                // TOdO is this valid? saying a successful command execution means a successful connect?
+                // or is the distinction between being able to connect and execute a command successfuly not really meaningful here?
                 pump.lastSuccessfulConnection = pump.lastConnectionAttempt;
             }
         } finally {

@@ -78,7 +78,6 @@ public class BolusCommand extends BaseCommand {
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressCheckKey();
-            result.enacted = true;
 
             // the pump displays the entered bolus and waits a few seconds to let user check and cancel
             while (scripter.getCurrentMenu().getType() == MenuType.BOLUS_ENTER) {
