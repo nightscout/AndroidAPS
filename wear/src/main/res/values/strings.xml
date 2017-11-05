@@ -20,7 +20,15 @@
         <item>5</item>
     </string-array>
 
+    <string-array name="battery_choice">
+        <item>Phone</item>
+        <item>Rig</item>
+    </string-array>
 
+    <string-array name="battery_choice_values">
+        <item>true</item>
+        <item>false</item>
+    </string-array>
 
     <string-array name="input_design">
         <item>Default</item>
@@ -38,6 +46,7 @@
 
 
     <string name="label_xdrip">AAPS</string>
+    <string name="label_xdrip2">AAPSv2</string>
     <string name="label_xdrip_large">AAPS(Large)</string>
     <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
     <string name="label_xdrip_no_chart">AAPS(NoChart)</string>

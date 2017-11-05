@@ -26,6 +26,14 @@
         android:summary="Input Design"
         android:title="Input Design" />
 
+    <ListPreference
+        android:defaultValue="true"
+        android:entries="@array/battery_choice"
+        android:entryValues="@array/battery_choice_values"
+        android:key="battery_choice"
+        android:summary="Battery Display"
+        android:title="Battery Display" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showExternalStatus"

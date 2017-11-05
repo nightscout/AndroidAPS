@@ -37,7 +37,10 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
@@ -242,9 +245,39 @@ public class WatchUpdaterService extends WearableListenerService implements
         } else if (lastBG.value < lowLine) {
             sgvLevel = -1;
         }
-        DataMap dataMap = new DataMap();
 
-        int battery = getBatteryLevel(getApplicationContext());
+        //IOB
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        final IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+        final IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+        String iobText = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U";
+
+        if (mPrefs.getBoolean("wear_detailediob", true)) {
+            iobText = DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
+                    + DecimalFormatter.to2Decimal(basalIob.basaliob);
+        }
+
+        //COB
+        String cobText = "0g";
+        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+        if (autosensData != null) {
+            cobText = (int) autosensData.cob + "g";
+        }
+
+        //battery
+        int phoneBattery = getBatteryLevel(getApplicationContext());
+        String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
+
+        //Temp basal
+        String temp_basal = "-.--U/h";
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            temp_basal= activeTemp.toStringShort();
+        }
+
+        DataMap dataMap = new DataMap();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
         dataMap.putDouble("timestamp", lastBG.date);
         if (glucoseStatus == null) {
@@ -256,12 +289,16 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
             dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
         }
-        dataMap.putString("battery", "" + battery);
         dataMap.putLong("sgvLevel", sgvLevel);
-        dataMap.putInt("batteryLevel", (battery >= 30) ? 1 : 0);
+        dataMap.putString("battery", "" + phoneBattery);
+        dataMap.putString("rigBattery", rigBattery);
+        dataMap.putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
         dataMap.putDouble("sgvDouble", lastBG.value);
         dataMap.putDouble("high", highLine);
         dataMap.putDouble("low", lowLine);
+        dataMap.putString("cob", "" + cobText);
+        dataMap.putString("iob", "" + iobText);
+        dataMap.putString("tempBasal", "" + temp_basal);
         return dataMap;
     }
 
