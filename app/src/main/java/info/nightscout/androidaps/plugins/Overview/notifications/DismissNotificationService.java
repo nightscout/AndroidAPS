@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview;
+package info.nightscout.androidaps.plugins.Overview.notifications;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.utils.SafeParse;
 
 public class DismissNotificationService extends IntentService {
 

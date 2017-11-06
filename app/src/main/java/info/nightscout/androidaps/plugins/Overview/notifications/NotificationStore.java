@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.Overview;
+package info.nightscout.androidaps.plugins.Overview.notifications;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;

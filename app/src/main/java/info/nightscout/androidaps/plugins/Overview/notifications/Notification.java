@@ -1,5 +1,5 @@
 
-package info.nightscout.androidaps.plugins.Overview;
+package info.nightscout.androidaps.plugins.Overview.notifications;
 
 import java.util.Date;
 
