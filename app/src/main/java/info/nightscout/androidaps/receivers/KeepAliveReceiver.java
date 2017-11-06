@@ -23,6 +23,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.SP;
@@ -81,12 +82,14 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis();
 
             if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), true)
-                    && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
+                    && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && ! ConfigBuilderPlugin.getActiveLoop().isDisconnected()) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
                 MainApp.bus().post(new EventNewNotification(n));
-            } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
+            }
+
+            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
