@@ -491,7 +491,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -505,7 +505,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -519,7 +519,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -533,7 +533,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
