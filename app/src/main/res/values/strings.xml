@@ -757,5 +757,14 @@
     <string name="waitingforestimatedbolusend" formatted="false">Waiting for estimated bolus end. Remaining %d sec.</string>
     <string name="processinghistory">Processing event</string>
     <string name="startingbolus">Starting bolus delivery</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
+    <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="localalertsettings_title">Local alerts</string>
+    <string name="enable_missed_bg_readings_alert">Alert if no BGs received in 30 min</string>
+    <string name="enable_pump_unreachable_alert">Alert if pump unreachable for 30 min</string>
 </resources>
 

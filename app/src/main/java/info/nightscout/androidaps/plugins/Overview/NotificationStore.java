@@ -1,6 +1,14 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,14 +16,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-//Added by Rumen for snooze time 
+//Added by Rumen for snooze time
 import info.nightscout.utils.SP;
 
 /**
@@ -49,11 +56,16 @@ public class NotificationStore {
                 return;
             }
         }
-        if (n.soundId != null) {
+
+        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_urgent_alarms_as_android_notification), false)
+                && n.level == Notification.URGENT) {
+            raiseSystemNotification(n);
+        } else if (n.soundId != null) {
             Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
             alarm.putExtra("soundid", n.soundId);
             MainApp.instance().startService(alarm);
         }
+
         store.add(n);
 
         WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
@@ -62,6 +74,23 @@ public class NotificationStore {
         }
 
         Collections.sort(store, new NotificationComparator());
+    }
+
+    private void raiseSystemNotification(Notification n) {
+        Context context = MainApp.instance().getApplicationContext();
+        NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.blueowl);
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setLargeIcon(largeIcon)
+                        .setContentTitle("Urgent alarm")
+                        .setContentText(n.text)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setVibrate(new long[] { 1000, 1000, 1000, 1000})
+                        .setSound(sound, AudioAttributes.USAGE_ALARM);
+        mgr.notify(n.id, notificationBuilder.build());
     }
 
     public boolean remove(int id) {
