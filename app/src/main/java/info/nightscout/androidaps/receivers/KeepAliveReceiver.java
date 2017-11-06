@@ -114,6 +114,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         }
     }
 
+    //called by MainAPP at first app start
     public void setAlarm(Context context) {
 
         shortenSnoozeInterval();

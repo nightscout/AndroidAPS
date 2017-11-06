@@ -85,15 +85,17 @@ public class NotificationStore {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setLargeIcon(largeIcon)
-                        .setContentTitle("Urgent alarm")
                         .setContentText(n.text)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setDeleteIntent(DismissNotificationService.deleteIntent(n.id));
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000})
+                    .setContentTitle(MainApp.sResources.getString(R.string.urgent_alarm))
                     .setSound(sound, AudioAttributes.USAGE_ALARM);
         } else {
-            notificationBuilder.setVibrate(new long[]{0, 100, 50, 100, 50});
+            notificationBuilder.setVibrate(new long[]{0, 100, 50, 100, 50})
+                    .setContentTitle(MainApp.sResources.getString(R.string.info))
+            ;
         }
         mgr.notify(n.id, notificationBuilder.build());
     }
