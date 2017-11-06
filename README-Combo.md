@@ -53,7 +53,20 @@ Testing:
  _Copy revision number_ or use _git show_ on the command-line) the branch name. Attach the log to the issue and label it as a bug.
   The logs can be found in _/storage/emulated/0/Android/data/info.nightscout.androidaps/_
 
-v2 usage
+v2
+Limitations
+- Extended bolus and multiwave bolus are not supported.
+
+// TODO when to check for pump-boluses? before a bolus, sure, but also every 15m when running another command (or through keepalive?)
+
+Usage
+- This is not a product, esp. in the beginning the user needs to monitor and understand the system, its limitations and how it
+  can fail. It is strongly advised NOT to use this system when the person using is not able to fully understand the system.
+- The integration of the Combo with AndroidAPS is designed with the assumption that all inputs are made via AndroidAPS.
+  While there are checks that will detected boluses entered directly on the pump, which will be added to the history and be
+  included in IOB calulations, there are delays until AAPS becomes aware of those bolusus. It is therefore strongly adviced
+  to only bolus via AndroidAPS (it's also only possible to enter carbs via AndroidAPS, required for advanced loop functionality).
+- It's recommended to enable key lock on the pump to prevent bolusing, esp. when the pump was used before and quick bolusing was a habit.
 - When a BOLUS/TBR CANCELLED alert starts on the pump during bolusing or setting a TBR, this is caused by disconnect
   between pump and phone. The app will try to reconnect and confirm the alert and then retry the last action. Therefore,
   such an alarm shall be ignored (cancelling it is not a big issue, but will lead to the currently active action to
@@ -63,7 +76,3 @@ v2 usage
 v3 TODOs
 - Reading and displaying TDDs
 
-Maybes:
-- reading/writing basal profiles to pump
-- splitted bolus/slower bolus delivery
-- extended bolus support
