@@ -79,10 +79,24 @@
             android:defaultValue="false"
             android:key="@string/key_enable_missed_bg_readings_alert"
             android:title="@string/enable_missed_bg_readings_alert"/>
+        <EditTextPreference
+            android:title="@string/nsalarm_staledatavalue_label"
+            android:key="@string/key_missed_bg_readings_threshold"
+            android:dependency="@string/key_enable_missed_bg_readings_alert"
+            android:defaultValue="30"
+            android:inputType="number">
+        </EditTextPreference>
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert"/>
+        <EditTextPreference
+            android:title="@string/pump_unreachable_threshold"
+            android:key="@string/key_pump_unreachable_threshold"
+            android:dependency="@string/key_enable_pump_unreachable_alert"
+            android:defaultValue="30"
+            android:inputType="number">
+        </EditTextPreference>
         <SwitchPreference
             android:defaultValue="false"
             android:key="raise_urgent_alarms_as_android_notification"

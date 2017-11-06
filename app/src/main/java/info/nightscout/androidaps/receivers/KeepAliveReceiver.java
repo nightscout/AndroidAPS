@@ -35,9 +35,17 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
     // TODO consider moving this into an Alarms plugin that works offline and can be configured
     // (e.g. override silent mode at night only)
-    public static final int ALARM_FREQUENCY = 25 * 60 * 1000;
-    private static long nextPumpDisconnectedAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
-    private static long nextMissedReadingsAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
+
+    private static int missedReadingsThreshold() {
+        return SP.getInt(MainApp.sResources.getString(R.string.key_missed_bg_readings_threshold), 30) * 60 * 1000;
+    }
+
+    private static int pumpUnreachableThreshold() {
+        return SP.getInt(MainApp.sResources.getString(R.string.key_pump_unreachable_threshold), 30) * 60 * 1000;
+    }
+
+    private static long nextPumpDisconnectedAlarm = System.currentTimeMillis() + pumpUnreachableThreshold();
+    private static long nextMissedReadingsAlarm = System.currentTimeMillis() + missedReadingsThreshold();
 
     @Override
     public void onReceive(Context context, Intent rIntent) {
@@ -55,11 +63,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private void checkBg() {
         BgReading bgReading = DatabaseHelper.lastBg();
         if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_missed_bg_readings_alert), false)
-        && bgReading != null && bgReading.date + ALARM_FREQUENCY < System.currentTimeMillis()
+        && bgReading != null && bgReading.date + missedReadingsThreshold() < System.currentTimeMillis()
                 && nextMissedReadingsAlarm < System.currentTimeMillis()) {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.sResources.getString(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
-            nextMissedReadingsAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
+            nextMissedReadingsAlarm = System.currentTimeMillis() + missedReadingsThreshold();
             MainApp.bus().post(new EventNewNotification(n));
         }
     }
@@ -73,7 +81,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
-            boolean alarmTimeoutExpired = lastConnection.getTime() + ALARM_FREQUENCY < System.currentTimeMillis();
+            boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
             boolean nextAlarmOccurrenceReached = nextPumpDisconnectedAlarm < System.currentTimeMillis();
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
@@ -81,7 +89,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
-                nextPumpDisconnectedAlarm = System.currentTimeMillis() + ALARM_FREQUENCY;
+                nextPumpDisconnectedAlarm = System.currentTimeMillis() + pumpUnreachableThreshold();
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
