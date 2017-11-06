@@ -155,11 +155,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
     static void shortenSnoozeInterval() {
         //shortens alarm times in case of setting changes or future data
-        long nextMissedReadingsAlarm = SP.getLong("nextMissedReadingsAlarm", 0l);
+        long nextMissedReadingsAlarm = SP.getLong("nextMissedReadingsAlarm", 0L);
         nextMissedReadingsAlarm = Math.min(System.currentTimeMillis() + missedReadingsThreshold(), nextMissedReadingsAlarm);
         SP.putLong("nextMissedReadingsAlarm", nextMissedReadingsAlarm);
 
-        long nextPumpDisconnectedAlarm = SP.getLong("nextPumpDisconnectedAlarm", 0l);
+        long nextPumpDisconnectedAlarm = SP.getLong("nextPumpDisconnectedAlarm", 0L);
         nextPumpDisconnectedAlarm = Math.min(System.currentTimeMillis() + pumpUnreachableThreshold(), nextPumpDisconnectedAlarm);
         SP.putLong("nextPumpDisconnectedAlarm", nextPumpDisconnectedAlarm);
     }
