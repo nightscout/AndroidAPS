@@ -229,7 +229,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection.getTime() > 0 && pump.isExtendedBolusEnabled;
+        return pump.lastConnection.getTime() > 0 && pump.isExtendedBolusEnabled && pump.maxBasal > 0;
     }
 
     @Override
