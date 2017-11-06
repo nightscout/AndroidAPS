@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,7 +23,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-//Added by Rumen for snooze time
 import info.nightscout.utils.SP;
 
 /**
@@ -57,20 +57,24 @@ public class NotificationStore {
             }
         }
 
+        store.add(n);
+
         if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_urgent_alarms_as_android_notification), false)
                 && n.level == Notification.URGENT) {
             raiseSystemNotification(n);
-        } else if (n.soundId != null) {
-            Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
-            alarm.putExtra("soundid", n.soundId);
-            MainApp.instance().startService(alarm);
-        }
+        } else {
+            if (n.soundId != null) {
+                Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                alarm.putExtra("soundid", n.soundId);
+                MainApp.instance().startService(alarm);
+            }
 
-        store.add(n);
+            //Only pipe through to wear if no system notification is raised (should show on wear anyways)
+            WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
+            if(wearPlugin!= null && wearPlugin.isEnabled()) {
+                wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
+            }
 
-        WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
-        if(wearPlugin!= null && wearPlugin.isEnabled()) {
-            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
         }
 
         Collections.sort(store, new NotificationComparator());
@@ -89,9 +93,11 @@ public class NotificationStore {
                         .setContentText(n.text)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setVibrate(new long[] { 1000, 1000, 1000, 1000})
-                        .setSound(sound, AudioAttributes.USAGE_ALARM);
+                        .setSound(sound, AudioAttributes.USAGE_ALARM)
+                        .setDeleteIntent(DismissNotificationService.deleteIntent(n.id));
         mgr.notify(n.id, notificationBuilder.build());
     }
+
 
     public boolean remove(int id) {
         for (int i = 0; i < store.size(); i++) {
@@ -131,3 +137,4 @@ public class NotificationStore {
         }
     }
 }
+
