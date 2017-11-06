@@ -794,11 +794,11 @@
     <string name="enable_pump_unreachable_alert">Alert if pump unreachable for 30 min</string>
     <string name="combo_pump_never_connected">Never</string>
     <string name="combo_reservoir_level_insufficant_for_bolus">Not enough insulin left in reservoir for bolus</string>
-    <string name="combo_pump_bolus_history_state_mismatch">A bolus has been given recently on the pump directly of which AndroidAPS has only just become aware of. The pump\'s history is currently being read. Please check the Combo page, verify the last bolus and IOB and bolus again if needed. No bolus has been given.</string>
+    <string name="combo_pump_bolus_history_state_mismatch">A bolus has been delivered directly on the pump recently, of which AndroidAPS has only just become aware of. The pump\'s history is currently being read. Please check the Combo page, verify the last bolus and IOB and bolus again if needed. No bolus has been delivered.</string>
     <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
-    <string name="combo_force_disabled">Unsafe usage: extended or multiwave boluses have been delivered within the last 6h. Closed loop mode forcefully disabled. Only normal boluses are supported when running in closed loop mode.</string>
+    <string name="combo_force_disabled">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours. Loop mode has been disabled until 6 hours after the last unsupported bolus. Only normal boluses are supported in loop mode.</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
 </resources>
 

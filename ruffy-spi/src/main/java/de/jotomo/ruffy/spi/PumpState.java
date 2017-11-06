@@ -31,6 +31,8 @@ public class PumpState {
     public int insulinState = UNKNOWN;
 
     public int activeBasalProfileNumber;
+    /** True if use of an extended or multiwave bolus has been detected */
+    public boolean unsafeUsageDetected;
 
     public PumpState menu(String menu) {
         this.menu = menu;

@@ -640,7 +640,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private void checkForUnsupportedBoluses(CommandResult commandResult) {
         long lastViolation = 0;
-        if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
+        if (commandResult.state.unsafeUsageDetected) {
+            lastViolation = System.currentTimeMillis();
+        }
+            if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
             lastViolation = commandResult.lastBolus.timestamp;
         } else if (commandResult.history != null) {
             for (Bolus bolus : commandResult.history.bolusHistory) {
@@ -649,16 +652,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
             }
         }
-
         if (lastViolation > 0) {
             closedLoopDisabledUntil = lastViolation + 6 * 60 * 60 * 1000;
-            if (closedLoopDisabledUntil > System.currentTimeMillis()) {
+            if (closedLoopDisabledUntil > System.currentTimeMillis() && violationWarningRaisedFor != closedLoopDisabledUntil) {
                 // TODO add message to either Combo tab or its errors popup
+                // TODO warn once; after that the user gets suggesiotn from open loop mode as a reminder...
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         MainApp.sResources.getString(R.string.combo_force_disabled),
                         Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
+                violationWarningRaisedFor = closedLoopDisabledUntil;
             }
         }
     }
@@ -920,15 +924,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     // Constraints interface
     private long closedLoopDisabledUntil = 0;
+    private long violationWarningRaisedFor = 0;
 
     @Override
     public boolean isLoopEnabled() {
-        return true;
+        return closedLoopDisabledUntil < System.currentTimeMillis();
     }
 
     @Override
     public boolean isClosedModeEnabled() {
-        return closedLoopDisabledUntil < System.currentTimeMillis();
+        return true;
     }
 
     @Override

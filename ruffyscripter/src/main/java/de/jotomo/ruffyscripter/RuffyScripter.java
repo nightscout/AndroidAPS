@@ -17,6 +17,7 @@ import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
+import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -440,7 +441,11 @@ public class RuffyScripter implements RuffyCommands {
 
         if (menuType == MenuType.MAIN_MENU) {
             Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
-            if (tbrPercentage != 100) {
+            BolusType bolusType = (BolusType) menu.getAttribute(MenuAttribute.BOLUS_TYPE);
+            if (bolusType != null && bolusType != BolusType.NORMAL) {
+                // unsupported Extended/Multiwave bolus running
+                state.unsafeUsageDetected = true;
+            } else if (tbrPercentage != 100) {
                 state.tbrActive = true;
                 Double displayedTbr = (Double) menu.getAttribute(MenuAttribute.TBR);
                 state.tbrPercent = displayedTbr.intValue();
