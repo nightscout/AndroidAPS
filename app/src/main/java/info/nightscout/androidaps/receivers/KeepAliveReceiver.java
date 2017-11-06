@@ -44,15 +44,13 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         return SP.getInt(MainApp.sResources.getString(R.string.key_pump_unreachable_threshold), 30) * 60 * 1000;
     }
 
-    private static long nextPumpDisconnectedAlarm = System.currentTimeMillis() + pumpUnreachableThreshold();
-    private static long nextMissedReadingsAlarm = System.currentTimeMillis() + missedReadingsThreshold();
-
     @Override
     public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
 
+        initAlarmTimes();
         checkBg();
         checkPump();
 
@@ -64,10 +62,10 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         BgReading bgReading = DatabaseHelper.lastBg();
         if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_missed_bg_readings_alert), false)
         && bgReading != null && bgReading.date + missedReadingsThreshold() < System.currentTimeMillis()
-                && nextMissedReadingsAlarm < System.currentTimeMillis()) {
+                && SP.getLong("nextMissedReadingsAlarm", 0l) < System.currentTimeMillis()) {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.sResources.getString(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
-            nextMissedReadingsAlarm = System.currentTimeMillis() + missedReadingsThreshold();
+            SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
             MainApp.bus().post(new EventNewNotification(n));
         }
     }
@@ -82,14 +80,14 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
             boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
-            boolean nextAlarmOccurrenceReached = nextPumpDisconnectedAlarm < System.currentTimeMillis();
+            boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis();
 
-            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), false)
                     && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
-                nextPumpDisconnectedAlarm = System.currentTimeMillis() + pumpUnreachableThreshold();
+                SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
+                SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
@@ -137,4 +135,16 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
+
+    static void initAlarmTimes() {
+        //shortens alarm times in case of setting changes or future data
+        long nextMissedReadingsAlarm = SP.getLong("nextMissedReadingsAlarm", 0l);
+        nextMissedReadingsAlarm = Math.min(System.currentTimeMillis() + missedReadingsThreshold(), nextMissedReadingsAlarm);
+        SP.putLong("nextMissedReadingsAlarm", nextMissedReadingsAlarm);
+
+        long nextPumpDisconnectedAlarm = SP.getLong("nextPumpDisconnectedAlarm", 0l);
+        nextPumpDisconnectedAlarm = Math.min(System.currentTimeMillis() + missedReadingsThreshold(), nextPumpDisconnectedAlarm);
+        SP.putLong("nextPumpDisconnectedAlarm", nextPumpDisconnectedAlarm);
+    }
+
 }

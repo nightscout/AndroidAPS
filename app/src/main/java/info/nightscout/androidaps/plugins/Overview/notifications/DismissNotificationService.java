@@ -19,6 +19,10 @@ public class DismissNotificationService extends IntentService {
         super(name);
     }
 
+    public DismissNotificationService(){
+        super("DismissNotificationService");
+    };
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         MainApp.bus().post(new EventDismissNotification(intent.getIntExtra("alertID", -1)));
