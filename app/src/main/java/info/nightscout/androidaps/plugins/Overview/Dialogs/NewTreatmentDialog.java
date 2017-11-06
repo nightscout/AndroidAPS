@@ -51,6 +51,10 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
     private Handler mHandler;
 
+    //one shot guards
+    private boolean accepted;
+    private boolean okClicked;
+
     public NewTreatmentDialog() {
         HandlerThread mHandlerThread = new HandlerThread(NewTreatmentDialog.class.getSimpleName());
         mHandlerThread.start();
@@ -109,10 +113,15 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     }
 
     @Override
-    public void onClick(View view) {
+    public synchronized void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
-
+                if (okClicked){
+                    log.debug("guarding: ok already clicked");
+                    dismiss();
+                    return;
+                }
+                okClicked = true;
                 try {
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
@@ -132,43 +141,50 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
                     final Context context = getContext();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                final PumpInterface pump = MainApp.getConfigBuilder();
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                        if (finalInsulinAfterConstraints == 0)
-                                            detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
-                                        if (finalCarbsAfterConstraints == 0)
-                                            detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                        detailedBolusInfo.context = context;
-                                        detailedBolusInfo.source = Source.USER;
-                                        PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
-                                        if (!result.success) {
-                                            try {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                                builder.setMessage(result.comment);
-                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                                builder.show();
-                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                                // window has been destroyed
-                                                Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                                MainApp.bus().post(new EventNewNotification(notification));
+                            synchronized (builder) {
+                                if (accepted) {
+                                    log.debug("guarding: already accepted");
+                                    return;
+                                }
+                                accepted = true;
+                                if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                    final PumpInterface pump = MainApp.getConfigBuilder();
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                            if (finalInsulinAfterConstraints == 0)
+                                                detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
+                                            if (finalCarbsAfterConstraints == 0)
+                                                detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                            detailedBolusInfo.context = context;
+                                            detailedBolusInfo.source = Source.USER;
+                                            PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
+                                            if (!result.success) {
+                                                try {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                                    builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                    builder.setMessage(result.comment);
+                                                    builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                                    builder.show();
+                                                } catch (WindowManager.BadTokenException | NullPointerException e) {
+                                                    // window has been destroyed
+                                                    Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                                    MainApp.bus().post(new EventNewNotification(notification));
+                                                }
                                             }
                                         }
-                                    }
-                                });
-                                Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                                    });
+                                    Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                                }
                             }
                         }
                     });
