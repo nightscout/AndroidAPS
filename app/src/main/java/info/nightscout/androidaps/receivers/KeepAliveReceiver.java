@@ -160,7 +160,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         SP.putLong("nextMissedReadingsAlarm", nextMissedReadingsAlarm);
 
         long nextPumpDisconnectedAlarm = SP.getLong("nextPumpDisconnectedAlarm", 0l);
-        nextPumpDisconnectedAlarm = Math.min(System.currentTimeMillis() + missedReadingsThreshold(), nextPumpDisconnectedAlarm);
+        nextPumpDisconnectedAlarm = Math.min(System.currentTimeMillis() + pumpUnreachableThreshold(), nextPumpDisconnectedAlarm);
         SP.putLong("nextPumpDisconnectedAlarm", nextPumpDisconnectedAlarm);
     }
 
