@@ -27,6 +27,6 @@ public class DismissNotificationService extends IntentService {
     public static PendingIntent deleteIntent(int id){
         Intent intent = new Intent(MainApp.instance(), DismissNotificationService.class);
         intent.putExtra("alertID", id);
-        return PendingIntent.getService(MainApp.instance(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(MainApp.instance(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }
