@@ -9,9 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +48,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
 
-        initAlarmTimes();
+        shortenSnoozeInterval();
         checkBg();
         checkPump();
 
@@ -117,6 +115,10 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     }
 
     public void setAlarm(Context context) {
+
+        shortenSnoozeInterval();
+        presnoozeAlarms();
+
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, KeepAliveReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
@@ -128,6 +130,18 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.keepAliveMsecs, pi);
     }
 
+    /*Presnoozes the alarms with 5 minutes if no snooze exists.
+     * Call only at startup!
+     */
+    public void presnoozeAlarms() {
+        if(SP.getLong("nextMissedReadingsAlarm", 0l) < System.currentTimeMillis()){
+            SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + 5*60*1000);
+        }
+        if(SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis()){
+            SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + 5*60*1000);
+        }
+    }
+
     public void cancelAlarm(Context context) {
         Intent intent = new Intent(context, KeepAliveReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -135,7 +149,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         alarmManager.cancel(sender);
     }
 
-    static void initAlarmTimes() {
+    static void shortenSnoozeInterval() {
         //shortens alarm times in case of setting changes or future data
         long nextMissedReadingsAlarm = SP.getLong("nextMissedReadingsAlarm", 0l);
         nextMissedReadingsAlarm = Math.min(System.currentTimeMillis() + missedReadingsThreshold(), nextMissedReadingsAlarm);
