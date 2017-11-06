@@ -72,8 +72,7 @@
             android:key="short_tabtitles"
             android:title="@string/short_tabtitles"/>
     </PreferenceCategory>
-    <PreferenceCategory
-        android:key="others"
+    <PreferenceScreen
         android:title="@string/localalertsettings_title">
         <SwitchPreference
             android:defaultValue="false"
@@ -87,7 +86,7 @@
             android:inputType="number">
         </EditTextPreference>
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert"/>
         <EditTextPreference
@@ -97,9 +96,9 @@
             android:defaultValue="30"
             android:inputType="number">
         </EditTextPreference>
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="raise_urgent_alarms_as_android_notification"
-            android:title="@string/raise_urgent_alarms_as_android_notification"/>
-    </PreferenceCategory>
+    </PreferenceScreen>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/key_raise_notifications_as_android_notifications"
+        android:title="@string/raise_notifications_as_android_notifications"/>
 </PreferenceScreen>

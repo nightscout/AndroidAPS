@@ -82,11 +82,10 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
             boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis();
 
-            if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), false)
+            if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), true)
                     && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;
-                SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
                 SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
                 MainApp.bus().post(new EventNewNotification(n));
             } else if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {

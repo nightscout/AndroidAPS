@@ -21,7 +21,6 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
-import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.SP;
 
 /**
@@ -58,8 +57,7 @@ public class NotificationStore {
 
         store.add(n);
 
-        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_urgent_alarms_as_android_notification), false)
-                && n.level == Notification.URGENT) {
+        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_notifications_as_android_notifications), false)) {
             raiseSystemNotification(n);
         } else {
             if (n.soundId != null) {
@@ -69,11 +67,10 @@ public class NotificationStore {
             }
 
             //Only pipe through to wear if no system notification is raised (should show on wear anyways)
-            WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
+            /*WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
             if(wearPlugin!= null && wearPlugin.isEnabled()) {
                 wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
-            }
-
+            }*/
         }
 
         Collections.sort(store, new NotificationComparator());
@@ -91,9 +88,13 @@ public class NotificationStore {
                         .setContentTitle("Urgent alarm")
                         .setContentText(n.text)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setVibrate(new long[] { 1000, 1000, 1000, 1000})
-                        .setSound(sound, AudioAttributes.USAGE_ALARM)
                         .setDeleteIntent(DismissNotificationService.deleteIntent(n.id));
+        if (n.level == Notification.URGENT) {
+            notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000})
+                    .setSound(sound, AudioAttributes.USAGE_ALARM);
+        } else {
+            notificationBuilder.setVibrate(new long[]{0, 100, 50, 100, 50});
+        }
         mgr.notify(n.id, notificationBuilder.build());
     }
 
