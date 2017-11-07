@@ -28,6 +28,6 @@ class ComboPump {
     volatile BasalProfile basalProfile;
     @NonNull
     volatile PumpHistory history = new PumpHistory();
-    /** Time the active TBR was set (if any) */
+    /** Time the active TBR was set (if any). Needed to calculate remaining time in fragment */
     long tbrSetTime;
 }

@@ -536,6 +536,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
 
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        checkForTbrMismatch();
 
         if (activeTemp == null || userRequested) {
             /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
@@ -575,6 +576,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // TODO properly check pumpstate to confirm cancellation
+        PumpState state = commandResult.state;
+        if (!state.tbrActive && state.tbrPercent == percent
+                && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
 
 
         if (tempBasal != null) {
@@ -668,6 +672,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     // TODO rename to checkState or so and also check time (& date) of pump
+    // implicit param 'pump'
     private void checkForTbrMismatch() {
         // detectTbrMismatch(): 'quick' check with no overhead on the pump side
         // TODO check if this works with pump suspend, esp. around pump suspend there'll be syncing to do;
