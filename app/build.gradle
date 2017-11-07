@@ -154,7 +154,6 @@ dependencies {
         exclude group: 'com.google.android', module: 'android'
     }
     compile 'org.apache.commons:commons-lang3:3.6'
-    compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'com.jjoe64:graphview:4.0.1'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
