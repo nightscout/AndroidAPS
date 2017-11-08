@@ -24,6 +24,7 @@ import de.jotomo.ruffy.spi.history.Bolus;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
+import info.nightscout.utils.DateUtil;
 
 // TODO clean up time/date formatting once this stabilizes a bit more
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
@@ -38,8 +39,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView tempBasalText;
 
     private Button refresh;
-
-    private PrettyTime prettyTime = new PrettyTime();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +95,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 ComboPlugin plugin = ComboPlugin.getPlugin();
 
                 // state
-                stateView.setText(plugin.getStateSummary());
+                stateView.setText(plugin.getStateSummary()); // todo: inline, coupled with colour
                 PumpState ps = plugin.getPump().state;
                 if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY) {
                     stateView.setTextColor(Color.RED);
@@ -118,9 +117,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     } else if (ps.batteryState == PumpState.LOW) {
                         batteryView.setText("{fa-battery-quarter}");
                         batteryView.setTextColor(Color.YELLOW);
-                    } else if (ps.batteryState == PumpState.UNKNOWN) {
-                        batteryView.setText("");
-                        batteryView.setTextColor(Color.YELLOW);
                     } else {
                         batteryView.setText("{fa-battery-full}");
                         batteryView.setTextColor(Color.WHITE);
@@ -138,19 +134,22 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
 
                     // last connection
-                    String timeAgo = StringUtils.capitalize(prettyTime.format(new Date(plugin.getPump().lastSuccessfulConnection)));
+                    String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulConnection);
                     if (plugin.getPump().lastSuccessfulConnection == 0) {
                         lastConnectionView.setText(R.string.combo_pump_never_connected);
-                        lastConnectionView.setTextColor(Color.RED);
+                        lastConnectionView.setTextColor(Color.YELLOW);
+                    } else if (plugin.getPump().lastSuccessfulConnection + 60 * 1000 > System.currentTimeMillis()) {
+                        lastConnectionView.setText(R.string.combo_pump_connected_now);
+                        lastConnectionView.setTextColor(Color.WHITE);
                     } else if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() - 30 * 60 * 1000) {
-//                        lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
+                        lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
                         lastConnectionView.setTextColor(Color.RED);
                     } else if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
-                        String lastFailed = timeAgo + "\n" + getString(R.string.combo_connect_attempt_failed);
+                        String lastFailed = minAgo + "\n" + getString(R.string.combo_connect_attempt_failed);
                         lastConnectionView.setText(lastFailed);
                         lastConnectionView.setTextColor(Color.YELLOW);
                     } else {
-                        lastConnectionView.setText(timeAgo);
+                        lastConnectionView.setText(minAgo);
                         lastConnectionView.setTextColor(Color.WHITE);
                     }
 
@@ -160,12 +159,17 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                         double bolusMinAgo = agoMsc / 60d / 1000d;
                         double bolusHoursAgo = agoMsc / 60d / 60d / 1000d;
-                        lastBolusView.setText(String.format("%.1f U (", bolus.amount) + prettyTime.format(new Date(bolus.timestamp)) + ")");
-//                        lastBolusView.setText(getString(R.string.combo_last_bolus,
-//                                bolus.amount,
-//                                bolusMinAgo < 60 ? bolusMinAgo : bolusHoursAgo,
-//                                bolusMinAgo < 60 ? getString(R.string.minago) : getString(R.string.hoursago),
-//                                DateUtil.timeString(bolus.timestamp)));
+                        if ((agoMsc < 60 * 1000)) {
+                            lastBolusView.setText(String.format("%.1f U (now)", bolus.amount, (int) bolusMinAgo));
+                        } else if (bolusMinAgo < 60) {
+                            lastBolusView.setText(String.format("%.1f U (%d min ago)", bolus.amount, (int) bolusMinAgo));
+//                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,
+//                                    getString(R.string.minago, bolusMinAgo), DateUtil.timeString(bolus.timestamp)));
+                        } else {
+                            lastBolusView.setText(String.format("%.1f U (%.1f h ago)", bolus.amount, bolusHoursAgo));
+//                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,
+//                                    String.format("%.1f", bolusHoursAgo) + getString(R.string.hoursago), DateUtil.timeString(bolus.timestamp)));
+                        }
                     } else {
                         lastBolusView.setText("");
                     }
@@ -177,8 +181,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         long remaining = ps.tbrRemainingDuration - minSinceRead;
                         if (remaining >= 0) {
                             tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
-                            tbrStr = ps.tbrPercent + "% (" + prettyTime.formatDuration(new Date(System.currentTimeMillis() + remaining * 60 * 1000)) + " remaining)";
-                            tbrStr = ps.tbrPercent + "% (" + prettyTime.format(new Date(System.currentTimeMillis() + remaining * 60 * 1000)) + " remaining)";
                         }
                     }
                     tempBasalText.setText(tbrStr);

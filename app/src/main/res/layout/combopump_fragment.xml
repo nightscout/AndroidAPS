@@ -95,6 +95,7 @@
                     android:gravity="start"
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
+                    android:text=""
                     android:textSize="20sp" />
 
             </LinearLayout>

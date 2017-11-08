@@ -770,9 +770,9 @@
     <string name="combo_pump_activity">Activity</string>
     <string name="combo_no_pump_connection">No connection for %s</string>
     <string name="combo_connect_attempt_failed">Last connect attempt failed</string>
-    <string name="combo_last_connection_time">%s (%s)</string>
+    <string name="combo_last_connection_time">%s</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
-    <string name="combo_last_bolus">%.1f U (%.1f %s, %s)</string>
+    <string name="combo_last_bolus">%.1f U (%s, %s)</string>
     <string name="combo_pump_state_disconnected">Pump disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
@@ -800,5 +800,7 @@
     <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
     <string name="combo_force_disabled">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours or the selected basal rate is not 1. Loop mode has been disabled until 6 hours after the last unsupported bolus or basal rate profile. Only normal boluses are supported in loop mode with basal rate profile 1.</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
+    <string name="combo_pump_state_initializing">Initializing</string>
+    <string name="combo_pump_connected_now">Now</string>
 </resources>
 
