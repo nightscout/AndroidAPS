@@ -17,6 +17,7 @@ import de.jotomo.ruffy.spi.history.PumpError;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 
+// Note: TBRs are added to history only after they've completed running
 public class ReadHistoryCommand extends BaseCommand {
     private static Logger log = LoggerFactory.getLogger(ReadHistoryCommand.class);
 

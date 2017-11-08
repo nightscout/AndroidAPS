@@ -32,11 +32,6 @@ public class CommandResult {
     @Nullable
     public Bolus lastBolus;
 
-    public long pumpTime;
-
-    public CommandResult() {
-    }
-
     public CommandResult success(boolean success) {
         this.success = success;
         return this;

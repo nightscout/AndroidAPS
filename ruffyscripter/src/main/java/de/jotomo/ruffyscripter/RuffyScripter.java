@@ -43,6 +43,7 @@ import de.jotomo.ruffyscripter.commands.ReadHistoryCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadReservoirLevelAndLastBolus;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
+import de.jotomo.ruffyscripter.commands.SetDateAndTimeCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 
 /**
@@ -723,8 +724,8 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult readBasalProfile(int number) {
-        return runCommand(new ReadBasalProfileCommand(number));
+    public CommandResult readBasalProfile() {
+        return runCommand(new ReadBasalProfileCommand());
     }
 
     @Override
@@ -738,9 +739,8 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult setDateAndTime(Date date) {
-        // TODO
-        return new CommandResult().success(false);
+    public CommandResult setDateAndTime() {
+        return runCommand(new SetDateAndTimeCommand());
     }
 
     @Override

@@ -1,7 +1,5 @@
 package de.jotomo.ruffy.spi;
 
-import java.util.Date;
-
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 
 public interface RuffyCommands {
@@ -35,13 +33,13 @@ public interface RuffyCommands {
      * what types of data and how far back data is returned. */
     CommandResult readHistory(PumpHistoryRequest request);
 
-    CommandResult readBasalProfile(int number);
+    CommandResult readBasalProfile();
 
     CommandResult setBasalProfile(BasalProfile basalProfile);
 
     CommandResult getDateAndTime();
 
-    CommandResult setDateAndTime(Date date);
+    CommandResult setDateAndTime();
 
     // TODO below methods are drafts
     void requestPairing();

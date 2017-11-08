@@ -79,8 +79,8 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
-    public CommandResult readBasalProfile(int number) {
-        return delegate.readBasalProfile(number);
+    public CommandResult readBasalProfile() {
+        return delegate.readBasalProfile();
     }
 
     @Override
@@ -89,8 +89,8 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
-    public CommandResult setDateAndTime(Date date) {
-        return delegate.setDateAndTime(date);
+    public CommandResult setDateAndTime() {
+        return delegate.setDateAndTime();
     }
 
     @Override
