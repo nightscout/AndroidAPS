@@ -1,6 +1,5 @@
 package info.nightscout.androidaps;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -23,7 +22,6 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
@@ -72,7 +70,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     }
 
     private static void updatePrefSummary(Preference pref) {
-        if (pref instanceof ListPreference || pref instanceof BluetoothDevicePreference) {
+        if (pref instanceof ListPreference) {
             ListPreference listPref = (ListPreference) pref;
             pref.setSummary(listPref.getEntry());
         }
@@ -85,7 +83,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().toString().trim())) {
+            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {
                 pref.setSummary(MainApp.sResources.getString(R.string.smscommunicator_allowednumbers_summary));
             }
         }
@@ -123,6 +121,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            if (savedInstanceState != null && savedInstanceState.containsKey("id")) {
+                id = savedInstanceState.getInt("id");
+            }
 
             if (id != -1) {
                 addPreferencesFromResource(id);
@@ -184,6 +186,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
 
             initSummary(getPreferenceScreen());
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putInt("id", id);
         }
 
         public Preference getPreference(String key) {
