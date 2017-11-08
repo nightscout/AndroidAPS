@@ -46,7 +46,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myPreferenceFragment = new MyPreferenceFragment();
-        myPreferenceFragment.setCaller(getIntent());
+        Bundle args = new Bundle();
+        args.putInt("id", getIntent().getIntExtra("id", -1));
+        myPreferenceFragment.setArguments(args);
         getFragmentManager().beginTransaction().replace(android.R.id.content, myPreferenceFragment).commit();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
@@ -105,10 +107,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment {
-        Intent caller;
+        private Integer id;
 
-        public void setCaller(Intent i) {
-            caller = i;
+        @Override
+        public void setArguments(Bundle args) {
+            super.setArguments(args);
+            id = args.getInt("id");
         }
 
         void addPreferencesFromResourceIfEnabled(PluginBase p, int type) {
@@ -119,8 +123,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
-            Integer id = caller.getIntExtra("id", -1);
 
             if (id != -1) {
                 addPreferencesFromResource(id);
