@@ -750,5 +750,6 @@
     <string name="waitingforestimatedbolusend" formatted="false">Waiting for bolus end. Remaining %d sec.</string>
     <string name="processinghistory">Processing event</string>
     <string name="startingbolus">Starting bolus delivery</string>
+    <string name="executingrightnow">Command is executed right now</string>
 </resources>
 
