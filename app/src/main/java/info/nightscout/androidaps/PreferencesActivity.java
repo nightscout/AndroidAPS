@@ -113,7 +113,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void setArguments(Bundle args) {
             super.setArguments(args);
-            id = args.getInt("key");
+            id = args.getInt("id");
         }
 
         void addPreferencesFromResourceIfEnabled(PluginBase p, int type) {
