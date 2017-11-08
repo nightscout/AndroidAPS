@@ -29,6 +29,7 @@ public class CommandResult {
 
     public int reservoirLevel = -1;
 
+    @Nullable
     public Bolus lastBolus;
 
     public long pumpTime;

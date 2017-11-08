@@ -26,7 +26,6 @@ public interface PumpInterface {
     int setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
-    @NonNull
     Date lastDataTime();
     void refreshDataFromPump(String reason);
 

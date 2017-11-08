@@ -52,6 +52,7 @@ import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
 public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
+    private static ComboPlugin plugin = null;
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = false;
 
@@ -62,8 +63,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     // TODO access to pump (and its members) is chaotic and needs an update
     private static ComboPump pump = new ComboPump();
-
-    private static ComboPlugin plugin = null;
 
     private volatile boolean bolusInProgress;
     private volatile boolean cancelBolus;
@@ -204,7 +203,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isBusy() {
-        return ruffyScripter.isPumpBusy() && !pump.state.suspended;
+        return ruffyScripter.isPumpBusy();
     }
 
     @Override
@@ -231,10 +230,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public synchronized void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
         if (!pump.initialized) {
-            // TODO reading profile
             long maxWait = System.currentTimeMillis() + 15 * 1000;
             while (!ruffyScripter.isPumpAvailable()) {
-                log.debug("Waiting for ruffy service to be connected ...");
+                log.debug("Waiting for ruffy service to come up ...");
                 SystemClock.sleep(100);
                 if (System.currentTimeMillis() > maxWait) {
                     log.debug("ruffy service unavailable, wtf");
@@ -243,15 +241,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
+        // TODO reading profile, set clock; periodically and forced at startup (by setting/having profile/stateLastRead be 0
         CommandResult result = runCommand("Refreshing", 3, ruffyScripter::readReservoirLevelAndLastBolus);
         updateLocalData(result);
+        if (result.success)
+            pump.initialized = true;
 
         // TODO fuse the below into 'sync'? or make checkForTbrMismatch jut a trigger to issue a sync if needed; don't run sync twice as is nice
 //        checkForTbrMismatch();
         checkPumpHistory();
         // checkPumpDate()
 
-        pump.initialized = true;
     }
 
     private void updateLocalData(CommandResult result) {
@@ -577,8 +577,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // TODO properly check pumpstate to confirm cancellation
         PumpState state = commandResult.state;
-        if (!state.tbrActive && state.tbrPercent == percent
-                && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
+//        if (!state.tbrActive && state.tbrPercent == percent
+//                && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
+//
+//        }
+
 
 
         if (tempBasal != null) {
