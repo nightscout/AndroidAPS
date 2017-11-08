@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.utils.SP;
@@ -119,9 +120,8 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         profile = new ProfileStore(newProfile.getData());
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
-        PumpInterface pump = MainApp.getConfigBuilder();
         if (SP.getBoolean("syncprofiletopump", false)) {
-            if (pump.setNewBasalProfile(MainApp.getConfigBuilder().getProfile()) == PumpInterface.SUCCESS) {
+            if (ConfigBuilderPlugin.getActivePump().setNewBasalProfile(MainApp.getConfigBuilder().getProfile()) == PumpInterface.SUCCESS) {
                 SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
                 if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
                     smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));

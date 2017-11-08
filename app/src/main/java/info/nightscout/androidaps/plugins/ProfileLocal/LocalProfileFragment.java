@@ -23,11 +23,11 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
@@ -59,8 +59,8 @@ public class LocalProfileFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     localProfilePlugin.storeSettings();
-                    if(basalView!=null){
-                        basalView.updateLabel(MainApp.sResources.getString(R.string.nsprofileview_basal_label)+ ": "+ getSumLabel());
+                    if (basalView != null) {
+                        basalView.updateLabel(MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel());
                     }
                 }
             };
@@ -91,12 +91,11 @@ public class LocalProfileFragment extends SubscriberFragment {
             mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
             icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label) + ":", getPlugin().ic, null, 0.1d, new DecimalFormat("0.0"), save);
             isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", getPlugin().isf, null, 0.1d, new DecimalFormat("0.0"), save);
-            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label)+ ": " + getSumLabel(), getPlugin().basal, null, 0.01d, new DecimalFormat("0.00"), save);
-            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label)+ ":", getPlugin().targetLow, getPlugin().targetHigh, 0.1d, new DecimalFormat("0.0"), save);
+            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), getPlugin().basal, null, 0.01d, new DecimalFormat("0.00"), save);
+            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label) + ":", getPlugin().targetLow, getPlugin().targetHigh, 0.1d, new DecimalFormat("0.0"), save);
             profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
 
-            PumpInterface pump = MainApp.getConfigBuilder();
-            if (!pump.getPumpDescription().isTempBasalCapable) {
+            if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
                 layout.findViewById(R.id.localprofile_basal).setVisibility(View.GONE);
             }
 
@@ -148,7 +147,7 @@ public class LocalProfileFragment extends SubscriberFragment {
 
     @NonNull
     public String getSumLabel() {
-        return " ∑" + DecimalFormatter.to2Decimal(localProfilePlugin.getProfile().getDefaultProfile().baseBasalSum()) +"U";
+        return " ∑" + DecimalFormatter.to2Decimal(localProfilePlugin.getProfile().getDefaultProfile().baseBasalSum()) + "U";
     }
 
     @Subscribe

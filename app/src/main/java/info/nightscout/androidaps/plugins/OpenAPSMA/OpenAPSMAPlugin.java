@@ -14,13 +14,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.DateUtil;
@@ -145,7 +145,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = MainApp.getConfigBuilder().getProfile();
-        PumpInterface pump = MainApp.getConfigBuilder();
 
         if (profile == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.noprofileselected)));
@@ -213,11 +212,11 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
-        if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
+        if (!checkOnlyHardLimits(ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
         start = new Date();
         try {
-            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), iobTotal, glucoseStatus, mealData);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

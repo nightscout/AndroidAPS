@@ -477,24 +477,22 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - bolusWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         bolusWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
-                        if (pumpInterface != null) {
-                            danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                            detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
-                            detailedBolusInfo.source = Source.USER;
-                            PumpEnactResult result = pumpInterface.deliverTreatment(detailedBolusInfo);
-                            if (result.success) {
-                                reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
-                                if (danaRPlugin != null)
-                                    reply += "\n" + danaRPlugin.shortStatus(true);
-                                lastRemoteBolusTime = new Date();
-                                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            } else {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
-                                if (danaRPlugin != null)
-                                    reply += "\n" + danaRPlugin.shortStatus(true);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            }
+                        danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
+                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                        detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
+                        detailedBolusInfo.source = Source.USER;
+                        PumpEnactResult result = pumpInterface.deliverTreatment(detailedBolusInfo);
+                        if (result.success) {
+                            reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
+                            if (danaRPlugin != null)
+                                reply += "\n" + danaRPlugin.shortStatus(true);
+                            lastRemoteBolusTime = new Date();
+                            sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        } else {
+                            reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
+                            if (danaRPlugin != null)
+                                reply += "\n" + danaRPlugin.shortStatus(true);
+                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                         }
                     } else if (tempBasalWaitingForConfirmation != null && !tempBasalWaitingForConfirmation.processed &&
                             tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - tempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {

@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
@@ -35,7 +35,6 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -586,10 +585,9 @@ public class ActionStringHandler {
         if(!SP.getBoolean("syncprofiletopump", false)){
             msg+= MainApp.sResources.getString(R.string.syncprofiletopump_title) + " " + MainApp.sResources.getString(R.string.cpp_sync_setting_missing) + "\n";
         }
-        final PumpInterface pump = MainApp.getConfigBuilder();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (pump == null || profile == null || profile.getBasal() == null){
+        if (profile == null || profile.getBasal() == null){
             msg+= MainApp.sResources.getString(R.string.cpp_notloadedplugins) +  "\n";
         }
         if(!"".equals(msg)) {
