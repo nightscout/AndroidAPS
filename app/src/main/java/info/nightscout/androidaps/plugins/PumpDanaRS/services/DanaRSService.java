@@ -130,7 +130,7 @@ public class DanaRSService extends Service {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
             bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
-            bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+            bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus, bolusStep, maxBolus
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
             bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
 
@@ -141,7 +141,6 @@ public class DanaRSService extends Service {
                 bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
                 bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // bolusStep, maxBolus
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
                 bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
                 bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
