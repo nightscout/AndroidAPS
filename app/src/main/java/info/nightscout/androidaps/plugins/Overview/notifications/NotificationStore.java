@@ -65,12 +65,6 @@ public class NotificationStore {
                 alarm.putExtra("soundid", n.soundId);
                 MainApp.instance().startService(alarm);
             }
-
-            //Only pipe through to wear if no system notification is raised (should show on wear anyways)
-            /*WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
-            if(wearPlugin!= null && wearPlugin.isEnabled()) {
-                wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
-            }*/
         }
 
         Collections.sort(store, new NotificationComparator());
