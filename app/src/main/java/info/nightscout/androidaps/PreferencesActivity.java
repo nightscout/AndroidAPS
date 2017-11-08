@@ -87,10 +87,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 pref.setSummary(MainApp.sResources.getString(R.string.smscommunicator_allowednumbers_summary));
             }
         }
-        if (pref instanceof MultiSelectListPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) pref;
-            pref.setSummary(editTextPref.getText());
-        }
     }
 
     public static void initSummary(Preference p) {
