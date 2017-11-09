@@ -219,12 +219,13 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         mDeviceName = SP.getString(R.string.key_danars_name, "");
     }
 
-    public static void connectIfNotConnected(String from) {
+    public void connectIfNotConnected(String from) {
         if (!isConnected())
             connect(from);
     }
 
-    public static void connect(String from) {
+    @Override
+    public void connect(String from) {
         log.debug("RS connect from: " + from);
         if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals("")) {
             final Object o = new Object();
@@ -249,15 +250,18 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         }
     }
 
-    public static boolean isConnected() {
+    @Override
+    public boolean isConnected() {
         return danaRSService != null && danaRSService.isConnected();
     }
 
-    public static boolean isConnecting() {
+    @Override
+    public boolean isConnecting() {
         return danaRSService != null && danaRSService.isConnecting();
     }
 
-    public static void disconnect(String from) {
+    @Override
+    public void disconnect(String from) {
         if (danaRSService != null) danaRSService.disconnect(from);
     }
 
@@ -383,30 +387,35 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public synchronized int setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
+        PumpEnactResult result = new PumpEnactResult();
+
         if (danaRSService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
-            return FAILED;
+            result.comment = "setNewBasalProfile sExecutionService is null";
+            return result;
         }
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return FAILED;
+            result.comment = MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet);
+            return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
-        connectIfNotConnected("updateBasalsInPump");
         if (!danaRSService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            disconnect("SetNewBasalProfile");
-            return FAILED;
+            result.comment = MainApp.sResources.getString(R.string.failedupdatebasalprofile);
+            return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            disconnect("SetNewBasalProfile");
-            return SUCCESS;
+            result.success = true;
+            result.enacted = true;
+            result.comment = "OK";
+            return result;
         }
     }
 

@@ -185,10 +185,30 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
-        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+    }
+
+    @Override
+    public void disconnect(String reason) {
+    }
+
+    @Override
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
         lastDataTime = new Date();
-        return SUCCESS;
+        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = true;
+        return result;
     }
 
     @Override

@@ -52,6 +52,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogr
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
@@ -78,6 +79,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     private static ArrayList<PluginBase> pluginList;
 
     private PowerManager.WakeLock mWakeLock;
+
+    private static CommandQueue commandQueue = new CommandQueue();
 
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
@@ -195,6 +198,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
         }
         verifySelectionInCategories();
+    }
+
+    public static CommandQueue getCommandQueue() {
+        return commandQueue;
     }
 
     public static BgSourceInterface getActiveBgSource() {
@@ -384,7 +391,34 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
+    public boolean isConnected() {
+        if (activePump != null)
+            return activePump.isConnected();
+        return false;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        if (activePump != null)
+            return activePump.isConnecting();
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+        if (activePump != null)
+            activePump.connect(reason);
+    }
+
+    @Override
+    public void disconnect(String reason) {
+        if (activePump != null)
+            activePump.disconnect(reason);
+    }
+
+    @Override
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
+        PumpEnactResult result = new PumpEnactResult();
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
 
@@ -392,7 +426,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             if (basalValues[index].value < getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
-                return FAILED;
+                result.success = false;
+                result.comment = MainApp.sResources.getString(R.string.basalvaluebelowminimum);
+                return result;
             }
         }
 
@@ -400,11 +436,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         if (isThisProfileSet(profile)) {
             log.debug("Correct profile already set");
-            return NOT_NEEDED;
-        } else if (activePump != null) {
-            return activePump.setNewBasalProfile(profile);
+            result.success = true;
+            result.enacted = false;
+            return result;
         } else
-            return SUCCESS;
+            return activePump.setNewBasalProfile(profile);
     }
 
     @Override

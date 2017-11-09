@@ -130,9 +130,29 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+    }
+
+    @Override
+    public void disconnect(String reason) {
+    }
+
+    @Override
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        return SUCCESS;
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = true;
+        return result;
     }
 
     @Override

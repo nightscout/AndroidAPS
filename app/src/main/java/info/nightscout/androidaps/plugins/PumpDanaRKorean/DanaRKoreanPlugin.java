@@ -247,27 +247,35 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     // Pump interface
     @Override
-    public int setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
+        PumpEnactResult result = new PumpEnactResult();
+
         if (sExecutionService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
-            return FAILED;
+            result.comment = "setNewBasalProfile sExecutionService is null";
+            return result;
         }
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return FAILED;
+            result.comment = MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet);
+            return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return FAILED;
+            result.comment = MainApp.sResources.getString(R.string.failedupdatebasalprofile);
+            return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            return SUCCESS;
+            result.success = true;
+            result.enacted = true;
+            result.comment = "OK";
+            return result;
         }
     }
 
@@ -299,7 +307,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public void refreshDataFromPump(String reason) {
         if (!isConnected() && !isConnecting()) {
-            doConnect(reason);
+            connect(reason);
         }
     }
 
@@ -353,7 +361,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
-            doConnect("setTempBasalAbsolute old data");
+            connect("setTempBasalAbsolute old data");
         }
 
         PumpEnactResult result = new PumpEnactResult();
@@ -650,7 +658,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         }
     }
 
-    public static void doConnect(String from) {
+    @Override
+    public void connect(String from) {
         if (sExecutionService != null) {
             sExecutionService.connect(from);
             pumpDescription.basalStep = pump.basalStep;
@@ -658,15 +667,18 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         }
     }
 
-    public static boolean isConnected() {
+    @Override
+    public boolean isConnected() {
         return sExecutionService != null && sExecutionService.isConnected();
     }
 
-    public static boolean isConnecting() {
+    @Override
+    public boolean isConnecting() {
         return sExecutionService != null && sExecutionService.isConnecting();
     }
 
-    public static void doDisconnect(String from) {
+    @Override
+    public void disconnect(String from) {
         if (sExecutionService != null) sExecutionService.disconnect(from);
     }
 

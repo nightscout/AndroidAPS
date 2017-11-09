@@ -32,7 +32,7 @@ public class MsgCheckValue extends MessageBase {
         pump.productCode = intFromBuff(bytes, 2, 1);
         if (pump.model != DanaRPump.EXPORT_MODEL) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
-            ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).doDisconnect("Wrong Model");
+            ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).disconnect("Wrong Model");
             log.debug("Wrong model selected");
         }
 

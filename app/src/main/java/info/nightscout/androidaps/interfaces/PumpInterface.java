@@ -16,12 +16,14 @@ public interface PumpInterface {
     boolean isInitialized();
     boolean isSuspended();
     boolean isBusy();
+    boolean isConnected();
+    boolean isConnecting();
+
+    void connect(String reason);
+    void disconnect(String reason);
 
     // Upload to pump new basal profile
-    int SUCCESS = 0;
-    int FAILED = 1;
-    int NOT_NEEDED = 2;
-    int setNewBasalProfile(Profile profile);
+    PumpEnactResult setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
     Date lastDataTime();

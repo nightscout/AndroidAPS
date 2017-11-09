@@ -37,13 +37,13 @@ public class MsgCheckValue_v2 extends MessageBase {
         pump.productCode = intFromBuff(bytes, 2, 1);
         if (pump.model != DanaRPump.EXPORT_MODEL) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
-            DanaRv2Plugin.doDisconnect("Wrong Model");
+            DanaRv2Plugin.getPlugin().disconnect("Wrong Model");
             log.debug("Wrong model selected");
         }
 
         if (pump.protocol != 2) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
-            DanaRKoreanPlugin.doDisconnect("Wrong Model");
+            DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to non APS DanaR");
             (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentEnabled(PluginBase.PUMP, false);
             (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentVisible(PluginBase.PUMP, false);

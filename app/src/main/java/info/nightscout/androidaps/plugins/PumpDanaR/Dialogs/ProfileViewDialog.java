@@ -77,11 +77,11 @@ public class ProfileViewDialog extends DialogFragment {
                     public void run() {
                         DanaRPump.getInstance().lastSettingsRead = new Date(0);
                         if (MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PUMP))
-                            DanaRPlugin.doConnect("ProfileViewDialog");
+                            DanaRPlugin.getPlugin().connect("ProfileViewDialog");
                         if (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP))
-                            DanaRKoreanPlugin.doConnect("ProfileViewDialog");
+                            DanaRKoreanPlugin.getPlugin().connect("ProfileViewDialog");
                         if (MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginBase.PUMP))
-                            DanaRv2Plugin.doConnect("ProfileViewDialog");
+                            DanaRv2Plugin.getPlugin().connect("ProfileViewDialog");
                     }
                 });
                 dismiss();

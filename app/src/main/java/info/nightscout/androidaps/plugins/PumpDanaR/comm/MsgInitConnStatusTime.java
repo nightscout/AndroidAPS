@@ -26,7 +26,7 @@ public class MsgInitConnStatusTime extends MessageBase {
     public void handleMessage(byte[] bytes) {
         if (bytes.length - 10 > 7) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
-            ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).doDisconnect("Wrong Model");
+            ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to Korean DanaR");
             MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentEnabled(PluginBase.PUMP, true);
             MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginBase.PUMP, true);

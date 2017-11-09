@@ -10,8 +10,6 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.SystemClock;
 
 import com.cozmo.danar.util.BleCommandUtil;
@@ -33,7 +31,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
-import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingProgressDialog;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
@@ -70,19 +67,6 @@ public class BLEComm {
     private DanaRS_Packet processsedMessage = null;
     private ArrayList<byte[]> mSendQueue = new ArrayList<>();
 
-    // Variables for connection progress (elapsed time)
-    private Handler sHandler;
-    private HandlerThread sHandlerThread;
-    private long connectionStartTime = 0;
-    private final Runnable updateProgress = new Runnable() {
-        @Override
-        public void run() {
-            long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
-            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
-            sHandler.postDelayed(updateProgress, 1000);
-        }
-    };
-
     private BluetoothManager mBluetoothManager = null;
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothDevice mBluetoothDevice = null;
@@ -101,12 +85,6 @@ public class BLEComm {
     BLEComm(DanaRSService service) {
         this.service = service;
         initialize();
-
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(PairingProgressDialog.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
     }
 
     private boolean initialize() {
@@ -160,9 +138,6 @@ public class BLEComm {
             return false;
         }
 
-        connectionStartTime = System.currentTimeMillis();
-
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING));
         isConnecting = true;
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -171,7 +146,6 @@ public class BLEComm {
             return false;
         }
 
-        sHandler.post(updateProgress);
         mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
         log.debug("Trying to create a new connection.");
@@ -183,7 +157,6 @@ public class BLEComm {
 
     public void stopConnecting() {
         isConnecting = false;
-        sHandler.removeCallbacks(updateProgress); // just to be sure
     }
 
     public void disconnect(String from) {
@@ -234,7 +207,6 @@ public class BLEComm {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 close();
                 isConnected = false;
-                sHandler.removeCallbacks(updateProgress); // just to be sure
                 MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
                 log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
             }
@@ -248,8 +220,6 @@ public class BLEComm {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic();
             }
-            // stop sending connection progress
-            sHandler.removeCallbacks(updateProgress);
             SendPumpCheck();
             // 1st message sent to pump after connect
         }

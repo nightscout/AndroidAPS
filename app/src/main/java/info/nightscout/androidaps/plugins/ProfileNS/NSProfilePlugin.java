@@ -121,14 +121,13 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
         if (SP.getBoolean("syncprofiletopump", false)) {
-            if (ConfigBuilderPlugin.getActivePump().setNewBasalProfile(MainApp.getConfigBuilder().getProfile()) == PumpInterface.SUCCESS) {
+            if (ConfigBuilderPlugin.getActivePump().setNewBasalProfile(MainApp.getConfigBuilder().getProfile()).enacted == true) {
                 SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
                 if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
                     smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
                 }
             }
         }
-
     }
 
     private static void storeNSProfile() {
