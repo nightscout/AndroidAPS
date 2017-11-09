@@ -576,7 +576,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // TODO properly check fake neutral temp is active
 //            if (!commandResult.state.tbrActive) {
-             if (commandResult.success) {
+            if (commandResult.success) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
                 tempBasal.durationInMinutes = 15;
                 tempBasal.source = Source.USER;
@@ -586,7 +586,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // TODO properly check pumpstate to confirm cancellation
-        PumpState state = commandResult.state;
+//        PumpState state = commandResult.state;
 //        if (!state.tbrActive && state.tbrPercent == percent
 //                && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
 //
