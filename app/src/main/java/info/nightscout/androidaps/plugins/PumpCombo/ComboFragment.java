@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ocpsoft.prettytime.PrettyTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

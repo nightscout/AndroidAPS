@@ -802,5 +802,6 @@
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
     <string name="combo_pump_state_initializing">Initializing</string>
     <string name="combo_pump_connected_now">Now</string>
+    <string name="pump_history">pump history</string>
 </resources>
 
