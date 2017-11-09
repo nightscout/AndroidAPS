@@ -146,7 +146,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return MainApp.sResources.getString(R.string.combo_pump_state_suspended_due_to_error);
         else if (ps.suspended)
             return MainApp.sResources.getString(R.string.combo_pump_state_suspended_by_user);
-        return MainApp.sResources.getString(R.string.combo_pump_state_normal);
+        return MainApp.sResources.getString(R.string.combo_pump_state_running);
     }
 
     @Override
@@ -574,7 +574,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
             commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, () -> ruffyScripter.setTbr(percentage, 15));
 
-            if (!commandResult.state.tbrActive) {
+            // TODO properly check fake neutral temp is active
+//            if (!commandResult.state.tbrActive) {
+             if (commandResult.success) {
                 tempBasal = new TemporaryBasal(System.currentTimeMillis());
                 tempBasal.durationInMinutes = 15;
                 tempBasal.source = Source.USER;
@@ -807,7 +809,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private void syncHistory(final PumpHistoryRequest request) {
-        CommandResult result = runCommand("Syncing pump history", 3, () -> ruffyScripter.readHistory(request));
+        CommandResult result = runCommand(MainApp.sResources.getString(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         if (!result.success) {
             // TODO
         }
