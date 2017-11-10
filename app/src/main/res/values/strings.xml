@@ -776,7 +776,7 @@
     <string name="combo_pump_state_disconnected">Pump disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
-    <string name="combo_pump_state_normal">Normal</string>
+    <string name="combo_pump_state_running">Running</string>
     <string name="combo_pump_action_checking_history">Checking pump history</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
     <string name="combo_pump_action_setting_tbr">Setting TBR</string>
@@ -802,6 +802,7 @@
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
     <string name="combo_pump_state_initializing">Initializing</string>
     <string name="combo_pump_connected_now">Now</string>
+    <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="pump_history">pump history</string>
 </resources>
 
