@@ -584,7 +584,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Basal set correctly");
             }
-        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < getPumpDescription().basalStep) {
+        } else if (isTempBasalInProgress()
+                && getTempBasalRemainingMinutesFromHistory() > 5
+                && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < getPumpDescription().basalStep) {
             result = new PumpEnactResult();
             result.absolute = getTempBasalAbsoluteRateHistory();
             result.duration = getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes();
