@@ -26,7 +26,7 @@ public interface RuffyCommands {
     /** Read the state of the pump, which encompasses all information displayed on the main menu. */
     CommandResult readPumpState();
 
-    /** Read revervoir level and last bolus via Quick Info */
+    /** Read reservoir level and last bolus via Quick Info */
     CommandResult readReservoirLevelAndLastBolus();
 
     /** Reads pump history via the My Data menu. The {@link PumpHistoryRequest} specifies
