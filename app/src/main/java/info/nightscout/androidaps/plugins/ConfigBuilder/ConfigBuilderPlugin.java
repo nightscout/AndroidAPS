@@ -417,6 +417,18 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    public void stopConnecting() {
+        if (activePump != null)
+            activePump.stopConnecting();
+    }
+
+    @Override
+    public void getPumpStatus() {
+        if (activePump != null)
+            activePump.getPumpStatus();
+    }
+
+    @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
         PumpEnactResult result = new PumpEnactResult();
         // Compare with pump limits
@@ -455,12 +467,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (activePump != null)
             return activePump.lastDataTime();
         else return new Date();
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        if (activePump != null)
-            activePump.refreshDataFromPump(reason);
     }
 
     @Override

@@ -601,12 +601,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.overview_pumpstatus:
                 if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
-                        }
-                    });
+                    ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
                 break;
         }
 

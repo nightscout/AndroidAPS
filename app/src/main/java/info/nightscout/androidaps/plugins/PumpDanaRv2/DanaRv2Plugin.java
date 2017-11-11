@@ -290,13 +290,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     @Override
-    public void refreshDataFromPump(String reason) {
-        if (!isConnected() && !isConnecting()) {
-            connect(reason);
-        }
-    }
-
-    @Override
     public double getBaseBasalRate() {
         return pump.currentBasal;
     }
@@ -630,6 +623,16 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     @Override
+    public void stopConnecting() {
+        // TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    }
+
+    @Override
+    public void getPumpStatus() {
+        // TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    }
+
+    @Override
     public JSONObject getJSONStatus() {
         if (pump.lastConnection.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
@@ -692,7 +695,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
      */
 
     @Override
-    public boolean loadHistory(byte type) {
+    public PumpEnactResult loadHistory(byte type) {
         return sExecutionService.loadHistory(type);
     }
 

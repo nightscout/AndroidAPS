@@ -196,10 +196,21 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void connect(String reason) {
+        if (!BuildConfig.NSCLIENTOLNY)
+            NSUpload.uploadDeviceStatus();
+        lastDataTime = new Date();
     }
 
     @Override
     public void disconnect(String reason) {
+    }
+
+    @Override
+    public void stopConnecting() {
+    }
+
+    @Override
+    public void getPumpStatus() {
     }
 
     @Override
@@ -219,13 +230,6 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public Date lastDataTime() {
         return lastDataTime;
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        if (!BuildConfig.NSCLIENTOLNY)
-            NSUpload.uploadDeviceStatus();
-        lastDataTime = new Date();
     }
 
     @Override

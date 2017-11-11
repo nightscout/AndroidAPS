@@ -21,13 +21,15 @@ public interface PumpInterface {
 
     void connect(String reason);
     void disconnect(String reason);
+    void stopConnecting();
+
+    void getPumpStatus();
 
     // Upload to pump new basal profile
     PumpEnactResult setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
     Date lastDataTime();
-    void refreshDataFromPump(String reason);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
 

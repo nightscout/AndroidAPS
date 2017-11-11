@@ -148,6 +148,14 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public void stopConnecting() {
+    }
+
+    @Override
+    public void getPumpStatus() {
+    }
+
+    @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
@@ -163,11 +171,6 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     @Override
     public Date lastDataTime() {
         return new Date();
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        // do nothing
     }
 
     @Override

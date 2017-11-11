@@ -1,8 +1,9 @@
-package info.nightscout.androidaps.queue;
+package info.nightscout.androidaps.queue.commands;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -12,7 +13,7 @@ import info.nightscout.utils.DecimalFormatter;
 public class CommandBolus extends Command {
     DetailedBolusInfo detailedBolusInfo;
 
-    CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
+    public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
         commandType = CommandType.BOLUS;
         this.detailedBolusInfo = detailedBolusInfo;
         this.callback = callback;
@@ -20,7 +21,7 @@ public class CommandBolus extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().deliverTreatment(detailedBolusInfo);
+        PumpEnactResult r = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
         if (callback != null)
             callback.result(r).run();
     }

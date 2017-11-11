@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -122,7 +123,7 @@ public class DanaRSService extends Service {
         bleComm.sendMessage(message);
     }
 
-    protected boolean getPumpStatus() {
+    public void getPumpStatus() {
         try {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpstatus)));
 
@@ -172,10 +173,10 @@ public class DanaRSService extends Service {
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        return true;
+        log.debug("Pump status loaded");
     }
 
-    public boolean loadEvents() {
+    public void loadEvents() {
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
             msg = new DanaRS_Packet_APS_History_Events(0);
@@ -189,7 +190,7 @@ public class DanaRSService extends Service {
             SystemClock.sleep(100);
         }
         lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded;
-        return true;
+        log.debug("Events loaded");
     }
 
 
@@ -358,8 +359,9 @@ public class DanaRSService extends Service {
         return true;
     }
 
-    public boolean loadHistory(byte type) {
-        if (!isConnected()) return false;
+    public PumpEnactResult loadHistory(byte type) {
+        PumpEnactResult result = new PumpEnactResult();
+        if (!isConnected()) return result;
         DanaRS_Packet_History_ msg = null;
         switch (type) {
             case RecordTypes.RECORD_TYPE_ALARM:
@@ -400,7 +402,9 @@ public class DanaRSService extends Service {
             SystemClock.sleep(200);
             bleComm.sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(0));
         }
-        return true;
+        result.success = true;
+        result.comment = "OK";
+        return result;
     }
 
 

@@ -168,16 +168,13 @@ public class MainApp extends Application {
 
         startKeepAliveService();
 
-        Thread t = new Thread(new Runnable() {
+       new Thread(new Runnable() {
             @Override
             public void run() {
                 SystemClock.sleep(5000);
-                PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump != null)
-                    pump.refreshDataFromPump("Initialization");
+                ConfigBuilderPlugin.getCommandQueue().readStatus("Initialization", null);
             }
-        });
-        t.start();
+        }).start();
 
     }
 

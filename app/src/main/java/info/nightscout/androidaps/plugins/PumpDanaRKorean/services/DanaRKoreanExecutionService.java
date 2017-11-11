@@ -27,6 +27,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -458,9 +459,10 @@ public class DanaRKoreanExecutionService extends Service {
         return true;
     }
 
-    public boolean loadHistory(byte type) {
+    public PumpEnactResult loadHistory(byte type) {
+        PumpEnactResult result = new PumpEnactResult();
         connect("loadHistory");
-        if (!isConnected()) return false;
+        if (!isConnected()) return result;
         MessageBase msg = null;
         switch (type) {
             case RecordTypes.RECORD_TYPE_ALARM:
@@ -500,7 +502,9 @@ public class DanaRKoreanExecutionService extends Service {
         }
         waitMsec(200);
         mSerialIOThread.sendMessage(new MsgPCCommStop());
-        return true;
+        result.success = true;
+        result.comment = "OK";
+        return result;
     }
 
     public boolean updateBasalsInPump(final Profile profile) {

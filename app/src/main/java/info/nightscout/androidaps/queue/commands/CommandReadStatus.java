@@ -1,25 +1,30 @@
-package info.nightscout.androidaps.queue;
+package info.nightscout.androidaps.queue.commands;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.queue.Callback;
 
 /**
  * Created by mike on 09.11.2017.
  */
 
 public class CommandReadStatus extends Command {
+    String reason;
 
-    CommandReadStatus(Callback callback) {
+    public CommandReadStatus(String reason, Callback callback) {
         commandType = CommandType.READSTATUS;
+        this.reason = reason;
         this.callback = callback;
     }
 
     @Override
     public void execute() {
-        // do nothing by default. Status is read on connection
+        MainApp.getConfigBuilder().getPumpStatus();
         if (callback != null)
             callback.result(null).run();
     }
 
     @Override
     public String status() {
-        return "READ STATUS";
+        return "READSTATUS " + reason;
     }
 }

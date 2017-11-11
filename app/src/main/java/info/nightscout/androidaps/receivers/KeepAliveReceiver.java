@@ -47,29 +47,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.setNewBasalProfile(profile);
-                    }
-                });
-                t.start();
+                MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
             } else if (isStatusOutdated && !pump.isBusy()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.refreshDataFromPump("KeepAlive. Status outdated.");
-                    }
-                });
-                t.start();
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
             } else if (isBasalOutdated && !pump.isBusy()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.refreshDataFromPump("KeepAlive. Basal outdated.");
-                    }
-                });
-                t.start();
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
             }
         }
 

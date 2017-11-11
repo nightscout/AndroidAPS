@@ -1,7 +1,8 @@
-package info.nightscout.androidaps.queue;
+package info.nightscout.androidaps.queue.commands;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.Callback;
 
 /**
  * Created by mike on 09.11.2017.
@@ -12,7 +13,7 @@ public class CommandTempBasalAbsolute extends Command {
     double absoluteRate;
     boolean enforceNew;
 
-    CommandTempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public CommandTempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
         commandType = CommandType.TEMPBASAL;
         this.absoluteRate = absoluteRate;
         this.durationInMinutes = durationInMinutes;
@@ -22,7 +23,7 @@ public class CommandTempBasalAbsolute extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalAbsolute(absoluteRate, durationInMinutes, enforceNew);
+        PumpEnactResult r = MainApp.getConfigBuilder().setTempBasalAbsolute(absoluteRate, durationInMinutes, enforceNew);
         if (callback != null)
             callback.result(r).run();
     }

@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.interfaces;
 
+import info.nightscout.androidaps.data.PumpEnactResult;
+
 /**
  * Created by mike on 12.06.2017.
  */
 
 public interface DanaRInterface {
-    boolean loadHistory(byte type);
+    PumpEnactResult loadHistory(byte type);
 }

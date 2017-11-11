@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.FragmentManager;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,12 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRStatsActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
+import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
@@ -38,11 +41,14 @@ import info.nightscout.utils.SetWarnColor;
 public class DanaRFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
-    private static Handler sHandler;
-    private static HandlerThread sHandlerThread;
-
     private Handler loopHandler = new Handler();
-    private Runnable refreshLoop = null;
+    private Runnable refreshLoop = new Runnable() {
+        @Override
+        public void run() {
+            updateGUI();
+            loopHandler.postDelayed(refreshLoop, 60 * 1000L);
+        }
+    };
 
     TextView lastConnectionView;
     TextView btConnectionView;
@@ -58,6 +64,7 @@ public class DanaRFragment extends SubscriberFragment {
     TextView basalStepView;
     TextView bolusStepView;
     TextView serialNumberView;
+    TextView queueView;
     Button viewProfileButton;
     Button historyButton;
     Button statsButton;
@@ -65,35 +72,19 @@ public class DanaRFragment extends SubscriberFragment {
     LinearLayout pumpStatusLayout;
     TextView pumpStatusView;
 
-    static Runnable connectRunnable = new Runnable() {
-        @Override
-        public void run() {
-            MainApp.getConfigBuilder().refreshDataFromPump("Connect request from GUI");
-        }
-    };
-
-
     public DanaRFragment() {
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(DanaRFragment.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (refreshLoop == null) {
-            refreshLoop = new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                    loopHandler.postDelayed(refreshLoop, 60 * 1000L);
-                }
-            };
-            loopHandler.postDelayed(refreshLoop, 60 * 1000L);
-        }
+        loopHandler.postDelayed(refreshLoop, 60 * 1000L);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        loopHandler.removeCallbacks(refreshLoop);
     }
 
     @Override
@@ -118,6 +109,7 @@ public class DanaRFragment extends SubscriberFragment {
             basalStepView = (TextView) view.findViewById(R.id.danar_basalstep);
             bolusStepView = (TextView) view.findViewById(R.id.danar_bolusstep);
             serialNumberView = (TextView) view.findViewById(R.id.danar_serialnumber);
+            queueView = (TextView) view.findViewById(R.id.danar_queue);
 
             pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
             pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
@@ -150,7 +142,7 @@ public class DanaRFragment extends SubscriberFragment {
                 @Override
                 public void onClick(View v) {
                     log.debug("Clicked connect to pump");
-                    sHandler.post(connectRunnable);
+                    ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);
                 }
             });
 
@@ -203,6 +195,11 @@ public class DanaRFragment extends SubscriberFragment {
 
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange s) {
+        updateGUI();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventQueueChanged s) {
         updateGUI();
     }
 
@@ -266,10 +263,17 @@ public class DanaRFragment extends SubscriberFragment {
                     basalStepView.setText("" + pump.basalStep);
                     bolusStepView.setText("" + pump.bolusStep);
                     serialNumberView.setText("" + pump.serialNumber);
-
+                    if (queueView != null) {
+                        Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
+                        if (status.toString().equals("")) {
+                            queueView.setVisibility(View.GONE);
+                        } else {
+                            queueView.setVisibility(View.VISIBLE);
+                            queueView.setText(status);
+                        }
+                    }
                 }
             });
-
     }
 
 }
