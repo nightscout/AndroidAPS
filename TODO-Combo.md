@@ -21,6 +21,10 @@
       - [ ] Ruffy: support reading date/time menus
     - [ ] Setting pump basal profile
     - [ ] Pairing
+    - [ ] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
+          Currently the pump gets to know such a record when bolusing or when refresh() is called
+          after 15m of no other command taking place. IOB will then be current with next loop
+          iteration.
   - [ ] Cleanups
     - [ ] Finish 'enacted' removal rewrite (esp. cancel tbr)
     - [ ] ComboPlugin, commands invocation, checks, upadting combo store/cache
