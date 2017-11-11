@@ -16,8 +16,11 @@ import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpError;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
+import de.jotomo.ruffy.spi.history.Tbr;
+import de.jotomo.ruffy.spi.history.Tdd;
 
 // Note: TBRs are added to history only after they've completed running
+// TODO remove duplication
 public class ReadHistoryCommand extends BaseCommand {
     private static Logger log = LoggerFactory.getLogger(ReadHistoryCommand.class);
 
@@ -36,8 +39,6 @@ public class ReadHistoryCommand extends BaseCommand {
             scripter.navigateToMenu(MenuType.MY_DATA_MENU);
             scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
             scripter.pressCheckKey();
-
-            // TODO see how dana does time mangling for timezones
 
             // bolus history
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
@@ -71,18 +72,32 @@ public class ReadHistoryCommand extends BaseCommand {
             // tdd history
             scripter.pressMenuKey();
             scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
-/*
+            if (request.tddHistory != PumpHistoryRequest.SKIP) {
+                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+                if (totalRecords > 0) {
+                    if (request.tddHistory == PumpHistoryRequest.LAST) {
+                        Tdd tdd = readTddRecord();
+                        history.tddHistory.add(tdd);
+                    } else {
+                        readTddRecords(request.tbrHistory);
+                    }
+                }
+            }
+
             // tbr history
             scripter.pressMenuKey();
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DATA);
             if (request.tbrHistory != PumpHistoryRequest.SKIP) {
-                Double percentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
-                MenuTime duration = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
-                MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
-                // TODO start or end time?
-                MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
+                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+                if (totalRecords > 0) {
+                    if (request.tbrHistory == PumpHistoryRequest.LAST) {
+                        Tbr tbr = readTbrRecord();
+                        history.tbrHistory.add(tbr);
+                    } else {
+                        readTbrRecords(request.tbrHistory);
+                    }
+                }
             }
-*/
 
             scripter.pressBackKey();
             scripter.returnToRootMenu();
@@ -102,8 +117,76 @@ public class ReadHistoryCommand extends BaseCommand {
                     log.debug(new Date(pumpError.timestamp) + ": " + pumpError.toString());
                 }
             }
+            if (!history.tddHistory.isEmpty()) {
+                log.debug("Read TDD history:");
+                for (Tdd tdd : history.tddHistory) {
+                    log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
+                }
+            }
+            if (!history.tbrHistory.isEmpty()) {
+                log.debug("Read TBR history:");
+                for (Tbr tbr : history.tbrHistory) {
+                    log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
+                }
+            }
         }
         result.success(true).history(history);
+    }
+
+    private void readTddRecords(long requestedTime) {
+        int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
+        int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+        while (true) {
+            log.debug("Reading TDD record #" + record + "/" + totalRecords);
+            Tdd tdd = readTddRecord();
+            if (requestedTime != PumpHistoryRequest.FULL && tdd.timestamp <= requestedTime) {
+                break;
+            }
+            history.tddHistory.add(tdd);
+            scripter.pressDownKey();
+            scripter.waitForMenuUpdate();
+            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
+            if (record == totalRecords) {
+                break;
+            }
+        }
+    }
+
+    @NonNull
+    private Tdd readTddRecord() {
+        scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
+        Double dailyTotal = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.DAILY_TOTAL);
+        long recordDate = readRecordDate();
+        return new Tdd(recordDate, dailyTotal);
+    }
+
+    private void readTbrRecords(long requestedTime) {
+        int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
+        int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+        while (true) {
+            log.debug("Reading TBR record #" + record + "/" + totalRecords);
+            Tbr tbr = readTbrRecord();
+            if (requestedTime != PumpHistoryRequest.FULL && tbr.timestamp <= requestedTime) {
+                break;
+            }
+            history.tbrHistory.add(tbr);
+            scripter.pressDownKey();
+            scripter.waitForMenuUpdate();
+            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
+            if (record == totalRecords) {
+                break;
+            }
+        }
+    }
+
+    @NonNull
+    private Tbr readTbrRecord() {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DATA);
+        Double percentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
+        MenuTime durationTime = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
+        int duration = durationTime.getHour() * 60 + durationTime.getMinute();
+        long recordDate = readRecordDate();
+        return new Tbr(recordDate, duration, percentage.intValue());
     }
 
     private void readBolusRecords(long requestedTime) {
