@@ -305,8 +305,9 @@ public class RuffyScripter implements RuffyCommands {
                     long now = System.currentTimeMillis();
                     if (now > dynamicTimeout) {
                         boolean menuRecentlyUpdated = now < menuLastUpdated + 5 * 1000;
-                        boolean inMenuNotMainMenu = currentMenu != null && currentMenu.getType() != MenuType.MAIN_MENU;
-                        if (menuRecentlyUpdated || inMenuNotMainMenu) {
+                        boolean idlingInMainMenu = getCurrentMenu().getType() == MenuType.MAIN_MENU
+                                && !getCurrentMenu().attributes().contains(MenuAttribute.BOLUS_REMAINING);
+                        if (menuRecentlyUpdated && !idlingInMainMenu) {
                             // command still working (or waiting for pump to complete, e.g. bolus delivery)
                             dynamicTimeout = now + 30 * 1000;
                         } else {
