@@ -10,6 +10,27 @@ public class Tdd extends HistoryRecord {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tdd tdd = (Tdd) o;
+
+        if (timestamp != tdd.timestamp) return false;
+        return Double.compare(tdd.total, total) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (int) (timestamp ^ (timestamp >>> 32));
+        temp = Double.doubleToLongBits(total);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Tdd{" +
                 "timestamp=" + timestamp +

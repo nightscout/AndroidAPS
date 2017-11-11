@@ -73,6 +73,3 @@ Usage
   have to wait till the pump's display turns off before it can reconnect to the pump).
   If the pump's alarm continues, the last action might have failed, in which case the user needs to confirm the alarm
 
-v3 TODOs
-- Reading and displaying TDDs
-

@@ -53,6 +53,9 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         Button errorHistory = (Button) view.findViewById(R.id.combo_error_history);
         errorHistory.setOnClickListener(this);
 
+        Button tddHistory = (Button) view.findViewById(R.id.combo_tdd_history);
+        tddHistory.setOnClickListener(this);
+
         updateGUI();
         return view;
     }
@@ -65,8 +68,11 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 break;
             case R.id.combo_error_history:
                 ComboErrorHistoryDialog ehd = new ComboErrorHistoryDialog();
-                FragmentManager manager = getFragmentManager();
-                ehd.show(manager, ComboErrorHistoryDialog.class.getSimpleName());
+                ehd.show(getFragmentManager(), ComboErrorHistoryDialog.class.getSimpleName());
+                break;
+            case R.id.combo_tdd_history:
+                ComboTddHistoryDialog thd = new ComboTddHistoryDialog();
+                thd.show(getFragmentManager(), ComboTddHistoryDialog.class.getSimpleName());
                 break;
         }
     }

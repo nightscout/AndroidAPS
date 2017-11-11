@@ -10,6 +10,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import de.jotomo.ruffy.spi.history.Bolus;
@@ -156,7 +157,11 @@ public class ReadHistoryCommand extends BaseCommand {
     private Tdd readTddRecord() {
         scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
         Double dailyTotal = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.DAILY_TOTAL);
-        long recordDate = readRecordDate();
+        MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
+        Calendar instance = Calendar.getInstance();
+        int year = date.getMonth() == 12 ? Calendar.getInstance().get(Calendar.YEAR) - 1 : Calendar.getInstance().get(Calendar.YEAR);
+        instance.set(year, date.getMonth(), date.getDay());
+        long recordDate = instance.getTimeInMillis();
         return new Tdd(recordDate, dailyTotal);
     }
 

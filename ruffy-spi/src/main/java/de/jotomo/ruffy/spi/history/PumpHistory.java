@@ -3,6 +3,7 @@ package de.jotomo.ruffy.spi.history;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /** History data as read from the pump's My Data menu.
@@ -13,7 +14,7 @@ public class PumpHistory {
     @NonNull
     public List<Tbr> tbrHistory = new ArrayList<>();
     @NonNull
-    public List<PumpError> pumpErrorHistory = new ArrayList<>();
+    public List<PumpError> pumpErrorHistory = new LinkedList<>();
     @NonNull
     public List<Tdd> tddHistory = new ArrayList<>();
 

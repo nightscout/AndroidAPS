@@ -1,5 +1,6 @@
 package de.jotomo.ruffy.spi.history;
 
+/** Note: the timestamp is the time the TBR **ended**, not started .*/
 public class Tbr extends HistoryRecord {
     public final int duration;
     public final int percent;
@@ -8,6 +9,26 @@ public class Tbr extends HistoryRecord {
         super(timestamp);
         this.duration = duration;
         this.percent = percent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tbr tbr = (Tbr) o;
+
+        if (timestamp != tbr.timestamp) return false;
+        if (duration != tbr.duration) return false;
+        return percent == tbr.percent;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + duration;
+        result = 31 * result + percent;
+        return result;
     }
 
     @Override

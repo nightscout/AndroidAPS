@@ -25,8 +25,8 @@ public class PumpHistoryRequest {
         return this;
     }
 
-    public PumpHistoryRequest errorHistory(long errorHistory) {
-        this.pumpErrorHistory = errorHistory;
+    public PumpHistoryRequest pumpErrorHistory(long pumpErrorHistory) {
+        this.pumpErrorHistory = pumpErrorHistory;
         return this;
     }
 

@@ -373,6 +373,17 @@
                 android:paddingRight="0dp"
                 android:text="@string/pump_errors_history" />
 
+            <Button
+                android:id="@+id/combo_tdd_history"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/icon_danarstats"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/combo_stats" />
+
         </LinearLayout>
 
     </LinearLayout>

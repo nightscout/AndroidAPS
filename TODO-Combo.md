@@ -8,10 +8,21 @@
   - [ ] Bolus deleted in treatments  (marked invalid?!) is re-added when pump reads history
 - [ ] Tasks
   - [ ] Main
+    - [ ] on command error: recover by returning to main menu
     - [ ] Reading history
-      - [ ] Bolus
+      - [x] Bolus
+        - [x] Read
+        - [x] Sync DB
       - [ ] TBRs
+        - [x] Read
+        - [ ] Sync DB
       - [ ] Alerts
+        - [x] Read
+        - [ ] Sync DB?
+        - [x] Display in UI
+      - [ ] TDD
+        - [x] Read
+        - [ ] Sync DB?
         - [ ] Display in UI
     - [ ] Taking over alerts
       - [ ] On connect
@@ -24,6 +35,7 @@
     - [ ] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
           after 15m of no other command taking place. IOB will then be current with next loop
+    - [ ] Optimize reading full history to pass timestamps of last known records to avoid reading known records
           iteration.
   - [ ] Cleanups
     - [ ] Finish 'enacted' removal rewrite (esp. cancel tbr)
@@ -39,18 +51,14 @@
     - [ ] Display errors in combo tap
     - [x] Option to raise overview notifications as android notification with noise (for urgent ones?)
   - [ ] Low prio
+    - [ ] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
+          e.g. pumpErrorHistory should be renamed to alertHistory
     - [ ] Enable BT if disabled? does dana does this?
     - [ ] Finish and test German translation
     - [ ] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed
         - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
           Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
           also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
-
-- [ ] v3
-  - [ ] Tasks (this is probably best left to the command-mode people)
-    - [ ] Reading TDD
-      - [ ] UI for TDDs
-    - [ ] Optimize reading full history to pass timestamps of last known records to avoid reading known records
 
 Inbox
   - [ ] Where/when to call checkTbrMisMatch?
