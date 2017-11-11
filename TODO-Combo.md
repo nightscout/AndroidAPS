@@ -2,9 +2,10 @@
   - [ ] No connection can be established anymore
     - Removing the BT device's bonding (!=pairing) fixes it; nope it doesn't
     - Ruffy logs in BTConnection:163  handler.fail("no connection possible: " + e.getMessage());
+    - When developing (and thus killing/restarting AAPS often) this is trigger more frequently, leaving
+      some ruffy-releated (BT) cache in disarray? Immune to wiping, only repairing seems to work so far
   - [x] Timeout connecting to pump -> crash
   - [ ] Bolus deleted in treatments  (marked invalid?!) is re-added when pump reads history
-  - [ ] Shutdown -> kill idle thread so app can terminate
 - [ ] Tasks
   - [ ] Main
     - [ ] Reading history
@@ -37,9 +38,12 @@
     - [ ] Enable BT if disabled? does dana does this?
     - [ ] Finish and test German translation
     - [ ] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed
+        - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
+          Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
+          also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
 
 - [ ] v3
-  - [ ] Tasks
+  - [ ] Tasks (this is probably best left to the command-mode people)
     - [ ] Reading TDD
       - [ ] UI for TDDs
     - [ ] Optimize reading full history to pass timestamps of last known records to avoid reading known records
