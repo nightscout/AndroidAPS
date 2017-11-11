@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,6 @@ import info.nightscout.utils.DateUtil;
 
 // TODO clean up time/date formatting once this stabilizes a bit more
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
-    private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
-
     private TextView stateView;
     private TextView activityView;
     private TextView batteryView;
@@ -33,8 +32,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView lastConnectionView;
     private TextView lastBolusView;
     private TextView tempBasalText;
-
-    private Button refresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,9 +46,12 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
 
-        refresh = (Button) view.findViewById(R.id.combo_refresh);
+        Button refresh = (Button) view.findViewById(R.id.combo_refresh);
         refresh.setOnClickListener(this);
         refresh.setOnLongClickListener(this);
+
+        Button errorHistory = (Button) view.findViewById(R.id.combo_error_history);
+        errorHistory.setOnClickListener(this);
 
         updateGUI();
         return view;
@@ -64,7 +64,9 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 new Thread(() -> ComboPlugin.getPlugin().refreshDataFromPump("User request")).start();
                 break;
             case R.id.combo_error_history:
-                // TODO v2 show popup with pump errors and comm problems steal code from profile view, called on overview
+                ComboErrorHistoryDialog ehd = new ComboErrorHistoryDialog();
+                FragmentManager manager = getFragmentManager();
+                ehd.show(manager, ComboErrorHistoryDialog.class.getSimpleName());
                 break;
         }
     }
@@ -73,7 +75,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public boolean onLongClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-                new Thread(() -> ComboPlugin.getPlugin().forceSyncFullHistory()).start();
+                new Thread(() -> ComboPlugin.getPlugin().forceFullHistoryRead()).start();
                 return true;
         }
         return false;
