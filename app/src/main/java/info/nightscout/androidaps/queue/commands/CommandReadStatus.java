@@ -25,6 +25,6 @@ public class CommandReadStatus extends Command {
 
     @Override
     public String status() {
-        return "READSTATUS " + reason;
+        return "READSTATUS";
     }
 }

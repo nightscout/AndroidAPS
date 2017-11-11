@@ -60,5 +60,5 @@ public class Constants {
     public static final double DEVIATION_TO_BE_EQUAL = 2.0;
 
     // Pump
-    public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 5 * 60;
+    public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 60 - 1;
 }

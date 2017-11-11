@@ -61,9 +61,6 @@ public class Notification {
     public NSAlarm nsAlarm = null;
     public Integer soundId = null;
 
-    public Notification() {
-    }
-
     public Notification(int id, Date date, String text, int level, Date validTo) {
         this.id = id;
         this.date = date;
@@ -86,6 +83,27 @@ public class Notification {
         this.text = text;
         this.level = level;
         this.validTo = new Date(0);
+    }
+
+    public Notification(int id) {
+        this.id = id;
+        this.date = new Date();
+        this.validTo = new Date(0);
+    }
+
+    public Notification text(String text) {
+        this.text = text;
+        return this;
+    }
+
+    public Notification level(int level) {
+        this.level = level;
+        return this;
+    }
+
+    public Notification sound(int soundId) {
+        this.soundId = soundId;
+        return this;
     }
 
     public Notification(NSAlarm nsAlarm) {
