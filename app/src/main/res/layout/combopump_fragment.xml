@@ -142,7 +142,7 @@
                     android:paddingLeft="5dp"
                     android:textColor="@android:color/white"
                     android:text=""
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 

@@ -107,6 +107,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
                 if (plugin.isInitialized()) {
                     // battery
+                    batteryView.setTextSize(20);
                     if (ps.batteryState == PumpState.EMPTY) {
                         batteryView.setText("{fa-battery-empty}");
                         batteryView.setTextColor(Color.RED);
