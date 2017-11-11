@@ -16,19 +16,11 @@ import java.util.List;
 import de.jotomo.ruffy.spi.history.PumpError;
 import info.nightscout.androidaps.R;
 
-/**
- * Created by adrian on 17/08/17.
- */
-
 public class ComboErrorHistoryDialog extends DialogFragment {
-    private static Logger log = LoggerFactory.getLogger(ComboErrorHistoryDialog.class);
-
-    private TextView text;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.combo_error_history_fragment, container, false);
-        text = (TextView) layout.findViewById(R.id.combo_error_history_text);
+        TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
         List<PumpError> errors = ComboPlugin.getPlugin().getPump().history.pumpErrorHistory;
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM. HH:mm");

@@ -16,19 +16,11 @@ import java.util.List;
 import de.jotomo.ruffy.spi.history.Tdd;
 import info.nightscout.androidaps.R;
 
-/**
- * Created by adrian on 17/08/17.
- */
-
 public class ComboTddHistoryDialog extends DialogFragment {
-    private static Logger log = LoggerFactory.getLogger(ComboTddHistoryDialog.class);
-
-    private TextView text;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.combo_tdd_history_fragment, container, false);
-        text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
+        TextView text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
         List<Tdd> tdds = ComboPlugin.getPlugin().getPump().history.tddHistory;
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.");
