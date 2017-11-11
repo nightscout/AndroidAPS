@@ -78,14 +78,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     private static ArrayList<PluginBase> pluginList;
 
-    private PowerManager.WakeLock mWakeLock;
-
     private static CommandQueue commandQueue = new CommandQueue();
 
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
-        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");
     }
 
     @Override
@@ -479,33 +475,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        mWakeLock.acquire();
-        PumpEnactResult result;
-        detailedBolusInfo.insulin = applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = applyCarbsConstraints((int) detailedBolusInfo.carbs);
-
-        BolusProgressDialog bolusProgressDialog = null;
-        if (detailedBolusInfo.context != null) {
-            bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
-            bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
-        } else {
-            Intent i = new Intent();
-            i.putExtra("insulin", detailedBolusInfo.insulin);
-            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApp.instance().startActivity(i);
-        }
-
-
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
-        result = activePump.deliverTreatment(detailedBolusInfo);
+        PumpEnactResult result = activePump.deliverTreatment(detailedBolusInfo);
 
         BolusProgressDialog.bolusEnded = true;
         MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
-        mWakeLock.release();
         return result;
     }
 

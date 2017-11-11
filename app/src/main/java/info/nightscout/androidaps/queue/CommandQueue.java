@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.queue;
 
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -13,6 +15,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
@@ -143,6 +147,23 @@ public class CommandQueue {
         add(new CommandBolus(detailedBolusInfo, callback));
 
         notifyAboutNewCommand();
+
+        // Bring up bolus progress dialog
+        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+
+        BolusProgressDialog bolusProgressDialog = null;
+        if (detailedBolusInfo.context != null) {
+            bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
+            bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
+        } else {
+            Intent i = new Intent();
+            i.putExtra("insulin", detailedBolusInfo.insulin);
+            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
+        }
 
         return true;
     }
