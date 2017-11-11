@@ -408,7 +408,7 @@ public class RuffyScripter implements RuffyCommands {
             boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
-            long timeoutExpired = System.currentTimeMillis() + 90 * 1000;
+            long timeoutExpired = System.currentTimeMillis() + 30 * 1000;
             long initialUpdateTime = menuLastUpdated;
             while (initialUpdateTime == menuLastUpdated) {
                 if (System.currentTimeMillis() > timeoutExpired) {
