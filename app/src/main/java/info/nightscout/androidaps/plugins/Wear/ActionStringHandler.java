@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -33,14 +34,17 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -625,16 +629,13 @@ public class ActionStringHandler {
     }
 
     private static void doFillBolus(final Double amount) {
-        //if(1==1)return;
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(new Runnable() {
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.insulin = amount;
+        detailedBolusInfo.isValid = false;
+        detailedBolusInfo.source = Source.USER;
+        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.insulin = amount;
-                detailedBolusInfo.isValid = false;
-                detailedBolusInfo.source = Source.USER;
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
                             "\n" +
@@ -645,16 +646,13 @@ public class ActionStringHandler {
     }
 
     private static void doBolus(final Double amount, final Integer carbs) {
-        //if(1==1)return;
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(new Runnable() {
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.insulin = amount;
+        detailedBolusInfo.carbs = carbs;
+        detailedBolusInfo.source = Source.USER;
+        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.insulin = amount;
-                detailedBolusInfo.carbs = carbs;
-                detailedBolusInfo.source = Source.USER;
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
                             "\n" +

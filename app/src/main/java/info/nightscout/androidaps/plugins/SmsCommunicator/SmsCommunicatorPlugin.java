@@ -35,12 +35,14 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -225,7 +227,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
         }
     }
 
-    private void processSms(Sms receivedSms) {
+    private void processSms(final Sms receivedSms) {
         if (!isEnabled(PluginBase.GENERAL)) {
             log.debug("Ignoring SMS. Plugin disabled.");
             return;
@@ -477,23 +479,27 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - bolusWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         bolusWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
-                        danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                         detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
                         detailedBolusInfo.source = Source.USER;
-                        PumpEnactResult result = pumpInterface.deliverTreatment(detailedBolusInfo);
-                        if (result.success) {
-                            reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
-                            if (danaRPlugin != null)
-                                reply += "\n" + danaRPlugin.shortStatus(true);
-                            lastRemoteBolusTime = new Date();
-                            sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                        } else {
-                            reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
-                            if (danaRPlugin != null)
-                                reply += "\n" + danaRPlugin.shortStatus(true);
-                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                        }
+                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                            @Override
+                            public void run() {
+                                DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
+                                if (result.success) {
+                                    String reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
+                                    if (danaRPlugin != null)
+                                        reply += "\n" + danaRPlugin.shortStatus(true);
+                                    lastRemoteBolusTime = new Date();
+                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                } else {
+                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
+                                    if (danaRPlugin != null)
+                                        reply += "\n" + danaRPlugin.shortStatus(true);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
+                            }
+                        });
                     } else if (tempBasalWaitingForConfirmation != null && !tempBasalWaitingForConfirmation.processed &&
                             tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - tempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         tempBasalWaitingForConfirmation.processed = true;

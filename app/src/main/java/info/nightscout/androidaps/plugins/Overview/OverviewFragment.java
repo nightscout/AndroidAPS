@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -26,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -109,10 +109,10 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -122,6 +122,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -707,30 +708,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                            final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                            sHandler.post(new Runnable() {
+                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                            detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                            detailedBolusInfo.context = context;
+                            detailedBolusInfo.boluscalc = boluscalcJSON;
+                            detailedBolusInfo.source = Source.USER;
+                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                 @Override
                                 public void run() {
-                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                    detailedBolusInfo.context = context;
-                                    detailedBolusInfo.boluscalc = boluscalcJSON;
-                                    detailedBolusInfo.source = Source.USER;
-                                    PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                     if (!result.success) {
-                                        try {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
-                                        } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                            // window has been destroyed
-                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                            MainApp.bus().post(new EventNewNotification(notification));
-                                        }
+                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                        i.putExtra("soundid", R.raw.boluserror);
+                                        i.putExtra("status", result.comment);
+                                        i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        MainApp.instance().startActivity(i);
                                     }
                                 }
                             });
