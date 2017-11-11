@@ -31,14 +31,15 @@ public class ComboTddHistoryDialog extends DialogFragment {
         text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
         List<Tdd> tdds = ComboPlugin.getPlugin().getPump().history.tddHistory;
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.");
         if (tdds.isEmpty()) {
             text.setText("No TDDs. To retrieve the TDD history from the pump, long press the Refresh button.");
         } else {
             for (Tdd tdd : tdds) {
                 sb.append(simpleDateFormat.format(tdd.timestamp));
                 sb.append("  ");
-                sb.append(tdd.total);
+                sb.append(String.format("%.1f", tdd.total));
+                sb.append(" U");
                 sb.append("\n");
             }
             text.setText(sb.toString());

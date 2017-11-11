@@ -23,7 +23,7 @@
       - [ ] TDD
         - [x] Read
         - [ ] Sync DB?
-        - [ ] Display in UI
+        - [x] Display in UI
     - [ ] Taking over alerts
       - [ ] On connect
       - [ ] During bolusing

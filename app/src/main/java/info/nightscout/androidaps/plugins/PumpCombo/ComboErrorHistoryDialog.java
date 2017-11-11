@@ -31,7 +31,7 @@ public class ComboErrorHistoryDialog extends DialogFragment {
         text = (TextView) layout.findViewById(R.id.combo_error_history_text);
         List<PumpError> errors = ComboPlugin.getPlugin().getPump().history.pumpErrorHistory;
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM. HH:mm");
         if (errors.isEmpty()) {
             text.setText("No errors. To retrieve the error history from the pump, long press the Refresh button.");
         } else {
