@@ -72,20 +72,4 @@
             android:key="short_tabtitles"
             android:title="@string/short_tabtitles"/>
     </PreferenceCategory>
-    <PreferenceCategory
-        android:key="others"
-        android:title="@string/localalertsettings_title">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_enable_missed_bg_readings_alert"
-            android:title="@string/enable_missed_bg_readings_alert"/>
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_enable_pump_unreachable_alert"
-            android:title="@string/enable_pump_unreachable_alert"/>
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="raise_urgent_alarms_as_android_notification"
-            android:title="@string/raise_urgent_alarms_as_android_notification"/>
-    </PreferenceCategory>
 </PreferenceScreen>

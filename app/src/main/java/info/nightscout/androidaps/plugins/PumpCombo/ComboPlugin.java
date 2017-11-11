@@ -38,7 +38,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
@@ -138,9 +137,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     String getStateSummary() {
         PumpState ps = pump.state;
-        if (!pump.initialized) {
-            return MainApp.sResources.getString(R.string.combo_pump_state_initializing);
-        } else if (ps.menu == null)
+        if (ps.menu == null)
             return MainApp.sResources.getString(R.string.combo_pump_state_disconnected);
         else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
             return MainApp.sResources.getString(R.string.combo_pump_state_suspended_due_to_error);
