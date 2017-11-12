@@ -33,8 +33,8 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -271,7 +271,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
 
-        pump.initialized = true;
+        if (!pump.initialized) {
+            pump.initialized = true;
+            MainApp.bus().post(new EventInitializationChanged());
+        }
+
         // ComboFragment updates state fully only after the pump has initialized,
         // this fetches state again and updates the ui proper
         runCommand(null, 0, ruffyScripter::readPumpState);
