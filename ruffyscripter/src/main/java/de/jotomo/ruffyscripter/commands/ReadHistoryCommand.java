@@ -107,25 +107,25 @@ public class ReadHistoryCommand extends BaseCommand {
 
         if (log.isDebugEnabled()) {
             if (!history.bolusHistory.isEmpty()) {
-                log.debug("Read bolus history:");
+                log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
                 for (Bolus bolus : history.bolusHistory) {
                     log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
                 }
             }
             if (!history.pumpErrorHistory.isEmpty()) {
-                log.debug("Read error history:");
+                log.debug("Read error history (" + history.pumpErrorHistory.size() + "):");
                 for (PumpError pumpError : history.pumpErrorHistory) {
                     log.debug(new Date(pumpError.timestamp) + ": " + pumpError.toString());
                 }
             }
             if (!history.tddHistory.isEmpty()) {
-                log.debug("Read TDD history:");
+                log.debug("Read TDD history (" + history.tddHistory.size() + "):");
                 for (Tdd tdd : history.tddHistory) {
                     log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
                 }
             }
             if (!history.tbrHistory.isEmpty()) {
-                log.debug("Read TBR history:");
+                log.debug("Read TBR history (" + history.tbrHistory.size() + "):");
                 for (Tbr tbr : history.tbrHistory) {
                     log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
                 }
@@ -144,12 +144,12 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.tddHistory.add(tdd);
-            scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
-            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
             if (record == totalRecords) {
                 break;
             }
+            scripter.pressDownKey();
+            scripter.waitForMenuUpdate();
+            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
 
@@ -175,12 +175,12 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.tbrHistory.add(tbr);
-            scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
-            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
             if (record == totalRecords) {
                 break;
             }
+            scripter.pressDownKey();
+            scripter.waitForMenuUpdate();
+            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
 
@@ -190,8 +190,8 @@ public class ReadHistoryCommand extends BaseCommand {
         Double percentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
         MenuTime durationTime = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
         int duration = durationTime.getHour() * 60 + durationTime.getMinute();
-        long recordDate = readRecordDate();
-        return new Tbr(recordDate, duration, percentage.intValue());
+        long tbrStartDate = readRecordDate() - duration * 60 * 1000;
+        return new Tbr(tbrStartDate, duration, percentage.intValue());
     }
 
     private void readBolusRecords(long requestedTime) {
@@ -204,12 +204,12 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.bolusHistory.add(bolus);
-            scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
-            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
             if (record == totalRecords) {
                 break;
             }
+            scripter.pressDownKey();
+            scripter.waitForMenuUpdate();
+            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
 
@@ -233,12 +233,12 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.pumpErrorHistory.add(error);
-            scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
-            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
             if (record == totalRecords) {
                 break;
             }
+            scripter.pressDownKey();
+            scripter.waitForMenuUpdate();
+            record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
 
