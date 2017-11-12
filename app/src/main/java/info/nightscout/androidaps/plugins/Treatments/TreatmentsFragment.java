@@ -9,19 +9,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsProfileSwitchFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTemporaryBasalsFragment;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener {
+public class TreatmentsFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     TextView treatmentsTab;
@@ -101,5 +104,20 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         tempTargetTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         profileSwitchTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         selected.setBackgroundColor(MainApp.sResources.getColor(R.color.tabBgColorSelected));
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
+        updateGUI();
+    }
+
+    @Override
+    protected void updateGUI() {
+        if (MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable
+                || MainApp.getConfigBuilder().getExtendedBolusesFromHistory().size() > 0) {
+            extendedBolusesTab.setVisibility(View.VISIBLE);
+        } else {
+            extendedBolusesTab.setVisibility(View.GONE);
+        }
     }
 }
