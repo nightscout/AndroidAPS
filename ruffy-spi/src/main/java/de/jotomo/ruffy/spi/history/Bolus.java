@@ -1,5 +1,7 @@
 package de.jotomo.ruffy.spi.history;
 
+import java.util.Date;
+
 public class Bolus extends HistoryRecord {
     public final double amount;
     public final boolean isValid;
@@ -20,7 +22,7 @@ public class Bolus extends HistoryRecord {
 
         if (timestamp != bolus.timestamp) return false;
         if (isValid != bolus.isValid) return false;
-        return Double.compare(bolus.amount, amount) == 0;
+        return Math.abs(bolus.amount - amount) <= 0.05;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class Bolus extends HistoryRecord {
     @Override
     public String toString() {
         return "Bolus{" +
-                "timestamp=" + timestamp +
+                "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +
                 ", amount=" + amount +
                 '}';
     }

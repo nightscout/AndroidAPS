@@ -41,7 +41,7 @@ public class PumpHistory {
     @Override
     public String toString() {
         return "PumpHistory{" +
-                ", bolusHistory=" + bolusHistory.size() +
+                "bolusHistory=" + bolusHistory.size() +
                 ", tbrHistory=" + tbrHistory.size() +
                 ", pumpErrorHistory=" + pumpErrorHistory.size() +
                 ", tddHistory=" + tddHistory.size() +

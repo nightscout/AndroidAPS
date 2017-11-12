@@ -1,5 +1,7 @@
 package de.jotomo.ruffy.spi.history;
 
+import java.util.Date;
+
 /** What data a 'read history' request should return. */
 public class PumpHistoryRequest {
     /* History to read:
@@ -38,10 +40,10 @@ public class PumpHistoryRequest {
     @Override
     public String toString() {
         return "PumpHistoryRequest{" +
-                ", bolusHistory=" + bolusHistory +
-                ", tbrHistory=" + tbrHistory +
-                ", pumpErrorHistory=" + pumpErrorHistory +
-                ", tddHistory=" + tddHistory +
+                "bolusHistory=" + bolusHistory + (bolusHistory > 0 ? ("(" + new Date(bolusHistory) + ")") : "") +
+                ", tbrHistory=" + tbrHistory + (tbrHistory > 0 ? ("(" + new Date(tbrHistory) + ")") : "") +
+                ", pumpErrorHistory=" + pumpErrorHistory + (pumpErrorHistory > 0 ? ("(" + new Date(pumpErrorHistory) + ")") : "") +
+                ", tddHistory=" + tddHistory + (tddHistory > 0 ? ("(" + new Date(tddHistory) + ")") : "") +
                 '}';
     }
 }

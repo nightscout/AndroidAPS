@@ -65,7 +65,7 @@ public class CommandResult {
     @Override
     public String toString() {
         return "CommandResult{" +
-                ", success=" + success +
+                "success=" + success +
                 ", exception=" + exception +
                 ", state=" + state +
                 ", history=" + history +

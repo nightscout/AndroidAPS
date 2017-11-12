@@ -1,5 +1,7 @@
 package de.jotomo.ruffy.spi.history;
 
+import java.util.Date;
+
 public class PumpError extends HistoryRecord {
     public final Integer warningCode;
     public final Integer errorCode;
@@ -40,7 +42,7 @@ public class PumpError extends HistoryRecord {
     @Override
     public String toString() {
         return "PumpError{" +
-                "timestamp=" + timestamp +
+                "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +
                 ", warningCode=" + warningCode +
                 ", errorCode=" + errorCode +
                 ", message='" + message + '\'' +

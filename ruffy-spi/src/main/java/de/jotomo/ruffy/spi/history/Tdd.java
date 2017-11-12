@@ -1,5 +1,7 @@
 package de.jotomo.ruffy.spi.history;
 
+import java.util.Date;
+
 /** Total daily dosage; amount of insulin delivered over a full day. */
 public class Tdd extends HistoryRecord {
     public final double total;
@@ -17,7 +19,7 @@ public class Tdd extends HistoryRecord {
         Tdd tdd = (Tdd) o;
 
         if (timestamp != tdd.timestamp) return false;
-        return Double.compare(tdd.total, total) == 0;
+        return Math.abs(tdd.total - total) <= 0.05;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class Tdd extends HistoryRecord {
     @Override
     public String toString() {
         return "Tdd{" +
-                "timestamp=" + timestamp +
+                "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +
                 ", total=" + total +
                 '}';
     }

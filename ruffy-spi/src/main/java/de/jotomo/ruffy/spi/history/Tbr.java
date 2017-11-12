@@ -1,7 +1,9 @@
 package de.jotomo.ruffy.spi.history;
 
-/** Note: the timestamp is the time the TBR **ended**, not started .*/
+import java.util.Date;
+
 public class Tbr extends HistoryRecord {
+    /** Duration in minutes */
     public final int duration;
     public final int percent;
 
@@ -34,7 +36,7 @@ public class Tbr extends HistoryRecord {
     @Override
     public String toString() {
         return "Tbr{" +
-                "timestamp=" + timestamp +
+                "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +
                 ", duration=" + duration +
                 ", percent=" + percent +
                 '}';
