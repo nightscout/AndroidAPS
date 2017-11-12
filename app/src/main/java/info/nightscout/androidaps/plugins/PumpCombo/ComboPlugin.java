@@ -374,13 +374,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .comment(MainApp.instance().getString(R.string.virtualpump_resultok));
             }
         } finally {
-            cancelBolus = false;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
     }
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
+        // guard against boluses issued multiple times within a minute
         if (lastRequestedBolus != null
                 && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.05
                 && lastRequestedBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
@@ -459,12 +459,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         } finally {
             // BolusCommand.execute() intentionally doesn't close the progress dialog if an error
-            // occurred/ so it stays open while the connection was re-established if needed and/or
+            // occurred so it stays open while the connection was re-established if needed and/or
             // this method did recovery
             bolusProgressReporter.report(FINISHED, 100, 0);
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
             MainApp.bus().post(new EventRefreshOverview("Combo Bolus"));
+            cancelBolus = false;
         }
     }
 
@@ -472,9 +473,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public void stopBolusDelivering() {
         if (bolusInProgress) {
             ruffyScripter.cancelBolus();
-        } else {
-            cancelBolus = true;
         }
+        cancelBolus = true;
     }
 
     // Note: AAPS calls this only to enact OpenAPS recommendations
