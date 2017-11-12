@@ -284,8 +284,6 @@ public class RuffyScripter implements RuffyCommands {
                 long dynamicTimeout = calculateCmdInactivityTimeout();
                 long overallTimeout = calculateOverallCmdTimeout();
                 while (cmdThread.isAlive()) {
-                    log.trace("Waiting for running command to complete");
-                    SystemClock.sleep(500);
                     if (!ruffyService.isConnected()) {
                         // on connection lose try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
@@ -307,6 +305,11 @@ public class RuffyScripter implements RuffyCommands {
                         boolean menuRecentlyUpdated = now < menuLastUpdated + 5 * 1000;
                         boolean idlingInMainMenu = getCurrentMenu().getType() == MenuType.MAIN_MENU
                                 && !getCurrentMenu().attributes().contains(MenuAttribute.BOLUS_REMAINING);
+                        // TODO this triggers falsely if command finished and idles in main menu until
+                        // conneciton is closed; probably better since wait is moved to bottom of loop
+                        // so the while(cmdThread.isAlive) check and this isn't 500ms apart.
+                        // still, think this through; maybe wait a fec seconds and recheck if command is
+                        // active and menu is still main menu ...
                         if (menuRecentlyUpdated && !idlingInMainMenu) {
                             // command still working (or waiting for pump to complete, e.g. bolus delivery)
                             dynamicTimeout = now + 30 * 1000;
@@ -324,6 +327,8 @@ public class RuffyScripter implements RuffyCommands {
                         activeCmd.getResult().success = false;
                         break;
                     }
+                    log.trace("Waiting for running command to complete");
+                    SystemClock.sleep(500);
                 }
 
                 activeCmd.getResult().state = readPumpStateInternal();
