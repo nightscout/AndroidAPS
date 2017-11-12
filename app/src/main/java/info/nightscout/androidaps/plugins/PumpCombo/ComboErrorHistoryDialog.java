@@ -25,9 +25,15 @@ public class ComboErrorHistoryDialog extends DialogFragment {
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM. HH:mm");
         if (errors.isEmpty()) {
-            text.setText("No errors. To retrieve the error history from the pump, long press the Refresh button.");
+            text.setText("To retrieve the error history from the pump, long press the Refresh button.");
         } else {
+            boolean first = true;
             for (PumpError error : errors) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append("\n");
+                }
                 sb.append(simpleDateFormat.format(error.timestamp));
                 sb.append("  ");
                 sb.append(error.message);
@@ -41,7 +47,6 @@ public class ComboErrorHistoryDialog extends DialogFragment {
                     sb.append(error.errorCode);
                     sb.append(")");
                 }
-                sb.append("\n");
             }
             text.setText(sb.toString());
         }

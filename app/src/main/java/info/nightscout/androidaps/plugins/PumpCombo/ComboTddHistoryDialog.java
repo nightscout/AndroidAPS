@@ -25,14 +25,19 @@ public class ComboTddHistoryDialog extends DialogFragment {
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.");
         if (tdds.isEmpty()) {
-            text.setText("No TDDs. To retrieve the TDD history from the pump, long press the Refresh button.");
+            text.setText("To retrieve the TDD history from the pump, long press the Refresh button.");
         } else {
+            boolean first = true;
             for (Tdd tdd : tdds) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append("\n");
+                }
                 sb.append(simpleDateFormat.format(tdd.timestamp));
                 sb.append("  ");
                 sb.append(String.format("%.1f", tdd.total));
                 sb.append(" U");
-                sb.append("\n");
             }
             text.setText(sb.toString());
         }
