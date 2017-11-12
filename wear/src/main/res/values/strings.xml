@@ -20,16 +20,6 @@
         <item>5</item>
     </string-array>
 
-    <string-array name="battery_choice">
-        <item>Phone</item>
-        <item>Rig</item>
-    </string-array>
-
-    <string-array name="battery_choice_values">
-        <item>true</item>
-        <item>false</item>
-    </string-array>
-
     <string-array name="input_design">
         <item>Default</item>
         <item>Quick righty</item>

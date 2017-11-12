@@ -24,39 +24,55 @@
             android:layout_marginTop="-5dp">
 
             <TextView
+                android:id="@+id/loop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/loop_grey_25"
+                android:gravity="center|right"
+                android:paddingRight="7dp"
+                android:paddingTop="-2dp"
+                android:text="--'"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/sgv"
-                android:textSize="41sp"
+                android:textSize="38sp"
                 android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal|bottom"
                 android:gravity="bottom|right"
+                android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:layout_marginBottom="-2dp"
                 android:paddingTop="-2dp" />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:weightSum="1"
-                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
                 android:baselineAligned="false"
-                android:layout_gravity="center_horizontal">
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:textAlignment="center"
+                android:weightSum="1">
 
                 <TextView
                     android:id="@+id/direction"
-                    android:textSize="30sp"
-                    android:text="--"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
-                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal|bottom"
                     android:gravity="center_horizontal|bottom"
-                    android:layout_marginBottom="-5dp"
-                    android:layout_marginTop="-2dp"
+                    android:text="--"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -64,8 +80,11 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:layout_marginBottom="2dp"
                     android:gravity="center_horizontal|bottom"
-                    android:text="--' ago"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="6dp"
+                    android:text="--'"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -101,6 +120,17 @@
 
                 <TextView
                     android:id="@+id/uploader_battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10sp"
+                    android:text="--%"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/rig_battery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10sp"
@@ -181,6 +211,38 @@
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="30sp" />
+
+                <LinearLayout
+                    android:id="@+id/date_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingLeft="2sp"
+                    android:textAlignment="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/day"
+                        android:layout_width="23dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="day"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="mth"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

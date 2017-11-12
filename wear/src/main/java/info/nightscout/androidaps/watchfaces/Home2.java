@@ -94,6 +94,12 @@ public class Home2 extends BaseWatchFace2 {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
         }
 
+        if (loopLevel == 1) {
+            mLoop.setBackgroundResource(R.drawable.loop_green_25);
+        } else {
+            mLoop.setBackgroundResource(R.drawable.loop_red_25);
+        }
+
         mStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mStatus_home));
 
         if (chart != null) {
@@ -110,6 +116,7 @@ public class Home2 extends BaseWatchFace2 {
 
     protected void setColorLowRes() {
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
+        mLoop.setBackgroundResource(R.drawable.loop_grey_25);
         mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));

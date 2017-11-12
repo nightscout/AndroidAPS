@@ -246,37 +246,6 @@ public class WatchUpdaterService extends WearableListenerService implements
             sgvLevel = -1;
         }
 
-        //IOB
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        final IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-        final IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
-        String iobText = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U";
-
-        if (mPrefs.getBoolean("wear_detailediob", true)) {
-            iobText = DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                    + DecimalFormatter.to2Decimal(basalIob.basaliob);
-        }
-
-        //COB
-        String cobText = "0g";
-        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
-        if (autosensData != null) {
-            cobText = (int) autosensData.cob + "g";
-        }
-
-        //battery
-        int phoneBattery = getBatteryLevel(getApplicationContext());
-        String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
-
-        //Temp basal
-        String temp_basal = "-.--U/h";
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
-        if (activeTemp != null) {
-            temp_basal= activeTemp.toStringShort();
-        }
-
         DataMap dataMap = new DataMap();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
         dataMap.putDouble("timestamp", lastBG.date);
@@ -289,16 +258,11 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
             dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
         }
+
         dataMap.putLong("sgvLevel", sgvLevel);
-        dataMap.putString("battery", "" + phoneBattery);
-        dataMap.putString("rigBattery", rigBattery);
-        dataMap.putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
         dataMap.putDouble("sgvDouble", lastBG.value);
         dataMap.putDouble("high", highLine);
         dataMap.putDouble("low", lowLine);
-        dataMap.putString("cob", "" + cobText);
-        dataMap.putString("iob", "" + iobText);
-        dataMap.putString("tempBasal", "" + temp_basal);
         return dataMap;
     }
 
@@ -552,14 +516,54 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private void sendStatus() {
+
         if (googleApiClient.isConnected()) {
 
-            String status = generateStatusString();
+            TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.updateTotalIOBTreatments();
+            IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
+            treatmentsInterface.updateTotalIOBTempBasals();
+            IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
+
+            String iobTotal = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+            String iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            String iobString = iobTotal + " " + iobDetail;  //for generateStatusString()
+            String cobString = generateCOBString();
+            String tempBasal = generateBasalString(treatmentsInterface);
+            String status = generateStatusString(iobString,tempBasal,bolusIob,basalIob);
+
+            //batteries
+            int phoneBattery = getBatteryLevel(getApplicationContext());
+            String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
+
+            //OpenAPS status
+            String openApsString = String.valueOf(NSDeviceStatus.getInstance().getOpenApsStatus());
+            String openApsStatus = openApsString.substring(0,openApsString.indexOf("m"));
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
             dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            //Log.e("SendStatus", "timestamp is " + System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("externalStatusString", status);
+            //Log.e("SendStatus", "externalStatusString is " + status);
+            dataMapRequest.getDataMap().putString("iobTotal", iobTotal);
+            //Log.e("SendStatus", "iobTotal is " + iobTotal);
+            dataMapRequest.getDataMap().putString("iobDetail", iobDetail);
+            //Log.e("SendStatus", "iobDetail is " + iobDetail);
+            dataMapRequest.getDataMap().putBoolean("detailedIob", mPrefs.getBoolean("wear_detailediob", false));
+            //Log.e("SendStatus", "cob is " + cobString);
+            dataMapRequest.getDataMap().putString("cob", cobString);
+            //Log.e("SendStatus", "cob is " + cobString);
+            dataMapRequest.getDataMap().putString("tempBasal", tempBasal);
+            //Log.e("SendStatus", "tempBasal is " + tempBasal);
+            dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
+            //Log.e("SendStatus", "battery is " + phoneBattery);
+            dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
+            //Log.e("SendStatus", "rigBattery is " + rigBattery);
+            dataMapRequest.getDataMap().putString("openApsStatus", openApsStatus);
+            //Log.e("SendStatus", "openApsStatus is " + openApsStatus);
+            dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
+            //Log.e("SendStatus", "batteryLevel is " + ((phoneBattery >= 30) ? 1 : 0));
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
@@ -584,7 +588,8 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     @NonNull
-    private String generateStatusString() {
+    private String generateStatusString(String iobString, String tempBasal, IobTotal bolusIob, IobTotal basalIob) {
+
         String status = "";
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -602,36 +607,38 @@ public class WatchUpdaterService extends WearableListenerService implements
             lastLoopStatus = true;
         }
 
-        //Temp basal
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+        status += tempBasal + " " + iobString;
 
-        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
-        if (activeTemp != null) {
-            status += activeTemp.toStringShort();
-
-        }
-
-        //IOB
-        treatmentsInterface.updateTotalIOBTreatments();
-        IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
-        treatmentsInterface.updateTotalIOBTempBasals();
-        IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
-
-        if (mPrefs.getBoolean("wear_detailediob", true)) {
-            status += "("
-                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-        }
+        //add BGI if shown, otherwise return
         if (!mPrefs.getBoolean("wear_showbgi", false)) {
             return status;
         }
-
         double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
-
         status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
 
         return status;
+    }
+
+    @NonNull
+    private String generateBasalString(TreatmentsInterface treatmentsInterface) {
+
+        String basalStringResult = "-.--U/h";
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            basalStringResult = activeTemp.toStringShort();
+        }
+        return basalStringResult;
+    }
+
+    @NonNull
+    private String generateCOBString() {
+
+        String cobStringResult = "--";
+        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+        if (autosensData != null) {
+            cobStringResult = (int) autosensData.cob + "g";
+        }
+        return cobStringResult;
     }
 
     @Override

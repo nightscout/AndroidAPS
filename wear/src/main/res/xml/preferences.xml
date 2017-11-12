@@ -26,13 +26,26 @@
         android:summary="Input Design"
         android:title="Input Design" />
 
-    <ListPreference
+    <CheckBoxPreference
         android:defaultValue="true"
-        android:entries="@array/battery_choice"
-        android:entryValues="@array/battery_choice_values"
-        android:key="battery_choice"
-        android:summary="Battery Display"
-        android:title="Battery Display" />
+        android:key="show_uploader_battery"
+        android:title="Show Phone Battery"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="show_rig_battery"
+        android:title="Show Rig Battery"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="show_date"
+        android:title="Show Date"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -51,9 +64,25 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="showDelta"
+        android:summary="Show delta. (Circle WF)"
+        android:title="Show Delta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:key="showAvgDelta"
         android:summary="Show the avgDelta."
         android:title="Show AvgDelta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showAgo"
+        android:summary="Minutes since last reading. (Circle WF)"
+        android:title="Show Ago"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -72,22 +101,6 @@
         android:key="chart_timeframe"
         android:summary="Chart Timeframe"
         android:title="Chart Timeframe" />
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showAgo"
-        android:summary="Minutes since last reading. (Circle WF)"
-        android:title="Show Ago"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showDelta"
-        android:summary="Show delta. (Circle WF)"
-        android:title="Show Delta"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
         android:defaultValue="true"

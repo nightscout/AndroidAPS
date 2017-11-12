@@ -31,6 +31,7 @@ import com.ustwo.clockwise.wearable.WatchFace;
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchShape;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -48,12 +49,13 @@ import lecho.lib.hellocharts.view.LineChartView;
 public  abstract class BaseWatchFace2 extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mDelta, mStatus, mIOB, mCOB;
+    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mStatus, mIOB1, mIOB2, mCOB, mLoop, mDay, mMonth;
     public RelativeLayout mRelativeLayout;
-    public LinearLayout mLinearLayout, mLinearLayout2;
+    public LinearLayout mLinearLayout, mLinearLayout2, mDate;
     public long sgvLevel = 0;
     public int batteryLevel = 1;
     public int ageLevel = 1;
+    public int loopLevel = 1;
     public int highColor = Color.YELLOW;
     public int lowColor = Color.RED;
     public int midColor = Color.WHITE;
@@ -80,13 +82,7 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
     private MessageReceiver messageReceiver;
 
     protected SharedPreferences sharedPrefs;
-    private String avgDelta = "";
-    private String delta = "";
-    private String sgvString = "--";
-    //private String batteryString = "--%";    --- replaced with local variable
-    //private String IOB = "--U";    --- not used
-    //private String COB = "--g";    --- not used
-
+    private String openApsStatus = "--";
 
     @Override
     public void onCreate() {
@@ -123,17 +119,23 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
                 mTime = (TextView) stub.findViewById(R.id.watch_time);
+                mDay = (TextView) stub.findViewById(R.id.day);
+                mMonth = (TextView) stub.findViewById(R.id.month);
+                mLoop = (TextView) stub.findViewById(R.id.loop);
                 mSgv = (TextView) stub.findViewById(R.id.sgv);
                 mDirection = (TextView) stub.findViewById(R.id.direction);
                 mTimestamp = (TextView) stub.findViewById(R.id.timestamp);
-                mIOB = (TextView) stub.findViewById(R.id.iobView);
+                mIOB1 = (TextView) stub.findViewById(R.id.iob_text);
+                mIOB2 = (TextView) stub.findViewById(R.id.iobView);
                 mCOB = (TextView) stub.findViewById(R.id.cobView);
                 mStatus = (TextView) stub.findViewById(R.id.tmpBasal);
                 mUploaderBattery = (TextView) stub.findViewById(R.id.uploader_battery);
+                mRigBattery = (TextView) stub.findViewById(R.id.rig_battery);
                 mDelta = (TextView) stub.findViewById(R.id.delta);
                 mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
                 mLinearLayout = (LinearLayout) stub.findViewById(R.id.secondary_layout);
                 mLinearLayout2 = (LinearLayout) stub.findViewById(R.id.tertiary_layout);
+                mDate = (LinearLayout) stub.findViewById(R.id.date_time);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
                 layoutSet = true;
                 mRelativeLayout.measure(specW, specH);
@@ -158,12 +160,12 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
     }
 
     public String readingAge(boolean shortString) {
-        if (datetime == 0) { return "--' ago"; }
+        if (datetime == 0) { return shortString?"--'":"-- Minute ago"; }
         int minutesAgo = (int) Math.floor(timeSince()/(1000*60));
-        //if (minutesAgo == 1) {
-        //    return minutesAgo + "' ago";
-        //}
-        return minutesAgo + "' ago";
+        if (minutesAgo == 1) {
+            return minutesAgo + (shortString?"'":" Minute ago");
+        }
+        return minutesAgo + (shortString?"'":" Minutes ago");
     }
 
     @Override
@@ -199,6 +201,19 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
             mTime.setText(timeFormat.format(System.currentTimeMillis()));
             mTimestamp.setText(readingAge(true));
 
+            if (sharedPrefs.getBoolean("show_date", false)) {
+                Date today = new Date();
+                SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
+                SimpleDateFormat sdfMonth = new SimpleDateFormat("MMM");
+                mDay.setText(sdfDay.format(today));
+                mMonth.setText(sdfMonth.format(today));
+                mDate.setVisibility(View.VISIBLE);
+            } else {
+                //mDay.setText("");
+                //mMonth.setText("");
+                mDate.setVisibility(View.GONE);
+            }
+
             if(ageLevel()<=0) {
                 mSgv.setPaintFlags(mSgv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
@@ -222,20 +237,8 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
                 DataMap dataMap = DataMap.fromBundle(bundle);
                 wakeLock.acquire(50);
                 sgvLevel = dataMap.getLong("sgvLevel");
-                batteryLevel = dataMap.getInt("batteryLevel");
                 datetime = dataMap.getDouble("timestamp");
-                sgvString = dataMap.getString("sgvString");
                 mSgv.setText(dataMap.getString("sgvString"));
-                mIOB.setText(dataMap.getString("iob"));
-                mCOB.setText(dataMap.getString("cob"));
-
-                String batteryString;
-                if (Boolean.valueOf(sharedPrefs.getString("battery_choice","true"))) {
-                    batteryString = dataMap.getString("battery") + "%";
-                } else {
-                    batteryString = dataMap.getString("rigBattery");
-                }
-                mUploaderBattery.setText("" + batteryString);
 
                 if(ageLevel()<=0) {
                     mSgv.setPaintFlags(mSgv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -247,19 +250,19 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
                 mTime.setText(timeFormat.format(System.currentTimeMillis()));
 
                 mDirection.setText(dataMap.getString("slopeArrow"));
-                avgDelta = dataMap.getString("avgDelta");
-                delta = dataMap.getString("delta");
+                String avgDelta = dataMap.getString("avgDelta");
+                String delta = dataMap.getString("delta");
 
-                mDelta.setText(delta);
+                if (sharedPrefs.getBoolean("showDelta", true)) {
+                    mDelta.setText(delta);
+                    mDelta.setVisibility(View.VISIBLE);
+                } else {
+                    mDelta.setVisibility(View.GONE);
+                }
+
                 boolean showAvgDelta = sharedPrefs.getBoolean("showAvgDelta", true);
                 if(showAvgDelta){
                     mDelta.append("  " + avgDelta);
-                }
-
-                if (mTimestamp != null && mStatus != null) {
-                    mTimestamp.setText(readingAge(true));
-                    mStatus.setVisibility(View.VISIBLE);
-                    mStatus.setText("" + dataMap.getString("tempBasal"));
                 }
 
                 if (chart != null) {
@@ -272,6 +275,89 @@ public  abstract class BaseWatchFace2 extends WatchFace implements SharedPrefere
                 invalidate();
                 setColor();
             }
+
+            //status
+            bundle = intent.getBundleExtra("status");
+            if (layoutSet && bundle != null) {
+                DataMap dataMap = DataMap.fromBundle(bundle);
+                wakeLock.acquire(50);
+                ///externalStatusString = dataMap.getString("externalStatusString");
+                batteryLevel = dataMap.getInt("batteryLevel");
+                openApsStatus = dataMap.getString("openApsStatus");
+                mCOB.setText(dataMap.getString("cob"));
+
+                if (dataMap.getBoolean("detailedIob")) {
+                    mIOB1.setTextSize(14);
+                    mIOB2.setTextSize(10);
+                    mIOB1.setText("IOB " + dataMap.getString("iobTotal"));
+                    mIOB2.setText(dataMap.getString("iobDetail"));
+                } else {
+                    mIOB1.setTextSize(10);
+                    mIOB2.setTextSize(14);
+                    mIOB1.setText("IOB");
+                    mIOB2.setText(dataMap.getString("iobTotal"));
+                }
+
+
+                //use Config.APS to determine mode?
+                if (sharedPrefs.getBoolean("show_uploader_battery", true)) {
+                    mUploaderBattery.setText(dataMap.getString("battery") + "%");
+                    mUploaderBattery.setVisibility(View.VISIBLE);
+                } else {
+                    mUploaderBattery.setVisibility(View.GONE);
+                }
+
+                if (sharedPrefs.getBoolean("show_rig_battery", false)) {
+                    mRigBattery.setText(dataMap.getString("rigBattery"));
+                    mRigBattery.setVisibility(View.VISIBLE);
+                } else {
+                    mRigBattery.setVisibility(View.GONE);
+                }
+
+                if (mTimestamp != null) {
+                    if (sharedPrefs.getBoolean("showAgo", true)) {
+                        mTimestamp.setText(readingAge(true));
+                        mTimestamp.setVisibility(View.VISIBLE);
+                    } else {
+                        mTimestamp.setVisibility(View.GONE);
+                    }
+                }
+
+                if (mStatus != null) {
+                    mStatus.setVisibility(View.VISIBLE);
+                    mStatus.setText("" + dataMap.getString("tempBasal"));
+                }
+
+                if (mLoop != null) {
+                    if (sharedPrefs.getBoolean("showExternalStatus", true)) {
+                        mLoop.setVisibility(View.VISIBLE);
+                        String loopTime = dataMap.getString("openApsStatus");
+                        if (loopTime != null && loopTime != "") {
+                            mLoop.setText(loopTime + "'");
+                            if (Integer.valueOf(loopTime) > 14) {
+                                loopLevel = 0;
+                                mLoop.setBackgroundResource(R.drawable.loop_red_25);
+                            } else {
+                                loopLevel = 1;
+                                mLoop.setBackgroundResource(R.drawable.loop_green_25);
+                            }
+                        } else {
+                            mLoop.setText("-'");
+                        }
+                    } else {
+                        //mLoop.setText("");
+                        //mLoop.setBackgroundResource(R.drawable.empty);
+                        mLoop.setVisibility(View.GONE);
+                    }
+                }
+
+                mRelativeLayout.measure(specW, specH);
+                mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
+                        mRelativeLayout.getMeasuredHeight());
+                invalidate();
+                setColor();
+            }
+
 
             //basals and temps
             bundle = intent.getBundleExtra("basals");
