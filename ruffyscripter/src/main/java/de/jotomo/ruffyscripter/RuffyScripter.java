@@ -232,7 +232,7 @@ public class RuffyScripter implements RuffyCommands {
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
             log.error("Command argument violations: " + Joiner.on(", ").join(violations));
-            return new CommandResult().state(readPumpStateInternal());
+            return new CommandResult().success(false).state(readPumpStateInternal());
         }
 
         // TODO simplify, hard to reason about exists
@@ -358,7 +358,7 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     private long calculateOverallCmdTimeout() {
-        return System.currentTimeMillis() + 3 * 60 * 1000;
+        return System.currentTimeMillis() + 4 * 60 * 1000;
     }
 
     /**
