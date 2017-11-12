@@ -4,7 +4,7 @@
     - Ruffy logs in BTConnection:163  handler.fail("no connection possible: " + e.getMessage());
     - When developing (and thus killing/restarting AAPS often) this is trigger more frequently, leaving
       some ruffy-releated (BT) cache in disarray? Immune to wiping, only repairing seems to work so far
-  - [x] Timeout connecting to pump -> crash
+  - [x] Timeout connecting to pump -> crash (result.state wasn't filled in case of timeout)
   - [ ] Bolus deleted in treatments  (marked invalid?!) is re-added when pump reads history
 - [ ] Tasks
   - [ ] Main
@@ -15,10 +15,20 @@
         - [x] Sync DB
       - [ ] TBRs
         - [x] Read
-        - [ ] Sync DB
+        - [x] Sync DB
+        - [ ] Issue of creating TBR start date from main menu time, which might be off by a minute
+              when we read it as a history record. End date time might be slightly off, unless
+              CancelTempBasal is updated to read from history (probably not worth it).
+              What would happen if while setting the TBR the start time was 12:01 but then
+              we read a history record with a start time of 12:02, both running 30min.
+              Would the former be trimmed to 1m? That'd be acceptable (this edge case occurs
+              if between confirm the TBR and reading the main menu date, the second goes
+              from 59.9999 to 0)
       - [ ] Alerts
         - [x] Read
-        - [ ] Sync DB?
+        - [ ] Sync DB? No, but raise an alert if new ones are found beyond those read at startup
+              (Those that occurred while AAPS was not active needn't be turned into alarms,
+               the user had to deal with them on the pump already).
         - [x] Display in UI
       - [ ] TDD
         - [x] Read
@@ -32,10 +42,11 @@
       - [ ] Ruffy: support reading date/time menus
     - [ ] Setting pump basal profile
     - [ ] Pairing
+    - [ ] Check dynamic timeout logic in RuffyScripter.runCommand
     - [ ] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
           after 15m of no other command taking place. IOB will then be current with next loop
-    - [ ] Optimize reading full history to pass timestamps of last known records to avoid reading known records
+    - [x] Optimize reading full history to pass timestamps of last known records to avoid reading known records
           iteration.
   - [ ] Cleanups
     - [ ] Finish 'enacted' removal rewrite (esp. cancel tbr)
@@ -61,6 +72,14 @@
           also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
 
 Inbox
+  - [ ] Date syncing
+        If a bolus is given with a wrong time set (while AAPS is not active), then setting
+        time will result in that being in the past and not being detected as active.
+        Read bolus history before setting time and work with relative time to construct
+        actual bolus time? Will that fuck up syncing after setting time? Will the bolus be
+        counted twice (if time correcting was maybe an hour, e.g. daylight saving time switch,
+        resulting in an incorrectly too high IOB (too high might be tolerable in such a rare
+        circumstance)
   - [ ] Where/when to call checkTbrMisMatch?
   - [ ] pairing: just start SetupFragment?
   - [ ] Read history, change time, check if bolus records changed

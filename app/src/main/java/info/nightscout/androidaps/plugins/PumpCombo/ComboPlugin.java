@@ -453,6 +453,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // add treatment record to DB (if it wasn't cancelled)
             if (lastPumpBolus != null && (lastPumpBolus.amount > 0)) {
+                detailedBolusInfo.date = reservoirBolusResult.lastBolus.timestamp;
                 detailedBolusInfo.insulin = lastPumpBolus.amount;
                 detailedBolusInfo.date = lastPumpBolus.timestamp;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
@@ -516,15 +517,21 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             adjustedPercent = rounded.intValue();
         }
 
+        // TODO testing how well errors on background jobs are reported back
+//        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(800, durationInMinutes));
         final int finalAdjustedPercent = adjustedPercent;
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
+        if (!commandResult.success) {
+            return new PumpEnactResult().success(false).enacted(false);
+        }
 
         PumpState state = commandResult.state;
         if (state.tbrActive && state.tbrPercent == percent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
             // TODO timestamp: can this cause problems? setting TBR while a minute flips over?
             //     might that be the cause if the TBR duration instantly flips from e.g. 0:30 -> 0:29 ?
-            TemporaryBasal tempStart = new TemporaryBasal(state.timestamp);
+            // rounds to full minute; TODO should use time displayed on pump screen, but check and be lenient around midnight to not get the day wrong ...
+            TemporaryBasal tempStart = new TemporaryBasal(state.timestamp / (60 * 1000) * (60 * 1000));
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different
             tempStart.durationInMinutes = durationInMinutes;
@@ -559,7 +566,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
 
             if (!commandResult.state.tbrActive) {
-                TemporaryBasal tempBasal = new TemporaryBasal(System.currentTimeMillis());
+                // TODO pump menu time, midnight, blabla
+                TemporaryBasal tempBasal = new TemporaryBasal(commandResult.state.timestamp / ( 60 * 1000) * (60 * 1000));
                 tempBasal.durationInMinutes = 0;
                 tempBasal.source = Source.USER;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
@@ -612,6 +620,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         // TODO keep stats of how many commansd failed; if >50% fail raise an alert;
         // otherwise all commands could fail, but since we can connect to the pump no 'pump unrechable alert' would be raised.
 
+        // TODO check and update date. can this cause any issues for running commands, so that this should be checked explicitely insstead?
+
         CommandResult commandResult;
         try {
             if (activity != null) {
@@ -634,7 +644,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 updateLocalData(commandResult);
             }
 
-            checkForUnsupportedBoluses(commandResult);
+            checkForUnsafeUsage(commandResult);
 
             pump.lastCmdResult = commandResult;
             pump.lastConnectionAttempt = System.currentTimeMillis();
@@ -652,7 +662,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return commandResult;
     }
 
-    private void checkForUnsupportedBoluses(CommandResult commandResult) {
+    private void checkForUnsafeUsage(CommandResult commandResult) {
         long lastViolation = 0;
         if (commandResult.state.unsafeUsageDetected) {
             lastViolation = System.currentTimeMillis();
@@ -723,137 +733,166 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     /**
-     * Checks if there are any changes on the pump AAPS isn't aware of yet and if so, read the
-     * full pump history and update AAPS' DB.
+     * Checks if there are any changes on the pump not in the DB yet and if so, issues a history
+     * read to get the DB up to date.
      */
     private boolean checkPumpHistory() {
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), 3, () ->
                 ruffyScripter.readHistory(
                         new PumpHistoryRequest()
                                 .bolusHistory(PumpHistoryRequest.LAST)
-                                .tbrHistory(PumpHistoryRequest.LAST)
-                                .pumpErrorHistory(PumpHistoryRequest.LAST)));
+                                .tbrHistory(PumpHistoryRequest.LAST)));
 
         if (!commandResult.success || commandResult.history == null) {
-            // TODO error case, command
             return false;
         }
 
-        // TODO v2.1 optimize, construct PumpHistoryRequest to requset only what needs updating
         PumpHistoryRequest request = new PumpHistoryRequest();
 
+        // note: sync only ever happens one way from pump to aaps;
+        // db records are only added after delivering a bolus and confirming them via pump history
+        // so whatever is in the DB is either right, added by the user (possibly injecton)
+        // so don't delete records, only get the last from the pump and check if that one is in
+        // the DB (valid or note)
+
         // last bolus
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
-        Treatment aapsBolus = null;
-        for (Treatment t : treatments) {
-            if (t.insulin != 0) {
-                aapsBolus = t;
-                break;
-            }
-        }
         Bolus pumpBolus = null;
         List<Bolus> bolusHistory = commandResult.history.bolusHistory;
         if (!bolusHistory.isEmpty()) {
             pumpBolus = bolusHistory.get(0);
         }
 
-        if ((aapsBolus == null || pumpBolus == null)
-                || (Math.abs(aapsBolus.insulin - pumpBolus.amount) > 0.05 || aapsBolus.date != pumpBolus.timestamp)) {
-            log.debug("Last bolus on pump is unknown, refreshing full bolus history");
-            request.bolusHistory = PumpHistoryRequest.FULL;
+        Treatment aapsBolus = null;
+        if (pumpBolus != null) {
+            aapsBolus = MainApp.getDbHelper().getTreatmentByDate(pumpBolus.timestamp);
         }
 
-        // last tbr
-        List<TemporaryBasal> tempBasals = MainApp.getConfigBuilder().getTemporaryBasalsFromHistory().getReversedList();
-        TemporaryBasal aapsTbr = null;
-        if (!tempBasals.isEmpty()) {
-            aapsTbr = tempBasals.get(0);
+        // there's a pump bolus AAPS doesn't know, or we only know one within the same minute but different amount
+        if (pumpBolus != null && (aapsBolus == null || Math.abs(aapsBolus.insulin - pumpBolus.amount) >= 0.05)) {
+            log.debug("Last bolus on pump is unknown, refreshing bolus history");
+            request.bolusHistory = aapsBolus == null ? PumpHistoryRequest.FULL : aapsBolus.date;
         }
+
+        // last TBR (TBRs are added to history upon completion so here we don't need to care about TBRs cancelled
+        //           by the user, checkTbrMismtach() takes care of that)
         Tbr pumpTbr = null;
         List<Tbr> tbrHistory = commandResult.history.tbrHistory;
         if (!tbrHistory.isEmpty()) {
             pumpTbr = tbrHistory.get(0);
         }
-        if ((aapsTbr == null || pumpTbr == null)
-                || (aapsTbr.date != pumpTbr.timestamp || aapsTbr.percentRate != pumpTbr.percent || aapsTbr.durationInMinutes != pumpTbr.duration)) {
-            log.debug("Last TBR on pump is unknown, refreshing full TBR history");
-            request.tbrHistory = PumpHistoryRequest.FULL;
+
+        TemporaryBasal aapsTbr = null;
+        if (pumpTbr != null) {
+            aapsTbr = MainApp.getDbHelper().getTemporaryBasalsDataByDate(pumpTbr.timestamp);
         }
 
-        // last error
-        PumpError aapsError = null;
-        if (!pump.history.pumpErrorHistory.isEmpty()) {
-            aapsError = pump.history.pumpErrorHistory.get(0);
+        // TODO check possible deviations in start/duration due to imprecision of combo
+        if (pumpTbr != null && (aapsTbr == null || pumpTbr.percent != aapsTbr.percentRate || pumpTbr.duration != aapsTbr.durationInMinutes)) {
+            log.debug("Last TBR on pump is unknown, refreshing TBR history");
+            request.tbrHistory = aapsTbr == null ? PumpHistoryRequest.FULL : aapsTbr.date;
         }
+
+        /* This is loaded on demand
+        // last error
         PumpError pumpError = null;
         List<PumpError> pumpErrorHistory = commandResult.history.pumpErrorHistory;
         if (!pumpErrorHistory.isEmpty()){
             pumpError = pumpErrorHistory.get(0);
         }
-        if ((aapsError == null || pumpError == null)
-                || aapsError.timestamp != pumpError.timestamp) {
-            log.debug("Last pump error is unknown, refrehing full error history");
+        if (pumpError != null && !pump.history.pumpErrorHistory.contains(pumpError)) {
+            log.debug("Last pump error is unknown, refreshing error history");
+            request.pumpErrorHistory = pump.history.pumpErrorHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.pumpErrorHistory.get(0).timestamp;
         }
 
-        // tdd
-        // TODO v2.1
+        // last TDD
+        Tdd pumpTdd = null;
+        List<Tdd> pumpTddHistory = commandResult.history.tddHistory;
+        if (!pumpTddHistory.isEmpty()) {
+            pumpTdd = pumpTddHistory.get(0);
+        }
+        if (pumpTdd != null && !pump.history.tddHistory.contains(pumpTdd)) {
+            log.debug("Last TDD is unknown, refreshing TDD history");
+            request.tddHistory = pump.history.tddHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.tddHistory.get(0).timestamp;
+        }
+        */
 
         if (request.bolusHistory != PumpHistoryRequest.SKIP
                 || request.tbrHistory != PumpHistoryRequest.SKIP
                 || request.pumpErrorHistory != PumpHistoryRequest.SKIP
                 || request.tddHistory != PumpHistoryRequest.SKIP) {
-            readHistory(request);
+            log.debug("History reads needed to get up to date: " + request);
+            return readHistory(request);
         }
 
         return true;
     }
 
-    private void readHistory(final PumpHistoryRequest request) {
-        CommandResult result = runCommand(MainApp.sResources.getString(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
-        if (!result.success) {
-            // TODO
+    /** Reads the pump's history and updates the DB accordingly. */
+    private synchronized boolean readHistory(final PumpHistoryRequest request) {
+        CommandResult historyResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
+        if (!historyResult.success) {
+            return false;
         }
+
+        // TODO deleting boluses/TBRs that that exist in AAPS' DB but not on the pump??
 
         DatabaseHelper dbHelper = MainApp.getDbHelper();
         // boluses
-        for (Bolus pumpBolus : result.history.bolusHistory) {
+        for (Bolus pumpBolus : historyResult.history.bolusHistory) {
+            // TODO there's a possibility of two TBR in one minute, which would be stored as one in db
+            // (date is key/unique). Later TBR would override former and the later one would run
+            // longer (former one would probably be one that's immediately overridden), so not an issue?
+            // (TDD has same issue: multiple alarms of the same type in one minute or seen as one)
             Treatment aapsBolus = dbHelper.getTreatmentByDate(pumpBolus.timestamp);
             if (aapsBolus == null) {
-                log.debug("Creating record from pump bolus: " + pumpBolus);
-                // info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage.findDetailedBolusInfo( ??)
+                log.debug("Creating bolus record from pump bolus: " + pumpBolus);
                 DetailedBolusInfo dbi = new DetailedBolusInfo();
                 dbi.date = pumpBolus.timestamp;
                 dbi.insulin = pumpBolus.amount;
                 dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-                dbi.source = Source.USER;
+                dbi.source = Source.PUMP;
+                dbi.pumpId = pumpBolus.timestamp;
                 MainApp.getConfigBuilder().addToHistoryTreatment(dbi);
-                MainApp.bus().post(new EventTreatmentChange()); // <- updates treatment-bolus tab
-                // TODO another event to fforce iobcalc recalc since earliest change? hm, seems autodetected :-)
             }
         }
 
         // TBRs
         // TODO tolerance for start/end deviations? temp start is based on pump time, but in ms; round to seconds, so we can find it here more easily?
+        for (Tbr pumpTbr : historyResult.history.tbrHistory) {
+            TemporaryBasal aapsTbr = dbHelper.getTemporaryBasalsDataByDate(pumpTbr.timestamp);
+            if (aapsTbr == null) {
+                log.debug("Creating TBR from pump TBR: " + pumpTbr);
+                TemporaryBasal temporaryBasal = new TemporaryBasal();
+                temporaryBasal.date = pumpTbr.timestamp;
+                temporaryBasal.percentRate = pumpTbr.percent;
+                temporaryBasal.durationInMinutes = pumpTbr.duration;
+                temporaryBasal.isAbsolute = false;
+                temporaryBasal.source = Source.PUMP;
+                temporaryBasal.pumpId = pumpTbr.timestamp;
+                MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
+            }
+        }
 
-        // errors
-        for (PumpError pumpError : result.history.pumpErrorHistory) {
+        // errors (not persisted in DB, read from pump on start up and cached in plugin)
+        for (PumpError pumpError : historyResult.history.pumpErrorHistory) {
             if (!pump.history.pumpErrorHistory.contains(pumpError)) {
                 pump.history.pumpErrorHistory.add(pumpError);
             }
         }
 
-        // tdd
-        for (Tdd tdd : result.history.tddHistory) {
+        // TDDs (not persisted in DB, read from pump on start up and cached in plugin)
+        for (Tdd tdd : historyResult.history.tddHistory) {
             if (!pump.history.tddHistory.contains(tdd)) {
                 pump.history.tddHistory.add(tdd);
             }
         }
 
-        runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
+        CommandResult reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
+
+        return historyResult.success && reservoirBolusResult.success;
     }
 
     void forceFullHistoryRead() {
-        // TODO v2.1: optimize to pass timestamps of last known records to avoid reading known records
         readHistory(new PumpHistoryRequest()
                 .bolusHistory(PumpHistoryRequest.FULL)
                 .tbrHistory(PumpHistoryRequest.FULL)

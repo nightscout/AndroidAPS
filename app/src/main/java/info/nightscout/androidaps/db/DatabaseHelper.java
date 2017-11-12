@@ -1053,6 +1053,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTemporaryBasalChange();
     }
 
+    @Nullable
+    public TemporaryBasal getTemporaryBasalsDataByDate(long startTime) {
+        try {
+            List<TemporaryBasal> tempbasals;
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("date", startTime);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            tempbasals = getDaoTemporaryBasal().query(preparedQuery);
+            // date is unique
+            return tempbasals.isEmpty() ? null : tempbasals.get(0);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
+    }
+
     public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
         try {
             List<TemporaryBasal> tempbasals;

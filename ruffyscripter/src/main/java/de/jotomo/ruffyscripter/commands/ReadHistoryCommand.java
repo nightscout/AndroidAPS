@@ -144,6 +144,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.tddHistory.add(tdd);
+            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + tdd);
             if (record == totalRecords) {
                 break;
             }
@@ -158,11 +159,15 @@ public class ReadHistoryCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
         Double dailyTotal = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.DAILY_TOTAL);
         MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
-        Calendar instance = Calendar.getInstance();
-        int year = date.getMonth() == 12 ? Calendar.getInstance().get(Calendar.YEAR) - 1 : Calendar.getInstance().get(Calendar.YEAR);
-        instance.set(year, date.getMonth(), date.getDay());
-        long recordDate = instance.getTimeInMillis();
-        return new Tdd(recordDate, dailyTotal);
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        if (date.getMonth() > Calendar.getInstance().get(Calendar.MONTH) + 1) {
+            year -= 1;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, date.getMonth() - 1, date.getDay(), 0, 0, 0);
+
+        return new Tdd(calendar.getTimeInMillis(), dailyTotal);
     }
 
     private void readTbrRecords(long requestedTime) {
@@ -175,6 +180,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.tbrHistory.add(tbr);
+            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + tbr);
             if (record == totalRecords) {
                 break;
             }
@@ -204,6 +210,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.bolusHistory.add(bolus);
+            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + bolus);
             if (record == totalRecords) {
                 break;
             }
@@ -233,6 +240,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             history.pumpErrorHistory.add(error);
+            log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + error);
             if (record == totalRecords) {
                 break;
             }
@@ -257,12 +265,15 @@ public class ReadHistoryCommand extends BaseCommand {
         MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
         MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
 
-        int currentMonth = new Date().getMonth() + 1;
-        int currentYear = new Date().getYear() + 1900;
-        if (currentMonth == 1 && date.getMonth() == 12) {
-            currentYear -= 1;
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        if (date.getMonth() > Calendar.getInstance().get(Calendar.MONTH) + 1) {
+            year -= 1;
         }
-        return new Date(currentYear - 1900, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute()).getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), 0);
+
+        return calendar.getTimeInMillis();
+
     }
 
     @Override
