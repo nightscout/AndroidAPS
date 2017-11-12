@@ -799,5 +799,6 @@
     <string name="combo_pump_connected_now">Now</string>
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="pump_history">pump history</string>
+    <string name="combo_pump_alerts">Alerts</string>
 </resources>
 
