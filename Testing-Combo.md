@@ -49,6 +49,10 @@
         by AAPS and result in the pump's time being updated the next time communication
         with the pump takes place, so disabling automatic time updates on the phone and
         changing the phone clock manually should allow testing this
+  - [ ] XXX test year change, reading history
+        Set phone time to 31.12, 23:55, press Refresh in Combo tab to sync time to pump,
+        enter bolus
+  - [ ] XXX daylight saving time changes (2am twice)
 - [ ] Disconnected pump
   ...
 - [ ] Refilling cartridge

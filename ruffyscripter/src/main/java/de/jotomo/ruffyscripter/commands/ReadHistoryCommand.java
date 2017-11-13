@@ -149,7 +149,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
+            scripter.waitForScreenUpdate();
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
@@ -185,7 +185,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
+            scripter.waitForScreenUpdate();
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
@@ -215,7 +215,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
+            scripter.waitForScreenUpdate();
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
@@ -245,7 +245,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForMenuUpdate();
+            scripter.waitForScreenUpdate();
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }

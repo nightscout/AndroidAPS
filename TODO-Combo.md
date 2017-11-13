@@ -12,10 +12,10 @@
     - [ ] Reading history
       - [x] Bolus
         - [x] Read
-        - [x] Sync DB
+        - [x] Update DB
       - [ ] TBRs
         - [x] Read
-        - [x] Sync DB
+        - [x] Update DB
         - [ ] Issue of creating TBR start date from main menu time, which might be off by a minute
               when we read it as a history record. End date time might be slightly off, unless
               CancelTempBasal is updated to read from history (probably not worth it).
@@ -26,13 +26,13 @@
               from 59.9999 to 0)
       - [ ] Alerts
         - [x] Read
-        - [ ] Sync DB? No, but raise an alert if new ones are found beyond those read at startup
+        - [ ] Update DB? No, but raise an alert if new ones are found beyond those read at startup
               (Those that occurred while AAPS was not active needn't be turned into alarms,
                the user had to deal with them on the pump already).
         - [x] Display in UI
-      - [ ] TDD
+      - [x] TDD
         - [x] Read
-        - [ ] Sync DB?
+        - [x] Update DB? No, just write to plugin cache
         - [x] Display in UI
     - [ ] Taking over alerts
       - [ ] On connect

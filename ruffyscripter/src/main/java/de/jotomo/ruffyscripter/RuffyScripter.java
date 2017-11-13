@@ -219,7 +219,7 @@ public class RuffyScripter implements RuffyCommands {
         while (menuType != MenuType.MAIN_MENU && menuType != MenuType.STOP && menuType != MenuType.WARNING_OR_ERROR) {
             log.debug("Going back to main menu, currently at " + menuType);
             pressBackKey();
-            waitForMenuUpdate();
+            waitForScreenUpdate();
             menuType = getCurrentMenu().getType();
         }
     }
@@ -570,40 +570,20 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    // TODO sort out usages of this method and waitForMenu update, which have the same intent,
-    // but approach things differently;
-    private void waitForScreenUpdate() {
+    /**
+     * Wait until the menu is updated
+     */
+    public void waitForScreenUpdate() {
         if (Thread.currentThread().isInterrupted())
             throw new CommandException("Interrupted");
         synchronized (screenlock) {
             try {
-                screenlock.wait((long) 2000); // updates usually come in every ~500, occasionally up to 1100ms
+                // updates usually come in every ~500, occasionally up to 1100ms
+                screenlock.wait((long) 2000);
             } catch (InterruptedException e) {
                 throw new CommandException("Interrupted");
             }
         }
-    }
-
-    // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
-    // then anything longer than a few seconds is an error;
-    // only ensureConnected() uses the method with the timeout parameter; inline that code,
-    // so we can use a custom timeout and give a better error message in case of failure
-
-    // TODO confirmAlarms? and report back which were cancelled?
-
-    /**
-     * Wait until the menu is updated
-     */
-    public void waitForMenuUpdate() {
-        waitForScreenUpdate();
-//        long timeoutExpired = System.currentTimeMillis() + 60 * 1000;
-//        long initialUpdateTime = menuLastUpdated;
-//        while (initialUpdateTime == menuLastUpdated) {
-//            if (System.currentTimeMillis() > timeoutExpired) {
-//                throw new CommandException("Timeout waiting for menu update");
-//            }
-//            SystemClock.sleep(10);
-//        }
     }
 
     private void pressKey(final byte key) {
@@ -619,25 +599,17 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     public void navigateToMenu(MenuType desiredMenu) {
-//        MenuType startedFrom = getCurrentMenu().getType();
-//        boolean movedOnce = false;
-        int retries = 20;
+        int moviesLeft = 20;
         while (getCurrentMenu().getType() != desiredMenu) {
-            retries--;
+            moviesLeft--;
             MenuType currentMenuType = getCurrentMenu().getType();
             log.debug("Navigating to menu " + desiredMenu + ", current menu: " + currentMenuType);
-//            if (movedOnce && currentMenuType == startedFrom) {
-//                throw new CommandException().message("Menu not found searching for " + desiredMenu
-//                        + ". Check menu settings on your pump to ensure it's not hidden.");
-//            }
-            if (retries == 0) {
+            if (moviesLeft == 0) {
                 throw new CommandException("Menu not found searching for " + desiredMenu
                         + ". Check menu settings on your pump to ensure it's not hidden.");
             }
             pressMenuKey();
-//            waitForMenuToBeLeft(currentMenuType);
-            SystemClock.sleep(200);
-//            movedOnce = true;
+            waitForScreenUpdate();
         }
     }
 
