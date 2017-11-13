@@ -272,7 +272,8 @@ public class ReadHistoryCommand extends BaseCommand {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), 0);
 
-        return calendar.getTimeInMillis();
+        // round to second
+        return calendar.getTimeInMillis() - calendar.getTimeInMillis() % 1000;
 
     }
 
