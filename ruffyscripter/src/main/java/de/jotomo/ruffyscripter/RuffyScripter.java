@@ -22,7 +22,6 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -244,16 +243,14 @@ public class RuffyScripter implements RuffyCommands {
                 log.debug("Connection ready to execute cmd " + cmd);
                 Thread cmdThread = new Thread(() -> {
                     try {
-                        // TODO fail if currentMenu is not available?
-                        Menu localCurrentMenu = currentMenu;
-                        if (localCurrentMenu == null || localCurrentMenu.getType() == MenuType.STOP) {
+                        if (getCurrentMenu().getType() == MenuType.STOP) {
                             if (cmd.needsRunMode()) {
                                 log.error("Requested command requires run mode, but pump is suspended");
                                 activeCmd.getResult().success = false;
                                 return;
                             }
                         }
-                        if (localCurrentMenu != null && localCurrentMenu.getType() == MenuType.WARNING_OR_ERROR
+                        if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR
                                 && !(cmd instanceof ConfirmAlertCommand)) {
                             log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
                             activeCmd.getResult().success = false;
@@ -506,14 +503,22 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     // === pump ops ===
+    @NonNull
     public Menu getCurrentMenu() {
         if (Thread.currentThread().isInterrupted())
             throw new CommandException("Interrupted");
-        if (currentMenu == null) {
+        Menu menu = this.currentMenu;
+        if (menu == null) {
             log.error("currentMenu == null, bailing");
             throw new CommandException("Unable to read current menu");
         }
-        return currentMenu;
+        return menu;
+    }
+
+    @Nullable
+    public String getCurrentMenuName() {
+        Menu menu = this.currentMenu;
+        return menu != null ? menu.getType().toString() : "<none>";
     }
 
     public void pressUpKey() {
@@ -661,7 +666,7 @@ public class RuffyScripter implements RuffyCommands {
                 retries = retries - 1;
             } else {
                 if (failureMessage == null) {
-                    failureMessage = "Invalid pump state, expected to be in menu " + expectedMenu + ", but current menu is " + currentMenu.getType();
+                    failureMessage = "Invalid pump state, expected to be in menu " + expectedMenu + ", but current menu is " + getCurrentMenuName();
                 }
                 throw new CommandException(failureMessage);
             }
@@ -675,7 +680,7 @@ public class RuffyScripter implements RuffyCommands {
                 SystemClock.sleep(100);
                 retries = retries - 1;
             } else {
-                throw new CommandException("Invalid pump state, expected to be in menu MAIN or STOP but current menu is " + currentMenu.getType());
+                throw new CommandException("Invalid pump state, expected to be in menu MAIN or STOP but current menu is " + getCurrentMenuName());
             }
         }
     }
