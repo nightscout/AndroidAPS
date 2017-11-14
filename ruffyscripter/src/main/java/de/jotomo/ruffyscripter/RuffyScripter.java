@@ -340,11 +340,16 @@ public class RuffyScripter implements RuffyCommands {
                 // TOD under which circumstances can these occur?
             } catch (CommandException e) {
                 log.error("CommandException while executing command", e);
+                recoverFromCommandFailure();
                 return activeCmd.getResult().success(false).state(readPumpStateInternal());
             } catch (Exception e) {
                 log.error("Unexpected exception communication with ruffy", e);
+                recoverFromCommandFailure();
                 return activeCmd.getResult().success(false).exception(e).state(readPumpStateInternal());
             } finally {
+                if (activeCmd.getResult().success) {
+                    log.warn("Command " + activeCmd + " successful, but finished leaving pump on menu " + getCurrentMenuName());
+                }
                 activeCmd = null;
             }
         }
@@ -396,6 +401,23 @@ public class RuffyScripter implements RuffyCommands {
         } catch (RemoteException e) {
             log.debug("Recovery from connection loss failed");
             return false;
+        }
+    }
+
+    /** Returns to the main menu (if possible) after a command failure, so that subsequent commands
+     * reusing the connection won't fail. */
+    private void recoverFromCommandFailure() {
+        Menu menu = this.currentMenu;
+        if (menu == null) {
+            return;
+        }
+        MenuType type = menu.getType();
+        if (type != MenuType.WARNING_OR_ERROR && type != MenuType.MAIN_MENU) {
+            try {
+                returnToRootMenu();
+            } catch (Exception e) {
+                log.warn("Error returning to main menu, when trying to recover from command failure", e);
+            }
         }
     }
 
