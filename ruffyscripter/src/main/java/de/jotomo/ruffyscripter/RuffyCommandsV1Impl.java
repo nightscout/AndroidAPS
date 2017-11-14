@@ -69,6 +69,11 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
+    public boolean isConnected() {
+        return delegate.isConnected();
+    }
+
+    @Override
     public CommandResult readPumpState() {
         return delegate.readPumpState();
     }

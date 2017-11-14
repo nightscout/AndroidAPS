@@ -204,6 +204,15 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
+    public boolean isConnected() {
+        try {
+            return ruffyService.isConnected();
+        } catch (RemoteException e) {
+            return false;
+        }
+    }
+
+    @Override
     public CommandResult readPumpState() {
         return runCommand(new ReadPumpStateCommand());
     }
@@ -485,7 +494,7 @@ public class RuffyScripter implements RuffyCommands {
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
-            state.alertCodes = readWarningOrErrorCode();
+            state.activeAlert = readWarningOrErrorCode();
         } else if (menuType == MenuType.STOP) {
             state.suspended = true;
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));

@@ -23,6 +23,9 @@ public interface RuffyCommands {
     /** Indicate of the pump is busy processing a command. */
     boolean isPumpBusy();
 
+    /** Whether there's an active BT connection to the pump. */
+    boolean isConnected();
+
     /** Read the state of the pump, which encompasses all information displayed on the main menu. */
     CommandResult readPumpState();
 
