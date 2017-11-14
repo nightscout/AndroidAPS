@@ -22,7 +22,8 @@ public class CommandResult {
 
     /** Whether an alert (warning only) was confirmed. This can happen during boluses.
      * Request error history to see which errors occurred. */
-    // TODO check usages
+    // TODO check usage
+    // TODO return alerts to display? 'forwardedAlert'?
     public boolean alertConfirmed;
     /** BolusCommand: if a cancel request was successful */
     public boolean wasSuccessfullyCancelled;

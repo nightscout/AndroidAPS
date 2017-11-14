@@ -5,35 +5,20 @@
     - When developing (and thus killing/restarting AAPS often) this is trigger more frequently, leaving
       some ruffy-releated (BT) cache in disarray? Immune to wiping, only repairing seems to work so far
   - [x] Timeout connecting to pump -> crash (result.state wasn't filled in case of timeout)
-  - [ ] Bolus deleted in treatments  (marked invalid?!) is re-added when pump reads history
+  - [x] Bolus deleted in treatments  (marked invalid?!) is re-added when pump reads history
+        Probably fixed through other bugfixes, irrelevant though as "pump history records" can't
+        be deleted in AAPS
+  - [ ] Issue of creating TBR start date from main menu time, which might be off by a minute
+        when we read it as a history record. End date time might be slightly off, unless
+         CancelTempBasal is updated to read from history (probably not worth it).
+         What would happen if while setting the TBR the start time was 12:01 but then
+         we read a history record with a start time of 12:02, both running 30min.
+         Would the former be trimmed to 1m? That'd be acceptable (this edge case occurs
+         if between confirm the TBR and reading the main menu date, the second goes
+         from 59.9999 to 0)
 - [ ] Tasks
   - [ ] Main
     - [ ] on command error: recover by returning to main menu
-    - [ ] Reading history
-      - [x] Bolus
-        - [x] Read
-        - [x] Update DB
-      - [ ] TBRs
-        - [x] Read
-        - [x] Update DB
-        - [ ] Issue of creating TBR start date from main menu time, which might be off by a minute
-              when we read it as a history record. End date time might be slightly off, unless
-              CancelTempBasal is updated to read from history (probably not worth it).
-              What would happen if while setting the TBR the start time was 12:01 but then
-              we read a history record with a start time of 12:02, both running 30min.
-              Would the former be trimmed to 1m? That'd be acceptable (this edge case occurs
-              if between confirm the TBR and reading the main menu date, the second goes
-              from 59.9999 to 0)
-      - [ ] Alerts
-        - [x] Read
-        - [ ] Update DB? No, but raise an alert if new ones are found beyond those read at startup
-              (Those that occurred while AAPS was not active needn't be turned into alarms,
-               the user had to deal with them on the pump already).
-        - [x] Display in UI
-      - [x] TDD
-        - [x] Read
-        - [x] Update DB? No, just write to plugin cache
-        - [x] Display in UI
     - [ ] Taking over alerts
       - [ ] On connect
       - [ ] During bolusing
@@ -46,6 +31,23 @@
     - [ ] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
           after 15m of no other command taking place. IOB will then be current with next loop
+    - [x] Reading history
+      - [x] Bolus
+        - [x] Read
+        - [x] Update DB
+      - [x] TBRs
+        - [x] Read
+        - [x] Update DB
+      - [x] Alerts
+        - [x] Read
+        - [x] Update DB? No, but raise an alert if new ones are found beyond those read at startup
+              (Those that occurred while AAPS was not active needn't be turned into alarms,
+               the user had to deal with them on the pump already). (Done via "Taking over alerts")
+        - [x] Display in UI
+      - [x] TDD
+        - [x] Read
+        - [x] Update DB? No, just write to plugin cache
+        - [x] Display in UI
     - [x] Optimize reading full history to pass timestamps of last known records to avoid reading known records
           iteration.
   - [ ] Cleanups
@@ -59,7 +61,7 @@
   - [ ] Integrate alarms
     - [x] Remove combo alerter thread
     - [ ] Fix display of alarms on mainscreen (increase height if needed)
-    - [ ] Display errors in combo tap
+    - [ ] Display errors in combo tab(?)
     - [x] Option to raise overview notifications as android notification with noise (for urgent ones?)
   - [ ] Low prio
     - [ ] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
