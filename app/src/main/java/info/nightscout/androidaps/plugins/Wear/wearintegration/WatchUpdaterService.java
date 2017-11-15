@@ -542,28 +542,16 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
-            //Log.e("SendStatus", "timestamp is " + System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("externalStatusString", status);
-            //Log.e("SendStatus", "externalStatusString is " + status);
             dataMapRequest.getDataMap().putString("iobTotal", iobTotal);
-            //Log.e("SendStatus", "iobTotal is " + iobTotal);
             dataMapRequest.getDataMap().putString("iobDetail", iobDetail);
-            //Log.e("SendStatus", "iobDetail is " + iobDetail);
             dataMapRequest.getDataMap().putBoolean("detailedIob", mPrefs.getBoolean("wear_detailediob", false));
-            //Log.e("SendStatus", "cob is " + cobString);
             dataMapRequest.getDataMap().putString("cob", cobString);
-            //Log.e("SendStatus", "cob is " + cobString);
             dataMapRequest.getDataMap().putString("tempBasal", tempBasal);
-            //Log.e("SendStatus", "tempBasal is " + tempBasal);
             dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
-            //Log.e("SendStatus", "battery is " + phoneBattery);
             dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
-            //Log.e("SendStatus", "rigBattery is " + rigBattery);
             dataMapRequest.getDataMap().putString("openApsStatus", openApsStatus);
-            //Log.e("SendStatus", "openApsStatus is " + openApsStatus);
             dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
-            //Log.e("SendStatus", "batteryLevel is " + ((phoneBattery >= 30) ? 1 : 0));
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {

@@ -18,13 +18,35 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/input_design"
-        android:entryValues="@array/input_design_values"
-        android:key="input_design"
-        android:summary="Input Design"
-        android:title="Input Design" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="show_date"
+        android:title="Show Date"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_iob"
+        android:title="Show IOB"
+        android:summary="Show insulin on board."
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_cob"
+        android:title="Show COB"
+        android:summary="Show carb on board."
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_temp_basal"
+        android:title="Show Temp Basal"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -41,26 +63,11 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="show_date"
-        android:title="Show Date"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
         android:defaultValue="true"
         android:key="showExternalStatus"
         android:title="Show Loop Status"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="highlight_basals"
-        android:summary="Better visible basal rate and temp basals"
-        android:title="Highlight Basals"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -88,9 +95,33 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="showBG"
+        android:summary="Show BG. (Circle WF)"
+        android:title="Show BG"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_direction"
+        android:summary="Show direction arrow"
+        android:title="Show Direction Arrow"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:key="dark"
         android:summary="Dark theme"
         android:title="Dark"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="highlight_basals"
+        android:summary="Better visible basal rate and temp basals"
+        android:title="Highlight Basals"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -102,13 +133,13 @@
         android:summary="Chart Timeframe"
         android:title="Chart Timeframe" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showBG"
-        android:summary="Show BG. (Circle WF)"
-        android:title="Show BG"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="input_design"
+        android:summary="Input Design"
+        android:title="Input Design" />
 
     <CheckBoxPreference
         android:defaultValue="false"
