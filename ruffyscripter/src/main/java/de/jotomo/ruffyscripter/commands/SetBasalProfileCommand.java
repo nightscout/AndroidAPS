@@ -15,6 +15,7 @@ public class SetBasalProfileCommand extends BaseCommand {
     @Override
     public void execute() {
         // TODO
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override

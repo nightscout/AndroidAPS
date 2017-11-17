@@ -22,9 +22,6 @@ public abstract class BaseCommand implements Command {
         return false;
     }
 
-    // TODO i18n; can we work with error codes instead of messages? Like W07? that way we're language agnostic
-    // error message ist still needed to cancel TBR though, let next-gen ruffy take care of that?
-
     /**
      * A warning id (or null) caused by a disconnect we can safely confirm on reconnect,
      * knowing it's not severe as it was caused by this command.

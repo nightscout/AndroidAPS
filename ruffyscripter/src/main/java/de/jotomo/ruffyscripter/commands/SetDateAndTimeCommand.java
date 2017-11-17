@@ -6,16 +6,19 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 
 import de.jotomo.ruffy.spi.CommandResult;
 
-/**
- * Created by joe on 08/11/17.
- */
-
 public class SetDateAndTimeCommand extends BaseCommand {
     @Override
     public void execute() {
+        throw new RuntimeException("Not implemented yet");
 /*        scripter.navigateToMenu(MenuType.DATE_AND_TIME_MENU);
         scripter.pressCheckKey();
-        // TODO ruffy does'n support date/time menu yet*/
+        // TODO ruffy does'n support date/time menu yet
         result.success = true;
+*/
+    }
+
+    @Override
+    public String toString() {
+        return "SetDateAndTimeCommand{}";
     }
 }

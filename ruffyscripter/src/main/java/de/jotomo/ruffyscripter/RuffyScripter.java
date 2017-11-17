@@ -54,8 +54,6 @@ public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
     private IRuffyService ruffyService;
-    // TODO never written
-    private String unrecoverableError = null;
 
     @Nullable
     private volatile Menu currentMenu;
@@ -178,7 +176,7 @@ public class RuffyScripter implements RuffyCommands {
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
         @Override
         public void run() {
-            while (unrecoverableError == null) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     long now = System.currentTimeMillis();
                     long connectionTimeOutMs = 5000;
@@ -233,7 +231,9 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    /** Always returns a CommandResult, never throws */
+    /**
+     * Always returns a CommandResult, never throws
+     */
     private CommandResult runCommand(final Command cmd) {
         log.debug("Attempting to run cmd: " + cmd);
 
@@ -243,7 +243,6 @@ public class RuffyScripter implements RuffyCommands {
             return new CommandResult().success(false).state(readPumpStateInternal());
         }
 
-        // TODO simplify, hard to reason about exists
         synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
@@ -252,21 +251,34 @@ public class RuffyScripter implements RuffyCommands {
                 log.debug("Connection ready to execute cmd " + cmd);
                 Thread cmdThread = new Thread(() -> {
                     try {
-                        if (getCurrentMenu().getType() == MenuType.STOP) {
-                            if (cmd.needsRunMode()) {
-                                log.error("Requested command requires run mode, but pump is suspended");
-                                activeCmd.getResult().success = false;
-                                return;
-                            }
-                        }
-                        if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR
-                                && !(cmd instanceof ConfirmAlertCommand)) {
+                        // check pump in a suitable state to run the requested command
+                        if (cmd instanceof ReadPumpStateCommand) {
+                            // always allowed, state is set at the end of runCommand method
+                        } else if (getCurrentMenu().getType() == MenuType.STOP && cmd.needsRunMode()) {
+                            log.error("Requested command requires run mode, but pump is suspended");
+                            activeCmd.getResult().success = false;
+                            return;
+                        } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR && !(cmd instanceof ConfirmAlertCommand)) {
                             log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
                             activeCmd.getResult().success = false;
                             return; // active alert is returned as part of PumpState
+                        } else if (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
+                            log.debug("Pump is unexpectedly not on main menu but " + getCurrentMenuName());
+                            activeCmd.getResult().success = false;
+                            return;
                         }
+
+                        // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
+                        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+                        while (ruffyService.isConnected() && bolusRemaining != null) {
+                            log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
+                            waitForScreenUpdate();
+                        }
+
                         PumpState pumpState = readPumpStateInternal();
                         log.debug("Pump state before running command: " + pumpState);
+
+                        // execute the command
                         cmd.setScripter(RuffyScripter.this);
                         long cmdStartTime = System.currentTimeMillis();
                         cmd.execute();
@@ -285,54 +297,40 @@ public class RuffyScripter implements RuffyCommands {
                 long executionStart = System.currentTimeMillis();
                 cmdThread.start();
 
-                // time out if nothing has been happening for more than 90s or after 4m
-                // (to fail before the next loop iteration issues the next command)
-                long dynamicTimeout = calculateCmdInactivityTimeout();
-                long overallTimeout = calculateOverallCmdTimeout();
+                long overallTimeout = System.currentTimeMillis() + 4 * 60 * 1000;
                 while (cmdThread.isAlive()) {
                     if (!ruffyService.isConnected()) {
-                        // on connection lose try to reconnect, confirm warning alerts caused by
+                        // on connection loss try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
-                        for(int attempts = 4; attempts > 0; attempts--) {
+                        for (int attempts = 4; attempts > 0; attempts--) {
                             boolean reconnected = recoverFromConnectionLoss();
                             if (reconnected) {
                                 break;
                             }
-                            // try again in 20 sec
-                            SystemClock.sleep(20 * 1000);
+                            // connect attempt times out after 30s, shortly wait and then retry;
+                            // (30s timeout + 5s wait) * 4 attempts = 140s
+                            SystemClock.sleep(5 * 1000);
                         }
                     }
 
-                    long now = System.currentTimeMillis();
-                    if (now > dynamicTimeout) {
-                        boolean menuRecentlyUpdated = now < menuLastUpdated + 5 * 1000;
-                        boolean idlingInMainMenu = getCurrentMenu().getType() == MenuType.MAIN_MENU
-                                && !getCurrentMenu().attributes().contains(MenuAttribute.BOLUS_REMAINING);
-                        // TODO this triggers falsely if command finished and idles in main menu until
-                        // conneciton is closed; probably better since wait is moved to bottom of loop
-                        // so the while(cmdThread.isAlive) check and this isn't 500ms apart.
-                        // still, think this through; maybe wait a fec seconds and recheck if command is
-                        // active and menu is still main menu ...
-                        if (menuRecentlyUpdated && !idlingInMainMenu) {
-                            // command still working (or waiting for pump to complete, e.g. bolus delivery)
-                            dynamicTimeout = now + 30 * 1000;
-                        } else {
-                            log.error("Dynamic timeout running command " + activeCmd);
-                            cmdThread.interrupt();
-                            SystemClock.sleep(5000);
-                            log.error("Timed out thread dead yet? " + cmdThread.isAlive());
-                            activeCmd.getResult().success = false;
-                            break;
-                        }
-                    }
-                    if (now > overallTimeout) {
-                        log.error("Command " + cmd + " timed out");
+                    // abort if there has been no transmission from the pump for 15s
+                    if (!(System.currentTimeMillis() < menuLastUpdated + 15 * 1000)) {
+                        log.error("Dynamic timeout running command " + activeCmd);
+                        cmdThread.interrupt();
                         activeCmd.getResult().success = false;
                         break;
                     }
+
+                    if (System.currentTimeMillis() > overallTimeout) {
+                        log.error("Command " + cmd + " timed out");
+                        cmdThread.interrupt();
+                        activeCmd.getResult().success = false;
+                        break;
+                    }
+
                     log.trace("Waiting for running command to complete");
                     SystemClock.sleep(500);
                 }
@@ -346,7 +344,6 @@ public class RuffyScripter implements RuffyCommands {
                     log.debug("Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s");
                 }
                 return result;
-                // TOD under which circumstances can these occur?
             } catch (CommandException e) {
                 log.error("CommandException while executing command", e);
                 recoverFromCommandFailure();
@@ -354,9 +351,10 @@ public class RuffyScripter implements RuffyCommands {
             } catch (Exception e) {
                 log.error("Unexpected exception communication with ruffy", e);
                 recoverFromCommandFailure();
-                return activeCmd.getResult().success(false).exception(e).state(readPumpStateInternal());
+                return activeCmd.getResult().success(false).state(readPumpStateInternal());
             } finally {
-                if (activeCmd.getResult().success) {
+                Menu menu = this.currentMenu;
+                if (activeCmd.getResult().success && menu != null && menu.getType() != MenuType.MAIN_MENU) {
                     log.warn("Command " + activeCmd + " successful, but finished leaving pump on menu " + getCurrentMenuName());
                 }
                 activeCmd = null;
@@ -364,16 +362,8 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    private long calculateCmdInactivityTimeout() {
-        return System.currentTimeMillis() + 5 * 1000;
-    }
-
-    private long calculateOverallCmdTimeout() {
-        return System.currentTimeMillis() + 4 * 60 * 1000;
-    }
-
     /**
-     * On connection lose the pump raises an alert immediately (when setting a TBR or giving a bolus) -
+     * On connection loss the pump raises an alert immediately (when setting a TBR or giving a bolus) -
      * there's no timeout before that happens. But: a reconnect is still possible which can then
      * confirm the alert.
      *
@@ -405,16 +395,18 @@ public class RuffyScripter implements RuffyCommands {
                 waitForScreenUpdate();
             }
             boolean connected = ruffyService.isConnected();
-            log.debug("Recovery from connection loss successful:" + connected);
+            log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
             return connected;
         } catch (RemoteException e) {
-            log.debug("Recovery from connection loss failed");
+            log.debug("Recovery from connection loss failed", e);
             return false;
         }
     }
 
-    /** Returns to the main menu (if possible) after a command failure, so that subsequent commands
-     * reusing the connection won't fail. */
+    /**
+     * Returns to the main menu (if possible) after a command failure, so that subsequent commands
+     * reusing the connection won't fail.
+     */
     private void recoverFromCommandFailure() {
         Menu menu = this.currentMenu;
         if (menu == null) {
@@ -430,7 +422,9 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    /** If there's an issue, this times out eventually and throws a CommandException */
+    /**
+     * If there's an issue, this times out eventually and throws a CommandException
+     */
     private void ensureConnected() {
         try {
             if (ruffyService.isConnected()) {
@@ -456,16 +450,14 @@ public class RuffyScripter implements RuffyCommands {
         }
     }
 
-    // TODO v2 add remaining info we can extract from the main menu, low battery and low
-    // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
-
     /**
      * This reads the state of the, which is whatever is currently displayed on the display,
      * no actions are performed.
      */
     public PumpState readPumpStateInternal() {
         PumpState state = new PumpState();
-        state.timestamp = System.currentTimeMillis();
+        // round timestamp to full second
+        state.timestamp = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
         Menu menu = currentMenu;
         if (menu == null) {
             return state;
@@ -519,11 +511,6 @@ public class RuffyScripter implements RuffyCommands {
                 ? new WarningOrErrorCode(warningCode, errorCode) : null;
     }
 
-// below: methods to be used by commands
-// TODO move into a new Operations(scripter) class commands can delegate to,
-// so this class can focus on providing a connection to run commands
-// (or maybe reconsider putting it into a base class)
-
     public static class Key {
         public static byte NO_KEY = (byte) 0x00;
         public static byte MENU = (byte) 0x03;
@@ -547,7 +534,7 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Nullable
-    public String getCurrentMenuName() {
+    private String getCurrentMenuName() {
         Menu menu = this.currentMenu;
         return menu != null ? menu.getType().toString() : "<none>";
     }
@@ -576,7 +563,7 @@ public class RuffyScripter implements RuffyCommands {
         log.debug("Releasing menu key");
     }
 
-    public void pressBackKey() {
+    private void pressBackKey() {
         log.debug("Pressing back key");
         pressKey(Key.BACK);
         log.debug("Releasing back key");
@@ -781,7 +768,6 @@ public class RuffyScripter implements RuffyCommands {
             if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 WarningOrErrorCode warningOrErrorCode = readWarningOrErrorCode();
                 if (warningOrErrorCode.errorCode != null) {
-                    // TODO proper way to display such things in the UI;
                     throw new CommandException("Pump is in error state");
                 }
                 Integer displayedWarningCode = warningOrErrorCode.warningCode;

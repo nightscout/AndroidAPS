@@ -15,5 +15,13 @@ public class WarningOrErrorCode {
         this.warningCode = warningCode;
         this.errorCode = errorCode;
     }
+
+    @Override
+    public String toString() {
+        return "WarningOrErrorCode{" +
+                "warningCode=" + warningCode +
+                ", errorCode=" + errorCode +
+                '}';
+    }
 }
 

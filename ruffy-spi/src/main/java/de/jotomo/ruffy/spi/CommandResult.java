@@ -2,14 +2,15 @@ package de.jotomo.ruffy.spi;
 
 import android.support.annotation.Nullable;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 
 public class CommandResult {
     /** Whether the command was executed successfully. */
     public boolean success;
-    /** Null unless an unhandled exception was raised. */
-    public Exception exception;
     /** State of the pump *after* command execution. */
     public PumpState state;
     /** History if requested by the command. */
@@ -20,13 +21,9 @@ public class CommandResult {
     /** Total duration the command took. */
     public String duration;
 
-    /** Whether an alert (warning only) was confirmed. This can happen during boluses.
-     * Request error history to see which errors occurred. */
-    // TODO check usage
-    // TODO return alerts to display? 'forwardedAlert'?
-    public boolean alertConfirmed;
-    /** BolusCommand: if a cancel request was successful */
-    public boolean wasSuccessfullyCancelled;
+    /** Warnings raised on the pump that are forwarded to AAPS to be turned into AAPS
+     * notifications. */
+    public List<Integer> forwardedWarnings = new LinkedList<>();
 
     public int reservoirLevel = -1;
 
@@ -40,11 +37,6 @@ public class CommandResult {
 
     public CommandResult duration(String duration) {
         this.duration = duration;
-        return this;
-    }
-
-    public CommandResult exception(Exception exception) {
-        this.exception = exception;
         return this;
     }
 
@@ -67,13 +59,11 @@ public class CommandResult {
     public String toString() {
         return "CommandResult{" +
                 "success=" + success +
-                ", exception=" + exception +
                 ", state=" + state +
                 ", history=" + history +
                 ", basalProfile=" + basalProfile +
                 ", duration='" + duration + '\'' +
-                ", alertConfirmed='" + alertConfirmed + '\'' +
-                ", wasSuccessfullyCancelled='" + wasSuccessfullyCancelled + '\'' +
+                ", forwardedWarnings='" + forwardedWarnings + '\'' +
                 '}';
     }
 }

@@ -4,7 +4,7 @@ import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
 
 /** State displayed on the main screen of the pump. */
 public class PumpState {
-    /** Time the state was captured */
+    /** Time the state was captured, rounded to a full second */
     public long timestamp;
     /** The time displayed on the main menu */
     public long pumpTimeMinutesOfDay;
@@ -22,7 +22,7 @@ public class PumpState {
 
     /** Warning or error code displayed if a warning or alert alert is active,
      * see {@link PumpWarningCodes}, {@link PumpErrorCodes} */
-    public WarningOrErrorCode alertCodes;
+    public WarningOrErrorCode activeAlert;
 
     public static final int UNKNOWN = -1;
     public static final int LOW = 1;

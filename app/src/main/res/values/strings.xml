@@ -768,14 +768,11 @@
     <string name="combo_stats">Stats</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity">Activity</string>
-    <string name="combo_no_pump_connection">No connection for %s</string>
-    <!-- TODO v2 this is more like 'last command' failed -->
+    <string name="combo_no_pump_connection">No successful connection for %s</string>
     <string name="combo_connect_attempt_failed">Last connect attempt failed</string>
     <string name="combo_last_connection_time">%s</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
     <string name="combo_last_bolus">%.1f U (%s, %s)</string>
-    <!-- TODO v2 better name, 'disconnected' but may confusing since the loop can be disconnected
-        and technically the pump is disconnected when no command is running -->
     <string name="combo_pump_state_disconnected">Disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
@@ -800,5 +797,9 @@
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="pump_history">pump history</string>
     <string name="combo_pump_alerts">Alerts</string>
+    <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
+    <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
+    <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
+    <string name="combo_is_in_error_state">Pump is in an error state, please check the pump</string>
 </resources>
 

@@ -4,7 +4,6 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
 import info.nightscout.androidaps.R;
@@ -23,7 +19,6 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 
-// TODO clean up time/date formatting once this stabilizes a bit more
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
     private TextView stateView;
     private TextView activityView;
@@ -99,7 +94,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 ComboPlugin plugin = ComboPlugin.getPlugin();
 
                 // state
-                stateView.setText(plugin.getStateSummary()); // todo: inline, coupled with colour
+                stateView.setText(plugin.getStateSummary());
                 PumpState ps = plugin.getPump().state;
                 if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY) {
                     stateView.setTextColor(Color.RED);
@@ -139,14 +134,14 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
 
                     // last connection
-                    String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulConnection);
-                    if (plugin.getPump().lastSuccessfulConnection + 60 * 1000 > System.currentTimeMillis()) {
+                    String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulCmdTime);
+                    if (plugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                         lastConnectionView.setText(R.string.combo_pump_connected_now);
                         lastConnectionView.setTextColor(Color.WHITE);
-                    } else if (plugin.getPump().lastSuccessfulConnection < System.currentTimeMillis() - 30 * 60 * 1000) {
+                    } else if (plugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                         lastConnectionView.setText(getString(R.string.combo_no_pump_connection, minAgo));
                         lastConnectionView.setTextColor(Color.RED);
-                    } else if (plugin.getPump().lastConnectionAttempt > plugin.getPump().lastSuccessfulConnection) {
+                    } else if (plugin.getPump().lastCmdTime > plugin.getPump().lastSuccessfulCmdTime) {
                         String lastFailed = minAgo + "\n" + getString(R.string.combo_connect_attempt_failed);
                         lastConnectionView.setText(lastFailed);
                         lastConnectionView.setTextColor(Color.YELLOW);
@@ -161,6 +156,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                         double bolusMinAgo = agoMsc / 60d / 1000d;
                         double bolusHoursAgo = agoMsc / 60d / 60d / 1000d;
+                        // TODO i18n
                         if ((agoMsc < 60 * 1000)) {
                             lastBolusView.setText(String.format("%.1f U (now)", bolus.amount, (int) bolusMinAgo));
                         } else if (bolusMinAgo < 60) {
@@ -186,11 +182,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         }
                     }
                     tempBasalText.setText(tbrStr);
-
-
-                    // TODO error ratio?
-                    // display last warning/error?
-                    // last comm error?
                 }
             });
     }

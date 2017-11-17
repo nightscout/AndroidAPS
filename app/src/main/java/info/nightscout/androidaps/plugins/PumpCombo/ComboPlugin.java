@@ -7,20 +7,23 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
+import de.jotomo.ruffy.spi.PumpWarningCodes;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpError;
+import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
 import de.jotomo.ruffy.spi.history.Tdd;
+import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -59,35 +62,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = false;
 
-    private PumpDescription pumpDescription = new PumpDescription();
+    private final static PumpDescription pumpDescription = new PumpDescription();
 
-    @NonNull
-    private final RuffyCommands ruffyScripter;
-
-    // TODO access to pump (and its members) is chaotic and needs an update
-    private static ComboPump pump = new ComboPump();
-
-    private volatile boolean bolusInProgress;
-    private volatile boolean cancelBolus;
-    private Bolus lastRequestedBolus;
-
-    public static ComboPlugin getPlugin() {
-        if (plugin == null)
-            plugin = new ComboPlugin();
-        return plugin;
-    }
-
-    private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
-
-    private ComboPlugin() {
-        definePumpCapabilities();
-        ruffyScripter = RuffyCommandsV1Impl.getInstance(MainApp.instance());
-    }
-
-    private void definePumpCapabilities() {
-        // these properties are static; they can't be changed on the pump, but only via
-        // desktop configuration software
+    static {
+        // these properties can't be changed on the pump, some via desktop configuration software
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
@@ -111,6 +89,29 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.basalMinimumRate = 0.0d;
 
         pumpDescription.isRefillingCapable = true;
+    }
+
+    @NonNull
+    private final RuffyCommands ruffyScripter;
+
+    private static ComboPump pump = new ComboPump();
+
+    private volatile boolean bolusInProgress;
+    private volatile boolean cancelBolus;
+    private Bolus lastRequestedBolus;
+    private long pumpHistoryLastChecked;
+
+    public static ComboPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new ComboPlugin();
+        return plugin;
+    }
+
+    private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
+            .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
+
+    private ComboPlugin() {
+        ruffyScripter = RuffyCommandsV1Impl.getInstance(MainApp.instance());
     }
 
     public ComboPump getPump() {
@@ -213,18 +214,33 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public int setNewBasalProfile(Profile profile) {
-        return FAILED;
+        BasalProfile basalProfile = convertProfileToComboProfile(profile);
+        if (pump.basalProfile.equals(basalProfile)) {
+            return PumpInterface.NOT_NEEDED;
+        }
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
+                () -> ruffyScripter.setBasalProfile(basalProfile));
+        return commandResult.success ? PumpInterface.SUCCESS : PumpInterface.FAILED;
     }
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return false;
+        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
+    }
+
+    @NonNull
+    private BasalProfile convertProfileToComboProfile(Profile profile) {
+        BasalProfile basalProfile = new BasalProfile();
+        for (int i = 0; i < 24; i++) {
+            basalProfile.hourlyRates[i] = profile.getBasal(i * 60 * 60);
+        }
+        return basalProfile;
     }
 
     @NonNull
     @Override
     public Date lastDataTime() {
-        return new Date(pump.lastSuccessfulConnection);
+        return new Date(pump.lastSuccessfulCmdTime);
     }
 
     /**
@@ -252,20 +268,28 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
 
-        checkForTbrMismatch(stateResult.state);
-
-        int minutesOfDayNow = Calendar.getInstance().get(Calendar.HOUR) + Calendar.getInstance().get(Calendar.MINUTE) * 60;
-        if (!pump.initialized || (Math.abs(stateResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) >= 2)) {
+        // ensure time and date(!) are current
+        /* menu not supported by ruffy
+        if (!pump.initialized) {
             if (!runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime).success) {
                 return;
             }
         }
+        */
 
+        // read basal profile into cache, update pump profile if needed
+        /* not implemented by ruffiscripter
         if (!pump.initialized) {
-            if (!runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile).success) {
+            CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
+            if (!readBasalResult.success) {
                 return;
             }
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            setNewBasalProfile(profile);
+
+            pump.basalProfile = readBasalResult.basalProfile;
         }
+        */
 
         if (!checkPumpHistory()) {
             return;
@@ -281,8 +305,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         runCommand(null, 0, ruffyScripter::readPumpState);
     }
 
-
-    // TODO currently testing if updating this after each command works well
     private void updateLocalData(CommandResult result) {
         if (result.reservoirLevel != PumpState.UNKNOWN) {
             pump.reservoirLevel = result.reservoirLevel;
@@ -296,11 +318,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         MainApp.bus().post(new EventComboPumpUpdateGUI());
     }
 
-    // TODO uses profile values for the time being
     @Override
     public double getBaseBasalRate() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Double basal = profile.getBasal();
+        log.trace("getBaseBasalrate returning " + basal);
+        return basal;
+
 /*        if (pump.basalProfile == null) {
-// TODO when to force refresh this?
+           // when to force refresh this?
             CommandResult result = runCommand("Reading basal profile", new CommandExecution() {
                 @Override
                 public CommandResult execute() {
@@ -308,15 +334,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
             });
             pump.basalProfile = result.basalProfile;
-            // TODO error handling ...
+            // error handling ...
         }
         return pump.basalProfile.hourlyRates[Calendar.getInstance().get(Calendar.HOUR_OF_DAY)];
 */
-
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        Double basal = profile.getBasal();
-        log.trace("getBaseBasalrate returning " + basal);
-        return basal;
     }
 
     private static BolusProgressReporter nullBolusProgressReporter = (state, percent, delivered) -> {
@@ -353,8 +374,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        // TODO safety check: reject bolus if same type and amount requested within the
-        // same minute;
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
@@ -402,7 +421,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     ruffyScripter::readReservoirLevelAndLastBolus);
             if (!reservoirBolusResult.success) {
                 return new PumpEnactResult().success(false).enacted(false);
-                // todo anything else needed? persistent connection problems; escalated after 30m, interactive bolus gives generic error, should be fine
             }
 
             // check enough insulin left for bolus
@@ -412,7 +430,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             // verify we're update to date and know the most recent bolus
-            // TODO should we check against pump.lastBolus or rather the DB ...
             if (!Objects.equals(pump.lastBolus, reservoirBolusResult.lastBolus)) {
                 new Thread(this::checkPumpHistory).start();
                 return new PumpEnactResult().success(false).enacted(false)
@@ -446,7 +463,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (cancelBolus) {
                 // if cancellation was requested, the delivered bolus is allowed to differ from requested
             } else if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
-                // TODO schedule forced history sync
                 return new PumpEnactResult().success(false).enacted(false).
                         comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
             }
@@ -517,9 +533,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             adjustedPercent = rounded.intValue();
         }
 
-        // TODO testing how well errors on background jobs are reported back
-//        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(800, durationInMinutes));
-        final int finalAdjustedPercent = adjustedPercent;
+        int finalAdjustedPercent = adjustedPercent;
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
         if (!commandResult.success) {
             return new PumpEnactResult().success(false).enacted(false);
@@ -528,16 +542,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         PumpState state = commandResult.state;
         if (state.tbrActive && state.tbrPercent == percent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
-            // TODO timestamp: can this cause problems? setting TBR while a minute flips over?
-            //     might that be the cause if the TBR duration instantly flips from e.g. 0:30 -> 0:29 ?
-            // rounds to full minute; TODO should use time displayed on pump screen, but check and be lenient around midnight to not get the day wrong ...
-            TemporaryBasal tempStart = new TemporaryBasal(state.timestamp / (60 * 1000) * (60 * 1000));
-            // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
-            // we should check this, but really ... something must be really screwed up if that number was anything different
+            TemporaryBasal tempStart = new TemporaryBasal();
+            tempStart.date = state.timestamp / (60 * 1000) * (60 * 1000);
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
             tempStart.source = Source.USER;
+            tempStart.pumpId = tempStart.date;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
 
@@ -554,22 +565,22 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return OPERATION_NOT_SUPPORTED;
     }
 
-    // TODO review and test, esp. aaps/pump mismatch situations
     @Override
     public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (activeTemp == null || userRequested) {
-            // TODO
-            /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
+        if (activeTemp == null) {
+            return new PumpEnactResult().success(false).enacted(false);
+        }
+        if (userRequested) {
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
-
             if (!commandResult.state.tbrActive) {
-                // TODO pump menu time, midnight, blabla
-                TemporaryBasal tempBasal = new TemporaryBasal(commandResult.state.timestamp / ( 60 * 1000) * (60 * 1000));
+                TemporaryBasal tempBasal = new TemporaryBasal();
+                tempBasal.date = commandResult.state.timestamp;
                 tempBasal.durationInMinutes = 0;
                 tempBasal.source = Source.USER;
+                tempBasal.pumpId = activeTemp.pumpId;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
                 return new PumpEnactResult().isTempCancel(true).success(true).enacted(true);
             } else {
@@ -591,9 +602,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             if (commandResult.state.tbrActive && commandResult.state.tbrPercent == percentage
                     && (commandResult.state.tbrRemainingDuration == 15 || commandResult.state.tbrRemainingDuration == 14)) {
-                TemporaryBasal tempBasal = new TemporaryBasal(System.currentTimeMillis());
+                TemporaryBasal tempBasal = new TemporaryBasal();
+                tempBasal.date = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
                 tempBasal.durationInMinutes = 15;
                 tempBasal.source = Source.USER;
+                tempBasal.pumpId = tempBasal.date;
                 tempBasal.percentRate = percentage;
                 tempBasal.isAbsolute = false;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
@@ -608,20 +621,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         CommandResult execute();
     }
 
-    // TODO remove this method, make stuff explicit (state updates, activity updates)
-    // and only have a withRetries() method that simply retries a command?
-
     /**
      * Runs a command, sets an activity if provided, retries if requested and updates fields
      * concerned with last connection.
      * NO history, reservoir level fields are updated, this make be done separately if desired.
      */
     private synchronized CommandResult runCommand(String activity, int retries, CommandExecution commandExecution) {
-        // TODO keep stats of how many commansd failed; if >50% fail raise an alert;
-        // otherwise all commands could fail, but since we can connect to the pump no 'pump unrechable alert' would be raised.
-
-        // TODO check and update date. can this cause any issues for running commands, so that this should be checked explicitely insstead?
-
         CommandResult commandResult;
         try {
             if (activity != null) {
@@ -629,7 +634,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
 
-            // TOOD check for active warning and transfer if benign (should then also work with "Refresh" button
+            if (!ruffyScripter.isConnected()) {
+                CommandResult preCheckError = runOnConnectChecks();
+                if (preCheckError != null) {
+                   return preCheckError;
+                }
+            }
 
             commandResult = commandExecution.execute();
 
@@ -640,26 +650,92 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
             }
 
+            for (Integer forwardedWarning : commandResult.forwardedWarnings) {
+                notifyAboutPumpWarning(new WarningOrErrorCode(forwardedWarning, null));
+            }
+
             if (commandResult.success) {
                 updateLocalData(commandResult);
             }
 
-            checkForUnsafeUsage(commandResult);
-
             pump.lastCmdResult = commandResult;
-            pump.lastConnectionAttempt = System.currentTimeMillis();
+            pump.lastCmdTime = System.currentTimeMillis();
             if (commandResult.success) {
-                // TOdO is this valid? saying a successful command execution means a successful connect?
-                // or is the distinction between being able to connect and execute a command successfuly not really meaningful here?
-                pump.lastSuccessfulConnection = pump.lastConnectionAttempt;
+                pump.lastSuccessfulCmdTime = pump.lastCmdTime;
             }
+
         } finally {
             if (activity != null) {
                 pump.activity = null;
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
         }
+
+        if (pump.initialized && pumpHistoryLastChecked + 15 * 60 * 1000 < System.currentTimeMillis()) {
+            checkPumpHistory();
+        }
+
+        checkForUnsafeUsage(commandResult);
+
         return commandResult;
+    }
+
+    private CommandResult runOnConnectChecks() {
+        // connect, get status and check if an alarm is active
+        CommandResult preCheckResult = ruffyScripter.readPumpState();
+        if (!preCheckResult.success) {
+            return preCheckResult;
+        }
+
+        WarningOrErrorCode activeAlert = preCheckResult.state.activeAlert;
+        // note if multiple alerts are active this will and should fail; e.g. if pump was stopped
+        // due to empty cartridge alert, which might also trigger TBR cancelled alert
+        if (activeAlert != null) {
+            if (activeAlert.warningCode != null
+                    && (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW ||
+                    activeAlert.warningCode == PumpWarningCodes.BATTERY_LOW)) {
+                // turn benign warnings into notifications
+                notifyAboutPumpWarning(activeAlert);
+                ruffyScripter.confirmAlert(activeAlert.warningCode);
+            } else {
+                Notification notification = new Notification();
+                notification.date = new Date();
+                notification.id = Notification.COMBO_PUMP_ALARM;
+                notification.level = Notification.URGENT;
+                notification.text = MainApp.sResources.getString(R.string.combo_is_in_error_state);
+                MainApp.bus().post(new EventNewNotification(notification));
+                return preCheckResult.success(false);
+            }
+        }
+
+        // check if TBR was cancelled or set by user
+        boolean mismatch = checkForTbrMismatch(preCheckResult.state);
+        if (mismatch) checkPumpHistory();
+
+        // raise notification if clock is off (setting clock is not supported by ruffy)
+        Date now = new Date();
+        int minutesOfDayNow = now.getHours() * 60 + now.getMinutes();
+        if ((Math.abs(preCheckResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) > 3)) {
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, "Check pump clock", Notification.NORMAL);
+            MainApp.bus().post(new EventNewNotification(notification));
+//                    runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime);
+        }
+
+        return null;
+    }
+
+    private void notifyAboutPumpWarning(WarningOrErrorCode activeAlert) {
+        if (activeAlert.warningCode == null || (activeAlert.warningCode.equals(PumpWarningCodes.CARTRIDGE_LOW) && activeAlert.warningCode.equals(PumpWarningCodes.BATTERY_LOW))) {
+            throw new IllegalArgumentException(activeAlert.toString());
+        }
+        Notification notification = new Notification();
+        notification.date = new Date();
+        notification.id = Notification.COMBO_PUMP_ALARM;
+        notification.level = Notification.NORMAL;
+        notification.text = activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW
+                ? MainApp.sResources.getString(R.string.combo_pump_cartridge_low_warrning)
+                : MainApp.sResources.getString(R.string.combo_pump_battery_low_warrning);
+        MainApp.bus().post(new EventNewNotification(notification));
     }
 
     private void checkForUnsafeUsage(CommandResult commandResult) {
@@ -679,8 +755,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (lastViolation > 0) {
             closedLoopDisabledUntil = lastViolation + 6 * 60 * 60 * 1000;
             if (closedLoopDisabledUntil > System.currentTimeMillis() && violationWarningRaisedFor != closedLoopDisabledUntil) {
-                // TODO add message to either Combo tab or its errors popup
-                // TODO warn once; after that the user gets suggesiotn from open loop mode as a reminder...
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         MainApp.sResources.getString(R.string.combo_force_disabled),
                         Notification.URGENT);
@@ -695,38 +769,37 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private boolean checkForTbrMismatch(PumpState state) {
-        // detectTbrMismatch(): 'quick' check with no overhead on the pump side
-        // TODO check if this works with pump suspend, esp. around pump suspend there'll be syncing to do;
-
-        // TODO we need to tolerate differences of 1-2 minutes due to the time it takes to programm a tbr
-        // mismatching a 5m interval etc
-
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         boolean sync = false;
         if (aapsTbr == null && state.tbrActive) {
             // pump runs TBR AAPS is unaware off
-            log.debug("Pump runs TBR AAPS is unaware of, reading last 3h of pump TBR history");
+            log.debug("Pump runs TBR AAPS is unaware of, cancelling TBR so it can be read from history properly");
+            runCommand(null, 0, ruffyScripter::cancelTbr);
             sync = true;
         } else if (aapsTbr != null && !state.tbrActive) {
             // AAPS has a TBR but the pump isn't running a TBR
-            log.debug("AAPS shows TBR but pump isn't running a TBR; deleting TBR in AAPS and reading last 3h of pump TBR history");
+            log.debug("AAPS shows TBR but pump isn't running a TBR; deleting TBR in AAPS and reading pump history");
             MainApp.getDbHelper().delete(aapsTbr);
             sync = true;
         } else if (aapsTbr != null && state.tbrActive) {
             // both AAPS and pump have a TBR ...
             if (aapsTbr.percentRate != state.tbrPercent) {
                 // ... but they have different percentages
-                log.debug("TBR percentage differs between AAPS and pump; deleting TBR in AAPS and reading last 3h of pump TBR history");
+                log.debug("TBR percentage differs between AAPS and pump; deleting TBR in AAPS and reading pump history");
                 MainApp.getDbHelper().delete(aapsTbr);
                 sync = true;
             }
             int durationDiff = Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration);
             if (durationDiff > 2) {
                 // ... but they have different runtimes
-                log.debug("TBR duration differs between AAPS and pump; deleting TBR in AAPS and reading last 3h of pump TBR history");
+                log.debug("TBR duration differs between AAPS and pump; deleting TBR in AAPS and reading pump history");
                 MainApp.getDbHelper().delete(aapsTbr);
                 sync = true;
             }
+        }
+
+        if (sync) {
+            log.debug("Sync requested from checkTbrMismatch");
         }
 
         return sync;
@@ -736,7 +809,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * Checks if there are any changes on the pump not in the DB yet and if so, issues a history
      * read to get the DB up to date.
      */
-    private boolean checkPumpHistory() {
+    private synchronized boolean checkPumpHistory() {
+        // set here, rather at the end so that if this runs into an error it's not tried
+        // over and over since it's called at the end of runCommand
+        pumpHistoryLastChecked = System.currentTimeMillis();
+
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), 3, () ->
                 ruffyScripter.readHistory(
                         new PumpHistoryRequest()
@@ -774,7 +851,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // last TBR (TBRs are added to history upon completion so here we don't need to care about TBRs cancelled
-        //           by the user, checkTbrMismtach() takes care of that)
+        //           by the user, checkTbrMismatch() takes care of that)
         Tbr pumpTbr = null;
         List<Tbr> tbrHistory = commandResult.history.tbrHistory;
         if (!tbrHistory.isEmpty()) {
@@ -786,35 +863,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             aapsTbr = MainApp.getDbHelper().getTemporaryBasalsDataByDate(pumpTbr.timestamp);
         }
 
-        // TODO check possible deviations in start/duration due to imprecision of combo
         if (pumpTbr != null && (aapsTbr == null || pumpTbr.percent != aapsTbr.percentRate || pumpTbr.duration != aapsTbr.durationInMinutes)) {
             log.debug("Last TBR on pump is unknown, refreshing TBR history");
             request.tbrHistory = aapsTbr == null ? PumpHistoryRequest.FULL : aapsTbr.date;
         }
-
-        /* This is loaded on demand
-        // last error
-        PumpError pumpError = null;
-        List<PumpError> pumpErrorHistory = commandResult.history.pumpErrorHistory;
-        if (!pumpErrorHistory.isEmpty()){
-            pumpError = pumpErrorHistory.get(0);
-        }
-        if (pumpError != null && !pump.history.pumpErrorHistory.contains(pumpError)) {
-            log.debug("Last pump error is unknown, refreshing error history");
-            request.pumpErrorHistory = pump.history.pumpErrorHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.pumpErrorHistory.get(0).timestamp;
-        }
-
-        // last TDD
-        Tdd pumpTdd = null;
-        List<Tdd> pumpTddHistory = commandResult.history.tddHistory;
-        if (!pumpTddHistory.isEmpty()) {
-            pumpTdd = pumpTddHistory.get(0);
-        }
-        if (pumpTdd != null && !pump.history.tddHistory.contains(pumpTdd)) {
-            log.debug("Last TDD is unknown, refreshing TDD history");
-            request.tddHistory = pump.history.tddHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.tddHistory.get(0).timestamp;
-        }
-        */
 
         if (request.bolusHistory != PumpHistoryRequest.SKIP
                 || request.tbrHistory != PumpHistoryRequest.SKIP
@@ -827,69 +879,66 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return true;
     }
 
-    /** Reads the pump's history and updates the DB accordingly. */
+    /**
+     * Reads the pump's history and updates the DB accordingly.
+     */
     private synchronized boolean readHistory(final PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         if (!historyResult.success) {
             return false;
         }
 
-        // TODO deleting boluses/TBRs that that exist in AAPS' DB but not on the pump??
+        updateDbFromPumpHistory(historyResult.history);
+        CommandResult reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
+        return historyResult.success && reservoirBolusResult.success;
+    }
 
+    private synchronized void updateDbFromPumpHistory(@NonNull PumpHistory history) {
         DatabaseHelper dbHelper = MainApp.getDbHelper();
         // boluses
-        for (Bolus pumpBolus : historyResult.history.bolusHistory) {
-            // TODO there's a possibility of two TBR in one minute, which would be stored as one in db
-            // (date is key/unique). Later TBR would override former and the later one would run
-            // longer (former one would probably be one that's immediately overridden), so not an issue?
-            // (TDD has same issue: multiple alarms of the same type in one minute or seen as one)
+        for (Bolus pumpBolus : history.bolusHistory) {
             Treatment aapsBolus = dbHelper.getTreatmentByDate(pumpBolus.timestamp);
             if (aapsBolus == null) {
                 log.debug("Creating bolus record from pump bolus: " + pumpBolus);
                 DetailedBolusInfo dbi = new DetailedBolusInfo();
                 dbi.date = pumpBolus.timestamp;
+                dbi.pumpId = pumpBolus.timestamp;
+                dbi.source = Source.PUMP;
                 dbi.insulin = pumpBolus.amount;
                 dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-                dbi.source = Source.PUMP;
-                dbi.pumpId = pumpBolus.timestamp;
                 MainApp.getConfigBuilder().addToHistoryTreatment(dbi);
             }
         }
 
         // TBRs
-        // TODO tolerance for start/end deviations? temp start is based on pump time, but in ms; round to seconds, so we can find it here more easily?
-        for (Tbr pumpTbr : historyResult.history.tbrHistory) {
+        for (Tbr pumpTbr : history.tbrHistory) {
             TemporaryBasal aapsTbr = dbHelper.getTemporaryBasalsDataByDate(pumpTbr.timestamp);
             if (aapsTbr == null) {
                 log.debug("Creating TBR from pump TBR: " + pumpTbr);
                 TemporaryBasal temporaryBasal = new TemporaryBasal();
                 temporaryBasal.date = pumpTbr.timestamp;
+                temporaryBasal.pumpId = pumpTbr.timestamp;
+                temporaryBasal.source = Source.PUMP;
                 temporaryBasal.percentRate = pumpTbr.percent;
                 temporaryBasal.durationInMinutes = pumpTbr.duration;
                 temporaryBasal.isAbsolute = false;
-                temporaryBasal.source = Source.PUMP;
-                temporaryBasal.pumpId = pumpTbr.timestamp;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
             }
         }
 
         // errors (not persisted in DB, read from pump on start up and cached in plugin)
-        for (PumpError pumpError : historyResult.history.pumpErrorHistory) {
+        for (PumpError pumpError : history.pumpErrorHistory) {
             if (!pump.history.pumpErrorHistory.contains(pumpError)) {
                 pump.history.pumpErrorHistory.add(pumpError);
             }
         }
 
         // TDDs (not persisted in DB, read from pump on start up and cached in plugin)
-        for (Tdd tdd : historyResult.history.tddHistory) {
+        for (Tdd tdd : history.tddHistory) {
             if (!pump.history.tddHistory.contains(tdd)) {
                 pump.history.tddHistory.add(tdd);
             }
         }
-
-        CommandResult reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
-
-        return historyResult.success && reservoirBolusResult.success;
     }
 
     void forceFullHistoryRead() {
@@ -913,12 +962,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         try {
             JSONObject pumpJson = new JSONObject();
-            pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulConnection));
+            pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
             pumpJson.put("reservoir", pump.reservoirLevel);
 
             JSONObject statusJson = new JSONObject();
             statusJson.put("status", getStateSummary());
-            statusJson.put("timestamp", pump.lastSuccessfulConnection);
+            statusJson.put("timestamp", pump.lastSuccessfulCmdTime);
             pumpJson.put("status", statusJson);
 
             JSONObject extendedJson = new JSONObject();
@@ -934,8 +983,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 extendedJson.put("TempBasalPercent", ps.tbrPercent);
                 extendedJson.put("TempBasalRemaining", ps.tbrRemainingDuration);
             }
-            if (ps.alertCodes != null && ps.alertCodes.errorCode != null) {
-                extendedJson.put("ErrorCode", ps.alertCodes.errorCode);
+            if (ps.activeAlert != null && ps.activeAlert.errorCode != null) {
+                extendedJson.put("ErrorCode", ps.activeAlert.errorCode);
             }
             pumpJson.put("extended", extendedJson);
 

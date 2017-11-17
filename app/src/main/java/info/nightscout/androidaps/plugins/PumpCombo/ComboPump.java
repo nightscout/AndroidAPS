@@ -10,12 +10,9 @@ import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 
 class ComboPump {
-    // TODO all non-state (==main screen) data is overriden by commands, no? put them seperately
-    // at least skim over how dana does it!
     boolean initialized = false;
-    // TODO actually ... this isn't about successful command execution, but whether we could connect to the pump at all
-    volatile long lastSuccessfulConnection;
-    volatile long lastConnectionAttempt;
+    volatile long lastSuccessfulCmdTime;
+    volatile long lastCmdTime;
 
     @Nullable
     volatile CommandResult lastCmdResult;
@@ -24,12 +21,10 @@ class ComboPump {
     volatile PumpState state = new PumpState();
     volatile int reservoirLevel = -1;
     volatile Bolus lastBolus = null;
-    @Nullable
-    volatile BasalProfile basalProfile;
+    @NonNull
+    volatile BasalProfile basalProfile = new BasalProfile();
     @NonNull
     volatile PumpHistory history = new PumpHistory();
-    /**
-     * Time the active TBR was set (if any). Needed to calculate remaining time in fragment
-     */
+    /** Time the active TBR was set (if any). Needed to calculate remaining time in fragment */
     long tbrSetTime;
 }

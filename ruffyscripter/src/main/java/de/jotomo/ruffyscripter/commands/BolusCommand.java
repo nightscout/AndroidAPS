@@ -34,7 +34,6 @@ public class BolusCommand extends BaseCommand {
     public BolusCommand(double bolus, BolusProgressReporter bolusProgressReporter) {
         this.bolus = bolus;
         this.bolusProgressReporter = bolusProgressReporter;
-        this.result = new CommandResult();
     }
 
     @Override
@@ -123,14 +122,12 @@ public class BolusCommand extends BaseCommand {
                     if (warningCode == PumpWarningCodes.BOLUS_CANCELLED) {
                         scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 2000);
                         bolusProgressReporter.report(STOPPED, 0, 0);
-                        result.wasSuccessfullyCancelled = true;
-                        result.alertConfirmed = true;
                     } else if (warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
                         scripter.confirmAlert(PumpWarningCodes.CARTRIDGE_LOW, 2000);
-                        result.alertConfirmed = true;
+                        result.forwardedWarnings.add(PumpWarningCodes.CARTRIDGE_LOW);
                     } else if (warningCode == PumpWarningCodes.BATTERY_LOW) {
                         scripter.confirmAlert(PumpWarningCodes.BATTERY_LOW, 2000);
-                        result.alertConfirmed = true;
+                        result.forwardedWarnings.add(PumpWarningCodes.BATTERY_LOW);
                     } else {
                         throw new CommandException("Pump is showing exotic warning: " + warningCode);
                     }

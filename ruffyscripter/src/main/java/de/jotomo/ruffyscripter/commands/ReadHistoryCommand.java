@@ -100,7 +100,6 @@ public class ReadHistoryCommand extends BaseCommand {
                 }
             }
 
-            scripter.pressBackKey();
             scripter.returnToRootMenu();
             scripter.verifyRootMenuIsDisplayed();
         }
