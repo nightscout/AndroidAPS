@@ -550,7 +550,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
-        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep * (1 + durationInHalfHours % 1));
+        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
 
         PumpEnactResult result = new PumpEnactResult();
         ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());

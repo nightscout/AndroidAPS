@@ -33,14 +33,14 @@ public class DanaRS_Packet_Bolus_Get_Step_Bolus_Information extends DanaRS_Packe
         dataSize = 2;
         pump.initialBolusAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 
-        Date lastBolusTime = new Date(); // it doesn't provide day only hour+min, workaround: expecting today
+        pump.lastBolusTime = new Date(); // it doesn't provide day only hour+min, workaround: expecting today
         dataIndex += dataSize;
         dataSize = 1;
-        lastBolusTime.setHours(byteArrayToInt(getBytes(data, dataIndex, dataSize)));
+        pump.lastBolusTime.setHours(byteArrayToInt(getBytes(data, dataIndex, dataSize)));
 
         dataIndex += dataSize;
         dataSize = 1;
-        lastBolusTime.setMinutes(byteArrayToInt(getBytes(data, dataIndex, dataSize)));
+        pump.lastBolusTime.setMinutes(byteArrayToInt(getBytes(data, dataIndex, dataSize)));
 
         dataIndex += dataSize;
         dataSize = 2;
@@ -58,7 +58,7 @@ public class DanaRS_Packet_Bolus_Get_Step_Bolus_Information extends DanaRS_Packe
             log.debug("Result: " + error);
             log.debug("BolusType: " + bolusType);
             log.debug("Initial bolus amount: " + pump.initialBolusAmount + " U");
-            log.debug("Last bolus time: " + lastBolusTime.toLocaleString());
+            log.debug("Last bolus time: " + pump.lastBolusTime.toLocaleString());
             log.debug("Last bolus amount: " + pump.lastBolusAmount);
             log.debug("Max bolus: " + pump.maxBolus + " U");
             log.debug("Bolus step: " + pump.bolusStep + " U");
