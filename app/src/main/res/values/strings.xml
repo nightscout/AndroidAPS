@@ -768,7 +768,7 @@
     <string name="combo_stats">Stats</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity">Activity</string>
-    <string name="combo_no_pump_connection">No successful connection for %s</string>
+    <string name="combo_no_pump_connection">No connection for %d min</string>
     <string name="combo_connect_attempt_failed">Last connect attempt failed</string>
     <string name="combo_last_connection_time">%s</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
