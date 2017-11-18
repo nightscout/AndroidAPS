@@ -1170,8 +1170,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.request.hasPredictions;
-        if (showPrediction) {
+        boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
+        if (predictionsAvailable) {
             showPredictionView.setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
         } else {
@@ -1214,7 +1214,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // ****** GRAPH *******
 
-        // allign to hours
+        // align to hours
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.MILLISECOND, 0);
@@ -1226,7 +1226,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         long toTime;
         long fromTime;
         long endTime;
-        if (showPrediction) {
+        if (predictionsAvailable && showPredictionView.isChecked()) {
             int predHours = (int) (Math.ceil(finalLastRun.constraintsProcessed.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
@@ -1295,7 +1295,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         graphData.addInRangeArea(bgGraph, fromTime, endTime, lowLine, highLine);
 
         // **** BG ****
-        if (showPrediction)
+        if (predictionsAvailable && showPredictionView.isChecked())
             graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, finalLastRun.constraintsProcessed);
         else
             graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, null);
