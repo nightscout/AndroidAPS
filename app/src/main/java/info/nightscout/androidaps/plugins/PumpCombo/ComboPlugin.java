@@ -214,18 +214,20 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public int setNewBasalProfile(Profile profile) {
-        BasalProfile basalProfile = convertProfileToComboProfile(profile);
+        return PumpInterface.FAILED;
+/*        BasalProfile basalProfile = convertProfileToComboProfile(profile);
         if (pump.basalProfile.equals(basalProfile)) {
             return PumpInterface.NOT_NEEDED;
         }
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(basalProfile));
-        return commandResult.success ? PumpInterface.SUCCESS : PumpInterface.FAILED;
+        return commandResult.success ? PumpInterface.SUCCESS : PumpInterface.FAILED;*/
     }
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
+        return true;
+//        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
     }
 
     @NonNull
@@ -412,6 +414,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
+        Bolus lastKnownBolus = pump.lastBolus;
+
         try {
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
@@ -430,7 +434,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             // verify we're update to date and know the most recent bolus
-            if (!Objects.equals(pump.lastBolus, reservoirBolusResult.lastBolus)) {
+            if (!Objects.equals(lastKnownBolus, reservoirBolusResult.lastBolus)) {
                 new Thread(this::checkPumpHistory).start();
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
@@ -628,6 +632,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      */
     private synchronized CommandResult runCommand(String activity, int retries, CommandExecution commandExecution) {
         pump.lastCmdTime = System.currentTimeMillis();
+
         CommandResult commandResult;
         try {
             if (activity != null) {
@@ -656,13 +661,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             if (commandResult.success) {
-                updateLocalData(commandResult);
+                pump.lastSuccessfulCmdTime = pump.lastCmdTime;
             }
 
             pump.lastCmdResult = commandResult;
 
             if (commandResult.success) {
-                pump.lastSuccessfulCmdTime = pump.lastCmdTime;
+                updateLocalData(commandResult);
             }
         } finally {
             if (activity != null) {

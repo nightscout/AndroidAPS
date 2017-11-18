@@ -56,6 +56,11 @@ Testing:
 v2
 Limitations
 - Extended bolus and multiwave bolus are not supported.
+- If multiple boluses are given within a single minute, only one might be recognized.
+  This is due to the Combo saving history records with minute-precision only.
+  However, this case is only possible for very small boluses and is unlikely to occur
+  in non-testing scenarios (e.g. bolusing from the pump and then immediately bolusing
+  from AAPS).
 
 // TODO when to check for pump-boluses? before a bolus, sure, but also every 15m when running another command (or through keepalive?)
 

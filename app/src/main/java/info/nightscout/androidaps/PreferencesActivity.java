@@ -165,9 +165,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     }
                 }
 
+                /* No usable settings yet
                 if (Config.COMBO) {
                     addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginBase.PUMP);
                 }
+                */
 
                 addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginBase.PUMP);
 
