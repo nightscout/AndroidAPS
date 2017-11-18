@@ -23,6 +23,7 @@ public class ComboTddHistoryDialog extends DialogFragment {
         TextView text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
         List<Tdd> tdds = ComboPlugin.getPlugin().getPump().history.tddHistory;
         StringBuilder sb = new StringBuilder();
+        // TODO i18n
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.");
         if (tdds.isEmpty()) {
             text.setText("To retrieve the TDD history from the pump, long press the Refresh button.");

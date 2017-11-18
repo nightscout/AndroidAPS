@@ -117,7 +117,7 @@ public class RuffyScripter implements RuffyCommands {
 
         @Override
         public void rtDisplayHandleNoMenu() throws RemoteException {
-            log.debug("rtDisplayHandleNoMenu callback invoked");
+            log.warn("rtDisplayHandleNoMenu callback invoked");
         }
     };
 
@@ -635,12 +635,12 @@ public class RuffyScripter implements RuffyCommands {
      * Wait till a menu changed has completed, "away" from the menu provided as argument.
      */
     public void waitForMenuToBeLeft(MenuType menuType) {
-        long timeout = System.currentTimeMillis() + 60 * 1000;
+        long timeout = System.currentTimeMillis() + 10 * 1000;
         while (getCurrentMenu().getType() == menuType) {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException("Timeout waiting for menu " + menuType + " to be left");
             }
-            SystemClock.sleep(10);
+            waitForScreenUpdate();
         }
     }
 
@@ -649,11 +649,11 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
-        int retries = 600;
+        int attempts = 5;
         while (getCurrentMenu().getType() != expectedMenu) {
-            if (retries > 0) {
-                SystemClock.sleep(100);
-                retries = retries - 1;
+            attempts -= 1;
+            if (attempts > 0) {
+                waitForScreenUpdate();
             } else {
                 if (failureMessage == null) {
                     failureMessage = "Invalid pump state, expected to be in menu " + expectedMenu + ", but current menu is " + getCurrentMenuName();

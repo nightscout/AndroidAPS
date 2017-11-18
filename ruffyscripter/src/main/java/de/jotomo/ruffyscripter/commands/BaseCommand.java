@@ -10,7 +10,11 @@ public abstract class BaseCommand implements Command {
     // RS will inject itself here
     protected RuffyScripter scripter;
 
-    protected CommandResult result = new CommandResult();
+    protected CommandResult result;
+
+    public BaseCommand() {
+        result = new CommandResult();
+    }
 
     @Override
     public void setScripter(RuffyScripter scripter) {

@@ -1,4 +1,6 @@
 - [x] Bugs
+  - [x] ruffy: Accessing the quick info menu yields noMenu when cartridge is low
+  - [x] ruffy: Multi-digit error codes in error history aren't supported
   - [-] No connection can be established anymore; ruffy issue i can't solve
     - Removing the BT device's bonding (!=pairing) fixes it; nope it doesn't
     - Ruffy logs in BTConnection:163  handler.fail("no connection possible: " + e.getMessage());
