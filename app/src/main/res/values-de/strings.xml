@@ -691,6 +691,6 @@
     <string name="combo_stats">Statistiken</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
     <string name="combo_pump_action_cancelling_tbr">TBR wird abgebrochen</string>
-    <string name="combo_pump_action_setting_tbr">TBR wird gesetzt</string>
-    <string name="combo_pump_action_bolusing">Bolus wird abgegeben</string>
+    <string name="combo_pump_action_setting_tbr">TBR wird gesetzt (%d%% / %d min)</string>
+    <string name="combo_pump_action_bolusing">Bolus (%.1f E) wird abgegeben</string>
 </resources>

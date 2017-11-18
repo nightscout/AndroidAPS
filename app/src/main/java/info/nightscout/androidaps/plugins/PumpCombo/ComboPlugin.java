@@ -417,7 +417,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         Bolus lastKnownBolus = pump.lastBolus;
 
         try {
-            pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing);
+            pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
 
             // refresh pump data
@@ -538,7 +538,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         int finalAdjustedPercent = adjustedPercent;
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr), 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
+        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr, percent, durationInMinutes),
+                3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
         if (!commandResult.success) {
             return new PumpEnactResult().success(false).enacted(false);
         }

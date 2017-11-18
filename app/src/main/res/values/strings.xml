@@ -779,8 +779,8 @@
     <string name="combo_pump_state_running">Running</string>
     <string name="combo_pump_action_checking_history">Checking pump history</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
-    <string name="combo_pump_action_setting_tbr">Setting TBR</string>
-    <string name="combo_pump_action_bolusing">Bolusing</string>
+    <string name="combo_pump_action_setting_tbr">Setting TBR (%d%% / %d min)</string>
+    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Refreshing</string>
     <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
