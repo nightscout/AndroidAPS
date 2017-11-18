@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,11 +36,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.Series;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -50,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +52,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
@@ -109,8 +103,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.utils.BolusWizard;
@@ -497,7 +491,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -511,7 +505,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -525,7 +519,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -539,7 +533,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
@@ -696,40 +690,48 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                 final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
                 final Context context = getContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AtomicBoolean accepted = new AtomicBoolean(false);
                 builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                 builder.setMessage(confirmMessage);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                            final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                            sHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                    detailedBolusInfo.context = context;
-                                    detailedBolusInfo.boluscalc = boluscalcJSON;
-                                    detailedBolusInfo.source = Source.USER;
-                                    PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
-                                    if (!result.success) {
-                                        try {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
-                                        } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                            // window has been destroyed
-                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                            MainApp.bus().post(new EventNewNotification(notification));
+                        synchronized (accepted) {
+                            if(accepted.get()) {
+                                log.debug("Guarding: already accepted!");
+                                return;
+                            }
+                            accepted.set(true);
+                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
+                                sHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                        detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                        detailedBolusInfo.context = context;
+                                        detailedBolusInfo.boluscalc = boluscalcJSON;
+                                        detailedBolusInfo.source = Source.USER;
+                                        PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
+                                        if (!result.success) {
+                                            try {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                builder.setMessage(result.comment);
+                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                                builder.show();
+                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
+                                                // window has been destroyed
+                                                Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                                MainApp.bus().post(new EventNewNotification(notification));
+                                            }
                                         }
                                     }
-                                }
-                            });
-                            Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                                });
+                                Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                            }
                         }
                     }
                 });

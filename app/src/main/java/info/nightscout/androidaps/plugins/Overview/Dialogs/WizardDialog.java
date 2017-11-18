@@ -32,7 +32,6 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.tools.debugger.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +58,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -113,6 +112,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     public static HandlerThread mHandlerThread;
 
     Context context;
+
+    //one shot guards
+    private boolean accepted;
+    private boolean okClicked;
+
 
     public WizardDialog() {
         super();
@@ -297,9 +301,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     @Override
-    public void onClick(View view) {
+    public synchronized void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
+                if (okClicked){
+                    log.debug("guarding: ok already clicked");
+                    dismiss();
+                    return;
+                }
+                okClicked = true;
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
@@ -327,56 +337,63 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     final int carbTime = SafeParse.stringToInt(editCarbTime.getText());
                     final boolean useSuperBolus = superbolusCheckbox.isChecked();
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        PumpEnactResult result;
-                                        if (useSuperBolus) {
-                                            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-                                            if (activeloop != null) {
-                                                activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
-                                                MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                            synchronized (builder) {
+                                if (accepted) {
+                                    log.debug("guarding: already accepted");
+                                    return;
+                                }
+                                accepted = true;
+                                if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                    final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            PumpEnactResult result;
+                                            if (useSuperBolus) {
+                                                final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+                                                if (activeloop != null) {
+                                                    activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                                    MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                                                }
+                                                pump.cancelTempBasal(true);
+                                                result = pump.setTempBasalAbsolute(0d, 120, true);
+                                                if (!result.success) {
+                                                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
+                                                }
                                             }
-                                            pump.cancelTempBasal(true);
-                                            result = pump.setTempBasalAbsolute(0d, 120, true);
+                                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                            detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                            detailedBolusInfo.context = context;
+                                            detailedBolusInfo.glucose = bg;
+                                            detailedBolusInfo.glucoseType = "Manual";
+                                            detailedBolusInfo.carbTime = carbTime;
+                                            detailedBolusInfo.boluscalc = boluscalcJSON;
+                                            detailedBolusInfo.source = Source.USER;
+                                            result = pump.deliverTreatment(detailedBolusInfo);
                                             if (!result.success) {
-                                                OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
+                                                try {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                                    builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                    builder.setMessage(result.comment);
+                                                    builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                                    builder.show();
+                                                } catch (WindowManager.BadTokenException | NullPointerException e) {
+                                                    // window has been destroyed
+                                                    Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                                    MainApp.bus().post(new EventNewNotification(notification));
+                                                }
                                             }
                                         }
-                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                        detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                        detailedBolusInfo.context = context;
-                                        detailedBolusInfo.glucose = bg;
-                                        detailedBolusInfo.glucoseType = "Manual";
-                                        detailedBolusInfo.carbTime = carbTime;
-                                        detailedBolusInfo.boluscalc = boluscalcJSON;
-                                        detailedBolusInfo.source = Source.USER;
-                                        result = pump.deliverTreatment(detailedBolusInfo);
-                                        if (!result.success) {
-                                            try {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                                builder.setMessage(result.comment);
-                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                                builder.show();
-                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                                // window has been destroyed
-                                                Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                                MainApp.bus().post(new EventNewNotification(notification));
-                                            }
-                                        }
-                                    }
-                                });
-                                Answers.getInstance().logCustom(new CustomEvent("Wizard"));
+                                    });
+                                    Answers.getInstance().logCustom(new CustomEvent("Wizard"));
+                                }
                             }
                         }
                     });

@@ -146,6 +146,10 @@
             android:name=".Services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".plugins.Overview.notifications.DismissNotificationService"
+            android:exported="false" >
+        </service>
 
         <meta-data
             android:name="io.fabric.ApiKey"

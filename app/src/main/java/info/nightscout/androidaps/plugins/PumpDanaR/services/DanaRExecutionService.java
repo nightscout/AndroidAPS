@@ -79,7 +79,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;

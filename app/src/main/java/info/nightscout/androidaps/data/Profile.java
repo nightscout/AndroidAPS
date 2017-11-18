@@ -12,17 +12,15 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class Profile {

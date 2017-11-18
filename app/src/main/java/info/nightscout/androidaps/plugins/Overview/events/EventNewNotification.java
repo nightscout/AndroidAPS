@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview.events;
 
 import info.nightscout.androidaps.events.Event;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 
 /**
  * Created by mike on 03.12.2016.

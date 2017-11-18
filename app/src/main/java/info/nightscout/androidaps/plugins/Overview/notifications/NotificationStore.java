@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview;
+package info.nightscout.androidaps.plugins.Overview.notifications;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -21,8 +21,6 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
-import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-//Added by Rumen for snooze time
 import info.nightscout.utils.SP;
 
 /**
@@ -57,20 +55,16 @@ public class NotificationStore {
             }
         }
 
-        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_urgent_alarms_as_android_notification), false)
-                && n.level == Notification.URGENT) {
-            raiseSystemNotification(n);
-        } else if (n.soundId != null) {
-            Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
-            alarm.putExtra("soundid", n.soundId);
-            MainApp.instance().startService(alarm);
-        }
-
         store.add(n);
 
-        WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
-        if(wearPlugin!= null && wearPlugin.isEnabled()) {
-            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
+        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_notifications_as_android_notifications), false)) {
+            raiseSystemNotification(n);
+        } else {
+            if (n.soundId != null) {
+                Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                alarm.putExtra("soundid", n.soundId);
+                MainApp.instance().startService(alarm);
+            }
         }
 
         Collections.sort(store, new NotificationComparator());
@@ -85,13 +79,21 @@ public class NotificationStore {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setLargeIcon(largeIcon)
-                        .setContentTitle("Urgent alarm")
                         .setContentText(n.text)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setVibrate(new long[] { 1000, 1000, 1000, 1000})
-                        .setSound(sound, AudioAttributes.USAGE_ALARM);
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setDeleteIntent(DismissNotificationService.deleteIntent(n.id));
+        if (n.level == Notification.URGENT) {
+            notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000})
+                    .setContentTitle(MainApp.sResources.getString(R.string.urgent_alarm))
+                    .setSound(sound, AudioAttributes.USAGE_ALARM);
+        } else {
+            notificationBuilder.setVibrate(new long[]{0, 100, 50, 100, 50})
+                    .setContentTitle(MainApp.sResources.getString(R.string.info))
+            ;
+        }
         mgr.notify(n.id, notificationBuilder.build());
     }
+
 
     public boolean remove(int id) {
         for (int i = 0; i < store.size(); i++) {
@@ -131,3 +133,4 @@ public class NotificationStore {
         }
     }
 }
+
