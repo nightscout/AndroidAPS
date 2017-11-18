@@ -415,6 +415,7 @@ public class RuffyScripter implements RuffyCommands {
         MenuType type = menu.getType();
         if (type != MenuType.WARNING_OR_ERROR && type != MenuType.MAIN_MENU) {
             try {
+                log.debug("Command execution yielded an error, returning to main menu");
                 returnToRootMenu();
             } catch (Exception e) {
                 log.warn("Error returning to main menu, when trying to recover from command failure", e);
@@ -617,17 +618,17 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     public void navigateToMenu(MenuType desiredMenu) {
-        int moviesLeft = 20;
+        int retries = 20;
         while (getCurrentMenu().getType() != desiredMenu) {
-            moviesLeft--;
             MenuType currentMenuType = getCurrentMenu().getType();
             log.debug("Navigating to menu " + desiredMenu + ", current menu: " + currentMenuType);
-            if (moviesLeft == 0) {
+            retries--;
+            if (retries == 0) {
                 throw new CommandException("Menu not found searching for " + desiredMenu
                         + ". Check menu settings on your pump to ensure it's not hidden.");
             }
             pressMenuKey();
-            waitForScreenUpdate();
+            SystemClock.sleep(200);
         }
     }
 

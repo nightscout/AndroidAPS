@@ -158,7 +158,6 @@ public class BolusCommand extends BaseCommand {
         scripter.navigateToMenu(MenuType.BOLUS_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_MENU);
         scripter.pressCheckKey();
-        scripter.waitForScreenUpdate();
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
     }
 

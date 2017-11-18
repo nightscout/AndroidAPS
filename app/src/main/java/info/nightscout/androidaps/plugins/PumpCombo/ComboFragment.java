@@ -142,10 +142,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     } else if (plugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                         lastConnectionView.setText(getString(R.string.combo_no_pump_connection, min));
                         lastConnectionView.setTextColor(Color.RED);
-                    } else if (plugin.getPump().lastCmdTime > plugin.getPump().lastSuccessfulCmdTime) {
-                        String lastFailed = minAgo + "\n" + getString(R.string.combo_connect_attempt_failed);
-                        lastConnectionView.setText(lastFailed);
-                        lastConnectionView.setTextColor(Color.YELLOW);
                     } else {
                         lastConnectionView.setText(minAgo);
                         lastConnectionView.setTextColor(Color.WHITE);

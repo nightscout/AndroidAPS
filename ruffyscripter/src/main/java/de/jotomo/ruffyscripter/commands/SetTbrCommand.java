@@ -70,7 +70,6 @@ public class SetTbrCommand extends BaseCommand {
             // switch to TBR_DURATION menu by pressing menu key
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             scripter.pressMenuKey();
-            scripter.waitForScreenUpdate();
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
             boolean increasingDuration = inputTbrDuration();
@@ -88,7 +87,6 @@ public class SetTbrCommand extends BaseCommand {
         scripter.navigateToMenu(MenuType.TBR_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_MENU);
         scripter.pressCheckKey();
-        scripter.waitForScreenUpdate();
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
     }
 

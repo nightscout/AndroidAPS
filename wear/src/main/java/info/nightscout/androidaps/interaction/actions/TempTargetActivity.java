@@ -96,7 +96,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                      if (lowRange != null){
                          def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
                      }
-                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
+                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 10d, new DecimalFormat("0"), false);
                  } else {
                      double def = 5.5;
                      if (lowRange != null){

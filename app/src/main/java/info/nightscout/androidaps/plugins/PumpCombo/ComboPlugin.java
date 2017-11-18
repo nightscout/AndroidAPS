@@ -631,8 +631,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * NO history, reservoir level fields are updated, this make be done separately if desired.
      */
     private synchronized CommandResult runCommand(String activity, int retries, CommandExecution commandExecution) {
-        pump.lastCmdTime = System.currentTimeMillis();
-
         CommandResult commandResult;
         try {
             if (activity != null) {
@@ -661,7 +659,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             if (commandResult.success) {
-                pump.lastSuccessfulCmdTime = pump.lastCmdTime;
+                pump.lastSuccessfulCmdTime = System.currentTimeMillis();
             }
 
             pump.lastCmdResult = commandResult;

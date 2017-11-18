@@ -12,7 +12,6 @@ import de.jotomo.ruffy.spi.history.PumpHistory;
 class ComboPump {
     boolean initialized = false;
     volatile long lastSuccessfulCmdTime;
-    volatile long lastCmdTime;
 
     @Nullable
     volatile CommandResult lastCmdResult;

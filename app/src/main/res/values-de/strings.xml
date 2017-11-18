@@ -678,7 +678,7 @@
     <string name="combo_tbr_remaining">%d%% (%d verbleibend)</string>
     <string name="combopump_settings">Accu-Chek Combo settings Einstellungen</string>
     <string name="combo_connect_attempt_failed">Verbindungsaufbau fehlgeschlagen</string>
-    <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %s</string>
+    <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %d min</string>
     <string name="bolusstopped">Bolusabgabe gestopped</string>
     <string name="bolusstopping">Bolusabgabe wird abgebrochen</string>
     <string name="pump_errors_history">Fehlerprotokol</string>
