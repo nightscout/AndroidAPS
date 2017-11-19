@@ -141,7 +141,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     String getStateSummary() {
         PumpState ps = pump.state;
-        if (ps.menu == null)
+        if (ps.activeAlert != null) {
+            return ps.activeAlert.errorCode != null
+                    ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
+                    : "W" + ps.activeAlert.warningCode + ": " + ps.activeAlert.message;
+        } else if (ps.menu == null)
             return MainApp.sResources.getString(R.string.combo_pump_state_disconnected);
         else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
             return MainApp.sResources.getString(R.string.combo_pump_state_suspended_due_to_error);
@@ -642,6 +646,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (!ruffyScripter.isConnected()) {
                 CommandResult preCheckError = runOnConnectChecks();
                 if (preCheckError != null) {
+                   updateLocalData(preCheckError);
                    return preCheckError;
                 }
             }
@@ -656,7 +661,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             for (Integer forwardedWarning : commandResult.forwardedWarnings) {
-                notifyAboutPumpWarning(new WarningOrErrorCode(forwardedWarning, null));
+                notifyAboutPumpWarning(new WarningOrErrorCode(forwardedWarning, null, null));
             }
 
             if (commandResult.success) {

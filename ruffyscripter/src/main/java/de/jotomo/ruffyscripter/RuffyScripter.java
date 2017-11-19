@@ -254,6 +254,7 @@ public class RuffyScripter implements RuffyCommands {
                         // check pump in a suitable state to run the requested command
                         if (cmd instanceof ReadPumpStateCommand) {
                             // always allowed, state is set at the end of runCommand method
+                            activeCmd.getResult().success = true;
                         } else if (getCurrentMenu().getType() == MenuType.STOP && cmd.needsRunMode()) {
                             log.error("Requested command requires run mode, but pump is suspended");
                             activeCmd.getResult().success = false;
@@ -508,8 +509,9 @@ public class RuffyScripter implements RuffyCommands {
             errorCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.ERROR);
             retries--;
         }
+        String message = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
         return (warningCode != null || errorCode != null)
-                ? new WarningOrErrorCode(warningCode, errorCode) : null;
+                ? new WarningOrErrorCode(warningCode, errorCode, message) : null;
     }
 
     public static class Key {
