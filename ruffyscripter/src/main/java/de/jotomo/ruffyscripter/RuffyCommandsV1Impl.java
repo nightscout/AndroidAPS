@@ -83,19 +83,22 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
         return delegate.readHistory(request);
     }
 
+    /** Not supported by RuffyScripter */
     @Override
     public CommandResult readBasalProfile() {
-        return delegate.readBasalProfile();
+        return new CommandResult().success(false);
     }
 
+    /** Not supported by RuffyScripter */
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        return delegate.setBasalProfile(basalProfile);
+        return new CommandResult().success(false);
     }
 
+    /** Not supported by RuffyScripter */
     @Override
     public CommandResult setDateAndTime() {
-        return delegate.setDateAndTime();
+        return new CommandResult().success(false);
     }
 
     @Override
