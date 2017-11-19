@@ -76,6 +76,8 @@ public class Home2 extends BaseWatchFace {
         mMonth.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mLoop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
 
+        setIobTextSize();
+
         if (sgvLevel == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
@@ -150,6 +152,7 @@ public class Home2 extends BaseWatchFace {
             pointSize = 2;
             setupCharts();
         }
+        setIobTextSize();
     }
 
     protected void setColorBright() {
@@ -166,6 +169,8 @@ public class Home2 extends BaseWatchFace {
             mDay.setTextColor(Color.BLACK);
             mMonth.setTextColor(Color.BLACK);
             mLoop.setTextColor(Color.BLACK);
+
+            setIobTextSize();
 
             if (sgvLevel == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
@@ -211,6 +216,27 @@ public class Home2 extends BaseWatchFace {
             }
         } else {
             setColorDark();
+        }
+    }
+
+    protected void setIobTextSize() {
+
+        if (mIOB1 != null && mIOB2 != null) {
+
+            if (detailedIOB) {
+                mIOB1.setTextSize(14);
+                mIOB2.setTextSize(10);
+            } else {
+                mIOB1.setTextSize(10);
+                mIOB2.setTextSize(14);
+            }
+        //deal with cases where there is only the value shown for IOB, and not the label
+        } else if (mIOB2 != null) {
+            if (detailedIOB) {
+                mIOB2.setTextSize(10);
+            } else {
+                mIOB2.setTextSize(14);
+            }
         }
     }
 }

@@ -93,6 +93,25 @@
         </service>
 
         <service
+            android:name=".watchfaces.Cockpit"
+            android:allowEmbedded="true"
+            android:label="AAPS(Cockpit)"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_cockpit" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".watchfaces.LargeHome"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_large"

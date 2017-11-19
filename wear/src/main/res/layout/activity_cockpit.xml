@@ -6,7 +6,7 @@
     android:id="@+id/watch_view_stub"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:rectLayout="@layout/rect_activity_home_2"
-    app:roundLayout="@layout/round_activity_home_2"
-    tools:context=".watchfaces.Home"
+    app:rectLayout="@layout/rect_cockpit"
+    app:roundLayout="@layout/round_cockpit"
+    tools:context=".watchfaces.Cockpit"
     tools:deviceIds="wear"/>

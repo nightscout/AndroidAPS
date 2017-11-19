@@ -49,7 +49,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mLoop, mDay, mMonth, isAAPSv2;
+    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
     public double datetime;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate;
@@ -75,8 +75,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
-    private final Point displaySize = new Point();
-    private int specW, specH;
+    public final Point displaySize = new Point();
+    public int specW, specH;
     private LocalBroadcastManager localBroadcastManager;
     private MessageReceiver messageReceiver;
 
@@ -149,6 +149,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mRigBattery = (TextView) stub.findViewById(R.id.rig_battery);
                 mDelta = (TextView) stub.findViewById(R.id.delta);
                 isAAPSv2 = (TextView) stub.findViewById(R.id.AAPSv2);
+                mHighLight = (TextView) stub.findViewById(R.id.highLight);
+                mLowLight = (TextView) stub.findViewById(R.id.lowLight);
                 mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
                 mLinearLayout = (LinearLayout) stub.findViewById(R.id.secondary_layout);
                 mLinearLayout2 = (LinearLayout) stub.findViewById(R.id.tertiary_layout);
@@ -252,7 +254,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 sUploaderBattery = dataMap.getString("battery");
                 sRigBattery = dataMap.getString("rigBattery");
                 detailedIOB = dataMap.getBoolean("detailedIob");
-                sIOB1 = dataMap.getString("iobTotal");
+                sIOB1 = dataMap.getString("iobTotal") + "U";
                 sIOB2 = dataMap.getString("iobDetail");
                 sCOB1 = "Carb";
                 sCOB2 = dataMap.getString("cob");
@@ -325,6 +327,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mCOB1.setVisibility(View.GONE);
                 mCOB2.setVisibility(View.GONE);
             }
+        //deal with cases where there is only the value shown for COB, and not the label
+        } else if (mCOB2 != null) {
+            mCOB2.setText(sCOB2);
+            if (sharedPrefs.getBoolean("show_cob", true)) {
+                mCOB2.setVisibility(View.VISIBLE);
+            } else {
+                mCOB2.setVisibility(View.GONE);
+            }
         }
 
         if (mIOB1 != null && mIOB2 != null) {
@@ -332,19 +342,27 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mIOB1.setVisibility(View.VISIBLE);
                 mIOB2.setVisibility(View.VISIBLE);
                 if (detailedIOB) {
-                    mIOB1.setTextSize(14);
-                    mIOB2.setTextSize(10);
                     mIOB1.setText("IOB " + sIOB1);
                     mIOB2.setText(sIOB2);
                 } else {
-                    mIOB1.setTextSize(10);
-                    mIOB2.setTextSize(14);
                     mIOB1.setText("IOB");
                     mIOB2.setText(sIOB1);
                 }
             } else {
                 mIOB1.setVisibility(View.GONE);
                 mIOB2.setVisibility(View.GONE);
+            }
+        //deal with cases where there is only the value shown for IOB, and not the label
+        } else if (mIOB2 != null) {
+            if (sharedPrefs.getBoolean("show_iob", true)) {
+                mIOB2.setVisibility(View.VISIBLE);
+                if (detailedIOB) {
+                    mIOB2.setText(sIOB2);
+                } else {
+                    mIOB2.setText(sIOB1);
+                }
+            } else {
+                mIOB2.setText("");
             }
         }
 
