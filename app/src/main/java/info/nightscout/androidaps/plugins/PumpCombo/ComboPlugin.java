@@ -689,6 +689,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return commandResult;
     }
 
+    /**
+     * Returns the command result of running ReadPumpState if it wasn't successful, indicating
+     * an error condition. Returns null otherwise.
+     */
     private CommandResult runOnConnectChecks() {
         // connect, get status and check if an alarm is active
         CommandResult preCheckResult = ruffyScripter.readPumpState();

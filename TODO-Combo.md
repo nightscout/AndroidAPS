@@ -1,4 +1,6 @@
-- [x] Bugs
+- [ ] Bugs
+  - [ ] Taking over benign warnings on connect doesn't work properly
+        (Notification raised but not confirmed?)
   - [x] ruffy: Accessing the quick info menu yields noMenu when cartridge is low
   - [x] ruffy: Multi-digit error codes in error history aren't supported
   - [-] No connection can be established anymore; ruffy issue i can't solve
@@ -39,8 +41,8 @@
     - [-] Updating time on pump
       - [x] Raise a warning if time clock is off
       - [-] Ruffy: support reading date/time menus
-    - [-] Setting pump basal profile (20h)
-    - [-] Pairing (and sourcing ruffy) (20h)
+    - [-] Setting pump basal profile
+    - [-] Pairing (and sourcing ruffy)
     - [x] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
           after 15m of no other command taking place. IOB will then be current with next loop
