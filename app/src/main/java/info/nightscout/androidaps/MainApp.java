@@ -13,6 +13,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
+import com.squareup.otto.LoggingBus;
 import com.squareup.otto.ThreadEnforcer;
 
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingProlongedPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
@@ -103,7 +105,8 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
-        sBus = new Bus(ThreadEnforcer.ANY);
+        sBus = Config.logEvents ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
+
         sInstance = this;
         sResources = getResources();
 
@@ -149,6 +152,7 @@ public class MainApp extends Application {
             if (!Config.NSCLIENT)
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
+            pluginsList.add(FoodPlugin.getPlugin());
 
             pluginsList.add(WearPlugin.initPlugin(this));
             pluginsList.add(StatuslinePlugin.initPlugin(this));
@@ -165,9 +169,6 @@ public class MainApp extends Application {
         else
             Answers.getInstance().logCustom(new CustomEvent("AppStart"));
 
-
-        startKeepAliveService();
-
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -175,8 +176,9 @@ public class MainApp extends Application {
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null)
                     pump.refreshDataFromPump("Initialization");
+                startKeepAliveService();
             }
-        });
+        }, "pump-initialization");
         t.start();
 
     }
@@ -186,6 +188,9 @@ public class MainApp extends Application {
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_TREATMENT));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_CHANGED_TREATMENT));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_REMOVED_TREATMENT));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_FOOD));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_CHANGED_FOOD));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_REMOVED_FOOD));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_SGV));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_PROFILE));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_STATUS));
@@ -206,12 +211,6 @@ public class MainApp extends Application {
     private void startKeepAliveService() {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
-            if (Config.DANAR) {
-                startService(new Intent(this, DanaRExecutionService.class));
-                startService(new Intent(this, DanaRKoreanExecutionService.class));
-                startService(new Intent(this, DanaRv2ExecutionService.class));
-                startService(new Intent(this, DanaRSService.class));
-            }
             keepAliveReceiver.setAlarm(this);
         }
     }

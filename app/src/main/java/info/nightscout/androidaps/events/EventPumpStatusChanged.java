@@ -7,7 +7,7 @@ import info.nightscout.androidaps.R;
  * Created by mike on 19.02.2017.
  */
 
-public class EventPumpStatusChanged {
+public class EventPumpStatusChanged extends Event {
     public static final int CONNECTING = 0;
     public static final int CONNECTED = 1;
     public static final int PERFORMING = 2;
