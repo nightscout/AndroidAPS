@@ -19,7 +19,7 @@ public class Tdd extends HistoryRecord {
         Tdd tdd = (Tdd) o;
 
         if (timestamp != tdd.timestamp) return false;
-        return Math.abs(tdd.total - total) <= 0.05;
+        return tdd.total != total;
     }
 
     @Override

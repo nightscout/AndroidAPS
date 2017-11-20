@@ -1,6 +1,7 @@
 - [ ] Bugs
   - [ ] Taking over benign warnings on connect doesn't work properly
         (Notification raised but not confirmed?)
+  - [ ] Reading full history multiple times duplicates entries shown in Stats/TDD dialog
   - [x] ruffy: Accessing the quick info menu yields noMenu when cartridge is low
   - [x] ruffy: Multi-digit error codes in error history aren't supported
   - [-] No connection can be established anymore; ruffy issue i can't solve

@@ -4,24 +4,52 @@
     android:layout_height="match_parent"
     tools:context=".plugins.PumpCombo.ComboFragment">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="TDD"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/combo_tdd_history_text"
+        <View
+            android:id="@+id/profileview_datedelimiter"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="textStart"
-                android:padding="10dp"
-                android:gravity="start"/>
-        </LinearLayout>
+                android:orientation="vertical">
 
-    </ScrollView>
+                <TextView
+                    android:id="@+id/combo_tdd_history_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:textAlignment="textStart" />
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
 
 </FrameLayout>

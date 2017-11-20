@@ -226,6 +226,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(basalProfile));
+        // Note: no verification here, command checks summary of inputs (total basal) at the end
         return commandResult.success ? PumpInterface.SUCCESS : PumpInterface.FAILED;*/
     }
 
