@@ -784,12 +784,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean checkForTbrMismatch(PumpState state) {
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         boolean sync = false;
-        if (aapsTbr == null && state.tbrActive) {
+        if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration <= 2) {
             // pump runs TBR AAPS is unaware off
             log.debug("Pump runs TBR AAPS is unaware of, cancelling TBR so it can be read from history properly");
             runCommand(null, 0, ruffyScripter::cancelTbr);
             sync = true;
-        } else if (aapsTbr != null && !state.tbrActive) {
+        } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             // AAPS has a TBR but the pump isn't running a TBR
             log.debug("AAPS shows TBR but pump isn't running a TBR; deleting TBR in AAPS and reading pump history");
             MainApp.getDbHelper().delete(aapsTbr);
