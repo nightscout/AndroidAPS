@@ -940,10 +940,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     void readAllPumpData() {
         readHistory(new PumpHistoryRequest()
-                .bolusHistory(PumpHistoryRequest.FULL)
-                .tbrHistory(PumpHistoryRequest.FULL)
-                .pumpErrorHistory(PumpHistoryRequest.FULL)
-                .tddHistory(PumpHistoryRequest.FULL));
+                .bolusHistory(pump.history.bolusHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.bolusHistory.get(0).timestamp)
+                .tbrHistory(pump.history.tbrHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.tbrHistory.get(0).timestamp)
+                .pumpErrorHistory(pump.history.pumpErrorHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.pumpErrorHistory.get(0).timestamp)
+                .tddHistory(pump.history.tddHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.tddHistory.get(0).timestamp));
         CommandResult commandResult = runCommand("Reading basal profile", 2,
                 ruffyScripter::readBasalProfile);
         if (commandResult.success) {
