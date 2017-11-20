@@ -102,35 +102,36 @@ public class ReadHistoryCommand extends BaseCommand {
 
             scripter.returnToRootMenu();
             scripter.verifyRootMenuIsDisplayed();
-        }
 
-        if (log.isDebugEnabled()) {
-            if (!history.bolusHistory.isEmpty()) {
-                log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
-                for (Bolus bolus : history.bolusHistory) {
-                    log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
+            if (log.isDebugEnabled()) {
+                if (!history.bolusHistory.isEmpty()) {
+                    log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
+                    for (Bolus bolus : history.bolusHistory) {
+                        log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
+                    }
+                }
+                if (!history.pumpErrorHistory.isEmpty()) {
+                    log.debug("Read error history (" + history.pumpErrorHistory.size() + "):");
+                    for (PumpError pumpError : history.pumpErrorHistory) {
+                        log.debug(new Date(pumpError.timestamp) + ": " + pumpError.toString());
+                    }
+                }
+                if (!history.tddHistory.isEmpty()) {
+                    log.debug("Read TDD history (" + history.tddHistory.size() + "):");
+                    for (Tdd tdd : history.tddHistory) {
+                        log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
+                    }
+                }
+                if (!history.tbrHistory.isEmpty()) {
+                    log.debug("Read TBR history (" + history.tbrHistory.size() + "):");
+                    for (Tbr tbr : history.tbrHistory) {
+                        log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
+                    }
                 }
             }
-            if (!history.pumpErrorHistory.isEmpty()) {
-                log.debug("Read error history (" + history.pumpErrorHistory.size() + "):");
-                for (PumpError pumpError : history.pumpErrorHistory) {
-                    log.debug(new Date(pumpError.timestamp) + ": " + pumpError.toString());
-                }
-            }
-            if (!history.tddHistory.isEmpty()) {
-                log.debug("Read TDD history (" + history.tddHistory.size() + "):");
-                for (Tdd tdd : history.tddHistory) {
-                    log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
-                }
-            }
-            if (!history.tbrHistory.isEmpty()) {
-                log.debug("Read TBR history (" + history.tbrHistory.size() + "):");
-                for (Tbr tbr : history.tbrHistory) {
-                    log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
-                }
-            }
+
+            result.success(true).history(history);
         }
-        result.success(true).history(history);
     }
 
     private void readTddRecords(long requestedTime) {
