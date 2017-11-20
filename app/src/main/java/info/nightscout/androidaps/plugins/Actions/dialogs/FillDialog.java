@@ -61,7 +61,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
-        double bolusstep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
         editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, new DecimalFormat("0.00"), false);
 

@@ -3,6 +3,9 @@ package info.nightscout.androidaps.queue.commands;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -21,7 +24,11 @@ public class CommandBolus extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
+        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().deliverTreatment(detailedBolusInfo);
+
+        BolusProgressDialog.bolusEnded = true;
+        MainApp.bus().post(new EventDismissBolusprogressIfRunning(r));
+
         if (callback != null)
             callback.result(r).run();
     }

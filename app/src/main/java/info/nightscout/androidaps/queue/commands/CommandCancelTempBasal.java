@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue.commands;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -19,7 +20,7 @@ public class CommandCancelTempBasal extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = MainApp.getConfigBuilder().cancelTempBasal(enforceNew);
+        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().cancelTempBasal(enforceNew);
         if (callback != null)
             callback.result(r).run();
     }

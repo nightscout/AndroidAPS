@@ -24,6 +24,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
@@ -237,7 +238,7 @@ public class GraphData {
         }
 
         // Extended bolus
-        if (!MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+        if (!ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
             List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
 
             for (int tx = 0; tx < extendedBoluses.size(); tx++) {

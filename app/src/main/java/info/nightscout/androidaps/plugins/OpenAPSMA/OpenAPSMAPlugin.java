@@ -63,7 +63,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.oaps_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -73,12 +73,14 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == APS && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
+        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+        return type == APS && fragmentEnabled && pumpCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == APS && fragmentVisible && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
+        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+        return type == APS && fragmentVisible && pumpCapable;
     }
 
     @Override
@@ -212,7 +214,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
-        if (!checkOnlyHardLimits(ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), "current_basal", 0.01, 5)) return;
+        if (!checkOnlyHardLimits(ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), "current_basal", 0.01, 5))
+            return;
 
         start = new Date();
         try {
@@ -231,7 +234,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1)
                 determineBasalResultMA.changeRequested = false;
-            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getBaseBasalRate()) < 0.1)
+            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
                 determineBasalResultMA.changeRequested = false;
         }
 

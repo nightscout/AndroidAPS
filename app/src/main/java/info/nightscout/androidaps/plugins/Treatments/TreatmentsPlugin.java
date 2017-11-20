@@ -210,7 +210,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             }
         }
 
-        if (!MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+        if (!ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
@@ -329,7 +329,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 total.plus(calc);
             }
         }
-        if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+        if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
             IobTotal totalExt = new IobTotal(time);
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
@@ -361,7 +361,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (tb != null)
             return tb;
         ExtendedBolus eb = getExtendedBolusFromHistory(time);
-        if (eb != null && MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+        if (eb != null && ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
             return new TemporaryBasal(eb);
         return null;
     }

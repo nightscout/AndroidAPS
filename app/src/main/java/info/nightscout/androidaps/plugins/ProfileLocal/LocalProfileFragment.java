@@ -162,7 +162,7 @@ public class LocalProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);

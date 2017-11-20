@@ -1,7 +1,12 @@
 package info.nightscout.androidaps.queue.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -9,6 +14,8 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandTempBasalPercent extends Command {
+    private static Logger log = LoggerFactory.getLogger(CommandTempBasalPercent.class);
+
     int durationInMinutes;
     int percent;
 
@@ -21,7 +28,9 @@ public class CommandTempBasalPercent extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = MainApp.getConfigBuilder().setTempBasalPercent(percent, durationInMinutes);
+        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalPercent(percent, durationInMinutes);
+        if (Config.logCongigBuilderActions)
+            log.debug("setTempBasalPercent percent: " + percent + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)
             callback.result(r).run();
     }

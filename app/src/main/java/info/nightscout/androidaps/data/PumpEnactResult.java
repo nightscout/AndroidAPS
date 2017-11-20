@@ -89,6 +89,31 @@ public class PumpEnactResult extends Object {
     public PumpEnactResult() {
     }
 
+    public PumpEnactResult success(boolean success) {
+        this.success = success;
+        return this;
+    }
+
+    public PumpEnactResult enacted(boolean enacted) {
+        this.enacted = enacted;
+        return this;
+    }
+
+    public PumpEnactResult comment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public PumpEnactResult absolute(double absolute) {
+        this.absolute = absolute;
+        return this;
+    }
+
+    public PumpEnactResult duration(int duration) {
+        this.duration = duration;
+        return this;
+    }
+
     public JSONObject json() {
         JSONObject result = new JSONObject();
         try {

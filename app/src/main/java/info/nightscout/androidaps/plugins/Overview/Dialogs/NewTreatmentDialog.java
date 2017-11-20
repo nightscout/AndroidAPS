@@ -96,7 +96,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
 
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        editInsulin.setParams(0d, 0d, maxInsulin, MainApp.getConfigBuilder().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin,ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
 
         return view;
     }

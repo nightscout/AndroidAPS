@@ -75,12 +75,14 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == APS && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
+        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+        return type == APS && fragmentEnabled && pumpCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == APS && fragmentVisible && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
+        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+        return type == APS && fragmentVisible && pumpCapable;
     }
 
     @Override
@@ -137,7 +139,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     public void invoke(String initiator) {
         log.debug("invoke from " + initiator);
         lastAPSResult = null;
-        DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS = null;
+        DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS;
         try {
             determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(MainApp.instance().getBaseContext()));
         } catch (IOException e) {
@@ -214,7 +216,8 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
-        if (!checkOnlyHardLimits(ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), "current_basal", 0.01, 5)) return;
+        if (!checkOnlyHardLimits(ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), "current_basal", 0.01, 5))
+            return;
 
         startPart = new Date();
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
@@ -247,7 +250,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultAMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1)
                 determineBasalResultAMA.changeRequested = false;
-            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultAMA.rate - MainApp.getConfigBuilder().getBaseBasalRate()) < 0.1)
+            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultAMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
                 determineBasalResultAMA.changeRequested = false;
         }
 

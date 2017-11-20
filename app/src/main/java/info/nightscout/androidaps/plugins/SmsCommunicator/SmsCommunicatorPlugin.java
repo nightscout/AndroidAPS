@@ -289,11 +289,15 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
-                                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
-                                    MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
-                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled) + " " +
-                                            MainApp.sResources.getString(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
-                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                                        @Override
+                                        public void run() {
+                                            MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
+                                            String reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled) + " " +
+                                                    MainApp.sResources.getString(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
+                                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                        }
+                                    });
                                 }
                                 receivedSms.processed = true;
                                 Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Stop"));
@@ -437,7 +441,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (System.currentTimeMillis() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
                         reply = MainApp.sResources.getString(R.string.smscommunicator_remotebolusnotallowed);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                    } else if (MainApp.getConfigBuilder().isSuspended()) {
+                    } else if (ConfigBuilderPlugin.getActivePump().isSuspended()) {
                         reply = MainApp.sResources.getString(R.string.pumpsuspended);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else if (splited.length > 1) {
@@ -478,7 +482,6 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (bolusWaitingForConfirmation != null && !bolusWaitingForConfirmation.processed &&
                             bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - bolusWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         bolusWaitingForConfirmation.processed = true;
-                        PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                         detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
                         detailedBolusInfo.source = Source.USER;
@@ -503,41 +506,37 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     } else if (tempBasalWaitingForConfirmation != null && !tempBasalWaitingForConfirmation.processed &&
                             tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - tempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         tempBasalWaitingForConfirmation.processed = true;
-                        PumpInterface pumpInterface = MainApp.getConfigBuilder();
-                        if (pumpInterface != null) {
-                            danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true);
-                            if (result.success) {
-                                reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
-                                if (danaRPlugin != null)
-                                    reply += "\n" + danaRPlugin.shortStatus(true);
-                                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            } else {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalfailed);
-                                if (danaRPlugin != null)
-                                    reply += "\n" + danaRPlugin.shortStatus(true);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true, new Callback() {
+                            @Override
+                            public void run() {
+                                if (result.success) {
+                                    String reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
+                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                } else {
+                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalfailed);
+                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
                             }
-                        }
+                        });
                     } else if (cancelTempBasalWaitingForConfirmation != null && !cancelTempBasalWaitingForConfirmation.processed &&
                             cancelTempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - cancelTempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         cancelTempBasalWaitingForConfirmation.processed = true;
-                        PumpInterface pumpInterface = MainApp.getConfigBuilder();
-                        if (pumpInterface != null) {
-                            danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.cancelTempBasal(true);
-                            if (result.success) {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcanceled);
-                                if (danaRPlugin != null)
-                                    reply += "\n" + danaRPlugin.shortStatus(true);
-                                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            } else {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcancelfailed);
-                                if (danaRPlugin != null)
-                                    reply += "\n" + danaRPlugin.shortStatus(true);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                            @Override
+                            public void run() {
+                                if (result.success) {
+                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcanceled);
+                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                } else {
+                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcancelfailed);
+                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
                             }
-                        }
+                        });
                     } else if (calibrationWaitingForConfirmation != null && !calibrationWaitingForConfirmation.processed &&
                             calibrationWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - calibrationWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         calibrationWaitingForConfirmation.processed = true;
@@ -552,14 +551,24 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     } else if (suspendWaitingForConfirmation != null && !suspendWaitingForConfirmation.processed &&
                             suspendWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - suspendWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         suspendWaitingForConfirmation.processed = true;
-                        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                        activeloop.suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
-                        PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
-                        NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
-                        MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
-                        reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
-                                MainApp.sResources.getString(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
-                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                            @Override
+                            public void run() {
+                                if (result.success) {
+                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                                    activeloop.suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
+                                    NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
+                                    MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
+                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
+                                            MainApp.sResources.getString(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
+                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                } else {
+                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcancelfailed);
+                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
+                            }
+                        });
                     } else {
                         sendSMS(new Sms(receivedSms.phoneNumber, MainApp.sResources.getString(R.string.smscommunicator_unknowncommand), new Date()));
                     }

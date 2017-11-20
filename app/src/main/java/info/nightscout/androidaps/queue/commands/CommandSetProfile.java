@@ -3,6 +3,7 @@ package info.nightscout.androidaps.queue.commands;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -20,7 +21,7 @@ public class CommandSetProfile extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = MainApp.getConfigBuilder().setNewBasalProfile(profile);
+        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setNewBasalProfile(profile);
         if (callback != null)
             callback.result(r).run();
     }

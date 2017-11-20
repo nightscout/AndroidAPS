@@ -18,10 +18,10 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.SP;
 
 /**
@@ -77,7 +77,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && (Config.NSCLIENT ||fragmentVisible);
+        return type == PROFILE && (Config.NSCLIENT || fragmentVisible);
     }
 
     @Override
@@ -121,12 +121,17 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
         if (SP.getBoolean("syncprofiletopump", false)) {
-            if (ConfigBuilderPlugin.getActivePump().setNewBasalProfile(MainApp.getConfigBuilder().getProfile()).enacted == true) {
-                SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
-                if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
-                    smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
+            ConfigBuilderPlugin.getCommandQueue().setProfile(MainApp.getConfigBuilder().getProfile(), new Callback() {
+                @Override
+                public void run() {
+                    if (result.enacted) {
+                        SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
+                        if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
+                            smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
+                        }
+                    }
                 }
-            }
+            });
         }
     }
 

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.queue.commands;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -18,7 +19,7 @@ public class CommandReadStatus extends Command {
 
     @Override
     public void execute() {
-        MainApp.getConfigBuilder().getPumpStatus();
+        ConfigBuilderPlugin.getActivePump().getPumpStatus();
         if (callback != null)
             callback.result(null).run();
     }

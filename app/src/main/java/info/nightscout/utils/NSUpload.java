@@ -23,6 +23,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -220,7 +221,7 @@ public class NSUpload {
                 log.debug("OpenAPS data too old to upload");
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = MainApp.getConfigBuilder().getJSONStatus();
+            JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus();
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }

@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.FragmentManager;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -223,15 +222,15 @@ public class DanaRFragment extends SubscriberFragment {
                         Long agoMsec = System.currentTimeMillis() - pump.lastBolusTime.getTime();
                         double agoHours = agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime.getTime()) +  " " + DecimalFormatter.to2Decimal(DanaRPump.getInstance().lastBolusAmount) + " U");
+                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime.getTime()) + " " + DecimalFormatter.to2Decimal(DanaRPump.getInstance().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
                     }
 
                     dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getBaseBasalRate()) + " U/h");
+                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h");
                     // DanaRPlugin, DanaRKoreanPlugin
-                    if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+                    if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
                         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                             tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                         } else {

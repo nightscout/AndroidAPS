@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -106,16 +104,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     JSONObject boluscalcJSON;
     boolean cobAvailable = false;
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
-
     Context context;
 
     public WizardDialog() {
         super();
-        mHandlerThread = new HandlerThread(WizardDialog.class.getSimpleName());
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -250,7 +242,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        double bolusstep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, new DecimalFormat("0.00"), false, textWatcher);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();

@@ -18,7 +18,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
@@ -155,7 +154,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);
