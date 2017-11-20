@@ -27,8 +27,8 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
-    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     /**
      * Takes in an ISO date string of the following format:
