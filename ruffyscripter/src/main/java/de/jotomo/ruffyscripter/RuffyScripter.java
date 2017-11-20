@@ -640,7 +640,7 @@ public class RuffyScripter implements RuffyCommands {
                         + ". Check menu settings on your pump to ensure it's not hidden.");
             }
             pressMenuKey();
-            SystemClock.sleep(200);
+            waitForScreenUpdate();
         }
     }
 
