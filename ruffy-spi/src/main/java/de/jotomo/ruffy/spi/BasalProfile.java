@@ -27,4 +27,11 @@ public class BasalProfile {
     public int hashCode() {
         return Arrays.hashCode(hourlyRates);
     }
+
+    @Override
+    public String toString() {
+        return "BasalProfile{" +
+                "hourlyRates=" + Arrays.toString(hourlyRates) +
+                '}';
+    }
 }

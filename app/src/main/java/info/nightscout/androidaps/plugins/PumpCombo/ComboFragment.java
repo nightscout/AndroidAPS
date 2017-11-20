@@ -76,7 +76,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public boolean onLongClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-                new Thread(() -> ComboPlugin.getPlugin().forceFullHistoryRead()).start();
+                new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start();
                 return true;
         }
         return false;

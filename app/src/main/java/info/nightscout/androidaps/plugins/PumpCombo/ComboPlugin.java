@@ -274,7 +274,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
 
-        // ensure time and date(!) are current
+        // ensure time and date(!) are current; connect triggers a notification on mismatch
         /* menu not supported by ruffy
         if (!pump.initialized) {
             if (!runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime).success) {
@@ -958,7 +958,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
-    void forceFullHistoryRead() {
+    void readAllPumpData() {
         readHistory(new PumpHistoryRequest()
                 .bolusHistory(PumpHistoryRequest.FULL)
                 .tbrHistory(PumpHistoryRequest.FULL)
