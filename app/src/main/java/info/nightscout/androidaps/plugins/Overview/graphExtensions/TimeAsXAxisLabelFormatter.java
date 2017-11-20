@@ -15,7 +15,7 @@ public class TimeAsXAxisLabelFormatter extends DefaultLabelFormatter {
 
     protected final String mFormat;
 
-    public TimeAsXAxisLabelFormatter(Context context, String format) {
+    public TimeAsXAxisLabelFormatter(String format) {
         mFormat = format;
     }
 

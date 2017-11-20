@@ -7,14 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
-import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 import io.socket.client.Ack;
 
 /**
  * Created by mike on 29.12.2015.
  */
-public class NSAddAck implements Ack {
+public class NSAddAck extends Event implements Ack {
     private static Logger log = LoggerFactory.getLogger(NSAddAck.class);
     public String _id = null;
     public String nsClientID = null;
