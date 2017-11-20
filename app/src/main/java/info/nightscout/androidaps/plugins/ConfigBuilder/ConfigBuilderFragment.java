@@ -270,6 +270,23 @@ public class ConfigBuilderFragment extends Fragment {
                         }, null);
                     }
                 });
+
+                holder.name.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        final PluginBase plugin = (PluginBase) v.getTag();
+                        PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(getContext(), PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                startActivity(i);
+                            }
+                        }, null);
+                        return false;
+                    }
+                });
+
             } else {
                 holder = (PluginViewHolder) view.getTag();
             }

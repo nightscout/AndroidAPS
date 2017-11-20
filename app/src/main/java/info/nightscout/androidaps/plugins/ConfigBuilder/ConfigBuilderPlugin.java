@@ -409,9 +409,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        if (activePump != null)
-            return activePump.isThisProfileSet(profile);
-        else return true;
+        if (activePump != null) {
+            boolean result = activePump.isThisProfileSet(profile);
+            if (result == false) {
+                log.debug("Current profile: " + getProfile().getData().toString());
+                log.debug("New profile: " + profile.getData().toString());
+            }
+        } else return true;
     }
 
     @Override
@@ -564,7 +568,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
-        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < 0.05) {
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < getPumpDescription().basalStep) {
             if (isTempBasalInProgress()) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
