@@ -459,6 +459,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 log.debug("Current profile: " + getProfile().getData().toString());
                 log.debug("New profile: " + profile.getData().toString());
             }
+            return result;
         } else return true;
     }
 
