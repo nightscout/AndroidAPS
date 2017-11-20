@@ -446,8 +446,18 @@ public class RuffyScripter implements RuffyCommands {
                 SystemClock.sleep(50);
             }
         } catch (CommandException e) {
+            try {
+                ruffyService.doRTDisconnect();
+            } catch (RemoteException e1) {
+                log.warn("Disconnect after connect failure failed", e1);
+            }
             throw e;
         } catch (Exception e) {
+            try {
+                ruffyService.doRTDisconnect();
+            } catch (RemoteException e1) {
+                log.warn("Disconnect after connect failure failed", e1);
+            }
             throw new CommandException("Unexpected exception while initiating/restoring pump connection", e);
         }
     }
