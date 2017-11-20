@@ -12,7 +12,7 @@ import de.jotomo.ruffy.spi.BasalProfile;
 
 public class ReadBasalProfileCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(ReadBasalProfileCommand.class);
-
+    
     @Override
     public void execute() {
         scripter.navigateToMenu(MenuType.BASAL_1_MENU);
@@ -41,5 +41,10 @@ public class ReadBasalProfileCommand extends BaseCommand {
         scripter.verifyRootMenuIsDisplayed();
 
         result.success(true).basalProfile(basalProfile);
+    }
+
+    @Override
+    public String toString() {
+        return "ReadBasalProfileCommand{}";
     }
 }

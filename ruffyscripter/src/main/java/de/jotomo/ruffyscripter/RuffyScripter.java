@@ -53,6 +53,8 @@ import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
+    public static final long DISCONNECT_TIME_OUT_MS = 2500;
+
     private IRuffyService ruffyService;
 
     @Nullable
@@ -179,10 +181,9 @@ public class RuffyScripter implements RuffyCommands {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     long now = System.currentTimeMillis();
-                    long connectionTimeOutMs = 5000;
                     if (ruffyService.isConnected() && activeCmd == null
-                            && now > lastCmdExecutionTime + connectionTimeOutMs) {
-                        log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
+                            && now > lastCmdExecutionTime + DISCONNECT_TIME_OUT_MS) {
+                        log.debug("Disconnecting after " + (DISCONNECT_TIME_OUT_MS / 1000) + "s inactivity timeout");
                         ruffyService.doRTDisconnect();
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);

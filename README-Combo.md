@@ -1,30 +1,15 @@
-**Do not share this code beyond members of this project. This is a preview release with significant limitations.**
-
-Release date: **unreleased, there are still bugs!**
+**This software is part of a DIY solution. You're solely responsible for everything that might happen**
 
 Hardware requirements:
 - A Roche Accu-Chek Combo (any firmware, they all work)
+- A Smartpix or Realtyme device together with the 360 Configuration Software to configure the pump.
+  Roche sends these out free of charge to their customers.
 - A compatible phone:
     - An Android phone with either Android < 4.2 (and possibly >= 8.1 in the future) or a phone running LineageOS 14.1 (formerly CyanogenMod)
-    - Or root rights on any android phone and use this method: http://github.com/gregorybel/combo-pairing/
+    - With a phone running LineageOS a pairing can be created that can then be transfered to a rooted phone which can then be used as a loop
+      phone using these instructions:  http://github.com/gregorybel/combo-pairing/
 
-Limitations:
-- Only the state from the main menu is read from the pump and returned with every command and is displayed on the combo tab, nothing else is read back from the pump at this point. Hence, all treatments must be entered via AAPS, no operations shall be performed on the pump itself.
-- Only bolus, TBR set, TBR cancel commands are supported
-- Alarms (low cartridge, low battery) need to be dealt with on the pump directly
-- AAPS rebinds the ruffy service when it goes away, which restart the service. However, when AAPS crashes hard (and thus didn't unbind from ruffy), ruffy runs into a lot of DeadObjectExceptions and might have to be restarted. Though I've only seen this when stopping the debugger.
-- A pump suspend state is detected and attempts to bolus or set TBR in suspend mode will raise an alert.
-- No bolus progress is displayed and there's no way to abort bolusing via AndroidAPS at this time.
-
-What works:
-- Having OpenAPS (via AAPS) set the _temporary_ basal rate
-- Issue bolus when entering treatments on the home screen (bolus and calculator dialog). This displays a _Waiting for pump_ popup, without progress  report, even in the case of a carb-only treatment, due to a current limitation in AAPS.
-- Commands controlling the pump check each step to ensure they're executed properly and abort if anything but the expected screen is shown.
-- Command execution is monitored, timeouts and errors trigger notification alerts (which are noisy and vibrate and which are re-raised every 5m as long as the problem persists).
-- Establishing a connection with ruffy/pump is done as needed, connection is terminated after 5s of inactivity.
-- Most errors are transient, failed commands usually run through the next loop iteration, or succeed when they are automatically retried (TBR commands only, bolus commands are _not_ automatically retried). If AAPS recovers, the alarm will only trigger again if there is another error (and of course keep ringing if an error persists)
-
-How to use:
+How to use v1:
 - Note: Documentation on how to use AndroidAPS is available at https://github.com/MilosKozak/AndroidAPS/wiki
 - Configure the pumps settings as described here: https://gitlab.com/jotomo/AndroidAPS/wikis/pump-configuration
 - On the pump, go to the _Menu settings_ menu and select _Standard_. This disables extended and multiwave and all but one basal rate. Those aren't supported by AAPS-Combo.
@@ -47,7 +32,7 @@ How to use:
   Issue a TBR Cancel in AAPS to get them lined up. In case of boluses, check the pump to be sure (press check twice to enter the bolus history menu).
 - Update this page if something is unclear or missing
 
-Testing:
+Testing v1:
 - When there's an error, check the Combo tab, there should be a clue.
 - Try to reproduce and open a ticket, add tag if any, otherwise add the hash of the commit used (right-click on the branch name select
  _Copy revision number_ or use _git show_ on the command-line) the branch name. Attach the log to the issue and label it as a bug.
@@ -62,8 +47,6 @@ Limitations
   in non-testing scenarios (e.g. bolusing from the pump and then immediately bolusing
   from AAPS).
 
-// TODO when to check for pump-boluses? before a bolus, sure, but also every 15m when running another command (or through keepalive?)
-
 Usage
 - This is not a product, esp. in the beginning the user needs to monitor and understand the system, its limitations and how it
   can fail. It is strongly advised NOT to use this system when the person using is not able to fully understand the system.
@@ -77,4 +60,5 @@ Usage
   such an alarm shall be ignored (cancelling it is not a big issue, but will lead to the currently active action to
   have to wait till the pump's display turns off before it can reconnect to the pump).
   If the pump's alarm continues, the last action might have failed, in which case the user needs to confirm the alarm
-
+- If AAPS crashes (or is stopped from the debugger) while pump comms where happening, it might be necessary to force close ruffy.
+  Restarting AAPS will also start ruffy again.
