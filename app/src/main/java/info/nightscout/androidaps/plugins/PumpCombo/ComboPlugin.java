@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -230,8 +231,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return true;
-//        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
+        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
     }
 
     @NonNull
@@ -284,18 +284,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         */
 
         // read basal profile into cache, update pump profile if needed
-        /* not implemented by ruffiscripter
         if (!pump.initialized) {
             CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
             if (!readBasalResult.success) {
                 return;
             }
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-            setNewBasalProfile(profile);
-
             pump.basalProfile = readBasalResult.basalProfile;
         }
-        */
 
         if (!checkPumpHistory()) {
             return;
@@ -330,24 +325,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public double getBaseBasalRate() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        Double basal = profile.getBasal();
-        log.trace("getBaseBasalrate returning " + basal);
-        return basal;
-
-/*        if (pump.basalProfile == null) {
-           // when to force refresh this?
-            CommandResult result = runCommand("Reading basal profile", new CommandExecution() {
-                @Override
-                public CommandResult execute() {
-                    return ruffyScripter.readBasalProfile(1);
-                }
-            });
-            pump.basalProfile = result.basalProfile;
-            // error handling ...
-        }
-        return pump.basalProfile.hourlyRates[Calendar.getInstance().get(Calendar.HOUR_OF_DAY)];
-*/
+        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        return pump.basalProfile.hourlyRates[currentHour];
     }
 
     private static BolusProgressReporter nullBolusProgressReporter = (state, percent, delivered) -> {
@@ -964,6 +943,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 .tbrHistory(PumpHistoryRequest.FULL)
                 .pumpErrorHistory(PumpHistoryRequest.FULL)
                 .tddHistory(PumpHistoryRequest.FULL));
+        CommandResult commandResult = runCommand("Reading basal profile", 2,
+                ruffyScripter::readBasalProfile);
+        if (commandResult.success) {
+            pump.basalProfile = commandResult.basalProfile;
+        }
     }
 
     @Override
