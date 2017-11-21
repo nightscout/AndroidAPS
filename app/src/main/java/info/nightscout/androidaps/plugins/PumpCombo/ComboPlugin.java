@@ -12,18 +12,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.PumpWarningCodes;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpError;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
-import de.jotomo.ruffy.spi.history.Tdd;
 import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
 import info.nightscout.androidaps.BuildConfig;
@@ -877,8 +874,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pump.lastHistoryTbrTime = history.tbrHistory.get(0).timestamp;
         }
 
-        if (!history.pumpErrorHistory.isEmpty()) {
-            pump.errorHistory = history.pumpErrorHistory;
+        if (!history.pumpAlertHistory.isEmpty()) {
+            pump.errorHistory = history.pumpAlertHistory;
         }
         if (!history.tddHistory.isEmpty()) {
             pump.tddHistory = history.tddHistory;

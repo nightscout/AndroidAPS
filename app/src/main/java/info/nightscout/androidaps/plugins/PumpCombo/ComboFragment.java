@@ -62,8 +62,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 new Thread(() -> ComboPlugin.getPlugin().refreshDataFromPump("User request")).start();
                 break;
             case R.id.combo_error_history:
-                ComboErrorHistoryDialog ehd = new ComboErrorHistoryDialog();
-                ehd.show(getFragmentManager(), ComboErrorHistoryDialog.class.getSimpleName());
+                ComboAlertHistoryDialog ehd = new ComboAlertHistoryDialog();
+                ehd.show(getFragmentManager(), ComboAlertHistoryDialog.class.getSimpleName());
                 break;
             case R.id.combo_tdd_history:
                 ComboTddHistoryDialog thd = new ComboTddHistoryDialog();

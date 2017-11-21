@@ -14,7 +14,7 @@ public class PumpHistory {
     @NonNull
     public List<Tbr> tbrHistory = new ArrayList<>();
     @NonNull
-    public List<PumpError> pumpErrorHistory = new LinkedList<>();
+    public List<PumpAlert> pumpAlertHistory = new LinkedList<>();
     @NonNull
     public List<Tdd> tddHistory = new ArrayList<>();
 
@@ -28,8 +28,8 @@ public class PumpHistory {
         return this;
     }
 
-    public PumpHistory pumpErrorHistory(List<PumpError> pumpErrorHistory) {
-        this.pumpErrorHistory = pumpErrorHistory;
+    public PumpHistory pumpErrorHistory(List<PumpAlert> pumpAlertHistory) {
+        this.pumpAlertHistory = pumpAlertHistory;
         return this;
     }
 
@@ -43,7 +43,7 @@ public class PumpHistory {
         return "PumpHistory{" +
                 "bolusHistory=" + bolusHistory.size() +
                 ", tbrHistory=" + tbrHistory.size() +
-                ", pumpErrorHistory=" + pumpErrorHistory.size() +
+                ", pumpAlertHistory=" + pumpAlertHistory.size() +
                 ", tddHistory=" + tddHistory.size() +
                 '}';
     }

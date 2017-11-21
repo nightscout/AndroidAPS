@@ -42,7 +42,7 @@ public class PumpHistoryRequest {
         return "PumpHistoryRequest{" +
                 "bolusHistory=" + bolusHistory + (bolusHistory > 0 ? ("(" + new Date(bolusHistory) + ")") : "") +
                 ", tbrHistory=" + tbrHistory + (tbrHistory > 0 ? ("(" + new Date(tbrHistory) + ")") : "") +
-                ", pumpErrorHistory=" + pumpErrorHistory + (pumpErrorHistory > 0 ? ("(" + new Date(pumpErrorHistory) + ")") : "") +
+                ", pumpAlertHistory=" + pumpErrorHistory + (pumpErrorHistory > 0 ? ("(" + new Date(pumpErrorHistory) + ")") : "") +
                 ", tddHistory=" + tddHistory + (tddHistory > 0 ? ("(" + new Date(tddHistory) + ")") : "") +
                 '}';
     }

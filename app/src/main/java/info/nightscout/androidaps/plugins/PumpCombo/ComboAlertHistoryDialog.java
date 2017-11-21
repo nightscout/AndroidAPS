@@ -7,29 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import de.jotomo.ruffy.spi.history.PumpError;
+import de.jotomo.ruffy.spi.history.PumpAlert;
 import info.nightscout.androidaps.R;
 
-public class ComboErrorHistoryDialog extends DialogFragment {
+public class ComboAlertHistoryDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.combo_error_history_fragment, container, false);
         TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
-        List<PumpError> errors = ComboPlugin.getPlugin().getPump().errorHistory;
+        List<PumpAlert> errors = ComboPlugin.getPlugin().getPump().errorHistory;
         StringBuilder sb = new StringBuilder();
         // TODO i18n
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM. HH:mm");
         if (errors.isEmpty()) {
-            text.setText("To retrieve the error history from the pump, long press the Refresh button.");
+            text.setText("To retrieve the alert history from the pump, long press the Refresh button.");
         } else {
             boolean first = true;
-            for (PumpError error : errors) {
+            for (PumpAlert error : errors) {
                 if (first) {
                     first = false;
                 } else {

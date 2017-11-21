@@ -2,13 +2,13 @@ package de.jotomo.ruffy.spi.history;
 
 import java.util.Date;
 
-public class PumpError extends HistoryRecord {
+public class PumpAlert extends HistoryRecord {
     public final Integer warningCode;
     public final Integer errorCode;
     /** Error message, in the language configured on the pump. */
     public final String message;
 
-    public PumpError(long timestamp, Integer warningCode, Integer errorCode, String message) {
+    public PumpAlert(long timestamp, Integer warningCode, Integer errorCode, String message) {
         super(timestamp);
         this.warningCode = warningCode;
         this.errorCode = errorCode;
@@ -20,14 +20,14 @@ public class PumpError extends HistoryRecord {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PumpError pumpError = (PumpError) o;
+        PumpAlert pumpAlert = (PumpAlert) o;
 
-        if (timestamp != pumpError.timestamp) return false;
-        if (warningCode != null ? !warningCode.equals(pumpError.warningCode) : pumpError.warningCode != null)
+        if (timestamp != pumpAlert.timestamp) return false;
+        if (warningCode != null ? !warningCode.equals(pumpAlert.warningCode) : pumpAlert.warningCode != null)
             return false;
-        if (errorCode != null ? !errorCode.equals(pumpError.errorCode) : pumpError.errorCode != null)
+        if (errorCode != null ? !errorCode.equals(pumpAlert.errorCode) : pumpAlert.errorCode != null)
             return false;
-        return message != null ? message.equals(pumpError.message) : pumpError.message == null;
+        return message != null ? message.equals(pumpAlert.message) : pumpAlert.message == null;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PumpError extends HistoryRecord {
 
     @Override
     public String toString() {
-        return "PumpError{" +
+        return "PumpAlert{" +
                 "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +
                 ", warningCode=" + warningCode +
                 ", errorCode=" + errorCode +

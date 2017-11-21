@@ -84,8 +84,8 @@
     - [-] Display errors in combo tab(?), nope notifications are better suited; also there's the alerts thing already
     - [x] Option to raise overview notifications as android notification with noise (for urgent ones?)
   - [ ] Low prio
-    - [ ] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
-          e.g. pumpErrorHistory should be renamed to alertHistory
+    - [x] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
+          e.g. pumpAlertHistory should be renamed to alertHistory
     - [ ] Enable BT if disabled? does dana does this?
     - [ ] Finish and test German translation
     - [ ] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed

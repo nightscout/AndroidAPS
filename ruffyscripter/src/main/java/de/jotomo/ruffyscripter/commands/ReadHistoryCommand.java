@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpError;
+import de.jotomo.ruffy.spi.history.PumpAlert;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
@@ -62,10 +62,10 @@ public class ReadHistoryCommand extends BaseCommand {
                 int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
                 if (totalRecords > 0) {
                     if (request.pumpErrorHistory == PumpHistoryRequest.LAST) {
-                        PumpError error = readErrorRecord();
-                        history.pumpErrorHistory.add(error);
+                        PumpAlert error = readAlertRecord();
+                        history.pumpAlertHistory.add(error);
                     } else {
-                        readErrorRecords(request.pumpErrorHistory);
+                        readAlertRecords(request.pumpErrorHistory);
                     }
                 }
             }
@@ -107,10 +107,10 @@ public class ReadHistoryCommand extends BaseCommand {
                         log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
                     }
                 }
-                if (!history.pumpErrorHistory.isEmpty()) {
-                    log.debug("Read error history (" + history.pumpErrorHistory.size() + "):");
-                    for (PumpError pumpError : history.pumpErrorHistory) {
-                        log.debug(new Date(pumpError.timestamp) + ": " + pumpError.toString());
+                if (!history.pumpAlertHistory.isEmpty()) {
+                    log.debug("Read error history (" + history.pumpAlertHistory.size() + "):");
+                    for (PumpAlert pumpAlert : history.pumpAlertHistory) {
+                        log.debug(new Date(pumpAlert.timestamp) + ": " + pumpAlert.toString());
                     }
                 }
                 if (!history.tddHistory.isEmpty()) {
@@ -230,16 +230,16 @@ public class ReadHistoryCommand extends BaseCommand {
         return new Bolus(recordDate, bolus, isValid);
     }
 
-    private void readErrorRecords(long requestedTime) {
+    private void readAlertRecords(long requestedTime) {
         int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
-            PumpError error = readErrorRecord();
+            PumpAlert error = readAlertRecord();
             if (requestedTime != PumpHistoryRequest.FULL && error.timestamp <= requestedTime) {
                 break;
             }
-            log.debug("Read error record #" + record + "/" + totalRecords);
-            history.pumpErrorHistory.add(error);
+            log.debug("Read alert record #" + record + "/" + totalRecords);
+            history.pumpAlertHistory.add(error);
             log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + error);
             if (record == totalRecords) {
                 break;
@@ -251,14 +251,14 @@ public class ReadHistoryCommand extends BaseCommand {
     }
 
     @NonNull
-    private PumpError readErrorRecord() {
+    private PumpAlert readAlertRecord() {
         scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
 
         Integer warningCode = (Integer) scripter.getCurrentMenu().getAttribute(MenuAttribute.WARNING);
         Integer errorCode = (Integer) scripter.getCurrentMenu().getAttribute(MenuAttribute.ERROR);
         String message = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
         long recordDate = readRecordDate();
-        return new PumpError(recordDate, warningCode, errorCode, message);
+        return new PumpAlert(recordDate, warningCode, errorCode, message);
     }
 
     private long readRecordDate() {
