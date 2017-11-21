@@ -61,9 +61,9 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         return DanaRFragment.class.getName();
     }
 
-    private boolean fragmentPumpEnabled = false;
-    private boolean fragmentProfileEnabled = false;
-    private boolean fragmentPumpVisible = true;
+    private static boolean fragmentPumpEnabled = false;
+    private static boolean fragmentProfileEnabled = false;
+    private static boolean fragmentPumpVisible = true;
 
     private static DanaRKoreanExecutionService sExecutionService;
 
@@ -201,11 +201,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
-            this.fragmentProfileEnabled = fragmentEnabled;
+            fragmentProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
-            this.fragmentPumpEnabled = fragmentEnabled;
+            fragmentPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
-        if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
+        if (type == PluginBase.PUMP && !fragmentEnabled && fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
             NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
@@ -216,7 +216,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
-            this.fragmentPumpVisible = fragmentVisible;
+            fragmentPumpVisible = fragmentVisible;
     }
 
     @Override
@@ -316,8 +316,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
             boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -394,9 +393,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > 200) {
-                percentRate = 200;
+            if (percentRate > getPumpDescription().maxTempPercent) {
+                percentRate = getPumpDescription().maxTempPercent;
             }
+            if (Config.logPumpActions)
+                log.debug("setTempBasalAbsolute: Calculated percent rate: " + percentRate);
+
             // If extended in progress
             if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
                 if (Config.logPumpActions)
@@ -410,7 +412,10 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
+                TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+                if (Config.logPumpActions)
+                    log.debug("setTempBasalAbsolute: currently running: " + running.toString());
+                if (running.percentRate == percentRate) {
                     if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
@@ -451,7 +456,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = configBuilderPlugin.applyBasalConstraints(extendedRateToSet);
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of 30 min
+            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
             if (Config.logPumpActions) {

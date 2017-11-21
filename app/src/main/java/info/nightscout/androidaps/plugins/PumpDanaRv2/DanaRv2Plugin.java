@@ -61,9 +61,9 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         return DanaRFragment.class.getName();
     }
 
-    private boolean fragmentPumpEnabled = false;
-    private boolean fragmentProfileEnabled = false;
-    private boolean fragmentPumpVisible = false;
+    private static boolean fragmentPumpEnabled = false;
+    private static boolean fragmentProfileEnabled = false;
+    private static boolean fragmentPumpVisible = true;
 
     private static DanaRv2ExecutionService sExecutionService;
 
@@ -186,11 +186,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
-            this.fragmentProfileEnabled = fragmentEnabled;
+            fragmentProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
-            this.fragmentPumpEnabled = fragmentEnabled;
+            fragmentPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
-        if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
+        if (type == PluginBase.PUMP && !fragmentEnabled && fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
             NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
@@ -201,7 +201,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
-            this.fragmentPumpVisible = fragmentVisible;
+            fragmentPumpVisible = fragmentVisible;
     }
 
     @Override
@@ -398,7 +398,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500;
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
                 if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
                     if (!enforceNew) {
@@ -515,6 +515,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
+
         PumpEnactResult result = new PumpEnactResult();
         ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
@@ -802,7 +803,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
             ret += "Temp: " + MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull() + "\n";
         }
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
@@ -816,7 +817,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         ret += "Batt: " + pump.batteryRemaining + "\n";
         return ret;
     }
-
     // TODO: daily total constraint
 
 }

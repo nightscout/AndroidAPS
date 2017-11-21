@@ -415,7 +415,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
                     log.debug("setTempBasalAbsolute: currently running: " + running.toString());
                 if (running.percentRate == percentRate) {
                     if (enforceNew) {
-                         cancelTempBasal(true);
+                        cancelTempBasal(true);
                     } else {
                         result.success = true;
                         result.percent = percentRate;
@@ -543,7 +543,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         }
         result.enacted = false;
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+        result.comment = MainApp.instance().getString(R.string.tempbasaldeliveryerror);
         log.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }
