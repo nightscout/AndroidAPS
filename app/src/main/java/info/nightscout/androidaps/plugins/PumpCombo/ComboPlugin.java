@@ -220,28 +220,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public int setNewBasalProfile(Profile profile) {
         return PumpInterface.FAILED;
-/*        BasalProfile basalProfile = convertProfileToComboProfile(profile);
-        if (pump.basalProfile.equals(basalProfile)) {
-            return PumpInterface.NOT_NEEDED;
-        }
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
-                () -> ruffyScripter.setBasalProfile(basalProfile));
-        // Note: no verification here, command checks summary of inputs (total basal) at the end
-        return commandResult.success ? PumpInterface.SUCCESS : PumpInterface.FAILED;*/
     }
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
-    }
-
-    @NonNull
-    private BasalProfile convertProfileToComboProfile(Profile profile) {
-        BasalProfile basalProfile = new BasalProfile();
-        for (int i = 0; i < 24; i++) {
-            basalProfile.hourlyRates[i] = profile.getBasal(i * 60 * 60);
-        }
-        return basalProfile;
+        return true;
     }
 
     @NonNull
@@ -276,7 +259,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // ensure time and date(!) are current; connect triggers a notification on mismatch
-        /* menu not supported by ruffy
+        /* menu not supported by ruffy v1
         if (!pump.initialized) {
             if (!runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime).success) {
                 return;
@@ -284,7 +267,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         */
 
-        // read basal profile into cache, update pump profile if needed
+        // read basal profile into cache
         if (!pump.initialized) {
             CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
             if (!readBasalResult.success) {
