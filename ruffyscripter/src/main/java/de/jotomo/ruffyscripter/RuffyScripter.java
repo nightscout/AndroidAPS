@@ -257,10 +257,12 @@ public class RuffyScripter implements RuffyCommands {
                         if (cmd instanceof ReadPumpStateCommand) {
                             // always allowed, state is set at the end of runCommand method
                             activeCmd.getResult().success = true;
-                        } else if (getCurrentMenu().getType() == MenuType.STOP && cmd.needsRunMode()) {
-                            log.error("Requested command requires run mode, but pump is suspended");
-                            activeCmd.getResult().success = false;
-                            return;
+                        } else if (getCurrentMenu().getType() == MenuType.STOP) {
+                            if (cmd.needsRunMode()) {
+                                log.error("Requested command requires run mode, but pump is suspended");
+                                activeCmd.getResult().success = false;
+                                return;
+                            }
                         } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR && !(cmd instanceof ConfirmAlertCommand)) {
                             log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
                             activeCmd.getResult().success = false;
