@@ -21,7 +21,7 @@ public class ComboErrorHistoryDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.combo_error_history_fragment, container, false);
         TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
-        List<PumpError> errors = ComboPlugin.getPlugin().getPump().history.pumpErrorHistory;
+        List<PumpError> errors = ComboPlugin.getPlugin().getPump().errorHistory;
         StringBuilder sb = new StringBuilder();
         // TODO i18n
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM. HH:mm");

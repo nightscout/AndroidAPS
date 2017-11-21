@@ -3,11 +3,17 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.history.Bolus;
+import de.jotomo.ruffy.spi.history.PumpError;
 import de.jotomo.ruffy.spi.history.PumpHistory;
+import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
+import de.jotomo.ruffy.spi.history.Tdd;
 
 class ComboPump {
     boolean initialized = false;
@@ -22,8 +28,15 @@ class ComboPump {
     volatile Bolus lastBolus = null;
     @NonNull
     volatile BasalProfile basalProfile = new BasalProfile();
-    @NonNull
-    volatile PumpHistory history = new PumpHistory();
+
     /** Time the active TBR was set (if any). Needed to calculate remaining time in fragment */
     long tbrSetTime;
+
+    // Last known history record times to skip over old ones when reading history
+    long lastHistoryBolusTime = PumpHistoryRequest.FULL;
+    long lastHistoryTbrTime = PumpHistoryRequest.FULL;
+
+    // Alert and TDD histories are not stored in DB, but are read on demand and just cached  here
+    List<PumpError> errorHistory = new ArrayList<>(0);
+    List<Tdd> tddHistory = new ArrayList<>(0);
 }

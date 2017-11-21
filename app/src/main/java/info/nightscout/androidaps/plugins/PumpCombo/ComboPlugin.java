@@ -868,9 +868,25 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return false;
         }
 
-        updateDbFromPumpHistory(historyResult.history);
-        CommandResult reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
-        return historyResult.success && reservoirBolusResult.success;
+        // update local cache
+        PumpHistory history = historyResult.history;
+        if (!history.bolusHistory.isEmpty()) {
+            pump.lastHistoryBolusTime = history.bolusHistory.get(0).timestamp;
+        }
+        if (!history.tbrHistory.isEmpty()) {
+            pump.lastHistoryTbrTime = history.tbrHistory.get(0).timestamp;
+        }
+
+        if (!history.pumpErrorHistory.isEmpty()) {
+            pump.errorHistory = history.pumpErrorHistory;
+        }
+        if (!history.tddHistory.isEmpty()) {
+            pump.tddHistory = history.tddHistory;
+        }
+
+        updateDbFromPumpHistory(history);
+
+        return historyResult.success;
     }
 
     private synchronized void updateDbFromPumpHistory(@NonNull PumpHistory history) {
@@ -905,34 +921,27 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
             }
         }
-
-        // errors (not persisted in DB, read from pump on start up and cached in plugin)
-        for (PumpError pumpError : history.pumpErrorHistory) {
-            if (!pump.history.pumpErrorHistory.contains(pumpError)) {
-                pump.history.pumpErrorHistory.add(pumpError);
-            }
-        }
-
-        // TDDs (not persisted in DB, read from pump on start up and cached in plugin)
-        for (Tdd tdd : history.tddHistory) {
-            if (!pump.history.tddHistory.contains(tdd)) {
-                pump.history.tddHistory.add(tdd);
-            }
-        }
     }
 
-    // TODO, opt doesn't seem to work
     void readAllPumpData() {
         readHistory(new PumpHistoryRequest()
-                .bolusHistory(pump.history.bolusHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.bolusHistory.get(0).timestamp)
-                .tbrHistory(pump.history.tbrHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.tbrHistory.get(0).timestamp)
-                .pumpErrorHistory(pump.history.pumpErrorHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.pumpErrorHistory.get(0).timestamp)
-                .tddHistory(pump.history.tddHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.tddHistory.get(0).timestamp));
-        CommandResult commandResult = runCommand("Reading basal profile", 2,
-                ruffyScripter::readBasalProfile);
-        if (commandResult.success) {
-            pump.basalProfile = commandResult.basalProfile;
+                .bolusHistory(pump.lastHistoryBolusTime)
+                .tbrHistory(pump.lastHistoryTbrTime)
+                .pumpErrorHistory(PumpHistoryRequest.FULL)
+                .tddHistory(PumpHistoryRequest.FULL));
+
+        CommandResult reservoirResult = runCommand("Checking reservoir level", 2,
+                ruffyScripter::readReservoirLevelAndLastBolus);
+        if (!reservoirResult.success) {
+            return;
         }
+
+        CommandResult basalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
+        if (!basalResult.success) {
+            return;
+        }
+
+        pump.basalProfile = basalResult.basalProfile;
     }
 
     @Override

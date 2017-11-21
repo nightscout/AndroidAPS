@@ -21,7 +21,7 @@ public class ComboTddHistoryDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.combo_tdd_history_fragment, container, false);
         TextView text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
-        List<Tdd> tdds = ComboPlugin.getPlugin().getPump().history.tddHistory;
+        List<Tdd> tdds = ComboPlugin.getPlugin().getPump().tddHistory;
         StringBuilder sb = new StringBuilder();
         // TODO i18n
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.");

@@ -138,11 +138,11 @@ public class ReadHistoryCommand extends BaseCommand {
         int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
-            log.debug("Reading TDD record #" + record + "/" + totalRecords);
             Tdd tdd = readTddRecord();
             if (requestedTime != PumpHistoryRequest.FULL && tdd.timestamp <= requestedTime) {
                 break;
             }
+            log.debug("Read TDD record #" + record + "/" + totalRecords);
             history.tddHistory.add(tdd);
             log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + tdd);
             if (record == totalRecords) {
@@ -174,11 +174,11 @@ public class ReadHistoryCommand extends BaseCommand {
         int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
-            log.debug("Reading TBR record #" + record + "/" + totalRecords);
             Tbr tbr = readTbrRecord();
             if (requestedTime != PumpHistoryRequest.FULL && tbr.timestamp <= requestedTime) {
                 break;
             }
+            log.debug("Read TBR record #" + record + "/" + totalRecords);
             history.tbrHistory.add(tbr);
             log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + tbr);
             if (record == totalRecords) {
@@ -204,11 +204,11 @@ public class ReadHistoryCommand extends BaseCommand {
         int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
-            log.debug("Reading bolus record #" + record + "/" + totalRecords);
             Bolus bolus = readBolusRecord();
             if (requestedTime != PumpHistoryRequest.FULL && bolus.timestamp <= requestedTime) {
                 break;
             }
+            log.debug("Read bolus record #" + record + "/" + totalRecords);
             history.bolusHistory.add(bolus);
             log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + bolus);
             if (record == totalRecords) {
@@ -234,11 +234,11 @@ public class ReadHistoryCommand extends BaseCommand {
         int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
-            log.debug("Reading error record #" + record + "/" + totalRecords);
             PumpError error = readErrorRecord();
             if (requestedTime != PumpHistoryRequest.FULL && error.timestamp <= requestedTime) {
                 break;
             }
+            log.debug("Read error record #" + record + "/" + totalRecords);
             history.pumpErrorHistory.add(error);
             log.debug("Parsed " + scripter.getCurrentMenu().toString() + " => " + error);
             if (record == totalRecords) {
