@@ -70,7 +70,7 @@
     <string name="openapsma_nopump">No pump available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
-     <string name="rate">Rate</string>
+    <string name="rate">Rate</string>
     <string name="duration">Duration</string>
     <string name="reason">Reason</string>
     <string name="glucose">Glucose</string>
@@ -685,10 +685,10 @@
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
-	<string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
-	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
-	<string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-	<string name="careportal_pump_label">PUMP</string>
+    <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
+    <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
+    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
+    <string name="careportal_pump_label">PUMP</string>
     <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
@@ -746,6 +746,13 @@
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <string name="connectiontimedout">Connection timed out</string>
+    <string name="food">Food</string>
+    <string name="shortgramm">g</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Fat</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="waitingforestimatedbolusend" formatted="false">Waiting for bolus end. Remaining %d sec.</string>
     <string name="processinghistory">Processing event</string>

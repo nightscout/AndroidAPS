@@ -4,7 +4,7 @@ package info.nightscout.androidaps.events;
  * Created by adrian on 07/02/17.
  */
 
-public class EventBolusRequested {
+public class EventBolusRequested extends Event {
     private double amount;
 
     public EventBolusRequested (double amount){
