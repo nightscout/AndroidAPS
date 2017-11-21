@@ -690,12 +690,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (mismatch) checkPumpHistory();
 
         // raise notification if clock is off (setting clock is not supported by ruffy)
-        Date now = new Date();
-        int minutesOfDayNow = now.getHours() * 60 + now.getMinutes();
-        if ((Math.abs(preCheckResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) > 3)) {
-            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, "Check pump clock", Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+        if (preCheckResult.state.pumpTimeMinutesOfDay != 0) {
+            Date now = new Date();
+            int minutesOfDayNow = now.getHours() * 60 + now.getMinutes();
+            if ((Math.abs(preCheckResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) > 3)) {
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, "Check pump clock", Notification.NORMAL);
+                MainApp.bus().post(new EventNewNotification(notification));
 //                    runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime);
+            }
         }
 
         return null;
