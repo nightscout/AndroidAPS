@@ -378,7 +378,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         // guard against boluses issued multiple times within a minute
         if (lastRequestedBolus != null
-                && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.05
+                && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
                 && lastRequestedBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.sResources.getString(R.string.bolus_frequency_exceeded));
@@ -825,7 +825,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // there's a pump bolus AAPS doesn't know, or we only know one within the same minute but different amount
-        if (pumpBolus != null && (aapsBolus == null || Math.abs(aapsBolus.insulin - pumpBolus.amount) >= 0.05)) {
+        if (pumpBolus != null && (aapsBolus == null || Math.abs(aapsBolus.insulin - pumpBolus.amount) >= 0.01)) {
             log.debug("Last bolus on pump is unknown, refreshing bolus history");
             request.bolusHistory = aapsBolus == null ? PumpHistoryRequest.FULL : aapsBolus.date;
         }

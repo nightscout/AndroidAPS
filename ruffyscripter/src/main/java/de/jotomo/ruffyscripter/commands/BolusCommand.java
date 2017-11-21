@@ -185,7 +185,7 @@ public class BolusCommand extends BaseCommand {
         }
 
         log.debug("Final bolus: " + displayedBolus);
-        if (Math.abs(displayedBolus - bolus) > 0.05) {
+        if (Math.abs(displayedBolus - bolus) > 0.01) {
             throw new CommandException("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
 
@@ -193,7 +193,7 @@ public class BolusCommand extends BaseCommand {
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         double refreshedDisplayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
-        if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
+        if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.01) {
             throw new CommandException("Failed to set bolus: bolus changed after input stopped from "
                     + displayedBolus + " -> " + refreshedDisplayedBolus);
         }

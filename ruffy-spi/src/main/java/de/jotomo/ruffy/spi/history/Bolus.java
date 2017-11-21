@@ -22,7 +22,7 @@ public class Bolus extends HistoryRecord {
 
         if (timestamp != bolus.timestamp) return false;
         if (isValid != bolus.isValid) return false;
-        return Math.abs(bolus.amount - amount) <= 0.05;
+        return Math.abs(bolus.amount - amount) <= 0.01;
     }
 
     @Override
