@@ -52,7 +52,7 @@ import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
-    public static final long DISCONNECT_TIME_OUT_MS = 2500;
+    private static final long DISCONNECT_TIME_OUT_MS = 2500;
 
     private IRuffyService ruffyService;
 
@@ -226,7 +226,9 @@ public class RuffyScripter implements RuffyCommands {
         while (menuType != MenuType.MAIN_MENU && menuType != MenuType.STOP && menuType != MenuType.WARNING_OR_ERROR) {
             log.debug("Going back to main menu, currently at " + menuType);
             pressBackKey();
-            waitForScreenUpdate();
+            while(getCurrentMenu().getType() == menuType) {
+                waitForScreenUpdate();
+            }
             menuType = getCurrentMenu().getType();
         }
     }
