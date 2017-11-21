@@ -157,7 +157,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         double bolusHoursAgo = agoMsc / 60d / 60d / 1000d;
                         // TODO i18n
                         if ((agoMsc < 60 * 1000)) {
-                            lastBolusView.setText(String.format("%.1f U (now)", bolus.amount, (int) bolusMinAgo));
+                            lastBolusView.setText(String.format("%.1f U (now)", bolus.amount));
                         } else if (bolusMinAgo < 60) {
                             lastBolusView.setText(String.format("%.1f U (%d min ago)", bolus.amount, (int) bolusMinAgo));
 //                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,

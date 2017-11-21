@@ -18,8 +18,6 @@ class ComboPump {
     boolean initialized = false;
     volatile long lastSuccessfulCmdTime;
 
-    @Nullable
-    volatile CommandResult lastCmdResult;
     public volatile String activity;
     @NonNull
     volatile PumpState state = new PumpState();
@@ -27,9 +25,6 @@ class ComboPump {
     volatile Bolus lastBolus = null;
     @NonNull
     volatile BasalProfile basalProfile = new BasalProfile();
-
-    /** Time the active TBR was set (if any). Needed to calculate remaining time in fragment */
-    long tbrSetTime;
 
     // Last known history record times to skip over old ones when reading history
     long lastHistoryBolusTime = PumpHistoryRequest.FULL;

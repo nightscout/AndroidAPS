@@ -525,7 +525,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
 
-            pump.tbrSetTime = state.timestamp;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
 
@@ -631,8 +630,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (commandResult.success) {
                 pump.lastSuccessfulCmdTime = System.currentTimeMillis();
             }
-
-            pump.lastCmdResult = commandResult;
 
             if (commandResult.success) {
                 updateLocalData(commandResult);

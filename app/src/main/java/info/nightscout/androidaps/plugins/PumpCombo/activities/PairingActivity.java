@@ -100,11 +100,7 @@ public class PairingActivity extends AppCompatActivity {
         }
 
         mDevices.add(item);
-        new Handler().post(new Runnable() {
-            public void run() {
-                mListAdapter.notifyDataSetChanged();
-            }
-        });
+        new Handler().post(() -> mListAdapter.notifyDataSetChanged());
     }
 
     private ScanCallback mBleScanCallback = new ScanCallback() {
