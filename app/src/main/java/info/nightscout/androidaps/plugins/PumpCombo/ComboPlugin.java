@@ -862,7 +862,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     /**
      * Reads the pump's history and updates the DB accordingly.
      */
-    private synchronized boolean readHistory(final PumpHistoryRequest request) {
+    private boolean readHistory(final PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         if (!historyResult.success) {
             return false;
@@ -921,6 +921,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
+    // TODO, opt doesn't seem to work
     void readAllPumpData() {
         readHistory(new PumpHistoryRequest()
                 .bolusHistory(pump.history.bolusHistory.isEmpty() ? PumpHistoryRequest.FULL : pump.history.bolusHistory.get(0).timestamp)

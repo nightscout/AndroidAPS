@@ -1,13 +1,28 @@
-**This software is part of a DIY solution. You're solely responsible for everything that might happen**
+**This software is part of a DIY solution and is not a product.
+You alone are responsible for what you do with it**
 
 Hardware requirements:
 - A Roche Accu-Chek Combo (any firmware, they all work)
-- A Smartpix or Realtyme device together with the 360 Configuration Software to configure the pump.
-  Roche sends these out free of charge to their customers.
+- A Smartpix or Realtyme device together with the 360 Configuration
+  Software to configure the pump.
+  Roche sends these out free of charge to their customers upon request.
 - A compatible phone:
-    - An Android phone with either Android < 4.2 (and possibly >= 8.1 in the future) or a phone running LineageOS 14.1 (formerly CyanogenMod)
-    - With a phone running LineageOS a pairing can be created that can then be transfered to a rooted phone which can then be used as a loop
-      phone using these instructions:  http://github.com/gregorybel/combo-pairing/
+    - An Android phone with either Android < 4.2 (and possibly >= 8.1
+      in the future) or a phone running LineageOS 14.1
+      (formerly CyanogenMod)
+    - With a phone running LineageOS a pairing can be created that can
+      then be transfered to a rooted phone which can then be used as a
+      loop phone using these instructions:
+      http://github.com/gregorybel/combo-pairing/
+
+Setup v2
+- Configure pump using 360 config software
+- ruffy https://github.com/jotomo/ruffy (Branch `combo-scripter-v2`)
+  Pairing should work, if not, switch to the `pairing` branch, pair,
+  then switch back
+- AndroidAPS from https://gitlab.com/jotomo/KEF (Branch `combo-scripter-v2`)
+
+TODO clean up stuff below
 
 How to use v1:
 - Note: Documentation on how to use AndroidAPS is available at https://github.com/MilosKozak/AndroidAPS/wiki
@@ -41,11 +56,11 @@ Testing v1:
 v2
 Limitations
 - Extended bolus and multiwave bolus are not supported.
-- If multiple boluses are given within a single minute, only one might be recognized.
-  This is due to the Combo saving history records with minute-precision only.
-  However, this case is only possible for very small boluses and is unlikely to occur
-  in non-testing scenarios (e.g. bolusing from the pump and then immediately bolusing
-  from AAPS).
+- If multiple boluses are given within a single minute, only one might
+  be recognized. This is due to the Combo saving history records with
+  minute-precision only. However, this case is only possible for very
+  small boluses and is unlikely to occur in non-testing scenarios
+  (e.g. bolusing from the pump and then immediately bolusing from AAPS).
 
 Usage
 - This is not a product, esp. in the beginning the user needs to monitor and understand the system, its limitations and how it
