@@ -20,6 +20,8 @@ import java.util.Objects;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -27,7 +29,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -42,10 +44,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
 import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.utils.DateUtil;
@@ -262,7 +260,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Override
     public PumpEnactResult loadHistory(byte type) {
         return danaRSService.loadHistory(type);
-     }
+    }
 
     // Constraints interface
 
@@ -591,7 +589,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null && runningTB.percentRate == percent) {
             result.enacted = false;
             result.success = true;
@@ -694,7 +692,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Override
     public synchronized PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             danaRSService.tempBasalStop();
             result.enacted = true;

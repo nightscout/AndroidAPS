@@ -360,13 +360,16 @@ public class CommandQueue {
 
     public Spanned spannedStatus() {
         String s = "";
+        int line = 0;
         if (performing != null) {
             s += "<b>" + performing.status() + "</b>";
+            line++;
         }
         for (int i = 0; i < queue.size(); i++) {
-            if (i != 0)
+            if (line != 0)
                 s += "<br>";
             s += queue.get(i).status();
+            line++;
         }
         return Html.fromHtml(s);
     }

@@ -78,7 +78,6 @@ public class DanaRSService extends Service {
 
     private BLEComm bleComm = BLEComm.getInstance(this);
 
-    private PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new LocalBinder();
 
     private DanaRPump danaRPump = DanaRPump.getInstance();
@@ -93,10 +92,6 @@ public class DanaRSService extends Service {
             // Ignore
         }
         MainApp.bus().register(this);
-
-        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, DanaRSService.class.getSimpleName());
-
     }
 
     public boolean isConnected() {
