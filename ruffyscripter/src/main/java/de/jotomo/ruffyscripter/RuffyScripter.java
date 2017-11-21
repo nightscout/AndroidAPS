@@ -631,6 +631,7 @@ public class RuffyScripter implements RuffyCommands {
 
     public void navigateToMenu(MenuType desiredMenu) {
         int retries = 20;
+        MenuType lastSeenMenu = getCurrentMenu().getType();
         while (getCurrentMenu().getType() != desiredMenu) {
             MenuType currentMenuType = getCurrentMenu().getType();
             log.debug("Navigating to menu " + desiredMenu + ", current menu: " + currentMenuType);
@@ -640,7 +641,12 @@ public class RuffyScripter implements RuffyCommands {
                         + ". Check menu settings on your pump to ensure it's not hidden.");
             }
             pressMenuKey();
-            waitForScreenUpdate();
+            // sometimes the pump takes a bit longer (more than one screen refresh) to advance
+            // to the next menu. wait until we actually see the change to avoid overshoots.
+            while (getCurrentMenu().getType() == lastSeenMenu) {
+                waitForScreenUpdate();
+            }
+            lastSeenMenu = getCurrentMenu().getType();
         }
     }
 

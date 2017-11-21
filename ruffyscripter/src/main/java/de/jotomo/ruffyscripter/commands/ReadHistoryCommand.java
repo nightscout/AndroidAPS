@@ -100,9 +100,6 @@ public class ReadHistoryCommand extends BaseCommand {
                 }
             }
 
-            scripter.returnToRootMenu();
-            scripter.verifyRootMenuIsDisplayed();
-
             if (log.isDebugEnabled()) {
                 if (!history.bolusHistory.isEmpty()) {
                     log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
@@ -129,6 +126,9 @@ public class ReadHistoryCommand extends BaseCommand {
                     }
                 }
             }
+
+            scripter.returnToRootMenu();
+            scripter.verifyRootMenuIsDisplayed();
 
             result.success(true).history(history);
         }
