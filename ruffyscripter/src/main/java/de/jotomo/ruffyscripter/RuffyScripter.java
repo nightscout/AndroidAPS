@@ -226,7 +226,7 @@ public class RuffyScripter implements RuffyCommands {
         while (menuType != MenuType.MAIN_MENU && menuType != MenuType.STOP && menuType != MenuType.WARNING_OR_ERROR) {
             log.debug("Going back to main menu, currently at " + menuType);
             pressBackKey();
-            while(getCurrentMenu().getType() == menuType) {
+            while (getCurrentMenu().getType() == menuType) {
                 waitForScreenUpdate();
             }
             menuType = getCurrentMenu().getType();
@@ -263,10 +263,12 @@ public class RuffyScripter implements RuffyCommands {
                                 activeCmd.getResult().success = false;
                                 return;
                             }
-                        } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR && !(cmd instanceof ConfirmAlertCommand)) {
-                            log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
-                            activeCmd.getResult().success = false;
-                            return; // active alert is returned as part of PumpState
+                        } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                            if (!(cmd instanceof ConfirmAlertCommand)) {
+                                log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
+                                activeCmd.getResult().success = false;
+                                return; // active alert is returned as part of PumpState
+                            }
                         } else if (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
                             log.debug("Pump is unexpectedly not on main menu but " + getCurrentMenuName());
                             activeCmd.getResult().success = false;
