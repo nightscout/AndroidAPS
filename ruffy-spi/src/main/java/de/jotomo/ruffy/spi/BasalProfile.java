@@ -20,7 +20,7 @@ public class BasalProfile {
 
         BasalProfile that = (BasalProfile) o;
 
-        for(int i = 0; i < 23; i++) {
+        for(int i = 0; i <= 23; i++) {
             if (Math.abs(hourlyRates[i] - that.hourlyRates[i]) > 0.01) {
                 return false;
             }
@@ -36,7 +36,7 @@ public class BasalProfile {
     @Override
     public String toString() {
         double total = 0d;
-        for(int i = 0; i < 23; i++) {
+        for(int i = 0; i <= 23; i++) {
             total += hourlyRates[i];
         }
         return "BasalProfile{" +
