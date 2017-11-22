@@ -80,7 +80,7 @@ public class BolusActivity extends ViewSelectorActivity {
                 if (editCarbs != null){
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
-                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 5d, new DecimalFormat("0"), false);
+                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
                 setLabelToPlusMinusView(view, "carbs");
                 container.addView(view);
                 return view;
