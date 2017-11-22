@@ -1,5 +1,6 @@
 package de.jotomo.ruffyscripter.commands;
 
+import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
@@ -12,7 +13,7 @@ import de.jotomo.ruffy.spi.BasalProfile;
 
 public class ReadBasalProfileCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(ReadBasalProfileCommand.class);
-    
+
     @Override
     public void execute() {
         scripter.navigateToMenu(MenuType.BASAL_1_MENU);
@@ -25,7 +26,12 @@ public class ReadBasalProfileCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_TOTAL);
         for (int i = 0; i < 24; i++) {
             scripter.pressMenuKey();
-            scripter.waitForScreenUpdate();
+            Menu menu = scripter.getCurrentMenu();
+            while (menu.getType() != MenuType.BASAL_SET
+                    || ((MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.BASAL_START)).getHour() != i) {
+                scripter.waitForScreenUpdate();
+                menu = scripter.getCurrentMenu();
+            }
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
             MenuTime startTime = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.BASAL_START);
             if (i != startTime.getHour()) {

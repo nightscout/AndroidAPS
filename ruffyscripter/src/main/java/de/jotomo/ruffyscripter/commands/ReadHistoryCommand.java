@@ -149,7 +149,9 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForScreenUpdate();
+            while (record == (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD)) {
+                scripter.waitForScreenUpdate();
+            }
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
@@ -185,7 +187,9 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForScreenUpdate();
+            while (record == (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD)) {
+                scripter.waitForScreenUpdate();
+            }
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
@@ -215,7 +219,9 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForScreenUpdate();
+            while (record == (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD)) {
+                scripter.waitForScreenUpdate();
+            }
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }
@@ -224,7 +230,7 @@ public class ReadHistoryCommand extends BaseCommand {
     private Bolus readBolusRecord() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
         BolusType bolusType = (BolusType) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        boolean isValid =  bolusType == BolusType.NORMAL;
+        boolean isValid = bolusType == BolusType.NORMAL;
         Double bolus = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
         long recordDate = readRecordDate();
         return new Bolus(recordDate, bolus, isValid);
@@ -245,7 +251,9 @@ public class ReadHistoryCommand extends BaseCommand {
                 break;
             }
             scripter.pressDownKey();
-            scripter.waitForScreenUpdate();
+            while (record == (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD)) {
+                scripter.waitForScreenUpdate();
+            }
             record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         }
     }

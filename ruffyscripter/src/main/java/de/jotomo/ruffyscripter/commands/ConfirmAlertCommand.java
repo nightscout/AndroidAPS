@@ -16,4 +16,11 @@ public class ConfirmAlertCommand extends BaseCommand {
     public boolean needsRunMode() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "ConfirmAlertCommand{" +
+                "warningCode=" + warningCode +
+                '}';
+    }
 }
