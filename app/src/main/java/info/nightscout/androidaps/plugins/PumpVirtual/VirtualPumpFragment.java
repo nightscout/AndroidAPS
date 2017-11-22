@@ -52,7 +52,7 @@ public class VirtualPumpFragment extends SubscriberFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
-            View view = inflater.inflate(R.layout.vitualpump_fragment, container, false);
+            View view = inflater.inflate(R.layout.virtualpump_fragment, container, false);
             basaBasalRateView = (TextView) view.findViewById(R.id.virtualpump_basabasalrate);
             tempBasalView = (TextView) view.findViewById(R.id.virtualpump_tempbasal);
             extendedBolusView = (TextView) view.findViewById(R.id.virtualpump_extendedbolus);
