@@ -61,7 +61,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
     }
 
     public double getUserDefinedDia() {
-        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : Constants.defaultDIA;
+        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : MIN_DIA;
     }
 
     @Override

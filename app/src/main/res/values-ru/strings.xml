@@ -590,7 +590,7 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>
     <string name="device">устройство</string>
-    <string name="dia_too_short">pначение длительности работы инс %s слишком мало - применено $s</string>
+    <string name="dia_too_short" formatted="false">pначение длительности работы инс %s слишком мало - применено %s</string>
     <string name="do_not_track_profile_switch">не отслеживать смены профиля</string>
     <string name="do_not_track_profile_switch_summary">все смены профиля игнорируются; используется только активный профиль</string>
     <string name="extendedbolus">расширенный болюс</string>
