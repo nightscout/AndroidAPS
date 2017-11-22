@@ -16,7 +16,7 @@ import info.nightscout.androidaps.R;
 public class ComboAlertHistoryDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.combo_error_history_fragment, container, false);
+        View layout = inflater.inflate(R.layout.combo_alert_history_fragment, container, false);
         TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
         List<PumpAlert> errors = ComboPlugin.getPlugin().getPump().errorHistory;
         StringBuilder sb = new StringBuilder();
