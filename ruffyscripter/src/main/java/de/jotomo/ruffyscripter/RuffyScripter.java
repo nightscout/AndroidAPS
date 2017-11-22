@@ -41,6 +41,7 @@ import de.jotomo.ruffyscripter.commands.ReadBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.ReadHistoryCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadReservoirLevelAndLastBolus;
+import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.SetDateAndTimeCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 
@@ -756,7 +757,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        throw new CommandException("Setting basal profile is not supported");
+        return runCommand(new SetBasalProfileCommand(basalProfile));
     }
 
     @Override

@@ -33,6 +33,7 @@ public class ReadBasalProfileCommand extends BaseCommand {
                 menu = scripter.getCurrentMenu();
             }
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
+
             MenuTime startTime = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.BASAL_START);
             if (i != startTime.getHour()) {
                 throw new CommandException("Attempting to read basal rate for hour " + i + ", but hour " + startTime.getHour() + " is displayed");

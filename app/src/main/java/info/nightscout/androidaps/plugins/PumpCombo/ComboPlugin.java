@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
@@ -215,13 +216,36 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
-        return PumpInterface.FAILED;
+    public synchronized int setNewBasalProfile(Profile profile) {
+        BasalProfile requestedBasalProfile = convertProfileToComboProfile(profile);
+        if (pump.basalProfile.equals(requestedBasalProfile)) {
+            return PumpInterface.NOT_NEEDED;
+        }
+        CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 0,
+                () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
+        if (!setResult.success) {
+            return PumpInterface.FAILED;
+        }
+
+        CommandResult readResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 0,
+                ruffyScripter::readBasalProfile);
+
+        return readResult.success && readResult.basalProfile.equals(requestedBasalProfile)
+                ? PumpInterface.SUCCESS : PumpInterface.FAILED;
     }
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return true;
+        return pump.basalProfile.equals(convertProfileToComboProfile(profile));
+    }
+
+    @NonNull
+    private BasalProfile convertProfileToComboProfile(Profile profile) {
+        BasalProfile basalProfile = new BasalProfile();
+        for (int i = 0; i < 24; i++) {
+            basalProfile.hourlyRates[i] = profile.getBasal(Integer.valueOf(i * 60 * 60));
+        }
+        return basalProfile;
     }
 
     @NonNull

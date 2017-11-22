@@ -20,7 +20,12 @@ public class BasalProfile {
 
         BasalProfile that = (BasalProfile) o;
 
-        return Arrays.equals(hourlyRates, that.hourlyRates);
+        for(int i = 0; i < 23; i++) {
+            if (Math.abs(hourlyRates[i] - that.hourlyRates[i]) > 0.01) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
