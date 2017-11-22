@@ -352,9 +352,10 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
-        if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
-            connect("setTempBasalAbsolute old data");
-        }
+        //This should not be needed while using queue because connection should be done before calling this
+        //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
+        //    connect("setTempBasalAbsolute old data");
+        //}
 
         PumpEnactResult result = new PumpEnactResult();
 
@@ -682,12 +683,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     @Override
     public void stopConnecting() {
-        // TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        if (sExecutionService != null) sExecutionService.stopConnecting();
     }
 
     @Override
     public void getPumpStatus() {
-        // TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        if (sExecutionService != null) sExecutionService.getPumpStatus();
     }
 
     @Override

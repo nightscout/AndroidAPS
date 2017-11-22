@@ -35,6 +35,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -82,6 +83,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -364,7 +366,7 @@ public class DanaRExecutionService extends Service {
         return true;
     }
 
-    public boolean bolus(double amount, int carbs, Treatment t) {
+    public boolean bolus(double amount, int carbs, final Treatment t) {
         bolusingTreatment = t;
         int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         MessageBase start;
@@ -391,7 +393,7 @@ public class DanaRExecutionService extends Service {
         }
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
-            if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+            if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
                 stop.stopped = true;
                 stop.forced = true;
                 log.debug("Communication stopped");
@@ -429,17 +431,27 @@ public class DanaRExecutionService extends Service {
                 MainApp.bus().post(bolusingEvent);
                 SystemClock.sleep(1000);
             }
-            if (!isConnected())
-                connect("bolusingInterrupted");
-            getPumpStatus();
-            if (danaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
-                t.insulin = danaRPump.lastBolusAmount;
-                log.debug("Used bolus amount from history: " + danaRPump.lastBolusAmount);
-            } else {
-                log.debug("Bolus amount in history too old: " + danaRPump.lastBolusTime.toLocaleString());
+
+            final Object o = new Object();
+            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusingInterrupted", new Callback() {
+                @Override
+                public void run() {
+                    if (danaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
+                        t.insulin = danaRPump.lastBolusAmount;
+                        log.debug("Used bolus amount from history: " + danaRPump.lastBolusAmount);
+                    } else {
+                        log.debug("Bolus amount in history too old: " + danaRPump.lastBolusTime.toLocaleString());
+                    }
+                    o.notify();
+                }
+            });
+            try {
+                o.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } else {
-            getPumpStatus();
+            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
         }
         return true;
     }
