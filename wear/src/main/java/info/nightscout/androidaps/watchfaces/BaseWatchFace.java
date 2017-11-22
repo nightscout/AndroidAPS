@@ -65,6 +65,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public int basalCenterColor = Color.BLUE;
     public boolean lowResMode = false;
     public boolean layoutSet = false;
+    public boolean bIsRound = false;
     public int pointSize = 2;
     public int missed_readings_alert_id = 818;
     public BgGraphBuilder bgGraphBuilder;
@@ -118,6 +119,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     protected void onLayout(WatchShape shape, Rect screenBounds, WindowInsets screenInsets) {
         super.onLayout(shape, screenBounds, screenInsets);
         layoutView.onApplyWindowInsets(screenInsets);
+        bIsRound = screenInsets.isRound();
     }
 
     public void performViewSetup() {
@@ -342,7 +344,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mIOB1.setVisibility(View.VISIBLE);
                 mIOB2.setVisibility(View.VISIBLE);
                 if (detailedIOB) {
-                    mIOB1.setText("IOB " + sIOB1);
+                    mIOB1.setText(sIOB1);
                     mIOB2.setText(sIOB2);
                 } else {
                     mIOB1.setText("IOB");
@@ -505,7 +507,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     private boolean isLowRes(WatchMode watchMode) {
-        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN) || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN); // || (watchMode == WatchMode.LOW_BIT_BURN_IN);
     }
 
     @Override

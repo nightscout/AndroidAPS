@@ -1,18 +1,15 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
-import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 /**
- * Created by Andrew on 18/11/2017.
+ * Created by andrew-warrington on 18/11/2017.
  */
 
 public class Cockpit extends BaseWatchFace {
@@ -25,7 +22,6 @@ public class Cockpit extends BaseWatchFace {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_cockpit, null);
         performViewSetup();
-        final WatchViewStub stub = (WatchViewStub) layoutView.findViewById(R.id.watch_view_stub);
     }
 
     @Override
@@ -50,32 +46,15 @@ public class Cockpit extends BaseWatchFace {
     }
 
     @Override
-    protected WatchFaceStyle getWatchFaceStyle(){
+    protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
     }
 
     protected void setColorDark() {
 
-        /*
-        //set text sizes
-        float scaleFactor = specH / 400f; //the design assumes 400dp is the default screen height.
-        if (mTime != null) mTime.setTextSize(18*scaleFactor);
-        if (mSgv != null) mSgv.setTextSize(38*scaleFactor);
-        if (mDirection != null) mDirection.setTextSize(30*scaleFactor);
-        if (mDelta != null) mDelta.setTextSize(14*scaleFactor);
-        if (mBasalRate != null) mBasalRate.setTextSize(14*scaleFactor);
-        if (mIOB2 != null) mIOB2.setTextSize(14*scaleFactor);
-        if (mCOB2 != null) mCOB2.setTextSize(14*scaleFactor);
-        if (mUploaderBattery != null) mUploaderBattery.setTextSize(14*scaleFactor);
-        if (mRigBattery != null) mRigBattery.setTextSize(14*scaleFactor);
-        if (mTimestamp != null) mTimestamp.setTextSize(14*scaleFactor);
-        if (mLoop != null) mLoop.setTextSize(14*scaleFactor);
-        if (mHighLight != null) mHighLight.setTextSize(8*scaleFactor);
-        if (mLowLight != null) mLowLight.setTextSize(8*scaleFactor);
-        if (isAAPSv2 != null) isAAPSv2.setTextSize(16*scaleFactor);
-        */
+        mRelativeLayout.setBackgroundResource(R.drawable.airplane_cockpit_outside_clouds);
+        setTextSizes();
 
-        Log.d("Lights", "mHighLight is " + mHighLight + " and mLowLight is " + mLowLight + ". sgvLevel is " + sgvLevel);
         if (mHighLight != null && mLowLight != null) {
             if (sgvLevel == 1) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_yellow_lit);
@@ -89,44 +68,53 @@ public class Cockpit extends BaseWatchFace {
             }
         }
 
-        int paddingPixel;
-        int paddingDp;
-        float density = this.getResources().getDisplayMetrics().density;
-
-        if (sharedPrefs.getBoolean("show_uploader_battery", true) && sharedPrefs.getBoolean("show_rig_battery", false)) {
-            paddingPixel = 8;
-            mUploaderBattery.setTextSize(10);
-            mRigBattery.setTextSize(10);
-        } else {
-            paddingPixel = 3;
-            mUploaderBattery.setTextSize(14);
-            mRigBattery.setTextSize(14);
-        }
-        paddingDp = (int)(paddingPixel * density);
-        mUploaderBattery.setPadding(0, paddingDp,0,0);
-        mRigBattery.setPadding(0, paddingDp,0,0);
-
-        if (mIOB2 != null) {
-            if (detailedIOB) {
-                paddingPixel = 8;
-                mIOB2.setTextSize(10);
-            } else {
-                paddingPixel = 3;
-                mIOB2.setTextSize(14);
-            }
-            paddingDp = (int)(paddingPixel * density);
-            mIOB2.setPadding(0, paddingDp,0,0);
-        }
-
         invalidate();
 
     }
 
     protected void setColorLowRes() {
-        setColorDark();
+        mRelativeLayout.setBackgroundResource(R.drawable.airplane_cockpit_outside_clouds_lowres);
+
     }
 
     protected void setColorBright() {
         setColorDark();
+    }
+
+    protected void setTextSizes() {
+
+        if (mIOB2 != null) {
+            if (detailedIOB) {
+                if (bIsRound) {
+                    mIOB2.setTextSize(10);
+                } else {
+                    mIOB2.setTextSize(9);
+                }
+            } else {
+                if (bIsRound) {
+                    mIOB2.setTextSize(13);
+                } else {
+                    mIOB2.setTextSize(12);
+                }
+            }
+        }
+
+        if ((mUploaderBattery.getVisibility() != View.GONE) && (mRigBattery.getVisibility() != View.GONE)) {
+            if (bIsRound) {
+                mUploaderBattery.setTextSize(12);
+                mRigBattery.setTextSize(12);
+            } else {
+                mUploaderBattery.setTextSize(10);
+                mRigBattery.setTextSize(10);
+            }
+        } else {
+            if (bIsRound) {
+                mUploaderBattery.setTextSize(13);
+                mRigBattery.setTextSize(13);
+            } else {
+                mUploaderBattery.setTextSize(12);
+                mRigBattery.setTextSize(12);
+            }
+        }
     }
 }

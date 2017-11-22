@@ -13,15 +13,15 @@
         android:weightSum="1">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:paddingTop="15dp"
-            android:weightSum="1"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-5dp"
             android:gravity="center_horizontal"
-            android:layout_marginTop="-5dp">
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:textAlignment="center"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/loop"
@@ -41,17 +41,17 @@
 
             <TextView
                 android:id="@+id/sgv"
-                android:textSize="38sp"
-                android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="-2dp"
                 android:gravity="bottom|right"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:layout_marginBottom="-2dp"
-                android:paddingTop="-2dp" />
+                android:paddingTop="-2dp"
+                android:text="---"
+                android:textColor="#FFFFFF"
+                android:textSize="38sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -115,7 +115,7 @@
                     android:text="delta"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -126,7 +126,7 @@
                     android:text="--%"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -137,7 +137,7 @@
                     android:text="--%"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -149,7 +149,7 @@
                     android:text="-.--U/h"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -214,11 +214,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="-3dp"
                     android:layout_marginTop="-2dp"
-                    android:paddingLeft="20sp"
+                    android:paddingLeft="14dp"
                     android:text="12:00"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="30sp" />
+                    android:textSize="26sp" />
 
                 <LinearLayout
                     android:id="@+id/date_time"
@@ -239,7 +239,7 @@
                         android:text="day"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/month"
@@ -248,7 +248,7 @@
                         android:gravity="center_horizontal"
                         android:text="mth"
                         android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
 
                 </LinearLayout>
 
@@ -258,7 +258,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingLeft="18sp"
+                    android:paddingLeft="12dp"
                     android:textAlignment="center">
 
                     <TextView
@@ -291,6 +291,7 @@
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_gravity="bottom"
+            android:layout_marginTop="5dp"
             android:gravity="center_horizontal|top" />
 
     </LinearLayout>

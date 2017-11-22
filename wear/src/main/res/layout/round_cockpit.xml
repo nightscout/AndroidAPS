@@ -6,304 +6,429 @@
     android:background="@drawable/airplane_cockpit_outside_clouds">
 
 
+    <LinearLayout
+        android:id="@+id/inside"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/airplane_cockpit"
+        android:orientation="vertical"
+        android:weightSum="1">
+
         <LinearLayout
-            android:id="@+id/inside"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/airplane_cockpit"
-            android:elevation="5dp"
+            android:layout_height="0px"
             android:orientation="vertical"
-            android:textAlignment="center"
-            android:weightSum="1">
+            android:layout_weight="0.095">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/windows"
+            android:layout_width="fill_parent"
+            android:layout_height="0px"
+            android:orientation="vertical"
+            android:layout_weight="0.2575">
 
             <LinearLayout
-                android:id="@+id/windows"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="0.47" />
+
+                <LinearLayout
+                    android:id="@+id/warnings"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.06"
+                    android:baselineAligned="false"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="0px"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="0.2" />
+
+                    <TextView
+                        android:id="@+id/highLight"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0px"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/airplane_led_grey_unlit"
+                        android:gravity="center"
+                        android:text="H"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text_dark"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="0px"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="2" />
+
+                    <TextView
+                        android:id="@+id/lowLight"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0px"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/airplane_led_grey_unlit"
+                        android:gravity="center"
+                        android:text="L"
+                        android:textAlignment="center"
+                        android:textColor="@color/primary_text_dark"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="0px"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="0.2" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="0.47" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dashboard"
+            android:layout_width="fill_parent"
+            android:layout_height="0px"
+            android:orientation="vertical"
+            android:layout_weight="0.0775">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/instruments"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="0.57"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:weightSum="1">
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="-5dp"
-                    android:gravity="center_horizontal"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.08"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/panel1"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.275"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:paddingTop="15dp"
-                    android:textAlignment="center"
-                    android:weightSum="1">
+                    android:gravity="center"
+                    android:textAlignment="center">
 
                     <LinearLayout
-                        android:id="@+id/warnings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:baselineAligned="false"
-                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingTop="4dp"
-                        android:textAlignment="center"
                         android:weightSum="1">
 
                         <TextView
-                            android:id="@+id/highLabel"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:text="H"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text_dark"
-                            android:textSize="8sp"
-                            android:textStyle="bold" />
+                            android:layout_height="0px"
+                            android:layout_weight="0.07" />
 
-                        <TextView
-                            android:id="@+id/highLight"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@drawable/airplane_led_grey_unlit"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text_dark"
-                            android:textSize="8sp" />
-
-                        <TextView
-                            android:id="@+id/lowLight"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="14dp"
-                            android:autoText="false"
-                            android:background="@drawable/airplane_led_grey_unlit"
-                            android:gravity="center_horizontal|center"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text_dark"
-                            android:textSize="8sp" />
-
-                        <TextView
-                            android:id="@+id/lowLabel"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:text="L"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_text_dark"
-                            android:textSize="8sp"
-                            android:textStyle="bold" />
+                            android:layout_height="0px"
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:weightSum="1">
 
+                            <TextView
+                                android:id="@+id/sgv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0px"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:text="---"
+                                android:textColor="@color/primary_text_dark"
+                                android:textSize="34sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.03" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.276"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="0px"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.35" />
+
+                            <TextView
+                                android:id="@+id/timestamp"
+                                android:layout_width="0px"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.65"
+                                android:text="--'"
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:textColor="@color/primary_text_dark"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/dashboard"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/AAPSv2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="AAPSv2"
-                        android:textSize="16sp"
-                        android:visibility="invisible" />
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.0225"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/instruments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="1dp">
+                    android:id="@+id/panel2"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.245"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        android:textAlignment="center">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:weightSum="1.01">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.020" />
+
+                        <TextView
+                            android:id="@+id/watch_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0px"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.19"
+                            android:gravity="center"
+                            android:text="12:00"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text_dark"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tmpBasal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0px"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_weight="0.19"
+                            android:gravity="bottom|center_horizontal"
+                            android:text="-.--U/h"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text_dark"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/iobView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0px"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_weight="0.18"
+                            android:gravity="bottom|center_horizontal"
+                            android:text="--U"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_text_dark"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/cobView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0px"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_weight="0.185"
+                            android:gravity="bottom|center_horizontal"
+                            android:text="--g"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <LinearLayout
-                            android:id="@+id/panel1"
-                            android:layout_width="70dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:baselineAligned="false"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0px"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.185"
+                            android:gravity="center"
+                            android:orientation="horizontal"
                             android:textAlignment="center">
 
                             <TextView
-                                android:id="@+id/sgv"
+                                android:id="@+id/uploader_battery"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="14dp"
-                                android:text="---"
-                                android:textColor="@color/primary_text_dark"
-                                android:textSize="38sp" />
-
-                            <TextView
-                                android:id="@+id/timestamp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_marginRight="15dp"
-                                android:layout_marginTop="21dp"
-                                android:text="--'"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:gravity="bottom|center_horizontal"
+                                android:text="--%"
                                 android:textAlignment="center"
                                 android:textColor="@color/primary_text_dark"
-                                android:textSize="14sp"
+                                android:textSize="13sp"
                                 android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/rig_battery"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:gravity="bottom|center_horizontal"
+                                android:paddingLeft="4dp"
+                                android:text="--%"
+                                android:textAlignment="center"
+                                android:textColor="@color/primary_text_dark"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/panel2"
-                            android:layout_width="60dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:baselineAligned="false"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:paddingEnd="4dp"
-                            android:paddingStart="4dp"
-                            android:textAlignment="center">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.06" />
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:orientation="horizontal"
-                                android:textAlignment="center">
+                    </LinearLayout>
 
-                                <TextView
-                                    android:id="@+id/watch_time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:text="12:00"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/primary_text_dark"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
+                </LinearLayout>
 
-                            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.0225"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tmpBasal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="7dp"
-                                android:text="-.--U/h"
-                                android:textAlignment="center"
-                                android:textColor="@color/primary_text_dark"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/iobView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--U"
-                                android:textColor="@color/primary_text_dark"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                <LinearLayout
+                    android:id="@+id/panel3"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.275"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:textAlignment="center">
 
-                            <TextView
-                                android:id="@+id/cobView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="--g"
-                                android:textAlignment="center"
-                                android:textColor="#FFFFFF"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:weightSum="1">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:orientation="horizontal"
-                                android:textAlignment="center">
-
-                                <TextView
-                                    android:id="@+id/uploader_battery"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:text="--%"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/primary_text_dark"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/rig_battery"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_marginTop="4dp"
-                                    android:text="--%"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/primary_text_dark"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:visibility="gone" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.07" />
 
                         <LinearLayout
-                            android:id="@+id/panel3"
-                            android:layout_width="70dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:baselineAligned="false"
-                            android:gravity="center_horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
                             android:orientation="vertical"
-                            android:textAlignment="center">
-
+                            android:weightSum="0.5">
 
                             <TextView
                                 android:id="@+id/direction"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal|bottom"
-                                android:layout_marginTop="6dp"
-                                android:gravity="center_horizontal|bottom"
+                                android:layout_height="0px"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.333"
+                                android:gravity="center"
                                 android:text="--"
                                 android:textAlignment="center"
-                                android:textColor="#FFFFFF"
-                                android:textSize="30sp"
+                                android:textColor="@color/primary_text_dark"
+                                android:textSize="28sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/delta"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="0px"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.167"
+                                android:gravity="center"
                                 android:text="delta"
                                 android:textAlignment="center"
                                 android:textColor="@color/primary_text_dark"
-                                android:textSize="14sp"
+                                android:textSize="13sp"
                                 android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.03" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="0.250"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="0px"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.1" />
 
                             <TextView
                                 android:id="@+id/loop"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="0px"
+                                android:layout_height="match_parent"
                                 android:layout_gravity="start"
-                                android:layout_marginLeft="11dp"
-                                android:layout_marginTop="19dp"
+                                android:layout_weight="0.5"
                                 android:background="@drawable/loop_grey_25"
                                 android:gravity="center"
                                 android:text="--'"
@@ -312,14 +437,32 @@
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
+                            <TextView
+                                android:id="@+id/AAPSv2"
+                                android:layout_width="0px"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.4"
+                                android:visibility="invisible"/>
+
                         </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.08"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
