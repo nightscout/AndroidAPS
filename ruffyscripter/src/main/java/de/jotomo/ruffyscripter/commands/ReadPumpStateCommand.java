@@ -11,4 +11,9 @@ public class ReadPumpStateCommand extends BaseCommand {
     public String toString() {
         return "ReadPumpStateCommand{}";
     }
+
+    @Override
+    public boolean needsRunMode() {
+        return false;
+    }
 }

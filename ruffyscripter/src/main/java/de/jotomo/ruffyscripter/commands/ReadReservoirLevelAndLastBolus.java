@@ -51,6 +51,11 @@ public class ReadReservoirLevelAndLastBolus extends BaseCommand {
     }
 
     @Override
+    public boolean needsRunMode() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "ReadReservoirLevelAndLastBolus{}";
     }

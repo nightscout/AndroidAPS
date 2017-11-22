@@ -206,11 +206,6 @@ public class BolusCommand extends BaseCommand {
     }
 
     @Override
-    public boolean needsRunMode() {
-        return true;
-    }
-
-    @Override
     public String toString() {
         return "BolusCommand{" +
                 "bolus=" + bolus +

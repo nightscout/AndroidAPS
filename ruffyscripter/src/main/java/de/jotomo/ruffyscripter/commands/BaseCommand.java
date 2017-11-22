@@ -23,7 +23,7 @@ public abstract class BaseCommand implements Command {
 
     @Override
     public boolean needsRunMode() {
-        return false;
+        return true;
     }
 
     /**

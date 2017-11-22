@@ -11,4 +11,9 @@ public class ConfirmAlertCommand extends BaseCommand {
     public void execute() {
         result.success(scripter.confirmAlert(warningCode, 5000));
     }
+
+    @Override
+    public boolean needsRunMode() {
+        return false;
+    }
 }
