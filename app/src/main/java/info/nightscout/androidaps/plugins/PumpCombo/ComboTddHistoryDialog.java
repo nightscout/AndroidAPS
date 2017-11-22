@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.List;
 
 import de.jotomo.ruffy.spi.history.Tdd;
@@ -20,10 +20,9 @@ public class ComboTddHistoryDialog extends DialogFragment {
         TextView text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
         List<Tdd> tdds = ComboPlugin.getPlugin().getPump().tddHistory;
         StringBuilder sb = new StringBuilder();
-        // TODO i18n
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.");
+        DateFormat dateFormatter = DateFormat.getDateInstance();
         if (tdds.isEmpty()) {
-            text.setText("To retrieve the TDD history from the pump, long press the Refresh button.");
+            text.setText(R.string.combo_empty_tdd_history_note);
         } else {
             boolean first = true;
             for (Tdd tdd : tdds) {
@@ -32,8 +31,9 @@ public class ComboTddHistoryDialog extends DialogFragment {
                 } else {
                     sb.append("\n");
                 }
-                sb.append(simpleDateFormat.format(tdd.timestamp));
+                sb.append(dateFormatter.format(tdd.timestamp));
                 sb.append("  ");
+                // TODO i18n
                 sb.append(String.format("%.1f", tdd.total));
                 sb.append(" U");
             }

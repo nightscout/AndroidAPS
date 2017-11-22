@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.List;
 
 import de.jotomo.ruffy.spi.history.PumpAlert;
@@ -20,10 +20,9 @@ public class ComboAlertHistoryDialog extends DialogFragment {
         TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
         List<PumpAlert> errors = ComboPlugin.getPlugin().getPump().errorHistory;
         StringBuilder sb = new StringBuilder();
-        // TODO i18n
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM. HH:mm");
+        DateFormat dateFormatter = DateFormat.getDateInstance();
         if (errors.isEmpty()) {
-            text.setText("To retrieve the alert history from the pump, long press the Refresh button.");
+            text.setText(R.string.combo_empty_alert_history_note);
         } else {
             boolean first = true;
             for (PumpAlert error : errors) {
@@ -32,7 +31,7 @@ public class ComboAlertHistoryDialog extends DialogFragment {
                 } else {
                     sb.append("\n");
                 }
-                sb.append(simpleDateFormat.format(error.timestamp));
+                sb.append(dateFormatter.format(error.timestamp));
                 sb.append("  ");
                 sb.append(error.message);
                 if (error.warningCode != null) {

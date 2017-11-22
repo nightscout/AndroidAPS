@@ -771,6 +771,7 @@
     <string name="combo_last_connection_time">%s</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
     <string name="combo_last_bolus">%.1f U (%s, %s)</string>
+    <string name="combo_pump_action_initializing">Initializing</string>
     <string name="combo_pump_state_disconnected">Disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
@@ -788,9 +789,9 @@
     <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
-    <string name="combo_force_disabled">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours or the selected basal rate is not 1. Loop mode has been disabled until 6 hours after the last unsupported bolus or basal rate profile. Only normal boluses are supported in loop mode with basal rate profile 1.</string>
+    <string name="combo_force_disabled_notification">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours or the selected basal rate is not 1. Loop mode has been disabled until 6 hours after the last unsupported bolus or basal rate profile. Only normal boluses are supported in loop mode with basal rate profile 1.</string>
+    <string name="combo_notification_check_time_date">Check pump time and date</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
-    <string name="combo_pump_action_initializing">Initializing</string>
     <string name="combo_pump_connected_now">Now</string>
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="danar_history">pump history</string>
@@ -813,5 +814,7 @@
     <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>
+    <string name="combo_empty_alert_history_note">To retrieve the alert history from the pump, long press the Refresh button.</string>
+    <string name="combo_empty_tdd_history_note">To retrieve the TDD history from the pump, long press the Refresh button.</string>
 </resources>
 

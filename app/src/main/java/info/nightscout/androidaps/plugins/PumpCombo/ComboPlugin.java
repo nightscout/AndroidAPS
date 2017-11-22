@@ -691,7 +691,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Date now = new Date();
             int minutesOfDayNow = now.getHours() * 60 + now.getMinutes();
             if ((Math.abs(preCheckResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) > 3)) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, "Check pump clock", Notification.NORMAL);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.NORMAL);
                 MainApp.bus().post(new EventNewNotification(notification));
 //                    runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime);
             }
@@ -732,7 +732,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             closedLoopDisabledUntil = lastViolation + 6 * 60 * 60 * 1000;
             if (closedLoopDisabledUntil > System.currentTimeMillis() && violationWarningRaisedFor != closedLoopDisabledUntil) {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
-                        MainApp.sResources.getString(R.string.combo_force_disabled),
+                        MainApp.sResources.getString(R.string.combo_force_disabled_notification),
                         Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));

@@ -189,7 +189,9 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        FragmentManager manager = getChildFragmentManager();
+        FragmentManager manager = getFragmentManager();
+// TODO this might fix some crashes ..., let's see if they re-appear with this disabled again
+//        FragmentManager manager = getChildFragmentManager();
         final PumpInterface pump = MainApp.getConfigBuilder();
         switch (view.getId()) {
             case R.id.actions_profileswitch:
