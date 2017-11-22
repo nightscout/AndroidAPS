@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import de.jotomo.ruffy.spi.history.Tdd;
 import info.nightscout.androidaps.R;
@@ -19,12 +20,12 @@ public class ComboTddHistoryDialog extends DialogFragment {
         View layout = inflater.inflate(R.layout.combo_tdd_history_fragment, container, false);
         TextView text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
         List<Tdd> tdds = ComboPlugin.getPlugin().getPump().tddHistory;
-        StringBuilder sb = new StringBuilder();
-        DateFormat dateFormatter = DateFormat.getDateInstance();
         if (tdds.isEmpty()) {
             text.setText(R.string.combo_empty_tdd_history_note);
         } else {
             boolean first = true;
+            StringBuilder sb = new StringBuilder();
+            DateFormat dateFormatter = DateFormat.getDateInstance();
             for (Tdd tdd : tdds) {
                 if (first) {
                     first = false;
@@ -33,8 +34,7 @@ public class ComboTddHistoryDialog extends DialogFragment {
                 }
                 sb.append(dateFormatter.format(tdd.timestamp));
                 sb.append("  ");
-                // TODO i18n
-                sb.append(String.format("%.1f", tdd.total));
+                sb.append(String.format(Locale.getDefault(), "%3.1f", tdd.total));
                 sb.append(" U");
             }
             text.setText(sb.toString());

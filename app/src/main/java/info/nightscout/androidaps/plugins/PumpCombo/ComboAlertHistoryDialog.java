@@ -19,11 +19,11 @@ public class ComboAlertHistoryDialog extends DialogFragment {
         View layout = inflater.inflate(R.layout.combo_alert_history_fragment, container, false);
         TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
         List<PumpAlert> errors = ComboPlugin.getPlugin().getPump().errorHistory;
-        StringBuilder sb = new StringBuilder();
-        DateFormat dateFormatter = DateFormat.getDateInstance();
         if (errors.isEmpty()) {
             text.setText(R.string.combo_empty_alert_history_note);
         } else {
+            StringBuilder sb = new StringBuilder();
+            DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
             boolean first = true;
             for (PumpAlert error : errors) {
                 if (first) {
@@ -31,7 +31,7 @@ public class ComboAlertHistoryDialog extends DialogFragment {
                 } else {
                     sb.append("\n");
                 }
-                sb.append(dateFormatter.format(error.timestamp));
+                sb.append(dateTimeFormatter.format(error.timestamp));
                 sb.append("  ");
                 sb.append(error.message);
                 if (error.warningCode != null) {
