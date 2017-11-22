@@ -593,7 +593,7 @@
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Last connection</string>
-    <string name="pump_bluetooth_status">Bluetooh status</string>
+    <string name="danar_bluetooth_status">Bluetooh status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="dev">DEV</string>
@@ -762,14 +762,12 @@
     <string name="startingbolus">Starting bolus delivery</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
-
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
     <string name="combo_stats">Stats</string>
     <string name="combo_pump_state_label">State</string>
-    <string name="combo_pump_activity">Activity</string>
+    <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>
-    <string name="combo_connect_attempt_failed">Last connect attempt failed</string>
     <string name="combo_last_connection_time">%s</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
     <string name="combo_last_bolus">%.1f U (%s, %s)</string>
@@ -785,7 +783,7 @@
     <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
     <string name="combo_pump_never_connected">Never</string>
-    <string name="combo_reservoir_level_insufficant_for_bolus">Not enough insulin left in reservoir for bolus</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin left in reservoir for bolus</string>
     <string name="combo_pump_bolus_history_state_mismatch">A bolus has been delivered directly on the pump recently, of which AndroidAPS has only just become aware of. The pump\'s history is currently being read. Please check the Combo page, verify the last bolus and IOB and bolus again if needed. No bolus has been delivered.</string>
     <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
@@ -795,7 +793,7 @@
     <string name="combo_pump_action_initializing">Initializing</string>
     <string name="combo_pump_connected_now">Now</string>
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
-    <string name="pump_history">pump history</string>
+    <string name="danar_history">pump history</string>
     <string name="combo_pump_alerts">Alerts</string>
     <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>

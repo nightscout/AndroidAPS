@@ -97,7 +97,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_bluetooth_status"
+                        android:text="@string/danar_bluetooth_status"
                         android:textSize="14sp" />
 
                     <TextView
@@ -711,7 +711,7 @@
                     android:drawableTop="@drawable/icon_danarhistory"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/pump_history" />
+                    android:text="@string/danar_history" />
 
                 <Button
                     android:id="@+id/danar_stats"

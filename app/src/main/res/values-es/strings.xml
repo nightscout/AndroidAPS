@@ -243,7 +243,7 @@
     <string name="danarprofile">Configuración perfil DanaR</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="failedupdatebasalprofile">No se pudo actualizar el perfil basal</string>
-    <string name="pump_history">Historial</string>
+    <string name="danar_history">Historial</string>
     <string name="danar_historyreload">Recargar</string>
     <string name="uploading">Subiendo</string>
     <string name="danar_ebolus">E bolo</string>

@@ -239,7 +239,7 @@
     <string name="danar_ebolus">E bolus</string>
     <string name="danar_error">chyba</string>
     <string name="danar_glucose">glykémie</string>
-    <string name="pump_history">Historie</string>
+    <string name="danar_history">Historie</string>
     <string name="danar_history_alarm">Alarmy</string>
     <string name="danar_history_basalhours">Hodinové bazály</string>
     <string name="danar_history_bolus">Bolusy</string>
@@ -610,7 +610,7 @@
     <string name="sensitivityweightedaverage">Sensitivita vážený průměr</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
-    <string name="pump_bluetooth_status">Bluetooth status</string>
+    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="careportal_activity_label">AKTIVITA &amp; ZPĚTNÁ VAZBA</string>
     <string name="basalmissing">Chybějící bazál v profilu. Použita výchozí hodnota</string>
     <string name="basal_step">Krok bazálu</string>

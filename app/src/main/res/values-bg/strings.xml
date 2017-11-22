@@ -258,7 +258,7 @@
     <string name="danarprofile_dia">DIA (Време на действие на инсулина) ч.:</string>
     <string name="danarprofile_dia_summary">Време на действие на инсулина</string>
     <string name="failedupdatebasalprofile">Неуспешно обноввяване на базалния профил</string>
-    <string name="pump_history">История</string>
+    <string name="danar_history">История</string>
     <string name="danar_historyreload">Презареди</string>
     <string name="uploading">Качване</string>
     <string name="danar_ebolus">E болус</string>
@@ -546,7 +546,7 @@
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Последно свързване</string>
-    <string name="pump_bluetooth_status">Bluetooh статус</string>
+    <string name="danar_bluetooth_status">Bluetooh статус</string>
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="dev">DEV</string>

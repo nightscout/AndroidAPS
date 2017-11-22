@@ -259,7 +259,7 @@
     <string name="danarprofile_dia">인슐린활동시간(DIA) [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">기초주입 프로파일 갱신 실패</string>
-    <string name="pump_history">과거기록</string>
+    <string name="danar_history">과거기록</string>
     <string name="danar_historyreload">새로고침</string>
     <string name="uploading">업로드중</string>
     <string name="danar_ebolus">E bolus</string>
@@ -556,7 +556,7 @@
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">펌웨어</string>
     <string name="pump_lastconnection_label">최근 연결</string>
-    <string name="pump_bluetooth_status">블루투스 상태</string>
+    <string name="danar_bluetooth_status">블루투스 상태</string>
     <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
     <string name="dev">DEV</string>

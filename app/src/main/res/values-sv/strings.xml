@@ -112,7 +112,7 @@
     <string name="cs_lang">CZ</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">basal tim</string>
-    <string name="pump_bluetooth_status">Bluetooth Status</string>
+    <string name="danar_bluetooth_status">Bluetooth Status</string>
     <string name="danar_bt_name_title">DanaR Bluetooth Pump</string>
     <string name="danar_carbohydrate">kolhydrat</string>
     <string name="danar_dailyunits">Enheter/Dag</string>
@@ -120,7 +120,7 @@
     <string name="danar_enableextendedbolus">Aktivera förlängd bolus i pump</string>
     <string name="danar_error">Fel</string>
     <string name="danar_glucose">Glukos</string>
-    <string name="pump_history">Historia</string>
+    <string name="danar_history">Historia</string>
     <string name="danar_history_alarm">Larm</string>
     <string name="danar_history_basalhours">Basal Timmar</string>
     <string name="danar_history_bolus">Bolusar</string>

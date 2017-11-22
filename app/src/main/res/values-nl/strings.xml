@@ -168,7 +168,7 @@
     <string name="cs_lang">Čeština</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">Basaal uur</string>
-    <string name="pump_bluetooth_status">Bluetooh status</string>
+    <string name="danar_bluetooth_status">Bluetooh status</string>
     <string name="danar_bt_name_title">DanaR Bluetooth toestel</string>
     <string name="danar_carbohydrate">Koolhydraten</string>
     <string name="danar_dailyunits">Dag totaal</string>
@@ -176,7 +176,7 @@
     <string name="danar_enableextendedbolus">Activeer vertraagde bolussen op de pomp</string>
     <string name="danar_error">Storing</string>
     <string name="danar_glucose">glucose</string>
-    <string name="pump_history">Geschiedenis</string>
+    <string name="danar_history">Geschiedenis</string>
     <string name="danar_history_alarm">Alarm</string>
     <string name="restart">Herstart</string>
     <string name="result">Resultaat</string>

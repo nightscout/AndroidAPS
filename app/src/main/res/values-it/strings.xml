@@ -91,7 +91,7 @@
     <string name="constraints_violation">Vincolo Violato</string>
     <string name="danar_alarm">Allarme</string>
     <string name="danar_basalhour">Basale Oraria</string>
-    <string name="pump_bluetooth_status">Stato Bluetooh</string>
+    <string name="danar_bluetooth_status">Stato Bluetooh</string>
     <string name="danar_bt_name_title">Dispositivo Bluetooh DanaR</string>
     <string name="danar_carbohydrate">Carboidrati</string>
     <string name="danar_dailyunits">Unita\' giornaliera</string>
@@ -101,7 +101,7 @@
     <string name="danar_enableextendedbolus">Bolo esteso abilitato</string>
     <string name="danar_error">Errore</string>
     <string name="danar_glucose">Glucosio</string>
-    <string name="pump_history">Storia</string>
+    <string name="danar_history">Storia</string>
     <string name="danar_history_alarm">Allarmi</string>
     <string name="danar_history_basalhours">Basale oraria</string>
     <string name="danar_history_bolus">Boli</string>

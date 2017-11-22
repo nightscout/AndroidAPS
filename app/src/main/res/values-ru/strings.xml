@@ -111,7 +111,7 @@
     <string name="cs_lang">чешский</string>
     <string name="danar_alarm">внимание!</string>
     <string name="danar_basalhour">почасовой базал</string>
-    <string name="pump_bluetooth_status">статус блутус</string>
+    <string name="danar_bluetooth_status">статус блутус</string>
     <string name="danar_bt_name_title">устройство блутус danaR</string>
     <string name="danar_carbohydrate">углеводы</string>
     <string name="danar_dailyunits">суточные единицы</string>
@@ -122,7 +122,7 @@
     <string name="danar_enableextendedbolus">активировать увеличенные болюсы на помпе</string>
     <string name="danar_error">ошибка</string>
     <string name="danar_glucose">гликемия</string>
-    <string name="pump_history">история</string>
+    <string name="danar_history">история</string>
     <string name="danar_history_alarm">оповещения об опасности</string>
     <string name="danar_history_basalhours">почасовые базалы</string>
     <string name="danar_history_bolus">болюсы</string>

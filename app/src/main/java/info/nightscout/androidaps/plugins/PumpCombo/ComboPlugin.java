@@ -398,7 +398,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // check enough insulin left for bolus
             if (Math.round(detailedBolusInfo.insulin + 0.5) > reservoirBolusResult.reservoirLevel) {
                 return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficant_for_bolus));
+                        .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficient_for_bolus));
             }
 
             // verify we're update to date and know the most recent bolus
