@@ -35,8 +35,12 @@ public class BasalProfile {
 
     @Override
     public String toString() {
+        double total = 0d;
+        for(int i = 0; i < 23; i++) {
+            total += hourlyRates[i];
+        }
         return "BasalProfile{" +
-                "hourlyRates=" + Arrays.toString(hourlyRates) +
+                "hourlyRates=" + Arrays.toString(hourlyRates) + ", total " + total + " U" +
                 '}';
     }
 }

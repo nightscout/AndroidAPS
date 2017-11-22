@@ -50,6 +50,7 @@ public class SetBasalProfileCommand extends BaseCommand {
             log.debug("Set basal profile, hour " + i + ": " + requestedRate);
         }
 
+        // move from hourly values to basal total
         scripter.pressCheckKey();
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_TOTAL);
 
@@ -62,6 +63,9 @@ public class SetBasalProfileCommand extends BaseCommand {
         if (Math.abs(pumpTotal - requestedTotal) > 0.05) { // TODO leniency actually needed?
             throw new CommandException("Basal total of " + pumpTotal + " differs from requested total of " + requestedTotal);
         }
+
+        // confirm entered basal rate
+        scripter.pressCheckKey();
 
         scripter.returnToRootMenu();
         scripter.verifyRootMenuIsDisplayed();
@@ -76,7 +80,7 @@ public class SetBasalProfileCommand extends BaseCommand {
         if (Math.abs(currentRate - requestedRate) < 0.01) {
             return null;
         }
-        log.debug("Current rate: " + currentRate + " = requested => " + requestedRate);
+        log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
         double change = requestedRate - currentRate;
         long steps = Math.round(change * 100);
         boolean increasing = steps > 0;

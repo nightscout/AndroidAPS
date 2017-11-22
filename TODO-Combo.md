@@ -92,4 +92,3 @@
         - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
           Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
           also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
-    - [ ] Button on Combo tab to confirm any warning (if active)?
