@@ -756,6 +756,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         return sExecutionService.loadHistory(type);
     }
 
+    @Override
+    public PumpEnactResult loadEvents() {
+        return null; // no history, not needed
+    }
+
     /**
      * Constraint interface
      */

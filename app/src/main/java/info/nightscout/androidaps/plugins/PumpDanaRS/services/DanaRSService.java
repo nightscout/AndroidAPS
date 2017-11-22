@@ -25,6 +25,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -70,6 +71,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_D
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
@@ -171,7 +173,7 @@ public class DanaRSService extends Service {
         log.debug("Pump status loaded");
     }
 
-    public void loadEvents() {
+    public PumpEnactResult loadEvents() {
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
             msg = new DanaRS_Packet_APS_History_Events(0);
@@ -186,6 +188,7 @@ public class DanaRSService extends Service {
         }
         lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded;
         log.debug("Events loaded");
+        return new PumpEnactResult().success(true);
     }
 
 
@@ -227,7 +230,7 @@ public class DanaRSService extends Service {
             }
         }
 
-        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+        final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
         bolusingEvent.t = t;
         bolusingEvent.percent = 99;
 
@@ -252,14 +255,16 @@ public class DanaRSService extends Service {
             MainApp.bus().post(bolusingEvent);
             SystemClock.sleep(1000);
         }
-        if (!(isConnected()))
-            DanaRSPlugin.getPlugin().connect("loadEvents");
-        loadEvents();
-        // reread bolus status
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
-        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
-        bolusingEvent.percent = 100;
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
+        ConfigBuilderPlugin.getCommandQueue().loadEvents(new Callback() {
+            @Override
+            public void run() {
+                // reread bolus status
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
+            }
+        });
         return true;
     }
 

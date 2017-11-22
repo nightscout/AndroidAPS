@@ -758,6 +758,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         return sExecutionService.loadHistory(type);
     }
 
+    @Override
+    public PumpEnactResult loadEvents() {
+        return null; // no history, not needed
+    }
+
     /**
      * Constraint interface
      */

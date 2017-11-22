@@ -361,9 +361,10 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
-        if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
-            connect("setTempBasalAbsolute old data");
-        }
+        //This should not be needed while using queue because connection should be done before calling this
+        //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
+        //    connect("setTempBasalAbsolute old data");
+        //}
 
         PumpEnactResult result = new PumpEnactResult();
 
@@ -625,12 +626,12 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
 
     @Override
     public void stopConnecting() {
-        // TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        if (sExecutionService != null) sExecutionService.stopConnecting();
     }
 
     @Override
     public void getPumpStatus() {
-        // TODO AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        if (sExecutionService != null) sExecutionService.getPumpStatus();
     }
 
     @Override
@@ -698,6 +699,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     @Override
     public PumpEnactResult loadHistory(byte type) {
         return sExecutionService.loadHistory(type);
+    }
+
+    @Override
+    public PumpEnactResult loadEvents() {
+        return sExecutionService.loadEvents();
     }
 
     /**

@@ -421,7 +421,6 @@
     <string name="waitingforpumpclicktorefresh">Attesa Micro. Clicca per rinnovare</string>
     <string name="wear_showbgi_title">Visualizza BGI</string>
     <string name="wrongpassword">Password Errata</string>
-    <string name="wrongpumpdriverselected">Driver Micro Errato</string>
     <string name="wrongpumppassword">Password Micro Errata</string>
     <string name="xdrip">Xdrip</string>
     <string name="xdripnotinstalled">xDrip non installato</string>

@@ -352,7 +352,6 @@
     <string name="profile_set_failed">Nastavení bazálního profilu selhalo</string>
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="pumpNotInitializedProfileNotSet">Pumpa není inicializována, profil nenastaven!</string>
-    <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
     <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <string name="mdi">Pera</string>
     <string name="sms_actualbg">Glykémie:</string>

@@ -262,6 +262,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         return danaRSService.loadHistory(type);
     }
 
+    @Override
+    public PumpEnactResult loadEvents() {
+        return danaRSService.loadEvents();
+    }
+
     // Constraints interface
 
     @Override

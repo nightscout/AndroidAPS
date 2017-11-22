@@ -43,10 +43,10 @@ public class QueueThread extends Thread {
         mWakeLock.acquire();
         MainApp.bus().post(new EventQueueChanged());
         connectionStartTime = System.currentTimeMillis();
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         try {
             while (true) {
+                PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                 log.debug("Looping ...");
                 long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
                 if (pump.isConnecting()) {
