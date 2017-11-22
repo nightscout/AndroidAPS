@@ -95,24 +95,27 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-
         if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
+            enableDisableNotification(fragmentEnabled);
             checkBusRegistration();
-            //updateNotification();
         }
-
     }
 
-    private void updateNotification() {
-
+    private void enableDisableNotification(boolean fragmentEnabled) {
         if (!fragmentEnabled) {
             NotificationManager mNotificationManager =
                     (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(ONGOING_NOTIFICATION_ID);
+        } else {
+            updateNotification();
+        }
+    }
+
+    private void updateNotification() {
+        if (!fragmentEnabled) {
             return;
         }
-
 
         String line1 = ctx.getString(R.string.noprofile);
 
@@ -194,11 +197,13 @@ public class PersistentNotificationPlugin implements PluginBase {
             try {
                 MainApp.bus().register(this);
             } catch (IllegalArgumentException e) {
+                // already registered
             }
         } else {
             try {
                 MainApp.bus().unregister(this);
             } catch (IllegalArgumentException e) {
+                // already unregistered
             }
         }
     }
