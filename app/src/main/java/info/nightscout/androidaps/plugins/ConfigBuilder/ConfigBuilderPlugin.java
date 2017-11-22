@@ -414,7 +414,9 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 }
                 return false;
             }
-        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < pump.getPumpDescription().basalStep) {
+        } else if (isTempBasalInProgress()
+                && getTempBasalRemainingMinutesFromHistory() > 5
+                && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < pump.getPumpDescription().basalStep) {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: Temp basal set correctly");
             if (callback != null) {

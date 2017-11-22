@@ -96,6 +96,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             case R.id.overview_bolusprogress_stop:
                 log.debug("Stop bolus delivery button pressed");
                 stopPressedView.setVisibility(View.VISIBLE);
+                stopButton.setVisibility(View.INVISIBLE);
                 ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
                 break;
         }

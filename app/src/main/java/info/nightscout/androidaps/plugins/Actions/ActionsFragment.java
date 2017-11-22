@@ -158,7 +158,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                             tempBasal.setVisibility(View.GONE);
                             tempBasalCancel.setVisibility(View.VISIBLE);
                             final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-                            tempBasalCancel.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
+                            tempBasalCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + activeTemp.toStringShort());
                         } else {
                             tempBasal.setVisibility(View.VISIBLE);
                             tempBasalCancel.setVisibility(View.GONE);
