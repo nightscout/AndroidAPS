@@ -6,14 +6,9 @@ Hardware requirements:
 - A Smartpix or Realtyme device together with the 360 Configuration
   Software to configure the pump.
   Roche sends these out free of charge to their customers upon request.
-- A compatible phone:
-    - An Android phone with either Android < 4.2 (and possibly >= 8.1
-      in the future) or a phone running LineageOS 14.1
-      (formerly CyanogenMod)
-    - With a phone running LineageOS a pairing can be created that can
-      then be transfered to a rooted phone which can then be used as a
-      loop phone using these instructions:
-      http://github.com/gregorybel/combo-pairing/
+- A compatible phone: An Android phone with a phone running LineageOS 14.1
+  (formerly CyanogenMod), or possibly stock Android >= 8.1 in the future.
+- To build AndroidAPS with Combo support you need the lastet Android Studio 3 version
 
 Limitations:
 - Extended bolus and multiwave bolus are not supported.
@@ -37,13 +32,15 @@ Limitations:
 
 Setup v2:
 - Configure pump using 360 config software.
+// TODO clarify with screenshot or at least better description of the on-screen items
   - Set/leave the menu configuration as "Standard"
   - Set maximum TBR to 500%
   - Disable end of TBR alert
   - Set low cartridge alarm to your licking
 - Get ruffy from https://github.com/jotomo/ruffy (branch `combo-scripter-v2`)
 - Pair the pump, if it doesn't work, switch to the `pairing` branch, pair,
-  then switch back the original branch
+  then switch back the original branch. Note that AndroidAPS must not try to
+  talk to the pump during the pairing process TODO setting MDI sufficient?
 - Get AndroidAPS from https://gitlab.com/jotomo/KEF (Branch `combo-scripter-v2`)
 - Make sure you're basal rate is properly set on the pump
 

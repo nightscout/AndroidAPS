@@ -1,5 +1,5 @@
-- [ ] Bugs
-  - [ ] Taking over benign warnings on connect doesn't work properly
+- [x] Bugs
+  - [x] Taking over benign warnings on connect doesn't work properly
         (Notification raised but not confirmed?)
   - [x] Optimization reading full history doesn't seem to work
   - [x] Reading full history multiple times duplicates entries shown in Stats/TDD dialog
@@ -43,7 +43,7 @@
     - [-] Updating time on pump
       - [x] Raise a warning if time clock is off
       - [-] Ruffy: support reading date/time menus
-    - [-] Setting pump basal profile
+    - [ ] Setting pump basal profile
     - [-] Pairing (and sourcing ruffy)
     - [x] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
@@ -83,7 +83,7 @@
     - [ ] Fix display of alarms on mainscreen (increase height if needed)
     - [-] Display errors in combo tab(?), nope notifications are better suited; also there's the alerts thing already
     - [x] Option to raise overview notifications as android notification with noise (for urgent ones?)
-  - [ ] Low prio
+  - [ ] Next version(s)
     - [x] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
           e.g. pumpAlertHistory should be renamed to alertHistory
     - [ ] Enable BT if disabled? does dana does this?
@@ -92,3 +92,4 @@
         - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
           Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
           also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
+    - [ ] Button on Combo tab to confirm any warning (if active)?
