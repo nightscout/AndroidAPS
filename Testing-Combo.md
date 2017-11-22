@@ -43,18 +43,13 @@
   - [ ] Alerts
   - [ ] TDDs
 - [ ] Date/Time
-  - [ ] Time must be set properly upon app start if pump time is off
-  - [ ] Daylight saving time changes must be detected and pump time updated.
-        Basically any time change greater than a minute on the phone must be picked up
-        by AAPS and result in the pump's time being updated the next time communication
-        with the pump takes place, so disabling automatic time updates on the phone and
-        changing the phone clock manually should allow testing this
-  - [ ] XXX test year change, reading history
-        Set phone time to 31.12, 23:55, press Refresh in Combo tab to sync time to pump,
-        enter bolus
-  - [ ] XXX daylight saving time changes (2am twice)
-- [ ] Disconnected pump
-  ...
+  - [ ] If time is off by more than 2m, a warning must be shown on the main screen whenever
+        a connection to the pump is established
+  - [ ] Since history records store the year, it must be inferred. Set phone and pump to something
+        like 31.21.17, 23:00, cause an alert, deliver a bolus, set a TBR, let the new year arrive
+        trigger the above events again and verify AAPS has correctly read them.
+- [ ] Disconnected pump (pump unreachable)
+      - [ ] ...
 - [ ] Refilling cartridge
   - [ ] If TBR was cancelled by refilling, AAPS must detect this and update the TBR treatment
         accordingly
