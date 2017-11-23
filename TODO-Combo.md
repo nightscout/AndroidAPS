@@ -44,6 +44,7 @@
       - [x] Raise a warning if time clock is off
       - [-] Ruffy: support reading date/time menus
     - [ ] Setting pump basal profile
+          - [ ] Overview notification on updated/failed basal profile
     - [-] Pairing (and sourcing ruffy)
     - [x] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
@@ -92,3 +93,4 @@
         - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
           Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
           also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
+  - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)

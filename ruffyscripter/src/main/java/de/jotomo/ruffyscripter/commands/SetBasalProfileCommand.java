@@ -81,8 +81,7 @@ public class SetBasalProfileCommand extends BaseCommand {
             return null;
         }
         log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
-        double change = requestedRate - currentRate;
-        long steps = Math.round(change * 100);
+        long steps = stepsUpToOne(currentRate) - stepsUpToOne(requestedRate);
         boolean increasing = steps > 0;
         log.debug("Pressing " + (increasing ? "up" : "down") + " " + Math.abs(steps) + " times");
         for (int i = 0; i < Math.abs(steps); i++) {
@@ -93,6 +92,14 @@ public class SetBasalProfileCommand extends BaseCommand {
             SystemClock.sleep(50);
         }
         return increasing;
+    }
+
+    /*Steps UP to 1.0
+    * May return a negative value for steps down*/
+    private long stepsUpToOne(double rate){
+        double change = (1.0-rate);
+        if (rate > 1) return Math.round(change/0.05);
+        return Math.round(change/0.01);
     }
 
     private void verifyDisplayedRate(double requestedRate, boolean increasingPercentage) {
@@ -110,7 +117,7 @@ public class SetBasalProfileCommand extends BaseCommand {
             displayedRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         }
         log.debug("Final displayed basal rate: " + displayedRate);
-        if (displayedRate != requestedRate) {
+        if (Math.abs(displayedRate - requestedRate) > 0.001) {
             throw new CommandException("Failed to set basal rate, requested: "
                     + requestedRate + ", actual: " + displayedRate);
         }
@@ -120,7 +127,7 @@ public class SetBasalProfileCommand extends BaseCommand {
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
         double refreshedDisplayedRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
-        if (displayedRate != refreshedDisplayedRate) {
+        if (Math.abs(displayedRate - refreshedDisplayedRate) > 0.001) {
             throw new CommandException("Failed to set basal rate: " +
                     "percentage changed after input stopped from "
                     + displayedRate + " -> " + refreshedDisplayedRate);
