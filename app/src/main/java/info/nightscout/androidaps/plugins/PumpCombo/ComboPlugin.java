@@ -224,6 +224,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 0,
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
             return PumpInterface.FAILED;
         }
 
@@ -238,6 +240,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
+        if (!isInitialized())
+            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (pump.basalProfile == null)
+            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         return pump.basalProfile.equals(convertProfileToComboProfile(profile));
     }
 
