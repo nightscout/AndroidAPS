@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
 
@@ -263,10 +264,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        if (!isInitialized())
-            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
-        if (pump.basalProfile == null)
-            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) {
+            // This is called too soon (for the Combo) on startup, so ignore this.
+            // The Combo init (refreshDataFromPump) will read the profile and update the pump's
+            // profile if the pref is set;
+            return true;
+        }
         return pump.basalProfile.equals(convertProfileToComboProfile(profile));
     }
 
@@ -341,6 +344,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return;
             }
             pump.basalProfile = readBasalResult.basalProfile;
+
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            if (SP.getBoolean("syncprofiletopump", false)
+                    && !pump.basalProfile.equals(convertProfileToComboProfile(profile))) {
+                setNewBasalProfile(profile);
+            }
         }
 
         if (!checkPumpHistory()) {
