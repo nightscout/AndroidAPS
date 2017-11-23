@@ -23,7 +23,7 @@ Limitations:
   (e.g. bolusing from the pump and then immediately bolusing from AAPS).
 - If a TBR is set on the pump, AAPS will cancel it. This is because it's not possible to determine
   the start point of a TBR until it is finished or was cancelled at which point a record in the
-  pumps history is created. Before that, there is none and it's simply not possible to determine
+  pump's history is created. Before that, there is none and it's simply not possible to determine
   the TBRs influence on IOB. Set TBR using AAPS instead.
 - It's currently not possible to set the time and date on the pump (only reading the time - but
   not the date - is supported raises a warning in AAPS to update the pump clock manually).
@@ -32,8 +32,10 @@ Limitations:
 
 Setup v2:
 - Configure pump using 360 config software.
-// TODO clarify with screenshot or at least better description of the on-screen items
-  - Set/leave the menu configuration as "Standard"
+  - Set/leave the menu configuration as "Standard", this will show only the supported
+    menus/actions on the pump and hide those which are unsupported (extended/multiwave bolus,
+    multiple basal rates), which cause the loop functionality to be disabled when used because
+    it's not possible to run the loop in a safe manner when used.
   - Set maximum TBR to 500%
   - Disable end of TBR alert
   - Set low cartridge alarm to your licking

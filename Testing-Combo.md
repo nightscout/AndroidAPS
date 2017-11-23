@@ -74,4 +74,17 @@
         must also raise an alert and disable loop
   - [ ] If a basal rate other than profile 1 is activated, this must also raise an alert and disable
         the loop for 6 h
+- [ ] Reading/setting basal profile
+  - [ ] AAPS reads basal rate properly
+  - [ ] AAPS doesn't touch pump basal if "Sync to profile" pref not set
+  - [ ] AAPS updates basal rate if "Sync to profile" is enabled
+  - [ ] Test profile with 115% (or something like that) change to ask the
+        pump for basal rates like 0.812, which should then be set propely
+- [ ] Taking over alerts
+  - [ ] If an error alert is active on the pump, pressing refresh shall display the error
+        in the Combo tab but NOT confirm it. Easiest error to trigger: rewind piston
+        and attempt to start the pump, this will trigger E11: Not primed.
+  - [ ] Pressing refresh while a low cartridge or low battery alarm is active
+        must confirm the alarm, indicate the new status in the Combo tab and
+        show a notification on the overview screen
 
