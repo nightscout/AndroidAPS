@@ -42,6 +42,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -217,8 +218,19 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public synchronized int setNewBasalProfile(Profile profile) {
+
+        if (!isInitialized()) {
+            log.error("setNewBasalProfile not initialized");
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            return PumpInterface.FAILED;
+        }
+
         BasalProfile requestedBasalProfile = convertProfileToComboProfile(profile);
         if (pump.basalProfile.equals(requestedBasalProfile)) {
+            //dismiss previously "FAILED" overview notifications
+            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             return PumpInterface.NOT_NEEDED;
         }
         CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 0,
@@ -234,8 +246,19 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         pump.basalProfile = readResult.basalProfile;
 
-        return readResult.success && readResult.basalProfile.equals(requestedBasalProfile)
-                ? PumpInterface.SUCCESS : PumpInterface.FAILED;
+        if(readResult.success && readResult.basalProfile.equals(requestedBasalProfile)){
+            //dismiss previously "FAILED" overview notifications
+            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            //issue success notification
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+            MainApp.bus().post(new EventNewNotification(notification));
+            return PumpInterface.SUCCESS;
+        } else {
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            return PumpInterface.FAILED;
+        }
     }
 
     @Override
