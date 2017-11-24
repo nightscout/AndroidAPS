@@ -42,9 +42,9 @@ public class SetBasalProfileCommand extends BaseCommand {
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
 
             double requestedRate = basalProfile.hourlyRates[i];
-            Boolean increasing = inputBasalRate(requestedRate);
-            if (increasing != null) {
-                verifyDisplayedRate(requestedRate, increasing);
+            long change = inputBasalRate(requestedRate);
+            if (change != 0) {
+                verifyDisplayedRate(requestedRate, change);
             }
 
             log.debug("Set basal profile, hour " + i + ": " + requestedRate);
@@ -60,7 +60,7 @@ public class SetBasalProfileCommand extends BaseCommand {
         for (int i = 0; i < 24; i++) {
             requestedTotal += basalProfile.hourlyRates[i];
         }
-        if (Math.abs(pumpTotal - requestedTotal) > 0.05) { // TODO leniency actually needed?
+        if (Math.abs(pumpTotal - requestedTotal) > 0.001) {
             throw new CommandException("Basal total of " + pumpTotal + " differs from requested total of " + requestedTotal);
         }
 
@@ -73,46 +73,61 @@ public class SetBasalProfileCommand extends BaseCommand {
         result.success(true).basalProfile(basalProfile);
     }
 
-    // TODO boolean to indicate, up, down or neither? yikes
-    private Boolean inputBasalRate(double requestedRate) {
-        // 0.05 steps; jumps to 0.10 steps if buttons are kept pressed, so there's room for optimization
+    private long inputBasalRate(double requestedRate) {
         double currentRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
-        if (Math.abs(currentRate - requestedRate) < 0.01) {
-            return null;
-        }
         log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
-        long steps = stepsUpToOne(currentRate) - stepsUpToOne(requestedRate);
-        boolean increasing = steps > 0;
-        log.debug("Pressing " + (increasing ? "up" : "down") + " " + Math.abs(steps) + " times");
+        long steps = calculateRequiredSteps(currentRate, requestedRate);
+        if (steps == 0) {
+            return 0;
+        }
+        log.debug("Pressing " + (steps > 0 ? "up" : "down") + " " + Math.abs(steps) + " times");
         for (int i = 0; i < Math.abs(steps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
             log.debug("Push #" + (i + 1) + "/" + Math.abs(steps));
-            if (increasing) scripter.pressUpKey();
+            if (steps > 0) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(50);
         }
-        return increasing;
+        return steps;
     }
 
-    /*Steps UP to 1.0
-    * May return a negative value for steps down*/
-    private long stepsUpToOne(double rate){
-        double change = (1.0-rate);
-        if (rate > 1) return Math.round(change/0.05);
-        return Math.round(change/0.01);
+    long calculateRequiredSteps(double currentRate, double requestedRate) {
+        long steps;
+        if (currentRate < 1 && requestedRate > 1) {
+            // going from below 1 to above 1, need both granularities
+            // calculate steps 0.x -> 1.0, calculate 1.0 -> 1+
+            long smallSteps = Math.round((1 - currentRate) / 0.01);
+            long bigSteps = Math.round((requestedRate - 1) / 0.05);
+            steps = smallSteps + bigSteps;
+        } else if (currentRate > 1 && requestedRate < 1) {
+            // going from above 1 to below 1, need both granularities
+            // calculate +1 -> 1.0, calculate 1.0 -> 0.x
+            long bigSteps = Math.round((currentRate - 1) / 0.05);
+            long smallSteps = Math.round((1 - requestedRate) / 0.01);
+            steps = (bigSteps + smallSteps) * -1;
+        } else if (currentRate < 1 && requestedRate <= 1) {
+            // staying below 1, finer granularity only
+            steps = Math.round((requestedRate - currentRate) / 0.01);
+        } else if (currentRate >= 1 && requestedRate >= 1) {
+            // staying above 1, coarser granularity only
+            steps = Math.round((requestedRate - currentRate) / 0.05);
+        } else {
+            throw new CommandException("Programmer doesn't know what he's doing");
+        }
+        return steps;
     }
 
-    private void verifyDisplayedRate(double requestedRate, boolean increasingPercentage) {
+    private void verifyDisplayedRate(double requestedRate, long change) {
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
         // wait up to 5s for any scrolling to finish
         double displayedRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis()
-                && ((increasingPercentage && displayedRate < requestedRate)
-                || (!increasingPercentage && displayedRate > requestedRate))) {
+                && ((change > 0 && displayedRate < requestedRate)
+                || (change < 0 && displayedRate > requestedRate))) {
             log.debug("Waiting for pump to process scrolling input for rate, current: "
                     + displayedRate + ", desired: " + requestedRate + ", scrolling "
-                    + (increasingPercentage ? "up" : "down"));
+                    + (change > 0 ? "up" : "down"));
             scripter.waitForScreenUpdate();
             displayedRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         }
