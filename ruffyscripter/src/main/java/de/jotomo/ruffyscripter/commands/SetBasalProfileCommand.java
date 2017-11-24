@@ -76,7 +76,8 @@ public class SetBasalProfileCommand extends BaseCommand {
     private long inputBasalRate(double requestedRate) {
         double currentRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
-        long steps = calculateRequiredSteps(currentRate, requestedRate);
+        // the pump changes steps size from 0.01 to 0.05 when crossing 1.00 U
+        long steps = stepsToOne(currentRate) - stepsToOne(requestedRate);
         if (steps == 0) {
             return 0;
         }
@@ -91,30 +92,14 @@ public class SetBasalProfileCommand extends BaseCommand {
         return steps;
     }
 
-    long calculateRequiredSteps(double currentRate, double requestedRate) {
-        long steps;
-        if (currentRate < 1 && requestedRate > 1) {
-            // going from below 1 to above 1, need both granularities
-            // calculate steps 0.x -> 1.0, calculate 1.0 -> 1+
-            long smallSteps = Math.round((1 - currentRate) / 0.01);
-            long bigSteps = Math.round((requestedRate - 1) / 0.05);
-            steps = smallSteps + bigSteps;
-        } else if (currentRate > 1 && requestedRate < 1) {
-            // going from above 1 to below 1, need both granularities
-            // calculate +1 -> 1.0, calculate 1.0 -> 0.x
-            long bigSteps = Math.round((currentRate - 1) / 0.05);
-            long smallSteps = Math.round((1 - requestedRate) / 0.01);
-            steps = (bigSteps + smallSteps) * -1;
-        } else if (currentRate < 1 && requestedRate <= 1) {
-            // staying below 1, finer granularity only
-            steps = Math.round((requestedRate - currentRate) / 0.01);
-        } else if (currentRate >= 1 && requestedRate >= 1) {
-            // staying above 1, coarser granularity only
-            steps = Math.round((requestedRate - currentRate) / 0.05);
-        } else {
-            throw new CommandException("Programmer doesn't know what he's doing");
-        }
-        return steps;
+    /**
+     * Steps required to go up to 1.0 (positive return value),
+     * or down to 1.0 (negative return value).
+     */
+    private long stepsToOne(double rate) {
+        double change = (1.0 - rate);
+        if (rate > 1) return Math.round(change / 0.05);
+        return Math.round(change / 0.01);
     }
 
     private void verifyDisplayedRate(double requestedRate, long change) {
