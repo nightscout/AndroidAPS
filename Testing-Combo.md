@@ -1,3 +1,5 @@
+- [ ] Pairing
+  - [ ] Pairing works with `combo-scripter-v2` branch
 - [ ] Bolusing
   - [ ] Cancelling bolus at various stages and checking error message (if any) and check
         no bolus or a partial bolus was delivered
@@ -87,4 +89,6 @@
   - [ ] Pressing refresh while a low cartridge or low battery alarm is active
         must confirm the alarm, indicate the new status in the Combo tab and
         show a notification on the overview screen
+- [ ] Misc
+  - [ ] Pump state is correctly uploaded to Nightscout
 

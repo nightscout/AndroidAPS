@@ -1,5 +1,6 @@
-**This software is part of a DIY solution and is not a product.
-You alone are responsible for what you do with it**
+**This software is part of a DIY solution and is not a product, but
+requires YOU to read, learn and understand the system and how to use it.
+You alone are responsible for what you do with it.**
 
 Hardware requirements:
 - A Roche Accu-Chek Combo (any firmware, they all work)

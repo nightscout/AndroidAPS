@@ -9,10 +9,6 @@ public class BasalProfile {
         this.hourlyRates = new double[24];
     }
 
-    public BasalProfile( double[] hourlyRates) {
-        this.hourlyRates = hourlyRates;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -20,8 +16,8 @@ public class BasalProfile {
 
         BasalProfile that = (BasalProfile) o;
 
-        for(int i = 0; i <= 23; i++) {
-            if (Math.abs(hourlyRates[i] - that.hourlyRates[i]) > 0.01) {
+        for(int i = 0; i < 24; i++) {
+            if (Math.abs(hourlyRates[i] - that.hourlyRates[i]) > 0.001) {
                 return false;
             }
         }
@@ -36,7 +32,7 @@ public class BasalProfile {
     @Override
     public String toString() {
         double total = 0d;
-        for(int i = 0; i <= 23; i++) {
+        for(int i = 0; i < 24; i++) {
             total += hourlyRates[i];
         }
         return "BasalProfile{" +

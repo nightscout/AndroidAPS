@@ -234,7 +234,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             return PumpInterface.NOT_NEEDED;
         }
-        CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 0,
+        CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
@@ -242,7 +242,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return PumpInterface.FAILED;
         }
 
-        CommandResult readResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 0,
+        CommandResult readResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
                 ruffyScripter::readBasalProfile);
 
         pump.basalProfile = readResult.basalProfile;
@@ -284,12 +284,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             * 0.05 - if above 1U/h
             * */
 
-            if(rate < 1){
+            if (rate < 1) {
                 //round to 0.01 granularity;
-                rate = Math.round(rate/0.01)*0.01;
+                rate = Math.round(rate / 0.01) * 0.01;
             } else {
                 //round to 0.05 granularity;
-                rate = Math.round(rate/0.05)*0.05;
+                rate = Math.round(rate / 0.05) * 0.05;
             }
 
             basalProfile.hourlyRates[i] = rate;
@@ -337,7 +337,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         */
 
-        // read basal profile into cache
+        // read basal profile into cache and update pump profile if needed
         if (!pump.initialized) {
             CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
             if (!readBasalResult.success) {
