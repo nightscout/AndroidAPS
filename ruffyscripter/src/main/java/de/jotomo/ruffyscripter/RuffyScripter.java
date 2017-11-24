@@ -254,35 +254,9 @@ public class RuffyScripter implements RuffyCommands {
                 log.debug("Connection ready to execute cmd " + cmd);
                 Thread cmdThread = new Thread(() -> {
                     try {
-                        // check pump in a suitable state to run the requested command
-                        if (cmd instanceof ReadPumpStateCommand) {
-                            // always allowed, state is set at the end of runCommand method
-                            activeCmd.getResult().success = true;
-                        } else if (getCurrentMenu().getType() == MenuType.STOP) {
-                            if (cmd.needsRunMode()) {
-                                log.error("Requested command requires run mode, but pump is suspended");
-                                activeCmd.getResult().success = false;
-                                return;
-                            }
-                        } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                            if (!(cmd instanceof ConfirmAlertCommand)) {
-                                log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
-                                activeCmd.getResult().success = false;
-                                return; // active alert is returned as part of PumpState
-                            }
-                        } else if (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
-                            log.debug("Pump is unexpectedly not on main menu but " + getCurrentMenuName());
-                            activeCmd.getResult().success = false;
+                        if (!runPreCommandChecks(cmd)) {
                             return;
                         }
-
-                        // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
-                        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-                        while (ruffyService.isConnected() && bolusRemaining != null) {
-                            log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
-                            waitForScreenUpdate();
-                        }
-
                         PumpState pumpState = readPumpStateInternal();
                         log.debug("Pump state before running command: " + pumpState);
 
@@ -368,6 +342,50 @@ public class RuffyScripter implements RuffyCommands {
                 activeCmd = null;
             }
         }
+    }
+
+    private boolean runPreCommandChecks(Command cmd) {
+        if (cmd instanceof ReadPumpStateCommand) {
+            // always allowed, state is set at the end of runCommand method
+            activeCmd.getResult().success = true;
+        } else if (getCurrentMenu().getType() == MenuType.STOP) {
+            if (cmd.needsRunMode()) {
+                log.error("Requested command requires run mode, but pump is suspended");
+                activeCmd.getResult().success = false;
+                return false;
+            }
+        } else if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+            if (!(cmd instanceof ConfirmAlertCommand)) {
+                log.warn("Warning/alert active on pump, but requested command is not ConfirmAlertCommand");
+                activeCmd.getResult().success = false;
+                return false;
+            }
+        } else if (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
+            log.debug("Pump is unexpectedly not on main menu but " + getCurrentMenuName() + ", trying to recover");
+            try {
+                recoverFromCommandFailure();
+            } catch (Exception e) {
+                activeCmd.getResult().success = false;
+                return false;
+            }
+            if (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
+                activeCmd.getResult().success = false;
+                return false;
+            }
+        }
+
+        // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
+        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+        try {
+            while (ruffyService.isConnected() && bolusRemaining != null) {
+                log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
+                waitForScreenUpdate();
+            }
+        } catch (Exception e) {
+            log.error("Exception waiting for bolus from previous command to finish", e);
+            return false;
+        }
+        return true;
     }
 
     /**
