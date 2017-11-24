@@ -421,6 +421,12 @@ public class RuffyScripter implements RuffyCommands {
                 waitForScreenUpdate();
             }
             boolean connected = ruffyService.isConnected();
+            if (connected) {
+                MenuType menuType = getCurrentMenu().getType();
+                if (menuType != MenuType.MAIN_MENU && menuType != MenuType.WARNING_OR_ERROR) {
+                    returnToRootMenu();
+                }
+            }
             log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
             return connected;
         } catch (RemoteException e) {
