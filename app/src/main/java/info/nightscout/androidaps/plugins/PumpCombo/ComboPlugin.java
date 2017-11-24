@@ -584,6 +584,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             adjustedPercent = rounded.intValue();
         }
 
+        // do a soft TBR-cancel when requested rate was rounded to 100% (>94% && <104%)
+        if (adjustedPercent == 100) {
+            return cancelTempBasal(false);
+        }
+
         int finalAdjustedPercent = adjustedPercent;
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr, percent, durationInMinutes),
                 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));

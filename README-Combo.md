@@ -40,6 +40,7 @@ Setup v2:
   - Set maximum TBR to 500%
   - Disable end of TBR alert
   - Set low cartridge alarm to your licking
+  - Enable keylock (can also be set on the pump directly, see usage section on reasoning)
 - Get ruffy from https://github.com/jotomo/ruffy (branch `combo-scripter-v2`)
 - Pair the pump, if it doesn't work, switch to the `pairing` branch, pair,
   then switch back the original branch. Note that AndroidAPS must not try to
@@ -59,6 +60,7 @@ Usage:
   advanced loop functionality).
 - It's recommended to enable key lock on the pump to prevent bolusing from the pump, esp. when the
   pump was used before and quick bolusing was a habit.
+  Also, with keylock enabled, accidentally pressing a key will NOT interrupt a running command
 - When a BOLUS/TBR CANCELLED alert starts on the pump during bolusing or setting a TBR, this is
   caused by a disconnect between pump and phone. The app will try to reconnect and confirm the alert
   and then retry the last action (boluses are NOT retried for safety reasons). Therefore,
