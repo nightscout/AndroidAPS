@@ -53,7 +53,7 @@ import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
-    private static final long DISCONNECT_TIME_OUT_MS = 2500;
+    private static final long DISCONNECT_TIME_OUT_MS = 5000;
 
     private IRuffyService ruffyService;
 
@@ -305,7 +305,7 @@ public class RuffyScripter implements RuffyCommands {
                 long executionStart = System.currentTimeMillis();
                 cmdThread.start();
 
-                long overallTimeout = System.currentTimeMillis() + 4 * 60 * 1000;
+                long overallTimeout = System.currentTimeMillis() + 10 * 60 * 1000;
                 while (cmdThread.isAlive()) {
                     if (!ruffyService.isConnected()) {
                         // on connection loss try to reconnect, confirm warning alerts caused by
