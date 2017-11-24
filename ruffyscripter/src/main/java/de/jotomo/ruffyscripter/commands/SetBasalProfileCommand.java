@@ -107,8 +107,8 @@ public class SetBasalProfileCommand extends BaseCommand {
         double displayedRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis()
-                && ((change > 0 && displayedRate < requestedRate)
-                || (change < 0 && displayedRate > requestedRate))) {
+                && ((change > 0 && requestedRate - displayedRate > 0.001) // displayedRate < requestedRate)
+                || (change < 0 && displayedRate - requestedRate > 0.001))) { //displayedRate > requestedRate))) {
             log.debug("Waiting for pump to process scrolling input for rate, current: "
                     + displayedRate + ", desired: " + requestedRate + ", scrolling "
                     + (change > 0 ? "up" : "down"));
