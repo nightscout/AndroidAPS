@@ -16,6 +16,7 @@ public class ReadBasalProfileCommand extends BaseCommand {
 
     @Override
     public void execute() {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.BASAL_1_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_1_MENU);
         scripter.pressCheckKey();

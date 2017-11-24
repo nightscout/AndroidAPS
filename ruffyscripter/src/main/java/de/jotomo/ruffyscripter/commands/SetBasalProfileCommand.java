@@ -25,6 +25,7 @@ public class SetBasalProfileCommand extends BaseCommand {
 
     @Override
     public void execute() {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.BASAL_1_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_1_MENU);
         scripter.pressCheckKey();
@@ -66,8 +67,6 @@ public class SetBasalProfileCommand extends BaseCommand {
 
         // confirm entered basal rate
         scripter.pressCheckKey();
-
-        scripter.returnToRootMenu();
         scripter.verifyRootMenuIsDisplayed();
 
         result.success(true).basalProfile(basalProfile);
