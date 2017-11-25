@@ -432,7 +432,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .comment(MainApp.instance().getString(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                return deliverBolus(detailedBolusInfo);
+                PumpEnactResult pumpEnactResult = deliverBolus(detailedBolusInfo);
+                if (!pumpEnactResult.success) {
+                    log.debug("Bolus delivery failed, refreshing history in background thread");
+                    new Thread(this::checkPumpHistory).start();
+                }
+                return pumpEnactResult;
             } else {
                 // no bolus required, carb only treatment
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
@@ -482,7 +487,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // verify we're update to date and know the most recent bolus
             if (!Objects.equals(lastKnownBolus, reservoirBolusResult.lastBolus)) {
-                new Thread(this::checkPumpHistory).start();
+                log.error("Bolus delivery failure at stage 3", new Exception());
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
             }
