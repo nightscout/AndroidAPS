@@ -461,6 +461,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (lastRequestedBolus != null
                 && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
                 && lastRequestedBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
+            log.error("Bolus delivery failure at stage 0", new Exception());
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.sResources.getString(R.string.bolus_frequency_exceeded));
         }
@@ -476,11 +477,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             CommandResult reservoirBolusResult = runCommand(null, 3,
                     ruffyScripter::readReservoirLevelAndLastBolus);
             if (!reservoirBolusResult.success) {
+                log.error("Bolus delivery failure at stage 1", new Exception());
                 return new PumpEnactResult().success(false).enacted(false);
             }
 
             // check enough insulin left for bolus
             if (Math.round(detailedBolusInfo.insulin + 0.5) > reservoirBolusResult.reservoirLevel) {
+                log.error("Bolus delivery failure at stage 2", new Exception());
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficient_for_bolus));
             }
@@ -505,6 +508,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             if (!bolusCmdResult.success) {
                 new Thread(this::checkPumpHistory).start();
+                log.error("Bolus delivery failure at stage 4", new Exception());
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
             }
@@ -512,6 +516,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // verify delivered bolus
             reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
             if (!reservoirBolusResult.success) {
+                log.error("Bolus delivery failure at stage 5", new Exception());
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
             }
@@ -519,6 +524,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (cancelBolus) {
                 // if cancellation was requested, the delivered bolus is allowed to differ from requested
             } else if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
+                log.error("Bolus delivery failure at stage 6", new Exception());
                 return new PumpEnactResult().success(false).enacted(false).
                         comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
             }

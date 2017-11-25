@@ -64,6 +64,7 @@ public class CommandResult {
                 ", basalProfile=" + basalProfile +
                 ", duration='" + duration + '\'' +
                 ", forwardedWarnings='" + forwardedWarnings + '\'' +
+                ", lastBolus=" + lastBolus +
                 '}';
     }
 }
