@@ -385,6 +385,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public int setNewBasalProfile(Profile profile) {
+        if (!SP.getBoolean(R.string.key_sync_profile_to_pump, false)) {
+           return NOT_NEEDED;
+        }
+
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
 

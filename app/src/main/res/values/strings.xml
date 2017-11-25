@@ -816,5 +816,6 @@
     <string name="info">INFO</string>
     <string name="combo_empty_alert_history_note">To retrieve the alert history from the pump, long press the Refresh button.</string>
     <string name="combo_empty_tdd_history_note">To retrieve the TDD history from the pump, long press the Refresh button.</string>
+    <string name="key_sync_profile_to_pump">sync_profile_to_pump</string>
 </resources>
 

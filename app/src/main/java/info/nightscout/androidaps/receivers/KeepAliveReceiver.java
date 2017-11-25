@@ -89,7 +89,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 MainApp.bus().post(new EventNewNotification(n));
             }
 
-            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
+            if (SP.getBoolean(MainApp.sResources.getString(R.string.key_sync_profile_to_pump), false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
