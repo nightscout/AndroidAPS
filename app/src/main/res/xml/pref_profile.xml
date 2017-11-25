@@ -6,7 +6,7 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="syncprofiletopump"
+            android:key="@string/key_sync_profile_to_pump"
             android:title="@string/syncprofiletopump_title" />
     </PreferenceCategory>
 
