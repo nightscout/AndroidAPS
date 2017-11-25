@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi.history;
+package de.jotomo.ruffy.spi;
 
 import android.support.annotation.Nullable;
 
@@ -28,4 +28,3 @@ public class WarningOrErrorCode {
                 '}';
     }
 }
-

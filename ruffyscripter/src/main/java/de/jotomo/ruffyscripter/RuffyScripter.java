@@ -31,7 +31,7 @@ import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
-import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
+import de.jotomo.ruffy.spi.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;

@@ -12,9 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 import de.jotomo.ruffy.spi.BolusProgressReporter;
-import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpWarningCodes;
-import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
+import de.jotomo.ruffy.spi.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERED;

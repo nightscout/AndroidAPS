@@ -1,7 +1,5 @@
 package de.jotomo.ruffy.spi;
 
-import de.jotomo.ruffy.spi.history.WarningOrErrorCode;
-
 /** State displayed on the main screen of the pump. */
 public class PumpState {
     /** Time the state was captured, rounded to a full second */
