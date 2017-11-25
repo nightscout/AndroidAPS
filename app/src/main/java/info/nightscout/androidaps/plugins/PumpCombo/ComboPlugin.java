@@ -589,6 +589,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return cancelTempBasal(false);
         }
 
+        long thisMinute = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
+        TemporaryBasal activeTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(thisMinute);
+        if (activeTbr != null && activeTbr.date == thisMinute) {
+            // setting multiple TBRs within a single minute (with the first TBR having a runtime
+            // of 0) is not supported. Attempting to do so sets a new TBR on the pump but adding
+            // the record to the DB fails as there already is a record with that date.
+            return new PumpEnactResult().success(false).enacted(false);
+        }
+
         int finalAdjustedPercent = adjustedPercent;
         CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_setting_tbr, percent, durationInMinutes),
                 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
