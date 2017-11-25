@@ -41,12 +41,17 @@ Setup v2:
   - Disable end of TBR alert
   - Set low cartridge alarm to your licking
   - Enable keylock (can also be set on the pump directly, see usage section on reasoning)
+- Get Android Studio 3
 - Get ruffy from https://github.com/jotomo/ruffy (branch `combo-scripter-v2`)
 - Pair the pump, if it doesn't work, switch to the `pairing` branch, pair,
-  then switch back the original branch. Note that AndroidAPS must not try to
-  talk to the pump during the pairing process TODO setting MDI sufficient?
+  then switch back the original branch. If the pump is already paired and
+  can be controlled via ruffy, installing the above version is sufficient.
 - Get AndroidAPS from https://gitlab.com/jotomo/KEF (Branch `combo-scripter-v2`)
-- Make sure you're basal rate is properly set on the pump
+- Before enabling the Combo plugin in AAPS make sure you're profile is set up
+  correctly and your basal profile is up to date as AAPS will sync the basal profile
+  to the pump.
+- There might be minor glitches around enabling/disabling the Combo plugi, requiring
+  to restart AAPS by force-closing it.
 
 Usage:
 - This is not a product, esp. in the beginning the user needs to monitor and understand the system,
@@ -82,6 +87,9 @@ Usage:
 - Read the documentation on the wiki as well as the docs at https://openaps.org
 - Don't press any buttons on the pump while AAPS communicates with the pump (Bluetooth logo is
   shown on the pump).
+- If the loop requests a running TBR to be cancelled the Combo will set a TBR of 90% or 110%
+  for 15 minutes instead. This is because cancelling a TBR causes an alert on the pump which
+  causes a lot of vibrations.
 
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused
