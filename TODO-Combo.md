@@ -93,4 +93,9 @@
         - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
           Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
           also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
-  - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)
+    - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)
+    - [ ] With long running commands (e.g. setting basal rate, which can take up to 5m), multiple 'set tbr' commands
+          may stack up. Since setting a TBR multiple times in one minute fails, the ComboPlugin rejects such
+          request, letting the oldest TBR run till the net iteration. This can potentially be nicely solved
+          through the queue branch. However, the original problem is the amount of time the Combo can
+          take to execute commands, which might go away (mostly) with command mode.

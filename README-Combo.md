@@ -46,6 +46,8 @@ Setup v2:
 - Pair the pump, if it doesn't work, switch to the `pairing` branch, pair,
   then switch back the original branch. If the pump is already paired and
   can be controlled via ruffy, installing the above version is sufficient.
+  If AAPS is already installed, switch to the MDI plugin to avoid the Combo
+  plugin from interfering with ruffy during the pairing process.
 - Get AndroidAPS from https://gitlab.com/jotomo/KEF (Branch `combo-scripter-v2`)
 - Before enabling the Combo plugin in AAPS make sure you're profile is set up
   correctly and your basal profile is up to date as AAPS will sync the basal profile
@@ -90,6 +92,7 @@ Usage:
 - If the loop requests a running TBR to be cancelled the Combo will set a TBR of 90% or 110%
   for 15 minutes instead. This is because cancelling a TBR causes an alert on the pump which
   causes a lot of vibrations.
+- Long press the Refresh button on the Combo tab to force a re-read of all pump data
 
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused

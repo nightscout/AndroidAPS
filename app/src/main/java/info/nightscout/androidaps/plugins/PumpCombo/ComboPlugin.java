@@ -590,7 +590,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         long thisMinute = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
-        TemporaryBasal activeTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(thisMinute);
+        TemporaryBasal activeTbr = MainApp.getDbHelper().getTemporaryBasalsDataByDate(thisMinute);
         if (activeTbr != null && activeTbr.date == thisMinute) {
             // setting multiple TBRs within a single minute (with the first TBR having a runtime
             // of 0) is not supported. Attempting to do so sets a new TBR on the pump but adding
