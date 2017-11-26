@@ -532,9 +532,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // add treatment record to DB (if it wasn't cancelled)
             if (lastPumpBolus != null && (lastPumpBolus.amount > 0)) {
-                detailedBolusInfo.date = reservoirBolusResult.lastBolus.timestamp;
+                detailedBolusInfo.date = lastPumpBolus.timestamp;
                 detailedBolusInfo.insulin = lastPumpBolus.amount;
                 detailedBolusInfo.date = lastPumpBolus.timestamp;
+                detailedBolusInfo.source = Source.PUMP;
+                detailedBolusInfo.pumpId = lastPumpBolus.timestamp;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 return new PumpEnactResult().success(true).enacted(true)
                         .bolusDelivered(lastPumpBolus.amount).carbsDelivered(detailedBolusInfo.carbs);
