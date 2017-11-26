@@ -1,4 +1,7 @@
 - [x] Bugs
+  - [x] Deleting a bolus from the history re-adds it from the pump's
+        history. Deleting it again, flags it as invalid at which point
+        it will not be added to IOB and not be re-added.
   - [x] Taking over benign warnings on connect doesn't work properly
         (Notification raised but not confirmed?)
   - [x] Optimization reading full history doesn't seem to work
@@ -24,7 +27,7 @@
          from 59.9999 to 0)
         Only in issue if TBR was set on pump. In that case the TBR is cancelled and the
         resulting history record is read
-- [ ] Tasks
+- [x] Tasks
   - [x] Main
     - [x] On command error: recover by returning to main menu
           check entry and exit points of commands
@@ -34,7 +37,7 @@
         - Can the low warning be set as high as 280 or so? To be able to trigger it with a quick refill? yup.
       - [x] Check for errors first thing in runCommand? Whenever analysing a CommandResult?
       - [x] forward all warnings and errors encountered, but only confirm benign ones
-    - [-] Properly reporting back failures in UI, maybe warn if lots of errors (unreachable alert might
+    - [-] Reporting back failures in UI, maybe warn if lots of errors (unreachable alert might
           already be enough, since it's based on 'lastSuccessfulConnection', where a connection is
           considered successful if the command during that connection succeeded.
           KeepAlive triggered check suffices.
@@ -43,8 +46,8 @@
     - [-] Updating time on pump
       - [x] Raise a warning if time clock is off
       - [-] Ruffy: support reading date/time menus
-    - [ ] Setting pump basal profile
-          - [ ] Overview notification on updated/failed basal profile
+    - [x] Setting pump basal profile
+      - [x] Overview notification on updated/failed basal profile
     - [-] Pairing (and sourcing ruffy)
     - [x] Run readReservoirAndBolusLevel after SetTbr too so boluses on the pump are caught sooner?
           Currently the pump gets to know such a record when bolusing or when refresh() is called
@@ -79,23 +82,31 @@
     - Nope, at least not with a 2014 pump (SW1.06?)
   - [x] Reconnect and auto-retry for commands
   - [x] Empty battery state
-  - [ ] Integrate alarms
+  - [x] Integrate alarms
     - [x] Remove combo alerter thread
-    - [ ] Fix display of alarms on mainscreen (increase height if needed)
-    - [-] Display errors in combo tab(?), nope notifications are better suited; also there's the alerts thing already
+    - [x] Display errors in combo tab(?), nope notifications are better suited; also there's the alerts thing already
     - [x] Option to raise overview notifications as android notification with noise (for urgent ones?)
-  - [ ] Next version(s)
-    - [x] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
-          e.g. pumpAlertHistory should be renamed to alertHistory
-    - [ ] Enable BT if disabled? does dana does this?
-    - [ ] Finish and test German translation
-    - [ ] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed
-        - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
-          Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
-          also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
-    - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)
-    - [ ] With long running commands (e.g. setting basal rate, which can take up to 5m), multiple 'set tbr' commands
-          may stack up. Since setting a TBR multiple times in one minute fails, the ComboPlugin rejects such
-          request, letting the oldest TBR run till the net iteration. This can potentially be nicely solved
-          through the queue branch. However, the original problem is the amount of time the Combo can
-          take to execute commands, which might go away (mostly) with command mode.
+- [ ] Next version(s)
+  - [ ] State in ComboPump is not safely shared among threads
+  - [ ] Cancelling TBR or overriding a running one with a new one
+        is likely buggy (in both cases requiring a TBR end record)
+        checkTbrMismatch causes history read and TBR is right in AAPS
+        so far and any TBR set on the pump is cancelled, so it works,
+        but isn't clean. Needs some rethink - with a fresh mind -
+        maybe understanding what DanaR does, how to translate it to
+        the Combo
+  - [x] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
+        e.g. pumpAlertHistory should be renamed to alertHistory
+  - [ ] Enable BT if disabled? does dana does this?
+  - [ ] Finish and test German translation
+  - [ ] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed
+      - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
+        Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
+        also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
+  - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)
+  - [ ] With long running commands (e.g. setting basal rate, which can take up to 5m), multiple 'set tbr' commands
+        may stack up. Since setting a TBR multiple times in one minute fails, the ComboPlugin rejects such
+        request, letting the oldest TBR run till the net iteration. This can potentially be nicely solved
+        through the queue branch. However, the original problem is the amount of time the Combo can
+      take to execute commands, which might go away (mostly) with command mode.
+  - [ ] Fix display of alarms on mainscreen (increase height if needed)
