@@ -523,7 +523,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Bolus lastPumpBolus = reservoirBolusResult.lastBolus;
             if (cancelBolus) {
                 // if cancellation was requested, the delivered bolus is allowed to differ from requested
-            } else if (lastPumpBolus == null || lastPumpBolus.amount != detailedBolusInfo.insulin) {
+            } else if (lastPumpBolus == null || Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01
+                    || System.currentTimeMillis() - lastPumpBolus.timestamp > 5 * 60 * 1000) {
                 log.error("Bolus delivery failure at stage 6", new Exception());
                 return new PumpEnactResult().success(false).enacted(false).
                         comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
@@ -925,7 +926,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // there's a pump bolus AAPS doesn't know, or we only know one within the same minute but different amount
-        if (pumpBolus != null && (aapsBolus == null || Math.abs(aapsBolus.insulin - pumpBolus.amount) >= 0.01)) {
+        if (pumpBolus != null && (aapsBolus == null || Math.abs(aapsBolus.insulin - pumpBolus.amount) > 0.01)) {
             log.debug("Last bolus on pump is unknown, refreshing bolus history");
             request.bolusHistory = aapsBolus == null ? PumpHistoryRequest.FULL : aapsBolus.date;
         }
@@ -1093,7 +1094,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     battery = 25;
                     break;
                 default:
-                    battery = 75;
+                    battery = 100;
                     break;
             }
             batteryJson.put("percent", battery);
