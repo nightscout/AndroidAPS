@@ -1025,11 +1025,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     void readAllPumpData() {
-        readHistory(new PumpHistoryRequest()
+        boolean readHistorySuccess = readHistory(new PumpHistoryRequest()
                 .bolusHistory(pump.lastHistoryBolusTime)
                 .tbrHistory(pump.lastHistoryTbrTime)
                 .pumpErrorHistory(PumpHistoryRequest.FULL)
                 .tddHistory(PumpHistoryRequest.FULL));
+        if (!readHistorySuccess) {
+            return;
+        }
 
         CommandResult reservoirResult = runCommand("Checking reservoir level", 2,
                 ruffyScripter::readReservoirLevelAndLastBolus);
