@@ -627,7 +627,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
-            tempStart.source = Source.USER;
+            tempStart.source = Source.PUMP;
             tempStart.pumpId = tempStart.date;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
@@ -658,7 +658,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 TemporaryBasal tempBasal = new TemporaryBasal();
                 tempBasal.date = commandResult.state.timestamp;
                 tempBasal.durationInMinutes = 0;
-                tempBasal.source = Source.USER;
+                tempBasal.source = Source.PUMP;
                 tempBasal.pumpId = activeTemp.pumpId;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
                 return new PumpEnactResult().isTempCancel(true).success(true).enacted(true);
@@ -684,7 +684,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 TemporaryBasal tempBasal = new TemporaryBasal();
                 tempBasal.date = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
                 tempBasal.durationInMinutes = 15;
-                tempBasal.source = Source.USER;
+                tempBasal.source = Source.PUMP;
                 tempBasal.pumpId = tempBasal.date;
                 tempBasal.percentRate = percentage;
                 tempBasal.isAbsolute = false;
