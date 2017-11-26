@@ -817,5 +817,8 @@
     <string name="combo_empty_alert_history_note">To retrieve the alert history from the pump, long press the Refresh button.</string>
     <string name="combo_empty_tdd_history_note">To retrieve the TDD history from the pump, long press the Refresh button.</string>
     <string name="key_sync_profile_to_pump">sync_profile_to_pump</string>
+    <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
+    <string name="combo_tdd_average">Average: %3.1f U</string>
+    <string name="combo_tdd_maximum">Maximum: %3.1f U</string>
 </resources>
 

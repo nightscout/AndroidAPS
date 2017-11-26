@@ -23,15 +23,29 @@ public class ComboTddHistoryDialog extends DialogFragment {
         if (tdds.isEmpty()) {
             text.setText(R.string.combo_empty_tdd_history_note);
         } else {
-            boolean first = true;
             StringBuilder sb = new StringBuilder();
             DateFormat dateFormatter = DateFormat.getDateInstance();
+            double avg = 0;
+            double min = 999;
+            double max = 0;
+            int count = 0;
             for (Tdd tdd : tdds) {
-                if (first) {
-                    first = false;
-                } else {
-                    sb.append("\n");
+                if (tdd.total > 0) {
+                    avg += tdd.total;
+                    count++;
                 }
+                if (tdd.total < min) min = tdd.total;
+                if (tdd.total > max) max = tdd.total;
+            }
+            avg = avg / count;
+            sb.append(String.format(Locale.getDefault(), getString(R.string.combo_tdd_minimum), min));
+            sb.append("\n");
+            sb.append(String.format(Locale.getDefault(), getString(R.string.combo_tdd_average), avg));
+            sb.append("\n");
+            sb.append(String.format(Locale.getDefault(), getString(R.string.combo_tdd_maximum), max));
+            sb.append("\n");
+            for (Tdd tdd : tdds) {
+                sb.append("\n");
                 sb.append(dateFormatter.format(tdd.timestamp));
                 sb.append("  ");
                 sb.append(String.format(Locale.getDefault(), "%3.1f", tdd.total));
