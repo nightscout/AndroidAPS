@@ -844,6 +844,13 @@ public class RuffyScripter implements RuffyCommands {
                 if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                     pressCheckKey();
                 }
+                // wait till the pump has processed the alarm, otherwise it might still be showing
+                // when a command returns
+                WarningOrErrorCode displayedWarning = readWarningOrErrorCode();
+                while (displayedWarning.warningCode != null && displayedWarning.warningCode.equals(warningCode)) {
+                   waitForScreenUpdate();
+                    displayedWarning = readWarningOrErrorCode();
+                }
                 return true;
             }
             SystemClock.sleep(10);
