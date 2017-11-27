@@ -1,6 +1,24 @@
 - [ ] Bugs
-  - [ ] Pump becoming unresponsive every 8-20 or so, only reacting
+  - [ ] Pump stops to response to connect attemps every 2-20h or so, only reacting
         again when physically pressing a button on the pump ...
+        Occassionally the pump starts to accept connections again, sometimes
+        after 40m, sometimes no luck even after 80m
+        Stuff tried without success:
+        - Restarting BT
+        - Restarting ruffy
+        - Restarting AAPS
+        - Restarting phone
+        - Removing rtDisconnect on failed connect attempt (RuffyScripter.ensureConnected)
+        - Ruffy v1 branch with minimal NPE fixes and needed menus
+        Observations:
+        - Last command run beforehand was a short one, connection time < 1m
+        - It's unrelated to battery voltage.
+        - Auto off is disabled
+        - Keylock makes no difference
+        Speculations:
+        Did this already happen before the whole 'basal profile' thing?
+        Takes ages, could that trigger some weird bug that has never
+        surfaced in any other scenario before?
   - [ ] Temp basal history shows TBRs twice, once with a 1 min
         duration and then with the reminder; caused by clock not
         being within ~30s of the phone.
