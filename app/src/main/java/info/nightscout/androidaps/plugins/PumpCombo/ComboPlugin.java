@@ -825,8 +825,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         long lastViolation = 0;
         if (commandResult.state.unsafeUsageDetected) {
             lastViolation = System.currentTimeMillis();
-        }
-        if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
+        } else if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
             lastViolation = commandResult.lastBolus.timestamp;
         } else if (commandResult.history != null) {
             for (Bolus bolus : commandResult.history.bolusHistory) {

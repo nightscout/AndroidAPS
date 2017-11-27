@@ -1,4 +1,18 @@
-- [x] Bugs
+- [ ] Bugs
+  - [ ] Pump becoming unresponsive every 8-20 or so, only reacting
+        again when physically pressing a button on the pump ...
+  - [ ] Temp basal history shows TBRs twice, once with a 1 min
+        duration and then with the reminder; caused by clock not
+        being within ~30s of the phone.
+        Cancelling TBR or overriding a running one with a new one
+        (both cases require a TBR end record) require an end TBR record.
+        checkTbrMismatch causes history read and TBR is right in AAPS
+        so far and any TBR set on the pump is cancelled, so it works,
+        but isn't clean. Needs some rethink - with a fresh mind -
+        maybe understanding what DanaR does, how to translate it to
+        the Combo.
+        Explicit end records when adding pump history records;
+        and/or: logic to detect time differences and align data
   - [x] Deleting a bolus from the history re-adds it from the pump's
         history. Deleting it again, flags it as invalid at which point
         it will not be added to IOB and not be re-added.
@@ -88,13 +102,6 @@
     - [x] Option to raise overview notifications as android notification with noise (for urgent ones?)
 - [ ] Next version(s)
   - [ ] State in ComboPump is not safely shared among threads
-  - [ ] Cancelling TBR or overriding a running one with a new one
-        is likely buggy (in both cases requiring a TBR end record)
-        checkTbrMismatch causes history read and TBR is right in AAPS
-        so far and any TBR set on the pump is cancelled, so it works,
-        but isn't clean. Needs some rethink - with a fresh mind -
-        maybe understanding what DanaR does, how to translate it to
-        the Combo
   - [x] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
         e.g. pumpAlertHistory should be renamed to alertHistory
   - [ ] Enable BT if disabled? does dana does this?

@@ -17,11 +17,12 @@ Limitations:
 - Setting a basal profile other than 1 on the pump, or delivering extended boluses or multiwave
   boluses from the pump will disable the loop functionality for 6h as the the loop can't run
   safely under those conditions.
-- If multiple boluses are given within a single minute, only one might
+- If multiple boluses are given within a single minute, only one will
   be recognized. This is due to the Combo saving history records with
   minute-precision only. However, this case is only possible for very
   small boluses and is unlikely to occur in non-testing scenarios
-  (e.g. bolusing from the pump and then immediately bolusing from AAPS).
+  (e.g. bolusing from the pump and then immediately bolusing from AAPS
+   or giving smaller boluses in the pump in quick succession).
 - If a TBR is set on the pump, AAPS will cancel it. This is because it's not possible to determine
   the start point of a TBR until it is finished or was cancelled at which point a record in the
   pump's history is created. Before that, there is none and it's simply not possible to determine
