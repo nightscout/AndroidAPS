@@ -632,7 +632,11 @@ public class NSClientService extends Service {
                                         if (sgv.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = sgv.getMills();
                                 }
-                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
+                                //log.debug("Alarm for stale data active:"+Notification.isAlarmForStaleData());
+                                if(Notification.isAlarmForStaleData()){
+                                    MainApp.bus().post(new EventDismissNotification(Notification.NSALARM));
+                                }                                    
+                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);                                
                             }
                             MainApp.bus().post(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
                         } catch (JSONException e) {
