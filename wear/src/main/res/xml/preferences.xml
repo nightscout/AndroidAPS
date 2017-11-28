@@ -43,10 +43,19 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="show_temp_basal"
-        android:title="Show Temp Basal"
+        android:key="showDelta"
+        android:summary="Show delta. (Circle WF)"
+        android:title="Show Delta"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showAvgDelta"
+        android:summary="Show the avgDelta."
+        android:title="Show AvgDelta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -64,34 +73,17 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showExternalStatus"
-        android:title="Show Loop Status"
+        android:key="show_temp_basal"
+        android:title="Show Basal Rate"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showDelta"
-        android:summary="Show delta. (Circle WF)"
-        android:title="Show Delta"
+        android:key="showExternalStatus"
+        android:title="Show Loop Status"
         app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showAvgDelta"
-        android:summary="Show the avgDelta."
-        android:title="Show AvgDelta"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showAgo"
-        android:summary="Minutes since last reading. (Circle WF)"
-        android:title="Show Ago"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+        app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -106,6 +98,14 @@
         android:key="show_direction"
         android:summary="Show direction arrow"
         android:title="Show Direction Arrow"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showAgo"
+        android:summary="Minutes since last reading. (Circle WF)"
+        android:title="Show Ago"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 

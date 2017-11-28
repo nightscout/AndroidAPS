@@ -49,7 +49,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
     public double datetime;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate;
@@ -84,19 +84,21 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     protected SharedPreferences sharedPrefs;
 
     public boolean detailedIOB = false;
+    public boolean showBGI = false;
     public String openApsStatus = "0";
     public String externalStatusString = "no status";
     public String sSgv = "---";
     public String sDirection = "--";
     public String sUploaderBattery = "--";
     public String sRigBattery = "--";
-    public String sDelta = "-";
-    public String sAvgDelta = "-";
+    public String sDelta = "--";
+    public String sAvgDelta = "--";
     public String sBasalRate = "-.--U/h";
     public String sIOB1 = "IOB";
     public String sIOB2 = "-.--";
     public String sCOB1 = "Carb";
     public String sCOB2 = "--g";
+    public String sBgi = "--";
 
     @Override
     public void onCreate() {
@@ -145,11 +147,13 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mIOB2 = (TextView) stub.findViewById(R.id.iobView);
                 mCOB1 = (TextView) stub.findViewById(R.id.cob_text);
                 mCOB2 = (TextView) stub.findViewById(R.id.cobView);
+                mBgi =  (TextView) stub.findViewById(R.id.bgiView);
                 mStatus = (TextView) stub.findViewById(R.id.externaltstatus);
                 mBasalRate = (TextView) stub.findViewById(R.id.tmpBasal);
                 mUploaderBattery = (TextView) stub.findViewById(R.id.uploader_battery);
                 mRigBattery = (TextView) stub.findViewById(R.id.rig_battery);
                 mDelta = (TextView) stub.findViewById(R.id.delta);
+                mAvgDelta = (TextView) stub.findViewById(R.id.avgdelta);
                 isAAPSv2 = (TextView) stub.findViewById(R.id.AAPSv2);
                 mHighLight = (TextView) stub.findViewById(R.id.highLight);
                 mLowLight = (TextView) stub.findViewById(R.id.lowLight);
@@ -220,8 +224,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             wakeLock.acquire(50);
 
             setDataFields();
-
             missedReadingAlert();
+
             mRelativeLayout.measure(specW, specH);
             mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
                     mRelativeLayout.getMeasuredHeight());
@@ -256,10 +260,12 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 sUploaderBattery = dataMap.getString("battery");
                 sRigBattery = dataMap.getString("rigBattery");
                 detailedIOB = dataMap.getBoolean("detailedIob");
-                sIOB1 = dataMap.getString("iobTotal") + "U";
+                sIOB1 = dataMap.getString("iobSum") + "U";
                 sIOB2 = dataMap.getString("iobDetail");
                 sCOB1 = "Carb";
                 sCOB2 = dataMap.getString("cob");
+                sBgi = dataMap.getString("bgi");
+                showBGI = dataMap.getBoolean("showBgi");
                 externalStatusString = dataMap.getString("externalStatusString");
                 openApsStatus = dataMap.getString("openApsStatus");
                 batteryLevel = dataMap.getInt("batteryLevel");
@@ -315,8 +321,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             } else {
                 mDelta.setVisibility(View.GONE);
             }
+        }
+
+        if (mAvgDelta != null) {
             if (sharedPrefs.getBoolean("showAvgDelta", true)) {
-                mDelta.append("  " + sAvgDelta);
+                mAvgDelta.setText(sAvgDelta);
+                mAvgDelta.setVisibility(View.VISIBLE);
+            } else {
+                mAvgDelta.setVisibility(View.GONE);
             }
         }
 
@@ -420,6 +432,15 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             }
         }
 
+        if (mBgi != null) {
+            if (showBGI) {
+                mBgi.setText(sBgi);
+                mBgi.setVisibility(View.VISIBLE);
+            } else {
+                mBgi.setVisibility(View.GONE);
+            }
+        }
+        
         if (mStatus != null) {
             if (sharedPrefs.getBoolean("showExternalStatus", true)) {
                 mStatus.setText(externalStatusString);
@@ -436,14 +457,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                     mLoop.setText(openApsStatus + "'");
                     if (Integer.valueOf(openApsStatus) > 14) {
                         loopLevel = 0;
-                        if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
+                        //if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
                             mLoop.setBackgroundResource(R.drawable.loop_red_25);
-                        }
+                        //}
                     } else {
                         loopLevel = 1;
-                        if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
+                        //if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
                             mLoop.setBackgroundResource(R.drawable.loop_green_25);
-                        }
+                        //}
                     }
                 } else {
                     mLoop.setText("-'");
@@ -516,7 +537,9 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         if(layoutSet){
             setDataFields();
         }
+        invalidate();
     }
+
     protected abstract void setColorDark();
     protected abstract void setColorBright();
     protected abstract void setColorLowRes();

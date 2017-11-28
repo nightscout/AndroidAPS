@@ -102,7 +102,9 @@ public class Home2 extends BaseWatchFace {
         }
         mRigBattery.setTextColor(Color.BLACK);
         mDelta.setTextColor(Color.BLACK);
+        mAvgDelta.setTextColor(Color.BLACK);
         mBasalRate.setTextColor(Color.BLACK);
+        mBgi.setTextColor(Color.BLACK);
 
         if (loopLevel == 1) {
             mLoop.setBackgroundResource(R.drawable.loop_green_25);
@@ -132,9 +134,11 @@ public class Home2 extends BaseWatchFace {
         mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
         mDelta.setTextColor(Color.BLACK);
+        mAvgDelta.setTextColor(Color.BLACK);
         mRigBattery.setTextColor(Color.BLACK);
         mUploaderBattery.setTextColor(Color.BLACK);
         mBasalRate.setTextColor(Color.BLACK);
+        mBgi.setTextColor(Color.BLACK);
         mIOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mIOB2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mCOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
@@ -196,7 +200,9 @@ public class Home2 extends BaseWatchFace {
             }
             mRigBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mBasalRate.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mBgi.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
 
             if (loopLevel == 1) {
                 mLoop.setBackgroundResource(R.drawable.loop_green_25);

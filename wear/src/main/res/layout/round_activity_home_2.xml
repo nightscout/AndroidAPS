@@ -6,33 +6,35 @@
     android:id="@+id/main_layout">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         android:textAlignment="center"
-        android:weightSum="1">
+        android:weightSum="1.1">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:orientation="vertical"
+            android:layout_weight="0.05">
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:paddingTop="15dp"
-            android:weightSum="1"
+            android:layout_height="0px"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="0.27"
             android:gravity="center_horizontal"
-            android:layout_marginTop="-5dp">
+            android:orientation="horizontal"
+            android:textAlignment="center">
 
             <TextView
                 android:id="@+id/loop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="2dp"
+                android:layout_gravity="bottom|center"
                 android:background="@drawable/loop_grey_25"
-                android:gravity="center|right"
-                android:paddingRight="7dp"
-                android:paddingTop="-2dp"
+                android:gravity="center"
                 android:text="--'"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
@@ -41,17 +43,17 @@
 
             <TextView
                 android:id="@+id/sgv"
-                android:textSize="38sp"
-                android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="-2dp"
                 android:gravity="bottom|right"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:layout_marginBottom="-2dp"
-                android:paddingTop="-2dp" />
+                android:paddingTop="-2dp"
+                android:text="---"
+                android:textColor="#FFFFFF"
+                android:textSize="38sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -60,8 +62,8 @@
                 android:baselineAligned="false"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:textAlignment="center"
-                android:weightSum="1">
+                android:paddingEnd="4dp"
+                android:textAlignment="center">
 
                 <TextView
                     android:id="@+id/direction"
@@ -79,11 +81,8 @@
                     android:id="@+id/timestamp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
                     android:layout_marginBottom="2dp"
-                    android:gravity="center_horizontal|bottom"
-                    android:paddingEnd="8dp"
-                    android:paddingStart="6dp"
+                    android:gravity="center"
                     android:text="--'"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
@@ -94,68 +93,111 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/light_grey"
             android:id="@+id/secondary_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="0px"
+            android:layout_gravity="center"
+            android:layout_weight="0.10"
+            android:background="@color/light_grey"
+            android:gravity="center"
+            android:orientation="vertical"
             android:padding="1dp">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textAlignment="center">
 
                 <TextView
                     android:id="@+id/delta"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:text="delta"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="+/-"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/avgdelta"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="avg"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/uploader_battery"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10sp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
                     android:text="--%"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/rig_battery"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10sp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
                     android:text="--%"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tmpBasal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10sp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.7"
+                    android:gravity="center"
                     android:text="-.--U/h"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bgiView"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="bgi"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/AAPSv2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0"
                     android:text=""
                     android:visibility="gone" />
 
@@ -166,24 +208,34 @@
         <LinearLayout
             android:id="@+id/tertiary_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="0.22"
             android:background="@color/black"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="1dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:baselineAligned="false"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:textAlignment="center">
+                android:weightSum="7">
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center"
                     android:baselineAligned="false"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:textAlignment="center">
 
@@ -191,6 +243,8 @@
                         android:id="@+id/cob_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="Carb"
                         android:textColor="#FFFFFF"
                         android:textSize="10sp"
@@ -200,6 +254,8 @@
                         android:id="@+id/cobView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="--g"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
@@ -208,13 +264,18 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"></LinearLayout>
+
                 <TextView
                     android:id="@+id/watch_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="-3dp"
-                    android:layout_marginTop="-2dp"
-                    android:paddingLeft="20sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:text="12:00"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
@@ -223,11 +284,10 @@
                 <LinearLayout
                     android:id="@+id/date_time"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:gravity="center_horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingLeft="2sp"
                     android:textAlignment="center"
                     android:visibility="gone">
 
@@ -235,7 +295,8 @@
                         android:id="@+id/day"
                         android:layout_width="23dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="day"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
@@ -245,7 +306,8 @@
                         android:id="@+id/month"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="mth"
                         android:textColor="#FFFFFF"
                         android:textSize="12sp" />
@@ -253,18 +315,26 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_horizontal"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingLeft="18sp"
                     android:textAlignment="center">
+
 
                     <TextView
                         android:id="@+id/iob_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="IOB"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
@@ -275,12 +345,20 @@
                         android:id="@+id/iobView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="--U"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"></LinearLayout>
 
             </LinearLayout>
 
@@ -289,9 +367,17 @@
         <lecho.lib.hellocharts.view.LineChartView
             android:id="@+id/chart"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="0px"
             android:layout_gravity="bottom"
+            android:layout_weight="0.41"
             android:gravity="center_horizontal|top" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:orientation="vertical"
+            android:layout_weight="0.05">
+        </LinearLayout>
 
     </LinearLayout>
 
