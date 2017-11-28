@@ -9,16 +9,21 @@ import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.RuffyCommands;
+import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 
 
 public class RuffyCommandsV1Impl implements RuffyCommands {
+    private static RuffyCommandsV1Impl instance;
     private static RuffyCommands delegate;
 
     @NonNull
     public static RuffyCommands getInstance(Context context) {
-        if (delegate == null) delegate = new RuffyScripter(context);
-        return delegate;
+        if (instance == null) {
+            instance = new RuffyCommandsV1Impl();
+            delegate = new RuffyScripter(context);
+        }
+        return instance;
     }
 
     private RuffyCommandsV1Impl() {}
@@ -85,19 +90,17 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
-        return delegate.readHistory(request);
+        return delegate.readPumpState().history(new PumpHistory());
     }
 
-    /** Not supported by RuffyScripter */
     @Override
     public CommandResult readBasalProfile() {
-        return new CommandResult().success(false);
+        return delegate.readBasalProfile();
     }
 
-    /** Not supported by RuffyScripter */
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        return new CommandResult().success(false);
+        return delegate.setBasalProfile(basalProfile);
     }
 
     /** Not supported by RuffyScripter */

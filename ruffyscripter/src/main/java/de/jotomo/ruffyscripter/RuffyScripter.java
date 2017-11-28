@@ -43,7 +43,6 @@ import de.jotomo.ruffyscripter.commands.ReadHistoryCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadReservoirLevelAndLastBolus;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
-import de.jotomo.ruffyscripter.commands.SetDateAndTimeCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 
 /**
@@ -793,7 +792,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult setDateAndTime() {
-        return runCommand(new SetDateAndTimeCommand());
+        throw new RuntimeException("Not supported");
     }
 
     @Override
