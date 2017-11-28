@@ -632,8 +632,11 @@ public class NSClientService extends Service {
                                         if (sgv.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = sgv.getMills();
                                 }
-                                //log.debug("Alarm for stale data active:"+Notification.isAlarmForStaleData());
-                                if(Notification.isAlarmForStaleData()){
+                                // Was that sgv more than 15 mins ago ?
+                                boolean moreThan15MinAgo = false;
+                                if((System.currentTimeMillis()-latestDateInReceivedData)/(60 * 1000L) < 15L ) 
+                                    moreThan15MinAgo = true;
+                                if(Notification.isAlarmForStaleData() && moreThan15MinAgo){
                                     MainApp.bus().post(new EventDismissNotification(Notification.NSALARM));
                                 }                                    
                                 BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);                                
