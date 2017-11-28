@@ -33,6 +33,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
+import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -59,6 +60,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
+    public static final String DATABASE_FOODS = "Foods";
 
     private static final int DATABASE_VERSION = 8;
 
@@ -85,6 +87,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
 
+    public FoodHelper foodHelper = new FoodHelper(this);
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         onCreate(getWritableDatabase(), getConnectionSource());
@@ -104,6 +108,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
+            TableUtils.createTableIfNotExists(connectionSource, Food.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -128,6 +133,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
                 TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
                 TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
+                TableUtils.dropTable(connectionSource, Food.class, true);
                 onCreate(database, connectionSource);
             }
         } catch (SQLException e) {
@@ -205,6 +211,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
+            foodHelper.resetFood();
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -217,6 +224,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
         scheduleProfileSwitchChange();
+        foodHelper.scheduleFoodChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -655,8 +663,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventTreatmentChange");
-                MainApp.bus().post(new EventReloadTreatmentData());
-                MainApp.bus().post(new EventTreatmentChange());
+                MainApp.bus().post(new EventReloadTreatmentData(new EventTreatmentChange()));
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
@@ -1357,8 +1364,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventExtendedBolusChange");
-                MainApp.bus().post(new EventReloadTreatmentData());
-                MainApp.bus().post(new EventExtendedBolusChange());
+                MainApp.bus().post(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
@@ -1535,9 +1541,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old = getDaoProfileSwitch().queryForId(profileSwitch.date);
                 if (old != null) {
                     if (!old.isEqual(profileSwitch)) {
+                        profileSwitch.source = old.source;
+                        profileSwitch.profileName = old.profileName; // preserver profileName to prevent multiple CPP extension
                         getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
-                        old.copyFrom(profileSwitch);
-                        getDaoProfileSwitch().create(old);
+                        getDaoProfileSwitch().create(profileSwitch);
                         log.debug("PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
                         scheduleProfileSwitchChange();
                         return true;
@@ -1672,4 +1679,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
+    // ---------------- Food handling ---------------
 }

@@ -61,15 +61,15 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         return DanaRFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = false;
-    static boolean fragmentProfileEnabled = false;
-    static boolean fragmentPumpVisible = true;
+    private boolean fragmentPumpEnabled = false;
+    private boolean fragmentProfileEnabled = false;
+    private boolean fragmentPumpVisible = true;
 
-    public static DanaRKoreanExecutionService sExecutionService;
+    private static DanaRKoreanExecutionService sExecutionService;
 
 
     private static DanaRPump pump = DanaRPump.getInstance();
-    private static boolean useExtendedBoluses = false;
+    private boolean useExtendedBoluses = false;
 
     private static DanaRKoreanPlugin plugin = null;
 
@@ -208,8 +208,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
 
@@ -217,6 +217,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
             this.fragmentPumpVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_danarkorean;
     }
 
     @Override
@@ -345,7 +350,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
             doConnect("setTempBasalAbsolute old data");
@@ -405,7 +410,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
                 if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
-                    if (force) {
+                    if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
                         result.success = true;
@@ -503,7 +508,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        if (pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
+        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (runningTB != null && runningTB.percentRate == percent) {
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;
@@ -544,10 +550,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
-        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep * (1 + durationInHalfHours % 1));
+        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
 
         PumpEnactResult result = new PumpEnactResult();
-        if (pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
+        ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -598,7 +605,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     public PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
-        if (pump.isTempBasalInProgress) {
+        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;
             result.isTempCancel = true;
@@ -622,7 +630,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
-        if (pump.isExtendedInProgress) {
+        ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (runningEB != null) {
             sExecutionService.extendedBolusStop();
             result.enacted = true;
             result.isTempCancel = true;
@@ -642,7 +651,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     public static void doConnect(String from) {
-        if (sExecutionService != null) sExecutionService.connect(from);
+        if (sExecutionService != null) {
+            sExecutionService.connect(from);
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+        }
     }
 
     public static boolean isConnected() {

@@ -9,8 +9,8 @@ import info.nightscout.androidaps.R;
 
 public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private static InsulinOrefRapidActingPlugin plugin = null;
 
@@ -65,6 +65,11 @@ public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == INSULIN) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     @Override

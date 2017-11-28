@@ -116,6 +116,9 @@ public class DataService extends IntentService {
                             Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
                             Intents.ACTION_NEW_STATUS.equals(action) ||
                             Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
+                            Intents.ACTION_NEW_FOOD.equals(action) ||
+                            Intents.ACTION_CHANGED_FOOD.equals(action) ||
+                            Intents.ACTION_REMOVED_FOOD.equals(action) ||
                             Intents.ACTION_NEW_CAL.equals(action) ||
                             Intents.ACTION_NEW_MBG.equals(action))
                     ) {
@@ -316,28 +319,8 @@ public class DataService extends IntentService {
                 log.error("Unhandled exception", e);
             }
         }
-        if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT)) {
-            try {
-                if (bundles.containsKey("treatment")) {
-                    String trstring = bundles.getString("treatment");
-                    handleAddChangeDataFromNS(trstring);
-                }
-                if (bundles.containsKey("treatments")) {
-                    String trstring = bundles.getString("treatments");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String trstr = trJson.toString();
-                        handleAddChangeDataFromNS(trstr);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
 
-        }
-
-        if (intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
+        if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
                 if (bundles.containsKey("treatment")) {
                     String trstring = bundles.getString("treatment");
@@ -433,6 +416,56 @@ public class DataService extends IntentService {
                 log.error("Unhandled exception", e);
             }
         }
+
+        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD) || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
+            try {
+                if (bundles.containsKey("food")) {
+                    String trstring = bundles.getString("food");
+                    handleAddChangeFoodRecord(new JSONObject(trstring));
+                }
+                if (bundles.containsKey("foods")) {
+                    String trstring = bundles.getString("foods");
+                    JSONArray jsonArray = new JSONArray(trstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject trJson = jsonArray.getJSONObject(i);
+                        handleAddChangeFoodRecord(trJson);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Unhandled exception", e);
+            }
+        }
+
+        if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
+            try {
+                if (bundles.containsKey("food")) {
+                    String trstring = bundles.getString("food");
+                    JSONObject trJson = new JSONObject(trstring);
+                    String _id = trJson.getString("_id");
+                    handleRemovedFoodRecord(_id);
+                }
+
+                if (bundles.containsKey("foods")) {
+                    String trstring = bundles.getString("foods");
+                    JSONArray jsonArray = new JSONArray(trstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject trJson = jsonArray.getJSONObject(i);
+                        String _id = trJson.getString("_id");
+                        handleRemovedFoodRecord(_id);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Unhandled exception", e);
+            }
+        }
+    }
+
+    private void handleRemovedFoodRecord(String _id) {
+        MainApp.getDbHelper().foodHelper.deleteFoodById(_id);
+    }
+
+    public void handleAddChangeFoodRecord(JSONObject trJson) throws JSONException {
+        MainApp.getDbHelper().foodHelper.createFoodFromJsonIfNotExists(trJson);
     }
 
     private void handleRemovedRecordFromNS(String _id) {

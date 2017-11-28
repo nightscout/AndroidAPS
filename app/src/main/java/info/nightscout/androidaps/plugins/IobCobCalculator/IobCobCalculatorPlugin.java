@@ -126,6 +126,11 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
         if (sHandlerThread == null) {
@@ -365,6 +370,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     previous = existing;
                     continue;
                 }
+
+                if (profile.getIsf(bgTime) == null)
+                    return; // profile not set yet
 
                 double sens = Profile.toMgdl(profile.getIsf(bgTime), profile.getUnits());
 

@@ -42,6 +42,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionServi
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
@@ -122,6 +123,7 @@ public class DanaRHistoryActivity extends Activity {
         statusView.setVisibility(View.GONE);
 
         boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP);
+        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginBase.PUMP);
 
         // Types
 
@@ -132,8 +134,12 @@ public class DanaRHistoryActivity extends Activity {
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_CARBO, getString(R.string.danar_history_carbohydrates)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_DAILY, getString(R.string.danar_history_dailyinsulin)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, getString(R.string.danar_history_glucose)));
-        if (!isKorean) {
+        if (!isKorean && !isRS) {
             typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, getString(R.string.danar_history_errors)));
+        }
+        if (isRS)
+            typeList.add(new TypeList(RecordTypes.RECORD_TYPE_PRIME, getString(R.string.danar_history_prime)));
+        if (!isKorean) {
             typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
             typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
         }

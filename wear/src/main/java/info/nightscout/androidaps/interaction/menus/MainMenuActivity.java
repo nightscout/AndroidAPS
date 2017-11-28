@@ -32,8 +32,9 @@ public class MainMenuActivity extends MenuListActivity {
 
     @Override
     protected String[] getElements() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(!BuildConfig.WEAR_CONTROL){
+        if(!sharedPreferences.getBoolean("wearcontrol", false)){
             return new String[] {
                     "Settings",
                     "Re-Sync"};

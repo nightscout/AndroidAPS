@@ -45,17 +45,25 @@ import info.nightscout.utils.SP;
 public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(TreatmentsPlugin.class);
 
-    public static IobTotal lastTreatmentCalculation;
-    public static IobTotal lastTempBasalsCalculation;
+    private static TreatmentsPlugin treatmentsPlugin;
+
+    public static TreatmentsPlugin getPlugin() {
+        if (treatmentsPlugin == null)
+            treatmentsPlugin = new TreatmentsPlugin();
+        return treatmentsPlugin;
+    }
+
+    private IobTotal lastTreatmentCalculation;
+    private IobTotal lastTempBasalsCalculation;
 
     public static List<Treatment> treatments;
-    private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<TemporaryBasal>();
-    private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<ExtendedBolus>();
-    private static Intervals<TempTarget> tempTargets = new OverlappingIntervals<TempTarget>();
+    private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
+    private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
+    private static Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
     private static ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
 
     @Override
     public String getFragmentClass() {
@@ -114,11 +122,16 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    @Override
     public int getType() {
         return PluginBase.TREATMENT;
     }
 
-    public TreatmentsPlugin() {
+    private TreatmentsPlugin() {
         MainApp.bus().register(this);
         initializeTempBasalData();
         initializeTreatmentData();
@@ -127,7 +140,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         initializeProfileSwitchData();
     }
 
-    public static void initializeTreatmentData() {
+    private static void initializeTreatmentData() {
         // Treatments
         double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
@@ -135,7 +148,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
     }
 
-    public static void initializeTempBasalData() {
+    private static void initializeTempBasalData() {
         // Treatments
         double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
@@ -144,7 +157,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     }
 
-    public static void initializeExtendedBolusData() {
+    private static void initializeExtendedBolusData() {
         // Treatments
         double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
@@ -153,12 +166,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     }
 
-    public void initializeTempTargetData() {
+    private void initializeTempTargetData() {
         long fromMills = System.currentTimeMillis() - 60 * 60 * 1000L * 24;
         tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(fromMills, false));
     }
 
-    public void initializeProfileSwitchData() {
+    private void initializeProfileSwitchData() {
         profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(false));
     }
 
@@ -211,9 +224,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void updateTotalIOBTreatments() {
-        IobTotal total = getCalculationToTimeTreatments(System.currentTimeMillis());
-
-        lastTreatmentCalculation = total;
+        lastTreatmentCalculation = getCalculationToTimeTreatments(System.currentTimeMillis());
     }
 
     @Override
@@ -224,7 +235,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (profile == null) return result;
 
         long now = System.currentTimeMillis();
-        long dia_ago = now - (new Double(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
+        long dia_ago = now - (Double.valueOf(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
 
         for (Treatment treatment : treatments) {
             if (!treatment.isValid)
@@ -291,6 +302,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         initializeTreatmentData();
         initializeExtendedBolusData();
         updateTotalIOBTreatments();
+        MainApp.bus().post(ev.next);
     }
 
     @Subscribe
@@ -339,9 +351,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void updateTotalIOBTempBasals() {
-        IobTotal total = getCalculationToTimeTempBasals(System.currentTimeMillis());
-
-        lastTempBasalsCalculation = total;
+        lastTempBasalsCalculation = getCalculationToTimeTempBasals(System.currentTimeMillis());
     }
 
     @Nullable

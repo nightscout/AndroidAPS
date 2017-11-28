@@ -39,7 +39,7 @@ import info.nightscout.utils.DecimalFormatter;
 public class PersistentNotificationPlugin implements PluginBase {
 
     private static final int ONGOING_NOTIFICATION_ID = 4711;
-    static boolean fragmentEnabled = true;
+    private boolean fragmentEnabled = true;
     private final Context ctx;
 
     public PersistentNotificationPlugin(Context ctx) {
@@ -95,24 +95,27 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-
         if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
+            enableDisableNotification(fragmentEnabled);
             checkBusRegistration();
-            //updateNotification();
         }
-
     }
 
-    private void updateNotification() {
-
+    private void enableDisableNotification(boolean fragmentEnabled) {
         if (!fragmentEnabled) {
             NotificationManager mNotificationManager =
                     (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(ONGOING_NOTIFICATION_ID);
+        } else {
+            updateNotification();
+        }
+    }
+
+    private void updateNotification() {
+        if (!fragmentEnabled) {
             return;
         }
-
 
         String line1 = ctx.getString(R.string.noprofile);
 
@@ -191,11 +194,16 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     private void checkBusRegistration() {
         if (fragmentEnabled) {
-            MainApp.bus().register(this);
+            try {
+                MainApp.bus().register(this);
+            } catch (IllegalArgumentException e) {
+                // already registered
+            }
         } else {
             try {
                 MainApp.bus().unregister(this);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
+                // already unregistered
             }
         }
     }
@@ -203,6 +211,11 @@ public class PersistentNotificationPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         //no visible fragment
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {

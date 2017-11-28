@@ -14,8 +14,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     private static InsulinFastactingPlugin plugin = null;
 
@@ -78,6 +78,11 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == INSULIN) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     // Insulin interface

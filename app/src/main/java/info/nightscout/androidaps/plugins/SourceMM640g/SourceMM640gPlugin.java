@@ -9,9 +9,9 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  * Created by mike on 05.08.2016.
  */
 public class SourceMM640gPlugin implements PluginBase, BgSourceInterface {
-    boolean fragmentEnabled = false;
+    private boolean fragmentEnabled = false;
 
-    static SourceMM640gPlugin plugin = null;
+    private static SourceMM640gPlugin plugin = null;
 
     public static SourceMM640gPlugin getPlugin() {
         if (plugin == null)
@@ -73,6 +73,11 @@ public class SourceMM640gPlugin implements PluginBase, BgSourceInterface {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
 
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
 

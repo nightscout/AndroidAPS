@@ -274,7 +274,7 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.PROFILESWITCH);
             data.put("duration", profileSwitch.durationInMinutes);
-            data.put("profile", profileSwitch.profileName);
+            data.put("profile", profileSwitch.getCustomizedName());
             data.put("profileJson", profileSwitch.profileJson);
             data.put("profilePlugin", profileSwitch.profilePlugin);
             if (profileSwitch.isCPP) {
@@ -404,4 +404,23 @@ public class NSUpload {
             DbLogger.dbAdd(intent, data.toString());
         }
     }
+
+    public static void removeFoodFromNS(String _id) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbRemove");
+            bundle.putString("collection", "food");
+            bundle.putString("_id", _id);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbRemove(intent, _id);
+        } catch (Exception e) {
+            log.error("Unhandled exception", e);
+        }
+
+    }
+
 }

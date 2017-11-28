@@ -10,8 +10,8 @@ import info.nightscout.utils.SP;
 
 public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private static InsulinOrefFreePeakPlugin plugin = null;
 
@@ -66,6 +66,11 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == INSULIN) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_insulinoreffreepeak;
     }
 
     @Override

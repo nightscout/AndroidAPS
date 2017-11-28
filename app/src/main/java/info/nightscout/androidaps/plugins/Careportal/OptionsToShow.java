@@ -7,6 +7,7 @@ package info.nightscout.androidaps.plugins.Careportal;
 public class OptionsToShow {
     public int eventType;
     public int eventName;
+    public boolean date;
     public boolean bg;
     public boolean insulin;
     public boolean carbs;
@@ -22,29 +23,63 @@ public class OptionsToShow {
     public boolean executeProfileSwitch = false;
     public boolean executeTempTarget = false;
 
-    public OptionsToShow(int eventType,
-                         int eventName,
-                         boolean bg,
-                         boolean insulin,
-                         boolean carbs,
-                         boolean prebolus,
-                         boolean duration,
-                         boolean percent,
-                         boolean absolute,
-                         boolean profile,
-                         boolean split,
-                         boolean tempTarget) {
+    public OptionsToShow(int eventType, int eventName) {
         this.eventType = eventType;
         this.eventName = eventName;
-        this.bg = bg;
-        this.insulin = insulin;
-        this.carbs = carbs;
-        this.prebolus = prebolus;
-        this.duration = duration;
-        this.percent = percent;
-        this.absolute = absolute;
-        this.profile = profile;
-        this.split = split;
-        this.tempTarget = tempTarget;
+    }
+
+    public OptionsToShow date() {
+        date = true;
+        return this;
+    }
+
+    public OptionsToShow bg() {
+        bg = true;
+        return this;
+    }
+
+    public OptionsToShow insulin() {
+        insulin = true;
+        return this;
+    }
+
+    public OptionsToShow carbs() {
+        carbs = true;
+        return this;
+    }
+
+    public OptionsToShow prebolus() {
+        prebolus = true;
+        return this;
+    }
+
+    public OptionsToShow duration() {
+        duration = true;
+        return this;
+    }
+
+    public OptionsToShow percent() {
+        percent = true;
+        return this;
+    }
+
+    public OptionsToShow absolute() {
+        absolute = true;
+        return this;
+    }
+
+    public OptionsToShow profile() {
+        profile = true;
+        return this;
+    }
+
+    public OptionsToShow split() {
+        split = true;
+        return this;
+    }
+
+    public OptionsToShow tempTarget() {
+        tempTarget = true;
+        return this;
     }
 }

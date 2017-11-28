@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -50,6 +51,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".plugins.PumpDanaRS.activities.BLEScanActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"
@@ -113,6 +121,10 @@
             android:name=".plugins.PumpDanaRv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".plugins.PumpDanaRS.services.DanaRSService"
+            android:enabled="true"
+            android:exported="true"></service>
         <service
             android:name=".plugins.Wear.wearintegration.WatchUpdaterService"
             android:exported="true">

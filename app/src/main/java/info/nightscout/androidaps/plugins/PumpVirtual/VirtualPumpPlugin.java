@@ -39,19 +39,19 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     public static Double defaultBasalValue = 0.2d;
 
-    public static Integer batteryPercent = 50;
-    public static Integer reservoirInUnits = 50;
+    static Integer batteryPercent = 50;
+    static Integer reservoirInUnits = 50;
 
-    Date lastDataTime = new Date(0);
+    private Date lastDataTime = new Date(0);
 
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
 
     private static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
-    PumpDescription pumpDescription = new PumpDescription();
+    private PumpDescription pumpDescription = new PumpDescription();
 
-    static void loadFakingStatus() {
+    private static void loadFakingStatus() {
         fromNSAreCommingFakedExtendedBoluses = SP.getBoolean("fromNSAreCommingFakedExtendedBoluses", false);
     }
 
@@ -64,15 +64,15 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         return fromNSAreCommingFakedExtendedBoluses;
     }
 
-    static VirtualPumpPlugin instance = null;
-    public static VirtualPumpPlugin getInstance() {
+    private static VirtualPumpPlugin plugin = null;
+    public static VirtualPumpPlugin getPlugin() {
         loadFakingStatus();
-        if (instance == null)
-            instance = new VirtualPumpPlugin();
-        return instance;
+        if (plugin == null)
+            plugin = new VirtualPumpPlugin();
+        return plugin;
     }
 
-    public VirtualPumpPlugin() {
+    private VirtualPumpPlugin() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
@@ -155,6 +155,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return R.xml.pref_virtualpump;
+    }
+
+    @Override
     public int getType() {
         return PluginBase.PUMP;
     }
@@ -207,7 +212,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     public double getBaseBasalRate() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile != null)
-            return profile.getBasal();
+            return profile.getBasal() != null ? profile.getBasal() : 0d;
         else
             return 0d;
     }
@@ -251,7 +256,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         TemporaryBasal tempBasal = new TemporaryBasal();
         tempBasal.date = System.currentTimeMillis();

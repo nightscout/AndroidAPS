@@ -38,13 +38,22 @@ import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.ver
 public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAPlugin.class);
 
+    private static OpenAPSMAPlugin openAPSMAPlugin;
+
+    public static OpenAPSMAPlugin getPlugin() {
+        if (openAPSMAPlugin == null) {
+            openAPSMAPlugin = new OpenAPSMAPlugin();
+        }
+        return openAPSMAPlugin;
+    }
+
     // last values
     DetermineBasalAdapterMAJS lastDetermineBasalAdapterMAJS = null;
     Date lastAPSRun = null;
     DetermineBasalResultMA lastAPSResult = null;
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     @Override
     public String getName() {
@@ -90,6 +99,11 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == APS) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_openapsma;
     }
 
     @Override
@@ -196,18 +210,22 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
         if (!checkOnlyHardLimits(profile.getIc(), "carbratio", 2, 100)) return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
         start = new Date();
-        determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        try {
+            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
         Profiler.log(log, "MA calculation", start);
 
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
-        // Fix bug determine basal
+        // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.changeRequested = false;
         // limit requests on openloop mode
@@ -220,8 +238,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         determineBasalResultMA.iob = iobTotal;
 
-        determineBasalAdapterMAJS.release();
-
         try {
             determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
@@ -232,8 +248,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         lastAPSResult = determineBasalResultMA;
         lastAPSRun = now;
         MainApp.bus().post(new EventOpenAPSUpdateGui());
-
-        //deviceStatus.suggested = determineBasalResultMA.json;
     }
 
 

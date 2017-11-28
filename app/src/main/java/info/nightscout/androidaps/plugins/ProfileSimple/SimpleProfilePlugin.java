@@ -24,8 +24,16 @@ import info.nightscout.utils.SP;
 public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(SimpleProfilePlugin.class);
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = true;
+    private static SimpleProfilePlugin simpleProfilePlugin;
+
+    public static SimpleProfilePlugin getPlugin() {
+        if (simpleProfilePlugin == null)
+            simpleProfilePlugin  = new SimpleProfilePlugin();
+        return simpleProfilePlugin;
+    }
+
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private static ProfileStore convertedProfile = null;
 
@@ -38,7 +46,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     Double targetLow;
     Double targetHigh;
 
-    public SimpleProfilePlugin() {
+    private SimpleProfilePlugin() {
         loadSettings();
     }
 
@@ -103,6 +111,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     public void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");
@@ -117,7 +130,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         editor.putString("SimpleProfile" + "targetlow", targetLow.toString());
         editor.putString("SimpleProfile" + "targethigh", targetHigh.toString());
 
-        editor.commit();
+        editor.apply();
         createConvertedProfile();
     }
 
@@ -174,7 +187,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
             "created_at": "2016-06-16T08:34:41.256Z"
         }
         */
-    void createConvertedProfile() {
+    private void createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();

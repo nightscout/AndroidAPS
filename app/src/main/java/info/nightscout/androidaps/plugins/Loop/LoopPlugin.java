@@ -46,6 +46,15 @@ import info.nightscout.utils.SafeParse;
 public class LoopPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
 
+    private static LoopPlugin loopPlugin;
+
+    public static LoopPlugin getPlugin() {
+        if (loopPlugin == null) {
+            loopPlugin = new LoopPlugin();
+        }
+        return loopPlugin;
+    }
+
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
 
@@ -137,6 +146,11 @@ public class LoopPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == LOOP) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_closedmode;
     }
 
     @Subscribe
