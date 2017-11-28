@@ -106,6 +106,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     Context context;
 
+    //one shot guards
+    private boolean accepted;
+    private boolean okClicked;
+
     public WizardDialog() {
         super();
     }
@@ -289,6 +293,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
+                if (okClicked) {
+                    log.debug("guarding: ok already clicked");
+                    dismiss();
+                    return;
+                }
+                okClicked = true;
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
@@ -316,56 +326,63 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     final int carbTime = SafeParse.stringToInt(editCarbTime.getText());
                     final boolean useSuperBolus = superbolusCheckbox.isChecked();
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                if (useSuperBolus) {
-                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                                    if (activeloop != null) {
-                                        activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
-                                        MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                            synchronized (builder) {
+                                if (accepted) {
+                                    log.debug("guarding: already accepted");
+                                    return;
+                                }
+                                accepted = true;
+                                if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                    if (useSuperBolus) {
+                                        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                                        if (activeloop != null) {
+                                            activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                            MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                                        }
+                                        ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 120, true, new Callback() {
+                                            @Override
+                                            public void run() {
+                                                if (!result.success) {
+                                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                    i.putExtra("soundid", R.raw.boluserror);
+                                                    i.putExtra("status", result.comment);
+                                                    i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    MainApp.instance().startActivity(i);
+                                                }
+                                            }
+                                        });
                                     }
-                                    ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 120, true, new Callback() {
+                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                    detailedBolusInfo.context = context;
+                                    detailedBolusInfo.glucose = bg;
+                                    detailedBolusInfo.glucoseType = "Manual";
+                                    detailedBolusInfo.carbTime = carbTime;
+                                    detailedBolusInfo.boluscalc = boluscalcJSON;
+                                    detailedBolusInfo.source = Source.USER;
+                                    ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                         @Override
                                         public void run() {
                                             if (!result.success) {
                                                 Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                                 i.putExtra("soundid", R.raw.boluserror);
                                                 i.putExtra("status", result.comment);
-                                                i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                                i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                                                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 MainApp.instance().startActivity(i);
                                             }
                                         }
                                     });
+                                    Answers.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }
-                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                detailedBolusInfo.context = context;
-                                detailedBolusInfo.glucose = bg;
-                                detailedBolusInfo.glucoseType = "Manual";
-                                detailedBolusInfo.carbTime = carbTime;
-                                detailedBolusInfo.boluscalc = boluscalcJSON;
-                                detailedBolusInfo.source = Source.USER;
-                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                    @Override
-                                    public void run() {
-                                        if (!result.success) {
-                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                            i.putExtra("soundid", R.raw.boluserror);
-                                            i.putExtra("status", result.comment);
-                                            i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            MainApp.instance().startActivity(i);
-                                        }
-                                    }
-                                });
-                                Answers.getInstance().logCustom(new CustomEvent("Wizard"));
                             }
                         }
                     });

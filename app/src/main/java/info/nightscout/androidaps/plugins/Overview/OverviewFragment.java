@@ -100,6 +100,8 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
@@ -165,6 +167,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     boolean smallHeight;
 
     public static boolean shorttextmode = false;
+
+    private boolean accepted;
 
     private int rangeToDisplay = 6; // for graph
 
@@ -473,7 +477,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 30, true, new Callback() {
                 @Override
@@ -486,7 +490,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 60, true, new Callback() {
                 @Override
@@ -499,7 +503,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 2 * 60, true, new Callback() {
                 @Override
@@ -512,7 +516,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 3 * 60, true, new Callback() {
                 @Override
@@ -662,33 +666,41 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                 final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
                 final Context context = getContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                accepted = false;
                 builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                 builder.setMessage(confirmMessage);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                            detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                            detailedBolusInfo.context = context;
-                            detailedBolusInfo.boluscalc = boluscalcJSON;
-                            detailedBolusInfo.source = Source.USER;
-                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                @Override
-                                public void run() {
-                                    if (!result.success) {
-                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                        i.putExtra("soundid", R.raw.boluserror);
-                                        i.putExtra("status", result.comment);
-                                        i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        MainApp.instance().startActivity(i);
+                        synchronized (builder) {
+                            if (accepted) {
+                                log.debug("guarding: already accepted");
+                                return;
+                            }
+                            accepted = true;
+                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                detailedBolusInfo.context = context;
+                                detailedBolusInfo.boluscalc = boluscalcJSON;
+                                detailedBolusInfo.source = Source.USER;
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
+                                        }
                                     }
-                                }
-                            });
-                            Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                                });
+                                Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                            }
                         }
                     }
                 });

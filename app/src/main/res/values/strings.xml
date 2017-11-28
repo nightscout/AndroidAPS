@@ -758,5 +758,19 @@
     <string name="startingbolus">Starting bolus delivery</string>
     <string name="executingrightnow">Command is executed right now</string>
     <string name="pumpdrivercorrected">Pump driver corrected</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
+    <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="localalertsettings_title">Local alerts</string>
+    <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
+    <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
+    <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
+    <string name="key_pump_unreachable_threshold" translatable="false">pump_unreachable_threshold</string>
+    <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
+    <string name="urgent_alarm">Urgent Alarm</string>
+    <string name="info">INFO</string>
 </resources>
 

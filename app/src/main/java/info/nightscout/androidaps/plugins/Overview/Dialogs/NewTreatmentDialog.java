@@ -47,6 +47,10 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     private Integer maxCarbs;
     private Double maxInsulin;
 
+    //one shot guards
+    private boolean accepted;
+    private boolean okClicked;
+
     public NewTreatmentDialog() {
     }
 
@@ -96,15 +100,21 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
 
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        editInsulin.setParams(0d, 0d, maxInsulin,ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
 
         return view;
     }
 
     @Override
-    public void onClick(View view) {
+    public synchronized void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
+                if (okClicked) {
+                    log.debug("guarding: ok already clicked");
+                    dismiss();
+                    return;
+                }
+                okClicked = true;
 
                 try {
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
@@ -125,41 +135,51 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
                     final Context context = getContext();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                if (finalInsulinAfterConstraints == 0)
-                                    detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
-                                if (finalCarbsAfterConstraints == 0)
-                                    detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                detailedBolusInfo.context = context;
-                                detailedBolusInfo.source = Source.USER;
-                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                    @Override
-                                    public void run() {
-                                        if (!result.success) {
-                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                            i.putExtra("soundid", R.raw.boluserror);
-                                            i.putExtra("status", result.comment);
-                                            i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            MainApp.instance().startActivity(i);
+                            synchronized (builder) {
+                                if (accepted) {
+                                    log.debug("guarding: already accepted");
+                                    return;
+                                }
+                                accepted = true;
+                                if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                    if (finalInsulinAfterConstraints == 0)
+                                        detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
+                                    if (finalCarbsAfterConstraints == 0)
+                                        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                    detailedBolusInfo.context = context;
+                                    detailedBolusInfo.source = Source.USER;
+                                    ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                        @Override
+                                        public void run() {
+                                            if (!result.success) {
+                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                i.putExtra("soundid", R.raw.boluserror);
+                                                i.putExtra("status", result.comment);
+                                                i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                MainApp.instance().startActivity(i);
+                                            }
                                         }
-                                    }
-                                });
-                                Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                                    });
+                                    Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                                }
                             }
                         }
                     });
-                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.setNegativeButton(
+
+                            getString(R.string.cancel), null);
                     builder.show();
+
                     dismiss();
                 } catch (Exception e) {
                     log.error("Unhandled exception", e);

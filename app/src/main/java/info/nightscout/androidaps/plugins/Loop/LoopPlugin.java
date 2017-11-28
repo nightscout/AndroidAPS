@@ -57,6 +57,7 @@ public class LoopPlugin implements PluginBase {
 
     private long loopSuspendedTill = 0L; // end of manual loop suspend
     private boolean isSuperBolus = false;
+    private boolean isDisconnected = false;
 
     public class LastRun {
         public APSResult request = null;
@@ -74,6 +75,7 @@ public class LoopPlugin implements PluginBase {
         MainApp.bus().register(this);
         loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);
         isSuperBolus = SP.getBoolean("isSuperBolus", false);
+        isDisconnected = SP.getBoolean("isDisconnected", false);
     }
 
     @Override
@@ -161,13 +163,28 @@ public class LoopPlugin implements PluginBase {
     public void suspendTo(long endTime) {
         loopSuspendedTill = endTime;
         isSuperBolus = false;
+        isDisconnected = false;
         SP.putLong("loopSuspendedTill", loopSuspendedTill);
+        SP.putBoolean("isSuperBolus", isSuperBolus);
+        SP.putBoolean("isDisconnected", isDisconnected);
     }
 
     public void superBolusTo(long endTime) {
         loopSuspendedTill = endTime;
         isSuperBolus = true;
+        isDisconnected = false;
         SP.putLong("loopSuspendedTill", loopSuspendedTill);
+        SP.putBoolean("isSuperBolus", isSuperBolus);
+        SP.putBoolean("isDisconnected", isDisconnected);
+    }
+
+    public void disconnectTo(long endTime) {
+        loopSuspendedTill = endTime;
+        isSuperBolus = false;
+        isDisconnected = true;
+        SP.putLong("loopSuspendedTill", loopSuspendedTill);
+        SP.putBoolean("isSuperBolus", isSuperBolus);
+        SP.putBoolean("isDisconnected", isDisconnected);
     }
 
     public int minutesToEndOfSuspend() {
@@ -211,6 +228,19 @@ public class LoopPlugin implements PluginBase {
         }
 
         return isSuperBolus;
+    }
+
+    public boolean isDisconnected() {
+        if (loopSuspendedTill == 0)
+            return false;
+
+        long now = System.currentTimeMillis();
+
+        if (loopSuspendedTill <= now) { // time exceeded
+            suspendTo(0L);
+            return false;
+        }
+        return isDisconnected;
     }
 
     public void invoke(String initiator, boolean allowNotification) {
