@@ -129,7 +129,7 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
-            //if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
