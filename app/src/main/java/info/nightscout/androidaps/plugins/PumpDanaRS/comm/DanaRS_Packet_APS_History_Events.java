@@ -30,8 +30,8 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
     private int min = 0;
     private int sec = 0;
 
-    public boolean done;
-    private int totalCount;
+    public static boolean done;
+    private static int totalCount;
 
     public static long lastEventTimeLoaded = 0;
 
@@ -77,6 +77,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         // Last record
         if (recordCode == (byte) 0xFF) {
             done = true;
+            log.debug("Last record received");
             return;
         }
 

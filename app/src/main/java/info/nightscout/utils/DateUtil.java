@@ -27,8 +27,8 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
-    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -143,6 +143,22 @@ public class DateUtil {
         String t = DateUtils.formatDateTime(MainApp.instance(), toDate(seconds).getTime(), DateUtils.FORMAT_SHOW_TIME);
         timeStrings.put(seconds, t);
         return t;
+    }
+
+
+    public static String timeFrameString(long timeInMillis){
+        long remainingTimeMinutes = timeInMillis/(1000*60);
+        long remainingTimeHours = remainingTimeMinutes/60;
+        remainingTimeMinutes = remainingTimeMinutes%60;
+        return "(" + ((remainingTimeHours >0)?(remainingTimeHours + "h "):"") + remainingTimeMinutes + "')";
+    }
+
+    public static String sinceString(long timestamp){
+        return timeFrameString(System.currentTimeMillis()-timestamp);
+    }
+
+    public static String untilString(long timestamp){
+        return timeFrameString(timestamp- System.currentTimeMillis());
     }
 
 

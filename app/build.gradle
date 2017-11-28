@@ -45,7 +45,7 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 1500
-        version "1.54-dev"
+        version "1.56-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
@@ -149,6 +149,7 @@ dependencies {
     compile('com.github.tony19:logback-android-classic:1.1.1-6') {
         exclude group: 'com.google.android', module: 'android'
     }
+    compile 'org.apache.commons:commons-lang3:3.6'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'com.jjoe64:graphview:4.0.1'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'

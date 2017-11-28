@@ -87,6 +87,8 @@ public class FoodHelper {
                         log.debug("FOOD: Updating record by _id: " + old.toString());
                         scheduleFoodChange();
                         return true;
+                    } else {
+                        return false;
                     }
                 }
             }

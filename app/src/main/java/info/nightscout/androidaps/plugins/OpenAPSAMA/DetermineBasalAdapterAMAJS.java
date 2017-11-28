@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -25,11 +24,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
 import info.nightscout.utils.SP;
 
@@ -186,7 +184,7 @@ public class DetermineBasalAdapterAMAJS {
                         double minBg,
                         double maxBg,
                         double targetBg,
-                        PumpInterface pump,
+                        double basalrate,
                         IobTotal[] iobArray,
                         GlucoseStatus glucoseStatus,
                         MealData mealData,
@@ -210,7 +208,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
         mProfile.put("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
         mProfile.put("skip_neutral_temps", true);
-        mProfile.put("current_basal", pump.getBaseBasalRate());
+        mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
         mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", 3d));

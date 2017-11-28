@@ -35,11 +35,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
@@ -151,8 +151,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
         iceditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_icedit);
         isfeditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_isfedit);
 
-        PumpInterface pump = MainApp.getConfigBuilder();
-        if (!pump.getPumpDescription().isTempBasalCapable) {
+        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
             layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal_layout).setVisibility(View.GONE);
         }
 
@@ -334,7 +333,8 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
         adb.setPositiveButton("MIGRATE", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 CircadianPercentageProfilePlugin.migrateToLP();
-            } });
+            }
+        });
         adb.setNegativeButton("Cancel", null);
         adb.show();
     }
@@ -366,7 +366,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
     }
 
     private void customSnackbar(View view, final String Msg, Object snackbarCaller) {
-        if(mSnackBar!= null) mSnackBar.dismiss();
+        if (mSnackBar != null) mSnackBar.dismiss();
 
         this.snackbarCaller = snackbarCaller;
         if (timeshiftViewHint || percentageViewHint) {
@@ -522,7 +522,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);
