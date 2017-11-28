@@ -391,18 +391,41 @@
                                 android:textSize="28sp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/delta"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="0px"
-                                android:layout_gravity="center"
                                 android:layout_weight="0.167"
                                 android:gravity="center"
-                                android:text="delta"
-                                android:textAlignment="center"
-                                android:textColor="@color/primary_text_dark"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:layout_gravity="center"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:id="@+id/delta"
+                                    android:layout_width="0px"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="+/-"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/primary_text_dark"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/avgdelta"
+                                    android:layout_width="0px"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="avg"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/primary_text_dark"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
