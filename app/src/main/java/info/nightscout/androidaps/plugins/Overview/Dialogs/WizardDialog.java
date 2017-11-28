@@ -3,9 +3,8 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -32,7 +31,6 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.tools.debugger.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +45,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -59,13 +56,11 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
-import info.nightscout.androidaps.plugins.Overview.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -109,16 +104,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     JSONObject boluscalcJSON;
     boolean cobAvailable = false;
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
-
     Context context;
 
     public WizardDialog() {
         super();
-        mHandlerThread = new HandlerThread(WizardDialog.class.getSimpleName());
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -253,7 +242,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        double bolusstep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, new DecimalFormat("0.00"), false, textWatcher);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
@@ -333,46 +322,46 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        PumpEnactResult result;
-                                        if (useSuperBolus) {
-                                            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-                                            if (activeloop != null) {
-                                                activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
-                                                MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
-                                            }
-                                            pump.cancelTempBasal(true);
-                                            result = pump.setTempBasalAbsolute(0d, 120, true);
+                                if (useSuperBolus) {
+                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                                    if (activeloop != null) {
+                                        activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                        MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                                    }
+                                    ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 120, true, new Callback() {
+                                        @Override
+                                        public void run() {
                                             if (!result.success) {
-                                                OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
+                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                i.putExtra("soundid", R.raw.boluserror);
+                                                i.putExtra("status", result.comment);
+                                                i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                MainApp.instance().startActivity(i);
                                             }
                                         }
-                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                        detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                        detailedBolusInfo.context = context;
-                                        detailedBolusInfo.glucose = bg;
-                                        detailedBolusInfo.glucoseType = "Manual";
-                                        detailedBolusInfo.carbTime = carbTime;
-                                        detailedBolusInfo.boluscalc = boluscalcJSON;
-                                        detailedBolusInfo.source = Source.USER;
-                                        result = pump.deliverTreatment(detailedBolusInfo);
+                                    });
+                                }
+                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                detailedBolusInfo.context = context;
+                                detailedBolusInfo.glucose = bg;
+                                detailedBolusInfo.glucoseType = "Manual";
+                                detailedBolusInfo.carbTime = carbTime;
+                                detailedBolusInfo.boluscalc = boluscalcJSON;
+                                detailedBolusInfo.source = Source.USER;
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
                                         if (!result.success) {
-                                            try {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                                builder.setMessage(result.comment);
-                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                                builder.show();
-                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                                // window has been destroyed
-                                                Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                                MainApp.bus().post(new EventNewNotification(notification));
-                                            }
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
                                         }
                                     }
                                 });
@@ -393,7 +382,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void initDialog() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        ProfileStore profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
 
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
@@ -403,7 +392,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         ArrayList<CharSequence> profileList;
         profileList = profileStore.getProfileList();
         profileList.add(0, MainApp.sResources.getString(R.string.active));
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_centered, profileList);
 
         profileSpinner.setAdapter(adapter);
@@ -444,7 +433,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void calculateInsulin() {
-        ProfileStore profile = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        ProfileStore profile = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();

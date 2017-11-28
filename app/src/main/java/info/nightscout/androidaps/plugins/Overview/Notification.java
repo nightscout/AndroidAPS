@@ -51,6 +51,7 @@ public class Notification {
     public static final int TOAST_ALARM = 22;
     public static final int WRONGBASALSTEP = 23;
     public static final int BOLUS_DELIVERY_ERROR = 24;
+    public static final int WRONG_DRIVER = 24;
 
     public int id;
     public Date date;
@@ -60,9 +61,6 @@ public class Notification {
 
     public NSAlarm nsAlarm = null;
     public Integer soundId = null;
-
-    public Notification() {
-    }
 
     public Notification(int id, Date date, String text, int level, Date validTo) {
         this.id = id;
@@ -86,6 +84,27 @@ public class Notification {
         this.text = text;
         this.level = level;
         this.validTo = new Date(0);
+    }
+
+    public Notification(int id) {
+        this.id = id;
+        this.date = new Date();
+        this.validTo = new Date(0);
+    }
+
+    public Notification text(String text) {
+        this.text = text;
+        return this;
+    }
+
+    public Notification level(int level) {
+        this.level = level;
+        return this;
+    }
+
+    public Notification sound(int soundId) {
+        this.soundId = soundId;
+        return this;
     }
 
     public Notification(NSAlarm nsAlarm) {

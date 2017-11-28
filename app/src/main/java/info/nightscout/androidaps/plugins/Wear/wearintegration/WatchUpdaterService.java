@@ -35,8 +35,8 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
@@ -189,8 +189,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private void cancelBolus() {
-        PumpInterface pump = MainApp.getConfigBuilder();
-        pump.stopBolusDelivering();
+        ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
     }
 
     private void sendData() {
@@ -533,7 +532,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void sendPreferences() {
         if (googleApiClient.isConnected()) {
 
-            boolean wearcontrol = SP.getBoolean("wearcontrol",false);
+            boolean wearcontrol = SP.getBoolean("wearcontrol", false);
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content

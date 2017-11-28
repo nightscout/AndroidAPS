@@ -22,6 +22,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -33,7 +34,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         wl.acquire();
 
 
-        final PumpInterface pump = MainApp.getConfigBuilder();
+        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
         if (pump != null && profile != null && profile.getBasal() != null) {
             boolean isBasalOutdated = false;
@@ -47,29 +48,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.setNewBasalProfile(profile);
-                    }
-                });
-                t.start();
+                MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
             } else if (isStatusOutdated && !pump.isBusy()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.refreshDataFromPump("KeepAlive. Status outdated.");
-                    }
-                });
-                t.start();
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
             } else if (isBasalOutdated && !pump.isBusy()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.refreshDataFromPump("KeepAlive. Basal outdated.");
-                    }
-                });
-                t.start();
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
             }
         }
 

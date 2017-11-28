@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -25,15 +26,16 @@ public class APSResult {
     public double rate;
     public int duration;
     public boolean changeRequested = false;
+
     @Override
     public String toString() {
-        final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
+        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (changeRequested) {
             if (rate == 0 && duration == 0)
                 return MainApp.sResources.getString(R.string.canceltemp);
             else
                 return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate/configBuilder.getBaseBasalRate() *100) + "%)\n" +
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%)\n" +
                         MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
                         MainApp.sResources.getString(R.string.reason) + ": " + reason;
         } else
@@ -41,13 +43,13 @@ public class APSResult {
     }
 
     public Spanned toSpanned() {
-        final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
+        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (changeRequested) {
             String ret = "";
             if (rate == 0 && duration == 0) ret = MainApp.sResources.getString(R.string.canceltemp);
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate/configBuilder.getBaseBasalRate() *100) + "%) <br>" +
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
                         "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
                         "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);

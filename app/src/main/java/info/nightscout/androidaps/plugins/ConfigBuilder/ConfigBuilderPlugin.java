@@ -52,13 +52,15 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogr
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin implements PluginBase, PumpInterface, ConstraintsInterface, TreatmentsInterface {
+public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
     private static BgSourceInterface activeBgSource;
@@ -77,12 +79,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     private static ArrayList<PluginBase> pluginList;
 
-    private PowerManager.WakeLock mWakeLock;
+    private static CommandQueue commandQueue = new CommandQueue();
 
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
-        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");
     }
 
     @Override
@@ -195,6 +195,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
         }
         verifySelectionInCategories();
+    }
+
+    public static CommandQueue getCommandQueue() {
+        return commandQueue;
     }
 
     public static BgSourceInterface getActiveBgSource() {
@@ -358,266 +362,77 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     /*
-        * Pump interface
+        * Ex Pump interface
         *
         * Config builder return itself as a pump and check constraints before it passes command to pump driver
         */
-    @Override
-    public boolean isInitialized() {
-        if (activePump != null)
-            return activePump.isInitialized();
-        else return true;
-    }
 
-    @Override
-    public boolean isSuspended() {
-        if (activePump != null)
-            return activePump.isSuspended();
-        else return false;
-    }
-
-    @Override
-    public boolean isBusy() {
-        if (activePump != null)
-            return activePump.isBusy();
-        else return false;
-    }
-
-    @Override
-    public int setNewBasalProfile(Profile profile) {
-        // Compare with pump limits
-        Profile.BasalValue[] basalValues = profile.getBasalValues();
-
-        for (int index = 0; index < basalValues.length; index++) {
-            if (basalValues[index].value < getPumpDescription().basalMinimumRate) {
-                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
-                return FAILED;
-            }
-        }
-
-        MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
-
-        if (isThisProfileSet(profile)) {
-            log.debug("Correct profile already set");
-            return NOT_NEEDED;
-        } else if (activePump != null) {
-            return activePump.setNewBasalProfile(profile);
-        } else
-            return SUCCESS;
-    }
-
-    @Override
-    public boolean isThisProfileSet(Profile profile) {
-        if (activePump != null) {
-            boolean result = activePump.isThisProfileSet(profile);
-            if (result == false) {
-                log.debug("Current profile: " + getProfile().getData().toString());
-                log.debug("New profile: " + profile.getData().toString());
-            }
-            return result;
-        } else return true;
-    }
-
-    @Override
-    public Date lastDataTime() {
-        if (activePump != null)
-            return activePump.lastDataTime();
-        else return new Date();
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        if (activePump != null)
-            activePump.refreshDataFromPump(reason);
-    }
-
-    @Override
-    public double getBaseBasalRate() {
-        if (activePump != null)
-            return activePump.getBaseBasalRate();
-        else
-            return 0d;
-    }
-
-    @Override
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        mWakeLock.acquire();
-        PumpEnactResult result;
-        detailedBolusInfo.insulin = applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = applyCarbsConstraints((int) detailedBolusInfo.carbs);
-
-        BolusProgressDialog bolusProgressDialog = null;
-        if (detailedBolusInfo.context != null) {
-            bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
-            bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
-        } else {
-            Intent i = new Intent();
-            i.putExtra("insulin", detailedBolusInfo.insulin);
-            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApp.instance().startActivity(i);
-        }
-
-
-        MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
-
-        result = activePump.deliverTreatment(detailedBolusInfo);
-
-        BolusProgressDialog.bolusEnded = true;
-        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-        mWakeLock.release();
-        return result;
-    }
-
-    @Override
-    public void stopBolusDelivering() {
-        activePump.stopBolusDelivering();
-    }
-
-    /**
-     * apply constraints, set temp based on absolute valus and expecting absolute result
-     *
-     * @param absoluteRate
-     * @param durationInMinutes
-     * @return
-     */
-    @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
-        Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
-        PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes, force);
-        if (Config.logCongigBuilderActions)
-            log.debug("setTempBasalAbsolute rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
-        return result;
-    }
-
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
-        return setTempBasalAbsolute(absoluteRate, durationInMinutes, false);
-    }
-
-    /**
-     * apply constraints, set temp based on percent and expecting result in percent
-     *
-     * @param percent           0 ... 100 ...
-     * @param durationInMinutes
-     * @return result
-     */
-    @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
-        Integer percentAfterConstraints = applyBasalConstraints(percent);
-        PumpEnactResult result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
-        if (Config.logCongigBuilderActions)
-            log.debug("setTempBasalPercent percent: " + percentAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
-        return result;
-    }
-
-    @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        Double rateAfterConstraints = applyBolusConstraints(insulin);
-        PumpEnactResult result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
-        if (Config.logCongigBuilderActions)
-            log.debug("setExtendedBolus rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
-        return result;
-    }
-
-    @Override
-    public PumpEnactResult cancelTempBasal(boolean force) {
-        PumpEnactResult result = activePump.cancelTempBasal(force);
-        if (Config.logCongigBuilderActions)
-            log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
-        return result;
-    }
-
-    @Override
-    public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = activePump.cancelExtendedBolus();
-        if (Config.logCongigBuilderActions)
-            log.debug("cancelExtendedBolus success: " + result.success + " enacted: " + result.enacted);
-        return result;
-    }
 
     /**
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      *
      * @param request
      * @return
+     *      true if command is going to be executed
+     *      false if error
      */
 
-    public PumpEnactResult applyAPSRequest(APSResult request) {
+    public boolean applyAPSRequest(APSResult request, Callback callback) {
+        PumpInterface pump = getActivePump();
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result;
 
-        if (!isInitialized()) {
-            result = new PumpEnactResult();
-            result.comment = MainApp.sResources.getString(R.string.pumpNotInitialized);
-            result.enacted = false;
-            result.success = false;
+        if (!pump.isInitialized()) {
             log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
-            return result;
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+            }
+            return false;
         }
 
-        if (isSuspended()) {
-            result = new PumpEnactResult();
-            result.comment = MainApp.sResources.getString(R.string.pumpsuspended);
-            result.enacted = false;
-            result.success = false;
+        if (pump.isSuspended()) {
             log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpsuspended));
-            return result;
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpsuspended)).enacted(false).success(false)).run();
+            }
+            return false;
         }
 
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
-        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < getPumpDescription().basalStep) {
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
             if (isTempBasalInProgress()) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
-                result = cancelTempBasal(false);
+                getCommandQueue().cancelTempBasal(false, callback);
+                return true;
             } else {
-                result = new PumpEnactResult();
-                result.absolute = request.rate;
-                result.duration = 0;
-                result.enacted = false;
-                result.comment = "Basal set correctly";
-                result.success = true;
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
+                }
+                return false;
             }
         } else if (isTempBasalInProgress()
                 && getTempBasalRemainingMinutesFromHistory() > 5
-                && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < getPumpDescription().basalStep) {
-            result = new PumpEnactResult();
-            result.absolute = getTempBasalAbsoluteRateHistory();
-            result.duration = getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes();
-            result.enacted = false;
-            result.comment = "Temp basal set correctly";
-            result.success = true;
+                && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < pump.getPumpDescription().basalStep) {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: Temp basal set correctly");
+            if (callback != null) {
+                callback.result(new PumpEnactResult().absolute(getTempBasalAbsoluteRateHistory()).duration(getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
+            }
+            return false;
         } else {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: setTempBasalAbsolute()");
-            result = setTempBasalAbsolute(request.rate, request.duration);
+            getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
+            return true;
         }
-        return result;
     }
 
-    @Nullable
-    @Override
-    public JSONObject getJSONStatus() {
-        if (activePump != null)
-            return activePump.getJSONStatus();
-        else return null;
-    }
 
-    @Override
-    public String deviceID() {
-        if (activePump != null)
-            return activePump.deviceID();
-        else return "No Pump active!";
-    }
-
+/*
     @Override
     public PumpDescription getPumpDescription() {
         if (activePump != null)
@@ -632,20 +447,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return emptyDescription;
         }
     }
-
-    @Override
-    public String shortStatus(boolean veryShort) {
-        if (activePump != null) {
-            return activePump.shortStatus(veryShort);
-        } else {
-            return "No Pump active!";
-        }
-    }
-
-    @Override
-    public boolean isFakingTempsByExtendedBoluses() {
-        return activePump.isFakingTempsByExtendedBoluses();
-    }
+*/
 
     /**
      * Constraints interface

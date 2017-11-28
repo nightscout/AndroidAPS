@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 
@@ -97,8 +97,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 log.debug("Stop bolus delivery button pressed");
                 stopPressedView.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.INVISIBLE);
-                PumpInterface pump = MainApp.getConfigBuilder();
-                pump.stopBolusDelivering();
+                ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
                 break;
         }
     }
@@ -124,7 +123,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
 
     @Subscribe
     public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
-        if(BolusProgressDialog.running){
+        if (BolusProgressDialog.running) {
             dismiss();
         }
     }

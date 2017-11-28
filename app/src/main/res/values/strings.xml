@@ -384,7 +384,6 @@
     <string name="pumpshutdown">Pump Shutdown</string>
     <string name="batterydischarged">Pump Battery Discharged</string>
     <string name="danarkoreanpump">DanaR Korean</string>
-    <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
     <string name="basal_rate">Basal rate:</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
@@ -757,5 +756,7 @@
     <string name="waitingforestimatedbolusend" formatted="false">Waiting for bolus end. Remaining %d sec.</string>
     <string name="processinghistory">Processing event</string>
     <string name="startingbolus">Starting bolus delivery</string>
+    <string name="executingrightnow">Command is executed right now</string>
+    <string name="pumpdrivercorrected">Pump driver corrected</string>
 </resources>
 

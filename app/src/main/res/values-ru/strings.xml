@@ -553,7 +553,6 @@
     <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
     <string name="wear_showbgi_title">показать BGI</string>
     <string name="wrongpassword">неверный пароль</string>
-    <string name="wrongpumpdriverselected">неправильно выбран драйвер помпы</string>
     <string name="wrongpumppassword">неверный пароль помпы</string>
     <string name="xdrip">xdrip</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>
