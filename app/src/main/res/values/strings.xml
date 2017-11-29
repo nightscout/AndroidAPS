@@ -772,5 +772,9 @@
     <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>
+    <string name="DexcomG5">DexcomG5 App (patched)</string>
+    <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
+    <string name="key_dexcomg5_nsupload">dexcomg5_nsupload</string>
+    <string name="dexcomg5_upload">G5 upload settings</string>
 </resources>
 

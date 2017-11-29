@@ -77,7 +77,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == CONSTRAINTS && fragmentVisible && !BuildConfig.NSCLIENTOLNY;
+        return type == CONSTRAINTS && fragmentVisible && !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
