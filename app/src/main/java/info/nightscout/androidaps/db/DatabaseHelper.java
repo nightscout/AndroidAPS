@@ -343,7 +343,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     // -------------------  BgReading handling -----------------------
 
-    public void createIfNotExists(BgReading bgReading, String from) {
+    public boolean createIfNotExists(BgReading bgReading, String from) {
         try {
             bgReading.date = roundDateToSec(bgReading.date);
             BgReading old = getDaoBgReadings().queryForId(bgReading.date);
@@ -351,7 +351,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
                 scheduleBgChange();
-                return;
+                return true;
             }
             if (!old.isEqual(bgReading)) {
                 log.debug("BG: Similiar found: " + old.toString());
@@ -359,11 +359,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
                 scheduleBgChange();
-                return;
+                return false;
             }
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
+        return false;
     }
 
     private static void scheduleBgChange() {

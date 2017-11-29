@@ -776,5 +776,6 @@
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5 upload settings</string>
+    <string name="customapp">Customized APK for download</string>
 </resources>
 

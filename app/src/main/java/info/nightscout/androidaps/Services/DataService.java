@@ -222,14 +222,14 @@ public class DataService extends IntentService {
                 JSONObject json = jsonArray.getJSONObject(i);
                 bgReading.value = json.getInt("m_value");
                 bgReading.direction = json.getString("m_trend");
-                bgReading.date = json.getLong("m_time");
+                bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
-                MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                    NSUpload.uploadBg(bgReading);
+                }
             }
 
-            if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                NSUpload.uploadBg(bgReading);
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
