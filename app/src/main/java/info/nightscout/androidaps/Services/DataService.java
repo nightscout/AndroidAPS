@@ -216,12 +216,16 @@ public class DataService extends IntentService {
         log.debug("Received Dexcom Data", data);
 
         try {
-            JSONObject json = new JSONObject(data);
-            bgReading.value = json.getInt("m_trend");
-            bgReading.direction = json.getString("m_trend");
-            bgReading.date = json.getLong("m_time");
-            bgReading.raw = 0;
-            MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+            JSONArray jsonArray = new JSONArray(data);
+            log.debug("Received Dexcom Data size:" + jsonArray.length());
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                bgReading.value = json.getInt("m_value");
+                bgReading.direction = json.getString("m_trend");
+                bgReading.date = json.getLong("m_time");
+                bgReading.raw = 0;
+                MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+            }
 
             if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                 NSUpload.uploadBg(bgReading);

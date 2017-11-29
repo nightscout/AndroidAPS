@@ -354,9 +354,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return;
             }
             if (!old.isEqual(bgReading)) {
+                log.debug("BG: Similiar found: " + old.toString());
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
-                log.debug("BG: Updating record from: " + from + " " + old.toString());
+                log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
                 scheduleBgChange();
                 return;
             }
