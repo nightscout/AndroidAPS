@@ -97,7 +97,7 @@
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="virtualpump_tempbasal_label">Temp Basal</string>
     <string name="visible">Sichtbar</string>
     <string name="virtualpump_basebasalrate_label">Basis Basalrate</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
