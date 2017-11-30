@@ -30,7 +30,10 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-
+import android.util.TypedValue;
+// Added by Rumen for scalable text 
+import android.content.Context;
+import info.nightscout.androidaps.MainApp;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BaseSeries;
 
@@ -69,7 +72,9 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         OPENAPSOFFLINE,
         EXERCISE,
         GENERAL,
-        GENERALWITHDURATION
+        GENERALWITHDURATION,
+        BG,
+        PREDICTION
     }
 
     /**
@@ -191,9 +196,19 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
 
             // draw data point
             if (!overdraw) {
-                if (value.getShape() == Shape.POINT) {
+                if (value.getShape() == Shape.BG) {
+                    mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize(), mPaint);
+                } else if (value.getShape() == Shape.PREDICTION) {
+                    mPaint.setColor(value.getColor());
+                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStrokeWidth(0);
+                    canvas.drawCircle(endX, endY, value.getSize(), mPaint);
+                    mPaint.setColor(value.getSecondColor());
+                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStrokeWidth(0);
+                    canvas.drawCircle(endX, endY, value.getSize() / 3, mPaint);
                 } else if (value.getShape() == Shape.RECTANGLE) {
                     canvas.drawRect(endX-value.getSize(), endY-value.getSize(), endX+value.getSize(), endY+value.getSize(), mPaint);
                 } else if (value.getShape() == Shape.TRIANGLE) {
@@ -228,7 +243,13 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                 } else if (value.getShape() == Shape.PROFILE) {
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
-                        mPaint.setTextSize((int) (value.getSize() * 3));
+                        //mPaint.setTextSize((int) (value.getSize() * 6));
+                        int spSize = 14;
+                        //your sp size
+                        // Convert the sp to pixels
+                        Context context = MainApp.instance().getApplicationContext();
+                        float scaledTextSize = spSize * context.getResources().getDisplayMetrics().scaledDensity;
+                        mPaint.setTextSize(scaledTextSize);
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
@@ -244,7 +265,6 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                 } else if (value.getShape() == Shape.MBG) {
                     mPaint.setStyle(Paint.Style.STROKE);
                     mPaint.setStrokeWidth(5);
-                    float w = mPaint.getStrokeWidth();
                     canvas.drawCircle(endX, endY, value.getSize(), mPaint);
                 } else if (value.getShape() == Shape.BGCHECK) {
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
