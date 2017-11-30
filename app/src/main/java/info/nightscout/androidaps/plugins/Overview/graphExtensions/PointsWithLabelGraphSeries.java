@@ -200,16 +200,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize(), mPaint);
-                } else if (value.getShape() == Shape.PREDICTION) {
-                    mPaint.setColor(value.getColor());
-                    mPaint.setStyle(Paint.Style.FILL);
-                    mPaint.setStrokeWidth(0);
-                    canvas.drawCircle(endX, endY, value.getSize(), mPaint);
-                    mPaint.setColor(value.getSecondColor());
-                    mPaint.setStyle(Paint.Style.FILL);
-                    mPaint.setStrokeWidth(0);
-                    canvas.drawCircle(endX, endY, value.getSize() / 3, mPaint);
-                } else if (value.getShape() == Shape.RECTANGLE) {
+                }  else if (value.getShape() == Shape.RECTANGLE) {
                     canvas.drawRect(endX-value.getSize(), endY-value.getSize(), endX+value.getSize(), endY+value.getSize(), mPaint);
                 } else if (value.getShape() == Shape.TRIANGLE) {
                     mPaint.setStrokeWidth(0);
