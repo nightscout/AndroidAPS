@@ -64,6 +64,7 @@ import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
@@ -144,13 +145,16 @@ public class MainApp extends Application {
             pluginsList.add(TreatmentsPlugin.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
-            if (!Config.NSCLIENT)
+            if (!Config.NSCLIENT && !Config.G5UPLOADER)
                 pluginsList.add(SourceXdripPlugin.getPlugin());
-            pluginsList.add(SourceNSClientPlugin.getPlugin());
-            if (!Config.NSCLIENT)
+            if (!Config.G5UPLOADER)
+                pluginsList.add(SourceNSClientPlugin.getPlugin());
+            if (!Config.NSCLIENT && !Config.G5UPLOADER)
                 pluginsList.add(SourceMM640gPlugin.getPlugin());
-            if (!Config.NSCLIENT)
+            if (!Config.NSCLIENT && !Config.G5UPLOADER)
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourceDexcomG5Plugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 
