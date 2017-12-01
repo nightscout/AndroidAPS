@@ -236,8 +236,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                 } else if (value.getShape() == Shape.PROFILE) {
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
-                        mPaint.setTextSize((int) (value.getSize() * 3));
-                        mPaint.setTextSize(scaledTextSize);
+                        //mPaint.setTextSize((int) (value.getSize() * 3));
+                        mPaint.setTextSize((float) (scaledTextSize*1.2));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
