@@ -31,6 +31,7 @@ import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
 import info.nightscout.androidaps.queue.commands.CommandReadStatus;
+import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
@@ -65,7 +66,6 @@ import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
  *      connect() is called again
  *
  * when queue is empty, disconnect is called
- *
  */
 
 public class CommandQueue {
@@ -141,17 +141,22 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
-        if (isRunning(Command.CommandType.BOLUS)) {
+        Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
+
+        if (isRunning(type)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
         }
 
         // remove all unfinished boluses
-        removeAll(Command.CommandType.BOLUS);
+        removeAll(type);
 
         // add new command to queue
-        add(new CommandBolus(detailedBolusInfo, callback));
+        if (detailedBolusInfo.isSMB)
+            add(new CommandSMBBolus(detailedBolusInfo, callback));
+        else
+            add(new CommandBolus(detailedBolusInfo, callback));
 
         notifyAboutNewCommand();
 
@@ -162,7 +167,7 @@ public class CommandQueue {
         detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
         detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
 
-        BolusProgressDialog bolusProgressDialog = null;
+        BolusProgressDialog bolusProgressDialog;
         if (detailedBolusInfo.context != null) {
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
@@ -228,7 +233,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints =  MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);
