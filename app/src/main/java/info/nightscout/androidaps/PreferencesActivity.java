@@ -16,12 +16,9 @@ import android.text.TextUtils;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-<<<<<<< HEAD
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
-=======
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
->>>>>>> dev2
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
@@ -144,6 +141,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(LoopPlugin.getPlugin(), PluginBase.LOOP);
                     addPreferencesFromResourceIfEnabled(OpenAPSMAPlugin.getPlugin(), PluginBase.APS);
                     addPreferencesFromResourceIfEnabled(OpenAPSAMAPlugin.getPlugin(), PluginBase.APS);
+                    addPreferencesFromResourceIfEnabled(OpenAPSSMBPlugin.getPlugin(), PluginBase.APS);
                 }
 
                 addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginBase.SENSITIVITY);
