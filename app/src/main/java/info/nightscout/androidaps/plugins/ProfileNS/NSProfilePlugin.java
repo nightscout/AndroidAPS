@@ -72,12 +72,12 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == PROFILE && (Config.NSCLIENT || fragmentEnabled);
+        return type == PROFILE && (Config.NSCLIENT || Config.G5UPLOADER|| fragmentEnabled);
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && (Config.NSCLIENT || fragmentVisible);
+        return type == PROFILE && (Config.NSCLIENT || Config.G5UPLOADER|| fragmentVisible);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
