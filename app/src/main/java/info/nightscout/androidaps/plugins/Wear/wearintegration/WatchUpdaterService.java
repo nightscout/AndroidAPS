@@ -274,12 +274,20 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         }
 
+        boolean detailed = SP.getBoolean("wear_detailed_delta", false);
         if (units.equals(Constants.MGDL)) {
-            deltastring += DecimalFormatter.to0Decimal(Math.abs(deltaMGDL));
+            if (detailed) {
+                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+            } else {
+                deltastring += DecimalFormatter.to0Decimal(Math.abs(deltaMGDL));
+            }
         } else {
-            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+            if (detailed){
+                deltastring += DecimalFormatter.to2Decimal(Math.abs(deltaMMOL));
+            } else {
+                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+            }
         }
-
         return deltastring;
     }
 
@@ -545,7 +553,12 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             //OpenAPS status
             String openApsString = String.valueOf(NSDeviceStatus.getInstance().getOpenApsStatus());
-            String openApsStatus = openApsString.substring(0,openApsString.indexOf("m"));
+            String openApsStatus = "";
+            if(openApsString != null) {
+                int index = openApsString.indexOf("m");
+                if(index > 0)
+                    openApsStatus = openApsString.substring(0, index);
+            }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
