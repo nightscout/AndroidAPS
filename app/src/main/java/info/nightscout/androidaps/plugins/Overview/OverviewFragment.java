@@ -5,12 +5,11 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -37,11 +35,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.Series;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -50,7 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +61,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -102,16 +93,17 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastA
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -175,24 +167,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     public static boolean shorttextmode = false;
 
+    private boolean accepted;
+
     private int rangeToDisplay = 6; // for graph
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
-
-    private static Handler sHandler;
-    private static HandlerThread sHandlerThread;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
     public OverviewFragment() {
         super();
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(OverviewFragment.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
     }
 
     @Override
@@ -211,9 +197,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             View view;
 
-            if (MainApp.sResources.getBoolean(R.bool.isTablet) && BuildConfig.NSCLIENTOLNY) {
+            if (MainApp.sResources.getBoolean(R.bool.isTablet) && (Config.NSCLIENT || Config.G5UPLOADER)) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
-            } else if (BuildConfig.NSCLIENTOLNY) {
+            } else if (Config.NSCLIENT || Config.G5UPLOADER) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
                 shorttextmode = true;
             } else if (smallHeight || landscape) {
@@ -407,10 +393,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -428,10 +413,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -442,10 +426,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -456,10 +439,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -470,10 +452,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -484,10 +465,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 10 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -496,12 +476,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 30, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 30, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -510,12 +489,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 60, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -524,12 +502,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 2 * 60, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 2 * 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -538,12 +515,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 3 * 60, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 3 * 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -589,13 +565,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
                 break;
             case R.id.overview_pumpstatus:
-                if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
-                        }
-                    });
+                if (ConfigBuilderPlugin.getActivePump().isSuspended() || !ConfigBuilderPlugin.getActivePump().isInitialized())
+                    ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
                 break;
         }
 
@@ -611,14 +582,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                 builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        sHandler.post(new Runnable() {
+                        hideTempRecommendation();
+                        clearNotification();
+                        MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed, new Callback() {
                             @Override
                             public void run() {
-                                hideTempRecommendation();
-                                clearNotification();
-                                PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
-                                if (applyResult.enacted) {
-                                    finalLastRun.setByPump = applyResult;
+                                if (result.enacted) {
+                                    finalLastRun.setByPump = result;
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
@@ -695,40 +665,41 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                 final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
                 final Context context = getContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                accepted = false;
                 builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                 builder.setMessage(confirmMessage);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                            final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                            sHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                    detailedBolusInfo.context = context;
-                                    detailedBolusInfo.boluscalc = boluscalcJSON;
-                                    detailedBolusInfo.source = Source.USER;
-                                    PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
-                                    if (!result.success) {
-                                        try {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
-                                        } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                            // window has been destroyed
-                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                            MainApp.bus().post(new EventNewNotification(notification));
+                        synchronized (builder) {
+                            if (accepted) {
+                                log.debug("guarding: already accepted");
+                                return;
+                            }
+                            accepted = true;
+                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                detailedBolusInfo.context = context;
+                                detailedBolusInfo.boluscalc = boluscalcJSON;
+                                detailedBolusInfo.source = Source.USER;
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
                                         }
                                     }
-                                }
-                            });
-                            Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                                });
+                                Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                            }
                         }
                     }
                 });
@@ -916,7 +887,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
-        PumpInterface pump = MainApp.getConfigBuilder();
+        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         String units = profile.getUnits();
@@ -958,7 +929,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if (Config.APS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable) {
+        if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
             apsModeView.setTextColor(Color.BLACK);
@@ -1003,7 +974,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
-        if (Config.NSCLIENT && tempTarget == null) {
+        if ((Config.NSCLIENT || Config.G5UPLOADER) && tempTarget == null) {
             tempTargetView.setVisibility(View.GONE);
         }
 
@@ -1054,7 +1025,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull() + " ";
             }
-            if (Config.NSCLIENT)
+            if (Config.NSCLIENT || Config.G5UPLOADER)
                 basalText += "(" + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
@@ -1071,15 +1042,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         final ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
         String extendedBolusText = "";
-        if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
-            extendedBolusText = extendedBolus.toString();
-        }
         if (extendedBolusView != null) { // must not exists in all layouts
             if (shorttextmode) {
                 if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
                     extendedBolusText = DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + "U/h";
-                } else {
-                    extendedBolusText = "";
                 }
                 extendedBolusView.setText(extendedBolusText);
                 extendedBolusView.setOnClickListener(new View.OnClickListener() {
@@ -1090,8 +1056,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 });
 
             } else {
+                if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
+                    extendedBolusText = extendedBolus.toString();
+                }
                 extendedBolusView.setText(extendedBolusText);
             }
+            if (extendedBolusText.equals(""))
+                extendedBolusView.setVisibility(View.GONE);
+            else
+                extendedBolusView.setVisibility(View.VISIBLE);
         }
 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());

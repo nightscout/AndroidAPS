@@ -12,17 +12,15 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class Profile {
@@ -30,21 +28,21 @@ public class Profile {
 
     private JSONObject json;
     private String units = null;
-    double dia = Constants.defaultDIA;
-    TimeZone timeZone = TimeZone.getDefault();
-    JSONArray isf;
+    private double dia = Constants.defaultDIA;
+    private TimeZone timeZone = TimeZone.getDefault();
+    private JSONArray isf;
     private LongSparseArray<Double> isf_v = null; // oldest at index 0
-    JSONArray ic;
+    private JSONArray ic;
     private LongSparseArray<Double> ic_v = null; // oldest at index 0
-    JSONArray basal;
+    private JSONArray basal;
     private LongSparseArray<Double> basal_v = null; // oldest at index 0
-    JSONArray targetLow;
+    private JSONArray targetLow;
     private LongSparseArray<Double> targetLow_v = null; // oldest at index 0
-    JSONArray targetHigh;
+    private JSONArray targetHigh;
     private LongSparseArray<Double> targetHigh_v = null; // oldest at index 0
 
-    int percentage = 100;
-    int timeshift = 0;
+    private int percentage = 100;
+    private int timeshift = 0;
 
     public Profile(JSONObject json, String units) {
         this(json, 100, 0);
@@ -206,7 +204,7 @@ public class Profile {
         return shiftedTime;
     }
 
-    double getMultiplier(LongSparseArray<Double> array) {
+    private double getMultiplier(LongSparseArray<Double> array) {
         double multiplier = 1d;
 
         if (array == isf_v)
@@ -220,7 +218,7 @@ public class Profile {
         return multiplier;
     }
 
-    double getMultiplier(JSONArray array) {
+    private double getMultiplier(JSONArray array) {
         double multiplier = 1d;
 
         if (array == isf)

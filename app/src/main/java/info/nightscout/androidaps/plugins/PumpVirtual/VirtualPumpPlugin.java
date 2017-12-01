@@ -166,7 +166,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return Config.NSCLIENT && fromNSAreCommingFakedExtendedBoluses;
+        return (Config.NSCLIENT || Config.G5UPLOADER) && fromNSAreCommingFakedExtendedBoluses;
     }
 
     @Override
@@ -185,10 +185,41 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
-        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+        if (!Config.NSCLIENT && !Config.G5UPLOADER)
+            NSUpload.uploadDeviceStatus();
         lastDataTime = new Date();
-        return SUCCESS;
+    }
+
+    @Override
+    public void disconnect(String reason) {
+    }
+
+    @Override
+    public void stopConnecting() {
+    }
+
+    @Override
+    public void getPumpStatus() {
+    }
+
+    @Override
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
+        lastDataTime = new Date();
+        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = true;
+        return result;
     }
 
     @Override
@@ -199,13 +230,6 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public Date lastDataTime() {
         return lastDataTime;
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        if (!BuildConfig.NSCLIENTOLNY)
-            NSUpload.uploadDeviceStatus();
-        lastDataTime = new Date();
     }
 
     @Override

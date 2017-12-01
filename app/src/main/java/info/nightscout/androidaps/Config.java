@@ -10,16 +10,17 @@ public class Config {
     public static final boolean APS = BuildConfig.APS;
     // PLUGINS
     public static final boolean NSCLIENT = BuildConfig.NSCLIENTOLNY;
+    public static final boolean G5UPLOADER = BuildConfig.G5UPLOADER;
 
-    public static final boolean DANAR = true && BuildConfig.PUMPDRIVERS;
+    public static final boolean DANAR = BuildConfig.PUMPDRIVERS;
 
-    public static final boolean ACTION = !BuildConfig.NSCLIENTOLNY;
-    public static final boolean VIRTUALPUMP = !BuildConfig.NSCLIENTOLNY;
-    public static final boolean MDI = !BuildConfig.NSCLIENTOLNY;
-    public static final boolean OTHERPROFILES = !BuildConfig.NSCLIENTOLNY;
-    public static final boolean SAFETY = !BuildConfig.NSCLIENTOLNY;
+    public static final boolean ACTION = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
+    public static final boolean VIRTUALPUMP = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
+    public static final boolean MDI = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
+    public static final boolean OTHERPROFILES = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
+    public static final boolean SAFETY = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
 
-    public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY;
+    public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
 
 
     public static final boolean displayDeviationSlope = true;

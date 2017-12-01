@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
-import com.j256.ormlite.stmt.query.Not;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class MsgSetSingleBasalProfile extends MessageBase {

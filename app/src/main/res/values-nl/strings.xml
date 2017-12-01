@@ -24,7 +24,6 @@
     <string name="xdripnotinstalled">xDrip+ niet geïnstalleerd</string>
     <string name="xdrip">xDrip</string>
     <string name="wrongpumppassword">Verkeerd pomp wachtwoord!</string>
-    <string name="wrongpumpdriverselected">Verkeerde pomp driver geselecteerd</string>
     <string name="wrongpassword">Verkeerd wachtwoord</string>
     <string name="wear_showbgi_title">Toon BGI</string>
     <string name="wear_showbgi_summary">Voeg BGI toe aan status lijn</string>
