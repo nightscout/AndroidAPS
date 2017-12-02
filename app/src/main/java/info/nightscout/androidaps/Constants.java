@@ -61,4 +61,5 @@ public class Constants {
 
     // Pump
     public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 60 - 1;
+    public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
 }

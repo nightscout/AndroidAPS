@@ -772,10 +772,16 @@
     <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>
+    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
+    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5 upload settings</string>
     <string name="customapp">Customized APK for download</string>
+   
 </resources>
 
