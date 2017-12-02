@@ -166,7 +166,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return Config.NSCLIENT && fromNSAreCommingFakedExtendedBoluses;
+        return (Config.NSCLIENT || Config.G5UPLOADER) && fromNSAreCommingFakedExtendedBoluses;
     }
 
     @Override
@@ -196,7 +196,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void connect(String reason) {
-        if (!BuildConfig.NSCLIENTOLNY)
+        if (!Config.NSCLIENT && !Config.G5UPLOADER)
             NSUpload.uploadDeviceStatus();
         lastDataTime = new Date();
     }

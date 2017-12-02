@@ -75,6 +75,7 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "boolean", "G5UPLOADER", "false"
         }
         openloop {
             dimension "standard"
@@ -87,6 +88,7 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "false"
         }
         pumpcontrol {
             dimension "standard"
@@ -99,6 +101,7 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "false"
         }
         nsclient {
             dimension "standard"
@@ -111,6 +114,20 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "false"
+        }
+        g5uploader {
+            dimension "standard"
+            resValue "string", "app_name", "NSClient"
+            versionName version + "-nsclient"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/yellowowl"
+            ]
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "false"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "true"
         }
     }
 }
@@ -161,7 +178,7 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     compile(name: 'android-edittext-validator-v1.3.4-mod', ext: 'aar')
-    compile ('com.google.android:flexbox:0.3.0') {
+    compile('com.google.android:flexbox:0.3.0') {
         exclude group: 'com.android.support'
     }
     compile('io.socket:socket.io-client:0.8.3') {

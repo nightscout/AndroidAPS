@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.utils.BundleLogger;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 
@@ -48,6 +50,7 @@ public class DataService extends IntentService {
     boolean nsClientEnabled = true;
     boolean mm640gEnabled = false;
     boolean glimpEnabled = false;
+    boolean dexcomG5Enabled = false;
 
     public DataService() {
         super("DataService");
@@ -64,21 +67,31 @@ public class DataService extends IntentService {
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
+            dexcomG5Enabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
             glimpEnabled = false;
+            dexcomG5Enabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
             glimpEnabled = false;
+            dexcomG5Enabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = true;
+            dexcomG5Enabled = false;
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
+            xDripEnabled = false;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = false;
+            dexcomG5Enabled = true;
         }
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
@@ -98,6 +111,10 @@ public class DataService extends IntentService {
             } else if (Intents.GLIMP_BG.equals(action)) {
                 if (glimpEnabled) {
                     handleNewDataFromGlimp(intent);
+                }
+            } else if (Intents.DEXCOMG5_BG.equals(action)) {
+                if (dexcomG5Enabled) {
+                    handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
                 // always handle SGV if NS-Client is the source
@@ -185,6 +202,37 @@ public class DataService extends IntentService {
         bgReading.raw = 0;
 
         MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
+    }
+
+    private void handleNewDataFromDexcomG5(Intent intent) {
+        // onHandleIntent Bundle{ data => [{"m_time":1511939180,"m_trend":"NotComputable","m_value":335}]; android.support.content.wakelockid => 95; }Bundle
+
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        String data = bundle.getString("data");
+        log.debug("Received Dexcom Data", data);
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            log.debug("Received Dexcom Data size:" + jsonArray.length());
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                bgReading.value = json.getInt("m_value");
+                bgReading.direction = json.getString("m_trend");
+                bgReading.date = json.getLong("m_time") * 1000L;
+                bgReading.raw = 0;
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                    NSUpload.uploadBg(bgReading);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleNewDataFromMM640g(Intent intent) {

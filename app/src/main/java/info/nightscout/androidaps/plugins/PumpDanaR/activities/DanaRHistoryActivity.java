@@ -124,8 +124,8 @@ public class DanaRHistoryActivity extends Activity {
 
         statusView.setVisibility(View.GONE);
 
-        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP);
-        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginBase.PUMP);
+        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP);
+        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginBase.PUMP);
 
         // Types
 
