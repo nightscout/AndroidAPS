@@ -36,8 +36,11 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
@@ -241,23 +244,21 @@ public class WatchUpdaterService extends WearableListenerService implements
         } else if (lastBG.value < lowLine) {
             sgvLevel = -1;
         }
-        DataMap dataMap = new DataMap();
 
-        int battery = getBatteryLevel(getApplicationContext());
+        DataMap dataMap = new DataMap();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
         dataMap.putDouble("timestamp", lastBG.date);
         if (glucoseStatus == null) {
             dataMap.putString("slopeArrow", "");
-            dataMap.putString("delta", "");
-            dataMap.putString("avgDelta", "");
+            dataMap.putString("delta", "--");
+            dataMap.putString("avgDelta", "--");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
             dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
             dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
         }
-        dataMap.putString("battery", "" + battery);
+
         dataMap.putLong("sgvLevel", sgvLevel);
-        dataMap.putInt("batteryLevel", (battery >= 30) ? 1 : 0);
         dataMap.putDouble("sgvDouble", lastBG.value);
         dataMap.putDouble("high", highLine);
         dataMap.putDouble("low", lowLine);
@@ -272,10 +273,20 @@ public class WatchUpdaterService extends WearableListenerService implements
             deltastring += "-";
 
         }
+
+        boolean detailed = SP.getBoolean("wear_detailed_delta", false);
         if (units.equals(Constants.MGDL)) {
-            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+            if (detailed) {
+                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+            } else {
+                deltastring += DecimalFormatter.to0Decimal(Math.abs(deltaMGDL));
+            }
         } else {
-            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+            if (detailed){
+                deltastring += DecimalFormatter.to2Decimal(Math.abs(deltaMMOL));
+            } else {
+                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+            }
         }
         return deltastring;
     }
@@ -514,14 +525,55 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private void sendStatus() {
+
         if (googleApiClient.isConnected()) {
 
-            String status = generateStatusString();
+            TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.updateTotalIOBTreatments();
+            IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
+            treatmentsInterface.updateTotalIOBTempBasals();
+            IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
+
+            String iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+            String iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            String cobString = generateCOBString();
+            String tempBasal = generateBasalString(treatmentsInterface);
+
+            //bgi
+            String bgiString = "";
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
+            bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+
+            String status = generateStatusString(profile, tempBasal,iobSum, iobDetail, bgiString);
+
+            //batteries
+            int phoneBattery = getBatteryLevel(getApplicationContext());
+            String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
+
+            //OpenAPS status
+            String openApsString = String.valueOf(NSDeviceStatus.getInstance().getOpenApsStatus());
+            String openApsStatus = "";
+            if(openApsString != null) {
+                int index = openApsString.indexOf("m");
+                if(index > 0)
+                    openApsStatus = openApsString.substring(0, index);
+            }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("externalStatusString", status);
+            dataMapRequest.getDataMap().putString("iobSum", iobSum);
+            dataMapRequest.getDataMap().putString("iobDetail", iobDetail);
+            dataMapRequest.getDataMap().putBoolean("detailedIob", mPrefs.getBoolean("wear_detailediob", false));
+            dataMapRequest.getDataMap().putString("cob", cobString);
+            dataMapRequest.getDataMap().putString("tempBasal", tempBasal);
+            dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
+            dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
+            dataMapRequest.getDataMap().putString("openApsStatus", openApsStatus);
+            dataMapRequest.getDataMap().putString("bgi", bgiString);
+            dataMapRequest.getDataMap().putBoolean("showBgi", mPrefs.getBoolean("wear_showbgi", false));
+            dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
@@ -546,10 +598,10 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     @NonNull
-    private String generateStatusString() {
+    private String generateStatusString(Profile profile, String tempBasal, String iobSum, String iobDetail, String bgiString) {
+
         String status = "";
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) {
             status = MainApp.sResources.getString(R.string.noprofile);
             return status;
@@ -564,36 +616,43 @@ public class WatchUpdaterService extends WearableListenerService implements
             lastLoopStatus = true;
         }
 
-        //Temp basal
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-
-        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
-        if (activeTemp != null) {
-            status += activeTemp.toStringShort();
-
+        String iobString = "";
+        if (mPrefs.getBoolean("wear_detailediob", false)) {
+            iobString = iobSum + " " + iobDetail;
+        } else {
+            iobString = iobSum + "U";
         }
 
-        //IOB
-        treatmentsInterface.updateTotalIOBTreatments();
-        IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
-        treatmentsInterface.updateTotalIOBTempBasals();
-        IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += tempBasal + " " + iobString;
 
-        if (mPrefs.getBoolean("wear_detailediob", true)) {
-            status += "("
-                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+        //add BGI if shown, otherwise return
+        if (mPrefs.getBoolean("wear_showbgi", false)) {
+            status += " " + bgiString;
         }
-        if (!mPrefs.getBoolean("wear_showbgi", false)) {
-            return status;
-        }
-
-        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
-
-        status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
 
         return status;
+    }
+
+    @NonNull
+    private String generateBasalString(TreatmentsInterface treatmentsInterface) {
+
+        String basalStringResult = "-.--U/h";
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            basalStringResult = activeTemp.toStringShort();
+        }
+        return basalStringResult;
+    }
+
+    @NonNull
+    private String generateCOBString() {
+
+        String cobStringResult = "--";
+        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+        if (autosensData != null) {
+            cobStringResult = (int) autosensData.cob + "g";
+        }
+        return cobStringResult;
     }
 
     @Override

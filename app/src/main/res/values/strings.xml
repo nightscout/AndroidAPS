@@ -782,6 +782,7 @@
     <string name="key_dexcomg5_nsupload">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5 upload settings</string>
     <string name="customapp">Customized APK for download</string>
-   
+    <string name="wear_detailed_delta_title">Show detailed delta</string>
+    <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
 </resources>
 
