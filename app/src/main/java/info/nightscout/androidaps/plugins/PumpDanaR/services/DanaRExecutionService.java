@@ -433,7 +433,7 @@ public class DanaRExecutionService extends Service {
             }
 
             final Object o = new Object();
-            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusingInterrupted", new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
                 @Override
                 public void run() {
                     if (danaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
