@@ -34,6 +34,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
@@ -358,11 +359,12 @@ public class DanaRKoreanExecutionService extends Service {
     }
 
     public boolean bolus(double amount, int carbs, final Treatment t) {
+        if (!isConnected()) return false;
+        if (BolusProgressDialog.stopPressed) return false;
+
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
-
-        if (!isConnected()) return false;
 
         if (carbs > 0) {
             mSerialIOThread.sendMessage(new MsgSetCarbsEntry(System.currentTimeMillis(), carbs));
