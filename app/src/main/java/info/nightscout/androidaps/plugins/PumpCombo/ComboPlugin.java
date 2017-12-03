@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import de.jotomo.ruffy.spi.BasalProfile;
@@ -835,14 +834,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
         if (lastViolation > 0) {
-            closedLoopDisabledUntil = lastViolation + 6 * 60 * 60 * 1000;
-            if (closedLoopDisabledUntil > System.currentTimeMillis() && violationWarningRaisedFor != closedLoopDisabledUntil) {
+            lowSuspendOnlyLoopEnforcetTill = lastViolation + 6 * 60 * 60 * 1000;
+            if (lowSuspendOnlyLoopEnforcetTill > System.currentTimeMillis() && violationWarningRaisedFor != lowSuspendOnlyLoopEnforcetTill) {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         MainApp.sResources.getString(R.string.combo_force_disabled_notification),
                         Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
-                violationWarningRaisedFor = closedLoopDisabledUntil;
+                violationWarningRaisedFor = lowSuspendOnlyLoopEnforcetTill;
             }
         }
     }
@@ -1131,12 +1130,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     // Constraints interface
-    private long closedLoopDisabledUntil = 0;
+    private long lowSuspendOnlyLoopEnforcetTill = 0;
     private long violationWarningRaisedFor = 0;
 
     @Override
     public boolean isLoopEnabled() {
-        return closedLoopDisabledUntil < System.currentTimeMillis();
+        return true;
     }
 
     @Override
@@ -1176,6 +1175,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public Double applyMaxIOBConstraints(Double maxIob) {
-        return maxIob;
+        return lowSuspendOnlyLoopEnforcetTill < System.currentTimeMillis() ? maxIob : 0;
     }
 }
