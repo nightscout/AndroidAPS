@@ -264,8 +264,8 @@ public class NSDeviceStatus {
             JSONObject enacted = openaps.has("enacted") ? openaps.getJSONObject("enacted") : new JSONObject();
 
             long clock = 0L;
-            if (suggested.has("deliverAt"))
-                clock = DateUtil.fromISODateString(suggested.getString("deliverAt")).getTime();
+            if (suggested.has("timestamp"))
+                clock = DateUtil.fromISODateString(suggested.getString("timestamp")).getTime();
             // check if this is new data
             if (clock != 0 && clock > deviceStatusOpenAPSData.clockSuggested) {
                 deviceStatusOpenAPSData.suggested = suggested;
