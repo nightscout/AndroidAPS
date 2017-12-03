@@ -347,8 +347,10 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/combo_buttons_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <Button

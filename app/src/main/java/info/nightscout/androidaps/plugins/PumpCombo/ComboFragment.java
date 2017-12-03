@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -27,6 +28,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView lastConnectionView;
     private TextView lastBolusView;
     private TextView tempBasalText;
+    private LinearLayout buttonsLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +42,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
         lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
+        buttonsLayout = (LinearLayout) view.findViewById(R.id.combo_buttons_layout);
 
         Button refresh = (Button) view.findViewById(R.id.combo_refresh);
         refresh.setOnClickListener(this);
@@ -111,6 +114,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 activityView.setText(activity != null ? activity : "");
 
                 if (plugin.isInitialized()) {
+                    buttonsLayout.setVisibility(View.VISIBLE);
+
                     // battery
                     batteryView.setTextSize(20);
                     if (ps.batteryState == PumpState.EMPTY) {
