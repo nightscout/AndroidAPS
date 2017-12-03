@@ -433,22 +433,26 @@ public class DanaRExecutionService extends Service {
             }
 
             final Object o = new Object();
-            ConfigBuilderPlugin.getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
-                @Override
-                public void run() {
-                    if (danaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
-                        t.insulin = danaRPump.lastBolusAmount;
-                        log.debug("Used bolus amount from history: " + danaRPump.lastBolusAmount);
-                    } else {
-                        log.debug("Bolus amount in history too old: " + danaRPump.lastBolusTime.toLocaleString());
+            synchronized(o) {
+                ConfigBuilderPlugin.getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
+                    @Override
+                    public void run() {
+                        if (danaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
+                            t.insulin = danaRPump.lastBolusAmount;
+                            log.debug("Used bolus amount from history: " + danaRPump.lastBolusAmount);
+                        } else {
+                            log.debug("Bolus amount in history too old: " + danaRPump.lastBolusTime.toLocaleString());
+                        }
+                        synchronized (o) {
+                            o.notify();
+                        }
                     }
-                    o.notify();
+                });
+                try {
+                    o.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            });
-            try {
-                o.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         } else {
             ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
