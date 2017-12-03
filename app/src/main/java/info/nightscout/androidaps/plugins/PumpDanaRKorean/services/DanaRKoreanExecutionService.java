@@ -389,48 +389,9 @@ public class DanaRKoreanExecutionService extends Service {
         }
         waitMsec(300);
 
-        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.t = t;
-        bolusingEvent.percent = 99;
-
         bolusingTreatment = null;
+        ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
 
-        int speed = 12;
-
-        // try to find real amount if bolusing was interrupted or comm failed
-        if (t.insulin != amount) {
-            disconnect("bolusingInterrupted");
-            long bolusDurationInMSec = (long) (amount * speed * 1000);
-            long expectedEnd = bolusStart + bolusDurationInMSec + 3000;
-
-            while (System.currentTimeMillis() < expectedEnd) {
-                long waitTime = expectedEnd - System.currentTimeMillis();
-                bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.waitingforestimatedbolusend), waitTime / 1000);
-                MainApp.bus().post(bolusingEvent);
-                SystemClock.sleep(1000);
-            }
-
-            final Object o = new Object();
-            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusingInterrupted", new Callback() {
-                @Override
-                public void run() {
-                    if (danaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
-                        t.insulin = danaRPump.lastBolusAmount;
-                        log.debug("Used bolus amount from history: " + danaRPump.lastBolusAmount);
-                    } else {
-                        log.debug("Bolus amount in history too old: " + danaRPump.lastBolusTime.toLocaleString());
-                    }
-                    o.notify();
-                }
-            });
-            try {
-                o.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
-        }
         return true;
     }
 
