@@ -97,7 +97,7 @@ public class QueueThread extends Thread {
                 if (queue.performing() == null) {
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
-                        log.debug("State: performing");
+                        log.debug("State: performing " + queue.performing().status());
                         queue.pickup();
                         MainApp.bus().post(new EventQueueChanged());
                         queue.performing().execute();
