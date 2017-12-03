@@ -4,11 +4,6 @@
         android:key="combopump"
         android:title="@string/combopump_settings">
 
-        <Preference
-            android:key="combo_pairing"
-            android:title="@string/pairpump">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpCombo.activities.PairActivity"/>
-        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>
