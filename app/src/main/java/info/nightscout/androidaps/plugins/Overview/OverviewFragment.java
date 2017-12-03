@@ -192,8 +192,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int screen_width = dm.widthPixels;
             int screen_height = dm.heightPixels;
-            smallWidth = screen_width < Constants.SMALL_WIDTH;
-            smallHeight = screen_height < Constants.SMALL_HEIGHT;
+            smallWidth = screen_width <= Constants.SMALL_WIDTH;
+            smallHeight = screen_height <= Constants.SMALL_HEIGHT;
             boolean landscape = screen_height < screen_width;
 
             View view;
@@ -203,7 +203,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             } else if (Config.NSCLIENT || Config.G5UPLOADER) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
                 shorttextmode = true;
-            } else if (smallHeight || landscape) {
+            } else if (smallHeight) {
                 view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
             } else {
                 view = inflater.inflate(R.layout.overview_fragment, container, false);
