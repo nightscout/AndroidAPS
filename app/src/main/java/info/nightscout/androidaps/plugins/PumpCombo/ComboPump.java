@@ -26,10 +26,6 @@ class ComboPump {
     @NonNull
     volatile BasalProfile basalProfile = new BasalProfile();
 
-    // Last known history record times to skip over old ones when reading history
-    long lastHistoryBolusTime = PumpHistoryRequest.FULL;
-    long lastHistoryTbrTime = PumpHistoryRequest.FULL;
-
     // Alert and TDD histories are not stored in DB, but are read on demand and just cached  here
     List<PumpAlert> errorHistory = new ArrayList<>(0);
     List<Tdd> tddHistory = new ArrayList<>(0);

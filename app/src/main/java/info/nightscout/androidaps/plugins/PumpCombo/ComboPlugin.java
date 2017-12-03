@@ -241,24 +241,20 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return PumpInterface.FAILED;
         }
 
+/* don't re-read basal profile to not trigger pump bug; setBasalProfile command checks the total at the end, which must suffice
         CommandResult readResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
                 ruffyScripter::readBasalProfile);
+*/
 
-        pump.basalProfile = readResult.basalProfile;
+        pump.basalProfile = requestedBasalProfile;
 
-        if(readResult.success && readResult.basalProfile.equals(requestedBasalProfile)){
-            //dismiss previously "FAILED" overview notifications
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            //issue success notification
-            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
-            MainApp.bus().post(new EventNewNotification(notification));
-            return PumpInterface.SUCCESS;
-        } else {
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
-            return PumpInterface.FAILED;
-        }
+        //dismiss previously "FAILED" overview notifications
+        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+        MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+        //issue success notification
+        Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+        MainApp.bus().post(new EventNewNotification(notification));
+        return PumpInterface.SUCCESS;
     }
 
     @Override
@@ -322,7 +318,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         CommandResult stateResult = runCommand(pump.initialized ? MainApp.sResources.getString(R.string.combo_pump_action_refreshing) : MainApp.sResources.getString(R.string.combo_pump_action_initializing),
-                1, ruffyScripter::readReservoirLevelAndLastBolus);
+                1, ruffyScripter::readPumpState);
         if (!stateResult.success) {
             return;
         }
@@ -454,6 +450,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
+    // TODO rewrite to read last bolus (via mydata) only when bolus failed or if it was cancelled midways
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         // guard against boluses issued multiple times within a minute
@@ -647,6 +644,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        // TODO verify this; should probably still do the call since there can be a mismatch
         if (activeTemp == null) {
             return new PumpEnactResult().success(false).enacted(false);
         }
@@ -672,6 +670,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                             + activeTemp.percentRate + "% and running for another "
                             + activeTemp.getPlannedRemainingMinutes() + " mins.");
         } else {
+            // TODO just call this.setTempBasal? code duplication
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
             final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
@@ -715,8 +714,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (!ruffyScripter.isConnected()) {
                 CommandResult preCheckError = runOnConnectChecks();
                 if (preCheckError != null) {
-                   updateLocalData(preCheckError);
-                   return preCheckError;
+                    updateLocalData(preCheckError);
+                    return preCheckError;
                 }
             }
 
@@ -853,10 +852,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         boolean sync = false;
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
+            // TODO add AAPS record for the active TBR with whatever time is remaining on it
             log.debug("Pump runs TBR AAPS is unaware of, cancelling TBR so it can be read from history properly");
             runCommand(null, 0, ruffyScripter::cancelTbr);
             sync = true;
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
+            // TODO create end record for the TBR active in AAPS
             log.debug("AAPS shows a TBR but pump isn't running a TBR; deleting TBR in AAPS and reading pump history");
             MainApp.getDbHelper().delete(aapsTbr);
             sync = true;
@@ -864,12 +865,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // both AAPS and pump have an active TBR ...
             if (aapsTbr.percentRate != state.tbrPercent) {
                 // ... but they have different percentages
+                // TODO end AAPS TBR, start new TBR based on pump TBR
                 log.debug("TBR percentage differs between AAPS and pump; deleting TBR in AAPS and reading pump history");
                 MainApp.getDbHelper().delete(aapsTbr);
                 sync = true;
             }
             int durationDiff = Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration);
             if (durationDiff > 2) {
+                // TODO end AAPS TBR, start new TBR based on pump TBR
                 // ... but they have different runtimes
                 log.debug("TBR duration differs between AAPS and pump; deleting TBR in AAPS and reading pump history");
                 MainApp.getDbHelper().delete(aapsTbr);
@@ -889,6 +892,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * read to get the DB up to date.
      */
     private synchronized boolean checkPumpHistory() {
+        return true;
+
+/* reading history triggers pump bug
         // set here, rather at the end so that if this runs into an error it's not tried
         // over and over since it's called at the end of runCommand
         pumpHistoryLastChecked = System.currentTimeMillis();
@@ -956,10 +962,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         return true;
+*/
     }
 
     /**
      * Reads the pump's history and updates the DB accordingly.
+     *
+     * Only ever called by #readAllPumpData which is triggered by the user via the combo fragment
+     * which warns the user against doing this.
      */
     private boolean readHistory(final PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
@@ -967,23 +977,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return false;
         }
 
-        // update local cache
         PumpHistory history = historyResult.history;
-        if (!history.bolusHistory.isEmpty()) {
-            pump.lastHistoryBolusTime = history.bolusHistory.get(0).timestamp;
-        }
-        if (!history.tbrHistory.isEmpty()) {
-            pump.lastHistoryTbrTime = history.tbrHistory.get(0).timestamp;
-        }
+        updateDbFromPumpHistory(history);
 
+        // update local cache
         if (!history.pumpAlertHistory.isEmpty()) {
             pump.errorHistory = history.pumpAlertHistory;
         }
         if (!history.tddHistory.isEmpty()) {
             pump.tddHistory = history.tddHistory;
         }
-
-        updateDbFromPumpHistory(history);
 
         return historyResult.success;
     }
@@ -1023,20 +1026,26 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     void readAllPumpData() {
+        long lastCheckInitiated = System.currentTimeMillis();
+
         boolean readHistorySuccess = readHistory(new PumpHistoryRequest()
-                .bolusHistory(pump.lastHistoryBolusTime)
-                .tbrHistory(pump.lastHistoryTbrTime)
+                .bolusHistory(pumpHistoryLastChecked)
+                .tbrHistory(pumpHistoryLastChecked)
                 .pumpErrorHistory(PumpHistoryRequest.FULL)
                 .tddHistory(PumpHistoryRequest.FULL));
         if (!readHistorySuccess) {
             return;
         }
 
+        pumpHistoryLastChecked = lastCheckInitiated;
+
+/* not displayed in the UI anymore due to pump bug
         CommandResult reservoirResult = runCommand("Checking reservoir level", 2,
                 ruffyScripter::readReservoirLevelAndLastBolus);
         if (!reservoirResult.success) {
             return;
         }
+*/
 
         CommandResult basalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
         if (!basalResult.success) {
@@ -1060,6 +1069,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         try {
             JSONObject pumpJson = new JSONObject();
             pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
+            // TODO can we upload empty/low/normal or is a int expected? If so, use fake numbers like 0/50/200
             pumpJson.put("reservoir", pump.reservoirLevel);
 
             JSONObject statusJson = new JSONObject();
