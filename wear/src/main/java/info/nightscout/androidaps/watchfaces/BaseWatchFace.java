@@ -85,7 +85,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     public boolean detailedIOB = false;
     public boolean showBGI = false;
-    public String openApsStatus = "0";
+    public Double openApsStatus;
     public String externalStatusString = "no status";
     public String sSgv = "---";
     public String sDirection = "--";
@@ -267,8 +267,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 sBgi = dataMap.getString("bgi");
                 showBGI = dataMap.getBoolean("showBgi");
                 externalStatusString = dataMap.getString("externalStatusString");
-                openApsStatus = dataMap.getString("openApsStatus");
                 batteryLevel = dataMap.getInt("batteryLevel");
+                openApsStatus = dataMap.getDouble("openApsStatus");
             }
 
             setDataFields();
@@ -453,18 +453,15 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         if (mLoop != null) {
             if (sharedPrefs.getBoolean("showExternalStatus", true)) {
                 mLoop.setVisibility(View.VISIBLE);
-                if (openApsStatus != null && openApsStatus != "") {
-                    mLoop.setText(openApsStatus + "'");
-                    if (Integer.valueOf(openApsStatus) > 14) {
+                if (openApsStatus != null) {
+                    int mins = (int) ((System.currentTimeMillis() - openApsStatus) / 1000 / 60);
+                    mLoop.setText(mins + "'");
+                    if (mins > 14) {
                         loopLevel = 0;
-                        //if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-                            mLoop.setBackgroundResource(R.drawable.loop_red_25);
-                        //}
+                        mLoop.setBackgroundResource(R.drawable.loop_red_25);
                     } else {
                         loopLevel = 1;
-                        //if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-                            mLoop.setBackgroundResource(R.drawable.loop_green_25);
-                        //}
+                        mLoop.setBackgroundResource(R.drawable.loop_green_25);
                     }
                 } else {
                     mLoop.setText("-'");

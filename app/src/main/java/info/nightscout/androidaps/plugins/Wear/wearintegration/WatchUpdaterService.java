@@ -552,13 +552,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
 
             //OpenAPS status
-            String openApsString = String.valueOf(NSDeviceStatus.getInstance().getOpenApsStatus());
-            String openApsStatus = "";
-            if(openApsString != null) {
-                int index = openApsString.indexOf("m");
-                if(index > 0)
-                    openApsStatus = openApsString.substring(0, index);
-            }
+            Double openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
@@ -570,7 +564,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("tempBasal", tempBasal);
             dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
             dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
-            dataMapRequest.getDataMap().putString("openApsStatus", openApsStatus);
+            dataMapRequest.getDataMap().putDouble("openApsStatus", openApsStatus);
             dataMapRequest.getDataMap().putString("bgi", bgiString);
             dataMapRequest.getDataMap().putBoolean("showBgi", mPrefs.getBoolean("wear_showbgi", false));
             dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);

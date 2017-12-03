@@ -264,8 +264,8 @@ public class NSDeviceStatus {
             JSONObject enacted = openaps.has("enacted") ? openaps.getJSONObject("enacted") : new JSONObject();
 
             long clock = 0L;
-            if (suggested.has("timestamp"))
-                clock = DateUtil.fromISODateString(suggested.getString("timestamp")).getTime();
+            if (suggested.has("deliverAt"))
+                clock = DateUtil.fromISODateString(suggested.getString("deliverAt")).getTime();
             // check if this is new data
             if (clock != 0 && clock > deviceStatusOpenAPSData.clockSuggested) {
                 deviceStatusOpenAPSData.suggested = suggested;
@@ -306,6 +306,15 @@ public class NSDeviceStatus {
         string.append("</span>"); // color
 
         return Html.fromHtml(string.toString());
+    }
+
+    public static double getOpenApsTimestamp() {
+
+        if (deviceStatusOpenAPSData.clockSuggested != 0) {
+            return deviceStatusOpenAPSData.clockSuggested;
+        } else {
+            return -1;
+        }
     }
 
     public Spanned getExtendedOpenApsStatus() {
