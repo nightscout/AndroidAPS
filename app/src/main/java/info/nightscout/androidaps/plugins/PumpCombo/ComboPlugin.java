@@ -531,8 +531,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 detailedBolusInfo.date = lastPumpBolus.timestamp;
                 detailedBolusInfo.insulin = lastPumpBolus.amount;
                 detailedBolusInfo.date = lastPumpBolus.timestamp;
-                detailedBolusInfo.source = Source.PUMP;
-                detailedBolusInfo.pumpId = lastPumpBolus.timestamp;
+                detailedBolusInfo.source = Source.USER;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 return new PumpEnactResult().success(true).enacted(true)
                         .bolusDelivered(lastPumpBolus.amount).carbsDelivered(detailedBolusInfo.carbs);
@@ -623,7 +622,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
-            tempStart.source = Source.PUMP;
+            tempStart.source = Source.USER;
+            // TODO this might be rubbish, test will show
+            // fake pumpId, so this can be identified on cancellation
             tempStart.pumpId = tempStart.date;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
@@ -644,10 +645,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        // TODO verify this; should probably still do the call since there can be a mismatch
-        if (activeTemp == null) {
-            return new PumpEnactResult().success(false).enacted(false);
-        }
         if (userRequested) {
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
@@ -655,13 +652,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 TemporaryBasal tempBasal = new TemporaryBasal();
                 tempBasal.date = commandResult.state.timestamp;
                 tempBasal.durationInMinutes = 0;
-                tempBasal.source = Source.PUMP;
+                tempBasal.source = Source.USER;
+                // not really the pumpId, but we need to use the same value here as used with
+                // starting the TBR we're cancelling here
                 tempBasal.pumpId = activeTemp.pumpId;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
                 return new PumpEnactResult().isTempCancel(true).success(true).enacted(true);
             } else {
                 return new PumpEnactResult().success(false).enacted(false);
             }
+        } else if (activeTemp == null) {
+            return new PumpEnactResult().success(false).enacted(false);
         } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep run (see below)
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
@@ -670,27 +671,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                             + activeTemp.percentRate + "% and running for another "
                             + activeTemp.getPlannedRemainingMinutes() + " mins.");
         } else {
-            // TODO just call this.setTempBasal? code duplication
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
             final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
-            CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_cancelling_tbr), 2, () -> ruffyScripter.setTbr(percentage, 15));
-
-            if (commandResult.state.tbrActive && commandResult.state.tbrPercent == percentage
-                    && (commandResult.state.tbrRemainingDuration == 15 || commandResult.state.tbrRemainingDuration == 14)) {
-                TemporaryBasal tempBasal = new TemporaryBasal();
-                tempBasal.date = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
-                tempBasal.durationInMinutes = 15;
-                tempBasal.source = Source.PUMP;
-                tempBasal.pumpId = tempBasal.date;
-                tempBasal.percentRate = percentage;
-                tempBasal.isAbsolute = false;
-                MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
-                return new PumpEnactResult().success(true).enacted(true);
-            } else {
-                return new PumpEnactResult().success(false).enacted(false);
-            }
+            return setTempBasalPercent(percentage, 15);
         }
     }
 
@@ -798,6 +783,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if ((Math.abs(preCheckResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) > 3)) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.NORMAL);
                 MainApp.bus().post(new EventNewNotification(notification));
+// setting date time isn't supported by ruffy v1, a warning is issue during connect if clock is off
 //                    runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime);
             }
         }
@@ -849,6 +835,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private boolean checkForTbrMismatch(PumpState state) {
+        // TODO
+        if (1==1) return false;
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         boolean sync = false;
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {

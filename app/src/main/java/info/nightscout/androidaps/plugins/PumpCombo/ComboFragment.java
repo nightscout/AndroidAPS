@@ -155,7 +155,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setTextColor(Color.WHITE);
                     }
 
-/* trigger pump bug
+/* triggers pump bug
                     // last bolus
                     Bolus bolus = plugin.getPump().lastBolus;
                     if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
