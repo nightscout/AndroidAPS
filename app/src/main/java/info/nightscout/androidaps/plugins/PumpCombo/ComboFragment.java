@@ -40,7 +40,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
-        lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
+        //lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
         buttonsLayout = (LinearLayout) view.findViewById(R.id.combo_buttons_layout);
 
@@ -86,7 +86,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     }
 
     @Subscribe
-    public void onStatusEvent(final EventComboPumpUpdateGUI ev) {
+    public void onStatusEvent(final EventComboPumpUpdateGUI ignored) {
         updateGUI();
     }
 
@@ -130,14 +130,15 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
 
                     // reservoir
-                    int reservoirLevel = plugin.getPump().reservoirLevel;
-                    reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " U");
                     if (ps.insulinState == PumpState.LOW) {
                         reservoirView.setTextColor(Color.YELLOW);
+                        reservoirView.setText(R.string.combo_reservoir_low);
                     } else if (ps.insulinState == PumpState.EMPTY) {
                         reservoirView.setTextColor(Color.RED);
+                        reservoirView.setText(R.string.combo_reservoir_empty);
                     } else {
                         reservoirView.setTextColor(Color.WHITE);
+                        reservoirView.setText(R.string.combo_reservoir_normal);
                     }
 
                     // last connection
@@ -154,6 +155,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setTextColor(Color.WHITE);
                     }
 
+/* trigger pump bug
                     // last bolus
                     Bolus bolus = plugin.getPump().lastBolus;
                     if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
@@ -175,6 +177,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     } else {
                         lastBolusView.setText("");
                     }
+*/
 
                     // TBR
                     String tbrStr = "";
