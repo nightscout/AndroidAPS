@@ -215,12 +215,37 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public synchronized int setNewBasalProfile(Profile profile) {
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+        // we're not doing that
+    }
+
+    @Override
+    public void disconnect(String reason) {
+        // we're not doing that
+    }
+
+    @Override
+    public void stopConnecting() {
+        // we're not doing that
+    }
+
+    @Override
+    public synchronized PumpEnactResult setNewBasalProfile(Profile profile) {
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return PumpInterface.FAILED;
+            return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet));
         }
 
         BasalProfile requestedBasalProfile = convertProfileToComboProfile(profile);
@@ -228,7 +253,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             //dismiss previously "FAILED" overview notifications
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            return PumpInterface.NOT_NEEDED;
+            return new PumpEnactResult().success(true).enacted(false);
         }
 
         CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
@@ -236,7 +261,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!setResult.success) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return PumpInterface.FAILED;
+            return new PumpEnactResult().success(false).enacted(false);
         }
 
 /* don't re-read basal profile to not trigger pump bug; setBasalProfile command checks the total at the end, which must suffice
@@ -252,7 +277,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         //issue success notification
         Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
         MainApp.bus().post(new EventNewNotification(notification));
-        return PumpInterface.SUCCESS;
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -301,7 +326,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * reservoir level and checks the running TBR on the pump.
      */
     @Override
-    public synchronized void refreshDataFromPump(String reason) {
+    public synchronized void getPumpStatus() {
         log.debug("RefreshDataFromPump called");
         if (!pump.initialized) {
             long maxWait = System.currentTimeMillis() + 15 * 1000;
@@ -521,6 +546,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         // See if the queue might solve this, otherwise we could add a check in runCommand
         // (but can't currently determine if the request is a basal request)
         // or have the scripter skip the next bolus that comes in
+        // TODO related: if pump can't be reached, a bolus will wait until pump is available again
+        // and will then bolus all requested boluses ... because 'synchronized' makes for a dumb
+        // queue
         if (bolusInProgress) {
             ruffyScripter.cancelBolus();
         }
