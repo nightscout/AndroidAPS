@@ -784,11 +784,8 @@
     <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
     <string name="combo_pump_never_connected">Never</string>
-    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin left in reservoir for bolus</string>
-    <string name="combo_pump_bolus_history_state_mismatch">A bolus has been delivered directly on the pump recently, of which AndroidAPS has only just become aware of. The pump\'s history is currently being read. Please check the Combo page, verify the last bolus and IOB and bolus again if needed. No bolus has been delivered.</string>
-    <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
-    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
+    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please the pump and treatments tabs and bolus again as needed.</string>
     <string name="combo_force_disabled_notification">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours or the selected basal rate is not 1. Loop mode has been set to low-suspend only until 6 hours after the last unsupported bolus or basal rate profile. Only normal boluses are supported in loop mode with basal rate profile 1.</string>
     <string name="combo_notification_check_time_date">Check pump time and date</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>

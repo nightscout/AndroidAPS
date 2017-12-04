@@ -438,7 +438,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
-    // TODO rewrite to read last bolus (via mydata) only when bolus failed or if it was cancelled midways
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         // guard against boluses issued multiple times within a minute
@@ -455,28 +454,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
 
-            // refresh pump data
-            CommandResult reservoirBolusResult = runCommand(null, 3,
-                    ruffyScripter::readReservoirLevelAndLastBolus);
-            if (!reservoirBolusResult.success) {
-                log.error("Bolus delivery failure at stage 1", new Exception());
-                return new PumpEnactResult().success(false).enacted(false);
-            }
-
-            // check enough insulin left for bolus
-            if (Math.round(detailedBolusInfo.insulin + 0.5) > reservoirBolusResult.reservoirLevel) {
-                log.error("Bolus delivery failure at stage 2", new Exception());
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficient_for_bolus));
-            }
-
-            // verify we're update to date and know the most recent bolus
-            if (!Objects.equals(lastKnownBolus, reservoirBolusResult.lastBolus)) {
-                log.error("Bolus delivery failure at stage 3", new Exception());
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_history_state_mismatch));
-            }
-
             if (cancelBolus) {
                 return new PumpEnactResult().success(true).enacted(false);
             }
@@ -488,28 +465,29 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                             detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
             bolusInProgress = false;
 
-            if (!bolusCmdResult.success) {
-                new Thread(this::checkPumpHistory).start();
-                log.error("Bolus delivery failure at stage 4", new Exception());
+            if (!cancelBolus && bolusCmdResult.success) {
+                detailedBolusInfo.date = bolusCmdResult.state.timestamp;
+                detailedBolusInfo.source = Source.USER;
+                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                return new PumpEnactResult().success(true).enacted(true)
+                        .bolusDelivered(detailedBolusInfo.insulin)
+                        .carbsDelivered(detailedBolusInfo.carbs);
+            }
+
+            // in case of error check what was actually delivered
+            CommandResult historyResult = runCommand(null, 1,
+                    () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
+            if (!historyResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
             }
-
-            // verify delivered bolus
-            reservoirBolusResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
-            if (!reservoirBolusResult.success) {
-                log.error("Bolus delivery failure at stage 5", new Exception());
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
-            }
-            Bolus lastPumpBolus = reservoirBolusResult.lastBolus;
+            Bolus lastPumpBolus = historyResult.lastBolus;
             if (cancelBolus) {
                 // if cancellation was requested, the delivered bolus is allowed to differ from requested
             } else if (lastPumpBolus == null || Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01
                     || System.currentTimeMillis() - lastPumpBolus.timestamp > 5 * 60 * 1000) {
-                log.error("Bolus delivery failure at stage 6", new Exception());
                 return new PumpEnactResult().success(false).enacted(false).
-                        comment(MainApp.sResources.getString(R.string.combo_pump_bolus_verification_failed));
+                        comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
             }
 
             // add treatment record to DB (if it wasn't cancelled)
@@ -538,6 +516,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public void stopBolusDelivering() {
+        // TODO if the pump is busy setting a TBR while a bolus was requested,
+        // cancelling here, when the TBR is still being set will fail to cancel the bolus.
+        // See if the queue might solve this, otherwise we could add a check in runCommand
+        // (but can't currently determine if the request is a basal request)
+        // or have the scripter skip the next bolus that comes in
         if (bolusInProgress) {
             ruffyScripter.cancelBolus();
         }
