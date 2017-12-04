@@ -552,7 +552,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             //OpenAPS status
             if(Config.APS){
                 //we are AndroidAPS
-                openApsStatus = LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime(): -1;
+                openApsStatus = LoopPlugin.lastRun != null && LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime(): -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
