@@ -23,7 +23,7 @@ public class Config {
     public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
 
 
-    public static final boolean displayDeviationSlope = true;
+    public static final boolean displayDeviationSlope = false;
 
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
