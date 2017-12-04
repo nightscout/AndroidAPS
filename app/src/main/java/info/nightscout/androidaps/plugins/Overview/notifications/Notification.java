@@ -64,6 +64,8 @@ public class Notification {
 
     public NSAlarm nsAlarm = null;
     public Integer soundId = null;
+    public Notification() {
+    }
 
     public Notification(int id, Date date, String text, int level, Date validTo) {
         this.id = id;
@@ -175,9 +177,10 @@ public class Notification {
         return false;
     }
 
-    static boolean isAlarmForStaleData() {
-        if (SP.getLong("snoozedTo", 0L) != 0L) {
-            if (System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
+    public static boolean isAlarmForStaleData(){
+        long snoozedTo = SP.getLong("snoozedTo", 0L);
+        if(snoozedTo != 0L){
+            if(System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
                 //log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
                 return false;
             }
@@ -188,16 +191,17 @@ public class Notification {
         long bgReadingAgo = System.currentTimeMillis() - bgReading.date;
         int bgReadingAgoMin = (int) (bgReadingAgo / (1000 * 60));
         // Added for testing
-        //bgReadingAgoMin = 20;
-        log.debug("bgReadingAgoMin value is:" + bgReadingAgoMin);
-        Double threshold = NSSettingsStatus.getInstance().getThreshold("alarmTimeagoWarnMins");
+        // bgReadingAgoMin = 20;
         boolean openAPSEnabledAlerts = NSSettingsStatus.getInstance().openAPSEnabledAlerts();
-        log.debug("OpenAPS Alerts enabled: " + openAPSEnabledAlerts);
-        // if no thresshold from Ns get it loccally
-        if (threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue, 15D);
-        // No threshold of OpenAPS Alarm so using the one for BG
-        // Added OpenAPSEnabledAlerts to alarm check
-        if ((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false)) || (bgReadingAgoMin > threshold && openAPSEnabledAlerts)) {
+        //log.debug("bgReadingAgoMin value is:"+bgReadingAgoMin);
+        //log.debug("Stale alarm snoozed to: "+(System.currentTimeMillis() - snoozedTo)/60000L);
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("alarmTimeagoWarnMins");
+	//log.debug("OpenAPS Alerts enabled: "+openAPSEnabledAlerts);
+	// if no thresshold from Ns get it loccally
+        if(threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue,15D);
+	// No threshold of OpenAPS Alarm so using the one for BG 
+	// Added OpenAPSEnabledAlerts to alarm check
+        if((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false))||(bgReadingAgoMin > threshold && openAPSEnabledAlerts)){
             return true;
         }
         //snoozing for threshold

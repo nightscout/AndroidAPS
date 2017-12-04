@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
@@ -134,7 +135,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
         if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(IobCobCalculatorPlugin.class.getSimpleName());
+            sHandlerThread = new HandlerThread(IobCobCalculatorPlugin.class.getSimpleName(), Process.THREAD_PRIORITY_LOWEST);
             sHandlerThread.start();
             sHandler = new Handler(sHandlerThread.getLooper());
         }

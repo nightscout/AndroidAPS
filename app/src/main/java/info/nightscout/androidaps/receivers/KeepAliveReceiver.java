@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -81,7 +82,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
             boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis();
 
-            if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), true)
+            if (Config.APS && SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), true)
                     && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !ConfigBuilderPlugin.getActiveLoop().isDisconnected()) {
                 Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
                 n.soundId = R.raw.alarm;

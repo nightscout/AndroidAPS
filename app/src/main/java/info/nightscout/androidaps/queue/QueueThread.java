@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.queue;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -16,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 09.11.2017.
@@ -61,8 +63,27 @@ public class QueueThread extends Thread {
                     MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult()));
                     MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.connectiontimedout)));
                     pump.stopConnecting();
-                    queue.clear();
-                    return;
+
+                    //BLUETOOTH-WATCHDOG
+                    boolean watchdog = SP.getBoolean(R.string.key_btwatchdog, false);
+                    long last_watchdog = SP.getLong(R.string.key_btwatchdog_lastbark, 0l);
+                    watchdog = watchdog && System.currentTimeMillis() - last_watchdog > (Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000);
+                    if(watchdog) {
+                        log.debug("BT watchdog - toggeling the phonest bluetooth");
+                        //write time
+                        SP.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis());
+                        //toggle BT
+                        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        mBluetoothAdapter.disable();
+                        SystemClock.sleep(1000);
+                        mBluetoothAdapter.enable();
+                        SystemClock.sleep(1000);
+                        //start over again once after watchdog barked
+                        connectionStartTime = System.currentTimeMillis();
+                    } else {
+                        queue.clear();
+                        return;
+                    }
                 }
 
                 if (!pump.isConnected()) {
@@ -76,8 +97,8 @@ public class QueueThread extends Thread {
                 if (queue.performing() == null) {
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
-                        log.debug("State: performing");
                         queue.pickup();
+                        log.debug("State: performing " + queue.performing().status());
                         MainApp.bus().post(new EventQueueChanged());
                         queue.performing().execute();
                         queue.resetPerforming();

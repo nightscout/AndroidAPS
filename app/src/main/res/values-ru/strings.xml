@@ -370,7 +370,7 @@
     <string name="overview">начало</string>
     <string name="overview_bolus_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2 fU е инс</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2fU е инс</string>
     <string name="overview_bolusprogress_stop">стоп</string>
     <string name="overview_bolusprogress_stoped">остановлено</string>
     <string name="overview_bolusprogress_stoppressed">нажат стоп</string>
