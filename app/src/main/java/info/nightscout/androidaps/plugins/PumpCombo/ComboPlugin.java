@@ -772,9 +772,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        // check if TBR was cancelled or set by user
-        boolean mismatch = checkForTbrMismatch(preCheckResult.state);
-        if (mismatch) checkPumpHistory();
+        checkAndResolveTbrMismatch(preCheckResult.state);
 
         // raise notification if clock is off (setting clock is not supported by ruffy)
         if (preCheckResult.state.pumpTimeMinutesOfDay != 0) {
@@ -834,45 +832,42 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     /**
      * Checks the main screen to determine if TBR on pump matches app state.
      */
-    private boolean checkForTbrMismatch(PumpState state) {
-        // TODO
-        if (1==1) return false;
+    private void checkAndResolveTbrMismatch(PumpState state) {
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        boolean sync = false;
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
-            // TODO add AAPS record for the active TBR with whatever time is remaining on it
-            log.debug("Pump runs TBR AAPS is unaware of, cancelling TBR so it can be read from history properly");
-            runCommand(null, 0, ruffyScripter::cancelTbr);
-            sync = true;
+            log.debug("Creating temp basal from pump TBR");
+            TemporaryBasal newTempBasal = new TemporaryBasal();
+            newTempBasal.date = System.currentTimeMillis();
+            newTempBasal.percentRate = state.tbrPercent;
+            newTempBasal.isAbsolute = false;
+            newTempBasal.durationInMinutes = state.tbrRemainingDuration;
+            newTempBasal.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
-            // TODO create end record for the TBR active in AAPS
-            log.debug("AAPS shows a TBR but pump isn't running a TBR; deleting TBR in AAPS and reading pump history");
-            MainApp.getDbHelper().delete(aapsTbr);
-            sync = true;
-        } else if (aapsTbr != null && state.tbrActive) {
-            // both AAPS and pump have an active TBR ...
-            if (aapsTbr.percentRate != state.tbrPercent) {
-                // ... but they have different percentages
-                // TODO end AAPS TBR, start new TBR based on pump TBR
-                log.debug("TBR percentage differs between AAPS and pump; deleting TBR in AAPS and reading pump history");
-                MainApp.getDbHelper().delete(aapsTbr);
-                sync = true;
-            }
-            int durationDiff = Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration);
-            if (durationDiff > 2) {
-                // TODO end AAPS TBR, start new TBR based on pump TBR
-                // ... but they have different runtimes
-                log.debug("TBR duration differs between AAPS and pump; deleting TBR in AAPS and reading pump history");
-                MainApp.getDbHelper().delete(aapsTbr);
-                sync = true;
-            }
-        }
+            log.debug("Ending AAPS-TBR since pump has no TBR active");
+            TemporaryBasal tempStop = new TemporaryBasal();
+            tempStop.date = aapsTbr.date;
+            tempStop.durationInMinutes = 0;
+            tempStop.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
+        } else if (aapsTbr != null && state.tbrActive
+                && (aapsTbr.percentRate != state.tbrPercent ||
+                Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
+            log.debug("AAPSs and pump-TBR differ; Ending AAPS-TBR and creating new TBR based on pump TBR");
+            TemporaryBasal tempStop = new TemporaryBasal();
+            tempStop.date = aapsTbr.date;
+            tempStop.durationInMinutes = 0;
+            tempStop.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
 
-        if (sync) {
-            log.debug("Sync requested from checkTbrMismatch");
+            TemporaryBasal newTempBasal = new TemporaryBasal();
+            newTempBasal.date = System.currentTimeMillis();
+            newTempBasal.percentRate = state.tbrPercent;
+            newTempBasal.isAbsolute = false;
+            newTempBasal.durationInMinutes = state.tbrRemainingDuration;
+            newTempBasal.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
         }
-
-        return sync;
     }
 
     /**
