@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -122,11 +123,6 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        double timestamp = 0;
-        if (intent != null) {
-            timestamp = intent.getDoubleExtra("timestamp", 0);
-        }
-
         String action = null;
         if (intent != null) {
             action = intent.getAction();
@@ -247,7 +243,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         DataMap dataMap = new DataMap();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
-        dataMap.putDouble("timestamp", lastBG.date);
+        dataMap.putLong("timestamp", lastBG.date);
         if (glucoseStatus == null) {
             dataMap.putString("slopeArrow", "");
             dataMap.putString("delta", "--");
@@ -481,7 +477,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(OPEN_SETTINGS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("openSettings", "openSettings");
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
@@ -494,7 +490,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BOLUS_PROGRESS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("bolusProgress", "bolusProgress");
             dataMapRequest.getDataMap().putString("progressstatus", status);
             dataMapRequest.getDataMap().putInt("progresspercent", progresspercent);
@@ -509,7 +505,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(ACTION_CONFIRMATION_REQUEST_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("actionConfirmationRequest", "actionConfirmationRequest");
             dataMapRequest.getDataMap().putString("title", title);
             dataMapRequest.getDataMap().putString("message", message);
@@ -551,8 +547,16 @@ public class WatchUpdaterService extends WearableListenerService implements
             int phoneBattery = getBatteryLevel(getApplicationContext());
             String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
 
+
+            long openApsStatus = -1;
             //OpenAPS status
-            Double openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
+            if(Config.APS){
+                //we are AndroidAPS
+                openApsStatus = LoopPlugin.lastRun != null && LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime(): -1;
+            } else {
+                //NSClient or remote
+                openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
+            }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
@@ -564,7 +568,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("tempBasal", tempBasal);
             dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
             dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
-            dataMapRequest.getDataMap().putDouble("openApsStatus", openApsStatus);
+            dataMapRequest.getDataMap().putLong("openApsStatus", openApsStatus);
             dataMapRequest.getDataMap().putString("bgi", bgiString);
             dataMapRequest.getDataMap().putBoolean("showBgi", mPrefs.getBoolean("wear_showbgi", false));
             dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
@@ -582,7 +586,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);

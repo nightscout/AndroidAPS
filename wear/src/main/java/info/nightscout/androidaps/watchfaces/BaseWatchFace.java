@@ -50,7 +50,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
     public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
-    public double datetime;
+    public long datetime;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate;
     public long sgvLevel = 0;
@@ -85,7 +85,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     public boolean detailedIOB = false;
     public boolean showBGI = false;
-    public Double openApsStatus;
+    public long openApsStatus;
     public String externalStatusString = "no status";
     public String sSgv = "---";
     public String sDirection = "--";
@@ -213,6 +213,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     @Override
     protected void onDraw(Canvas canvas) {
         if (layoutSet) {
+            setupCharts();
             this.mRelativeLayout.draw(canvas);
             Log.d("onDraw", "draw");
         }
@@ -241,7 +242,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 DataMap dataMap = DataMap.fromBundle(bundle);
                 wakeLock.acquire(50);
                 sgvLevel = dataMap.getLong("sgvLevel");
-                datetime = dataMap.getDouble("timestamp");
+                datetime = dataMap.getLong("timestamp");
                 sSgv = dataMap.getString("sgvString");
                 sDirection = dataMap.getString("slopeArrow");
                 sDelta = dataMap.getString("delta");
@@ -268,7 +269,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 showBGI = dataMap.getBoolean("showBgi");
                 externalStatusString = dataMap.getString("externalStatusString");
                 batteryLevel = dataMap.getInt("batteryLevel");
-                openApsStatus = dataMap.getDouble("openApsStatus");
+                openApsStatus = dataMap.getLong("openApsStatus");
             }
 
             setDataFields();
@@ -453,7 +454,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         if (mLoop != null) {
             if (sharedPrefs.getBoolean("showExternalStatus", true)) {
                 mLoop.setVisibility(View.VISIBLE);
-                if (openApsStatus != null) {
+                if (openApsStatus != -1) {
                     int mins = (int) ((System.currentTimeMillis() - openApsStatus) / 1000 / 60);
                     mLoop.setText(mins + "'");
                     if (mins > 14) {
@@ -557,14 +558,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 double sgv = entry.getDouble("sgvDouble");
                 double high = entry.getDouble("high");
                 double low = entry.getDouble("low");
-                double timestamp = entry.getDouble("timestamp");
+                long timestamp = entry.getLong("timestamp");
                 bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
             }
         } else {
             double sgv = dataMap.getDouble("sgvDouble");
             double high = dataMap.getDouble("high");
             double low = dataMap.getDouble("low");
-            double timestamp = dataMap.getDouble("timestamp");
+            long timestamp = dataMap.getLong("timestamp");
 
             final int size = bgDataList.size();
             if (size > 0) {
