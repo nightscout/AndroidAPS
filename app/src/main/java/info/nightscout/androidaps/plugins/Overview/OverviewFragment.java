@@ -203,7 +203,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             } else if (Config.NSCLIENT || Config.G5UPLOADER) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
                 shorttextmode = true;
-            } else if (smallHeight) {
+            } else if (smallHeight || landscape) {
                 view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
             } else {
                 view = inflater.inflate(R.layout.overview_fragment, container, false);
