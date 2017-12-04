@@ -308,7 +308,7 @@ public class NSDeviceStatus {
         return Html.fromHtml(string.toString());
     }
 
-    public static double getOpenApsTimestamp() {
+    public static long getOpenApsTimestamp() {
 
         if (deviceStatusOpenAPSData.clockSuggested != 0) {
             return deviceStatusOpenAPSData.clockSuggested;
