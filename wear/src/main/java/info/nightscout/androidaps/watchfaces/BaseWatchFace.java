@@ -213,6 +213,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     @Override
     protected void onDraw(Canvas canvas) {
         if (layoutSet) {
+            setupCharts();
             this.mRelativeLayout.draw(canvas);
             Log.d("onDraw", "draw");
         }
