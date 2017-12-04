@@ -192,8 +192,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int screen_width = dm.widthPixels;
             int screen_height = dm.heightPixels;
-            smallWidth = screen_width < Constants.SMALL_WIDTH;
-            smallHeight = screen_height < Constants.SMALL_HEIGHT;
+            smallWidth = screen_width <= Constants.SMALL_WIDTH;
+            smallHeight = screen_height <= Constants.SMALL_HEIGHT;
             boolean landscape = screen_height < screen_width;
 
             View view;

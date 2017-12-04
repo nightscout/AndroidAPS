@@ -24,6 +24,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -191,14 +192,15 @@ public class DanaRSService extends Service {
 
 
     public boolean bolus(final double insulin, int carbs, long carbtime, Treatment t) {
+        if (!isConnected()) return false;
+        if (BolusProgressDialog.stopPressed) return false;
+
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.startingbolus)));
         bolusingTreatment = t;
         final int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, preferencesSpeed);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t); // initialize static variables
         DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t); // initialize static variables
-
-        if (!isConnected()) return false;
 
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs); ####

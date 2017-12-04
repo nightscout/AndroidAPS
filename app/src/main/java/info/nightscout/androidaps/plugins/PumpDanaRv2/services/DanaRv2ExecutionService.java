@@ -34,6 +34,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -357,6 +358,9 @@ public class DanaRv2ExecutionService extends Service {
     }
 
     public boolean bolus(final double amount, int carbs, long carbtime, final Treatment t) {
+        if (!isConnected()) return false;
+        if (BolusProgressDialog.stopPressed) return false;
+
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.startingbolus)));
         bolusingTreatment = t;
         final int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
@@ -366,8 +370,6 @@ public class DanaRv2ExecutionService extends Service {
         else
             start = new MsgBolusStartWithSpeed(amount, preferencesSpeed);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
-
-        if (!isConnected()) return false;
 
         if (carbs > 0) {
             MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs);

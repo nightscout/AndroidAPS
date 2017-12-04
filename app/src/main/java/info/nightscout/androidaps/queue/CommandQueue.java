@@ -77,11 +77,7 @@ public class CommandQueue {
     private QueueThread thread = null;
 
     private PumpEnactResult executingNowError() {
-        PumpEnactResult result = new PumpEnactResult();
-        result.success = false;
-        result.enacted = false;
-        result.comment = MainApp.sResources.getString(R.string.executingrightnow);
-        return result;
+        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
     }
 
     public boolean isRunning(Command.CommandType type) {
@@ -137,6 +133,13 @@ public class CommandQueue {
             thread = new QueueThread(this);
             thread.start();
         }
+    }
+
+    public static void independentConnect(String reason, Callback callback) {
+        CommandQueue tempCommandQueue = new CommandQueue();
+        tempCommandQueue.readStatus(reason, callback);
+        QueueThread tempThread = new QueueThread(tempCommandQueue);
+        tempThread.start();
     }
 
     // returns true if command is queued
