@@ -362,16 +362,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private void updateLocalData(CommandResult result) {
-        if (result.reservoirLevel != PumpState.UNKNOWN) {
-            pump.reservoirLevel = result.reservoirLevel;
-        }
-
-        if (result.lastBolus != null) {
-            pump.lastBolus = result.lastBolus;
-        } else if (result.history != null && !result.history.bolusHistory.isEmpty()) {
-            pump.lastBolus = result.history.bolusHistory.get(0);
-        }
-
         if (result.state.menu != null) {
             pump.state = result.state;
         }
@@ -462,8 +452,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     .comment(MainApp.sResources.getString(R.string.bolus_frequency_exceeded));
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
-
-        Bolus lastKnownBolus = pump.lastBolus;
 
         try {
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
@@ -1047,7 +1035,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             JSONObject pumpJson = new JSONObject();
             pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
             // TODO can we upload empty/low/normal or is a int expected? If so, use fake numbers like 0/50/200
-            pumpJson.put("reservoir", pump.reservoirLevel);
+//            pumpJson.put("reservoir", pump.reservoirState);
 
             JSONObject statusJson = new JSONObject();
             statusJson.put("status", getStateSummary());
@@ -1057,10 +1045,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             JSONObject extendedJson = new JSONObject();
             extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             extendedJson.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
-            if (pump.lastBolus != null) {
-                extendedJson.put("LastBolus", new Date(pump.lastBolus.timestamp).toLocaleString());
-                extendedJson.put("LastBolusAmount", DecimalFormatter.to1Decimal(pump.lastBolus.amount));
-            }
             PumpState ps = pump.state;
             if (ps.tbrActive) {
                 extendedJson.put("TempBasalAbsoluteRate", ps.tbrRate);
