@@ -78,7 +78,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     @Override
     public boolean onLongClick(View view) {
         switch (view.getId()) {
-            case R.id.combo_refresh:
+            case R.id.combo_tdd_history:
                 new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start();
                 return true;
         }
@@ -155,7 +155,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setTextColor(Color.WHITE);
                     }
 
-/* triggers pump bug
+/* reading the data that would be displayed here triggers pump bug
                     // last bolus
                     Bolus bolus = plugin.getPump().lastBolus;
                     if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
