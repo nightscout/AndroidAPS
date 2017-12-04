@@ -17,11 +17,11 @@ import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.PumpWarningCodes;
 import de.jotomo.ruffy.spi.RuffyCommands;
+import de.jotomo.ruffy.spi.WarningOrErrorCode;
 import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffy.spi.history.PumpHistory;
 import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.history.Tbr;
-import de.jotomo.ruffy.spi.WarningOrErrorCode;
 import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -558,7 +558,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         cancelBolus = true;
     }
 
-    // Note: AAPS calls this only to enact OpenAPS recommendations
+    // Note: AAPS calls this solely to enact OpenAPS suggestions
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         // the force parameter isn't used currently since we always set the tbr - there might be room for optimization to
@@ -575,7 +575,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
 
-    // Note: AAPS calls this only for setting a temp basal issued by the user
+    // Note: AAPS calls this directly only for setting a temp basal issued by the user
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes) {
         log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
@@ -618,14 +618,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (state.tbrActive && state.tbrPercent == percent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
             TemporaryBasal tempStart = new TemporaryBasal();
-            tempStart.date = state.timestamp / (60 * 1000) * (60 * 1000);
+            tempStart.date = state.timestamp;
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
             tempStart.source = Source.USER;
-            // TODO this might be rubbish, test will show
-            // fake pumpId, so this can be identified on cancellation
-            tempStart.pumpId = tempStart.date;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
 
@@ -653,16 +650,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 tempBasal.date = commandResult.state.timestamp;
                 tempBasal.durationInMinutes = 0;
                 tempBasal.source = Source.USER;
-                // not really the pumpId, but we need to use the same value here as used with
-                // starting the TBR we're cancelling here
-                tempBasal.pumpId = activeTemp.pumpId;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
                 return new PumpEnactResult().isTempCancel(true).success(true).enacted(true);
             } else {
                 return new PumpEnactResult().success(false).enacted(false);
             }
         } else if (activeTemp == null) {
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(true).enacted(false);
         } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep run (see below)
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");

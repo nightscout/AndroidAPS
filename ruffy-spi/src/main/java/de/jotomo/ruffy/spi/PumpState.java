@@ -2,7 +2,7 @@ package de.jotomo.ruffy.spi;
 
 /** State displayed on the main screen of the pump. */
 public class PumpState {
-    /** Time the state was captured, rounded to a full second */
+    /** Time the state was captured. This is NOT the pump's time! */
     public long timestamp;
     /** The time displayed on the main menu */
     public long pumpTimeMinutesOfDay;
