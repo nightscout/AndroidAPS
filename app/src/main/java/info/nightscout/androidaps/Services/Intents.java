@@ -45,4 +45,6 @@ public interface Intents {
     String ACTION_REMOTE_CALIBRATION = "com.eveningoutpost.dexdrip.NewCalibration";
 
     String GLIMP_BG = "it.ct.glicemia.ACTION_GLUCOSE_MEASURED";
+
+    String DEXCOMG5_BG = "com.dexcom.cgm.DATA";
 }

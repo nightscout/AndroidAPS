@@ -192,18 +192,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int screen_width = dm.widthPixels;
             int screen_height = dm.heightPixels;
-            smallWidth = screen_width < Constants.SMALL_WIDTH;
-            smallHeight = screen_height < Constants.SMALL_HEIGHT;
+            smallWidth = screen_width <= Constants.SMALL_WIDTH;
+            smallHeight = screen_height <= Constants.SMALL_HEIGHT;
             boolean landscape = screen_height < screen_width;
 
             View view;
 
-            if (MainApp.sResources.getBoolean(R.bool.isTablet) && BuildConfig.NSCLIENTOLNY) {
+            if (MainApp.sResources.getBoolean(R.bool.isTablet) && (Config.NSCLIENT || Config.G5UPLOADER)) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
-            } else if (BuildConfig.NSCLIENTOLNY) {
+            } else if (Config.NSCLIENT || Config.G5UPLOADER) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
                 shorttextmode = true;
-            } else if (smallHeight || landscape) {
+            } else if (smallHeight) {
                 view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
             } else {
                 view = inflater.inflate(R.layout.overview_fragment, container, false);
@@ -975,7 +975,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
-        if (Config.NSCLIENT && tempTarget == null) {
+        if ((Config.NSCLIENT || Config.G5UPLOADER) && tempTarget == null) {
             tempTargetView.setVisibility(View.GONE);
         }
 
@@ -1026,7 +1026,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull() + " ";
             }
-            if (Config.NSCLIENT)
+            if (Config.NSCLIENT || Config.G5UPLOADER)
                 basalText += "(" + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";

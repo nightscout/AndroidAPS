@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -104,7 +105,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                 butonsLayout.setVisibility(View.VISIBLE);
             }
 
-            if (BuildConfig.NSCLIENTOLNY)
+            if (Config.NSCLIENT || Config.G5UPLOADER)
                 statsLayout.setVisibility(View.GONE); // visible on overview
 
             updateGUI();
