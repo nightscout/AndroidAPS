@@ -2,9 +2,8 @@ package info.nightscout.androidaps.plugins.Actions.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -27,11 +26,10 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
@@ -48,13 +46,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
 
     NumberPicker editInsulin;
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
-
     public FillDialog() {
-        mHandlerThread = new HandlerThread(FillDialog.class.getSimpleName());
-        mHandlerThread.start();
-        this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -69,7 +61,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
-        double bolusstep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
         editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, new DecimalFormat("0.00"), false);
 
@@ -158,28 +150,21 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setPositiveButton(getString(R.string.primefill), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     if (finalInsulinAfterConstraints > 0) {
-                        final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                        mHandler.post(new Runnable() {
+                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                        detailedBolusInfo.context = context;
+                        detailedBolusInfo.source = Source.USER;
+                        detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
+                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                             @Override
                             public void run() {
-                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                detailedBolusInfo.context = context;
-                                detailedBolusInfo.source = Source.USER;
-                                detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
-                                PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                 if (!result.success) {
-                                    try {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                        builder.setMessage(result.comment);
-                                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                        builder.show();
-                                    } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                        // window has been destroyed
-                                        Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                        MainApp.bus().post(new EventNewNotification(notification));
-                                    }
+                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                    i.putExtra("soundid", R.raw.boluserror);
+                                    i.putExtra("status", result.comment);
+                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    MainApp.instance().startActivity(i);
                                 }
                             }
                         });

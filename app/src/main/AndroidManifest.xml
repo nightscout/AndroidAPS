@@ -42,6 +42,9 @@
         <activity
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
@@ -72,6 +75,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
                 <!-- Receiver from glimp -->
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
+                <!-- Receiver from DexcomG5 -->
+                <action android:name="com.dexcom.cgm.DATA" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->
@@ -142,8 +147,7 @@
             android:exported="true" />
         <service
             android:name=".plugins.Overview.notifications.DismissNotificationService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
 
         <meta-data
             android:name="io.fabric.ApiKey"

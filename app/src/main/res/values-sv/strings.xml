@@ -293,7 +293,6 @@
     <string name="xdripnotinstalled">xDrip+ inte installerat</string>
     <string name="xdrip">xDrip</string>
     <string name="wrongpumppassword">Fel lösenord för pump</string>
-    <string name="wrongpumpdriverselected">Fel pump program vald</string>
     <string name="wrongpassword">Fel lösenord</string>
     <string name="wear_showbgi_title">Visa BGI</string>
     <string name="wear_showbgi_summary">Visa BGI i statusfält</string>

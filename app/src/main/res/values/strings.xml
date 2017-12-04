@@ -384,7 +384,6 @@
     <string name="pumpshutdown">Pump Shutdown</string>
     <string name="batterydischarged">Pump Battery Discharged</string>
     <string name="danarkoreanpump">DanaR Korean</string>
-    <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
     <string name="basal_rate">Basal rate:</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
@@ -760,6 +759,34 @@
     <string name="waitingforestimatedbolusend" formatted="false">Waiting for bolus end. Remaining %d sec.</string>
     <string name="processinghistory">Processing event</string>
     <string name="startingbolus">Starting bolus delivery</string>
+    <string name="executingrightnow">Command is executed right now</string>
+    <string name="pumpdrivercorrected">Pump driver corrected</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
+    <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="localalertsettings_title">Local alerts</string>
+    <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
+    <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
+    <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
+    <string name="key_pump_unreachable_threshold" translatable="false">pump_unreachable_threshold</string>
+    <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
+    <string name="urgent_alarm">Urgent Alarm</string>
+    <string name="info">INFO</string>
+    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
+    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
+    <string name="DexcomG5">DexcomG5 App (patched)</string>
+    <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
+    <string name="key_dexcomg5_nsupload">dexcomg5_nsupload</string>
+    <string name="dexcomg5_upload">G5 upload settings</string>
+    <string name="customapp">Customized APK for download</string>
+    <string name="wear_detailed_delta_title">Show detailed delta</string>
+    <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
@@ -800,20 +827,6 @@
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
     <string name="combo_is_in_error_state">Pump is in an error state, please check the pump</string>
-    <string name="pump_unreachable">Pump unreachable</string>
-    <string name="missed_bg_readings">Missed BG readings</string>
-    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
-    <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
-    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
-    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
-    <string name="localalertsettings_title">Local alerts</string>
-    <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
-    <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
-    <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
-    <string name="key_pump_unreachable_threshold" translatable="false">pump_unreachable_threshold</string>
-    <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
-    <string name="urgent_alarm">Urgent Alarm</string>
-    <string name="info">INFO</string>
     <string name="combo_empty_alert_history_note">To retrieve the alert history from the pump, long press the Refresh button.</string>
     <string name="combo_empty_tdd_history_note">To retrieve the TDD history from the pump, long press the Refresh button.</string>
     <string name="key_sync_profile_to_pump">sync_profile_to_pump</string>

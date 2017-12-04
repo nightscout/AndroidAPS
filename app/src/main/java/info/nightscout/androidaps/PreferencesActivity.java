@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.utils.LocaleHelper;
@@ -126,15 +127,16 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(id);
                 addPreferencesFromResource(R.xml.pref_advanced);
             } else {
-                if (!Config.NSCLIENT) {
+                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_password);
                 }
                 addPreferencesFromResource(R.xml.pref_age);
                 addPreferencesFromResource(R.xml.pref_language);
 
-                if (!Config.NSCLIENT) {
+                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_quickwizard);
                 }
+                addPreferencesFromResourceIfEnabled(SourceDexcomG5Plugin.getPlugin(), PluginBase.BGSOURCE);
                 addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginBase.GENERAL);
                 addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginBase.CONSTRAINTS);
                 if (Config.APS) {
@@ -147,7 +149,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginBase.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginBase.SENSITIVITY);
 
-                if (!Config.NSCLIENT) {
+                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_profile);
                 }
 
@@ -165,6 +167,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     }
                 }
 
+                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
+                    addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginBase.PUMP);
+                }
+
                 /* No usable settings yet
                 if (Config.COMBO) {
                     addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginBase.PUMP);
@@ -178,7 +184,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(NSClientInternalPlugin.getPlugin(), PluginBase.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginBase.GENERAL);
 
-                if (!Config.NSCLIENT) {
+                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_others);
                 }
                 addPreferencesFromResource(R.xml.pref_advanced);

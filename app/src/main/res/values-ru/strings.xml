@@ -370,7 +370,7 @@
     <string name="overview">начало</string>
     <string name="overview_bolus_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2 fU е инс</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2fU е инс</string>
     <string name="overview_bolusprogress_stop">стоп</string>
     <string name="overview_bolusprogress_stoped">остановлено</string>
     <string name="overview_bolusprogress_stoppressed">нажат стоп</string>
@@ -553,7 +553,6 @@
     <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
     <string name="wear_showbgi_title">показать BGI</string>
     <string name="wrongpassword">неверный пароль</string>
-    <string name="wrongpumpdriverselected">неправильно выбран драйвер помпы</string>
     <string name="wrongpumppassword">неверный пароль помпы</string>
     <string name="xdrip">xdrip</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>

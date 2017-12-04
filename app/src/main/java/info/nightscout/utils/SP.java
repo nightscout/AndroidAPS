@@ -65,7 +65,11 @@ public class SP {
     }
 
     static public long getLong(int resourceID, Long defaultValue) {
-        return SafeParse.stringToLong(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+        try {
+            return sharedPreferences.getLong(MainApp.sResources.getString(resourceID), defaultValue);
+        } catch (Exception e) {
+            return SafeParse.stringToLong(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+        }
     }
 
     static public long getLong(String key, Long defaultValue) {

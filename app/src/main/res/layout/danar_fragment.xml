@@ -124,6 +124,13 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/danar_queue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="content"
+                    android:textAlignment="center" />
+
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"

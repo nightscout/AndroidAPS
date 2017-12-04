@@ -21,6 +21,8 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
+//Added by Rumen for snooze time 
 import info.nightscout.utils.SP;
 
 /**
@@ -31,6 +33,7 @@ public class NotificationStore {
     private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
     public long snoozedUntil = 0L;
+
     public NotificationStore() {
     }
 
@@ -54,7 +57,6 @@ public class NotificationStore {
                 return;
             }
         }
-
         store.add(n);
 
         if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_notifications_as_android_notifications), false)) {
@@ -65,6 +67,11 @@ public class NotificationStore {
                 alarm.putExtra("soundid", n.soundId);
                 MainApp.instance().startService(alarm);
             }
+        }
+
+        WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
+        if (wearPlugin != null && wearPlugin.isEnabled()) {
+            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
         }
 
         Collections.sort(store, new NotificationComparator());
@@ -94,7 +101,6 @@ public class NotificationStore {
         mgr.notify(n.id, notificationBuilder.build());
     }
 
-
     public boolean remove(int id) {
         for (int i = 0; i < store.size(); i++) {
             if (get(i).id == id) {
@@ -118,14 +124,14 @@ public class NotificationStore {
             }
         }
     }
-    
-    public void snoozeTo(long timeToSnooze){
-        log.debug("Snoozing alarm until: "+timeToSnooze);
+
+    public void snoozeTo(long timeToSnooze) {
+        log.debug("Snoozing alarm until: " + timeToSnooze);
         SP.putLong("snoozedTo", timeToSnooze);
     }
-    
-    public void unSnooze(){
-        if(Notification.isAlarmForStaleData()){
+
+    public void unSnooze() {
+        if (Notification.isAlarmForStaleData()) {
             Notification notification = new Notification(Notification.NSALARM, MainApp.sResources.getString(R.string.nsalarm_staledata), Notification.URGENT);
             SP.putLong("snoozedTo", System.currentTimeMillis());
             add(notification);
@@ -133,4 +139,3 @@ public class NotificationStore {
         }
     }
 }
-

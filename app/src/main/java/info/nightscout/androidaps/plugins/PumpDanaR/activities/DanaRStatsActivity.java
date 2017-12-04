@@ -40,23 +40,16 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.DanaRInterface;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
 
 public class DanaRStatsActivity extends Activity {
     private static Logger log = LoggerFactory.getLogger(DanaRStatsActivity.class);
-
-    private boolean mBounded;
-
-    private Handler mHandler;
-    private static HandlerThread mHandlerThread;
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
@@ -72,9 +65,6 @@ public class DanaRStatsActivity extends Activity {
 
     public DanaRStatsActivity() {
         super();
-        mHandlerThread = new HandlerThread(DanaRStatsActivity.class.getSimpleName());
-        mHandlerThread.start();
-        this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -233,24 +223,18 @@ public class DanaRStatsActivity extends Activity {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-                if (pump.isBusy()) {
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.pumpbusy));
-                    return;
-                }
-                mHandler.post(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                reloadButton.setVisibility(View.GONE);
-                                statusView.setVisibility(View.VISIBLE);
-                                statsMessage.setVisibility(View.VISIBLE);
-                                statsMessage.setText(getString(R.string.danar_stats_warning_Message));
-                            }
-                        });
-                        ((DanaRInterface) pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+                        reloadButton.setVisibility(View.GONE);
+                        statusView.setVisibility(View.VISIBLE);
+                        statsMessage.setVisibility(View.VISIBLE);
+                        statsMessage.setText(getString(R.string.danar_stats_warning_Message));
+                    }
+                });
+                ConfigBuilderPlugin.getCommandQueue().loadHistory(RecordTypes.RECORD_TYPE_DAILY, new Callback() {
+                    @Override
+                    public void run() {
                         loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
                         runOnUiThread(new Runnable() {
                             @Override

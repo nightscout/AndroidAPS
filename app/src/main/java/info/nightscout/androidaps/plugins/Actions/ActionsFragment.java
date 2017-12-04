@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.Actions;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -34,6 +32,7 @@ import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,16 +53,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     Button tempBasalCancel;
     Button fill;
 
-    private static Handler sHandler;
-    private static HandlerThread sHandlerThread;
-
     public ActionsFragment() {
         super();
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(ActionsFragment.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
     }
 
 
@@ -135,14 +126,15 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         fill.setVisibility(View.GONE);
                         return;
                     }
+                    final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                     boolean allowProfileSwitch = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getProfileList().size() > 1;
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !allowProfileSwitch)
+                    if (!pump.getPumpDescription().isSetBasalProfileCapable || !pump.isInitialized() || pump.isSuspended() || !allowProfileSwitch)
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
 
 
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+                    if (!pump.getPumpDescription().isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses()) {
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                     } else {
@@ -158,7 +150,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                     }
 
 
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    if (!pump.getPumpDescription().isTempBasalCapable || !pump.isInitialized() || pump.isSuspended()) {
                         tempBasal.setVisibility(View.GONE);
                         tempBasalCancel.setVisibility(View.GONE);
                     } else {
@@ -173,7 +165,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         }
                     }
 
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended())
+                    if (!pump.getPumpDescription().isRefillingCapable || !pump.isInitialized() || pump.isSuspended())
                         fill.setVisibility(View.GONE);
                     else
                         fill.setVisibility(View.VISIBLE);
@@ -190,9 +182,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         FragmentManager manager = getFragmentManager();
-// TODO this might fix some crashes ..., let's see if they re-appear with this disabled again
-//        FragmentManager manager = getChildFragmentManager();
-        final PumpInterface pump = MainApp.getConfigBuilder();
         switch (view.getId()) {
             case R.id.actions_profileswitch:
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
@@ -214,24 +203,14 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 break;
             case R.id.actions_extendedbolus_cancel:
                 if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pump.cancelExtendedBolus();
-                            Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
-                        }
-                    });
+                    ConfigBuilderPlugin.getCommandQueue().cancelExtended(null);
+                    Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
                 if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pump.cancelTempBasal(true);
-                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
-                        }
-                    });
+                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                    Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;
             case R.id.actions_settempbasal:

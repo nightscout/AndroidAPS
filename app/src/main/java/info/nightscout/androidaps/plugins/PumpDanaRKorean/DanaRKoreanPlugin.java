@@ -61,9 +61,9 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         return DanaRFragment.class.getName();
     }
 
-    private boolean fragmentPumpEnabled = false;
-    private boolean fragmentProfileEnabled = false;
-    private boolean fragmentPumpVisible = true;
+    private static boolean fragmentPumpEnabled = false;
+    private static boolean fragmentProfileEnabled = false;
+    private static boolean fragmentPumpVisible = true;
 
     private static DanaRKoreanExecutionService sExecutionService;
 
@@ -201,11 +201,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
-            this.fragmentProfileEnabled = fragmentEnabled;
+            fragmentProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
-            this.fragmentPumpEnabled = fragmentEnabled;
+            fragmentPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
-        if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
+        if (type == PluginBase.PUMP && !fragmentEnabled && fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
             NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
@@ -216,7 +216,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
-            this.fragmentPumpVisible = fragmentVisible;
+            fragmentPumpVisible = fragmentVisible;
     }
 
     @Override
@@ -231,7 +231,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection.getTime() > 0 && !pump.isConfigUD && !pump.isEasyModeEnabled && pump.isExtendedBolusEnabled;
+        return pump.lastConnection.getTime() > 0 &&  pump.maxBasal > 0 && !pump.isConfigUD && !pump.isEasyModeEnabled && pump.isExtendedBolusEnabled;
     }
 
     @Override
@@ -247,27 +247,35 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     // Pump interface
     @Override
-    public int setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
+        PumpEnactResult result = new PumpEnactResult();
+
         if (sExecutionService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
-            return FAILED;
+            result.comment = "setNewBasalProfile sExecutionService is null";
+            return result;
         }
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return FAILED;
+            result.comment = MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet);
+            return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return FAILED;
+            result.comment = MainApp.sResources.getString(R.string.failedupdatebasalprofile);
+            return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            return SUCCESS;
+            result.success = true;
+            result.enacted = true;
+            result.comment = "OK";
+            return result;
         }
     }
 
@@ -297,13 +305,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     @Override
-    public void refreshDataFromPump(String reason) {
-        if (!isConnected() && !isConnecting()) {
-            doConnect(reason);
-        }
-    }
-
-    @Override
     public double getBaseBasalRate() {
         return pump.currentBasal;
     }
@@ -315,8 +316,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
             boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -352,9 +352,10 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         // Recheck pump status if older than 30 min
-        if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
-            doConnect("setTempBasalAbsolute old data");
-        }
+        //This should not be needed while using queue because connection should be done before calling this
+        //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
+        //    connect("setTempBasalAbsolute old data");
+        //}
 
         PumpEnactResult result = new PumpEnactResult();
 
@@ -393,9 +394,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > 200) {
-                percentRate = 200;
+            if (percentRate > getPumpDescription().maxTempPercent) {
+                percentRate = getPumpDescription().maxTempPercent;
             }
+            if (Config.logPumpActions)
+                log.debug("setTempBasalAbsolute: Calculated percent rate: " + percentRate);
+
             // If extended in progress
             if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
                 if (Config.logPumpActions)
@@ -409,7 +413,10 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
+                TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+                if (Config.logPumpActions)
+                    log.debug("setTempBasalAbsolute: currently running: " + running.toString());
+                if (running.percentRate == percentRate) {
                     if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
@@ -450,7 +457,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = configBuilderPlugin.applyBasalConstraints(extendedRateToSet);
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of 30 min
+            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
             if (Config.logPumpActions) {
@@ -650,7 +657,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         }
     }
 
-    public static void doConnect(String from) {
+    @Override
+    public void connect(String from) {
         if (sExecutionService != null) {
             sExecutionService.connect(from);
             pumpDescription.basalStep = pump.basalStep;
@@ -658,16 +666,29 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         }
     }
 
-    public static boolean isConnected() {
+    @Override
+    public boolean isConnected() {
         return sExecutionService != null && sExecutionService.isConnected();
     }
 
-    public static boolean isConnecting() {
+    @Override
+    public boolean isConnecting() {
         return sExecutionService != null && sExecutionService.isConnecting();
     }
 
-    public static void doDisconnect(String from) {
+    @Override
+    public void disconnect(String from) {
         if (sExecutionService != null) sExecutionService.disconnect(from);
+    }
+
+    @Override
+    public void stopConnecting() {
+        if (sExecutionService != null) sExecutionService.stopConnecting();
+    }
+
+    @Override
+    public void getPumpStatus() {
+        if (sExecutionService != null) sExecutionService.getPumpStatus();
     }
 
     @Override
@@ -733,8 +754,13 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
      */
 
     @Override
-    public boolean loadHistory(byte type) {
+    public PumpEnactResult loadHistory(byte type) {
         return sExecutionService.loadHistory(type);
+    }
+
+    @Override
+    public PumpEnactResult loadEvents() {
+        return null; // no history, not needed
     }
 
     /**

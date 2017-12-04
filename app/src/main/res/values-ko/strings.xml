@@ -373,7 +373,6 @@
     <string name="pumpshutdown">펌프 중지</string>
     <string name="batterydischarged">펌프배터리 방전</string>
     <string name="danarkoreanpump">다나R 한글</string>
-    <string name="wrongpumpdriverselected">펌프 드라이버가 잘못 선택되었습니다</string>
     <string name="basal_rate">기초주입량:</string>
     <string name="profile_set_failed">기초주입 프로파일 설정이 실패하였습니다</string>
     <string name="profile_set_ok">기초주입 프로파일이 펌프에 업데이트 되었습니다</string>

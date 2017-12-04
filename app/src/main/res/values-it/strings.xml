@@ -421,7 +421,6 @@
     <string name="waitingforpumpclicktorefresh">Attesa Micro. Clicca per rinnovare</string>
     <string name="wear_showbgi_title">Visualizza BGI</string>
     <string name="wrongpassword">Password Errata</string>
-    <string name="wrongpumpdriverselected">Driver Micro Errato</string>
     <string name="wrongpumppassword">Password Micro Errata</string>
     <string name="xdrip">Xdrip</string>
     <string name="xdripnotinstalled">xDrip non installato</string>
@@ -475,7 +474,7 @@
     <string name="tempbasals_realduration_label_string">DUR:</string>
     <string name="tempbasaldeliveryerror">Errore di somministrazione basale temporale</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Basale temporanea %.2fU/h for %d min avviata con successo</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Sospendi il loop per %d minuti riprendi</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">Sospendi il loop per %d minuti riprendi %s</string>
     <string name="smscommunicator_calibrationsent">La calibrazione è stata inviata. La ricezione deve essere abilitata in xDrip.</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Per interrompere la risposta basale della temperatura con il codice %s</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>

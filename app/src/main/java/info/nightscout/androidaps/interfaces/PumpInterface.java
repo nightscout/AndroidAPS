@@ -18,16 +18,20 @@ public interface PumpInterface {
     boolean isInitialized();
     boolean isSuspended();
     boolean isBusy();
+    boolean isConnected();
+    boolean isConnecting();
+
+    void connect(String reason);
+    void disconnect(String reason);
+    void stopConnecting();
+
+    void getPumpStatus();
 
     // Upload to pump new basal profile
-    int SUCCESS = 0;
-    int FAILED = 1;
-    int NOT_NEEDED = 2;
-    int setNewBasalProfile(Profile profile);
+    PumpEnactResult setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
     Date lastDataTime();
-    void refreshDataFromPump(String reason);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
 
@@ -38,7 +42,7 @@ public interface PumpInterface {
     PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);
     //some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
     //when the cancel request is requested by the user (forced), the pump should always do a real cancel
-    PumpEnactResult cancelTempBasal(boolean force);
+    PumpEnactResult cancelTempBasal(boolean enforceNew);
     PumpEnactResult cancelExtendedBolus();
 
     // Status to be passed to NS

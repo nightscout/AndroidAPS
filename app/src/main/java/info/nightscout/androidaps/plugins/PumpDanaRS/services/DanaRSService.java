@@ -1,11 +1,9 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.os.SystemClock;
 
 import com.squareup.otto.Subscribe;
@@ -20,10 +18,13 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -69,6 +70,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_D
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
@@ -77,7 +79,6 @@ public class DanaRSService extends Service {
 
     private BLEComm bleComm = BLEComm.getInstance(this);
 
-    private PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new LocalBinder();
 
     private DanaRPump danaRPump = DanaRPump.getInstance();
@@ -92,10 +93,6 @@ public class DanaRSService extends Service {
             // Ignore
         }
         MainApp.bus().register(this);
-
-        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, DanaRSService.class.getSimpleName());
-
     }
 
     public boolean isConnected() {
@@ -122,7 +119,7 @@ public class DanaRSService extends Service {
         bleComm.sendMessage(message);
     }
 
-    protected boolean getPumpStatus() {
+    public void getPumpStatus() {
         try {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpstatus)));
 
@@ -172,10 +169,10 @@ public class DanaRSService extends Service {
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        return true;
+        log.debug("Pump status loaded");
     }
 
-    public boolean loadEvents() {
+    public PumpEnactResult loadEvents() {
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
             msg = new DanaRS_Packet_APS_History_Events(0);
@@ -189,19 +186,21 @@ public class DanaRSService extends Service {
             SystemClock.sleep(100);
         }
         lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded;
-        return true;
+        log.debug("Events loaded");
+        return new PumpEnactResult().success(true);
     }
 
 
     public boolean bolus(final double insulin, int carbs, long carbtime, Treatment t) {
+        if (!isConnected()) return false;
+        if (BolusProgressDialog.stopPressed) return false;
+
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.startingbolus)));
         bolusingTreatment = t;
         final int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, preferencesSpeed);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t); // initialize static variables
         DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t); // initialize static variables
-
-        if (!isConnected()) return false;
 
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs); ####
@@ -231,7 +230,7 @@ public class DanaRSService extends Service {
             }
         }
 
-        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+        final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
         bolusingEvent.t = t;
         bolusingEvent.percent = 99;
 
@@ -256,14 +255,16 @@ public class DanaRSService extends Service {
             MainApp.bus().post(bolusingEvent);
             SystemClock.sleep(1000);
         }
-        if (!(isConnected()))
-            DanaRSPlugin.getPlugin().connect("loadEvents");
-        loadEvents();
-        // reread bolus status
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
-        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
-        bolusingEvent.percent = 100;
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
+        ConfigBuilderPlugin.getCommandQueue().loadEvents(new Callback() {
+            @Override
+            public void run() {
+                // reread bolus status
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
+            }
+        });
         return true;
     }
 
@@ -358,8 +359,9 @@ public class DanaRSService extends Service {
         return true;
     }
 
-    public boolean loadHistory(byte type) {
-        if (!isConnected()) return false;
+    public PumpEnactResult loadHistory(byte type) {
+        PumpEnactResult result = new PumpEnactResult();
+        if (!isConnected()) return result;
         DanaRS_Packet_History_ msg = null;
         switch (type) {
             case RecordTypes.RECORD_TYPE_ALARM:
@@ -400,7 +402,9 @@ public class DanaRSService extends Service {
             SystemClock.sleep(200);
             bleComm.sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(0));
         }
-        return true;
+        result.success = true;
+        result.comment = "OK";
+        return result;
     }
 
 

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Insulin;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;

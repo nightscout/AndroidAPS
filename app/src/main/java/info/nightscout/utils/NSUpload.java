@@ -18,11 +18,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -220,7 +222,7 @@ public class NSUpload {
                 log.debug("OpenAPS data too old to upload");
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = MainApp.getConfigBuilder().getJSONStatus();
+            JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus();
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }
@@ -371,6 +373,30 @@ public class NSUpload {
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("notes", error);
             data.put("isAnnouncement", true);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        bundle.putString("data", data.toString());
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
+    }
+
+    public static void uploadBg(BgReading reading) {
+        Context context = MainApp.instance().getApplicationContext();
+        Bundle bundle = new Bundle();
+        bundle.putString("action", "dbAdd");
+        bundle.putString("collection", "entries");
+        JSONObject data = new JSONObject();
+        try {
+            data.put("device", "AndroidAPS-DexcomG5");
+            data.put("date", reading.date);
+            data.put("dateString", DateUtil.toISOString(reading.date));
+            data.put("sgv", reading.value);
+            data.put("direction", reading.direction);
+            data.put("type", "sgv");
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

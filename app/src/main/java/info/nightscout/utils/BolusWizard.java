@@ -6,6 +6,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by mike on 11.10.2016.
@@ -124,7 +125,7 @@ public class BolusWizard {
             calculatedTotalInsulin = 0d;
         }
 
-        double bolusStep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        double bolusStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
         return calculatedTotalInsulin;

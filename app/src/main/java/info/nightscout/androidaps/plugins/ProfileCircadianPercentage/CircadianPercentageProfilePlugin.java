@@ -16,12 +16,10 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -169,7 +167,55 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         createConvertedProfile();
     }
 
-    public static void migrateToLP(){
+    public String externallySetParameters(int timeshift, int percentage) {
+
+        String msg = "";
+
+        if (!fragmentEnabled) {
+            msg += "NO CPP!" + "\n";
+        }
+
+        //check for validity
+        if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
+            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage") + "\n";
+        }
+        if (timeshift < 0 || timeshift > 23) {
+            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
+        }
+        if (!SP.getBoolean("syncprofiletopump", false)) {
+            msg += MainApp.sResources.getString(R.string.syncprofiletopump_title) + " " + MainApp.sResources.getString(R.string.cpp_sync_setting_missing) + "\n";
+        }
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (profile == null || profile.getBasal() == null) {
+            msg += MainApp.sResources.getString(R.string.cpp_notloadedplugins) + "\n";
+        }
+        if (!"".equals(msg)) {
+            msg += MainApp.sResources.getString(R.string.cpp_valuesnotstored);
+            return msg;
+        }
+
+        //store profile
+        this.timeshift = timeshift;
+        this.percentage = percentage;
+        storeSettings();
+
+
+        //send profile to pumpe
+        new NewNSTreatmentDialog(); //init
+        NewNSTreatmentDialog.doProfileSwitch(this.getProfile(), this.getProfileName(), 0, percentage, timeshift);
+
+        //return formatted string
+        /*msg += "%: " + this.percentage + " h: +" + this.timeshift;
+        msg += "\n";
+        msg += "\nBasal:\n" + basalString() + "\n";
+        msg += "\nISF:\n" + isfString() + "\n";
+        msg += "\nIC:\n" + isfString() + "\n";*/
+
+        return msg;
+    }
+
+    public static void migrateToLP() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("LocalProfile" + "mmol", SP.getBoolean(SETTINGS_PREFIX + "mmol", false));
@@ -183,7 +229,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             JSONArray targetHigh = new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", SP.getDouble(SETTINGS_PREFIX + "targethigh", 120d)));
             editor.putString("LocalProfile" + "targetlow", targetLow.toString());
             editor.putString("LocalProfile" + "targethigh", targetHigh.toString());
-        }  catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         editor.commit();
@@ -198,19 +244,19 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     }
 
-    public static String getLPisf(){
+    public static String getLPisf() {
         return getLPConversion("baseisf", 35d);
     }
 
-    public static String getLPic(){
+    public static String getLPic() {
         return getLPConversion("baseic", 4);
     }
 
-    public static String getLPbasal(){
+    public static String getLPbasal() {
         return getLPConversion("basebasal", 1);
     }
 
-    public static String getLPConversion(String type, double defaultValue){
+    public static String getLPConversion(String type, double defaultValue) {
         try {
             JSONArray jsonArray = new JSONArray();
             double last = -1d;
@@ -220,10 +266,10 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                 String time;
                 DecimalFormat df = new DecimalFormat("00");
                 time = df.format(i) + ":00";
-                if(last != value) {
+                if (last != value) {
                     jsonArray.put(new JSONObject().put("time", time).put("timeAsSeconds", i * 60 * 60).put("value", value));
                 }
-                last =  value;
+                last = value;
             }
             return jsonArray.toString();
         } catch (JSONException e) {

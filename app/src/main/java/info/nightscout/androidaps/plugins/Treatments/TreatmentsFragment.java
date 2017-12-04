@@ -18,6 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsProfileSwitchFragment;
@@ -113,7 +114,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
 
     @Override
     protected void updateGUI() {
-        if (MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().isExtendedBolusCapable
                 || MainApp.getConfigBuilder().getExtendedBolusesFromHistory().size() > 0) {
             extendedBolusesTab.setVisibility(View.VISIBLE);
         } else {
