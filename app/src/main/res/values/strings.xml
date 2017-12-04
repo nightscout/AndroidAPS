@@ -811,11 +811,8 @@
     <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
     <string name="combo_pump_never_connected">Never</string>
-    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin left in reservoir for bolus</string>
-    <string name="combo_pump_bolus_history_state_mismatch">A bolus has been delivered directly on the pump recently, of which AndroidAPS has only just become aware of. The pump\'s history is currently being read. Please check the Combo page, verify the last bolus and IOB and bolus again if needed. No bolus has been delivered.</string>
-    <string name="combo_pump_bolus_verification_failed">Bolus delivery verification failed. The pump history will be read again on the next loop run or when refreshing from the Combo page. Please check and bolus again if needed.</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
-    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please check the Combo page and bolus again as needed.</string>
+    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please the pump and treatments tabs and bolus again as needed.</string>
     <string name="combo_force_disabled_notification">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours or the selected basal rate is not 1. Loop mode has been set to low-suspend only until 6 hours after the last unsupported bolus or basal rate profile. Only normal boluses are supported in loop mode with basal rate profile 1.</string>
     <string name="combo_notification_check_time_date">Check pump time and date</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
@@ -827,11 +824,13 @@
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
     <string name="combo_is_in_error_state">Pump is in an error state, please check the pump</string>
-    <string name="combo_empty_alert_history_note">To retrieve the alert history from the pump, long press the Refresh button.</string>
-    <string name="combo_empty_tdd_history_note">To retrieve the TDD history from the pump, long press the Refresh button.</string>
+    <string name="combo_empty_history_note">To read all data from the pump, long press the Stats button.\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
     <string name="key_sync_profile_to_pump">sync_profile_to_pump</string>
     <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
     <string name="combo_tdd_average">Average: %3.1f U</string>
     <string name="combo_tdd_maximum">Maximum: %3.1f U</string>
+    <string name="combo_reservoir_low">Low</string>
+    <string name="combo_reservoir_empty">Empty</string>
+    <string name="combo_reservoir_normal">Normal</string>
 </resources>
 

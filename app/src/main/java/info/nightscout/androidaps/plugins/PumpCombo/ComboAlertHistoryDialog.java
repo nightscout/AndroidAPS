@@ -20,7 +20,7 @@ public class ComboAlertHistoryDialog extends DialogFragment {
         TextView text = (TextView) layout.findViewById(R.id.combo_error_history_text);
         List<PumpAlert> errors = ComboPlugin.getPlugin().getPump().errorHistory;
         if (errors.isEmpty()) {
-            text.setText(R.string.combo_empty_alert_history_note);
+            text.setText(R.string.combo_empty_history_note);
         } else {
             StringBuilder sb = new StringBuilder();
             DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);

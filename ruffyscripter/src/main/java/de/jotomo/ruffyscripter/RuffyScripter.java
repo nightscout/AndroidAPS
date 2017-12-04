@@ -499,8 +499,7 @@ public class RuffyScripter implements RuffyCommands {
      */
     public PumpState readPumpStateInternal() {
         PumpState state = new PumpState();
-        // round timestamp to full second
-        state.timestamp = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
+        state.timestamp = System.currentTimeMillis();
         Menu menu = currentMenu;
         if (menu == null) {
             return state;
