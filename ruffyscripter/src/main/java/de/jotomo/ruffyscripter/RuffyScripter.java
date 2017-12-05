@@ -523,8 +523,6 @@ public class RuffyScripter implements RuffyCommands {
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
-            MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
-            state.pumpTimeMinutesOfDay = time.getHour() * 60 + time.getMinute();
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
         } else if (menuType == MenuType.WARNING_OR_ERROR) {

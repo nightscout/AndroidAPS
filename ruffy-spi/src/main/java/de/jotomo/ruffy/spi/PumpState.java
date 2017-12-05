@@ -4,8 +4,6 @@ package de.jotomo.ruffy.spi;
 public class PumpState {
     /** Time the state was captured. This is NOT the pump's time! */
     public long timestamp;
-    /** The time displayed on the main menu */
-    public long pumpTimeMinutesOfDay;
     public String menu = null;
     public boolean suspended;
 

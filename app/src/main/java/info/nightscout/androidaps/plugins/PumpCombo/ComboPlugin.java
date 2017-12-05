@@ -346,15 +346,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
 
-        // ensure time and date(!) are current; connect triggers a notification on mismatch
-        /* menu not supported by ruffy v1
-        if (!pump.initialized) {
-            if (!runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime).success) {
-                return;
-            }
-        }
-        */
-
         // read basal profile into cache and update pump profile if needed
         if (!pump.initialized) {
             CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
@@ -763,18 +754,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         checkAndResolveTbrMismatch(preCheckResult.state);
-
-        // raise notification if clock is off (setting clock is not supported by ruffy)
-        if (preCheckResult.state.pumpTimeMinutesOfDay != 0) {
-            Date now = new Date();
-            int minutesOfDayNow = now.getHours() * 60 + now.getMinutes();
-            if ((Math.abs(preCheckResult.state.pumpTimeMinutesOfDay - minutesOfDayNow) > 3)) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.NORMAL);
-                MainApp.bus().post(new EventNewNotification(notification));
-// setting date time isn't supported by ruffy v1, a warning is issue during connect if clock is off
-//                    runCommand("Updating pump clock", 2, ruffyScripter::setDateAndTime);
-            }
-        }
 
         return null;
     }
