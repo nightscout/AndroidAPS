@@ -1,5 +1,5 @@
 - [ ] Bugs
-  - [ ] Pump stops to response to connect attemps every 2-20h or so, only reacting
+  - [-] Pump stops to response to connect attemps every 2-20h or so, only reacting
         again when physically pressing a button on the pump ...
         Occassionally the pump starts to accept connections again, sometimes
         after 40m, sometimes no luck even after 80m
@@ -19,7 +19,7 @@
         Did this already happen before the whole 'basal profile' thing?
         Takes ages, could that trigger some weird bug that has never
         surfaced in any other scenario before?
-  - [ ] Temp basal history shows TBRs twice, once with a 1 min
+  - [-] Temp basal history shows TBRs twice, once with a 1 min
         duration and then with the reminder; caused by clock not
         being within ~30s of the phone.
         Cancelling TBR or overriding a running one with a new one
@@ -31,6 +31,9 @@
         the Combo.
         Explicit end records when adding pump history records;
         and/or: logic to detect time differences and align data
+        Current solution works, albeit a bit ugly, but is used in rare
+        circumstances where clock might be off anyway, so this would
+        still occur.
   - [x] Deleting a bolus from the history re-adds it from the pump's
         history. Deleting it again, flags it as invalid at which point
         it will not be added to IOB and not be re-added.

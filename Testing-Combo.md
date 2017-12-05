@@ -20,36 +20,30 @@
   - [ ] Pressing a button on the pump after bolus delivery has started must be handled
         gracefully (bolus finished and AAPS must correctly add it the the DB)
     - [ ] Same as above, but moving pump out of range
-  - [ ] Giving a bolus on the pump and immediately afterwards entering a bolus on AAPS
-        must reject the bolus with a warning that IOB is not up to date
-  - [ ] A bolus given on the pump must appear in AAPS after the next communication or when
-        manually refreshing via the Combo tab
   - [ ] Test the highest bolus you'd ever give yourself (AAPS has a configurable limit and the pump
         has a limit which can be configured with the Config SW)
+  - [ ] Test a bolus exceeding the pumps max bolus; should show a generic error message
 - [ ] BT disconnect issues
   - [ ] Moving pump out of reach when setting TBR causes "TBR cancelled" alarm on pump.
         When putting pump close to phone, AAPS must confirm the alert and successfully
-        retry setting TBR
+        retry setting TBR (reconnects are a best-effort kind of a thing, so this might not always work)
   - [ ] Same as above while bolusing must report an error and NOT retry the command
 - [ ] AAPS start
   - [ ] Starting AAPS without a reachable pump must show something sensible in the Combo tab
         (that is not hang indefinitely with "initializing" activity)
   - [ ] Starting AAPS without a reachable pump must trigger "pump unrechable" alert after
         5 to 10 min.
-  - [ ] If 'sync profile to pump' is set the basal rate profile must be synced to pump on start
-  - [ ] If 'sync profile to pump' is set NOT set, the pump's profile must not be touched
+  - [ ] If the pump's profile doesn't match AAPS', the pump must be updated when AAPS starts
+  - [ ] Doing a profile change (to shift time or increase/decrease insulin), the pump's basal profile must be updated
+  - [ ] If a profile change has a duration, the pump's basal profile must be set to the original value again at the end
+        (this can vary a few minutes between what the overview screen shows and when the pump is updated, as the check
+        whether the pump is up-to-date or not is performed periodically and not at the exact minute a profile change ends)
 - [ ] Read history using Smartpix and compare with AAPS' DB (treatment tab)
       Esp. those times we communication was interrupted, boluses were cancelled, ...
   - [ ] Boluses
   - [ ] TBR
   - [ ] Alerts
   - [ ] TDDs
-- [ ] Date/Time
-  - [ ] If time is off by more than 2m, a warning must be shown on the main screen whenever
-        a connection to the pump is established
-  - [ ] Since history records store the year, it must be inferred. Set phone and pump to something
-        like 31.21.17, 23:00, cause an alert, deliver a bolus, set a TBR, let the new year arrive
-        trigger the above events again and verify AAPS has correctly read them.
 - [ ] Disconnected pump (pump unreachable)
       - [ ] ...
 - [ ] Refilling cartridge
@@ -66,8 +60,6 @@
 - [ ] Combo tab
   - [ ] Check displayed data (state, battery, reservoir, last bolus, temp basal) is the same
         as on the pump
-  - [ ] Last connection must indicate issues (yellow if recent connections/commands failed),
-        red if communications failed for 30 or more minutes
 - [ ] Unsafe usage
   - [ ] An extended or multiwave bolus given within the last six hour must raise an alert and
         closed loop functionality (Loop plugin shows "disabled by constrains" when "execute" is pressed)
