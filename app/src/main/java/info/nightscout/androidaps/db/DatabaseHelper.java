@@ -1388,7 +1388,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return;
             }
             extendedBolus.date = trJson.getLong("mills");
-            extendedBolus.durationInMinutes = trJson.getInt("duration");
+            extendedBolus.durationInMinutes = trJson.has("duration") ? trJson.getInt("duration") : 0;
             extendedBolus.insulin = trJson.getDouble("relative");
             extendedBolus._id = trJson.getString("_id");
             createOrUpdate(extendedBolus);

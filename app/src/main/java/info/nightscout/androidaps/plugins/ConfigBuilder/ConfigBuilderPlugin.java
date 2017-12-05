@@ -613,7 +613,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
     @Override
     public boolean isTempBasalInProgress() {
-        return activeTreatments.isTempBasalInProgress();
+        return activeTreatments != null && activeTreatments.isTempBasalInProgress();
     }
 
     @Override
