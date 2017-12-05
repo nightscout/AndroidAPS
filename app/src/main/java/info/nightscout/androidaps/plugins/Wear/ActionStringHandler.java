@@ -582,9 +582,6 @@ public class ActionStringHandler {
         if (timeshift < 0 || timeshift > 23) {
             msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
         }
-        if (!SP.getBoolean(R.string.key_sync_profile_to_pump, false)) {
-            msg += MainApp.sResources.getString(R.string.syncprofiletopump_title) + " " + MainApp.sResources.getString(R.string.cpp_sync_setting_missing) + "\n";
-        }
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null || profile.getBasal() == null) {

@@ -364,8 +364,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pump.basalProfile = readBasalResult.basalProfile;
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
-            if (SP.getBoolean("syncprofiletopump", false)
-                    && !pump.basalProfile.equals(convertProfileToComboProfile(profile))) {
+            if (!pump.basalProfile.equals(convertProfileToComboProfile(profile))) {
                 setNewBasalProfile(profile);
             }
         }

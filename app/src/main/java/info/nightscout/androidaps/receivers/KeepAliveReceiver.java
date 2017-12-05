@@ -90,7 +90,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 MainApp.bus().post(new EventNewNotification(n));
             }
 
-            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
+            if (!pump.isThisProfileSet(profile)) {
                 MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
             } else if (isStatusOutdated && !pump.isBusy()) {
                 MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);

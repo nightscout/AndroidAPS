@@ -362,7 +362,6 @@
     <string name="teenage">Tonåring</string>
     <string name="targetmissing">Mål saknas i profil. Använder grundinställning</string>
     <string name="target_range">Mål gränser:</string>
-    <string name="syncprofiletopump_title">Uppdatera profil till pump</string>
     <string name="suspendloopfor3h">Stäng av loop i 3 h</string>
     <string name="suspendloopfor2h">Stäng av loop i 2 h</string>
     <string name="suspendloopfor1h">Stäng av loop i 1 h</string>
