@@ -480,14 +480,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .carbsDelivered(detailedBolusInfo.carbs);
             }
 
-            // in case of error check what was actually delivered
+            // the remainder of this method checks what was actually delivered based on pump history
+            // in case of error  or cancellation
+
             CommandResult historyResult = runCommand(null, 1,
                     () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
-            if (!historyResult.success) {
+            if (!historyResult.success || historyResult.history == null || historyResult.history.bolusHistory.isEmpty()) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
             }
-            Bolus lastPumpBolus = historyResult.lastBolus;
+            Bolus lastPumpBolus = historyResult.history.bolusHistory.get(0);
             if (cancelBolus) {
                 // if cancellation was requested, the delivered bolus is allowed to differ from requested
             } else if (lastPumpBolus == null || Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01
@@ -496,11 +498,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
             }
 
-            // add treatment record to DB (if it wasn't cancelled)
             if (lastPumpBolus != null && (lastPumpBolus.amount > 0)) {
-                detailedBolusInfo.date = lastPumpBolus.timestamp;
                 detailedBolusInfo.insulin = lastPumpBolus.amount;
-                detailedBolusInfo.date = lastPumpBolus.timestamp;
                 detailedBolusInfo.source = Source.USER;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 return new PumpEnactResult().success(true).enacted(true)
