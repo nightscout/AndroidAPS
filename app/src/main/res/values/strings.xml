@@ -223,7 +223,6 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="syncprofiletopump_title">Sync profile to pump</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
