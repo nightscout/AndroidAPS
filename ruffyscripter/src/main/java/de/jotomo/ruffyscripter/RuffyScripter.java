@@ -53,8 +53,6 @@ import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
-    private static final long DISCONNECT_TIME_OUT_MS = 5000;
-
     private IRuffyService ruffyService;
 
     @Nullable
@@ -151,7 +149,6 @@ public class RuffyScripter implements RuffyCommands {
                     } catch (Exception e) {
                         log.error("Ruffy handler has issues", e);
                     }
-                    idleDisconnectMonitorThread.start();
                     started = true;
                 }
 
@@ -175,28 +172,6 @@ public class RuffyScripter implements RuffyCommands {
         return started;
     }
 
-    private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    long now = System.currentTimeMillis();
-                    if (ruffyService.isConnected() && activeCmd == null
-                            && now > lastCmdExecutionTime + DISCONNECT_TIME_OUT_MS) {
-                        log.debug("Disconnecting after " + (DISCONNECT_TIME_OUT_MS / 1000) + "s inactivity timeout");
-                        ruffyService.doRTDisconnect();
-                        // don't attempt anything fancy in the next 10s, let the pump settle
-                        SystemClock.sleep(10 * 1000);
-                    }
-                } catch (Exception e) {
-                    log.debug("Exception in idle disconnect monitor thread, taking a break and then carrying on", e);
-                    SystemClock.sleep(10 * 1000);
-                }
-                SystemClock.sleep(1000);
-            }
-        }
-    }, "idle-disconnect-monitor");
-
     @Override
     public boolean isPumpBusy() {
         return activeCmd != null;
@@ -208,6 +183,15 @@ public class RuffyScripter implements RuffyCommands {
             return ruffyService.isConnected();
         } catch (RemoteException e) {
             return false;
+        }
+    }
+
+    @Override
+    public void disconnect() {
+        try {
+            ruffyService.doRTDisconnect();
+        } catch (RemoteException e) {
+            throw new CommandException("Disconnect failed", e);
         }
     }
 

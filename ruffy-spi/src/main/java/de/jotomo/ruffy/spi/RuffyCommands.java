@@ -26,6 +26,8 @@ public interface RuffyCommands {
     /** Whether there's an active BT connection to the pump. */
     boolean isConnected();
 
+    void disconnect();
+
     /** Read the state of the pump, which encompasses all information displayed on the main menu. */
     CommandResult readPumpState();
 

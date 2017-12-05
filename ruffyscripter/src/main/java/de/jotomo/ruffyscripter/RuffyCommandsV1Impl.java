@@ -74,6 +74,11 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
     }
 
     @Override
+    public void disconnect() {
+        delegate.disconnect();
+    }
+
+    @Override
     public CommandResult readPumpState() {
         return delegate.readPumpState();
     }

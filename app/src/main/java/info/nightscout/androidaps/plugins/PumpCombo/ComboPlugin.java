@@ -226,12 +226,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public void connect(String reason) {
-        // we're not doing that
+        // ruffyscripter establishes a connection as needed
     }
 
     @Override
     public void disconnect(String reason) {
-        // we're not doing that
+        ruffyScripter.disconnect();
     }
 
     @Override
@@ -676,6 +676,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
             }
 
+            // Pass this to qeueue??
+            // hm, now that each PumpInterface method is basically one RuffyCommand again ....
             commandResult = commandExecution.execute();
 
             if (!commandResult.success && retries > 0) {
