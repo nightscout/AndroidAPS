@@ -1042,8 +1042,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         try {
             JSONObject pumpJson = new JSONObject();
             pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
-            // TODO can we upload empty/low/normal or is a int expected? If so, use fake numbers like 0/50/200
-//            pumpJson.put("reservoir", pump.reservoirState);
+
+            int level = 250;
+            if (pump.state.insulinState == PumpState.LOW) level = 50;
+            if (pump.state.insulinState == PumpState.EMPTY) level = 0;
+            pumpJson.put("reservoir", level);
 
             JSONObject statusJson = new JSONObject();
             statusJson.put("status", getStateSummary());
