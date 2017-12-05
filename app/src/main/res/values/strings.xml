@@ -791,7 +791,7 @@
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
-    <string name="combo_stats">Stats</string>
+    <string name="combo_stats">TDDS</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>
@@ -824,7 +824,7 @@
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
     <string name="combo_is_in_error_state">Pump is in an error state, please check the pump</string>
-    <string name="combo_empty_history_note">To read all data from the pump, long press the Stats button.\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
+    <string name="combo_empty_history_note">To read all data from the pump, long press the TDDS button. Besides alerts and TDDs, this will read boluses and TBRs from the pump and update the treatments accordingly.\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
     <string name="key_sync_profile_to_pump">sync_profile_to_pump</string>
     <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
     <string name="combo_tdd_average">Average: %3.1f U</string>
