@@ -29,6 +29,7 @@ public class QueueThread extends Thread {
     CommandQueue queue;
 
     private long connectionStartTime = 0;
+    private boolean connectLogged = false;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -49,19 +50,18 @@ public class QueueThread extends Thread {
         try {
             while (true) {
                 PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-                log.debug("Looping ...");
                 long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
                 if (pump.isConnecting()) {
-                    log.debug("State: connecting");
+                    log.debug("QUEUE: connecting " + secondsElapsed);
                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
                     SystemClock.sleep(1000);
                     continue;
                 }
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
-                    log.debug("State: timed out");
                     MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult()));
                     MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.connectiontimedout)));
+                    log.debug("QUEUE: timed out");
                     pump.stopConnecting();
 
                     //BLUETOOTH-WATCHDOG
@@ -87,7 +87,7 @@ public class QueueThread extends Thread {
                 }
 
                 if (!pump.isConnected()) {
-                    log.debug("State: connect");
+                    log.debug("QUEUE: connect");
                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
                     pump.connect("Connection needed");
                     SystemClock.sleep(1000);
@@ -95,10 +95,14 @@ public class QueueThread extends Thread {
                 }
 
                 if (queue.performing() == null) {
+                    if (!connectLogged) {
+                        connectLogged = true;
+                        log.debug("QUEUE: connection time " + secondsElapsed + "s");
+                    }
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
                         queue.pickup();
-                        log.debug("State: performing " + queue.performing().status());
+                        log.debug("QUEUE: performing " + queue.performing().status());
                         MainApp.bus().post(new EventQueueChanged());
                         queue.performing().execute();
                         queue.resetPerforming();
@@ -109,7 +113,7 @@ public class QueueThread extends Thread {
                 }
 
                 if (queue.size() == 0 && queue.performing() == null) {
-                    log.debug("State: queue empty. disconnect");
+                    log.debug("QUEUE: queue empty. disconnect");
                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
                     pump.disconnect("Queue empty");
                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
