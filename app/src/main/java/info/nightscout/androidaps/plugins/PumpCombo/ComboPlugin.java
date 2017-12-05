@@ -360,10 +360,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        if (!checkPumpHistory()) {
-            return;
-        }
-
         if (!pump.initialized) {
             pump.initialized = true;
             MainApp.bus().post(new EventInitializationChanged());
@@ -430,12 +426,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .comment(MainApp.instance().getString(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                PumpEnactResult pumpEnactResult = deliverBolus(detailedBolusInfo);
-                if (!pumpEnactResult.success) {
-                    log.debug("Bolus delivery failed, refreshing history in background thread");
-                    new Thread(this::checkPumpHistory).start();
-                }
-                return pumpEnactResult;
+                return deliverBolus(detailedBolusInfo);
             } else {
                 // no bolus required, carb only treatment
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
@@ -712,10 +703,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        if (pump.initialized && pumpHistoryLastChecked + 15 * 60 * 1000 < System.currentTimeMillis()) {
-            checkPumpHistory();
-        }
-
         checkForUnsafeUsage(commandResult);
 
         return commandResult;
@@ -837,84 +824,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             newTempBasal.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
         }
-    }
-
-    /**
-     * Checks if there are any changes on the pump not in the DB yet and if so, issues a history
-     * read to get the DB up to date.
-     */
-    private synchronized boolean checkPumpHistory() {
-        return true;
-
-/* reading history triggers pump bug
-        // set here, rather at the end so that if this runs into an error it's not tried
-        // over and over since it's called at the end of runCommand
-        pumpHistoryLastChecked = System.currentTimeMillis();
-
-        CommandResult commandResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_checking_history), 3, () ->
-                ruffyScripter.readHistory(
-                        new PumpHistoryRequest()
-                                .bolusHistory(PumpHistoryRequest.LAST)
-                                .tbrHistory(PumpHistoryRequest.LAST)));
-
-        if (!commandResult.success || commandResult.history == null) {
-            return false;
-        }
-
-        PumpHistoryRequest request = new PumpHistoryRequest();
-
-        // note: sync only ever happens one way from pump to aaps;
-        // db records are only added after delivering a bolus and confirming them via pump history
-        // so whatever is in the DB is either right, added by the user (possibly injecton)
-        // so don't delete records, only get the last from the pump and check if that one is in
-        // the DB (valid or note)
-
-        // last bolus
-        Bolus pumpBolus = null;
-        List<Bolus> bolusHistory = commandResult.history.bolusHistory;
-        if (!bolusHistory.isEmpty()) {
-            pumpBolus = bolusHistory.get(0);
-        }
-
-        Treatment aapsBolus = null;
-        if (pumpBolus != null) {
-            aapsBolus = MainApp.getDbHelper().getTreatmentByDate(pumpBolus.timestamp);
-        }
-
-        // there's a pump bolus AAPS doesn't know, or we only know one within the same minute but different amount
-        if (pumpBolus != null && (aapsBolus == null || Math.abs(aapsBolus.insulin - pumpBolus.amount) > 0.01)) {
-            log.debug("Last bolus on pump is unknown, refreshing bolus history");
-            request.bolusHistory = aapsBolus == null ? PumpHistoryRequest.FULL : aapsBolus.date;
-        }
-
-        // last TBR (TBRs are added to history upon completion so here we don't need to care about TBRs cancelled
-        //           by the user, checkTbrMismatch() takes care of that)
-        Tbr pumpTbr = null;
-        List<Tbr> tbrHistory = commandResult.history.tbrHistory;
-        if (!tbrHistory.isEmpty()) {
-            pumpTbr = tbrHistory.get(0);
-        }
-
-        TemporaryBasal aapsTbr = null;
-        if (pumpTbr != null) {
-            aapsTbr = MainApp.getDbHelper().getTemporaryBasalsDataByDate(pumpTbr.timestamp);
-        }
-
-        if (pumpTbr != null && (aapsTbr == null || pumpTbr.percent != aapsTbr.percentRate || pumpTbr.duration != aapsTbr.durationInMinutes)) {
-            log.debug("Last TBR on pump is unknown, refreshing TBR history");
-            request.tbrHistory = aapsTbr == null ? PumpHistoryRequest.FULL : aapsTbr.date;
-        }
-
-        if (request.bolusHistory != PumpHistoryRequest.SKIP
-                || request.tbrHistory != PumpHistoryRequest.SKIP
-                || request.pumpErrorHistory != PumpHistoryRequest.SKIP
-                || request.tddHistory != PumpHistoryRequest.SKIP) {
-            log.debug("History reads needed to get up to date: " + request);
-            return readHistory(request);
-        }
-
-        return true;
-*/
     }
 
     /**
