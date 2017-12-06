@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import com.squareup.otto.Subscribe;
 import de.jotomo.ruffy.spi.PumpState;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
+import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
@@ -28,6 +31,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView lastBolusView;
     private TextView tempBasalText;
     private LinearLayout buttonsLayout;
+    private TextView queueView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +47,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         //lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
         buttonsLayout = (LinearLayout) view.findViewById(R.id.combo_buttons_layout);
+        queueView = (TextView) view.findViewById(R.id.combo_queue);
+
 
         Button refresh = (Button) view.findViewById(R.id.combo_refresh);
         refresh.setOnClickListener(this);
@@ -88,6 +95,12 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onStatusEvent(final EventComboPumpUpdateGUI ignored) {
         updateGUI();
     }
+
+    @Subscribe
+    public void onStatusEvent(final EventQueueChanged ignored) {
+        updateGUI();
+    }
+
 
     public void updateGUI() {
         Activity fragmentActivity = getActivity();
@@ -188,6 +201,16 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         }
                     }
                     tempBasalText.setText(tbrStr);
+
+                    // TODO clean up & i18n or remove
+                    // Queued activities
+                    Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
+                    if (status.toString().equals("")) {
+                        queueView.setVisibility(View.GONE);
+                    } else {
+                        queueView.setVisibility(View.VISIBLE);
+                        queueView.setText("Queued activities:\n" + status);
+                    }
                 }
             });
     }
