@@ -125,17 +125,18 @@
   - [ ] State in ComboPump is not safely shared among threads
   - [x] Naming is messed up: pump has warnings and errors, which cause alerts; W+E are thus alerts,
         e.g. pumpAlertHistory should be renamed to alertHistory
-  - [ ] Enable BT if disabled? does dana does this?
-  - [ ] Finish and test German translation
-  - [ ] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed
+  - [x] Enable BT if disabled? does DanaR does this? BT watchdog in CommandQueue takes care of it
+  - [-] Finish and test German translation
+  - [x] No clean startup/shutdown; RuffyScripter is instanciated once, idle disconnect thread never killed
       - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
         Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
         also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
         Does xDrip intents start AAPS? Starts automatically (but not instantly) after boot and there's no "start on boot" setting enabled
+        CommandQueue now issues disconnect and the idle-disconnect-monitor has been removed.
   - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)
   - [ ] With long running commands (e.g. setting basal rate, which can take up to 5m), multiple 'set tbr' commands
         may stack up. Since setting a TBR multiple times in one minute fails, the ComboPlugin rejects such
         request, letting the oldest TBR run till the net iteration. This can potentially be nicely solved
         through the queue branch. However, the original problem is the amount of time the Combo can
-      take to execute commands, which might go away (mostly) with command mode.
+        take to execute commands, which might go away (mostly) with command mode.
   - [ ] Fix display of alarms on mainscreen (increase height if needed)
