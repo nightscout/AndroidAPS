@@ -1,4 +1,4 @@
-- [ ] Bugs
+- [x] Bugs
   - [-] Pump stops to response to connect attemps every 2-20h or so, only reacting
         again when physically pressing a button on the pump ...
         Occassionally the pump starts to accept connections again, sometimes
@@ -131,6 +131,7 @@
       - Application shut down is broken with PersistentNotification (never shut down) and WearPlugin -
         Android logs it as crashed and restarts it, thereby restarting the app (or just keeping it alive,
         also causes errors with the DB as there were attemtps to open a closed DB instance/ref.
+        Does xDrip intents start AAPS? Starts automatically (but not instantly) after boot and there's no "start on boot" setting enabled
   - [ ] Check if TBRs are set to often from ConfigBuilder on high base basal rates (basalstep is 0.01; in reality larger on >1U/h base basal)
   - [ ] With long running commands (e.g. setting basal rate, which can take up to 5m), multiple 'set tbr' commands
         may stack up. Since setting a TBR multiple times in one minute fails, the ComboPlugin rejects such

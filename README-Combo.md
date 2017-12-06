@@ -34,7 +34,7 @@ Limitations:
   tool), 50 (below low threshold) and 0 if the reservoir is empty.
   Furthermore, no history (from the My Data menu) is read unless absolutely required.
   Reading all pump data can be forced through the Combo tab (long press "TDDS"), to "import"
-  events that happend solely on the pump, but that code has been tested less and may
+  events that happened solely on the pump, but that code has been tested less and may
   trigger the bug, so it's strongly recommended to stick to the usage scenario of controlling the
   pump solely through AAPS.
   Checking history, reservoir level etc on the pump causes no issues but should be avoided
@@ -66,6 +66,15 @@ Usage:
 - This is not a product, esp. in the beginning the user needs to monitor and understand the system,
   its limitations and how it can fail. It is strongly advised NOT to use this system when the person
   using is not able to fully understand the system.
+- This integration uses the same functionality which the meter provides that comes with the Combo.
+  The meter allows to mirror the pump screen and forwards button presses to the pump. The connection
+  to the pump and this forwarding is what the ruffy app does. A `scripter` components reads the screen
+  and automates inputing boluses, TBRs etc and making sure inputs are processed correctly (that's what
+  the scripter-part in the branch name stands for).
+  AAPS then interacts with the scripter to apply loop commands and to administer boluses.
+  This mode has some restrictions: it's comparatively slow (but well fast enough for what it is used for),
+  doesn't support reading history continuously and setting a TBR or giving a bolus causes the pump to
+  vibrate.
 - The integration of the Combo with AndroidAPS is designed with the assumption that all inputs are
   made via AndroidAPS. Boluses entered on the pump will NOT be detected by AAPS and may therefore
   result in too much insulin being delivered.
@@ -96,7 +105,6 @@ Usage:
 - If the loop requests a running TBR to be cancelled the Combo will set a TBR of 90% or 110%
   for 15 minutes instead. This is because cancelling a TBR causes an alert on the pump which
   causes a lot of vibrations.
-- Long press the Refresh button on the Combo tab to force a re-read of all pump data
 
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused
