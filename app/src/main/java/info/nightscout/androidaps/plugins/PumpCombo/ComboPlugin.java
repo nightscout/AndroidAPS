@@ -327,7 +327,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      */
     @Override
     public synchronized void getPumpStatus() {
-        log.debug("RefreshDataFromPump called");
+        log.debug("getPumpStatus called");
         if (!pump.initialized) {
             long maxWait = System.currentTimeMillis() + 15 * 1000;
             while (!ruffyScripter.isPumpAvailable()) {
@@ -636,6 +636,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return new PumpEnactResult().success(true).enacted(false);
         } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep run (see below)
+            // Note that a connection to the pump is still opened, since the queue issues a getPumpStatus() call whenever an empty
+            // queue receives a new command. Probably not worth optimizing.
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
             return new PumpEnactResult().success(true).enacted(true)
                     .comment("cancelTempBasal skipping changing tbr since it already is at "
