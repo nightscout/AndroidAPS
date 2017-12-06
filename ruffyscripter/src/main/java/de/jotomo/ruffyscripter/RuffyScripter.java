@@ -231,12 +231,13 @@ public class RuffyScripter implements RuffyCommands {
         }
 
         synchronized (RuffyScripter.class) {
+            Thread cmdThread = null;
             try {
                 activeCmd = cmd;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
                 log.debug("Connection ready to execute cmd " + cmd);
-                Thread cmdThread = new Thread(() -> {
+                cmdThread = new Thread(() -> {
                     try {
                         if (!runPreCommandChecks(cmd)) {
                             return;
@@ -322,6 +323,14 @@ public class RuffyScripter implements RuffyCommands {
                 Menu menu = this.currentMenu;
                 if (activeCmd.getResult().success && menu != null && menu.getType() != MenuType.MAIN_MENU) {
                     log.warn("Command " + activeCmd + " successful, but finished leaving pump on menu " + getCurrentMenuName());
+                }
+                if (cmdThread != null) {
+                    try {
+                        // let command thread finish updating activeCmd var
+                        cmdThread.join(1000);
+                    } catch (InterruptedException e) {
+                        // ignore
+                    }
                 }
                 activeCmd = null;
             }
