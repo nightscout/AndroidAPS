@@ -189,13 +189,6 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public synchronized void disconnect() {
-        // TODO Clean up... is this still needed? Or caused by ruffyService.isConnected bug?
-        // queue is a bit overeager to close the connection, so a small gap of 100ms or so
-        // would cost a full reconnect of 10-20s
-//        SystemClock.sleep(1000);
-//        if (!isConnected()) {
-//            return;
-//        }
         try {
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {

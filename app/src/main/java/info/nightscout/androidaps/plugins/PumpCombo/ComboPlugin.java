@@ -521,14 +521,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public void stopBolusDelivering() {
-        // TODO if the pump is busy setting a TBR while a bolus was requested,
-        // cancelling here, when the TBR is still being set will fail to cancel the bolus.
-        // See if the queue might solve this, otherwise we could add a check in runCommand
-        // (but can't currently determine if the request is a basal request)
-        // or have the scripter skip the next bolus that comes in
-        // TODO related: if pump can't be reached, a bolus will wait until pump is available again
-        // and will then bolus all requested boluses ... because 'synchronized' makes for a dumb
-        // queue
         if (bolusInProgress) {
             ruffyScripter.cancelBolus();
         }
@@ -573,15 +565,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         // do a soft TBR-cancel when requested rate was rounded to 100% (>94% && <104%)
         if (adjustedPercent == 100) {
             return cancelTempBasal(false);
-        }
-
-        long thisMinute = System.currentTimeMillis() / (60 * 1000) * (60 * 1000);
-        TemporaryBasal activeTbr = MainApp.getDbHelper().getTemporaryBasalsDataByDate(thisMinute);
-        if (activeTbr != null && activeTbr.date == thisMinute) {
-            // setting multiple TBRs within a single minute (with the first TBR having a runtime
-            // of 0) is not supported. Attempting to do so sets a new TBR on the pump but adding
-            // the record to the DB fails as there already is a record with that date.
-            return new PumpEnactResult().success(false).enacted(false);
         }
 
         int finalAdjustedPercent = adjustedPercent;
