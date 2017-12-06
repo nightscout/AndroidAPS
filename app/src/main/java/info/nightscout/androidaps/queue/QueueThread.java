@@ -26,9 +26,8 @@ import info.nightscout.utils.SP;
 public class QueueThread extends Thread {
     private static Logger log = LoggerFactory.getLogger(QueueThread.class);
 
-    CommandQueue queue;
+    private CommandQueue queue;
 
-    private long connectionStartTime = 0;
     private boolean connectLogged = false;
 
     private PowerManager.WakeLock mWakeLock;
@@ -45,7 +44,7 @@ public class QueueThread extends Thread {
     public final void run() {
         mWakeLock.acquire();
         MainApp.bus().post(new EventQueueChanged());
-        connectionStartTime = System.currentTimeMillis();
+        long connectionStartTime = System.currentTimeMillis();
 
         try {
             while (true) {

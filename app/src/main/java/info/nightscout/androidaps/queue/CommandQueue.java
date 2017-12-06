@@ -80,7 +80,7 @@ public class CommandQueue {
         return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
     }
 
-    public boolean isRunning(Command.CommandType type) {
+    private boolean isRunning(Command.CommandType type) {
         if (performing != null && performing.commandType == type)
             return true;
         return false;
@@ -161,10 +161,11 @@ public class CommandQueue {
         // Notify Wear about upcoming bolus
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
-        // Bring up bolus progress dialog
+        // Apply constraints
         detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
         detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
 
+        // Bring up bolus progress dialog
         BolusProgressDialog bolusProgressDialog = null;
         if (detailedBolusInfo.context != null) {
             bolusProgressDialog = new BolusProgressDialog();
@@ -294,8 +295,8 @@ public class CommandQueue {
         Profile.BasalValue[] basalValues = profile.getBasalValues();
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
-        for (int index = 0; index < basalValues.length; index++) {
-            if (basalValues[index].value < pump.getPumpDescription().basalMinimumRate) {
+        for (Profile.BasalValue basalValue : basalValues) {
+            if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
