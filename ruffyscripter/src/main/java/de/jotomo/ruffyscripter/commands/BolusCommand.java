@@ -104,12 +104,14 @@ public class BolusCommand extends BaseCommand {
             boolean cancelInProgress = false;
             Double lastBolusReported = 0d;
             Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+            Thread cancellationThread = null;
             while (bolusRemaining != null || scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 if (cancelRequested && !cancelInProgress) {
                     bolusProgressReporter.report(STOPPING, 0, 0);
                     cancelInProgress = true;
-                    new Thread(() ->
-                            scripter.pressKeyMs(RuffyScripter.Key.UP, 3000), "bolus-canceller").start();
+                    cancellationThread = new Thread(() ->
+                            scripter.pressKeyMs(RuffyScripter.Key.UP, 3000), "bolus-canceller");
+                    cancellationThread.start();
                 }
                 if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                     // confirm warning alert and update the result to indicate alerts occurred
@@ -139,6 +141,16 @@ public class BolusCommand extends BaseCommand {
                 }
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+            }
+            // if a cancellation was started by pressing up for 3 seconds but the bolus has finished during those
+            // three seconds, must wait until the button is unpressed again so that follow up commands
+            // work properly.
+            if (cancellationThread != null) {
+                try {
+                    cancellationThread.join();
+                } catch (InterruptedException e) {
+                    // ignore
+                }
             }
             bolusProgressReporter.report(DELIVERED, 100, bolus);
             result.success = true;
