@@ -290,7 +290,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     @Override
-    public void onClick(View view) {
+    public synchronized void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
                 if (okClicked) {
