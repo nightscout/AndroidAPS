@@ -357,6 +357,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     // Pump interface
+
     @Override
     public boolean isInitialized() {
         return pump.lastConnection.getTime() > 0  && pump.maxBasal > 0;

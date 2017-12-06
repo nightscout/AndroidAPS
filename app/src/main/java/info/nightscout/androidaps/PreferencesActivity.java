@@ -173,8 +173,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
                 */
 
-                addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginBase.PUMP);
-
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginBase.INSULIN);
 
                 addPreferencesFromResourceIfEnabled(NSClientInternalPlugin.getPlugin(), PluginBase.GENERAL);

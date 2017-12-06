@@ -108,12 +108,13 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     public synchronized void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
-if (okClicked){
+                if (okClicked) {
                     log.debug("guarding: ok already clicked");
                     dismiss();
                     return;
                 }
                 okClicked = true;
+
                 try {
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
