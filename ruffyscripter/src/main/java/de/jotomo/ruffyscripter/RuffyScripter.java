@@ -59,7 +59,6 @@ public class RuffyScripter implements RuffyCommands {
     private volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
 
-    private volatile long lastCmdExecutionTime;
     private volatile Command activeCmd = null;
 
     private boolean started = false;
@@ -69,7 +68,9 @@ public class RuffyScripter implements RuffyCommands {
     private IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
         public void log(String message) throws RemoteException {
-//            log.debug("Ruffy says: " + message);
+            if (log.isTraceEnabled()) {
+                log.debug("Ruffy says: " + message);
+            }
         }
 
         @Override
@@ -180,14 +181,21 @@ public class RuffyScripter implements RuffyCommands {
     @Override
     public boolean isConnected() {
         try {
-            return ruffyService.isConnected();
+            return ruffyService.isConnected() && System.currentTimeMillis() - menuLastUpdated < 5000;
         } catch (RemoteException e) {
             return false;
         }
     }
 
     @Override
-    public void disconnect() {
+    public synchronized void disconnect() {
+        // TODO Clean up... is this still needed? Or caused by ruffyService.isConnected bug?
+        // queue is a bit overeager to close the connection, so a small gap of 100ms or so
+        // would cost a full reconnect of 10-20s
+//        SystemClock.sleep(1000);
+//        if (!isConnected()) {
+//            return;
+//        }
         try {
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
@@ -257,8 +265,6 @@ public class RuffyScripter implements RuffyCommands {
                     } catch (Exception e) {
                         log.error("Unexpected exception running cmd", e);
                         activeCmd.getResult().success = false;
-                    } finally {
-                        lastCmdExecutionTime = System.currentTimeMillis();
                     }
                 }, cmd.getClass().getSimpleName());
                 long executionStart = System.currentTimeMillis();
@@ -266,7 +272,7 @@ public class RuffyScripter implements RuffyCommands {
 
                 long overallTimeout = System.currentTimeMillis() + 10 * 60 * 1000;
                 while (cmdThread.isAlive()) {
-                    if (!ruffyService.isConnected()) {
+                    if (!isConnected()) {
                         // on connection loss try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
@@ -281,14 +287,6 @@ public class RuffyScripter implements RuffyCommands {
                             // (30s timeout + 5s wait) * 4 attempts = 140s
                             SystemClock.sleep(5 * 1000);
                         }
-                    }
-
-                    // abort if there has been no transmission from the pump for 15s
-                    if (!(System.currentTimeMillis() < menuLastUpdated + 15 * 1000)) {
-                        log.error("Dynamic timeout running command " + activeCmd);
-                        cmdThread.interrupt();
-                        activeCmd.getResult().success = false;
-                        break;
                     }
 
                     if (System.currentTimeMillis() > overallTimeout) {
@@ -370,7 +368,7 @@ public class RuffyScripter implements RuffyCommands {
         // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
         Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
         try {
-            while (ruffyService.isConnected() && bolusRemaining != null) {
+            while (isConnected() && bolusRemaining != null) {
                 log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
                 waitForScreenUpdate();
             }
@@ -409,23 +407,18 @@ public class RuffyScripter implements RuffyCommands {
         // If that happened, wait till the pump has finished the bolus, then it can be read from
         // the history as delivered.
         Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        try {
-            while (ruffyService.isConnected() && bolusRemaining != null) {
-                waitForScreenUpdate();
-            }
-            boolean connected = ruffyService.isConnected();
-            if (connected) {
-                MenuType menuType = getCurrentMenu().getType();
-                if (menuType != MenuType.MAIN_MENU && menuType != MenuType.WARNING_OR_ERROR) {
-                    returnToRootMenu();
-                }
-            }
-            log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
-            return connected;
-        } catch (RemoteException e) {
-            log.debug("Recovery from connection loss failed", e);
-            return false;
+        while (isConnected() && bolusRemaining != null) {
+            waitForScreenUpdate();
         }
+        boolean connected = isConnected();
+        if (connected) {
+            MenuType menuType = getCurrentMenu().getType();
+            if (menuType != MenuType.MAIN_MENU && menuType != MenuType.WARNING_OR_ERROR) {
+                returnToRootMenu();
+            }
+        }
+        log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
+        return connected;
     }
 
     /**
@@ -453,8 +446,7 @@ public class RuffyScripter implements RuffyCommands {
      */
     private void ensureConnected() {
         try {
-            if (ruffyService.isConnected()) {
-                log.debug("Already connected");
+            if (isConnected()) {
                 return;
             }
 
