@@ -784,5 +784,6 @@
     <string name="customapp">Customized APK for download</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
+    <string name="unsupportedfirmware">Unsupported pump firmware</string>
 </resources>
 

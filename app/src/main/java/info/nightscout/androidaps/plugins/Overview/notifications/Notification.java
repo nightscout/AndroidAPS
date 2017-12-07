@@ -55,6 +55,7 @@ public class Notification {
     public static final int WRONG_DRIVER = 24;
     public static final int PUMP_UNREACHABLE = 26;
     public static final int BG_READINGS_MISSED = 27;
+    public static final int UNSUPPORTED_FIRMWARE = 28;
 
     public int id;
     public Date date;
