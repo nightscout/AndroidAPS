@@ -2,8 +2,11 @@ package de.jotomo.ruffy.spi;
 
 /** State displayed on the main screen of the pump. */
 public class PumpState {
-    /** Time the state was captured. This is NOT the pump's time! */
+    /** Time the state was captured. */
     public long timestamp;
+    /** Pump time. Note that this is derived from the time displayed on the main menu and assumes
+     * the date is set correctly */
+    public long pumpTime;
     public String menu = null;
     public boolean suspended;
 

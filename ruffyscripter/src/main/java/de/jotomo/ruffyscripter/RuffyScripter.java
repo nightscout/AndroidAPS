@@ -22,6 +22,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -509,12 +510,22 @@ public class RuffyScripter implements RuffyCommands {
             }
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
+            MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
+            Date date = new Date();
+            date.setHours(time.getHour());
+            date.setMinutes(time.getMinute());
+            state.pumpTime = date.getTime();
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
             state.activeAlert = readWarningOrErrorCode();
         } else if (menuType == MenuType.STOP) {
             state.suspended = true;
             state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
             state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
+            MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
+            Date date = new Date();
+            date.setHours(time.getHour());
+            date.setMinutes(time.getMinute());
+            state.pumpTime = date.getTime();
         }
 
         return state;
