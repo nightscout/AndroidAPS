@@ -243,7 +243,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         Rect bounds = new Rect((int)endX, (int)endY + 3, (int) (xpluslength), (int) endY + 8);
                         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         canvas.drawRect(bounds, mPaint);
-                        mPaint.setTextSize((int) (scaledTextSize * 2.5));
+                        mPaint.setTextSize((float) (scaledTextSize));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
                         mPaint.setFakeBoldText(true);
                         canvas.drawText(value.getLabel(), endX, endY, mPaint);
@@ -295,7 +295,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
                         mPaint.setStrokeWidth(0);
-                        mPaint.setTextSize((int) (scaledTextSize * 3));
+                        mPaint.setTextSize((float) (scaledTextSize * 1.2));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
@@ -325,7 +325,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
                         mPaint.setStrokeWidth(0);
-                        mPaint.setTextSize(scaledTextSize * 3);
+                        mPaint.setTextSize((float) (scaledTextSize * 1.5));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);

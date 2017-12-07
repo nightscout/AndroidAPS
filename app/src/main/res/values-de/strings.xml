@@ -97,7 +97,7 @@
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="virtualpump_tempbasal_label">Temp Basal</string>
     <string name="visible">Sichtbar</string>
     <string name="virtualpump_basebasalrate_label">Basis Basalrate</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
@@ -672,4 +672,10 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="nsclientinternal_title">Interner NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="localalertsettings_title">Lokale Alarme</string>
+    <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
+    <string name="pump_unreachable">Pumpe ist nicht erreichbar</string>
+    <string name="enable_missed_bg_readings_alert">Alarm wenn keine Glukose Daten empfangen werden</string>
+    <string name="enable_pump_unreachable_alert">Alarm wenn die Pumpe nicht erreichbar ist</string>
+    <string name="pump_unreachable_threshold">Pumpe ist nicht erreichbar Grenze [min]</string>
 </resources>

@@ -435,9 +435,7 @@
     <string name="advancedsettings_title">Ρυθμίσεις για Προχωρημένους</string>
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Προφίλ</string>
-    <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">"Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα κλειδί ασφαλείας OpenAPS.Αυτό περιορίζει την αύξηση του βασικού x3 από την μεγαλύτερη τιμή του.Δεν χρειάζεται να το αλλάξετε "</string>
-    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="error_only_numeric_digits_allowed">Μόνο αριθμητικά ψηφία επιτρέπονται.</string>
     <string name="error_only_numeric_digits_range_allowed" formatted="false">"Μόνο αριθμητικά ψηφία μέσα στο εύρος %1$s - %2$s επιτρέπονται. "</string>
     <string name="error_field_must_not_be_empty">Το πεδίο αυτό δεν πρέπει να είναι κενό</string>
