@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
@@ -102,8 +101,7 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Crashlytics crashlytics = new Crashlytics.Builder().disabled(true).build();
-        Fabric.with(this, crashlytics);
+        Fabric.with(this, new Crashlytics());
         Fabric.with(this, new Answers());
         Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
         log.info("Version: " + BuildConfig.VERSION_NAME);
