@@ -975,15 +975,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
-        if ((Config.NSCLIENT || Config.G5UPLOADER) && tempTarget == null) {
-            //tempTargetView.setVisibility(View.GONE);
-            tempTargetView.setTextColor(Color.WHITE);
-            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            if(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units) != null) {
-                tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
-            } else tempTargetView.setText(getContext().getString(R.string.temptarget));
-            tempTargetView.setVisibility(View.VISIBLE);
-        }
 
         // **** Temp button ****
         if (acceptTempLayout != null) {
