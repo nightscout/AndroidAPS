@@ -14,7 +14,9 @@
     - [ ] notification must also appear on smartwatch
   - [ ] An error during bolus must yield an error in AAPS
   - [ ] An error during bolus must yield a notification on a smartwatch
-  - [ ] Bolusing e.g. 4 U if reservoir has only 2 U must yield a usable error
+  - [ ] Test bolusing a bolus bigger than what's left in the reservoir. A message to check what
+        was actually delivered must appear (this is a corner-case where when practically can't
+        check what was actually delivered).
   - [ ] Pressing a button on the pump before bolus delivery started must be handled gracefully
     - [ ] Same as above, but moving pump out of range
   - [ ] Pressing a button on the pump after bolus delivery has started must be handled

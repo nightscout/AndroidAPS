@@ -130,7 +130,19 @@ public class BolusCommand extends BaseCommand {
                         scripter.confirmAlert(PumpWarningCodes.BATTERY_LOW, 2000);
                         result.forwardedWarnings.add(PumpWarningCodes.BATTERY_LOW);
                     } else {
-                        throw new CommandException("Pump is showing exotic warning: " + warningCode);
+                        // all other warnings or errors;
+                        // An occlusion error can also occur during bolus. To read the partially delivered
+                        // bolus, we'd have to first confirm the error. But an (occlusion) **error** shall not
+                        // be confirmed and potentially be swallowed by a bug or shaky comms, so we let
+                        // the pump be noisy (which the user will have to interact with anyway).
+                        // Thus, this method will terminate with an exception and display an error message.
+                        // Ideally, sometime after the user has dealt with the situation, the partially
+                        // delivered bolus should be read. However, ready history is tricky at this point.
+                        // Also: with an occlusion, the amount of insulin active is in question.
+                        // It would be safer to assume the delivered bolus results in IOB, but there's
+                        // only so much we can do at this point, so the user shall take over here and
+                        // add a bolus record as and if needed.
+                        throw new CommandException("Pump is showing exotic warning/error: " + warningOrErrorCode);
                     }
                 }
                 if (bolusRemaining != null && !Objects.equals(bolusRemaining, lastBolusReported)) {
