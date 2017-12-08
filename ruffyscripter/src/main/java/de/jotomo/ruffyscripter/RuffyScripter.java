@@ -189,6 +189,9 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public synchronized void disconnect() {
+        if (ruffyService == null) {
+            return;
+        }
         try {
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
