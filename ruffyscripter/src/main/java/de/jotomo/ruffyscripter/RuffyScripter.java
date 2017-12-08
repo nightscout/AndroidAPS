@@ -180,6 +180,9 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public boolean isConnected() {
+        if (ruffyService == null) {
+            return false;
+        }
         try {
             return ruffyService.isConnected() && System.currentTimeMillis() - menuLastUpdated < 5000;
         } catch (RemoteException e) {
