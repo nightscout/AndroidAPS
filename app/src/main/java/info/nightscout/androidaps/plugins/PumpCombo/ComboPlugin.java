@@ -46,7 +46,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProg
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
 
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
 
@@ -703,8 +702,18 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         checkAndResolveTbrMismatch(preCheckResult.state);
+        checkPumpTime(preCheckResult.state);
 
         return null;
+    }
+
+    /** check pump time (main menu) and  raise notification if clock is off by more than 2m
+     * (setting clock is not supported by ruffy) */
+    private void checkPumpTime(PumpState state) {
+        if (state.timestamp != 0 && Math.abs(state.timestamp - System.currentTimeMillis()) > 2 * 60 * 1000) {
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.NORMAL);
+            MainApp.bus().post(new EventNewNotification(notification));
+        }
     }
 
     private void notifyAboutPumpWarning(WarningOrErrorCode activeAlert) {

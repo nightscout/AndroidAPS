@@ -830,6 +830,7 @@
     <string name="combo_reservoir_low">Low</string>
     <string name="combo_reservoir_empty">Empty</string>
     <string name="combo_reservoir_normal">Normal</string>
+    <string name="combo_notification_check_time_date">Pump time is invalid, please update it on the pump</string>
     <string name="combo_notification_check_time_date">Pump clock update needed</string>
     <string name="combo_history">History</string>
     <string name="combo_warning">Warning</string>
