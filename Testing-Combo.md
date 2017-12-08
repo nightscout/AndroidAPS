@@ -27,6 +27,10 @@
   - [ ] Moving pump out of reach when setting TBR causes "TBR cancelled" alarm on pump.
         When putting pump close to phone, AAPS must confirm the alert and successfully
         retry setting TBR (reconnects are a best-effort kind of a thing, so this might not always work)
+  - [ ] When a disconnect occurs, the pump's screen shows the error and the pump only accepts a connection
+        again when a timeout has occurred. A recovery should be quicker if that timeout is decreased.
+        It might be interesting to experiment with the Config software to set lower menu or display timeouts
+        (or whatever they're called ...) to improve recovery speed.
   - [ ] Same as above while bolusing must report an error and NOT retry the command
 - [ ] AAPS start
   - [ ] Starting AAPS without a reachable pump must show something sensible in the Combo tab
