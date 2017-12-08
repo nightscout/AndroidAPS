@@ -869,14 +869,19 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
+    // TODO queue
     void readTddData() {
         readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
+        ruffyScripter.disconnect();
     }
 
+    // TODO queue
     void readAlertData() {
         readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
+        ruffyScripter.disconnect();
     }
 
+    // TODO queue
     void readAllPumpData() {
         long lastCheckInitiated = System.currentTimeMillis();
 
@@ -905,6 +910,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         pump.basalProfile = basalResult.basalProfile;
+
+        ruffyScripter.disconnect();
     }
 
     @Override
