@@ -84,8 +84,11 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     @Override
     public boolean onLongClick(View view) {
         switch (view.getId()) {
+            case R.id.combo_error_history:
+                new Thread(() -> ComboPlugin.getPlugin().readAlertData()).start();
+                return true;
             case R.id.combo_tdd_history:
-                new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start();
+                new Thread(() -> ComboPlugin.getPlugin().readTddData()).start();
                 return true;
         }
         return false;

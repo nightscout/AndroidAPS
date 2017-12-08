@@ -21,7 +21,7 @@ public class ComboTddHistoryDialog extends DialogFragment {
         TextView text = (TextView) layout.findViewById(R.id.combo_tdd_history_text);
         List<Tdd> tdds = ComboPlugin.getPlugin().getPump().tddHistory;
         if (tdds.isEmpty()) {
-            text.setText(R.string.combo_empty_history_note);
+            text.setText(R.string.combo_no_tdd_data_note);
         } else {
             StringBuilder sb = new StringBuilder();
             DateFormat dateFormatter = DateFormat.getDateInstance();
