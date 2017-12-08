@@ -710,7 +710,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     /** check pump time (main menu) and  raise notification if clock is off by more than 2m
      * (setting clock is not supported by ruffy) */
     private void checkPumpTime(PumpState state) {
-        if (state.timestamp != 0 && Math.abs(state.timestamp - System.currentTimeMillis()) > 2 * 60 * 1000) {
+        if (state.pumpTime != 0 && Math.abs(state.pumpTime - System.currentTimeMillis()) > 2 * 60 * 1000) {
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
         }
