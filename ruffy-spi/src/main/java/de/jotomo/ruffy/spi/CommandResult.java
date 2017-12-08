@@ -13,13 +13,13 @@ public class CommandResult {
     public boolean success;
     /** State of the pump *after* command execution. */
     public PumpState state;
+    /** Bolus actually delivered if request was a bolus command. */
+    public Double delivered;
     /** History if requested by the command. */
     @Nullable
     public PumpHistory history;
     /** Basal rate profile if requested. */
     public BasalProfile basalProfile;
-    /** Total duration the command took. */
-    public String duration;
 
     /** Warnings raised on the pump that are forwarded to AAPS to be turned into AAPS
      * notifications. */
@@ -28,15 +28,11 @@ public class CommandResult {
     public int reservoirLevel = -1;
 
     @Nullable
+    @Deprecated
     public Bolus lastBolus;
 
     public CommandResult success(boolean success) {
         this.success = success;
-        return this;
-    }
-
-    public CommandResult duration(String duration) {
-        this.duration = duration;
         return this;
     }
 
@@ -62,7 +58,6 @@ public class CommandResult {
                 ", state=" + state +
                 ", history=" + history +
                 ", basalProfile=" + basalProfile +
-                ", duration='" + duration + '\'' +
                 ", forwardedWarnings='" + forwardedWarnings + '\'' +
                 ", lastBolus=" + lastBolus +
                 '}';

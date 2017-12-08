@@ -811,7 +811,7 @@
     <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
     <string name="combo_pump_never_connected">Never</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
-    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Attempting to update history from pump. Please the pump and treatments tabs and bolus again as needed.</string>
+    <string name="combo_bolus_bolus_delivery_failed">Bolus delivery failed. A (partial) bolus might have been delivered. Please check the pump and the treatments tabs and bolus again as needed.</string>
     <string name="combo_force_disabled_notification">Unsafe usage: extended or multiwave boluses have been delivered within the last 6 hours or the selected basal rate is not 1. Loop mode has been set to low-suspend only until 6 hours after the last unsupported bolus or basal rate profile. Only normal boluses are supported in loop mode with basal rate profile 1.</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. For safety reasons this is disallowed.</string>
     <string name="combo_pump_connected_now">Now</string>

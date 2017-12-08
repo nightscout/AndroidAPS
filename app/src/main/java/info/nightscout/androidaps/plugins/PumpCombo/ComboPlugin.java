@@ -471,46 +471,21 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                             detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
             bolusInProgress = false;
 
-            if (!cancelBolus && bolusCmdResult.success) {
-                detailedBolusInfo.date = bolusCmdResult.state.timestamp;
+            if (bolusCmdResult.delivered > 0) {
+                detailedBolusInfo.insulin = bolusCmdResult.delivered;
                 detailedBolusInfo.source = Source.USER;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                return new PumpEnactResult().success(true).enacted(true)
-                        .bolusDelivered(detailedBolusInfo.insulin)
-                        .carbsDelivered(detailedBolusInfo.carbs);
             }
 
-            // the remainder of this method checks what was actually delivered based on pump history
-            // in case of error  or cancellation
-
-            CommandResult historyResult = runCommand(null, 1,
-                    () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
-            if (!historyResult.success || historyResult.history == null || historyResult.history.bolusHistory.isEmpty()) {
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
-            }
-            Bolus lastPumpBolus = historyResult.history.bolusHistory.get(0);
-            if (cancelBolus) {
-                // if cancellation was requested, the delivered bolus is allowed to differ from requested
-            } else if (lastPumpBolus == null || Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01
-                    || System.currentTimeMillis() - lastPumpBolus.timestamp > 5 * 60 * 1000) {
-                return new PumpEnactResult().success(false).enacted(false).
-                        comment(MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
-            }
-
-            if (lastPumpBolus != null && (lastPumpBolus.amount > 0)) {
-                detailedBolusInfo.insulin = lastPumpBolus.amount;
-                detailedBolusInfo.source = Source.USER;
-                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                return new PumpEnactResult().success(true).enacted(true)
-                        .bolusDelivered(lastPumpBolus.amount).carbsDelivered(detailedBolusInfo.carbs);
-            } else {
-                return new PumpEnactResult().success(true).enacted(false);
-            }
+            return new PumpEnactResult()
+                    .success(bolusCmdResult.success)
+                    .enacted(bolusCmdResult.delivered > 0)
+                    .bolusDelivered(bolusCmdResult.delivered)
+                    .carbsDelivered(detailedBolusInfo.carbs);
         } finally {
-            // BolusCommand.execute() intentionally doesn't close the progress dialog if an error
-            // occurred so it stays open while the connection was re-established if needed and/or
-            // this method did recovery
+            // BolusCommand.execute() intentionally doesn't close the progress dialog (indirectly
+            // by reporting 100% progress) if an error occurred so it stays open while the connection
+            // was re-established if needed and/or this method did recovery
             bolusProgressReporter.report(FINISHED, 100, 0);
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());

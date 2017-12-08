@@ -152,6 +152,18 @@ public class BolusCommand extends BaseCommand {
                     // ignore
                 }
             }
+
+            if (cancelInProgress) {
+               // delivery was started, but cancellation requested, so there is a bolus we can read
+                ReadReservoirLevelAndLastBolus readReservoirLevelAndLastBolus = new ReadReservoirLevelAndLastBolus();
+                readReservoirLevelAndLastBolus.setScripter(scripter);
+                readReservoirLevelAndLastBolus.execute();
+                result.delivered = readReservoirLevelAndLastBolus.result.lastBolus.amount;
+            } else {
+                // bolus delivery completed successfully and completely
+                result.delivered = bolus;
+            }
+
             bolusProgressReporter.report(DELIVERED, 100, bolus);
             result.success = true;
         } finally {
