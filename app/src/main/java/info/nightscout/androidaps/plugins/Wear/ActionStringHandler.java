@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.Wear;
 
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -27,7 +25,6 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
