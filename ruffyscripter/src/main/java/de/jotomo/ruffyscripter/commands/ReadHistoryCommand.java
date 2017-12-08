@@ -36,7 +36,8 @@ public class ReadHistoryCommand extends BaseCommand {
     public void execute() {
         if (request.bolusHistory != PumpHistoryRequest.SKIP
                 || request.tbrHistory != PumpHistoryRequest.SKIP
-                || request.pumpErrorHistory != PumpHistoryRequest.SKIP) {
+                || request.pumpErrorHistory != PumpHistoryRequest.SKIP
+                || request.tddHistory != PumpHistoryRequest.SKIP) {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             scripter.navigateToMenu(MenuType.MY_DATA_MENU);
             scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
