@@ -57,6 +57,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
         Button errorHistory = (Button) view.findViewById(R.id.combo_error_history);
         errorHistory.setOnClickListener(this);
+        errorHistory.setOnLongClickListener(this);
 
         Button tddHistory = (Button) view.findViewById(R.id.combo_tdd_history);
         tddHistory.setOnClickListener(this);
