@@ -691,7 +691,7 @@
     <string name="combo_pump_state_suspended_by_user">Durch Benuzter gestoppt</string>
     <string name="combo_pump_state_suspended_due_to_error">Wegen Fehler gestoppt</string>
     <string name="combo_pump_state_running">Normaler Betrieb</string>
-    <string name="combo_stats">Statistiken</string>
+    <string name="combo_tdds">TDDS</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
     <string name="combo_pump_action_cancelling_tbr">TBR wird abgebrochen</string>
     <string name="combo_pump_action_setting_tbr">TBR wird gesetzt (%d%% / %d min)</string>

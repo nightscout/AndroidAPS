@@ -790,7 +790,7 @@
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
-    <string name="combo_stats">TDDS</string>
+    <string name="combo_tdds">TDDS</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>

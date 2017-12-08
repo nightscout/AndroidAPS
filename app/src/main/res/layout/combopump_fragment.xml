@@ -379,7 +379,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/icon_danarhistory"
+                android:drawableTop="@drawable/icon_cp_announcement"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/combo_pump_alerts" />
@@ -393,7 +393,18 @@
                 android:drawableTop="@drawable/icon_danarstats"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="@string/combo_stats" />
+                android:text="@string/combo_tdds" />
+
+            <Button
+                android:id="@+id/combo_full_history"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/icon_bolus"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/combo_history" />
 
         </LinearLayout>
 
