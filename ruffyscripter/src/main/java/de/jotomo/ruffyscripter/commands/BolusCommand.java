@@ -14,6 +14,7 @@ import java.util.Objects;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.PumpWarningCodes;
 import de.jotomo.ruffy.spi.WarningOrErrorCode;
+import de.jotomo.ruffy.spi.history.Bolus;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERED;
@@ -170,7 +171,11 @@ public class BolusCommand extends BaseCommand {
                 ReadReservoirLevelAndLastBolus readReservoirLevelAndLastBolus = new ReadReservoirLevelAndLastBolus();
                 readReservoirLevelAndLastBolus.setScripter(scripter);
                 readReservoirLevelAndLastBolus.execute();
-                result.delivered = readReservoirLevelAndLastBolus.result.lastBolus.amount;
+                Bolus lastBolus = readReservoirLevelAndLastBolus.result.lastBolus;
+                if (Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
+                    throw new CommandException("Unable to determine last bolus");
+                }
+                result.delivered = lastBolus.amount;
             } else {
                 // bolus delivery completed successfully and completely
                 result.delivered = bolus;
