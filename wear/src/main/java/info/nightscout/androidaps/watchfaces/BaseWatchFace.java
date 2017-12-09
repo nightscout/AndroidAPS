@@ -476,7 +476,9 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public void setDateAndTime() {
 
         final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BaseWatchFace.this);
-        mTime.setText(timeFormat.format(System.currentTimeMillis()));
+        if (mTime != null) {
+            mTime.setText(timeFormat.format(System.currentTimeMillis()));
+        }
 
         if (mDate != null && mDay != null && mMonth != null) {
             if (sharedPrefs.getBoolean("show_date", false)) {
