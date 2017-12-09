@@ -14,7 +14,7 @@ public class CommandResult {
     /** State of the pump *after* command execution. */
     public PumpState state;
     /** Bolus actually delivered if request was a bolus command. */
-    public Double delivered;
+    public double delivered;
     /** History if requested by the command. */
     @Nullable
     public PumpHistory history;
