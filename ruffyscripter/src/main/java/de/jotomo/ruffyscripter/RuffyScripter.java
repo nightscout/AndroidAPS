@@ -367,14 +367,17 @@ public class RuffyScripter implements RuffyCommands {
 
         // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
         Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        try {
-            while (isConnected() && bolusRemaining != null) {
-                log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
-                waitForScreenUpdate();
+        BolusType bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
+        if (bolusType != null && bolusType == BolusType.NORMAL) {
+            try {
+                while (isConnected() && bolusRemaining != null) {
+                    log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
+                    waitForScreenUpdate();
+                }
+            } catch (Exception e) {
+                log.error("Exception waiting for bolus from previous command to finish", e);
+                return false;
             }
-        } catch (Exception e) {
-            log.error("Exception waiting for bolus from previous command to finish", e);
-            return false;
         }
         return true;
     }
