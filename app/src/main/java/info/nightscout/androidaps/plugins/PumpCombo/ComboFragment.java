@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -32,7 +31,10 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView lastConnectionView;
     private TextView lastBolusView;
     private TextView tempBasalText;
-    private LinearLayout buttonsLayout;
+    private Button refreshButton;
+    private Button alertsButton;
+    private Button tddsButton;
+    private Button fullHistoryButton;
     private TextView queueView;
 
 
@@ -48,24 +50,22 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
         //lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
-        buttonsLayout = (LinearLayout) view.findViewById(R.id.combo_buttons_layout);
         queueView = (TextView) view.findViewById(R.id.combo_queue);
 
+        refreshButton = (Button) view.findViewById(R.id.combo_refresh_button);
+        refreshButton.setOnClickListener(this);
 
-        Button refresh = (Button) view.findViewById(R.id.combo_refresh);
-        refresh.setOnClickListener(this);
+        alertsButton = (Button) view.findViewById(R.id.combo_alerts_button);
+        alertsButton.setOnClickListener(this);
+        alertsButton.setOnLongClickListener(this);
 
-        Button errorHistory = (Button) view.findViewById(R.id.combo_error_history);
-        errorHistory.setOnClickListener(this);
-        errorHistory.setOnLongClickListener(this);
+        tddsButton = (Button) view.findViewById(R.id.combo_tdds_button);
+        tddsButton.setOnClickListener(this);
+        tddsButton.setOnLongClickListener(this);
 
-        Button tddHistory = (Button) view.findViewById(R.id.combo_tdd_history);
-        tddHistory.setOnClickListener(this);
-        tddHistory.setOnLongClickListener(this);
-
-        Button fullHistory = (Button) view.findViewById(R.id.combo_full_history);
-        fullHistory.setOnClickListener(this);
-        fullHistory.setOnLongClickListener(this);
+        fullHistoryButton = (Button) view.findViewById(R.id.combo_full_history_button);
+        fullHistoryButton.setOnClickListener(this);
+        fullHistoryButton.setOnLongClickListener(this);
 
         updateGUI();
         return view;
@@ -74,18 +74,18 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.combo_refresh:
+            case R.id.combo_refresh_button:
                 ConfigBuilderPlugin.getCommandQueue().readStatus("User request", null);
                 break;
-            case R.id.combo_error_history:
+            case R.id.combo_alerts_button:
                 ComboAlertHistoryDialog ehd = new ComboAlertHistoryDialog();
                 ehd.show(getFragmentManager(), ComboAlertHistoryDialog.class.getSimpleName());
                 break;
-            case R.id.combo_tdd_history:
+            case R.id.combo_tdds_button:
                 ComboTddHistoryDialog thd = new ComboTddHistoryDialog();
                 thd.show(getFragmentManager(), ComboTddHistoryDialog.class.getSimpleName());
                 break;
-            case R.id.combo_full_history:
+            case R.id.combo_full_history_button:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.combo_warning);
                 builder.setMessage(R.string.combo_read_full_history_warning);
@@ -97,13 +97,13 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     @Override
     public boolean onLongClick(View view) {
         switch (view.getId()) {
-            case R.id.combo_error_history:
+            case R.id.combo_alerts_button:
                 new Thread(() -> ComboPlugin.getPlugin().readAlertData()).start();
                 return true;
-            case R.id.combo_tdd_history:
+            case R.id.combo_tdds_button:
                 new Thread(() -> ComboPlugin.getPlugin().readTddData()).start();
                 return true;
-            case R.id.combo_full_history:
+            case R.id.combo_full_history_button:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.combo_warning);
                 builder.setMessage(R.string.combo_read_full_history_confirmation);
@@ -151,7 +151,10 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 activityView.setText(activity != null ? activity : "");
 
                 if (plugin.isInitialized()) {
-                    buttonsLayout.setVisibility(View.VISIBLE);
+                    refreshButton.setVisibility(View.VISIBLE);
+                    alertsButton.setVisibility(View.VISIBLE);
+                    tddsButton.setVisibility(View.VISIBLE);
+                    fullHistoryButton.setVisibility(View.VISIBLE);
 
                     // battery
                     batteryView.setTextSize(20);

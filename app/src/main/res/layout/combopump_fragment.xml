@@ -359,11 +359,10 @@
             android:id="@+id/combo_buttons_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/combo_refresh"
+                android:id="@+id/combo_refresh_button"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -374,7 +373,7 @@
                 android:text="@string/combo_refresh" />
 
             <Button
-                android:id="@+id/combo_error_history"
+                android:id="@+id/combo_alerts_button"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -382,10 +381,11 @@
                 android:drawableTop="@drawable/icon_cp_announcement"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
+                android:visibility="gone"
                 android:text="@string/combo_pump_alerts" />
 
             <Button
-                android:id="@+id/combo_tdd_history"
+                android:id="@+id/combo_tdds_button"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -393,10 +393,11 @@
                 android:drawableTop="@drawable/icon_danarstats"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
+                android:visibility="gone"
                 android:text="@string/combo_tdds" />
 
             <Button
-                android:id="@+id/combo_full_history"
+                android:id="@+id/combo_full_history_button"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -404,6 +405,7 @@
                 android:drawableTop="@drawable/icon_bolus"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
+                android:visibility="gone"
                 android:text="@string/combo_history" />
 
         </LinearLayout>
