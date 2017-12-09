@@ -199,7 +199,7 @@ public class RuffyScripter implements RuffyCommands {
         try {
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
-            throw new CommandException("Disconnect failed", e);
+            // ignore
         }
     }
 
