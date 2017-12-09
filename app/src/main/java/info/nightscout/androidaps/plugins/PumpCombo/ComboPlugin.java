@@ -53,7 +53,7 @@ import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
  * Created by mike on 05.08.2016.
  */
 public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
+    private static final Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
     private static ComboPlugin plugin = null;
     private boolean fragmentEnabled = false;
@@ -91,7 +91,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @NonNull
     private final RuffyCommands ruffyScripter;
 
-    private static ComboPump pump = new ComboPump();
+    @NonNull
+    private static final ComboPump pump = new ComboPump();
 
     private volatile boolean bolusInProgress;
     private volatile boolean cancelBolus;
@@ -104,7 +105,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return plugin;
     }
 
-    private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
+    private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
             .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
 
     private ComboPlugin() {

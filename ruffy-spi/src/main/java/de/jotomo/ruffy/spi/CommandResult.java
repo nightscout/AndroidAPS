@@ -27,8 +27,8 @@ public class CommandResult {
 
     public int reservoirLevel = -1;
 
+    /** Only set when by ReadReservoirLevelCommand. */
     @Nullable
-    @Deprecated
     public Bolus lastBolus;
 
     public CommandResult success(boolean success) {
