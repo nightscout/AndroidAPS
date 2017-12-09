@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spanned;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import de.jotomo.ruffy.spi.PumpState;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -55,10 +57,15 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
         Button errorHistory = (Button) view.findViewById(R.id.combo_error_history);
         errorHistory.setOnClickListener(this);
+        errorHistory.setOnLongClickListener(this);
 
         Button tddHistory = (Button) view.findViewById(R.id.combo_tdd_history);
         tddHistory.setOnClickListener(this);
         tddHistory.setOnLongClickListener(this);
+
+        Button fullHistory = (Button) view.findViewById(R.id.combo_full_history);
+        fullHistory.setOnClickListener(this);
+        fullHistory.setOnLongClickListener(this);
 
         updateGUI();
         return view;
@@ -68,7 +75,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-                new Thread(() -> ComboPlugin.getPlugin().getPumpStatus()).start();
+                ConfigBuilderPlugin.getCommandQueue().readStatus("User request", null);
                 break;
             case R.id.combo_error_history:
                 ComboAlertHistoryDialog ehd = new ComboAlertHistoryDialog();
@@ -78,14 +85,32 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 ComboTddHistoryDialog thd = new ComboTddHistoryDialog();
                 thd.show(getFragmentManager(), ComboTddHistoryDialog.class.getSimpleName());
                 break;
+            case R.id.combo_full_history:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.combo_warning);
+                builder.setMessage(R.string.combo_read_full_history_warning);
+                builder.show();
+                break;
         }
     }
 
     @Override
     public boolean onLongClick(View view) {
         switch (view.getId()) {
+            case R.id.combo_error_history:
+                new Thread(() -> ComboPlugin.getPlugin().readAlertData()).start();
+                return true;
             case R.id.combo_tdd_history:
-                new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start();
+                new Thread(() -> ComboPlugin.getPlugin().readTddData()).start();
+                return true;
+            case R.id.combo_full_history:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.combo_warning);
+                builder.setMessage(R.string.combo_read_full_history_confirmation);
+                builder.setPositiveButton(R.string.ok, (dialog, which) ->
+                        new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start());
+                builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                builder.show();
                 return true;
         }
         return false;
