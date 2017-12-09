@@ -520,6 +520,8 @@ public class RuffyScripter implements RuffyCommands {
         return state;
     }
 
+    /** Precondition: a warning/error must be displayed */
+    @Nullable
     public WarningOrErrorCode readWarningOrErrorCode() {
         verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
         Integer warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);

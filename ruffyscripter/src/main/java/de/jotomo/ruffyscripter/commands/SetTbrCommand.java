@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jotomo.ruffy.spi.PumpWarningCodes;
+import de.jotomo.ruffy.spi.WarningOrErrorCode;
 
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
@@ -60,25 +61,42 @@ public class SetTbrCommand extends BaseCommand {
     public void execute() {
         boolean cancellingTbr = percentage == 100;
 
-        enterTbrMenu();
-        boolean increasingPercentage = inputTbrPercentage();
-        verifyDisplayedTbrPercentage(increasingPercentage);
+        try {
+            enterTbrMenu();
+            boolean increasingPercentage = inputTbrPercentage();
+            verifyDisplayedTbrPercentage(increasingPercentage);
 
-        if (cancellingTbr) {
-            cancelTbrAndConfirmCancellationWarning();
-        } else {
-            // switch to TBR_DURATION menu by pressing menu key
-            scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-            scripter.pressMenuKey();
-            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+            if (cancellingTbr) {
+                cancelTbrAndConfirmCancellationWarning();
+            } else {
+                // switch to TBR_DURATION menu by pressing menu key
+                scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+                scripter.pressMenuKey();
+                scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-            boolean increasingDuration = inputTbrDuration();
-            verifyDisplayedTbrDuration(increasingDuration);
+                boolean increasingDuration = inputTbrDuration();
+                verifyDisplayedTbrDuration(increasingDuration);
 
-            // confirm TBR
-            scripter.pressCheckKey();
-            scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
+                // confirm TBR
+                scripter.pressCheckKey();
+                scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
+            }
+        } catch (CommandException e) {
+            if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                // The pump raises a TBR CANCELLED warning when a running TBR finishes while we're
+                // programming a new one (TBR remaining time was last displayed as 0:01, the pump
+                // rounds seconds up to full minutes). In that case confirm the alert since we know
+                // we caused it (in a way), but still fail the command so the usual cleanups of returning
+                // to main menu etc are performed, after which this command can simply be retried.
+                WarningOrErrorCode warningOrErrorCode = scripter.readWarningOrErrorCode();
+                if (warningOrErrorCode.warningCode != null
+                        && warningOrErrorCode.warningCode == PumpWarningCodes.TBR_CANCELLED) {
+                    scripter.confirmAlert(PumpWarningCodes.TBR_CANCELLED);
+                }
+            }
+            throw e;
         }
+
         result.success = true;
     }
 
