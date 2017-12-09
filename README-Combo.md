@@ -57,6 +57,9 @@ Setup:
   can be controlled via ruffy, installing the above version is sufficient.
   If AAPS is already installed, switch to the MDI plugin to avoid the Combo
   plugin from interfering with ruffy during the pairing process.
+  Note that the pairing processing is somewhat fragile and may need a few attempts;
+  quickly acknowledge prompts and when starting over, remove the pump device
+  from the bluetooth settings beforehand
 - Get AndroidAPS from https://github.com/jotomo/AndroidAPS (Branch `combo-scripter-v2`)
 - Before enabling the Combo plugin in AAPS make sure you're profile is set up
   correctly and your basal profile is up to date as AAPS will sync the basal profile
