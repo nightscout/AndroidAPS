@@ -538,8 +538,10 @@ public class WatchUpdaterService extends WearableListenerService implements
             //bgi
             String bgiString = "";
             Profile profile = MainApp.getConfigBuilder().getProfile();
-            double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
-            bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+            if(profile!=null) {
+                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
+                bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+            }
 
             String status = generateStatusString(profile, tempBasal,iobSum, iobDetail, bgiString);
 

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Wear;
 
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -26,7 +25,6 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -296,11 +294,10 @@ public class ActionStringHandler {
                         rMessage += MainApp.instance().getString(R.string.pumpbusy);
                     } else {
                         rMessage += "trying to fetch data from pump.";
-                        Handler handler = new Handler(handlerThread.getLooper());
-                        handler.post(new Runnable() {
+
+                        ConfigBuilderPlugin.getCommandQueue().loadHistory(RecordTypes.RECORD_TYPE_DAILY, new Callback() {
                             @Override
                             public void run() {
-                                ((DanaRInterface) pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
                                 List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
                                 List<DanaRHistoryRecord> historyList = getTDDList(dummies);
                                 if (isOldData(historyList)) {
@@ -308,8 +305,8 @@ public class ActionStringHandler {
                                 } else {
                                     sendStatusmessage("TDD", generateTDDMessage(historyList, dummies));
                                 }
-                            }
-                        });
+                                    }
+                                });
                     }
                 } else {
                     // if up to date: prepare, send (check if CPP is activated -> add CPP stats)
