@@ -711,7 +711,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (activeAlert != null) {
             if (activeAlert.warningCode != null
                     && (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW ||
-                    activeAlert.warningCode == PumpWarningCodes.BATTERY_LOW)) {
+                    activeAlert.warningCode == PumpWarningCodes.BATTERY_LOW ||
+                    activeAlert.warningCode == PumpWarningCodes.TBR_CANCELLED)) {
                 // turn benign warnings into notifications
                 notifyAboutPumpWarning(activeAlert);
                 ruffyScripter.confirmAlert(activeAlert.warningCode);
@@ -732,16 +733,23 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private void notifyAboutPumpWarning(WarningOrErrorCode activeAlert) {
-        if (activeAlert.warningCode == null || (activeAlert.warningCode.equals(PumpWarningCodes.CARTRIDGE_LOW) && activeAlert.warningCode.equals(PumpWarningCodes.BATTERY_LOW))) {
+        if (activeAlert.warningCode == null ||
+                (!activeAlert.warningCode.equals(PumpWarningCodes.CARTRIDGE_LOW)
+                        && !activeAlert.warningCode.equals(PumpWarningCodes.BATTERY_LOW)
+                        && !activeAlert.warningCode.equals(PumpWarningCodes.TBR_CANCELLED))) {
             throw new IllegalArgumentException(activeAlert.toString());
         }
         Notification notification = new Notification();
         notification.date = new Date();
         notification.id = Notification.COMBO_PUMP_ALARM;
         notification.level = Notification.NORMAL;
-        notification.text = activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW
-                ? MainApp.sResources.getString(R.string.combo_pump_cartridge_low_warrning)
-                : MainApp.sResources.getString(R.string.combo_pump_battery_low_warrning);
+        if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
+            notification.text = MainApp.sResources.getString(R.string.combo_pump_cartridge_low_warrning);
+        } else if (activeAlert.warningCode == PumpWarningCodes.BATTERY_LOW) {
+            notification.text = MainApp.sResources.getString(R.string.combo_pump_battery_low_warrning);
+        } else if (activeAlert.warningCode == PumpWarningCodes.TBR_CANCELLED) {
+            notification.text = MainApp.sResources.getString(R.string.combo_pump_tbr_cancelled_warrning);
+        }
         MainApp.bus().post(new EventNewNotification(notification));
     }
 
