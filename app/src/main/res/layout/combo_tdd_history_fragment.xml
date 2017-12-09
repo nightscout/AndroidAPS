@@ -16,7 +16,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:text="TDD"
+            android:text="@string/combo_tdds"
             android:textStyle="bold" />
 
         <View
