@@ -3,9 +3,10 @@
 - [ ] Bolusing
   - [ ] Cancelling bolus at various stages and checking error message (if any) and check
         no bolus or a partial bolus was delivered
-  - [ ] Cancelling a bolus 0.2 U before it's finished (cancelling requires pressing up/down
-        3s, so the cancellation will be too late, but the code should handle it and report
-        the full bolus being delivered
+  - [ ] Enter a bolus of 2 U and press cancel when delivery is at 1.7 (cancelling requires AAAPS
+        to press the up button for 3 seconds, so the cancellation attempt will not succeed because delivery
+        ends before those 3 seconds are elapsed. The code should handle this without giving an
+        error and adding the full bolus to treatments.
   - [ ] Low cartridge alarm during bolus
     - [ ] alarm must be confirmed by AAPS
     - [ ] bolus must have been fully delivered by pump
