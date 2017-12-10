@@ -44,10 +44,11 @@ Setup:
 - Configure pump using 360 config software.
   - Set/leave the menu configuration as "Standard", this will show only the supported
     menus/actions on the pump and hide those which are unsupported (extended/multiwave bolus,
-    multiple basal rates), which cause the loop functionality to be disabled when used because
+    multiple basal rates), which cause the loop functionality to be restricted when used because
     it's not possible to run the loop in a safe manner when used.
   - Set maximum TBR to 500%
   - Disable end of TBR alert
+  - Set TBR duration step-size to 15 min
   - Set low cartridge alarm to your licking
   - Enable keylock (can also be set on the pump directly, see usage section on reasoning)
 - Get Android Studio 3
