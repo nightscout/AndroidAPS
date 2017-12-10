@@ -29,186 +29,193 @@
         android:background="@drawable/steampunk_gauge"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/tertiary_layout"
+        <ImageView
+            android:id="@+id/delta_gauge"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/steampunk_pointer"
+            android:src="@drawable/steampunk_pointer"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tertiary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="0.7"
             android:orientation="vertical"
             android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="0.7"
-                android:orientation="vertical"
-                android:weightSum="1">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.11"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.2"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/cobView"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="@color/black_86p"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tmpBasal"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="@color/black_86p"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/iobView"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="@color/black_86p"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0px"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.21"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.34"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/loop"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.11"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="@color/black_86p"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.1"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/timestamp"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.11"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="@color/black_86p"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.34"
-                        android:gravity="center" />
-
-                </LinearLayout>
+                android:layout_gravity="center"
+                android:layout_weight="0.11"
+                android:gravity="center"
+                android:orientation="horizontal">
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="0.27"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="horizontal">
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:gravity="center" />
 
-                <lecho.lib.hellocharts.view.LineChartView
+                <TextView
+                    android:id="@+id/cobView"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_86p"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tmpBasal"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_86p"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/iobView"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_86p"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_gravity="center"
+                android:layout_weight="0.21"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.34"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/loop"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.11"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_86p"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/timestamp"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.11"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_86p"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.34"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="0.27"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"/>
 
-                <LinearLayout
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="horizontal">
-                </LinearLayout>
-
-            </LinearLayout>
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="0.03"
-                android:orientation="vertical">
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:orientation="horizontal">
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="0.03"
+            android:orientation="vertical">
         </LinearLayout>
 
     </LinearLayout>
@@ -221,20 +228,18 @@
         android:orientation="vertical">
     </LinearLayout>
 
-    <LinearLayout
+    <ImageView
         android:id="@+id/hour_hand"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/steampunk_hour_hand"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:orientation="vertical"/>
 
-    <LinearLayout
+    <ImageView
         android:id="@+id/minute_hand"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/steampunk_minute_hand"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:orientation="vertical"/>
 
 </RelativeLayout>

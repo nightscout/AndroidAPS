@@ -21,6 +21,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
     public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public ImageView mGlucoseDial, mDeltaGauge;
     public long datetime;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate;
@@ -160,10 +162,13 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
                 mLinearLayout = (LinearLayout) stub.findViewById(R.id.secondary_layout);
                 mLinearLayout2 = (LinearLayout) stub.findViewById(R.id.tertiary_layout);
+                mGlucoseDial = (ImageView) stub.findViewById(R.id.glucose_dial);
+                mDeltaGauge = (ImageView) stub.findViewById(R.id.delta_gauge);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
                 layoutSet = true;
 
                 setDataFields();
+                setColor();
                 }
             }
         );
@@ -225,6 +230,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             wakeLock.acquire(50);
 
             setDataFields();
+            setColor();
             missedReadingAlert();
 
             mRelativeLayout.measure(specW, specH);
@@ -273,6 +279,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             }
 
             setDataFields();
+            setColor();
 
             bundle = intent.getBundleExtra("basals");
             if (layoutSet && bundle != null) {
@@ -285,7 +292,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
                     mRelativeLayout.getMeasuredHeight());
             invalidate();
-            setColor();
         }
     }
 

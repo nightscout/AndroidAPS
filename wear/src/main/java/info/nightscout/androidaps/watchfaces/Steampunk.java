@@ -2,19 +2,17 @@ package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by andrew-warrington on 01/12/2017.
@@ -23,7 +21,6 @@ import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 public class Steampunk extends BaseWatchFace {
 
     private long sgvTapTime = 0;
-    public ImageView mGlucoseDial;
     private float lastEndDegrees = 0f;
 
     @Override
@@ -32,7 +29,6 @@ public class Steampunk extends BaseWatchFace {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_steampunk, null);
         performViewSetup();
-        mGlucoseDial = (ImageView) layoutView.findViewById(R.id.glucose_dial);
     }
 
     @Override
@@ -64,10 +60,8 @@ public class Steampunk extends BaseWatchFace {
     protected void setColorDark() {
 
         //rotate glucose dial.
-        float rotationAngle = 0;
-        if (sSgv != "---") {
-            rotationAngle = Float.valueOf(sSgv);
-        }
+        float rotationAngle = 0f;
+        if (!sSgv.equals("---")) rotationAngle = Float.valueOf(sSgv);
         if (rotationAngle > 330) rotationAngle = 330;
         if (rotationAngle != 0 && rotationAngle < 30) rotationAngle = 30;
 
@@ -80,6 +74,24 @@ public class Steampunk extends BaseWatchFace {
         rotate.setDuration(2000);
         mGlucoseDial.startAnimation(rotate);
         lastEndDegrees = rotationAngle;
+
+        //rotate delta gauge.
+        rotationAngle = 0f;
+        //for each 10 in avgDelta we need to move 15 degrees, hence multiply avgDelta by 1.5.
+        if (!sAvgDelta.equals("--")) rotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 1.5f);
+        if (rotationAngle > 35 || rotationAngle < -35) {  //if the needle will go off the chart in either direction...
+            mDeltaGauge.setVisibility(GONE);
+        } else {
+            mDeltaGauge.setVisibility(VISIBLE);
+            rotate = new RotateAnimation(
+                    0f, rotationAngle * -1,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f);
+            rotate.setFillAfter(true);
+            rotate.setInterpolator(new LinearInterpolator());
+            rotate.setDuration(2000);
+            mDeltaGauge.startAnimation(rotate);
+        }
 
         setTextSizes();
 
@@ -103,7 +115,7 @@ public class Steampunk extends BaseWatchFace {
     }
 
     protected void setColorLowRes() {
-        return;
+        setColorDark();
     }
 
     protected void setColorBright() {
