@@ -356,9 +356,8 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      *
      * @param request
-     * @return
-     *      true if command is going to be executed
-     *      false if error
+     * @return true if command is going to be executed
+     * false if error
      */
 
     public boolean applyAPSRequest(APSResult request, Callback callback) {
@@ -381,20 +380,6 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             return false;
         }
 
-        if (request.smb != 0) {
-            long lastSMBTime = getLastBolusTime();
-            if (lastSMBTime != 0 && lastSMBTime + 4.5 * 60 * 1000 > System.currentTimeMillis()) {
-                log.debug("SMB requsted but still in 5 min interval");
-            } else {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                detailedBolusInfo.insulin = request.smb;
-                detailedBolusInfo.isSMB = true;
-                detailedBolusInfo.source = Source.USER;
-                getCommandQueue().bolus(detailedBolusInfo, callback);
-            }
-        }
-
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
         if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
@@ -402,14 +387,16 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
                 getCommandQueue().cancelTempBasal(false, callback);
-                return true;
+                if (request.smb == 0)
+                    return true;
             } else {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Basal set correctly");
                 if (callback != null) {
                     callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
                 }
-                return false;
+                if (request.smb == 0)
+                    return false;
             }
         } else if (isTempBasalInProgress()
                 && getTempBasalRemainingMinutesFromHistory() > 5
@@ -419,13 +406,34 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (callback != null) {
                 callback.result(new PumpEnactResult().absolute(getTempBasalAbsoluteRateHistory()).duration(getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
             }
-            return false;
+            if (request.smb == 0)
+                return false;
         } else {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: setTempBasalAbsolute()");
             getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
-            return true;
+
+            if (request.smb == 0) return true;
         }
+        log.debug("SMB requested in config is: " + request.smb);
+        if (request.smb != 0) {
+            long lastBolusTime = getLastBolusTime();
+            if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+                log.debug("SMB requsted but still in 3 min interval");
+            } else {
+                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                detailedBolusInfo.insulin = request.smb;
+                detailedBolusInfo.isSMB = true;
+                detailedBolusInfo.source = Source.USER;
+                boolean smbDelivered = getCommandQueue().bolus(detailedBolusInfo, callback);
+                if (smbDelivered)
+                    return true;
+                else
+                    return false;
+            }
+        }
+        return true;
     }
 
 /*
