@@ -771,11 +771,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private void checkAndResolveTbrMismatch(PumpState state) {
-        TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             log.debug("Creating temp basal from pump TBR");
             TemporaryBasal newTempBasal = new TemporaryBasal();
-            newTempBasal.date = System.currentTimeMillis();
+            newTempBasal.date = now;
             newTempBasal.percentRate = state.tbrPercent;
             newTempBasal.isAbsolute = false;
             newTempBasal.durationInMinutes = state.tbrRemainingDuration;
@@ -784,22 +785,22 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             log.debug("Ending AAPS-TBR since pump has no TBR active");
             TemporaryBasal tempStop = new TemporaryBasal();
-            tempStop.date = aapsTbr.date;
+            tempStop.date = now;
             tempStop.durationInMinutes = 0;
             tempStop.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
         } else if (aapsTbr != null && state.tbrActive
                 && (aapsTbr.percentRate != state.tbrPercent ||
                 Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
-            log.debug("AAPSs and pump-TBR differ; Ending AAPS-TBR and creating new TBR based on pump TBR");
+            log.debug("AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
             TemporaryBasal tempStop = new TemporaryBasal();
-            tempStop.date = aapsTbr.date;
+            tempStop.date = now - 1000;
             tempStop.durationInMinutes = 0;
             tempStop.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
 
             TemporaryBasal newTempBasal = new TemporaryBasal();
-            newTempBasal.date = System.currentTimeMillis();
+            newTempBasal.date = now;
             newTempBasal.percentRate = state.tbrPercent;
             newTempBasal.isAbsolute = false;
             newTempBasal.durationInMinutes = state.tbrRemainingDuration;
