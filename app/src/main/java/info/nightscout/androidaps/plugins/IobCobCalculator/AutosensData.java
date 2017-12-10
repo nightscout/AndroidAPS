@@ -61,7 +61,7 @@ public class AutosensData {
     public double avgDeviation = 0d;
 
     public double autosensRatio = 1d;
-    public double minDeviationSlope; // renamed to slopeFromMaxDeviation in 0.6.0
+    public double minDeviationSlope = 999;
 
     public String log(long time) {
         return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio + " minDeviationSlope=" + minDeviationSlope;
