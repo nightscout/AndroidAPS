@@ -481,12 +481,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     .success(bolusCmdResult.success)
                     .enacted(bolusCmdResult.delivered > 0)
                     .bolusDelivered(bolusCmdResult.delivered)
-                    .carbsDelivered(detailedBolusInfo.carbs);
+                    .carbsDelivered(detailedBolusInfo.carbs)
+                    .comment(bolusCmdResult.success ? "" :
+                            MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
         } finally {
-            // BolusCommand.execute() intentionally doesn't close the progress dialog (indirectly
-            // by reporting 100% progress) if an error occurred so it stays open while the connection
-            // was re-established if needed and/or this method did recovery
-            bolusProgressReporter.report(FINISHED, 100, 0);
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
             MainApp.bus().post(new EventRefreshOverview("Combo Bolus"));
@@ -691,7 +689,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 // turn benign warnings into notifications
                 notifyAboutPumpWarning(activeAlert);
                 ruffyScripter.confirmAlert(activeAlert.warningCode);
-            } else {
+            } else if (activeAlert.errorCode != null){
                 Notification notification = new Notification();
                 notification.date = new Date();
                 notification.id = Notification.COMBO_PUMP_ALARM;

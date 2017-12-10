@@ -11,9 +11,6 @@ public class WarningOrErrorCode {
     public String message;
 
     public WarningOrErrorCode(@Nullable Integer warningCode, @Nullable Integer errorCode, @Nullable String message) {
-        if (warningCode == null && errorCode == null) {
-            throw new IllegalArgumentException("Either code must be non-null");
-        }
         this.warningCode = warningCode;
         this.errorCode = errorCode;
         this.message = message;

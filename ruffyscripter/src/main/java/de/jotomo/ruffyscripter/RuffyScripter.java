@@ -405,13 +405,16 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
 
-        // A bolus cancelled is raised BEFORE a bolus is started. If a disconnect occurs after a
+        // A BOLUS CANCELLED alert is raised BEFORE a bolus is started. If a disconnect occurs after a
         // bolus has started (or the user interacts with the pump) the bolus continues.
         // If that happened, wait till the pump has finished the bolus, then it can be read from
         // the history as delivered.
         Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        while (isConnected() && bolusRemaining != null) {
+        BolusType bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
+        while (isConnected() && bolusRemaining != null && bolusType == BolusType.NORMAL) {
             waitForScreenUpdate();
+            bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+            bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
         }
         boolean connected = isConnected();
         if (connected) {
@@ -534,13 +537,14 @@ public class RuffyScripter implements RuffyCommands {
         return state;
     }
 
-    /** Precondition: a warning/error must be displayed */
-    @Nullable
+    @NonNull
     public WarningOrErrorCode readWarningOrErrorCode() {
-        verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+        if (currentMenu == null || getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR) {
+            return new WarningOrErrorCode(null, null, null);
+        }
         Integer warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);
         Integer errorCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.ERROR);
-        int retries = 3;
+        int retries = 5;
         while (warningCode == null && errorCode == null && retries > 0) {
             waitForScreenUpdate();
             warningCode = (Integer) getCurrentMenu().getAttribute(MenuAttribute.WARNING);
@@ -548,8 +552,7 @@ public class RuffyScripter implements RuffyCommands {
             retries--;
         }
         String message = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
-        return (warningCode != null || errorCode != null)
-                ? new WarningOrErrorCode(warningCode, errorCode, message) : null;
+        return new WarningOrErrorCode(warningCode, errorCode, message);
     }
 
     public static class Key {
@@ -844,9 +847,9 @@ public class RuffyScripter implements RuffyCommands {
                 // wait till the pump has processed the alarm, otherwise it might still be showing
                 // when a command returns
                 WarningOrErrorCode displayedWarning = readWarningOrErrorCode();
-                while (displayedWarning.warningCode != null && displayedWarning.warningCode.equals(warningCode)) {
+                while (Objects.equals(displayedWarning.warningCode, warningCode)) {
                    waitForScreenUpdate();
-                    displayedWarning = readWarningOrErrorCode();
+                   displayedWarning = readWarningOrErrorCode();
                 }
                 return true;
             }

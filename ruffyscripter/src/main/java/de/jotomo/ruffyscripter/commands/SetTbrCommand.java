@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.jotomo.ruffy.spi.PumpWarningCodes;
 import de.jotomo.ruffy.spi.WarningOrErrorCode;
@@ -89,8 +90,7 @@ public class SetTbrCommand extends BaseCommand {
                 // we caused it (in a way), but still fail the command so the usual cleanups of returning
                 // to main menu etc are performed, after which this command can simply be retried.
                 WarningOrErrorCode warningOrErrorCode = scripter.readWarningOrErrorCode();
-                if (warningOrErrorCode.warningCode != null
-                        && warningOrErrorCode.warningCode == PumpWarningCodes.TBR_CANCELLED) {
+                if (Objects.equals(warningOrErrorCode.warningCode, PumpWarningCodes.TBR_CANCELLED)) {
                     scripter.confirmAlert(PumpWarningCodes.TBR_CANCELLED);
                 }
             }

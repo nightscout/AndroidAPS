@@ -54,7 +54,6 @@ public class BolusCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        try {
             if (cancelRequested) {
                 bolusProgressReporter.report(STOPPED, 0, 0);
                 result.success = true;
@@ -120,14 +119,14 @@ public class BolusCommand extends BaseCommand {
                     if (warningOrErrorCode.errorCode != null) {
                         throw new CommandException("Pump is in error state");
                     }
-                    int warningCode = warningOrErrorCode.warningCode;
-                    if (warningCode == PumpWarningCodes.BOLUS_CANCELLED) {
+                    Integer warningCode = warningOrErrorCode.warningCode;
+                    if (Objects.equals(warningCode, PumpWarningCodes.BOLUS_CANCELLED)) {
                         scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 2000);
                         bolusProgressReporter.report(STOPPED, 0, 0);
-                    } else if (warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
+                    } else if (Objects.equals(warningCode, PumpWarningCodes.CARTRIDGE_LOW)) {
                         scripter.confirmAlert(PumpWarningCodes.CARTRIDGE_LOW, 2000);
                         result.forwardedWarnings.add(PumpWarningCodes.CARTRIDGE_LOW);
-                    } else if (warningCode == PumpWarningCodes.BATTERY_LOW) {
+                    } else if (Objects.equals(warningCode, PumpWarningCodes.BATTERY_LOW)) {
                         scripter.confirmAlert(PumpWarningCodes.BATTERY_LOW, 2000);
                         result.forwardedWarnings.add(PumpWarningCodes.BATTERY_LOW);
                     } else {
@@ -183,14 +182,6 @@ public class BolusCommand extends BaseCommand {
 
             bolusProgressReporter.report(DELIVERED, 100, bolus);
             result.success = true;
-        } finally {
-            // this is a bit messy: when there's an issue (e.g. disconnected) the dialog should
-            // stay open, since we're recovering. So leave it open and make sure in ComboPlugin.deliverBolus
-            // the dialog is closed at the end.
-            if (result.success) {
-                bolusProgressReporter.report(FINISHED, 100, 0);
-            }
-        }
     }
 
     private void enterBolusMenu() {
