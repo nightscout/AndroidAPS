@@ -51,7 +51,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
     public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
-    public ImageView mGlucoseDial, mDeltaGauge;
+    public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public long datetime;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate;
@@ -101,6 +101,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public String sCOB1 = "Carb";
     public String sCOB2 = "--g";
     public String sBgi = "--";
+    public String sMinute = "0";
+    public String sHour = "0";
 
     @Override
     public void onCreate() {
@@ -163,7 +165,9 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mLinearLayout = (LinearLayout) stub.findViewById(R.id.secondary_layout);
                 mLinearLayout2 = (LinearLayout) stub.findViewById(R.id.tertiary_layout);
                 mGlucoseDial = (ImageView) stub.findViewById(R.id.glucose_dial);
-                mDeltaGauge = (ImageView) stub.findViewById(R.id.delta_gauge);
+                mDeltaGauge = (ImageView) stub.findViewById(R.id.delta_pointer);
+                mHourHand = (ImageView) stub.findViewById(R.id.hour_hand);
+                mMinuteHand = (ImageView) stub.findViewById(R.id.minute_hand);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
                 layoutSet = true;
 
@@ -486,13 +490,18 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             mTime.setText(timeFormat.format(System.currentTimeMillis()));
         }
 
+        Date now = new Date();
+        SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+        SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
+        sHour = sdfHour.format(now);
+        sMinute = sdfMinute.format(now);
+
         if (mDate != null && mDay != null && mMonth != null) {
             if (sharedPrefs.getBoolean("show_date", false)) {
-                Date today = new Date();
                 SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
                 SimpleDateFormat sdfMonth = new SimpleDateFormat("MMM");
-                mDay.setText(sdfDay.format(today));
-                mMonth.setText(sdfMonth.format(today));
+                mDay.setText(sdfDay.format(now));
+                mMonth.setText(sdfMonth.format(now));
                 mDate.setVisibility(View.VISIBLE);
             } else {
                 mDate.setVisibility(View.GONE);
