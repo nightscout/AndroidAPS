@@ -426,6 +426,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 detailedBolusInfo.insulin = request.smb;
                 detailedBolusInfo.isSMB = true;
                 detailedBolusInfo.source = Source.USER;
+                detailedBolusInfo.deliverAt = request.deliverAt;
                 boolean smbDelivered = getCommandQueue().bolus(detailedBolusInfo, callback);
                 if (smbDelivered)
                     return true;

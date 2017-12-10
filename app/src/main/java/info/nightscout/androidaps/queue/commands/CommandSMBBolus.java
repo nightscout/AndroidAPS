@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.queue.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -14,6 +17,7 @@ import info.nightscout.utils.DecimalFormatter;
  */
 
 public class CommandSMBBolus extends Command {
+    private static Logger log = LoggerFactory.getLogger(CommandSMBBolus.class);
     DetailedBolusInfo detailedBolusInfo;
 
     public CommandSMBBolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
@@ -24,7 +28,14 @@ public class CommandSMBBolus extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().deliverTreatment(detailedBolusInfo);
+        PumpEnactResult r;
+        if (detailedBolusInfo.deliverAt != 0 && detailedBolusInfo.deliverAt + 60 * 1000L > System.currentTimeMillis())
+            r = ConfigBuilderPlugin.getActivePump().deliverTreatment(detailedBolusInfo);
+        else {
+            r = new PumpEnactResult().enacted(false).success(false).comment("SMB request too old");
+            log.debug("SMB bolus canceled. delivetAt=" + detailedBolusInfo.deliverAt + " now=" + System.currentTimeMillis());
+        }
+
 
         BolusProgressDialog.bolusEnded = true;
         MainApp.bus().post(new EventDismissBolusprogressIfRunning(r));

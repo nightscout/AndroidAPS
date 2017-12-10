@@ -29,6 +29,7 @@ public class DetailedBolusInfo {
     public Context context = null;         // context for progress dialog
     public long pumpId = 0;                // id of record if comming from pump history (not a newly created treatment)
     public boolean isSMB = false;          // is a Super-MicroBolus
+    public long deliverAt = 0;             // SMB should be delivered within 1 min from this time
 
     @Override
     public String toString() {
@@ -37,6 +38,7 @@ public class DetailedBolusInfo {
                 " carbs: " + carbs +
                 " isValid: " + isValid +
                 " carbTime: " + carbTime +
-                " isSMB: " + isSMB;
+                " isSMB: " + isSMB +
+                " deliverAt: " + new Date(deliverAt).toLocaleString();
     }
 }
