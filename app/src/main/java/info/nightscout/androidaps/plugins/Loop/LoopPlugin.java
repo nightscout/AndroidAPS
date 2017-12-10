@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -296,6 +297,13 @@ public class LoopPlugin implements PluginBase {
             final APSResult resultAfterConstraints = result.clone();
             resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
             resultAfterConstraints.smb = constraintsInterface.applyBolusConstraints(resultAfterConstraints.smb);
+
+            // safety check for multiple SMBs
+            long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
+            if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+                log.debug("SMB requsted but still in 3 min interval");
+                resultAfterConstraints.smb = 0;
+            }
 
             if (lastRun == null) lastRun = new LastRun();
             lastRun.request = result;
