@@ -96,6 +96,10 @@ Usage:
   as a notification in AAPS. If they occur while no connection is open to the pump, going to the
   combo tab and hitting the Refresh button will take over those alerts by confirming them and
   showing a notification in AAPS.
+- When AAPS fails to confirm a TBR CANCELLED alert, or one is raised for different raising,
+  hitting Refresh in the Combo tab establishes a connection, confirms the alert and shows
+  a notification for it in AAPS. This can safely be done, since those alerts are benign - an
+  appropriate TBR will be set again during the next loop iteration.
 - For all other alerts raised by the pump: connecting to the pump will show the alert message in
   the Combo tab, e.g. "State: E4: Occlusion" as well as showing a notification on the main screen.
   An error will raise an urgent notification.
@@ -109,6 +113,12 @@ Usage:
 - If the loop requests a running TBR to be cancelled the Combo will set a TBR of 90% or 110%
   for 15 minutes instead. This is because cancelling a TBR causes an alert on the pump which
   causes a lot of vibrations.
+- Due to the bug (which causes the pump to become unreachable when reading history regularly),
+  a delivered bolus will NOT be added to treatments when the connection was lost during bolusing
+  or when a pump error occurs (e.g. occlusion). This will raise a message (and play an annoying
+  sound) and the user will have a create a bolus record via Careportal/NS manually. Currently
+  this requires an available NS installation and being online (for a short time). Hopefully
+  both of these issues can be resolved in future versions.
 
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused
