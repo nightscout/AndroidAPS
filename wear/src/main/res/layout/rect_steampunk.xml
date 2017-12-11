@@ -86,7 +86,7 @@
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.14"
                     android:orientation="horizontal">
 
 
@@ -96,13 +96,12 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="6dp"
-                        android:rotation="-25"
+                        android:paddingTop="7dp"
+                        android:rotation="-28"
                         android:text="--g"
                         android:textAlignment="center"
                         android:textColor="@color/black_86p"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -110,7 +109,7 @@
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.26"
                     android:orientation="horizontal">
 
                     <TextView
@@ -119,7 +118,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingBottom="12dp"
+                        android:paddingBottom="14dp"
+                        android:rotation="-2"
                         android:text="-.--U/h"
                         android:textAlignment="center"
                         android:textColor="@color/black_86p"
@@ -140,7 +140,6 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingStart="10dp"
                         android:paddingTop="6dp"
                         android:rotation="28"
                         android:text="0.00U"
@@ -242,7 +241,7 @@
                     android:gravity="center"
                     android:paddingEnd="8dp"
                     android:paddingTop="8dp"
-                    android:rotation="-21"
+                    android:rotation="-24"
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
@@ -300,7 +299,7 @@
                     android:gravity="center"
                     android:paddingStart="10dp"
                     android:paddingTop="8dp"
-                    android:rotation="21"
+                    android:rotation="24"
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
@@ -349,7 +348,7 @@
             android:layout_height="0px"
             android:layout_weight="0.3"
             android:orientation="vertical"
-            android:rotation="60"
+            android:rotation="0"
             android:src="@drawable/steampunk_hour_hand" />
 
     </LinearLayout>
