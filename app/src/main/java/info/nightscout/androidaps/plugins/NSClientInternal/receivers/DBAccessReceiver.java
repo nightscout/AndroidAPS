@@ -11,16 +11,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
-import info.nightscout.androidaps.db.DbRequest;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
-import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
@@ -90,12 +88,27 @@ public class DBAccessReceiver extends BroadcastReceiver {
             } else {
                 DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), data);
                 UploadQueue.add(dbr);
+                if (collection.equals("treatments"))
+                    genereateTreatmentOfflineBroadcast(dbr);
             }
 
         } finally {
             wakeLock.release();
         }
 
+    }
+
+    public void genereateTreatmentOfflineBroadcast(DbRequest request) {
+        if (request.action.equals("dbAdd")) {
+            try {
+                JSONObject data = new JSONObject(request.data);
+                data.put("mills", DateUtil.fromISODateString(data.getString("created_at")).getTime());
+                data.put("_id", data.get("NSCLIENT_ID")); // this is only fake id
+                BroadcastTreatment.handleNewTreatment(data, false);
+            } catch (Exception e) {
+                log.error("Unhadled exception", e);
+            }
+        }
     }
 
     private boolean isAllowedCollection(String collection) {
