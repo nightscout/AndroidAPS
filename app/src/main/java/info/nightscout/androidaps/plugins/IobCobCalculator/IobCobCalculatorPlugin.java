@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 
 /**
  * Created by mike on 24.04.2017.
@@ -402,8 +403,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
 
                 double currentDeviation;
-                double minDeviationSlope = 0;
+                double slopeFromMaxDeviation  = 0;
+                double slopeFromMinDeviation  = 999;
                 double maxDeviation = 0;
+                double minDeviation = 999;
 
                 // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
                 if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
@@ -416,10 +419,16 @@ public class IobCobCalculatorPlugin implements PluginBase {
                         AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
                         double deviationSlope = (ad.avgDeviation - currentDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
                         if (ad.avgDeviation > maxDeviation) {
-                            minDeviationSlope = Math.min(0, deviationSlope);
+                            slopeFromMaxDeviation = Math.min(0, deviationSlope);
                             maxDeviation = ad.avgDeviation;
                         }
-                        log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " minDeviationSlope=" + minDeviationSlope);
+                        if (avgDeviation < minDeviation) {
+                            slopeFromMinDeviation = Math.max(0, deviationSlope);
+                            minDeviation = avgDeviation;
+                        }
+
+                        //if (Config.logAutosensData)
+                        //    log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation);
                     }
                 }
 
@@ -454,7 +463,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 autosensData.delta = delta;
                 autosensData.avgDelta = avgDelta;
                 autosensData.avgDeviation = avgDeviation;
-                autosensData.minDeviationSlope = minDeviationSlope;
+                autosensData.slopeFromMaxDeviation = slopeFromMaxDeviation;
+                autosensData.slopeFromMinDeviation = slopeFromMinDeviation;
 
                 // calculate autosens only without COB
                 if (autosensData.cob <= 0) {
@@ -477,8 +487,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 previous = autosensData;
                 autosensDataTable.put(bgTime, autosensData);
                 autosensData.autosensRatio = detectSensitivity(oldestTimeWithData, bgTime).ratio;
-                if (Config.logAutosensData)
-                    log.debug(autosensData.log(bgTime));
+                //if (Config.logAutosensData)
+                //    log.debug(autosensData.log(bgTime));
             }
         }
         MainApp.bus().post(new EventAutosensCalculationFinished());
@@ -511,6 +521,21 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
         IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginBase.APS)) {
+            // Add expected zere temp basal for next 240 mins
+            IobTotal basalIobWithZeroTemp = basalIob.clone();
+            TemporaryBasal t = new TemporaryBasal();
+            t.date = now + 60 * 1000L;
+            t.durationInMinutes = 240;
+            t.isAbsolute = true;
+            t.absoluteRate = 0;
+            if (t.date < time) {
+                IobTotal calc = t.iobCalc(time);
+                basalIobWithZeroTemp.plus(calc);
+            }
+
+            basalIob.iobWithZeroTemp = basalIobWithZeroTemp;
+        }
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         if (time < System.currentTimeMillis()) {
@@ -594,6 +619,23 @@ public class IobCobCalculatorPlugin implements PluginBase {
         long time = System.currentTimeMillis();
         time = roundUpTime(time);
         int len = (int) ((profile.getDia() * 60 + 30) / 5);
+        IobTotal[] array = new IobTotal[len];
+        int pos = 0;
+        for (int i = 0; i < len; i++) {
+            long t = time + i * 5 * 60000;
+            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t);
+            array[pos] = iob;
+            pos++;
+        }
+        return array;
+    }
+
+   public static IobTotal[] calculateIobArrayForSMB() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        // predict IOB out to DIA plus 30m
+        long time = System.currentTimeMillis();
+        time = roundUpTime(time);
+        int len = (4 * 60) / 5;
         IobTotal[] array = new IobTotal[len];
         int pos = 0;
         for (int i = 0; i < len; i++) {

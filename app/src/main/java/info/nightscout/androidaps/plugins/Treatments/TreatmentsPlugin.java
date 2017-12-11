@@ -250,6 +250,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             if (t > dia_ago && t <= now) {
                 if (treatment.carbs >= 1) {
                     result.carbs += treatment.carbs;
+                    result.lastCarbTime = t;
                 }
                 if (treatment.insulin > 0 && treatment.mealBolus) {
                     result.boluses += treatment.insulin;
@@ -260,7 +261,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
         if (autosensData != null) {
             result.mealCOB = autosensData.cob;
-            result.minDeviationSlope = autosensData.minDeviationSlope;
+            result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation;
+            result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
         }
         result.lastBolusTime = getLastBolusTime();
         return result;
@@ -349,6 +351,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 IobTotal calc = t.iobCalc(time);
                 //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
                 total.plus(calc);
+                if (!t.isEndingEvent()) {
+                    total.lastTempDate = t.date;
+                    total.lastTempDuration = t.durationInMinutes;
+                    total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date);
+                }
+
             }
         }
         if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
@@ -359,6 +367,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                     if (e.date > time) continue;
                     IobTotal calc = e.iobCalc(time);
                     totalExt.plus(calc);
+                    TemporaryBasal t = new TemporaryBasal(e);
+                    if (!t.isEndingEvent() && t.date > total.lastTempDate) {
+                        total.lastTempDate = t.date;
+                        total.lastTempDuration = t.durationInMinutes;
+                        total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date);
+                    }
                 }
             }
             // Convert to basal iob

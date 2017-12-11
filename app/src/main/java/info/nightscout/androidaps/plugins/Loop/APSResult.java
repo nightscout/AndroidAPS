@@ -143,6 +143,16 @@ public class APSResult {
                         array.add(bg);
                     }
                 }
+                if (predBGs.has("ZT")) {
+                    JSONArray iob = predBGs.getJSONArray("ZT");
+                    for (int i = 1; i < iob.length(); i++) {
+                        BgReading bg = new BgReading();
+                        bg.value = iob.getInt(i);
+                        bg.date = startTime + i * 5 * 60 * 1000L;
+                        bg.isZTPrediction = true;
+                        array.add(bg);
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -170,6 +180,10 @@ public class APSResult {
                 }
                 if (predBGs.has("UAM")) {
                     JSONArray iob = predBGs.getJSONArray("UAM");
+                    latest = Math.max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L);
+                }
+                if (predBGs.has("ZT")) {
+                    JSONArray iob = predBGs.getJSONArray("ZT");
                     latest = Math.max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L);
                 }
             }

@@ -110,7 +110,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
     @Override
     public int getPreferencesId() {
-        return R.xml.pref_openapsama;
+        return R.xml.pref_openapssmb;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         Date start = new Date();
         Date startPart = new Date();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.calculateIobArrayInDia();
+        IobTotal[] iobArray = IobCobCalculatorPlugin.calculateIobArrayForSMB();
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
@@ -229,7 +229,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
             lastAutosensResult = new AutosensResult();
         }
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
-        Profiler.log(log, "AMA data gathering", start);
+        Profiler.log(log, "SMB data gathering", start);
 
         start = new Date();
         try {
@@ -263,7 +263,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         try {
             determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;

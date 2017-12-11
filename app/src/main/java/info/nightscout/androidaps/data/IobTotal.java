@@ -24,6 +24,10 @@ public class IobTotal {
     public double microBolusInsulin;
     public double microBolusIOB;
     public long lastBolusTime;
+    public long lastTempDate;
+    public int lastTempDuration;
+    public double lastTempRate;
+    public IobTotal iobWithZeroTemp;
 
     public double netInsulin = 0d; // for calculations from temp basals only
     public double netRatio = 0d; // net ratio at start of temp basal
@@ -31,6 +35,25 @@ public class IobTotal {
     public double extendedBolusInsulin = 0d; // total insulin for extended bolus
 
     long time;
+
+
+    public IobTotal clone() {
+        IobTotal copy = new IobTotal(time);
+        copy.iob = iob;
+        copy.activity = activity;
+        copy.bolussnooze = bolussnooze;
+        copy.basaliob = basaliob;
+        copy.netbasalinsulin = netbasalinsulin;
+        copy.hightempinsulin = hightempinsulin;
+        copy.microBolusInsulin = microBolusInsulin;
+        copy.microBolusIOB = microBolusIOB;
+        copy.lastBolusTime = lastBolusTime;
+        copy.lastTempDate = lastTempDate;
+        copy.lastTempDuration = lastTempDuration;
+        copy.lastTempRate = lastTempRate;
+        copy.iobWithZeroTemp = iobWithZeroTemp;
+        return copy;
+    }
 
     public IobTotal(long time) {
         this.iob = 0d;
@@ -70,6 +93,10 @@ public class IobTotal {
         result.microBolusInsulin = bolusIOB.microBolusInsulin + basalIob.microBolusInsulin;
         result.microBolusIOB = bolusIOB.microBolusIOB + basalIob.microBolusIOB;
         result.lastBolusTime = bolusIOB.lastBolusTime;
+        result.lastTempDate = basalIob.lastTempDate;
+        result.lastTempRate = basalIob.lastTempRate;
+        result.lastTempDuration = basalIob.lastTempDuration;
+        result.iobWithZeroTemp = basalIob.iobWithZeroTemp;
         return result;
     }
 
@@ -107,6 +134,22 @@ public class IobTotal {
             json.put("activity", activity);
             json.put("lastBolusTime", lastBolusTime);
             json.put("time", DateUtil.toISOString(new Date(time)));
+            /*
+
+            This is requested by SMB determine_basal but by based on Scott's info
+            it's MDT specific safety check only
+            It's causing rounding issues in determine_basal
+
+            JSONObject lastTemp = new JSONObject();
+            lastTemp.put("date", lastTempDate);
+            lastTemp.put("rate", lastTempRate);
+            lastTemp.put("duration", lastTempDuration);
+            json.put("lastTemp", lastTemp);
+            */
+            if (iobWithZeroTemp != null) {
+                JSONObject iwzt = iobWithZeroTemp.determineBasalJson();
+                json.put("iobWithZeroTemp", iwzt);
+            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

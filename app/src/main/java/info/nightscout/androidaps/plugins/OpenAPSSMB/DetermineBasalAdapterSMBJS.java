@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -25,14 +24,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.SafeParse;
 
 public class DetermineBasalAdapterSMBJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterSMBJS.class);
@@ -216,7 +214,7 @@ public class DetermineBasalAdapterSMBJS {
         String units = profile.getUnits();
 
         mProfile = new JSONObject();
-        ;
+
         mProfile.put("max_iob", maxIob);
         mProfile.put("dia", profile.getDia());
         mProfile.put("type", "current");
@@ -229,26 +227,32 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
         mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
         mProfile.put("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
-        mProfile.put("skip_neutral_temps", true);
+
+        mProfile.put("high_temptarget_raises_sensitivity", SMBDefaults.high_temptarget_raises_sensitivity);
+        mProfile.put("low_temptarget_lowers_sensitivity", SMBDefaults.low_temptarget_lowers_sensitivity);
+        mProfile.put("sensitivity_raises_target", SMBDefaults.sensitivity_raises_target);
+        mProfile.put("resistance_lowers_target", SMBDefaults.resistance_lowers_target);
+        mProfile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments);
+        mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
+        mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
+        mProfile.put("maxCOB", SMBDefaults.maxCOB);
+        mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
+        mProfile.put("min_5m_carbimpact", SP.getInt("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
+        mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
+        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
+        mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
+        mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_COB);
+        mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_temptarget);
+        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_after_carbs);
+        mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.allowSMB_with_high_temptarget);
+        mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
+        mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
+
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
-        mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
-        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", 3d));
-        mProfile.put("enableSMB_with_bolus", SP.getBoolean(R.string.key_use_smb, false));
-        mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_use_smb, false));
-        mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_use_smb, false));
-        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
-        mProfile.put("adv_target_adjustments", true); // lower target automatically when BG and eventualBG are high
-        // create maxCOB and default it to 120 because that's the most a typical body can absorb over 4 hours.
-        // (If someone enters more carbs or stacks more; OpenAPS will just truncate dosing based on 120.
-        // Essentially, this just limits AMA as a safety cap against weird COB calculations)
-        mProfile.put("maxCOB", 120);
-        mProfile.put("autotune_isf_adjustmentFraction", 0.5); // keep autotune ISF closer to pump ISF via a weighted average of fullNewISF and pumpISF.  1.0 allows full adjustment, 0 is no adjustment from pump ISF.
-        mProfile.put("remainingCarbsFraction", 1.0d); // fraction of carbs we'll assume will absorb over 4h if we don't yet see carb absorption
-        mProfile.put("remainingCarbsCap", 90); // max carbs we'll assume will absorb over 4h if we don't yet see carb absorption
+        mProfile.put("autosens_max", SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
 
         mCurrentTemp = new JSONObject();
-        ;
         mCurrentTemp.put("temp", "absolute");
         mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
         mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
@@ -262,7 +266,6 @@ public class DetermineBasalAdapterSMBJS {
         mIobData = IobCobCalculatorPlugin.convertToJSONArray(iobArray);
 
         mGlucoseStatus = new JSONObject();
-        ;
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
         if (SP.getBoolean("always_use_shortavg", false)) {
@@ -272,14 +275,17 @@ public class DetermineBasalAdapterSMBJS {
         }
         mGlucoseStatus.put("short_avgdelta", glucoseStatus.short_avgdelta);
         mGlucoseStatus.put("long_avgdelta", glucoseStatus.long_avgdelta);
+        mGlucoseStatus.put("date", glucoseStatus.date);
 
         mMealData = new JSONObject();
-        ;
         mMealData.put("carbs", mealData.carbs);
         mMealData.put("boluses", mealData.boluses);
         mMealData.put("mealCOB", mealData.mealCOB);
-        mMealData.put("minDeviationSlope", mealData.minDeviationSlope);
+        mMealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation);
+        mMealData.put("slopeFromMinDeviation", mealData.slopeFromMinDeviation);
         mMealData.put("lastBolusTime", mealData.lastBolusTime);
+        mMealData.put("lastCarbTime", mealData.lastCarbTime);
+
 
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
             mAutosensData = new JSONObject();

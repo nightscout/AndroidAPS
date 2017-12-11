@@ -35,18 +35,6 @@
                     android:summary="@string/always_use_shortavg_summary"
                     android:title="@string/always_use_shortavg" />
             </PreferenceCategory>
-            <PreferenceCategory android:title="@string/openapssmb">
-                <SwitchPreference
-                    android:defaultValue="false"
-                    android:key="@string/key_use_smb"
-                    android:summary="@string/enablesmb_summary"
-                    android:title="@string/enablesmb" />
-                <SwitchPreference
-                    android:defaultValue="false"
-                    android:key="@string/key_use_uam"
-                    android:summary="@string/enableuam_summary"
-                    android:title="@string/enableuam" />
-            </PreferenceCategory>
             <PreferenceCategory android:title="OpenAPS preferences.json">
                 <Preference android:summary="@string/openapsama_link_to_preferncejson_doc_txt">
                     <intent
@@ -103,11 +91,6 @@
                     validate:floatmaxNumber="1.0"
                     validate:floatminNumber="0.1"
                     validate:testType="floatNumericRange" />
-                <SwitchPreference
-                    android:defaultValue="true"
-                    android:key="openapsama_autosens_adjusttargets"
-                    android:summary="@string/openapsama_autosens_adjusttargets_summary"
-                    android:title="@string/openapsama_autosens_adjusttargets" />
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     android:defaultValue="2"
                     android:dialogMessage="@string/openapsama_bolussnooze_dia_divisor_summary"

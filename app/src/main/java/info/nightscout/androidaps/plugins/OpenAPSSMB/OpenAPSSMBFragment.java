@@ -65,8 +65,8 @@ public class OpenAPSSMBFragment extends SubscriberFragment implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSAMA button");
-                Answers.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
+                OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSSMB button");
+                Answers.getInstance().logCustom(new CustomEvent("OpenAPS_SMB_Run"));
                 break;
         }
 

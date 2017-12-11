@@ -46,6 +46,7 @@ public class BgReading implements DataPointWithLabelInterface {
     public boolean isaCOBPrediction = false; // true when drawing predictions as bg points (aCOB)
     public boolean isIOBPrediction = false; // true when drawing predictions as bg points (IOB)
     public boolean isUAMPrediction = false; // true when drawing predictions as bg points (UAM)
+    public boolean isZTPrediction = false; // true when drawing predictions as bg points (ZT)
 
     public BgReading() {
     }
@@ -228,11 +229,13 @@ public class BgReading implements DataPointWithLabelInterface {
             return 0x80FFFFFF & MainApp.sResources.getColor(R.color.cob);
         if (isUAMPrediction)
             return MainApp.sResources.getColor(R.color.uam);
+        if (isZTPrediction)
+            return MainApp.sResources.getColor(R.color.zt);
         return R.color.mdtp_white;
     }
 
     private boolean isPrediction() {
-        return isaCOBPrediction || isCOBPrediction || isIOBPrediction || isUAMPrediction;
+        return isaCOBPrediction || isCOBPrediction || isIOBPrediction || isUAMPrediction || isZTPrediction;
     }
 
 }

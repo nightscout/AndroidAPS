@@ -398,21 +398,21 @@ public class GraphData {
 
     // scale in % of vertical size (like 0.3)
     public void addRatio(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
-        LineGraphSeries<DataPoint> ratioSeries;
-        List<DataPoint> ratioArray = new ArrayList<>();
+        LineGraphSeries<ScaledDataPoint> ratioSeries;
+        List<ScaledDataPoint> ratioArray = new ArrayList<>();
         Double maxRatioValueFound = 0d;
         Scale ratioScale = new Scale(-1d);
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
-                ratioArray.add(new DataPoint(time, autosensData.autosensRatio));
+                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio, ratioScale));
                 maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
             }
         }
 
         // RATIOS
-        DataPoint[] ratioData = new DataPoint[ratioArray.size()];
+        ScaledDataPoint[] ratioData = new ScaledDataPoint[ratioArray.size()];
         ratioData = ratioArray.toArray(ratioData);
         ratioSeries = new LineGraphSeries<>(ratioData);
         ratioSeries.setColor(MainApp.sResources.getColor(R.color.ratio));
@@ -428,32 +428,46 @@ public class GraphData {
 
     // scale in % of vertical size (like 0.3)
     public void addDeviationSlope(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
-        LineGraphSeries<DataPoint> dsSeries;
-        List<DataPoint> dsArray = new ArrayList<>();
-        Double maxDSValueFound = 0d;
-        Scale dsScale = new Scale();
+        LineGraphSeries<ScaledDataPoint> dsMaxSeries;
+        LineGraphSeries<ScaledDataPoint> dsMinSeries;
+        List<ScaledDataPoint> dsMaxArray = new ArrayList<>();
+        List<ScaledDataPoint> dsMinArray = new ArrayList<>();
+        Double maxFromMaxValueFound = 0d;
+        Double maxFromMinValueFound = 0d;
+        Scale dsMaxScale = new Scale();
+        Scale dsMinScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
-                dsArray.add(new DataPoint(time, autosensData.minDeviationSlope));
-                maxDSValueFound = Math.max(maxDSValueFound, Math.abs(autosensData.minDeviationSlope));
+                dsMaxArray.add(new ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale));
+                dsMinArray.add(new ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale));
+                maxFromMaxValueFound = Math.max(maxFromMaxValueFound, Math.abs(autosensData.slopeFromMaxDeviation));
+                maxFromMinValueFound = Math.max(maxFromMinValueFound, Math.abs(autosensData.slopeFromMinDeviation));
             }
         }
 
-        // RATIOS
-        DataPoint[] ratioData = new DataPoint[dsArray.size()];
-        ratioData = dsArray.toArray(ratioData);
-        dsSeries = new LineGraphSeries<>(ratioData);
-        dsSeries.setColor(Color.MAGENTA);
-        dsSeries.setThickness(3);
+        // Slopes
+        ScaledDataPoint[] ratioMaxData = new ScaledDataPoint[dsMaxArray.size()];
+        ratioMaxData = dsMaxArray.toArray(ratioMaxData);
+        dsMaxSeries = new LineGraphSeries<>(ratioMaxData);
+        dsMaxSeries.setColor(Color.MAGENTA);
+        dsMaxSeries.setThickness(3);
+
+        ScaledDataPoint[] ratioMinData = new ScaledDataPoint[dsMinArray.size()];
+        ratioMinData = dsMinArray.toArray(ratioMinData);
+        dsMinSeries = new LineGraphSeries<>(ratioMinData);
+        dsMinSeries.setColor(Color.YELLOW);
+        dsMinSeries.setThickness(3);
 
         if (useForScale)
-            maxY = maxDSValueFound;
+            maxY = Math.max(maxFromMaxValueFound, maxFromMinValueFound);
 
-        dsScale.setMultiplier(maxY * scale / maxDSValueFound);
+        dsMaxScale.setMultiplier(maxY * scale / maxFromMaxValueFound);
+        dsMinScale.setMultiplier(maxY * scale / maxFromMinValueFound);
 
-        addSeriesWithoutInvalidate(graph, dsSeries);
+        addSeriesWithoutInvalidate(graph, dsMaxSeries);
+        addSeriesWithoutInvalidate(graph, dsMinSeries);
     }
 
     // scale in % of vertical size (like 0.3)
