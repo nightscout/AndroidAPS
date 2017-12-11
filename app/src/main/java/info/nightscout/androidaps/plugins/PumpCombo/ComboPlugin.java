@@ -556,8 +556,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
             tempStart.source = Source.USER;
-            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.addToHistoryTempBasal(tempStart);
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempStart);
 
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
@@ -771,6 +770,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private void checkAndResolveTbrMismatch(PumpState state) {
+        // compare with: info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal.updateTempBasalInDB()
         long now = System.currentTimeMillis();
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {

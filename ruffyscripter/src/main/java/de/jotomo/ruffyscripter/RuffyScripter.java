@@ -787,7 +787,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult getDateAndTime() {
-        return new CommandResult().success(false);
+        throw new RuntimeException("Not supported");
     }
 
     @Override

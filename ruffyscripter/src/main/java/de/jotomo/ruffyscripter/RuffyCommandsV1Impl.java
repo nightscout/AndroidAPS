@@ -28,9 +28,10 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
 
     private RuffyCommandsV1Impl() {}
 
+    /** Not supported by RuffyScripter */
     @Override
     public CommandResult getDateAndTime() {
-        return delegate.getDateAndTime();
+        return new CommandResult().success(false);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class RuffyCommandsV1Impl implements RuffyCommands {
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
-        return delegate.readPumpState().history(new PumpHistory());
+        return delegate.readHistory(request);
     }
 
     @Override
