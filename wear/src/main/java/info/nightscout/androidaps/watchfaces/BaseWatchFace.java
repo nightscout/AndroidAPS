@@ -103,6 +103,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public String sBgi = "--";
     public String sMinute = "0";
     public String sHour = "0";
+    public String sUnits = "-";
 
     @Override
     public void onCreate() {
@@ -257,6 +258,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 sDirection = dataMap.getString("slopeArrow");
                 sDelta = dataMap.getString("delta");
                 sAvgDelta = dataMap.getString("avgDelta");
+                sUnits = dataMap.getString("glucoseUnits");
                 if (chart != null) {
                     addToWatchSet(dataMap);
                     setupCharts();

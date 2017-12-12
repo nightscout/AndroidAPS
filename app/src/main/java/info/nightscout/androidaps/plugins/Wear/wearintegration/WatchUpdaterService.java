@@ -248,10 +248,12 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMap.putString("slopeArrow", "");
             dataMap.putString("delta", "--");
             dataMap.putString("avgDelta", "--");
+            dataMap.putString("glucoseUnits", "-");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
             dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
             dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("glucoseUnits", units);
         }
 
         dataMap.putLong("sgvLevel", sgvLevel);
