@@ -185,7 +185,7 @@ public class DanaRSService extends Service {
         while (!msg.done && bleComm.isConnected()) {
             SystemClock.sleep(100);
         }
-        lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded;
+        lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded - 45 * 60 * 1000L; // always load last 45 min
         log.debug("Events loaded");
         return new PumpEnactResult().success(true);
     }
