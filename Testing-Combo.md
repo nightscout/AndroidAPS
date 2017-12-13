@@ -12,7 +12,7 @@
     - [ ] bolus must have been fully delivered by pump
     - [ ] bolus must have been added to DB
     - [ ] the confirmed pump warning must be raised as a notification in AAPS
-    - [ ] notification must also appear on smartwatch
+          (or as android notification on watch/smartphone if setting "use system notifications ..." is enabled
   - [ ] An error during bolus must yield an error in AAPS
   - [ ] An error during bolus must yield a notification on a smartwatch
   - [ ] Test bolusing a bolus bigger than what's left in the reservoir. A message to check what

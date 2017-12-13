@@ -231,6 +231,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public void disconnect(String reason) {
+        log.debug("Disconnect called with reason: " + reason);
         ruffyScripter.disconnect();
     }
 
