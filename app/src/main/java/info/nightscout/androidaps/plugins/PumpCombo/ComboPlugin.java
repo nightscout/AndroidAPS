@@ -511,6 +511,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         log.debug("Trying to determine from pump history what was actually delivered");
         CommandResult readLastBolusResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_verifying_delivered_bolus), 3,
                 () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
+        if (!readLastBolusResult.success || readLastBolusResult.history == null) {
+            // this happens when the cartridge runs empty during delivery, the pump will be in an error
+            // state with multiple alarms ringing and no chance of reading history
+            return new PumpEnactResult().success(false).enacted(false)
+                    .comment(MainApp.sResources.getString(R.string.combo_error_bolus_verification_failed));
+        }
+
         List<Bolus> bolusHistory = readLastBolusResult.history.bolusHistory;
         Bolus lastBolus = !bolusHistory.isEmpty() ? bolusHistory.get(0) : null;
 
