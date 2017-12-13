@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
@@ -455,7 +456,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
-        long pumpTimeAtStartOfCommand = runCommand(null, 1, ruffyScripter::readPumpState).state.pumpTime;
+        long pumpTimeWhenBolusWasRequested = runCommand(null, 1, ruffyScripter::readPumpState).state.pumpTime;
 
         try {
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
@@ -484,7 +485,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .bolusDelivered(bolusCmdResult.delivered)
                         .carbsDelivered(detailedBolusInfo.carbs);
             } else {
-                return recoverFromErrorDuringBolusDelivery(detailedBolusInfo, pumpTimeAtStartOfCommand);
+                return recoverFromErrorDuringBolusDelivery(detailedBolusInfo, pumpTimeWhenBolusWasRequested);
             }
         } finally {
             pump.activity = null;
@@ -501,12 +502,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * continues regardless of a connection loss), retry the read history command a few
      * times if we run into the 90s connect timeout (with 3 retries, a bolus of up to 54 U could
      * be delivered until we give up).
-     * Then verify the bolus record we read has a date which is  >= the time this command started
+     * Then verify the bolus record we read has a date which is  >= the time the bolus was requested
      * (using the pump's time!). If there is such a bolus with <= the requested amount, then it's
      * from this command and shall be added to treatments. If the bolus wasn't delivered in full
      * add it but raise a warning. Raise a warning as well if no bolus was delivered at all.
      */
-    private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeAtStartOfCommand) {
+    private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeWhenBolusWasRequested) {
         log.debug("Trying to determine from pump history what was actually delivered");
         CommandResult readLastBolusResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_verifying_delivered_bolus), 3,
                 () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
@@ -514,16 +515,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         Bolus lastBolus = !bolusHistory.isEmpty() ? bolusHistory.get(0) : null;
 
         if (lastBolus == null // no bolus ever given
-                || lastBolus.timestamp < pumpTimeAtStartOfCommand // this is not the bolus you're looking for
+                || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for
                 || !lastBolus.isValid) { // ext/multiwave bolus
-            log.debug("No bolus was delivered");
+            log.debug("It appears no bolus was delivered");
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.sResources.getString(R.string.combo_error_no_bolus_delivered));
         } else if (Math.abs(lastBolus.amount - detailedBolusInfo.insulin) > 0.01) { // bolus only partially delivered
             detailedBolusInfo.insulin = lastBolus.amount;
             detailedBolusInfo.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            log.debug(String.format("Added partial bolus of %.2f to treatments", lastBolus.amount));
+            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments", lastBolus.amount));
             return new PumpEnactResult().success(false).enacted(true)
                     .comment(String.format(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered),
                             lastBolus.amount, detailedBolusInfo.insulin));
