@@ -496,12 +496,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
 
     /**
-     * If there was an error during BolusCommand the scripter will have reconnected as needed and waited
-     * for a bolus delivery to complete (once bolus delivery started it continues regardless of a connection loss).
-     * So, here we are with a connection again, let's read the last bolus record and check if
-     * its date is >= the time this command started (using the pump's time!).
-     * If there is such a bolus with <= the requested amount, then it's from this
-     * command and shall be added to treatments. If the bolus wasn't delivered in full
+     * If there was an error during BolusCommand the scripter try to reconnect. The pump refuses
+     * connections while a bolus delivery is still in progress (once bolus delivery started it
+     * continues regardless of a connection loss), retry the read history command a few
+     * times if we run into the 90s connect timeout (with 3 retries, a bolus of up to 54 U could
+     * be delivered until we give up).
+     * Then verify the bolus record we read has a date which is  >= the time this command started
+     * (using the pump's time!). If there is such a bolus with <= the requested amount, then it's
+     * from this command and shall be added to treatments. If the bolus wasn't delivered in full
      * add it but raise a warning. Raise a warning as well if no bolus was delivered at all.
      */
     private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeAtStartOfCommand) {

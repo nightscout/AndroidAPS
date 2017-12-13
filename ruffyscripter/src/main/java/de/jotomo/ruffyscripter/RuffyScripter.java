@@ -363,21 +363,6 @@ public class RuffyScripter implements RuffyCommands {
                 return false;
             }
         }
-
-        // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
-        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        BolusType bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        if (bolusType != null && bolusType == BolusType.NORMAL) {
-            try {
-                while (isConnected() && bolusRemaining != null) {
-                    log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
-                    waitForScreenUpdate();
-                }
-            } catch (Exception e) {
-                log.error("Exception waiting for bolus from previous command to finish", e);
-                return false;
-            }
-        }
         return true;
     }
 
@@ -404,17 +389,6 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
 
-        // A BOLUS CANCELLED alert is raised BEFORE a bolus is started. If a disconnect occurs after a
-        // bolus has started (or the user interacts with the pump) the bolus continues.
-        // If that happened, wait till the pump has finished the bolus, then it can be read from
-        // the history as delivered.
-        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        BolusType bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        while (isConnected() && bolusRemaining != null && bolusType == BolusType.NORMAL) {
-            waitForScreenUpdate();
-            bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-            bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        }
         boolean connected = isConnected();
         if (connected) {
             MenuType menuType = getCurrentMenu().getType();
