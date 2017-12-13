@@ -81,15 +81,19 @@ public class PumpState {
     @Override
     public String toString() {
         return "PumpState{" +
-                "menu=" + menu +
+                "timestamp=" + timestamp +
+                ", pumpTime=" + pumpTime +
+                ", menu='" + menu + '\'' +
+                ", suspended=" + suspended +
                 ", tbrActive=" + tbrActive +
                 ", tbrPercent=" + tbrPercent +
                 ", tbrRate=" + tbrRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
-                ", suspended=" + suspended +
+                ", activeAlert=" + activeAlert +
                 ", batteryState=" + batteryState +
                 ", insulinState=" + insulinState +
                 ", activeBasalProfileNumber=" + activeBasalProfileNumber +
+                ", unsafeUsageDetected=" + unsafeUsageDetected +
                 '}';
     }
 }

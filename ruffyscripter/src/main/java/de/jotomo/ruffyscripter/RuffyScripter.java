@@ -196,6 +196,7 @@ public class RuffyScripter implements RuffyCommands {
             return;
         }
         try {
+            log.debug("Disconnecting, requested by ...", new Exception());
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
             // ignore
@@ -363,21 +364,6 @@ public class RuffyScripter implements RuffyCommands {
                 return false;
             }
         }
-
-        // if everything broke before, the pump might still be delivering a bolus, if that's the case, wait for bolus to finish
-        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        BolusType bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        if (bolusType != null && bolusType == BolusType.NORMAL) {
-            try {
-                while (isConnected() && bolusRemaining != null) {
-                    log.debug("Waiting for bolus from previous connection to complete, remaining: " + bolusRemaining);
-                    waitForScreenUpdate();
-                }
-            } catch (Exception e) {
-                log.error("Exception waiting for bolus from previous command to finish", e);
-                return false;
-            }
-        }
         return true;
     }
 
@@ -404,19 +390,17 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
 
-        // A BOLUS CANCELLED alert is raised BEFORE a bolus is started. If a disconnect occurs after a
-        // bolus has started (or the user interacts with the pump) the bolus continues.
-        // If that happened, wait till the pump has finished the bolus, then it can be read from
-        // the history as delivered.
-        Double bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-        BolusType bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        while (isConnected() && bolusRemaining != null && bolusType == BolusType.NORMAL) {
-            waitForScreenUpdate();
-            bolusRemaining = (Double) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
-            bolusType = (BolusType) getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        }
         boolean connected = isConnected();
         if (connected) {
+            long menuTime = this.menuLastUpdated;
+            waitForScreenUpdate();
+            if (menuTime == this.menuLastUpdated) {
+                log.error("NOT RECEIVING UPDATES YET JOE");
+            }
+            while(currentMenu==null) {
+                log.warn("waiting for currentMenu to become != null");
+                waitForScreenUpdate();
+            }
             MenuType menuType = getCurrentMenu().getType();
             if (menuType != MenuType.MAIN_MENU && menuType != MenuType.WARNING_OR_ERROR) {
                 returnToRootMenu();
@@ -495,6 +479,7 @@ public class RuffyScripter implements RuffyCommands {
             return state;
         }
 
+        log.debug("Parsing menu: " + menu);
         MenuType menuType = menu.getType();
         state.menu = menuType.name();
 
@@ -505,7 +490,7 @@ public class RuffyScripter implements RuffyCommands {
 
             if (bolusType != null && bolusType != BolusType.NORMAL || !activeBasalRate.equals(1)) {
                 state.unsafeUsageDetected = true;
-            } else if (tbrPercentage != 100) {
+            } else if (tbrPercentage != null && tbrPercentage != 100) {
                 state.tbrActive = true;
                 Double displayedTbr = (Double) menu.getAttribute(MenuAttribute.TBR);
                 state.tbrPercent = displayedTbr.intValue();
@@ -513,26 +498,41 @@ public class RuffyScripter implements RuffyCommands {
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
-            state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
-            state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
-            MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
-            Date date = new Date();
-            date.setHours(time.getHour());
-            date.setMinutes(time.getMinute());
-            state.pumpTime = date.getTime();
+            if (menu.attributes().contains(MenuAttribute.BATTERY_STATE)) {
+                state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
+            }
+            if (menu.attributes().contains(MenuAttribute.INSULIN_STATE)) {
+                state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
+            }
+            if (menu.attributes().contains(MenuAttribute.TIME)) {
+                MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
+                Date date = new Date();
+                date.setHours(time.getHour());
+                date.setMinutes(time.getMinute());
+                date.setSeconds(0);
+                state.pumpTime = date.getTime() - date.getTime() % 1000;
+            }
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
             state.activeAlert = readWarningOrErrorCode();
         } else if (menuType == MenuType.STOP) {
             state.suspended = true;
-            state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
-            state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
-            MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
-            Date date = new Date();
-            date.setHours(time.getHour());
-            date.setMinutes(time.getMinute());
-            state.pumpTime = date.getTime();
+            if (menu.attributes().contains(MenuAttribute.BATTERY_STATE)) {
+                state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
+            }
+            if (menu.attributes().contains(MenuAttribute.INSULIN_STATE)) {
+                state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
+            }
+            if (menu.attributes().contains(MenuAttribute.TIME)) {
+                MenuTime time = (MenuTime) menu.getAttribute(MenuAttribute.TIME);
+                Date date = new Date();
+                date.setHours(time.getHour());
+                date.setMinutes(time.getMinute());
+                date.setSeconds(0);
+                state.pumpTime = date.getTime() - date.getTime() % 1000;
+            }
         }
 
+        log.debug("State read: " + state);
         return state;
     }
 

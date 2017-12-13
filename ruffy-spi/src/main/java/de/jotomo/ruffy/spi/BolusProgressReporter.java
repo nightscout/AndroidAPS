@@ -7,6 +7,7 @@ public interface BolusProgressReporter {
         DELIVERED,
         STOPPING,
         STOPPED,
+        RECOVERING,
         FINISHED
     }
 

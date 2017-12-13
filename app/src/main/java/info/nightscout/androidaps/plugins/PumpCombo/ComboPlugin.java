@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
@@ -39,15 +41,12 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
-
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
 
 /**
  * Created by mike on 05.08.2016.
@@ -405,6 +404,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             case STOPPED:
                 event.status = MainApp.sResources.getString(R.string.bolusstopped);
                 break;
+            case RECOVERING:
+                event.status = MainApp.sResources.getString(R.string.combo_error_bolus_recovery_progress);
             case FINISHED:
                 // no state, just percent below to close bolus progress dialog
                 break;
@@ -457,6 +458,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
+        long pumpTimeWhenBolusWasRequested = runCommand(null, 1, ruffyScripter::readPumpState).state.pumpTime;
+
         try {
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
@@ -465,32 +468,93 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(true).enacted(false);
             }
 
+            BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : ComboPlugin.bolusProgressReporter;
+
             // start bolus delivery
             bolusInProgress = true;
             CommandResult bolusCmdResult = runCommand(null, 0,
-                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
-                            detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
+                    () -> {
+                        return ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
+                                progressReporter);
+                    });
             bolusInProgress = false;
 
-            if (bolusCmdResult.delivered > 0) {
-                detailedBolusInfo.insulin = bolusCmdResult.delivered;
-                detailedBolusInfo.source = Source.USER;
-                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            if (bolusCmdResult.success) {
+                if (bolusCmdResult.delivered > 0) {
+                    detailedBolusInfo.insulin = bolusCmdResult.delivered;
+                    detailedBolusInfo.source = Source.USER;
+                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                }
+                return new PumpEnactResult()
+                        .success(true)
+                        .enacted(bolusCmdResult.delivered > 0)
+                        .bolusDelivered(bolusCmdResult.delivered)
+                        .carbsDelivered(detailedBolusInfo.carbs);
+            } else {
+                progressReporter.report(BolusProgressReporter.State.RECOVERING, 0, 0);
+                return recoverFromErrorDuringBolusDelivery(detailedBolusInfo, pumpTimeWhenBolusWasRequested);
             }
-
-            return new PumpEnactResult()
-                    .success(bolusCmdResult.success)
-                    .enacted(bolusCmdResult.delivered > 0)
-                    .bolusDelivered(bolusCmdResult.delivered)
-                    .carbsDelivered(detailedBolusInfo.carbs)
-                    .comment(bolusCmdResult.success ? "" :
-                            MainApp.sResources.getString(R.string.combo_bolus_bolus_delivery_failed));
         } finally {
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
             MainApp.bus().post(new EventRefreshOverview("Combo Bolus"));
             cancelBolus = false;
         }
+    }
+
+
+    /**
+     * If there was an error during BolusCommand the scripter reconnects and cleans up. The pump
+     * refuses connections while a bolus delivery is still in progress (once bolus delivery started
+     * it  continues regardless of a connection loss).
+     * Then verify the bolus record we read has a date which is >= the time the bolus was requested
+     * (using the pump's time!). If there is such a bolus with <= the requested amount, then it's
+     * from this command and shall be added to treatments. If the bolus wasn't delivered in full,
+     * add it to treatments but raise a warning. Raise a warning as well if no bolus was delivered
+     * at all.
+     * This all still might fail for very large boluses and earthquakes in which case an error
+     * is raised asking to user to deal with it.
+     */
+    private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeWhenBolusWasRequested) {
+        log.debug("Trying to determine from pump history what was actually delivered");
+        CommandResult readLastBolusResult = runCommand(null , 2,
+                () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
+        if (!readLastBolusResult.success || readLastBolusResult.history == null) {
+            // this happens when the cartridge runs empty during delivery, the pump will be in an error
+            // state with multiple alarms ringing and no chance of reading history
+            return new PumpEnactResult().success(false).enacted(false)
+                    .comment(MainApp.sResources.getString(R.string.combo_error_bolus_verification_failed));
+        }
+
+        List<Bolus> bolusHistory = readLastBolusResult.history.bolusHistory;
+        Bolus lastBolus = !bolusHistory.isEmpty() ? bolusHistory.get(0) : null;
+        log.debug("Last bolus read from history: " + lastBolus + ", request time: " +
+                pumpTimeWhenBolusWasRequested + " (" + new Date(pumpTimeWhenBolusWasRequested) + ")");
+
+        if (lastBolus == null // no bolus ever given
+                || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for
+                || !lastBolus.isValid) { // ext/multiwave bolus
+            log.debug("It appears no bolus was delivered");
+            return new PumpEnactResult().success(false).enacted(false)
+                    .comment(MainApp.sResources.getString(R.string.combo_error_no_bolus_delivered));
+        } else if (Math.abs(lastBolus.amount - detailedBolusInfo.insulin) > 0.01) { // bolus only partially delivered
+            detailedBolusInfo.insulin = lastBolus.amount;
+            detailedBolusInfo.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments", lastBolus.amount));
+            return new PumpEnactResult().success(false).enacted(true)
+                    .comment(String.format(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered),
+                            lastBolus.amount, detailedBolusInfo.insulin));
+        }
+
+        // bolus was correctly and fully delivered
+        detailedBolusInfo.insulin = lastBolus.amount;
+        detailedBolusInfo.source = Source.USER;
+        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        log.debug("Added correctly delivered bolus to treatments");
+        return new PumpEnactResult().success(true).enacted(true)
+                .bolusDelivered(lastBolus.amount)
+                .carbsDelivered(detailedBolusInfo.carbs);
     }
 
     @Override
