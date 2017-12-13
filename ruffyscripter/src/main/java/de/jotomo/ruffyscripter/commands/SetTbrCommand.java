@@ -111,7 +111,7 @@ public class SetTbrCommand extends BaseCommand {
      * and all). To avoid this, wait until the active TBR runs out if the active TBR
      * is about to end.
      *
-     * @return If we waited till the TBR ended an cancellation was request so all work is done.
+     * @return true wf we waited till the TBR ended and cancellation was request so all work is done.
      */
     private boolean checkAndWaitIfExistingTbrIsAboutToEnd(boolean cancellingTbr) {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
