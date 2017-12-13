@@ -404,6 +404,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             case STOPPED:
                 event.status = MainApp.sResources.getString(R.string.bolusstopped);
                 break;
+            case RECOVERING:
+                event.status = "Connection was interrupted. Please wait while recovery takes place.";
             case FINISHED:
                 // no state, just percent below to close bolus progress dialog
                 break;
@@ -466,11 +468,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(true).enacted(false);
             }
 
+            BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : ComboPlugin.bolusProgressReporter;
+
             // start bolus delivery
             bolusInProgress = true;
             CommandResult bolusCmdResult = runCommand(null, 0,
-                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
-                            detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter));
+                    () -> {
+                        return ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
+                                progressReporter);
+                    });
             bolusInProgress = false;
 
             if (bolusCmdResult.success) {
@@ -485,6 +491,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .bolusDelivered(bolusCmdResult.delivered)
                         .carbsDelivered(detailedBolusInfo.carbs);
             } else {
+                progressReporter.report(BolusProgressReporter.State.RECOVERING, 0, 0);
                 return recoverFromErrorDuringBolusDelivery(detailedBolusInfo, pumpTimeWhenBolusWasRequested);
             }
         } finally {
@@ -509,7 +516,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      */
     private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeWhenBolusWasRequested) {
         log.debug("Trying to determine from pump history what was actually delivered");
-        CommandResult readLastBolusResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_verifying_delivered_bolus), 3,
+        CommandResult readLastBolusResult = runCommand(null , 3,
                 () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
         if (!readLastBolusResult.success || readLastBolusResult.history == null) {
             // this happens when the cartridge runs empty during delivery, the pump will be in an error
@@ -520,6 +527,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         List<Bolus> bolusHistory = readLastBolusResult.history.bolusHistory;
         Bolus lastBolus = !bolusHistory.isEmpty() ? bolusHistory.get(0) : null;
+        log.debug("Last bolus read from history: " + lastBolus + ", request time: " + pumpTimeWhenBolusWasRequested);
 
         if (lastBolus == null // no bolus ever given
                 || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for
