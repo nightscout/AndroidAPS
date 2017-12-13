@@ -69,6 +69,7 @@ public class SetTbrCommand extends BaseCommand {
             // and all). To avoid this, wait until the active TBR runs out if the active TBR
             // is about to end
             long timeout = System.currentTimeMillis() + 65 * 1000;
+            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             PumpState state = scripter.readPumpStateInternal();
             if (state.tbrRemainingDuration == 1) {
                 while (state.tbrActive && System.currentTimeMillis() < timeout) {
