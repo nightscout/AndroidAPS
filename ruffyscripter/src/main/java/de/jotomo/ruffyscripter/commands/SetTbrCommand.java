@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.PumpWarningCodes;
 import de.jotomo.ruffy.spi.WarningOrErrorCode;
 
@@ -63,6 +64,10 @@ public class SetTbrCommand extends BaseCommand {
         boolean cancellingTbr = percentage == 100;
 
         try {
+            if (checkAndWaitIfExistingTbrIsAboutToEnd(cancellingTbr)) {
+                return;
+            }
+
             enterTbrMenu();
             boolean increasingPercentage = inputTbrPercentage();
             verifyDisplayedTbrPercentage(increasingPercentage);
@@ -98,6 +103,33 @@ public class SetTbrCommand extends BaseCommand {
         }
 
         result.success = true;
+    }
+
+    /**
+     * When programming a new TBR while an existing TBR runs out, a TBR CANCELLED
+     * alert is raised (failing the command, requiring a reconnect and confirming alert
+     * and all). To avoid this, wait until the active TBR runs out if the active TBR
+     * is about to end.
+     *
+     * @return true wf we waited till the TBR ended and cancellation was request so all work is done.
+     */
+    private boolean checkAndWaitIfExistingTbrIsAboutToEnd(boolean cancellingTbr) {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        long timeout = System.currentTimeMillis() + 65 * 1000;
+        PumpState state = scripter.readPumpStateInternal();
+        if (state.tbrRemainingDuration == 1) {
+            while (state.tbrActive && System.currentTimeMillis() < timeout) {
+                log.debug("Waiting for existing TBR to run out to avoid alert while setting TBR");
+                scripter.waitForScreenUpdate();
+                state = scripter.readPumpStateInternal();
+            }
+            // if we waited above and a cancellation was requested, we already completed the request
+            if (!state.tbrActive && cancellingTbr) {
+                result.success = true;
+                return true;
+            }
+        }
+        return false;
     }
 
     private void enterTbrMenu() {
