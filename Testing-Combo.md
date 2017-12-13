@@ -35,6 +35,16 @@
         It might be interesting to experiment with the Config software to set lower menu or display timeouts
         (or whatever they're called ...) to improve recovery speed.
   - [ ] Same as above while bolusing must report an error and NOT retry the command
+  - [ ] Recovery from connection issues during bolusing
+    - [ ] Bolusing still works => No error dialog, record is added to treatments
+    - [ ] Cancelling the bolus still works (while bolus is in progress)
+    - [ ] Pressing a button on the pump during delivery => Progress dialog freezes, then states that recovery
+          is in process and then closes; no error dialog, record correctly added to treatments
+    - [ ] Breaking the connection e.g. by moving the pump away from phone for up to a minute => same as above
+    - [ ] Same as above but put pump out of reach for 5 minutes => Error dialog, no record in treatments
+    - [ ] Starting a bolus bigger than what's left in the reservoir => Error dialog and a record in treatments with the partially delivered bolus
+    - [ ] When the connection breaks during bolusing, pressing the cancel button should not interfere with recovery and
+          the delivered bolus should be added to treatments
 - [ ] AAPS start
   - [ ] Starting AAPS without a reachable pump must show something sensible in the Combo tab
         (not hanging indefinitely with "initializing" activity)

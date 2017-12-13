@@ -405,7 +405,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 event.status = MainApp.sResources.getString(R.string.bolusstopped);
                 break;
             case RECOVERING:
-                event.status = "Connection was interrupted. Please wait while recovery takes place.";
+                event.status = MainApp.sResources.getString(R.string.combo_error_bolus_recovery_progress);
             case FINISHED:
                 // no state, just percent below to close bolus progress dialog
                 break;
@@ -504,19 +504,20 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
 
     /**
-     * If there was an error during BolusCommand the scripter try to reconnect. The pump refuses
-     * connections while a bolus delivery is still in progress (once bolus delivery started it
-     * continues regardless of a connection loss), retry the read history command a few
-     * times if we run into the 90s connect timeout (with 3 retries, a bolus of up to 54 U could
-     * be delivered until we give up).
-     * Then verify the bolus record we read has a date which is  >= the time the bolus was requested
+     * If there was an error during BolusCommand the scripter reconnects and cleans up. The pump
+     * refuses connections while a bolus delivery is still in progress (once bolus delivery started
+     * it  continues regardless of a connection loss).
+     * Then verify the bolus record we read has a date which is >= the time the bolus was requested
      * (using the pump's time!). If there is such a bolus with <= the requested amount, then it's
-     * from this command and shall be added to treatments. If the bolus wasn't delivered in full
-     * add it but raise a warning. Raise a warning as well if no bolus was delivered at all.
+     * from this command and shall be added to treatments. If the bolus wasn't delivered in full,
+     * add it to treatments but raise a warning. Raise a warning as well if no bolus was delivered
+     * at all.
+     * This all still might fail for very large boluses and earthquakes in which case an error
+     * is raised asking to user to deal with it.
      */
     private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeWhenBolusWasRequested) {
         log.debug("Trying to determine from pump history what was actually delivered");
-        CommandResult readLastBolusResult = runCommand(null , 3,
+        CommandResult readLastBolusResult = runCommand(null , 2,
                 () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
         if (!readLastBolusResult.success || readLastBolusResult.history == null) {
             // this happens when the cartridge runs empty during delivery, the pump will be in an error
@@ -527,7 +528,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         List<Bolus> bolusHistory = readLastBolusResult.history.bolusHistory;
         Bolus lastBolus = !bolusHistory.isEmpty() ? bolusHistory.get(0) : null;
-        log.debug("Last bolus read from history: " + lastBolus + ", request time: " + pumpTimeWhenBolusWasRequested);
+        log.debug("Last bolus read from history: " + lastBolus + ", request time: " +
+                pumpTimeWhenBolusWasRequested + " (" + new Date(pumpTimeWhenBolusWasRequested) + ")");
 
         if (lastBolus == null // no bolus ever given
                 || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for

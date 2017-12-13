@@ -39,7 +39,7 @@ public class Bolus extends HistoryRecord {
     @Override
     public String toString() {
         return "Bolus{" +
-                "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +
+                "timestamp=" + timestamp + " (" + new Date(timestamp) + ")" +
                 ", amount=" + amount +
                 '}';
     }
