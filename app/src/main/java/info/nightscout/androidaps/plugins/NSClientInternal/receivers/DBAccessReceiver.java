@@ -87,6 +87,9 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 UploadQueue.add(dbr);
             } else {
                 DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), data);
+                // this is not used as mongo _id but only for searching in UploadQueue database
+                // if record has to be removed from queue before upload
+                dbr._id = nsclientid.toString();
                 UploadQueue.add(dbr);
                 if (collection.equals("treatments"))
                     genereateTreatmentOfflineBroadcast(dbr);
