@@ -392,6 +392,15 @@ public class RuffyScripter implements RuffyCommands {
 
         boolean connected = isConnected();
         if (connected) {
+            long menuTime = this.menuLastUpdated;
+            waitForScreenUpdate();
+            if (menuTime == this.menuLastUpdated) {
+                log.error("NOT RECEIVING UPDATES YET JOE");
+            }
+            while(currentMenu==null) {
+                log.warn("waiting for currentMenu to become != null");
+                waitForScreenUpdate();
+            }
             MenuType menuType = getCurrentMenu().getType();
             if (menuType != MenuType.MAIN_MENU && menuType != MenuType.WARNING_OR_ERROR) {
                 returnToRootMenu();
@@ -500,7 +509,8 @@ public class RuffyScripter implements RuffyCommands {
                 Date date = new Date();
                 date.setHours(time.getHour());
                 date.setMinutes(time.getMinute());
-                state.pumpTime = date.getTime();
+                date.setSeconds(0);
+                state.pumpTime = date.getTime() - date.getTime() % 1000;
             }
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
             state.activeAlert = readWarningOrErrorCode();
@@ -517,10 +527,12 @@ public class RuffyScripter implements RuffyCommands {
                 Date date = new Date();
                 date.setHours(time.getHour());
                 date.setMinutes(time.getMinute());
-                state.pumpTime = date.getTime();
+                date.setSeconds(0);
+                state.pumpTime = date.getTime() - date.getTime() % 1000;
             }
         }
 
+        log.debug("State read: " + state);
         return state;
     }
 
