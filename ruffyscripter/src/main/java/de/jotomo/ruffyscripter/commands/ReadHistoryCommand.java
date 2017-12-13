@@ -34,106 +34,108 @@ public class ReadHistoryCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (request.bolusHistory != PumpHistoryRequest.SKIP
-                || request.tbrHistory != PumpHistoryRequest.SKIP
-                || request.pumpErrorHistory != PumpHistoryRequest.SKIP
-                || request.tddHistory != PumpHistoryRequest.SKIP) {
-            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-            scripter.navigateToMenu(MenuType.MY_DATA_MENU);
-            scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
-            scripter.pressCheckKey();
-
-            // bolus history
-            scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
-            if (request.bolusHistory != PumpHistoryRequest.SKIP) {
-                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-                if (totalRecords > 0) {
-                    if (request.bolusHistory == PumpHistoryRequest.LAST) {
-                        Bolus bolus = readBolusRecord();
-                        history.bolusHistory.add(bolus);
-                    } else {
-                        readBolusRecords(request.bolusHistory);
-                    }
-                }
-            }
-
-            // error history
-            scripter.pressMenuKey();
-            scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
-            if (request.pumpErrorHistory != PumpHistoryRequest.SKIP) {
-                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-                if (totalRecords > 0) {
-                    if (request.pumpErrorHistory == PumpHistoryRequest.LAST) {
-                        PumpAlert error = readAlertRecord();
-                        history.pumpAlertHistory.add(error);
-                    } else {
-                        readAlertRecords(request.pumpErrorHistory);
-                    }
-                }
-            }
-
-            // tdd history
-            scripter.pressMenuKey();
-            scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
-            if (request.tddHistory != PumpHistoryRequest.SKIP) {
-                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-                if (totalRecords > 0) {
-                    if (request.tddHistory == PumpHistoryRequest.LAST) {
-                        Tdd tdd = readTddRecord();
-                        history.tddHistory.add(tdd);
-                    } else {
-                        readTddRecords(request.tbrHistory);
-                    }
-                }
-            }
-
-            // tbr history
-            scripter.pressMenuKey();
-            scripter.verifyMenuIsDisplayed(MenuType.TBR_DATA);
-            if (request.tbrHistory != PumpHistoryRequest.SKIP) {
-                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-                if (totalRecords > 0) {
-                    if (request.tbrHistory == PumpHistoryRequest.LAST) {
-                        Tbr tbr = readTbrRecord();
-                        history.tbrHistory.add(tbr);
-                    } else {
-                        readTbrRecords(request.tbrHistory);
-                    }
-                }
-            }
-
-            if (log.isDebugEnabled()) {
-                if (!history.bolusHistory.isEmpty()) {
-                    log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
-                    for (Bolus bolus : history.bolusHistory) {
-                        log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
-                    }
-                }
-                if (!history.pumpAlertHistory.isEmpty()) {
-                    log.debug("Read error history (" + history.pumpAlertHistory.size() + "):");
-                    for (PumpAlert pumpAlert : history.pumpAlertHistory) {
-                        log.debug(new Date(pumpAlert.timestamp) + ": " + pumpAlert.toString());
-                    }
-                }
-                if (!history.tddHistory.isEmpty()) {
-                    log.debug("Read TDD history (" + history.tddHistory.size() + "):");
-                    for (Tdd tdd : history.tddHistory) {
-                        log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
-                    }
-                }
-                if (!history.tbrHistory.isEmpty()) {
-                    log.debug("Read TBR history (" + history.tbrHistory.size() + "):");
-                    for (Tbr tbr : history.tbrHistory) {
-                        log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
-                    }
-                }
-            }
-
-            scripter.returnToRootMenu();
-            scripter.verifyRootMenuIsDisplayed();
-
-            result.success(true).history(history);
+        if (request.bolusHistory == PumpHistoryRequest.SKIP
+                && request.tbrHistory == PumpHistoryRequest.SKIP
+                && request.pumpErrorHistory == PumpHistoryRequest.SKIP
+                && request.tddHistory == PumpHistoryRequest.SKIP) {
+            throw new CommandException("History request but all data types are skipped");
         }
+
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        scripter.navigateToMenu(MenuType.MY_DATA_MENU);
+        scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
+        scripter.pressCheckKey();
+
+        // bolus history
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
+        if (request.bolusHistory != PumpHistoryRequest.SKIP) {
+            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+            if (totalRecords > 0) {
+                if (request.bolusHistory == PumpHistoryRequest.LAST) {
+                    Bolus bolus = readBolusRecord();
+                    history.bolusHistory.add(bolus);
+                } else {
+                    readBolusRecords(request.bolusHistory);
+                }
+            }
+        }
+
+        // error history
+        scripter.pressMenuKey();
+        scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
+        if (request.pumpErrorHistory != PumpHistoryRequest.SKIP) {
+            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+            if (totalRecords > 0) {
+                if (request.pumpErrorHistory == PumpHistoryRequest.LAST) {
+                    PumpAlert error = readAlertRecord();
+                    history.pumpAlertHistory.add(error);
+                } else {
+                    readAlertRecords(request.pumpErrorHistory);
+                }
+            }
+        }
+
+        // tdd history
+        scripter.pressMenuKey();
+        scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
+        if (request.tddHistory != PumpHistoryRequest.SKIP) {
+            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+            if (totalRecords > 0) {
+                if (request.tddHistory == PumpHistoryRequest.LAST) {
+                    Tdd tdd = readTddRecord();
+                    history.tddHistory.add(tdd);
+                } else {
+                    readTddRecords(request.tbrHistory);
+                }
+            }
+        }
+
+        // tbr history
+        scripter.pressMenuKey();
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DATA);
+        if (request.tbrHistory != PumpHistoryRequest.SKIP) {
+            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+            if (totalRecords > 0) {
+                if (request.tbrHistory == PumpHistoryRequest.LAST) {
+                    Tbr tbr = readTbrRecord();
+                    history.tbrHistory.add(tbr);
+                } else {
+                    readTbrRecords(request.tbrHistory);
+                }
+            }
+        }
+
+        if (log.isDebugEnabled()) {
+            if (!history.bolusHistory.isEmpty()) {
+                log.debug("Read bolus history (" + history.bolusHistory.size() + "):");
+                for (Bolus bolus : history.bolusHistory) {
+                    log.debug(new Date(bolus.timestamp) + ": " + bolus.toString());
+                }
+            }
+            if (!history.pumpAlertHistory.isEmpty()) {
+                log.debug("Read error history (" + history.pumpAlertHistory.size() + "):");
+                for (PumpAlert pumpAlert : history.pumpAlertHistory) {
+                    log.debug(new Date(pumpAlert.timestamp) + ": " + pumpAlert.toString());
+                }
+            }
+            if (!history.tddHistory.isEmpty()) {
+                log.debug("Read TDD history (" + history.tddHistory.size() + "):");
+                for (Tdd tdd : history.tddHistory) {
+                    log.debug(new Date(tdd.timestamp) + ": " + tdd.toString());
+                }
+            }
+            if (!history.tbrHistory.isEmpty()) {
+                log.debug("Read TBR history (" + history.tbrHistory.size() + "):");
+                for (Tbr tbr : history.tbrHistory) {
+                    log.debug(new Date(tbr.timestamp) + ": " + tbr.toString());
+                }
+            }
+        }
+
+        scripter.returnToRootMenu();
+        scripter.verifyRootMenuIsDisplayed();
+
+        result.success(true).history(history);
     }
 
     private void readTddRecords(long requestedTime) {
