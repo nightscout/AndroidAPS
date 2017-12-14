@@ -159,12 +159,16 @@ public class Profile {
         LongSparseArray<Double> sparse = new LongSparseArray<>();
         for (Integer index = 0; index < array.length(); index++) {
             try {
-                JSONObject o = array.getJSONObject(index);
+                final JSONObject o = array.getJSONObject(index);
                 long tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
                 Double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
+                try {
+                    log.error(array.getJSONObject(index).toString());
+                } catch (JSONException e1) {
+                }
             }
         }
 
