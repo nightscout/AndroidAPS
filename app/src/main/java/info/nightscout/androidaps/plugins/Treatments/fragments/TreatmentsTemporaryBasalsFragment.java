@@ -31,6 +31,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -65,7 +66,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
             TemporaryBasal tempBasal = tempBasalList.getReversed(position);
             holder.ph.setVisibility(tempBasal.source == Source.PUMP ? View.VISIBLE : View.GONE);
-            holder.ns.setVisibility(tempBasal._id != null ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(NSUpload.isIdValid(tempBasal._id) ? View.VISIBLE : View.GONE);
             if (tempBasal.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
                 holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
@@ -165,8 +166,10 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = tempBasal._id;
-                                if (_id != null && !_id.equals("")) {
+                                if (NSUpload.isIdValid(_id)) {
                                     NSUpload.removeCareportalEntryFromNS(_id);
+                                } else {
+                                    UploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(tempBasal);
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
