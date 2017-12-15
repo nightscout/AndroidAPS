@@ -57,35 +57,41 @@ public class BolusCommand extends BaseCommand {
             if (cancelRequested) {
                 bolusProgressReporter.report(STOPPED, 0, 0);
                 result.success = true;
+                log.debug("Stage 0: cancelled bolus before programming");
                 return;
             }
+
             bolusProgressReporter.report(PROGRAMMING, 0, 0);
             enterBolusMenu();
             inputBolusAmount();
             verifyDisplayedBolusAmount();
 
-            // last chance to abort before confirm the bolus
+            // last chance to abort before confirming the bolus
             if (cancelRequested) {
                 bolusProgressReporter.report(STOPPING, 0, 0);
                 scripter.returnToRootMenu();
                 bolusProgressReporter.report(STOPPED, 0, 0);
                 result.success = true;
+                log.debug("Stage 1: cancelled bolus after programming");
                 return;
             }
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressCheckKey();
+            log.debug("Stage 2: bolus confirmed");
 
             // the pump displays the entered bolus and waits a few seconds to let user check and cancel
             while (scripter.getCurrentMenu().getType() == MenuType.BOLUS_ENTER) {
                 if (cancelRequested) {
+                    log.debug("Stage 2: cancelling during confirmation wait");
                     bolusProgressReporter.report(STOPPING, 0, 0);
                     scripter.pressUpKey();
                     // wait up to 1s for a BOLUS_CANCELLED alert, if it doesn't happen we missed
                     // the window, simply continue and let the next cancel attempt try its luck
                     boolean alertWasCancelled = scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 1000);
                     if (alertWasCancelled) {
+                        log.debug("Stage 2: successfully cancelled during confirmation wait");
                         bolusProgressReporter.report(STOPPED, 0, 0);
                         result.success = true;
                         return;
@@ -107,6 +113,7 @@ public class BolusCommand extends BaseCommand {
             Thread cancellationThread = null;
             while (bolusRemaining != null || scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 if (cancelRequested && !cancelInProgress) {
+                    log.debug("Stage 3: cancellation while delivering bolus");
                     bolusProgressReporter.report(STOPPING, 0, 0);
                     cancelInProgress = true;
                     cancellationThread = new Thread(() ->
@@ -123,12 +130,15 @@ public class BolusCommand extends BaseCommand {
                     if (Objects.equals(warningCode, PumpWarningCodes.BOLUS_CANCELLED)) {
                         scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 2000);
                         bolusProgressReporter.report(STOPPED, 0, 0);
+                        log.debug("Stage 3: confirmed BOLUS CANCELLED after cancelling bolus during delivery");
                     } else if (Objects.equals(warningCode, PumpWarningCodes.CARTRIDGE_LOW)) {
                         scripter.confirmAlert(PumpWarningCodes.CARTRIDGE_LOW, 2000);
                         result.forwardedWarnings.add(PumpWarningCodes.CARTRIDGE_LOW);
+                        log.debug("Stage 3: confirmed low cartridge alert and forwarding to AAPS");
                     } else if (Objects.equals(warningCode, PumpWarningCodes.BATTERY_LOW)) {
                         scripter.confirmAlert(PumpWarningCodes.BATTERY_LOW, 2000);
                         result.forwardedWarnings.add(PumpWarningCodes.BATTERY_LOW);
+                        log.debug("Stage 3: confirmed low battery alert and forwarding to AAPS");
                     } else {
                         // all other warnings or errors;
                         // An occlusion error can also occur during bolus. To read the partially delivered
@@ -166,7 +176,7 @@ public class BolusCommand extends BaseCommand {
             }
 
             if (cancelInProgress) {
-               // delivery was started, but cancellation requested, so there is a bolus we can read
+                log.debug("Stage 4: reading last bolus from pump history since a cancellation was requested during bolus delivery");
                 ReadReservoirLevelAndLastBolus readReservoirLevelAndLastBolus = new ReadReservoirLevelAndLastBolus();
                 readReservoirLevelAndLastBolus.setScripter(scripter);
                 readReservoirLevelAndLastBolus.execute();
@@ -174,9 +184,10 @@ public class BolusCommand extends BaseCommand {
                 if (lastBolus == null || Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
                     throw new CommandException("Unable to determine last bolus");
                 }
+                log.debug("Stage 4:" + lastBolus.amount + " U delivered before cancellation according to history");
                 result.delivered = lastBolus.amount;
             } else {
-                // bolus delivery completed successfully and completely
+                log.debug("Stage 4: full bolus of " + bolus + " U was successfully delivered");
                 result.delivered = bolus;
                 bolusProgressReporter.report(DELIVERED, 100, bolus);
             }
