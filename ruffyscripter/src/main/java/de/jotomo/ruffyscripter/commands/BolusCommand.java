@@ -19,7 +19,6 @@ import de.jotomo.ruffyscripter.RuffyScripter;
 
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERED;
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERING;
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.FINISHED;
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.PROGRAMMING;
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.STOPPED;
 import static de.jotomo.ruffy.spi.BolusProgressReporter.State.STOPPING;
@@ -128,6 +127,15 @@ public class BolusCommand extends BaseCommand {
                 }
                 Integer warningCode = warningOrErrorCode.warningCode;
                 if (Objects.equals(warningCode, PumpWarningCodes.BOLUS_CANCELLED)) {
+                    // wait until cancellation thread releases the up button, otherwise we won't
+                    // be able to confirm anything
+                    if (cancellationThread != null) {
+                        try {
+                            cancellationThread.join(3500);
+                        } catch (InterruptedException e) {
+                            // ignore
+                        }
+                    }
                     scripter.confirmAlert(PumpWarningCodes.BOLUS_CANCELLED, 2000);
                     bolusProgressReporter.report(STOPPED, 0, 0);
                     log.debug("Stage 3: confirmed BOLUS CANCELLED after cancelling bolus during delivery");
@@ -184,7 +192,7 @@ public class BolusCommand extends BaseCommand {
             if (lastBolus == null || Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
                 throw new CommandException("Unable to determine last bolus");
             }
-            log.debug("Stage 4:" + lastBolus.amount + " U delivered before cancellation according to history");
+            log.debug("Stage 4: " + lastBolus.amount + " U delivered before cancellation according to history");
             result.delivered = lastBolus.amount;
         } else {
             log.debug("Stage 4: full bolus of " + bolus + " U was successfully delivered");
