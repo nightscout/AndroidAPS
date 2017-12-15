@@ -406,9 +406,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 break;
             case RECOVERING:
                 event.status = MainApp.sResources.getString(R.string.combo_error_bolus_recovery_progress);
-            case FINISHED:
-                // no state, just percent below to close bolus progress dialog
-                break;
         }
         event.percent = percent;
         MainApp.bus().post(event);
@@ -531,17 +528,20 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (lastBolus == null // no bolus ever given
                 || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for
                 || !lastBolus.isValid) { // ext/multiwave bolus
-            log.debug("It appears no bolus was delivered");
+            log.debug("No bolus was delivered");
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.sResources.getString(R.string.combo_error_no_bolus_delivered));
         } else if (Math.abs(lastBolus.amount - detailedBolusInfo.insulin) > 0.01) { // bolus only partially delivered
+            double requestedBolus = detailedBolusInfo.insulin;
+
             detailedBolusInfo.insulin = lastBolus.amount;
             detailedBolusInfo.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments", lastBolus.amount));
+            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments (requested: %.2f", lastBolus.amount, requestedBolus));
+
             return new PumpEnactResult().success(false).enacted(true)
                     .comment(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered,
-                            lastBolus.amount, detailedBolusInfo.insulin));
+                            lastBolus.amount, requestedBolus));
         }
 
         // bolus was correctly and fully delivered
