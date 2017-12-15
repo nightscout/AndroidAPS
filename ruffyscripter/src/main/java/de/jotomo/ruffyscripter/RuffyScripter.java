@@ -31,8 +31,8 @@ import de.jotomo.ruffy.spi.BolusProgressReporter;
 import de.jotomo.ruffy.spi.CommandResult;
 import de.jotomo.ruffy.spi.PumpState;
 import de.jotomo.ruffy.spi.RuffyCommands;
-import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffy.spi.WarningOrErrorCode;
+import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
@@ -184,7 +184,13 @@ public class RuffyScripter implements RuffyCommands {
             return false;
         }
         try {
-            return ruffyService.isConnected() && System.currentTimeMillis() - menuLastUpdated < 5000;
+            if (!ruffyService.isConnected()) {
+                return false;
+            }
+            if (System.currentTimeMillis() - menuLastUpdated > 500) {
+                waitForScreenUpdate();
+            }
+            return System.currentTimeMillis() - menuLastUpdated < 500;
         } catch (RemoteException e) {
             return false;
         }
@@ -278,15 +284,16 @@ public class RuffyScripter implements RuffyCommands {
                         // can retry if needed).
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
-                        for (int attempts = 4; attempts > 0; attempts--) {
+                        for (int attempts = 2; attempts > 0; attempts--) {
                             boolean reconnected = recoverFromConnectionLoss();
                             if (reconnected) {
                                 break;
                             }
-                            // connect attempt times out after 30s, shortly wait and then retry;
-                            // (30s timeout + 5s wait) * 4 attempts = 140s
+                            // connect attempt times out after 90s, shortly wait and then retry;
+                            // (90s timeout + 5s wait) * 2 attempts = 190s
                             SystemClock.sleep(5 * 1000);
                         }
+                        break;
                     }
 
                     if (System.currentTimeMillis() > overallTimeout) {
@@ -392,15 +399,6 @@ public class RuffyScripter implements RuffyCommands {
 
         boolean connected = isConnected();
         if (connected) {
-            long menuTime = this.menuLastUpdated;
-            waitForScreenUpdate();
-            if (menuTime == this.menuLastUpdated) {
-                log.error("NOT RECEIVING UPDATES YET JOE");
-            }
-            while(currentMenu==null) {
-                log.warn("waiting for currentMenu to become != null");
-                waitForScreenUpdate();
-            }
             MenuType menuType = getCurrentMenu().getType();
             if (menuType != MenuType.MAIN_MENU && menuType != MenuType.WARNING_OR_ERROR) {
                 returnToRootMenu();
