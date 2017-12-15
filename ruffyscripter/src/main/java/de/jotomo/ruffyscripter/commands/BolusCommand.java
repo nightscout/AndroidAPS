@@ -90,8 +90,8 @@ public class BolusCommand extends BaseCommand {
                         result.success = true;
                         return;
                     }
-                    SystemClock.sleep(10);
                 }
+                SystemClock.sleep(10);
             }
 
             // the bolus progress is displayed on the main menu
@@ -171,16 +171,15 @@ public class BolusCommand extends BaseCommand {
                 readReservoirLevelAndLastBolus.setScripter(scripter);
                 readReservoirLevelAndLastBolus.execute();
                 Bolus lastBolus = readReservoirLevelAndLastBolus.result.lastBolus;
-                if (Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
+                if (lastBolus == null || Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
                     throw new CommandException("Unable to determine last bolus");
                 }
                 result.delivered = lastBolus.amount;
             } else {
                 // bolus delivery completed successfully and completely
                 result.delivered = bolus;
+                bolusProgressReporter.report(DELIVERED, 100, bolus);
             }
-
-            bolusProgressReporter.report(DELIVERED, 100, bolus);
             result.success = true;
     }
 

@@ -23,7 +23,7 @@ public interface RuffyCommands {
     /** Indicate of the pump is busy processing a command. */
     boolean isPumpBusy();
 
-    /** Whether there's an active BT connection to the pump. */
+    /** Whether there's usable connection to the pump. */
     boolean isConnected();
 
     void disconnect();

@@ -473,10 +473,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // start bolus delivery
             bolusInProgress = true;
             CommandResult bolusCmdResult = runCommand(null, 0,
-                    () -> {
-                        return ruffyScripter.deliverBolus(detailedBolusInfo.insulin,
-                                progressReporter);
-                    });
+                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
             bolusInProgress = false;
 
             if (bolusCmdResult.success) {
@@ -543,7 +540,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
             log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments", lastBolus.amount));
             return new PumpEnactResult().success(false).enacted(true)
-                    .comment(String.format(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered),
+                    .comment(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered,
                             lastBolus.amount, detailedBolusInfo.insulin));
         }
 
