@@ -63,5 +63,6 @@ public class NSSgv {
     public Long getMills () { return getLongOrNull("mills"); }
     public String getDevice () { return getStringOrNull("device"); }
     public String getDirection () { return getStringOrNull("direction"); }
+    public String getId () { return getStringOrNull("_id"); }
 
 }
