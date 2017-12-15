@@ -96,7 +96,7 @@ Usage:
   as a notification in AAPS. If they occur while no connection is open to the pump, going to the
   combo tab and hitting the Refresh button will take over those alerts by confirming them and
   showing a notification in AAPS.
-- When AAPS fails to confirm a TBR CANCELLED alert, or one is raised for different raising,
+- When AAPS fails to confirm a TBR CANCELLED alert, or one is raised for a different reason,
   hitting Refresh in the Combo tab establishes a connection, confirms the alert and shows
   a notification for it in AAPS. This can safely be done, since those alerts are benign - an
   appropriate TBR will be set again during the next loop iteration.
