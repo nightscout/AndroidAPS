@@ -991,9 +991,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             JSONObject pumpJson = new JSONObject();
             pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
 
-            int level = 250;
-            if (pump.state.insulinState == PumpState.LOW) level = 50;
-            if (pump.state.insulinState == PumpState.EMPTY) level = 0;
+            int level = 150;
+            if (pump.state.insulinState == PumpState.LOW) level = 8;
+            else if (pump.state.insulinState == PumpState.EMPTY) level = 0;
             pumpJson.put("reservoir", level);
 
             JSONObject statusJson = new JSONObject();
@@ -1016,18 +1016,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pumpJson.put("extended", extendedJson);
 
             JSONObject batteryJson = new JSONObject();
-            int battery;
-            switch (ps.batteryState) {
-                case PumpState.EMPTY:
-                    battery = 0;
-                    break;
-                case PumpState.LOW:
-                    battery = 25;
-                    break;
-                default:
-                    battery = 100;
-                    break;
-            }
+            int battery = 100;
+            if (ps.batteryState == PumpState.LOW) battery = 25;
+            else if (ps.batteryState == PumpState.EMPTY) battery = 0;
             batteryJson.put("percent", battery);
             pumpJson.put("battery", batteryJson);
 
