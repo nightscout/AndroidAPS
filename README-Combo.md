@@ -120,6 +120,22 @@ Usage:
   this requires an available NS installation and being online (for a short time). Hopefully
   both of these issues can be resolved in future versions.
 
+Known issues:
+- On phones with low memory (or aggressive power saving setings, Android may kill
+  AAPS frequently (if the buttons on the overview screen aren't displayed when opening
+  AAPS, the app was started again after Android killed it).
+  This may trigger false 'pump unreachable alarms' on start.
+  See the Combo tab's "last connection" field to check when the pump was last connected.
+  This may drain the pump's battery quicker since on startup the basal profile is read
+  from the pump. This may also increase the chance to hit the bug that makes the pump
+  reject all incoming connections unless a button on the pump is pressed.
+- Occasionally (every couple of days or less) AAPS might fail to automatically cancel
+  a TBR CANCELLED alert and needs to be dealt with (press the refresh button in AAPS
+  to transfer the warning to AAPS or confirm the alert on the pump).
+- Overall the integration seems rather robust, but there are limits to the way the
+  pump is controlled and how stable BT is, so there will be minor issues like the above
+  from time to time, though they're small compared to what works well.
+
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused
   the problem
