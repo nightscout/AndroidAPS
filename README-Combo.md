@@ -20,21 +20,20 @@ Limitations:
 - Setting a basal profile other than 1 on the pump, or delivering extended boluses or multiwave
   boluses from the pump interferes with TBRs and forces the loop into low-suspend only mode for 6 hours
   as the the loop can't run safely under those conditions.
-- It's currently not possible to set the time and date on the pump, however, this has no effect
-  on AAPS and will not cause a problem if the pump's clock is not updated at the exact time
-  daylight savings time starts or ends.
+- It's currently not possible to set the time and date on the pump, so daylight saving times
+  changes have to be performed manually.
 - There's a bug in the pump's firmware that's triggered when "too much" communication happens
   with the pump. Specifically, this issue occurs when going from just issuing commands to the pump
   to reading the pumps data and history. For that reason, a minimal amount of data is read from
-  the pump (no history).
+  the pump.
   The bug might still rarely occur and causes the pump to not accept any connection
   unless a button is physically pressed on the pump.
   Therefore, the pump's reservoir level is not read and the pump status information uploaded to Nightscout
-  shows fake numbers of 250 (above low threshold - which can be configured via the configuration
-  tool), 50 (below low threshold) and 0 if the reservoir is empty.
+  shows fake numbers of 150 (above low threshold - which can be configured via the configuration
+  tool), 8 (below low threshold, triggers NS alarm since < 10) and 0 if the reservoir is empty.
   Furthermore, no history (from the My Data menu) is read unless absolutely required.
-  Reading all pump data can be forced through the Combo tab (long press "TDDS"), to "import"
-  events that happened solely on the pump, but that code has been tested less and may
+  Reading all pump data can be forced through the Combo tab, to import
+  events that happened solely on the pump, but that code has been tested less, might cause duplicates and may
   trigger the bug, so it's strongly recommended to stick to the usage scenario of controlling the
   pump solely through AAPS.
   Checking history, reservoir level etc on the pump causes no issues but should be avoided
@@ -67,7 +66,7 @@ Setup:
   to the pump.
 
 Usage:
-- This is not a product, esp. in the beginning the user needs to monitor and understand the system,
+- Keep in mind that this is not a product, esp. in the beginning the user needs to monitor and understand the system,
   its limitations and how it can fail. It is strongly advised NOT to use this system when the person
   using is not able to fully understand the system.
 - This integration uses the same functionality which the meter provides that comes with the Combo.
@@ -121,17 +120,18 @@ Usage:
   both of these issues can be resolved in future versions.
 
 Known issues:
-- On phones with low memory (or aggressive power saving setings, Android may kill
+- On phones with low memory (or aggressive power saving settings), Android may kill
   AAPS frequently (if the buttons on the overview screen aren't displayed when opening
   AAPS, the app was started again after Android killed it).
   This may trigger false 'pump unreachable alarms' on start.
   See the Combo tab's "last connection" field to check when the pump was last connected.
   This may drain the pump's battery quicker since on startup the basal profile is read
   from the pump. This may also increase the chance to hit the bug that makes the pump
-  reject all incoming connections unless a button on the pump is pressed.
+  reject all incoming connections until a button on the pump is pressed.
 - Occasionally (every couple of days or less) AAPS might fail to automatically cancel
   a TBR CANCELLED alert and needs to be dealt with (press the refresh button in AAPS
-  to transfer the warning to AAPS or confirm the alert on the pump).
+  to transfer the warning to AAPS or confirm the alert on the pump). Similarly, the
+  'pump unreachable' bug may occur from time to time.
 - Overall the integration seems rather robust, but there are limits to the way the
   pump is controlled and how stable BT is, so there will be minor issues like the above
   from time to time, though they're small compared to what works well.
