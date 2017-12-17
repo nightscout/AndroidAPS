@@ -245,7 +245,7 @@
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -303,7 +303,7 @@
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
             </LinearLayout>

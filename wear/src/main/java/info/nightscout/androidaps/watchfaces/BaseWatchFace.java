@@ -553,6 +553,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
         if(layoutSet){
             setDataFields();
+            setColor();
         }
         invalidate();
     }

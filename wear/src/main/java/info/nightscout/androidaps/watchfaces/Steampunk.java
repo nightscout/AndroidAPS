@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
@@ -70,7 +72,7 @@ public class Steampunk extends BaseWatchFace {
         float rotationAngle = 0f;                                           //by default, show ? on the dial (? is at 0 degrees on the dial)
         if (!sSgv.equals("---")) {
             if (sUnits.equals("mmol")) {
-                rotationAngle = Float.valueOf(sSgv) * 18f;
+                rotationAngle = Float.valueOf(sSgv) * 18f;  //convert to mg/dL, which is equivalent to degrees
             } else {
                 rotationAngle = Float.valueOf(sSgv);       //if glucose a value is received, use it to determine the amount of rotation of the dial.
             }
@@ -88,13 +90,42 @@ public class Steampunk extends BaseWatchFace {
         mGlucoseDial.startAnimation(rotate);
         lastEndDegrees = rotationAngle;     //store the final angle as a starting point for the next rotation.
 
-        //rotate delta pointer.
+        //set the delta gauge and rotate the delta pointer
         float deltaIsNegative = 1f;         //by default go clockwise
         if (!sAvgDelta.equals("--")) {      //if a legitimate delta value is received, then...
             if (sAvgDelta.substring(0,1).equals("-")) deltaIsNegative = -1f;  //if the delta is negative, go counter-clockwise
-            deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 1.5f);   //get rid of the sign so it can be converted to float. then, for each 10 in avgDelta we need to move 15 degrees, hence multiply avgDelta by 1.5.
+
+            //ensure the delta gauge is the right units and granularity
+            if (!sUnits.equals("-")) {
+                if (sUnits.equals("mmol")) {
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("1")) {  //low
+                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10);
+                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 30f);   //get rid of the sign so it can be converted to float.
+                    }
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("2")) {  //medium
+                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05);
+                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 60f);   //get rid of the sign so it can be converted to float.
+                    }
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("3")) {  //high
+                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03);
+                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 100f);   //get rid of the sign so it can be converted to float.
+                    }
+                } else {
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("1")) {  //low
+                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20);
+                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 1.5f);   //get rid of the sign so it can be converted to float.
+                    }
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("2")) {  //medium
+                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10);
+                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 3f);   //get rid of the sign so it can be converted to float.
+                    }
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("3")) {  //high
+                        mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5);
+                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 6f);   //get rid of the sign so it can be converted to float.
+                    }
+                }
+            }
             if (deltaRotationAngle > 35) deltaRotationAngle = 35f;
-            if (deltaRotationAngle < -35) deltaRotationAngle = -35f;  //if the needle will go off the chart in either direction, make it stop at the end of the gauge.
             mDeltaGauge.setRotation(deltaRotationAngle * deltaIsNegative);
         }
 
