@@ -69,6 +69,7 @@ import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
+import info.nightscout.utils.LocalAlertUtils;
 import info.nightscout.utils.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
@@ -213,7 +214,7 @@ public class MainApp extends Application {
 
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
-            keepAliveReceiver.cancelAlarm(this);
+            LocalAlertUtils.cancelAlarm(this);
     }
 
     public static Bus bus() {
