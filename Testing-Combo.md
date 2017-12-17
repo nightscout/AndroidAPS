@@ -1,43 +1,14 @@
 - [ ] Pairing
   - [ ] Pairing works with `combo-scripter-v2` branch
 - [ ] Bolusing
-  - [ ] Cancelling bolus at various stages and checking error message (if any) and check
-        no bolus or a partial bolus was delivered
+  - [ ] Cancelling bolus at various stages shall not yield an error but cancel the bolus. If
+        cancelled before delivery started, no treatment must have been added, if cancel after delivery
+        started, the partially delivered bolus must have been added to treatments
   - [ ] Enter a bolus of 2 U and press cancel when delivery is at 1.7 (cancelling requires AAAPS
         to press the up button for 3 seconds, so the cancellation attempt will not succeed because delivery
         ends before those 3 seconds are elapsed). The code should handle this without giving an
         error and add the full bolus to treatments.
-  - [ ] Low cartridge alarm during bolus
-    - [ ] alarm must be confirmed by AAPS
-    - [ ] bolus must have been fully delivered by pump
-    - [ ] bolus must have been added to DB
-    - [ ] the confirmed pump warning must be raised as a notification in AAPS
-          (or as android notification on watch/smartphone if setting "use system notifications ..." is enabled
-  - [ ] An error during bolus must yield an error in AAPS
-  - [ ] An error during bolus must yield a notification on a smartwatch
-  - [ ] Test bolusing a bolus bigger than what's left in the reservoir. A message to check what
-        was actually delivered must appear (this is a corner-case where we practically can't
-        check what was actually delivered).
-  - [ ] Pressing a button on the pump before bolus delivery started must be handled gracefully
-    - [ ] Same as above, but moving pump out of range
-  - [ ] Pressing a button on the pump after bolus delivery has started must raise a warning
-        to check what was actually delivered and manually update treatments in AAPS.
-    - [ ] Same as above, but moving pump out of range
-  - [ ] Test the highest bolus you'd ever give yourself (AAPS has a configurable limit and the pump
-        has a limit which can be configured with the Config SW), no timeout or other issues must show
-  - [ ] Test a bolus exceeding the pumps max bolus; should show a generic error message
-- [ ] BT disconnect issues
-  - [ ] Moving pump out of reach when setting TBR causes "TBR cancelled" alarm on pump.
-        When putting pump close to phone, AAPS must confirm the alert and successfully
-        retry setting TBR (reconnects are a best-effort kind of a thing, so this might not always work)
-  - [ ] When a disconnect occurs, the pump's screen shows the error and the pump only accepts a connection
-        again when a timeout has occurred. A recovery should be quicker if that timeout is decreased.
-        It might be interesting to experiment with the Config software to set lower menu or display timeouts
-        (or whatever they're called ...) to improve recovery speed.
-  - [ ] Same as above while bolusing must report an error and NOT retry the command
   - [ ] Recovery from connection issues during bolusing
-    - [ ] Bolusing still works => No error dialog, record is added to treatments
-    - [ ] Cancelling the bolus still works (while bolus is in progress)
     - [ ] Pressing a button on the pump during delivery => Progress dialog freezes, then states that recovery
           is in process and then closes; no error dialog, record correctly added to treatments
     - [ ] Breaking the connection e.g. by moving the pump away from phone for up to a minute => same as above
@@ -45,11 +16,38 @@
     - [ ] Starting a bolus bigger than what's left in the reservoir => Error dialog and a record in treatments with the partially delivered bolus
     - [ ] When the connection breaks during bolusing, pressing the cancel button should not interfere with recovery and
           the delivered bolus should be added to treatments
+  - [ ] Low cartridge alarm during bolus
+    - [ ] alarm must be confirmed by AAPS
+    - [ ] bolus must have been fully delivered by pump
+    - [ ] bolus must have been added to DB
+    - [ ] the confirmed pump warning must be raised as a notification in AAPS
+          (or as android notification on watch/smartphone if setting "use system notifications ..." is enabled
+  - [ ] Pressing a button on the pump, or moving the pump away from the phone to break connection
+        must confirm the pump alert and recover to finish the bolusing.
+  - [ ] If recovery fails, an error popup must be displayed
+  - [ ] Test bolusing a bolus bigger than what's left in the reservoir. A message to check what
+        was actually delivered must appear (this is a corner-case where we practically can't
+        check what was actually delivered).
+  - [ ] Pressing a button on the pump before bolus delivery started must be handled gracefully
+    - [ ] Same as above, but moving pump out of range
+  - [ ] Pressing a button on the pump after bolus delivery has started will freeze the progress bar,
+        initiate recovery and add the delivered bolus the treatments.
+    - [ ] Same as above, but moving pump out of range
+  - [ ] Test the highest bolus you'd ever give yourself (AAPS has a configurable limit and the pump
+        has a limit which can be configured with the Config SW), no timeout or other issues must show
+- [ ] BT disconnect issues
+  - [ ] Moving pump out of reach when setting TBR causes "TBR cancelled" alarm on pump.
+        When putting pump close to phone, AAPS must confirm the alert and successfully
+        retry setting TBR (reconnects are a best-effort kind of a thing, so this might not always work)
+  - [ ] When a disconnect occurs, the pump's screen shows the error and the pump only accepts a connection
+        again when the pump's menu(?) timeout has occurred. A recovery should be quicker if that timeout is decreased.
+        It might be interesting to experiment with the Config software to set lower menu or display timeouts
+        (or whatever they're called ...) to improve recovery speed.
 - [ ] AAPS start
   - [ ] Starting AAPS without a reachable pump must show something sensible in the Combo tab
         (not hanging indefinitely with "initializing" activity)
   - [ ] Starting AAPS without a reachable pump must trigger "pump unrechable" alert after the configured threshold
-  - [ ] If the pump's profile doesn't match AAPS', the pump must be updated when AAPS starts
+  - [ ] If the pump's basal profile doesn't match AAPS', the pump must be updated when AAPS starts
 - [ ] Read history using Smartpix and compare with AAPS' DB (treatment tab)
       Esp. those times we communication was interrupted, boluses were cancelled, ...
   - [ ] Boluses
@@ -58,7 +56,8 @@
 - [ ] Disconnected pump (pump unreachable)
     - [ ] With local alerts enabled for 'pump unreachable', an alert must be triggered within 5 minutes
           after the configured threshold. (Don't set the threshold too low, e.g. 10 minutes, since
-          there might be no need to set a TBR within such a short time).
+          there might be no need to set a TBR within such a short time, but since there was no pump connection
+          within that time, the alarm would be triggered).
 - [ ] Refilling cartridge
   - [ ] If TBR was cancelled by refilling, AAPS must detect this and create a TBR record in AAPS
         based on what the pump displays (not the full TBR duration, but what is displayed as remaining
@@ -103,4 +102,3 @@
 - [ ] Misc
   - [ ] Pump state is correctly uploaded to Nightscout (note that reservoir level are fake numbers representing
         norma/low/empty).
-
