@@ -610,12 +610,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         PumpState state = commandResult.state;
-        if (state.tbrActive && state.tbrPercent == percent
+        if (state.tbrActive && state.tbrPercent == adjustedPercent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
             TemporaryBasal tempStart = new TemporaryBasal();
             tempStart.date = state.timestamp;
-            tempStart.durationInMinutes = durationInMinutes;
-            tempStart.percentRate = adjustedPercent;
+            tempStart.durationInMinutes = state.tbrRemainingDuration;
+            tempStart.percentRate = state.tbrPercent;
             tempStart.isAbsolute = false;
             tempStart.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempStart);
@@ -694,8 +694,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
             }
 
-            // Pass this to qeueue??
-            // hm, now that each PumpInterface method is basically one RuffyCommand again ....
             commandResult = commandExecution.execute();
 
             if (!commandResult.success && retries > 0) {

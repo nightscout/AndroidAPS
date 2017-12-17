@@ -61,10 +61,8 @@ public class SetTbrCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        boolean cancellingTbr = percentage == 100;
-
         try {
-            if (checkAndWaitIfExistingTbrIsAboutToEnd(cancellingTbr)) {
+            if (checkAndWaitIfExistingTbrIsAboutToEnd()) {
                 return;
             }
 
@@ -72,7 +70,7 @@ public class SetTbrCommand extends BaseCommand {
             boolean increasingPercentage = inputTbrPercentage();
             verifyDisplayedTbrPercentage(increasingPercentage);
 
-            if (cancellingTbr) {
+            if (percentage == 100) {
                 cancelTbrAndConfirmCancellationWarning();
             } else {
                 // switch to TBR_DURATION menu by pressing menu key
@@ -116,7 +114,7 @@ public class SetTbrCommand extends BaseCommand {
      *
      * @return true if we waited till the TBR ended and cancellation was request so all work is done.
      */
-    private boolean checkAndWaitIfExistingTbrIsAboutToEnd(boolean cancellingTbr) {
+    private boolean checkAndWaitIfExistingTbrIsAboutToEnd() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         long timeout = System.currentTimeMillis() + 65 * 1000;
         PumpState state = scripter.readPumpStateInternal();
@@ -126,8 +124,9 @@ public class SetTbrCommand extends BaseCommand {
                 scripter.waitForScreenUpdate();
                 state = scripter.readPumpStateInternal();
             }
-            // if we waited above and a cancellation was requested, we already completed the request
-            if (!state.tbrActive && cancellingTbr) {
+            // if we waited above and a cancellation (fake or hard) was requested,
+            // we already completed the request
+            if (!state.tbrActive && percentage >= 90 && percentage <= 110) {
                 result.success = true;
                 return true;
             }
