@@ -282,8 +282,14 @@ public class RuffyScripter implements RuffyCommands {
                         // on connection loss try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
+                        log.debug("Connection unusable, aborting command and attempting reconnect ...");
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
+
+                        // the BT connection might be still there, but we might not be receiving
+                        // menu updates, so force a disconnect before connecting again
+                        disconnect();
+                        SystemClock.sleep(500);
                         for (int attempts = 2; attempts > 0; attempts--) {
                             boolean reconnected = recoverFromConnectionLoss();
                             if (reconnected) {
