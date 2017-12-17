@@ -27,6 +27,13 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
     public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
 
+    public static void cancelAlarm(Context context) {
+        Intent intent = new Intent(context, KeepAliveReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
+    }
+
     @Override
     public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);

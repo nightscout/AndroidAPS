@@ -57,13 +57,6 @@ public class LocalAlertUtils {
         }
     }
 
-    public static void cancelAlarm(Context context) {
-        Intent intent = new Intent(context, KeepAliveReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
-    }
-
     public static void shortenSnoozeInterval() {
         //shortens alarm times in case of setting changes or future data
         long nextMissedReadingsAlarm = SP.getLong("nextMissedReadingsAlarm", 0L);
