@@ -15,6 +15,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,15 +28,6 @@ import info.nightscout.androidaps.R;
 
 public class ObjectivesFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
-
-    private static ObjectivesPlugin objectivesPlugin;
-
-    public static ObjectivesPlugin getPlugin() {
-        if (objectivesPlugin == null) {
-            objectivesPlugin = new ObjectivesPlugin();
-        }
-        return objectivesPlugin;
-    }
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -59,7 +52,7 @@ public class ObjectivesFragment extends Fragment {
         @Override
         public void onBindViewHolder(ObjectiveViewHolder holder, int position) {
             ObjectivesPlugin.Objective o = objectives.get(position);
-            ObjectivesPlugin.RequirementResult requirementsMet = getPlugin().requirementsMet(position);
+            ObjectivesPlugin.RequirementResult requirementsMet = ObjectivesPlugin.getPlugin().requirementsMet(position);
             Context context = MainApp.instance().getApplicationContext();
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
@@ -83,7 +76,7 @@ public class ObjectivesFragment extends Fragment {
             holder.verifyButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
-                    if (getPlugin().requirementsMet(o.num).done || enableFake.isChecked()) {
+                    if (ObjectivesPlugin.getPlugin().requirementsMet(o.num).done || enableFake.isChecked()) {
                         o.accomplished = new Date();
                         updateGUI();
                         ObjectivesPlugin.saveProgress();
@@ -173,45 +166,51 @@ public class ObjectivesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.objectives_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.objectives_fragment, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.objectives_recyclerview);
-        recyclerView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(llm);
-        enableFake =  (CheckBox) view.findViewById(R.id.objectives_fake);
-        fake_layout = (LinearLayout) view.findViewById(R.id.objectives_fake_layout);
-        reset = (TextView) view.findViewById(R.id.objectives_reset);
-        enableFake.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                updateGUI();
-            }
-        });
-        reset.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getPlugin().initializeData();
-                getPlugin().saveProgress();
-                updateGUI();
-            }
-        });
+            recyclerView = (RecyclerView) view.findViewById(R.id.objectives_recyclerview);
+            recyclerView.setHasFixedSize(true);
+            llm = new LinearLayoutManager(view.getContext());
+            recyclerView.setLayoutManager(llm);
+            enableFake = (CheckBox) view.findViewById(R.id.objectives_fake);
+            fake_layout = (LinearLayout) view.findViewById(R.id.objectives_fake_layout);
+            reset = (TextView) view.findViewById(R.id.objectives_reset);
+            enableFake.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    updateGUI();
+                }
+            });
+            reset.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    ObjectivesPlugin.getPlugin().initializeData();
+                    ObjectivesPlugin.saveProgress();
+                    updateGUI();
+                }
+            });
 
-        // Add correct translations to array after app is initialized
-        getPlugin().objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
-        getPlugin().objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
-        getPlugin().objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
-        getPlugin().objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
-        getPlugin().objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
-        getPlugin().objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
-        getPlugin().objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
-        getPlugin().objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
-        getPlugin().objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
-        getPlugin().objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
-        getPlugin().objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
-        getPlugin().objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
-        getPlugin().objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
-        updateGUI();
+            // Add correct translations to array after app is initialized
+            ObjectivesPlugin.objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
+            ObjectivesPlugin.objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
+            ObjectivesPlugin.objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
+            ObjectivesPlugin.objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
+            ObjectivesPlugin.objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
+            ObjectivesPlugin.objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
+            ObjectivesPlugin.objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
+            ObjectivesPlugin.objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
+            ObjectivesPlugin.objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
+            ObjectivesPlugin.objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
+            ObjectivesPlugin.objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
+            ObjectivesPlugin.objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
+            ObjectivesPlugin.objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
+            updateGUI();
 
-        return view;
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     void updateGUI() {

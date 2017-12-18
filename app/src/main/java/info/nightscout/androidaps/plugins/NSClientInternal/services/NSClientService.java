@@ -9,6 +9,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -43,6 +44,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastA
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastCals;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastClearAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastDeviceStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastFood;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastMbgs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastSgvs;
@@ -56,7 +58,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.DateUtil;
@@ -258,7 +260,7 @@ public class NSClientService extends Service {
             authMessage.put("from", latestDateInReceivedData); // send data newer than
             authMessage.put("secret", nsAPIhashCode);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             return;
         }
         MainApp.bus().post(new EventNSClientNewLog("AUTH", "requesting auth"));
@@ -321,12 +323,18 @@ public class NSClientService extends Service {
  */
         @Override
         public void call(final Object... args) {
-            JSONObject data = (JSONObject) args[0];
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong Announcement from NS: " + args[0]);
+                return;
+            }
             if (Config.detailedLog)
                 try {
                     MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", data.has("message") ? data.getString("message") : "received"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
                 }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
             log.debug(data.toString());
@@ -351,7 +359,13 @@ public class NSClientService extends Service {
         public void call(final Object... args) {
             if (Config.detailedLog)
                 MainApp.bus().post(new EventNSClientNewLog("ALARM", "received"));
-            JSONObject data = (JSONObject) args[0];
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong alarm from NS: " + args[0]);
+                return;
+            }
             BroadcastAlarm.handleAlarm(data, getApplicationContext());
             log.debug(data.toString());
         }
@@ -373,7 +387,13 @@ public class NSClientService extends Service {
  */
         @Override
         public void call(final Object... args) {
-            JSONObject data = (JSONObject) args[0];
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong Urgent alarm from NS: " + args[0]);
+                return;
+            }
             if (Config.detailedLog)
                 MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
             BroadcastUrgentAlarm.handleUrgentAlarm(data, getApplicationContext());
@@ -392,9 +412,15 @@ public class NSClientService extends Service {
  */
         @Override
         public void call(final Object... args) {
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong Urgent alarm from NS: " + args[0]);
+                return;
+            }
             if (Config.detailedLog)
                 MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
-            JSONObject data = (JSONObject) args[0];
             BroadcastClearAlarm.handleClearAlarm(data, getApplicationContext());
             log.debug(data.toString());
         }
@@ -519,6 +545,55 @@ public class NSClientService extends Service {
                                     BroadcastDeviceStatus.handleNewDeviceStatus(devicestatuses, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
+                            if (data.has("food")) {
+                                JSONArray foods = data.getJSONArray("food");
+                                JSONArray removedFoods = new JSONArray();
+                                JSONArray updatedFoods = new JSONArray();
+                                JSONArray addedFoods = new JSONArray();
+                                if (foods.length() > 0)
+                                    MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                                for (Integer index = 0; index < foods.length(); index++) {
+                                    JSONObject jsonFood = foods.getJSONObject(index);
+                                    NSTreatment treatment = new NSTreatment(jsonFood);
+
+                                    // remove from upload queue if Ack is failing
+                                    UploadQueue.removeID(jsonFood);
+                                    //Find latest date in treatment
+                                    if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
+                                        if (treatment.getMills() > latestDateInReceivedData)
+                                            latestDateInReceivedData = treatment.getMills();
+
+                                    if (treatment.getAction() == null) {
+                                        addedFoods.put(jsonFood);
+                                    } else if (treatment.getAction().equals("update")) {
+                                        updatedFoods.put(jsonFood);
+                                    } else if (treatment.getAction().equals("remove")) {
+                                        if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
+                                            removedFoods.put(jsonFood);
+                                    }
+                                }
+                                if (removedFoods.length() > 0) {
+                                    BroadcastFood.handleRemovedFood(removedFoods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                                if (updatedFoods.length() > 0) {
+                                    BroadcastFood.handleChangedFood(updatedFoods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                                if (addedFoods.length() > 0) {
+                                    BroadcastFood.handleNewFood(addedFoods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                            }
+                            if (data.has("")) {
+                                JSONArray foods = data.getJSONArray("food");
+                                if (foods.length() > 0) {
+                                    MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                                    for (Integer index = 0; index < foods.length(); index++) {
+                                        JSONObject jsonFood = foods.getJSONObject(index);
+                                        // remove from upload queue if Ack is failing
+                                        UploadQueue.removeID(jsonFood);
+                                    }
+                                    BroadcastDeviceStatus.handleNewFoods(foods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                            }
                             if (data.has("mbgs")) {
                                 JSONArray mbgs = data.getJSONArray("mbgs");
                                 if (mbgs.length() > 0)
@@ -557,11 +632,18 @@ public class NSClientService extends Service {
                                         if (sgv.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = sgv.getMills();
                                 }
-                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
+                                // Was that sgv more less 15 mins ago ?
+                                boolean lessThan15MinAgo = false;
+                                if((System.currentTimeMillis()-latestDateInReceivedData)/(60 * 1000L) < 15L ) 
+                                    lessThan15MinAgo = true;
+                                if(Notification.isAlarmForStaleData() && lessThan15MinAgo){
+                                    MainApp.bus().post(new EventDismissNotification(Notification.NSALARM));
+                                }                                    
+                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);                                
                             }
                             MainApp.bus().post(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         }
                         //MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
                     } finally {
@@ -583,7 +665,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbUpdate", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBUPDATE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -597,7 +679,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbUpdateUnset", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -610,7 +692,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbRemove", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBREMOVE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -633,7 +715,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbAdd", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -684,10 +766,11 @@ public class NSClientService extends Service {
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
                 CloseableIterator<DbRequest> iterator = null;
+                int maxcount = 30;
                 try {
                     iterator = MainApp.getDbHelper().getDbRequestInterator();
                     try {
-                        while (iterator.hasNext()) {
+                        while (iterator.hasNext() && maxcount > 0) {
                             DbRequest dbr = iterator.next();
                             if (dbr.action.equals("dbAdd")) {
                                 NSAddAck addAck = new NSAddAck();
@@ -702,12 +785,13 @@ public class NSClientService extends Service {
                                 NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
                                 dbUpdateUnset(dbr, updateUnsetAck);
                             }
+                            maxcount--;
                         }
                     } finally {
                         iterator.close();
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
 
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));

@@ -2,11 +2,12 @@ package info.nightscout.androidaps.plugins.ProfileCircadianPercentage;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
@@ -33,13 +34,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
@@ -125,6 +125,9 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        showDeprecatedDialog();
+
         View layout = inflater.inflate(R.layout.circadianpercentageprofile_fragment, container, false);
         fl = (FrameLayout) layout.findViewById(R.id.circadianpercentageprofile_framelayout);
         fl.requestFocusFromTouch();
@@ -148,8 +151,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
         iceditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_icedit);
         isfeditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_isfedit);
 
-        PumpInterface pump = MainApp.getConfigBuilder();
-        if (!pump.getPumpDescription().isTempBasalCapable) {
+        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
             layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal_layout).setVisibility(View.GONE);
         }
 
@@ -178,7 +180,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
             @Override
             public void onClick(View view) {
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
+                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
@@ -232,7 +234,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
             }
         });
 
-        timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -268,7 +270,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
                     }
                 }
             }
-        });
+        });*/
 
         diaView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -317,6 +319,26 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
         return layout;
     }
 
+    private void showDeprecatedDialog() {
+        AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+        adb.setTitle("DEPRECATED! Please migrate!");
+        adb.setMessage("CircadianPercentageProfile has been deprecated. " +
+                "It is recommended to migrate to LocalProfile.\n\n" +
+                "Good news: You won't lose any functionality! Percentage and Timeshift have been ported to the ProfileSwitch :) \n\n " +
+                "How to migrate:\n" +
+                "1) Press MIGRATE, the system will automatically fill the LocalProfile for you.\n" +
+                "2) Switch to LocalProfile in the ConfigBuilder\n" +
+                "3) CHECK that all settings are correct in the LocalProfile!!!");
+        adb.setIcon(android.R.drawable.ic_dialog_alert);
+        adb.setPositiveButton("MIGRATE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                CircadianPercentageProfilePlugin.migrateToLP();
+            }
+        });
+        adb.setNegativeButton("Cancel", null);
+        adb.show();
+    }
+
     public void updateGUI() {
         updateProfileInfo();
 
@@ -344,7 +366,7 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
     }
 
     private void customSnackbar(View view, final String Msg, Object snackbarCaller) {
-        if(mSnackBar!= null) mSnackBar.dismiss();
+        if (mSnackBar != null) mSnackBar.dismiss();
 
         this.snackbarCaller = snackbarCaller;
         if (timeshiftViewHint || percentageViewHint) {
@@ -500,13 +522,9 @@ public class CircadianPercentageProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
-                    } else if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
-                        profileswitchButton.setText(MainApp.instance().getText(R.string.activate_profile));
-                        profileswitchButton.setVisibility(View.VISIBLE);
                     } else {
-                        profileswitchButton.setText(MainApp.instance().getText(R.string.send_to_pump));
                         profileswitchButton.setVisibility(View.VISIBLE);
                     }
                 }

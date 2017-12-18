@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpDanaR;
 
 import android.bluetooth.BluetoothSocket;
+import android.os.SystemClock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
@@ -28,9 +25,6 @@ public class SerialIOThread extends Thread {
     private OutputStream mOutputStream = null;
     private BluetoothSocket mRfCommSocket;
 
-    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledDisconnection = null;
-
     private boolean mKeepRunning = true;
     private byte[] mReadBuff = new byte[0];
 
@@ -44,7 +38,7 @@ public class SerialIOThread extends Thread {
             mOutputStream = mRfCommSocket.getOutputStream();
             mInputStream = mRfCommSocket.getInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         this.start();
     }
@@ -63,7 +57,8 @@ public class SerialIOThread extends Thread {
                 // process all messages we already got
                 while (mReadBuff.length > 3) { // 3rd byte is packet size. continue only if we an determine packet size
                     byte[] extractedBuff = cutMessageFromBuffer();
-                    if (extractedBuff == null) break; // message is not complete in buffer (wrong packet calls disconnection)
+                    if (extractedBuff == null)
+                        break; // message is not complete in buffer (wrong packet calls disconnection)
 
                     int command = (extractedBuff[5] & 0xFF) | ((extractedBuff[4] << 8) & 0xFF00);
 
@@ -84,7 +79,6 @@ public class SerialIOThread extends Thread {
                     synchronized (message) {
                         message.notify();
                     }
-                    scheduleDisconnection();
                 }
             }
         } catch (Exception e) {
@@ -158,7 +152,6 @@ public class SerialIOThread extends Thread {
             mOutputStream.write(messageBytes);
         } catch (Exception e) {
             log.error("sendMessage write exception: ", e);
-            e.printStackTrace();
         }
 
         synchronized (message) {
@@ -166,14 +159,10 @@ public class SerialIOThread extends Thread {
                 message.wait(5000);
             } catch (InterruptedException e) {
                 log.error("sendMessage InterruptedException", e);
-                e.printStackTrace();
             }
         }
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-        }
+        SystemClock.sleep(200);
         if (!message.received) {
             log.warn("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
@@ -181,23 +170,6 @@ public class SerialIOThread extends Thread {
                 log.debug("Old firmware detected");
             }
         }
-        scheduleDisconnection();
-    }
-
-    public void scheduleDisconnection() {
-        class DisconnectRunnable implements Runnable {
-            public void run() {
-                disconnect("scheduleDisconnection");
-                scheduledDisconnection = null;
-            }
-        }
-        // prepare task for execution in 5 sec
-        // cancel waiting task to prevent sending multiple disconnections
-        if (scheduledDisconnection != null)
-            scheduledDisconnection.cancel(false);
-        Runnable task = new DisconnectRunnable();
-        final int sec = 5;
-        scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
     }
 
     public void disconnect(String reason) {

@@ -4,24 +4,32 @@
         android:key="wearplugin"
         android:title="@string/wear_settings">
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="wear_detailediob"
-            android:title="@string/wear_detailedIOB_title"
-            android:summary="@string/wear_detailedIOB_summary"/>
+        <PreferenceScreen
+            android:title="@string/wear_settings">
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="wear_showbgi"
-            android:title="@string/wear_showbgi_title"
-            android:summary="@string/wear_showbgi_summary"/>
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="wearcontrol"
+                android:summary="@string/wearcontrol_summary"
+                android:title="@string/wearcontrol_title" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="wear_overview_notification"
-            android:title="@string/wear_overviewnotifications"
-            android:summary="@string/wear_overviewnotifications_summary"/>
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="wear_detailediob"
+                android:summary="@string/wear_detailedIOB_summary"
+                android:title="@string/wear_detailedIOB_title" />
 
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="wear_detailed_delta"
+                android:summary="@string/wear_detailed_delta_summary"
+                android:title="@string/wear_detailed_delta_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="wear_showbgi"
+                android:summary="@string/wear_showbgi_summary"
+                android:title="@string/wear_showbgi_title" />
+        </PreferenceScreen>
     </PreferenceCategory>
-
 </PreferenceScreen>

@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -68,7 +69,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public boolean layoutSet = false;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
-    public double datetime;
+    public long datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
@@ -280,7 +281,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 wakeLock.acquire(50);
                 sgvLevel = dataMap.getLong("sgvLevel");
                 batteryLevel = dataMap.getInt("batteryLevel");
-                datetime = dataMap.getDouble("timestamp");
+                datetime = dataMap.getLong("timestamp");
                 rawString = dataMap.getString("rawString");
                 sgvString = dataMap.getString("sgvString");
                 batteryString = dataMap.getString("battery");
@@ -473,11 +474,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 setIsAnimated(true);
                 for (int i = 0; i <= 8 * 1000 / 40; i++) {
                     updateRainbow();
-                    try {
-                        Thread.sleep(40);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    SystemClock.sleep(40);
                 }
                 mSgv.getPaint().setShader(null);
                 setIsAnimated(false);
@@ -607,14 +604,14 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 double sgv = entry.getDouble("sgvDouble");
                 double high = entry.getDouble("high");
                 double low = entry.getDouble("low");
-                double timestamp = entry.getDouble("timestamp");
+                long timestamp = entry.getLong("timestamp");
                 bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
             }
         } else {
             double sgv = dataMap.getDouble("sgvDouble");
             double high = dataMap.getDouble("high");
             double low = dataMap.getDouble("low");
-            double timestamp = dataMap.getDouble("timestamp");
+            long timestamp = dataMap.getLong("timestamp");
 
             final int size = bgDataList.size();
             if (size > 0) {

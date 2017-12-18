@@ -3,8 +3,10 @@ package info.nightscout.androidaps.data;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
@@ -42,6 +44,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private static final String OPEN_SETTINGS = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
+    private static final String NEW_PREFERENCES_PATH = "/sendpreferencestowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
@@ -281,6 +284,15 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+                } else if (path.equals(NEW_PREFERENCES_PATH)){
+                    dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                    if(dataMap.containsKey("wearcontrol")) {
+                        boolean wearcontrol = dataMap.getBoolean("wearcontrol", false);
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("wearcontrol", wearcontrol);
+                        editor.commit();
+                    }
                 } else {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
@@ -400,11 +412,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         @Override
         public void run() {
-            try {
-                Thread.sleep(seconds * 1000);
-            } catch (InterruptedException e) {
-                //e.printStackTrace();
-            }
+            SystemClock.sleep(seconds * 1000);
             synchronized (this) {
                 if(valid) {
                     NotificationManagerCompat notificationManager =

@@ -16,7 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
 /**
@@ -25,11 +25,20 @@ import info.nightscout.utils.SP;
 public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
 
+    private static ObjectivesPlugin objectivesPlugin;
+
+    public static ObjectivesPlugin getPlugin() {
+        if (objectivesPlugin == null) {
+            objectivesPlugin = new ObjectivesPlugin();
+        }
+        return objectivesPlugin;
+    }
+
     public static List<Objective> objectives;
 
-    boolean fragmentVisible = true;
+    private boolean fragmentVisible = true;
 
-    public ObjectivesPlugin() {
+    private ObjectivesPlugin() {
         initializeData();
         loadProgress();
         MainApp.bus().register(this);
@@ -53,7 +62,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.objectives_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -63,12 +72,12 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == CONSTRAINTS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
+        return type == CONSTRAINTS && ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == CONSTRAINTS && fragmentVisible && !BuildConfig.NSCLIENTOLNY;
+        return type == CONSTRAINTS && fragmentVisible && !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -95,7 +104,12 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         if (type == CONSTRAINTS) this.fragmentVisible = fragmentVisible;
     }
 
-    public class Objective {
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    class Objective {
         Integer num;
         String objective;
         String gate;
@@ -118,13 +132,13 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     public static boolean pumpStatusIsAvailableInNS = false;
     // Objective 1
     public static Integer manualEnacts = 0;
-    public static final Integer manualEnactsNeeded = 20;
+    private static final Integer manualEnactsNeeded = 20;
 
-    public class RequirementResult {
+    class RequirementResult {
         boolean done = false;
         String comment = "";
 
-        public RequirementResult(boolean done, String comment) {
+        RequirementResult(boolean done, String comment) {
             this.done = done;
             this.comment = comment;
         }
@@ -135,7 +149,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         else return "---";
     }
 
-    public RequirementResult requirementsMet(Integer objNum) {
+    RequirementResult requirementsMet(Integer objNum) {
         switch (objNum) {
             case 0:
                 return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
@@ -152,7 +166,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
 
-    public void initializeData() {
+    void initializeData() {
         bgIsAvailableInNS = false;
         pumpStatusIsAvailableInNS = false;
         manualEnacts = 0;
@@ -220,14 +234,14 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         }
     }
 
-    void loadProgress() {
+    private void loadProgress() {
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
             try {
                 o.started = new Date(SP.getLong("Objectives" + num + "started", 0L));
                 o.accomplished = new Date(SP.getLong("Objectives" + num + "accomplished", 0L));
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         bgIsAvailableInNS = SP.getBoolean("Objectives" + "bgIsAvailableInNS", false);
@@ -235,7 +249,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         try {
             manualEnacts = SP.getInt("Objectives" + "manualEnacts", 0);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");

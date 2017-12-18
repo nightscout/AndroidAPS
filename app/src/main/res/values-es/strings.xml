@@ -46,11 +46,11 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_basebasalrate_label">Dosis Basal Base</string>
-    <string name="virtualpump_tempbasal_label">Basal Temporal</string>
+    <string name="pump_basebasalrate_label">Dosis Basal Base</string>
+    <string name="pump_tempbasal_label">Basal Temporal</string>
     <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
-    <string name="virtualpump_battery_label">Batería</string>
-    <string name="virtualpump_reservoir_label">Depósito:</string>
+    <string name="pump_battery_label">Batería</string>
+    <string name="pump_reservoir_label">Depósito:</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Error de SQL</string>
     <string name="openapsma_lastrun_label">Última ejecución</string>
@@ -201,7 +201,6 @@
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
-    <string name="syncprofiletopump_title">Sincronizar perfil a bomba</string>
     <string name="danar_pump_settings">Ajustes de la bomba DanaR</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
@@ -211,10 +210,10 @@
     <string name="nobtadapter">No se encuentra adaptador Bluetooth</string>
     <string name="devicenotfound">El dispositivo seleccionado no se encuentra</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
-    <string name="virtualpump_lastconnection_label">Última conexión</string>
+    <string name="pump_lastconnection_label">Última conexión</string>
     <string name="danar_iob_label">Bomba IOB</string>
     <string name="danar_dailyunits">Unidades diarias</string>
-    <string name="danar_lastbolus">Último bolo:</string>
+    <string name="pump_lastbolus_label">Último bolo:</string>
     <string name="hoursago">h antes</string>
     <string name="danar_invalidinput">Datos invalidos</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
@@ -276,7 +275,7 @@
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">Parar pulsado</string>
     <string name="waitingforpumpclicktorefresh">Esperando bomba. Click to refresh.</string>
-    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Va a entregar% .2fU</string>
+    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Va a entregar %.2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitoreo, y el análisis de los basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_1_objective">Empezar con bucle abierto</string>
@@ -377,7 +376,6 @@
     <string name="pumpshutdown">Apagando Bomba</string>
     <string name="removerecord">Eliminar registro:</string>
     <string name="resend_all_data">Enviar todos los datos</string>
-    <string name="send_to_pump">ENVIAR A BOMBA</string>
     <string name="short_avgdelta">Media corta delta</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_lastbg">Último BG:</string>

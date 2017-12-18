@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -41,6 +42,9 @@
         <activity
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
@@ -50,6 +54,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".plugins.PumpDanaRS.activities.BLEScanActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"
@@ -64,6 +75,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
                 <!-- Receiver from glimp -->
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
+                <!-- Receiver from DexcomG5 -->
+                <action android:name="com.dexcom.cgm.DATA" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->
@@ -114,6 +127,10 @@
             android:enabled="true"
             android:exported="false" />
         <service
+            android:name=".plugins.PumpDanaRS.services.DanaRSService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
             android:name=".plugins.Wear.wearintegration.WatchUpdaterService"
             android:exported="true">
             <intent-filter>
@@ -128,6 +145,9 @@
             android:name=".Services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".plugins.Overview.notifications.DismissNotificationService"
+            android:exported="false"></service>
 
         <meta-data
             android:name="io.fabric.ApiKey"

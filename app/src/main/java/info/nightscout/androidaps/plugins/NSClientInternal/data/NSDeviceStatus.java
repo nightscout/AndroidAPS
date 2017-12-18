@@ -5,6 +5,8 @@ import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,6 +72,7 @@ import info.nightscout.utils.SP;
 }
  */
 public class NSDeviceStatus {
+    private static Logger log = LoggerFactory.getLogger(NSDeviceStatus.class);
 
     private static NSDeviceStatus instance = null;
 
@@ -102,7 +105,7 @@ public class NSDeviceStatus {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return "";
     }
@@ -237,7 +240,7 @@ public class NSDeviceStatus {
                 deviceStatusPumpData.extended = Html.fromHtml(exteneded.toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -251,7 +254,7 @@ public class NSDeviceStatus {
         long clockEnacted = 0L;
 
         JSONObject suggested = null;
-        JSONObject enacted = null;
+        public JSONObject enacted = null;
     }
 
     public void updateOpenApsData(JSONObject object) {
@@ -278,7 +281,7 @@ public class NSDeviceStatus {
                 deviceStatusOpenAPSData.clockEnacted = clock;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -305,6 +308,15 @@ public class NSDeviceStatus {
         return Html.fromHtml(string.toString());
     }
 
+    public static long getOpenApsTimestamp() {
+
+        if (deviceStatusOpenAPSData.clockSuggested != 0) {
+            return deviceStatusOpenAPSData.clockSuggested;
+        } else {
+            return -1;
+        }
+    }
+
     public Spanned getExtendedOpenApsStatus() {
         StringBuilder string = new StringBuilder();
 
@@ -315,7 +327,7 @@ public class NSDeviceStatus {
                 string.append("<b>").append(DateUtil.minAgo(deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested.getString("reason")).append("<br>");
             return Html.fromHtml(string.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return Html.fromHtml("");
     }
@@ -333,7 +345,9 @@ public class NSDeviceStatus {
         try {
 
             long clock = 0L;
-            if (object.has("created_at"))
+            if (object.has("mills"))
+                clock = object.getLong("mills");
+            else if (object.has("created_at"))
                 clock = DateUtil.fromISODateString(object.getString("created_at")).getTime();
             String device = getDevice();
             Integer battery = null;
@@ -353,7 +367,7 @@ public class NSDeviceStatus {
                 uploaders.put(device, uploader);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 

@@ -76,9 +76,9 @@ public class ImportExportPrefs {
                             ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.exported));
                         } catch (FileNotFoundException e) {
                             ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         }
                     }
                 })
@@ -127,9 +127,9 @@ public class ImportExportPrefs {
                             });
                         } catch (FileNotFoundException e) {
                             ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         }
                     }
                 })

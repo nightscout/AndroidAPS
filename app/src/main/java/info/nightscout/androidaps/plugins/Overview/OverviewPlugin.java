@@ -4,6 +4,8 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -11,12 +13,23 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class OverviewPlugin implements PluginBase {
+    private static Logger log = LoggerFactory.getLogger(OverviewPlugin.class);
+
+    private static OverviewPlugin overviewPlugin = new OverviewPlugin();
+
+    public static OverviewPlugin getPlugin() {
+
+        if (overviewPlugin == null)
+            overviewPlugin = new OverviewPlugin();
+        return overviewPlugin;
+    }
 
     public static double bgTargetLow = 80d;
     public static double bgTargetHigh = 180d;
@@ -30,7 +43,7 @@ public class OverviewPlugin implements PluginBase {
         try {
             quickWizard.setData(new JSONArray(storedData));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         MainApp.bus().register(this);
     }
@@ -48,7 +61,7 @@ public class OverviewPlugin implements PluginBase {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.overview_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -89,6 +102,11 @@ public class OverviewPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         // Always visible
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     @Override

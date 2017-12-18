@@ -7,7 +7,7 @@ import info.nightscout.androidaps.R;
  * Created by mike on 19.02.2017.
  */
 
-public class EventPumpStatusChanged {
+public class EventPumpStatusChanged extends Event {
     public static final int CONNECTING = 0;
     public static final int CONNECTED = 1;
     public static final int PERFORMING = 2;
@@ -18,14 +18,24 @@ public class EventPumpStatusChanged {
     public int sSecondsElapsed = 0;
     public String sPerfomingAction = "";
 
+    public static String error = "";
+
     public EventPumpStatusChanged(int status) {
         sStatus = status;
         sSecondsElapsed = 0;
+        error = "";
     }
 
     public EventPumpStatusChanged(int status, int secondsElapsed) {
         sStatus = status;
         sSecondsElapsed = secondsElapsed;
+        error = "";
+    }
+
+    public EventPumpStatusChanged(int status, String error) {
+        sStatus = status;
+        sSecondsElapsed = 0;
+        this.error = error;
     }
 
     public EventPumpStatusChanged(String action) {

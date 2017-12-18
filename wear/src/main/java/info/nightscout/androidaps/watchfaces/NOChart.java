@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -58,7 +59,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
     public int ageLevel = 1;
     public boolean lowResMode = false;
     public boolean layoutSet = false;
-    public double datetime;
+    public long datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
@@ -251,7 +252,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
                 wakeLock.acquire(50);
                 sgvLevel = dataMap.getLong("sgvLevel");
                 batteryLevel = dataMap.getInt("batteryLevel");
-                datetime = dataMap.getDouble("timestamp");
+                datetime = dataMap.getLong("timestamp");
                 sgvString = dataMap.getString("sgvString");
                 mSgv.setText(dataMap.getString("sgvString"));
 
@@ -427,11 +428,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
                 setIsAnimated(true);
                 for (int i = 0; i <= 8 * 1000 / 40; i++) {
                     updateRainbow();
-                    try {
-                        Thread.sleep(40);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    SystemClock.sleep(40);
                 }
                 mSgv.getPaint().setShader(null);
                 setIsAnimated(false);

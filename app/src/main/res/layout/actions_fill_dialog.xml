@@ -6,51 +6,37 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+     <LinearLayout
+        android:id="@+id/careportal_newnstreatment_insulin_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="10dp"
-        android:text="@string/treatments_newtreatment_insulinamount_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/treatments_newtreatment_insulinamount_minus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"
-            android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
-            android:tint="#ffffff" />
-
-        <EditText
-            android:id="@+id/treatments_newtreatment_insulinamount"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:inputType="numberDecimal"
-            android:minWidth="200dp"
+            android:width="120dp"
             android:padding="10dp"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:gravity="center_horizontal" />
+            android:text="@string/treatments_newtreatment_insulinamount_label"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/treatments_newtreatment_insulinamount_plus"
+        <info.nightscout.utils.NumberPicker
+            android:id="@+id/treatments_newtreatment_insulinamount"
+            android:layout_width="130dp"
+            android:layout_height="40dp" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"
-            android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
-            android:tint="#ffffff" />
+            android:layout_gravity="center_vertical"
+            android:gravity="left"
+            android:minWidth="45dp"
+            android:paddingLeft="5dp"
+            android:text="U"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

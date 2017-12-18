@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
@@ -126,10 +127,15 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
         if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(IobCobCalculatorPlugin.class.getSimpleName());
+            sHandlerThread = new HandlerThread(IobCobCalculatorPlugin.class.getSimpleName(), Process.THREAD_PRIORITY_LOWEST);
             sHandlerThread.start();
             sHandler = new Handler(sHandlerThread.getLooper());
         }
@@ -227,7 +233,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     private BgReading findOlder(long time) {
         BgReading lastFound = bgReadings.get(bgReadings.size() - 1);
         if (lastFound.date > time) return null;
-        for (int i = bgReadings.size() - 2; i >=0 ; --i) {
+        for (int i = bgReadings.size() - 2; i >= 0; --i) {
             if (bgReadings.get(i).date < time) continue;
             lastFound = bgReadings.get(i);
             if (bgReadings.get(i).date > time) break;
@@ -246,7 +252,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             long currentTime = bgReadings.get(0).date + 5 * 60 * 1000 - bgReadings.get(0).date % (5 * 60 * 1000) - 5 * 60 * 1000L;
             //log.debug("First reading: " + new Date(currentTime).toLocaleString());
 
-             while (true) {
+            while (true) {
                 // test if current value is older than current time
                 BgReading newer = findNewer(currentTime);
                 BgReading older = findOlder(currentTime);
@@ -365,6 +371,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     previous = existing;
                     continue;
                 }
+
+                if (profile.getIsf(bgTime) == null)
+                    return; // profile not set yet
 
                 double sens = Profile.toMgdl(profile.getIsf(bgTime), profile.getUnits());
 
@@ -669,8 +678,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
                     if (Config.logAutosensData)
-                    if (Config.logAutosensData)
-                        log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
+                        if (Config.logAutosensData)
+                            log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
                     iobTable.removeAt(index);
                 } else {
                     break;

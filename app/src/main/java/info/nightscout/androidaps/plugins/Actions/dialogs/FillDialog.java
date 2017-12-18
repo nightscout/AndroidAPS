@@ -2,11 +2,8 @@ package info.nightscout.androidaps.plugins.Actions.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -16,10 +13,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
@@ -27,33 +26,27 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class FillDialog extends DialogFragment implements OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(FillDialog.class);
 
     Button deliverButton;
-    TextView insulin;
 
     double amount1 = 0d;
     double amount2 = 0d;
     double amount3 = 0d;
 
-    PlusMinusEditText editInsulin;
-
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
+    NumberPicker editInsulin;
 
     public FillDialog() {
-        mHandlerThread = new HandlerThread(FillDialog.class.getSimpleName());
-        mHandlerThread.start();
-        this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -67,10 +60,10 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        insulin = (TextView) view.findViewById(R.id.treatments_newtreatment_insulinamount);
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
-        double bolusstep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
-        editInsulin = new PlusMinusEditText(view, R.id.treatments_newtreatment_insulinamount, R.id.treatments_newtreatment_insulinamount_plus, R.id.treatments_newtreatment_insulinamount_minus, 0d, 0d, maxInsulin, bolusstep, new DecimalFormat("0.00"), false);
+        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
+        editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
+        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, new DecimalFormat("0.00"), false);
 
         //setup preset buttons
         Button button1 = (Button) view.findViewById(R.id.fill_preset_button1);
@@ -82,21 +75,21 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         amount2 = SP.getDouble("fill_button2", 0d);
         amount3 = SP.getDouble("fill_button3", 0d);
 
-        if(amount1 >0) {
+        if (amount1 > 0) {
             button1.setVisibility(View.VISIBLE);
             button1.setText(DecimalFormatter.to2Decimal(amount1) + "U");
             button1.setOnClickListener(this);
         } else {
             button1.setVisibility(View.GONE);
         }
-        if(amount2 >0) {
+        if (amount2 > 0) {
             button2.setVisibility(View.VISIBLE);
             button2.setText(DecimalFormatter.to2Decimal(amount2) + "U");
             button2.setOnClickListener(this);
         } else {
             button2.setVisibility(View.GONE);
         }
-        if(amount3 >0) {
+        if (amount3 > 0) {
             button3.setVisibility(View.VISIBLE);
             button3.setText(DecimalFormatter.to2Decimal(amount3) + "U");
             button3.setOnClickListener(this);
@@ -104,7 +97,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             button3.setVisibility(View.GONE);
         }
 
-        if (button1.getVisibility() == View.GONE && button2.getVisibility() == View.GONE && button3.getVisibility() == View.GONE ) {
+        if (button1.getVisibility() == View.GONE && button2.getVisibility() == View.GONE && button3.getVisibility() == View.GONE) {
             divider.setVisibility(View.GONE);
         }
         return view;
@@ -121,7 +114,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.treatments_newtreatment_deliverbutton:
-                Double insulin = SafeParse.stringToDouble(this.insulin.getText().toString());
+                Double insulin = SafeParse.stringToDouble(editInsulin.getText().toString());
                 confirmAndDeliver(insulin);
                 break;
             case R.id.fill_preset_button1:
@@ -157,22 +150,21 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setPositiveButton(getString(R.string.primefill), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     if (finalInsulinAfterConstraints > 0) {
-                        final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                        mHandler.post(new Runnable() {
+                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                        detailedBolusInfo.context = context;
+                        detailedBolusInfo.source = Source.USER;
+                        detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
+                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                             @Override
                             public void run() {
-                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                detailedBolusInfo.context = context;
-                                detailedBolusInfo.source = Source.USER;
-                                detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
-                                PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                 if (!result.success) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                    builder.setMessage(result.comment);
-                                    builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                    builder.show();
+                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                    i.putExtra("soundid", R.raw.boluserror);
+                                    i.putExtra("status", result.comment);
+                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    MainApp.instance().startActivity(i);
                                 }
                             }
                         });
@@ -183,8 +175,8 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setNegativeButton(getString(R.string.cancel), null);
             builder.show();
             dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.error("Unhandled exception", e);
         }
     }
 

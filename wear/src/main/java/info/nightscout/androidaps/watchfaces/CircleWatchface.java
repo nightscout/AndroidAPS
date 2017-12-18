@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -72,7 +73,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
 
     private int batteryLevel = 0;
-    private double datetime = 0;
+    private long datetime = 0;
     private String direction = "";
     private String delta = "";
     private String avgDelta = "";
@@ -432,11 +433,11 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
 
-    private synchronized double getDatetime() {
+    private synchronized long getDatetime() {
         return datetime;
     }
 
-    private synchronized void setDatetime(double datetime) {
+    private synchronized void setDatetime(long datetime) {
         this.datetime = datetime;
     }
 
@@ -504,11 +505,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 setIsAnimated(true);
                 for (int i = 0; i <= 8 * 1000 / 40; i++) {
                     animationStep();
-                    try {
-                        Thread.sleep(40);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    SystemClock.sleep(40);
                 }
                 setIsAnimated(false);
                 prepareDrawTime();
@@ -537,7 +534,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 Log.d("CircleWatchface", "sgv string : " + getSgvString());
                 setDelta(dataMap.getString("delta"));
                 setAvgDelta(dataMap.getString("avgDelta"));
-                setDatetime(dataMap.getDouble("timestamp"));
+                setDatetime(dataMap.getLong("timestamp"));
                 addToWatchSet(dataMap);
 
 
@@ -579,7 +576,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             double sgv = dataMap.getDouble("sgvDouble");
             double high = dataMap.getDouble("high");
             double low = dataMap.getDouble("low");
-            double timestamp = dataMap.getDouble("timestamp");
+            long timestamp = dataMap.getLong("timestamp");
             bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
         } else if (!sharedPrefs.getBoolean("animation", false)) {
             // don't load history at once if animations are set (less resource consumption)
@@ -589,7 +586,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 double sgv = entry.getDouble("sgvDouble");
                 double high = entry.getDouble("high");
                 double low = entry.getDouble("low");
-                double timestamp = entry.getDouble("timestamp");
+                long timestamp = entry.getLong("timestamp");
                 bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
             }
         } else
