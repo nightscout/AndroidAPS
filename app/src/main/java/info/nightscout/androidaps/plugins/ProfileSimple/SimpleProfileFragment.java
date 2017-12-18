@@ -18,14 +18,13 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SafeParse;
 
 public class SimpleProfileFragment extends SubscriberFragment {
@@ -56,8 +55,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
             targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
             profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
 
-            PumpInterface pump = MainApp.getConfigBuilder();
-            if (!pump.getPumpDescription().isTempBasalCapable) {
+            if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
                 layout.findViewById(R.id.simpleprofile_basalrate).setVisibility(View.GONE);
                 layout.findViewById(R.id.simpleprofile_basalrate_label).setVisibility(View.GONE);
             }
@@ -156,7 +154,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);

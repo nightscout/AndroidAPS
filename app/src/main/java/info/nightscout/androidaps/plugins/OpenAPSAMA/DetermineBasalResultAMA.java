@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import com.eclipsesource.v8.V8Object;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

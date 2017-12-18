@@ -37,7 +37,7 @@ def generateGitBuild = { ->
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
@@ -45,12 +45,11 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 1500
-        version "1.54-dev"
+        version "1.56-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
         ndk {
-            abiFilters "armeabi-v7a", "x86", "armeabi", "mips"
             moduleName "BleCommandUtil"
         }
     }
@@ -76,6 +75,7 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "boolean", "G5UPLOADER", "false"
         }
         openloop {
             dimension "standard"
@@ -88,6 +88,7 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "false"
         }
         pumpcontrol {
             dimension "standard"
@@ -100,6 +101,7 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "false"
         }
         nsclient {
             dimension "standard"
@@ -112,6 +114,20 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "false"
+        }
+        g5uploader {
+            dimension "standard"
+            resValue "string", "app_name", "NSClient"
+            versionName version + "-nsclient"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/yellowowl"
+            ]
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "false"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "boolean", "G5UPLOADER", "true"
         }
     }
 }
@@ -150,9 +166,9 @@ dependencies {
     compile('com.github.tony19:logback-android-classic:1.1.1-6') {
         exclude group: 'com.google.android', module: 'android'
     }
+    compile 'org.apache.commons:commons-lang3:3.6'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'com.jjoe64:graphview:4.0.1'
-    compile 'com.eclipsesource.j2v8:j2v8:3.1.6@aar'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
     compile 'com.google.android.gms:play-services-wearable:7.5.0'
     compile 'junit:junit:4.12'
@@ -162,7 +178,7 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     compile(name: 'android-edittext-validator-v1.3.4-mod', ext: 'aar')
-    compile ('com.google.android:flexbox:0.3.0') {
+    compile('com.google.android:flexbox:0.3.0') {
         exclude group: 'com.android.support'
     }
     compile('io.socket:socket.io-client:0.8.3') {

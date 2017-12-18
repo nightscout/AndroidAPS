@@ -32,6 +32,56 @@ public class PumpEnactResult extends Object {
 
     public boolean queued = false;
 
+    public PumpEnactResult success(boolean success) {
+       this.success = success;
+        return this;
+    }
+
+    public PumpEnactResult enacted(boolean enacted) {
+        this.enacted = enacted;
+        return this;
+    }
+
+    public PumpEnactResult comment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public PumpEnactResult duration(Integer duration) {
+        this.duration = duration;
+        return this;
+    }
+
+    public PumpEnactResult absolute(Double absolute) {
+        this.absolute = absolute;
+        return this;
+    }
+
+    public PumpEnactResult isPercent(boolean isPercent) {
+        this.isPercent = isPercent;
+        return this;
+    }
+
+    public PumpEnactResult isTempCancel(boolean isTempCancel) {
+        this.isTempCancel = isTempCancel;
+        return this;
+    }
+
+    public PumpEnactResult bolusDelivered(Double bolusDelivered) {
+        this.bolusDelivered = bolusDelivered;
+        return this;
+    }
+
+    public PumpEnactResult carbsDelivered(Double carbsDelivered) {
+        this.carbsDelivered = carbsDelivered;
+        return this;
+    }
+
+    public PumpEnactResult queued(boolean queued) {
+        this.queued = queued;
+        return this;
+    }
+
      public String log() {
         return "Success: " + success + " Enacted: " + enacted + " Comment: " + comment + " Duration: " + duration + " Absolute: " + absolute + " Percent: " + percent + " IsPercent: " + isPercent + " Queued: " + queued;
     }

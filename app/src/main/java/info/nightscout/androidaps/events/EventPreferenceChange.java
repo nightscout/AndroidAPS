@@ -5,7 +5,7 @@ import info.nightscout.androidaps.MainApp;
 /**
  * Created by mike on 19.06.2016.
  */
-public class EventPreferenceChange {
+public class EventPreferenceChange extends Event {
     public String changedKey;
     public EventPreferenceChange(String key) {
         changedKey = key;

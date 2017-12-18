@@ -10,8 +10,6 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.SystemClock;
 
 import com.cozmo.danar.util.BleCommandUtil;
@@ -25,7 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -33,7 +30,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
-import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingProgressDialog;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
@@ -62,26 +58,11 @@ public class BLEComm {
         return instance;
     }
 
-    private Object mConfirmConnect = null;
-
     private final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledDisconnection = null;
 
     private DanaRS_Packet processsedMessage = null;
     private ArrayList<byte[]> mSendQueue = new ArrayList<>();
-
-    // Variables for connection progress (elapsed time)
-    private Handler sHandler;
-    private HandlerThread sHandlerThread;
-    private long connectionStartTime = 0;
-    private final Runnable updateProgress = new Runnable() {
-        @Override
-        public void run() {
-            long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
-            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
-            sHandler.postDelayed(updateProgress, 1000);
-        }
-    };
 
     private BluetoothManager mBluetoothManager = null;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -101,12 +82,6 @@ public class BLEComm {
     BLEComm(DanaRSService service) {
         this.service = service;
         initialize();
-
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(PairingProgressDialog.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
     }
 
     private boolean initialize() {
@@ -138,7 +113,6 @@ public class BLEComm {
     }
 
     public boolean connect(String from, String address, Object confirmConnect) {
-        mConfirmConnect = confirmConnect;
         BluetoothManager tBluetoothManager = ((BluetoothManager) MainApp.instance().getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE));
         if (tBluetoothManager == null) {
             return false;
@@ -160,9 +134,6 @@ public class BLEComm {
             return false;
         }
 
-        connectionStartTime = System.currentTimeMillis();
-
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING));
         isConnecting = true;
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -171,10 +142,9 @@ public class BLEComm {
             return false;
         }
 
-        sHandler.post(updateProgress);
+        log.debug("Trying to create a new connection.");
         mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
-        log.debug("Trying to create a new connection.");
         mBluetoothDevice = device;
         mBluetoothDeviceAddress = address;
         mBluetoothDeviceName = device.getName();
@@ -183,7 +153,6 @@ public class BLEComm {
 
     public void stopConnecting() {
         isConnecting = false;
-        sHandler.removeCallbacks(updateProgress); // just to be sure
     }
 
     public void disconnect(String from) {
@@ -234,7 +203,7 @@ public class BLEComm {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 close();
                 isConnected = false;
-                sHandler.removeCallbacks(updateProgress); // just to be sure
+                isConnecting = false;
                 MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
                 log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
             }
@@ -242,14 +211,9 @@ public class BLEComm {
 
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             log.debug("onServicesDiscovered");
-
-            isConnecting = false;
-
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic();
             }
-            // stop sending connection progress
-            sHandler.removeCallbacks(updateProgress);
             SendPumpCheck();
             // 1st message sent to pump after connect
         }
@@ -516,18 +480,11 @@ public class BLEComm {
                                     pass = pass ^ 3463;
                                     DanaRPump.getInstance().rs_password = Integer.toHexString(pass);
                                     log.debug("Pump user password: " + Integer.toHexString(pass));
-                                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
 
+                                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
                                     isConnected = true;
                                     isConnecting = false;
-                                    service.getPumpStatus();
-                                    scheduleDisconnection();
-                                    if (mConfirmConnect != null) {
-                                        synchronized (mConfirmConnect) {
-                                            mConfirmConnect.notify();
-                                            mConfirmConnect = null;
-                                        }
-                                    }
+                                    log.debug("RS connected and status read");
                                     break;
                             }
                             break;
@@ -557,7 +514,6 @@ public class BLEComm {
                             } else {
                                 log.error("Unknown message received " + DanaRS_Packet.toHexString(inputBuffer));
                             }
-                            scheduleDisconnection();
                             break;
                     }
                 } catch (Exception e) {
@@ -652,7 +608,6 @@ public class BLEComm {
         if (!message.isReceived()) {
             log.warn("Reply not received " + message.getFriendlyName());
         }
-        scheduleDisconnection();
     }
 
     private void SendPairingRequest() {
@@ -679,24 +634,6 @@ public class BLEComm {
         byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, null, null);
         log.debug(">>>>> " + "ENCRYPTION__TIME_INFORMATION" + " " + DanaRS_Packet.toHexString(bytes));
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
-    }
-
-    public void scheduleDisconnection() {
-
-        class DisconnectRunnable implements Runnable {
-            public void run() {
-                disconnect("scheduleDisconnection");
-                scheduledDisconnection = null;
-            }
-        }
-        // prepare task for execution in 30 sec
-        // cancel waiting task to prevent sending multiple disconnections
-        if (scheduledDisconnection != null)
-            scheduledDisconnection.cancel(false);
-        Runnable task = new DisconnectRunnable();
-        final int sec = 30;
-        scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
-        log.debug("Disconnection scheduled");
     }
 
 }

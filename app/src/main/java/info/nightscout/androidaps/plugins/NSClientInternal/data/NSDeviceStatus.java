@@ -254,7 +254,7 @@ public class NSDeviceStatus {
         long clockEnacted = 0L;
 
         JSONObject suggested = null;
-        JSONObject enacted = null;
+        public JSONObject enacted = null;
     }
 
     public void updateOpenApsData(JSONObject object) {
@@ -308,6 +308,15 @@ public class NSDeviceStatus {
         return Html.fromHtml(string.toString());
     }
 
+    public static long getOpenApsTimestamp() {
+
+        if (deviceStatusOpenAPSData.clockSuggested != 0) {
+            return deviceStatusOpenAPSData.clockSuggested;
+        } else {
+            return -1;
+        }
+    }
+
     public Spanned getExtendedOpenApsStatus() {
         StringBuilder string = new StringBuilder();
 
@@ -336,7 +345,9 @@ public class NSDeviceStatus {
         try {
 
             long clock = 0L;
-            if (object.has("created_at"))
+            if (object.has("mills"))
+                clock = object.getLong("mills");
+            else if (object.has("created_at"))
                 clock = DateUtil.fromISODateString(object.getString("created_at")).getTime();
             String device = getDevice();
             Integer battery = null;

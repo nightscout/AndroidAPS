@@ -16,7 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
 /**
@@ -62,7 +62,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.objectives_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -72,12 +72,12 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == CONSTRAINTS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
+        return type == CONSTRAINTS && ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == CONSTRAINTS && fragmentVisible && !BuildConfig.NSCLIENTOLNY;
+        return type == CONSTRAINTS && fragmentVisible && !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -102,6 +102,11 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == CONSTRAINTS) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     class Objective {

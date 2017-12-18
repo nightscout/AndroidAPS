@@ -96,7 +96,9 @@ public class BgReading implements DataPointWithLabelInterface {
                 direction.compareTo("NOT COMPUTABLE") == 0 ||
                 direction.compareTo("OUT_OF_RANGE") == 0 ||
                 direction.compareTo("OUT OF RANGE") == 0 ||
-                direction.compareTo("NONE") == 0) {
+                direction.compareTo("NONE") == 0 ||
+                direction.compareTo("NotComputable") == 0
+                ) {
             return true;
         } else {
             return false;

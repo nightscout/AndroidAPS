@@ -3,13 +3,14 @@ package info.nightscout.androidaps.plugins.NSClientInternal.acks;
 import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import io.socket.client.Ack;
 
 /**
  * Created by mike on 02.01.2016.
  */
-public class NSAuthAck implements Ack{
+public class NSAuthAck extends Event implements Ack{
     public boolean read = false;
     public boolean write = false;
     public boolean write_treatment = false;

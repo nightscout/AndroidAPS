@@ -13,6 +13,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -101,6 +102,11 @@ public class OverviewPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         // Always visible
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     @Override

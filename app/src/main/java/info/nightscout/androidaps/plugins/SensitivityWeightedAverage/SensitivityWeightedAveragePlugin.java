@@ -93,6 +93,11 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         if (type == SENSITIVITY) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_absorption_aaps;
+    }
+
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {

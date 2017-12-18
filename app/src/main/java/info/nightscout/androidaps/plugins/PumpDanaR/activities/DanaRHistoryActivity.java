@@ -38,11 +38,13 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
@@ -122,8 +124,8 @@ public class DanaRHistoryActivity extends Activity {
 
         statusView.setVisibility(View.GONE);
 
-        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP);
-        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginBase.PUMP);
+        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP);
+        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginBase.PUMP);
 
         // Types
 
@@ -150,25 +152,19 @@ public class DanaRHistoryActivity extends Activity {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-                if (pump.isBusy()) {
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.pumpbusy));
-                    return;
-                }
-                mHandler.post(new Runnable() {
+                final TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                reloadButton.setVisibility(View.GONE);
-                                syncButton.setVisibility(View.GONE);
-                                statusView.setVisibility(View.VISIBLE);
-                            }
-                        });
-                        clearCardView();
-                        ((DanaRInterface)pump).loadHistory(selected.type);
+                        reloadButton.setVisibility(View.GONE);
+                        syncButton.setVisibility(View.GONE);
+                        statusView.setVisibility(View.VISIBLE);
+                    }
+                });
+                clearCardView();
+                ConfigBuilderPlugin.getCommandQueue().loadHistory(selected.type, new Callback() {
+                    @Override
+                    public void run() {
                         loadDataFromDB(selected.type);
                         runOnUiThread(new Runnable() {
                             @Override

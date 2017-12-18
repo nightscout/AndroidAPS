@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
@@ -41,6 +40,10 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
             log.debug("Model: " + String.format("%02X ", pump.model));
             log.debug("Protocol: " + String.format("%02X ", pump.protocol));
             log.debug("Product Code: " + String.format("%02X ", pump.productCode));
+        }
+
+        if (pump.productCode < 2) {
+            MainApp.bus().post(new EventNewNotification(new Notification(Notification.UNSUPPORTED_FIRMWARE, MainApp.sResources.getString(R.string.unsupportedfirmware), Notification.URGENT)));
         }
     }
 

@@ -72,7 +72,10 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
             name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
         }
         if (isCPP) {
-            name += "(" + percentage + "%," + timeshift + "h)";
+            name += "(" + percentage + "%";
+            if (timeshift != 0)
+                name += "," + timeshift + "h";
+            name += ")";
         }
         return name;
     }

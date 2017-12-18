@@ -27,8 +27,9 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
-    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private static String FORMAT_DATE_ISO_MSEC_UTC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -42,15 +43,31 @@ public class DateUtil {
             throws Exception {
         SimpleDateFormat f = new SimpleDateFormat(FORMAT_DATE_ISO, Locale.getDefault());
         Date date;
+
         f.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             date = f.parse(isoDateString);
+            return date;
         } catch (ParseException e) {
-            f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC, Locale.getDefault());
-            f.setTimeZone(TimeZone.getTimeZone("UTC"));
-            date = f.parse(isoDateString);
         }
-        return date;
+
+        f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC, Locale.getDefault());
+        f.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            date = f.parse(isoDateString);
+            return date;
+        } catch (ParseException e) {
+        }
+
+        f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC_UTC, Locale.getDefault());
+        f.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            date = f.parse(isoDateString);
+            return date;
+        } catch (ParseException e) {
+        }
+
+        throw new ParseException("Unparseable date: " + isoDateString, 0);
     }
 
     /**
@@ -72,6 +89,7 @@ public class DateUtil {
     public static String toISOString(Date date) {
         return toISOString(date, FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
     }
+
     public static String toISOString(long date) {
         return toISOString(new Date(date), FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
     }
@@ -125,6 +143,7 @@ public class DateUtil {
     public static String dateAndTimeString(Date date) {
         return dateString(date) + " " + timeString(date);
     }
+
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
     }
@@ -143,6 +162,22 @@ public class DateUtil {
         String t = DateUtils.formatDateTime(MainApp.instance(), toDate(seconds).getTime(), DateUtils.FORMAT_SHOW_TIME);
         timeStrings.put(seconds, t);
         return t;
+    }
+
+
+    public static String timeFrameString(long timeInMillis) {
+        long remainingTimeMinutes = timeInMillis / (1000 * 60);
+        long remainingTimeHours = remainingTimeMinutes / 60;
+        remainingTimeMinutes = remainingTimeMinutes % 60;
+        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + "h ") : "") + remainingTimeMinutes + "')";
+    }
+
+    public static String sinceString(long timestamp) {
+        return timeFrameString(System.currentTimeMillis() - timestamp);
+    }
+
+    public static String untilString(long timestamp) {
+        return timeFrameString(timestamp - System.currentTimeMillis());
     }
 
 

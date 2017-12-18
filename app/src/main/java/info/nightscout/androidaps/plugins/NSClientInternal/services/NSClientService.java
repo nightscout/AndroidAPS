@@ -58,7 +58,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.DateUtil;
@@ -632,7 +632,14 @@ public class NSClientService extends Service {
                                         if (sgv.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = sgv.getMills();
                                 }
-                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
+                                // Was that sgv more less 15 mins ago ?
+                                boolean lessThan15MinAgo = false;
+                                if((System.currentTimeMillis()-latestDateInReceivedData)/(60 * 1000L) < 15L ) 
+                                    lessThan15MinAgo = true;
+                                if(Notification.isAlarmForStaleData() && lessThan15MinAgo){
+                                    MainApp.bus().post(new EventDismissNotification(Notification.NSALARM));
+                                }                                    
+                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);                                
                             }
                             MainApp.bus().post(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
                         } catch (JSONException e) {

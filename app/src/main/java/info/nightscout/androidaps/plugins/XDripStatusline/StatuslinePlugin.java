@@ -47,7 +47,11 @@ public class StatuslinePlugin implements PluginBase {
 
     private static StatuslinePlugin statuslinePlugin;
 
-    public static StatuslinePlugin getPlugin(Context ctx) {
+    public static StatuslinePlugin getPlugin() {
+        return statuslinePlugin;
+    }
+
+    public static StatuslinePlugin initPlugin(Context ctx) {
 
         if (statuslinePlugin == null) {
             statuslinePlugin = new StatuslinePlugin(ctx);
@@ -109,7 +113,7 @@ public class StatuslinePlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -136,6 +140,11 @@ public class StatuslinePlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         // do nothing, no gui
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_xdripstatus;
     }
 
 

@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.Event;
 
-public class EventOverviewBolusProgress {
+public class EventOverviewBolusProgress extends Event {
     private static Logger log = LoggerFactory.getLogger(EventOverviewBolusProgress.class);
     public String status = "";
     public Treatment t = null;
