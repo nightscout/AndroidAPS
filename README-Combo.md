@@ -9,10 +9,10 @@ Hardware requirements:
 - A Roche Accu-Chek Combo (any firmware, they all work)
 - A Smartpix or Realtyme device together with the 360 Configuration
   Software to configure the pump.
-  Roche sends these out Smartpix devices and the configuration software
+  Roche sends out Smartpix devices and the configuration software
   free of charge to their customers upon request.
 - A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod)
-- To build AndroidAPS with Combo support you need the lastet Android Studio 3 version
+- To build AndroidAPS with Combo support you need the latest Android Studio 3 version
 
 Limitations:
 - Extended bolus and multiwave bolus are not supported.
@@ -24,10 +24,11 @@ Limitations:
   changes have to be performed manually.
 - There's a bug in the pump's firmware that's triggered when "too much" communication happens
   with the pump. Specifically, this issue occurs when going from just issuing commands to the pump
-  to reading the pumps data and history. For that reason, a minimal amount of data is read from
+  to reading the pump's data and history. For that reason, a minimal amount of data is read from
   the pump.
   The bug might still rarely occur and causes the pump to not accept any connection
-  unless a button is physically pressed on the pump.
+  unless a button is physically pressed on the pump (make sure the 'pump unreachable' alert is enabled
+  so you'll get an alarm if the bug occurs.
   Therefore, the pump's reservoir level is not read and the pump status information uploaded to Nightscout
   shows fake numbers of 150 (above low threshold - which can be configured via the configuration
   tool), 8 (below low threshold, triggers NS alarm since < 10) and 0 if the reservoir is empty.
@@ -48,20 +49,20 @@ Setup:
   - Set maximum TBR to 500%
   - Disable end of TBR alert
   - Set TBR duration step-size to 15 min
-  - Set low cartridge alarm to your licking
+  - Set low cartridge alarm to your liking
   - Enable keylock (can also be set on the pump directly, see usage section on reasoning)
-- Get Android Studio 3
-- Get ruffy from https://github.com/jotomo/ruffy (branch `combo-scripter-v2`)
-- Pair the pump, if it doesn't work, switch to the `pairing` branch, pair,
+- Get Android Studio 3 https://developer.android.com/studio/index.html
+- Clone ruffy from https://github.com/jotomo/ruffy (branch `combo-scripter-v2`)
+- Pair the pump, if it doesn't work after multiple attempts, switch to the `pairing` branch, pair,
   then switch back the original branch. If the pump is already paired and
   can be controlled via ruffy, installing the above version is sufficient.
   If AAPS is already installed, switch to the MDI plugin to avoid the Combo
   plugin from interfering with ruffy during the pairing process.
   Note that the pairing processing is somewhat fragile and may need a few attempts;
   quickly acknowledge prompts and when starting over, remove the pump device
-  from the bluetooth settings beforehand
-- Get AndroidAPS from https://github.com/jotomo/AndroidAPS (Branch `combo-scripter-v2`)
-- Before enabling the Combo plugin in AAPS make sure you're profile is set up
+  from the bluetooth settings beforehand.
+- Clone AndroidAPS from https://github.com/jotomo/AndroidAPS (Branch `combo-scripter-v2`)
+- Before enabling the Combo plugin in AAPS make sure your profile is set up
   correctly and your basal profile is up to date as AAPS will sync the basal profile
   to the pump.
 
