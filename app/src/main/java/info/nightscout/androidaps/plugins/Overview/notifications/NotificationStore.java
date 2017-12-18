@@ -69,11 +69,6 @@ public class NotificationStore {
             }
         }
 
-        WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
-        if (wearPlugin != null && wearPlugin.isEnabled()) {
-            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
-        }
-
         Collections.sort(store, new NotificationComparator());
     }
 

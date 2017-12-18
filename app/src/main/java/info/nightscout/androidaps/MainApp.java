@@ -169,7 +169,7 @@ public class MainApp extends Application {
         else
             Answers.getInstance().logCustom(new CustomEvent("AppStart"));
 
-       new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 SystemClock.sleep(5000);
