@@ -764,5 +764,4 @@
     <string name="combo_force_disabled_notification">Onvoorzichtig gebruik: Vertraagde of multi wave bolussen zijn toegediend in de afgelopen 6 uur op het geselecteerde basaal patroon is niet 1. Loop is onderbroken tot de 6 uur nadat deze bolussen of andere basale patronen zijn gedetecteerd. Alleen normale bolussen en basaal patroon 1 zijn mogelijk binnen basaal patroon 1</string>
     <string name="dexcomg5_upload">G5 Upload instellingen</string>
     <string name="combo_tdds">TDDS</string>
-    <string name="openapsama_bolussnooze_dia_divisor_summary">Standaardwaarde: 2 Bolus snooze is geactiveerd nadat je een maaltijdbolus doet, zodat de loop hierop niet reageert met lage tijd. basalen nadat je gegeten hebt. Het voorbeeld hier en is tevens de standaard 2 dus een 3 uur durende DIA betekend dat de bolus snooze geleidelijk zal weg gaan na 1,5 uur (3DIA/2).</string>
 </resources>
