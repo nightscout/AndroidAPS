@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.LocalAlertUtils;
+import info.nightscout.utils.SP;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -58,7 +59,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
             LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
 
-            if (!pump.isThisProfileSet(profile)) {
+            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
             } else if (isStatusOutdated && !pump.isBusy()) {
                 MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
