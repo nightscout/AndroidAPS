@@ -804,6 +804,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private void checkForUnsafeUsage(CommandResult commandResult) {
+        if (commandResult == null) return;
+
         long lastViolation = 0;
         if (commandResult.state.unsafeUsageDetected) {
             lastViolation = System.currentTimeMillis();
