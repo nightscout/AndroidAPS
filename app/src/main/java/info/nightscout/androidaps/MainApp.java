@@ -213,7 +213,7 @@ public class MainApp extends Application {
 
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
-            keepAliveReceiver.cancelAlarm(this);
+            KeepAliveReceiver.cancelAlarm(this);
     }
 
     public static Bus bus() {
