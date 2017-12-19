@@ -124,9 +124,8 @@ public class SetTbrCommand extends BaseCommand {
                 scripter.waitForScreenUpdate();
                 state = scripter.readPumpStateInternal();
             }
-            // if we waited above and a cancellation (fake or hard) was requested,
-            // we already completed the request
-            if (!state.tbrActive && percentage >= 90 && percentage <= 110) {
+            // if we waited above and a cancellation was requested, we already completed the request
+            if (!state.tbrActive && percentage == 100) {
                 result.success = true;
                 return true;
             }

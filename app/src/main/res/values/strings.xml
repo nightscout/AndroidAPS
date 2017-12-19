@@ -787,6 +787,9 @@
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
+    <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
+    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
+    <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>

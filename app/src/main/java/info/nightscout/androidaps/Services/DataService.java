@@ -228,6 +228,9 @@ public class DataService extends IntentService {
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                     NSUpload.uploadBg(bgReading);
                 }
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                    NSUpload.sendToXdrip(bgReading);
+                }
             }
 
         } catch (JSONException e) {
