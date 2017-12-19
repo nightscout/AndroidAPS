@@ -356,7 +356,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (!pump.basalProfile.equals(convertProfileToComboProfile(profile))) {
-                setNewBasalProfile(profile);
+                PumpEnactResult setNewBasalProfileResult = setNewBasalProfile(profile);
+                if (!setNewBasalProfileResult.success) {
+                    return;
+                }
             }
         }
 
