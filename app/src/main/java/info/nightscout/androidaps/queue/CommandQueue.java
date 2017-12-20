@@ -160,28 +160,33 @@ public class CommandQueue {
         detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
 
         // add new command to queue
-        if (detailedBolusInfo.isSMB)
+        if (detailedBolusInfo.isSMB) {
             add(new CommandSMBBolus(detailedBolusInfo, callback));
-        else
+        } else {
             add(new CommandBolus(detailedBolusInfo, callback));
+            // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
+            // not when the Bolus command is starting. The command closes the dialog upon completion).
+            if (detailedBolusInfo.context != null) {
+                BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
+                bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
+                bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
+            } else {
+                Intent i = new Intent();
+                i.putExtra("insulin", detailedBolusInfo.insulin);
+                i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MainApp.instance().startActivity(i);
+            }
+            // Notify Wear about upcoming bolus
+            MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+        }
 
         notifyAboutNewCommand();
 
         // Notify Wear about upcoming bolus
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
-        // Bring up bolus progress dialog
-        if (detailedBolusInfo.context != null) {
-            BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
-            bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
-        } else {
-            Intent i = new Intent();
-            i.putExtra("insulin", detailedBolusInfo.insulin);
-            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApp.instance().startActivity(i);
-        }
+        notifyAboutNewCommand();
 
         return true;
     }
