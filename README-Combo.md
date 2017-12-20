@@ -39,6 +39,8 @@ Limitations:
   pump solely through AAPS.
   Checking history, reservoir level etc on the pump causes no issues but should be avoided
   when the Bluetooth icon is displayed on the display, indicating that AAPS is communicating with the pump.
+- Setting basal rates where U/h exceeds 10 are currently not supported. Values between 0.01 to 0.04 are rounded
+  to 0.05, values above have a granularity of 0.05 and values above 1.00 have a granularity of 0.10.
 
 Setup:
 - Configure pump using 360 config software.

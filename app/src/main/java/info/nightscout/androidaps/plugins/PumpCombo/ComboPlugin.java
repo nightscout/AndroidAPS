@@ -81,6 +81,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
 
         pumpDescription.isSetBasalProfileCapable = true;
+        // this applies to range >= 0.05 U/h && < 1.00 U/h,
+        // above 1.00 U/h step size is 0.05,
+        // above 10 U/h, step size is 0.1,
+        // the smallest non-zero amount is 0.05 U/h, so 0.00 U/h jumps to 0.05 U/h during input
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.0d;
 
