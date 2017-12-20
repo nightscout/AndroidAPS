@@ -223,7 +223,6 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="syncprofiletopump_title">Sync profile to pump</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -796,5 +795,8 @@
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
+    <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
+    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
+    <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
 </resources>
 

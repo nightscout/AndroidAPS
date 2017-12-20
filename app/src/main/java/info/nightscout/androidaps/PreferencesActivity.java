@@ -151,10 +151,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginBase.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginBase.SENSITIVITY);
 
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
-                    addPreferencesFromResource(R.xml.pref_profile);
-                }
-
                 if (Config.DANAR) {
                     addPreferencesFromResourceIfEnabled(DanaRPlugin.getPlugin(), PluginBase.PUMP);
                     addPreferencesFromResourceIfEnabled(DanaRKoreanPlugin.getPlugin(), PluginBase.PUMP);
