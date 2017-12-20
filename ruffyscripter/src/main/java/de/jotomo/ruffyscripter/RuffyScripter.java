@@ -241,7 +241,7 @@ public class RuffyScripter implements RuffyCommands {
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
             log.error("Command argument violations: " + Joiner.on(", ").join(violations));
-            return new CommandResult().success(false).state(readPumpStateInternal());
+            return new CommandResult().success(false).state(new PumpState());
         }
 
         synchronized (RuffyScripter.class) {
@@ -423,7 +423,7 @@ public class RuffyScripter implements RuffyCommands {
     private PumpState recoverFromCommandFailure() {
         Menu menu = this.currentMenu;
         if (menu == null) {
-            return null;
+            return new PumpState();
         }
         MenuType type = menu.getType();
         if (type != MenuType.WARNING_OR_ERROR && type != MenuType.MAIN_MENU) {
