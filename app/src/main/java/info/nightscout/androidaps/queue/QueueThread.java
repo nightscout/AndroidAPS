@@ -28,6 +28,7 @@ public class QueueThread extends Thread {
 
     private CommandQueue queue;
 
+    private long lastCommandTime = 0;
     private boolean connectLogged = false;
 
     private PowerManager.WakeLock mWakeLock;
@@ -44,7 +45,7 @@ public class QueueThread extends Thread {
     public final void run() {
         mWakeLock.acquire();
         MainApp.bus().post(new EventQueueChanged());
-        long connectionStartTime = System.currentTimeMillis();
+        long connectionStartTime = lastCommandTime = System.currentTimeMillis();
 
         try {
             while (true) {
@@ -106,17 +107,24 @@ public class QueueThread extends Thread {
                         queue.performing().execute();
                         queue.resetPerforming();
                         MainApp.bus().post(new EventQueueChanged());
+                        lastCommandTime = System.currentTimeMillis();
                         SystemClock.sleep(100);
                         continue;
                     }
                 }
 
                 if (queue.size() == 0 && queue.performing() == null) {
-                    log.debug("QUEUE: queue empty. disconnect");
-                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
-                    pump.disconnect("Queue empty");
-                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
-                    return;
+                    long secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000;
+                    if (secondsFromLastCommand >= 5) {
+                        log.debug("QUEUE: queue empty. disconnect");
+                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+                        pump.disconnect("Queue empty");
+                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+                        return;
+                    } else {
+                        log.debug("QUEUE: waiting for disconnect");
+                        SystemClock.sleep(1000);
+                    }
                 }
             }
         } finally {
