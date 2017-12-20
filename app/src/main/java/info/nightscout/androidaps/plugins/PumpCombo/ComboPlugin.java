@@ -242,6 +242,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public synchronized PumpEnactResult setNewBasalProfile(Profile profile) {
         if (!isInitialized()) {
+            // note that this should not happen anymore since the queue is present, which
+            // issues a READSTATE when starting to issue commands which initializes the pump
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
@@ -283,9 +285,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public boolean isThisProfileSet(Profile profile) {
         if (!isInitialized()) {
-            // This is called too soon (for the Combo) on startup, so ignore this.
-            // The Combo init (refreshDataFromPump) will read the profile and update the pump's
-            // profile if the pref is set;
+            /* This might be called too soon during boot. Return true to prevent a request
+               to update the profile. KeepAlive is called every Constants.keepalivems
+               and will detect the need for a profile update and apply it.
+            */
             return true;
         }
         return pump.basalProfile.equals(convertProfileToComboProfile(profile));
@@ -353,11 +356,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return;
             }
             pump.basalProfile = readBasalResult.basalProfile;
-
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-            if (!pump.basalProfile.equals(convertProfileToComboProfile(profile))) {
-                setNewBasalProfile(profile);
-            }
         }
 
         if (!pump.initialized) {
@@ -801,6 +799,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private void checkForUnsafeUsage(CommandResult commandResult) {
+        if (commandResult == null) return;
+
         long lastViolation = 0;
         if (commandResult.state.unsafeUsageDetected) {
             lastViolation = System.currentTimeMillis();

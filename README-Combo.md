@@ -39,6 +39,9 @@ Limitations:
   pump solely through AAPS.
   Checking history, reservoir level etc on the pump causes no issues but should be avoided
   when the Bluetooth icon is displayed on the display, indicating that AAPS is communicating with the pump.
+- Currently only basal rates in the range of 0.05 to 10 U/h are supported (this also applies when modifying
+  a profile, e.g. when increasing to 200%, the highest basal rate must not exceed 5 U/h since it will be
+  doubled. Similarly, when reducing to 50%, the lowest basal rate must be at least 0.10 U/h).
 
 Setup:
 - Configure pump using 360 config software.

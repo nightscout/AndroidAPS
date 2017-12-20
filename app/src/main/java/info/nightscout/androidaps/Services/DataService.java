@@ -117,10 +117,8 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                // always handle SGV if NS-Client is the source
-                if (nsClientEnabled) {
-                    handleNewDataFromNSClient(intent);
-                }
+                // always backfill SGV from NS
+                handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
@@ -301,7 +299,7 @@ public class DataService extends IntentService {
                     log.error("Unhandled exception", e);
                 }
                 if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
-                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.URGENT);
+                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.NORMAL);
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else {
                     MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));

@@ -187,10 +187,10 @@ public class RuffyScripter implements RuffyCommands {
             if (!ruffyService.isConnected()) {
                 return false;
             }
-            if (System.currentTimeMillis() - menuLastUpdated >= 500) {
+            if (System.currentTimeMillis() - menuLastUpdated >= 1500) {
                 waitForScreenUpdate();
             }
-            return System.currentTimeMillis() - menuLastUpdated < 500;
+            return System.currentTimeMillis() - menuLastUpdated < 1500;
         } catch (RemoteException e) {
             return false;
         }
@@ -241,7 +241,7 @@ public class RuffyScripter implements RuffyCommands {
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
             log.error("Command argument violations: " + Joiner.on(", ").join(violations));
-            return new CommandResult().success(false).state(readPumpStateInternal());
+            return new CommandResult().success(false).state(new PumpState());
         }
 
         synchronized (RuffyScripter.class) {
@@ -282,7 +282,9 @@ public class RuffyScripter implements RuffyCommands {
                         // on connection loss try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
-                        log.debug("Connection unusable, aborting command and attempting reconnect ...");
+                        log.debug("Connection unusable (ruffy connection: " + ruffyService.isConnected() + ", "
+                                + "time since last menu update: " + (System.currentTimeMillis() - menuLastUpdated) + " ms, "
+                                + "aborting command and attempting reconnect ...");
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
 
@@ -324,12 +326,12 @@ public class RuffyScripter implements RuffyCommands {
                 return result;
             } catch (CommandException e) {
                 log.error("CommandException while executing command", e);
-                recoverFromCommandFailure();
-                return activeCmd.getResult().success(false).state(readPumpStateInternal());
+                PumpState pumpState = recoverFromCommandFailure();
+                return activeCmd.getResult().success(false).state(pumpState);
             } catch (Exception e) {
                 log.error("Unexpected exception communication with ruffy", e);
-                recoverFromCommandFailure();
-                return activeCmd.getResult().success(false).state(readPumpStateInternal());
+                PumpState pumpState = recoverFromCommandFailure();
+                return activeCmd.getResult().success(false).state(pumpState);
             } finally {
                 Menu menu = this.currentMenu;
                 if (activeCmd.getResult().success && menu != null && menu.getType() != MenuType.MAIN_MENU) {
@@ -416,12 +418,12 @@ public class RuffyScripter implements RuffyCommands {
 
     /**
      * Returns to the main menu (if possible) after a command failure, so that subsequent commands
-     * reusing the connection won't fail.
+     * reusing the connection won't fail and returns the current PumpState (empty if unreadable).
      */
-    private void recoverFromCommandFailure() {
+    private PumpState recoverFromCommandFailure() {
         Menu menu = this.currentMenu;
         if (menu == null) {
-            return;
+            return new PumpState();
         }
         MenuType type = menu.getType();
         if (type != MenuType.WARNING_OR_ERROR && type != MenuType.MAIN_MENU) {
@@ -431,6 +433,12 @@ public class RuffyScripter implements RuffyCommands {
             } catch (Exception e) {
                 log.warn("Error returning to main menu, when trying to recover from command failure", e);
             }
+        }
+        try {
+            return readPumpStateInternal();
+        } catch (Exception e) {
+            log.debug("Reading pump state during recovery failed", e);
+            return new PumpState();
         }
     }
 
@@ -480,6 +488,7 @@ public class RuffyScripter implements RuffyCommands {
         state.timestamp = System.currentTimeMillis();
         Menu menu = currentMenu;
         if (menu == null) {
+            log.debug("Returning empty PumpState, menu is unavailable");
             return state;
         }
 
