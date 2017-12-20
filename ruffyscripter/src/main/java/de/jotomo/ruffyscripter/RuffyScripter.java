@@ -283,7 +283,7 @@ public class RuffyScripter implements RuffyCommands {
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
                         log.debug("Connection unusable (ruffy connection: " + ruffyService.isConnected() + ", "
-                                + "time since last menu update: " + (System.currentTimeMillis() - menuLastUpdated) + " ms), "
+                                + "time since last menu update: " + (System.currentTimeMillis() - menuLastUpdated) + " ms, "
                                 + "aborting command and attempting reconnect ...");
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;

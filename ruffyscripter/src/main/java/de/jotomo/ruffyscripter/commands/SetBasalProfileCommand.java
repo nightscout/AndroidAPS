@@ -30,7 +30,6 @@ public class SetBasalProfileCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_1_MENU);
         scripter.pressCheckKey();
 
-        Double requestedTotal = 0d;
         // summary screen is shown; press menu to page through hours, wraps around to summary;
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_TOTAL);
         for (int i = 0; i < 24; i++) {
@@ -44,11 +43,6 @@ public class SetBasalProfileCommand extends BaseCommand {
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
 
             double requestedRate = basalProfile.hourlyRates[i];
-            if (requestedRate > 0 && requestedRate < 0.05) {
-                log.debug("rounding requested rate of " + requestedRate + " to supported value 0.05");
-                requestedRate = 0.05;
-            }
-            requestedTotal += requestedRate;
             long change = inputBasalRate(requestedRate);
             if (change != 0) {
                 verifyDisplayedRate(requestedRate, change);
@@ -63,6 +57,10 @@ public class SetBasalProfileCommand extends BaseCommand {
 
         // check total basal total on pump matches requested total
         Double pumpTotal = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BASAL_TOTAL);
+        Double requestedTotal = 0d;
+        for (int i = 0; i < 24; i++) {
+            requestedTotal += basalProfile.hourlyRates[i];
+        }
         if (Math.abs(pumpTotal - requestedTotal) > 0.001) {
             throw new CommandException("Basal total of " + pumpTotal + " differs from requested total of " + requestedTotal);
         }
@@ -77,17 +75,11 @@ public class SetBasalProfileCommand extends BaseCommand {
     private long inputBasalRate(double requestedRate) {
         double currentRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
-
         // the pump changes steps size from 0.01 to 0.05 when crossing 1.00 U
         long steps = stepsToOne(currentRate) - stepsToOne(requestedRate);
         if (steps == 0) {
             return 0;
         }
-
-        // edge case: 0.00 to 0.05 (or back) is one step, not 5.
-        if (currentRate == 0 && requestedRate > 0) steps -= 4;
-        else if (currentRate > 0 && requestedRate == 0) steps += 4;
-
         log.debug("Pressing " + (steps > 0 ? "up" : "down") + " " + Math.abs(steps) + " times");
         for (int i = 0; i < Math.abs(steps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.BASAL_SET);
