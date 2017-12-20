@@ -117,10 +117,8 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                // always handle SGV if NS-Client is the source
-                if (nsClientEnabled) {
-                    handleNewDataFromNSClient(intent);
-                }
+                // always backfill SGV from NS
+                handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
