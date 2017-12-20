@@ -486,7 +486,6 @@
     <string name="suspendloopfor1h">приостановить цикл на 1 час</string>
     <string name="suspendloopfor2h">приостановить цикл на 2 часа</string>
     <string name="suspendloopfor3h">приостановить цикл на 3 часа</string>
-    <string name="syncprofiletopump_title">синхронизировать профиль с помпой</string>
     <string name="target_range">целевой диапазон</string>
     <string name="teenage">подросток</string>
     <string name="tempbasaldeliveryerror">ошибка доставки врем базала</string>

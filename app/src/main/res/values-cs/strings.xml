@@ -192,7 +192,6 @@
     <string name="disconnected">Odpojeno</string>
     <string name="danar_bt_name_title">DanaR Bluetooth zařízení</string>
     <string name="danar_pump_settings">DanaR nastavení</string>
-    <string name="syncprofiletopump_title">Synchronizovat profil do pumpy</string>
     <string name="nightscout">Nightscout</string>
     <string name="absolute">Absolutní</string>
     <string name="comment">Komentář</string>
