@@ -80,7 +80,7 @@ public class QueueThread extends Thread {
                         mBluetoothAdapter.enable();
                         SystemClock.sleep(1000);
                         //start over again once after watchdog barked
-                        connectionStartTime = System.currentTimeMillis();
+                        connectionStartTime = lastCommandTime = System.currentTimeMillis();
                     } else {
                         queue.clear();
                         return;
