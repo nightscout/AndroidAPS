@@ -120,19 +120,17 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         profile = new ProfileStore(newProfile.getData());
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
-        if (SP.getBoolean(R.string.key_sync_profile_to_pump, false)) {
-            ConfigBuilderPlugin.getCommandQueue().setProfile(MainApp.getConfigBuilder().getProfile(), new Callback() {
-                @Override
-                public void run() {
-                    if (result.enacted) {
-                        SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
-                        if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
-                            smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
-                        }
+        ConfigBuilderPlugin.getCommandQueue().setProfile(MainApp.getConfigBuilder().getProfile(), new Callback() {
+            @Override
+            public void run() {
+                if (result.enacted) {
+                    SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
+                    if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
+                        smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     private static void storeNSProfile() {
