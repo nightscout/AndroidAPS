@@ -36,6 +36,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -82,7 +83,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(t.isSMB ? "SMB" : t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
             holder.ph.setVisibility(t.source == Source.PUMP ? View.VISIBLE : View.GONE);
-            holder.ns.setVisibility(t._id != null ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(NSUpload.isIdValid(t._id) ? View.VISIBLE : View.GONE);
             holder.invalid.setVisibility(t.isValid ? View.GONE : View.VISIBLE);
             if (iob.iobContrib != 0)
                 holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
@@ -146,8 +147,10 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                                     treatment.isValid = false;
                                     MainApp.getDbHelper().update(treatment);
                                 } else {
-                                    if (_id != null && !_id.equals("")) {
+                                    if (NSUpload.isIdValid(_id)) {
                                         NSUpload.removeCareportalEntryFromNS(_id);
+                                    } else {
+                                        UploadQueue.removeID("dbAdd", _id);
                                     }
                                     MainApp.getDbHelper().delete(treatment);
                                 }
