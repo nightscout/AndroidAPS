@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
     private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private static SourceDexcomG5Plugin plugin = null;
 
@@ -23,7 +24,7 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
 
     @Override
     public String getFragmentClass() {
-        return null;
+        return BGSourceFragment.class.getName();
     }
 
     @Override
@@ -49,7 +50,7 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return false;
+        return Config.G5UPLOADER || type == BGSOURCE && fragmentVisible;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean hasFragment() {
-        return false;
+        return true;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-
+        if (type == BGSOURCE) this.fragmentVisible = fragmentVisible;
     }
 
     @Override
