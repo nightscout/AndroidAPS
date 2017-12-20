@@ -36,10 +36,6 @@ public class CommandSMBBolus extends Command {
             log.debug("SMB bolus canceled. delivetAt=" + detailedBolusInfo.deliverAt + " now=" + System.currentTimeMillis());
         }
 
-
-        BolusProgressDialog.bolusEnded = true;
-        MainApp.bus().post(new EventDismissBolusprogressIfRunning(r));
-
         if (callback != null)
             callback.result(r).run();
     }
