@@ -301,7 +301,7 @@ public class DataService extends IntentService {
                     log.error("Unhandled exception", e);
                 }
                 if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
-                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.URGENT);
+                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.NORMAL);
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else {
                     MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));

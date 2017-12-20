@@ -153,6 +153,10 @@ public class CommandQueue {
         // remove all unfinished boluses
         removeAll(Command.CommandType.BOLUS);
 
+        // apply constraints
+        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+
         // add new command to queue
         add(new CommandBolus(detailedBolusInfo, callback));
 
@@ -162,12 +166,8 @@ public class CommandQueue {
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
         // Bring up bolus progress dialog
-        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
-
-        BolusProgressDialog bolusProgressDialog = null;
         if (detailedBolusInfo.context != null) {
-            bolusProgressDialog = new BolusProgressDialog();
+            BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
             bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
         } else {
