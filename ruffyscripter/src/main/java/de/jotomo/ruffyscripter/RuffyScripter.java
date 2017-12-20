@@ -187,10 +187,10 @@ public class RuffyScripter implements RuffyCommands {
             if (!ruffyService.isConnected()) {
                 return false;
             }
-            if (System.currentTimeMillis() - menuLastUpdated >= 500) {
+            if (System.currentTimeMillis() - menuLastUpdated >= 1500) {
                 waitForScreenUpdate();
             }
-            return System.currentTimeMillis() - menuLastUpdated < 500;
+            return System.currentTimeMillis() - menuLastUpdated < 1500;
         } catch (RemoteException e) {
             return false;
         }
@@ -282,7 +282,9 @@ public class RuffyScripter implements RuffyCommands {
                         // on connection loss try to reconnect, confirm warning alerts caused by
                         // the disconnected and then return the command as failed (the caller
                         // can retry if needed).
-                        log.debug("Connection unusable, aborting command and attempting reconnect ...");
+                        log.debug("Connection unusable (ruffy connection: " + ruffyService.isConnected() + ", "
+                                + "time since last menu update: " + (System.currentTimeMillis() - menuLastUpdated) + " ms, "
+                                + "aborting command and attempting reconnect ...");
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
 
