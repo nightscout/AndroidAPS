@@ -639,9 +639,13 @@ public class WatchUpdaterService extends WearableListenerService implements
         String basalStringResult;
         TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
-            basalStringResult = activeTemp.toStringVeryShort();
+            basalStringResult = activeTemp.toStringShort();
         } else {
-            basalStringResult = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
+                basalStringResult = "100%";
+            } else {
+                basalStringResult = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
+            }
         }
         return basalStringResult;
     }
