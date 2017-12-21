@@ -26,9 +26,11 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
@@ -243,7 +245,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_COB);
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_temptarget);
-        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_after_carbs);
+        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && (SourceDexcomG5Plugin.getPlugin().isEnabled(PluginBase.APS) || SMBDefaults.enableSMB_after_carbs));
         mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.allowSMB_with_high_temptarget);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
