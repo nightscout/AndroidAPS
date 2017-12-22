@@ -18,17 +18,19 @@ public class CommandTempBasalPercent extends Command {
 
     int durationInMinutes;
     int percent;
+    boolean enforceNew;
 
-    public CommandTempBasalPercent(int percent, int durationInMinutes, Callback callback) {
+    public CommandTempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
         commandType = CommandType.TEMPBASAL;
         this.percent = percent;
         this.durationInMinutes = durationInMinutes;
+        this.enforceNew = enforceNew;
         this.callback = callback;
     }
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalPercent(percent, durationInMinutes);
+        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalPercent(percent, durationInMinutes, enforceNew);
         if (Config.logCongigBuilderActions)
             log.debug("setTempBasalPercent percent: " + percent + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)

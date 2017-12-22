@@ -78,6 +78,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
@@ -330,6 +331,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+            final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
             if (activeloop == null)
                 return;
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
@@ -340,7 +342,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor3h));
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor10h));
-                    menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
+                    if (pumpDescription.tempDurationStep <= 30)
+                        menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor1h));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor2h));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor3h));
@@ -479,7 +482,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
             activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 30, true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 30, true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -492,7 +495,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
             activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 60, true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 60, true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -505,7 +508,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
             activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 2 * 60, true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 2 * 60, true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -518,7 +521,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
             activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 3 * 60, true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 3 * 60, true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
