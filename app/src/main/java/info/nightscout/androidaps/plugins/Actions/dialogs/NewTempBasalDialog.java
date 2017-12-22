@@ -102,6 +102,8 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
         basalTypeRadioGroup.setOnCheckedChangeListener(this);
+
+        setCancelable(false);
         return view;
     }
 

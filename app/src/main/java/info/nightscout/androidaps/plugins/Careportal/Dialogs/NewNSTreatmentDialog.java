@@ -175,7 +175,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSpinner.setAdapter(adapter);
         // set selected to actual profile
         for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName(false)))
                 profileSpinner.setSelection(p);
         }
 
@@ -360,6 +360,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_reuse_layout), options.profile && ps != null && ps.isCPP);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
 
+        setCancelable(false);
         return view;
     }
 

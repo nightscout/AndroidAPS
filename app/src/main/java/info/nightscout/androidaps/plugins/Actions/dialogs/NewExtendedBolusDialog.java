@@ -54,14 +54,9 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
-        return view;
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setCancelable(false);
+        return view;
     }
 
     @Override
