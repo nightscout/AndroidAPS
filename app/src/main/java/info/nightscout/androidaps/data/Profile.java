@@ -17,6 +17,9 @@ import java.util.TimeZone;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -327,8 +330,27 @@ public class Profile {
     }
 
     public Double getBasal(Integer timeAsSeconds) {
-        if (basal_v == null)
+        if (basal_v == null) {
             basal_v = convertToSparseArray(basal);
+            // Check for minimal basal value
+            PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+            if (pump != null) {
+                PumpDescription description = pump.getPumpDescription();
+                for (int i = 0; i < basal_v.size(); i++) {
+                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
+                        basal_v.setValueAt(i, description.basalMinimumRate);
+                        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, MainApp.sResources.getString(R.string.minimalbasalvaluereplaced), Notification.NORMAL)));
+                    }
+                }
+                return getValueToTime(basal_v, timeAsSeconds);
+            } else {
+                // if pump not available (at start)
+                // do not store converted array
+                Double value = getValueToTime(basal_v, timeAsSeconds);
+                basal_v = null;
+                return value;
+            }
+        }
         return getValueToTime(basal_v, timeAsSeconds);
     }
 
