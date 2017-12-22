@@ -577,9 +577,18 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
 
-    // Note: AAPS calls this directly only for setting a temp basal issued by the user
+    /**
+     * Note: AAPS calls this directly only for setting a temp basal issued by the user
+     *
+     * @param forceNew Driver always applies the requested TBR and simply overrides whatever TBR
+     *                 is or isn't running at the moment
+     */
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, boolean forceNew) {
+        return setTempBasalPercent(percent, durationInMinutes);
+    }
+
+    private PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes) {
         log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
 
         int adjustedPercent = percent;
