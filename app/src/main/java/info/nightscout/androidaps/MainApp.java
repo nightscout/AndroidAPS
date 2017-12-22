@@ -15,6 +15,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
 import com.squareup.otto.ThreadEnforcer;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +99,7 @@ public class MainApp extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         Fabric.with(this, new Answers());
+        JodaTimeAndroid.init(this);
         Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);

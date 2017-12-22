@@ -155,7 +155,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                 }
                             };
                             if (setAsPercent) {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, callback);
+                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, callback);
                             } else {
                                 ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, callback);
                             }

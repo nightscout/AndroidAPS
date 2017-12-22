@@ -434,7 +434,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            return setTempBasalPercent(percentRate, durationInMinutes);
+            return setTempBasalPercent(percentRate, durationInMinutes, false);
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress
@@ -499,7 +499,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         percent = configBuilderPlugin.applyBasalConstraints(percent);
@@ -514,7 +514,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
-        if (runningTB != null && runningTB.percentRate == percent) {
+        if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;

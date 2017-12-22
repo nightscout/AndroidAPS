@@ -213,7 +213,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalPercent(int percent, int durationInMinutes, Callback callback) {
+    public boolean tempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -226,7 +226,7 @@ public class CommandQueue {
         Integer percentAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(percent);
 
         // add new command to queue
-        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, callback));
+        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));
 
         notifyAboutNewCommand();
 
