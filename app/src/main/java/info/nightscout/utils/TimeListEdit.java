@@ -52,6 +52,8 @@ public class TimeListEdit {
     private JSONArray data1;
     private JSONArray data2;
     private double step;
+    private double min;
+    private double max;
     private NumberFormat formatter;
     private Runnable save;
     private LinearLayout layout;
@@ -59,7 +61,7 @@ public class TimeListEdit {
     private int inflatedUntil = -1;
 
 
-    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double step, NumberFormat formatter, Runnable save) {
+    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double min, double max, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
         this.view = view;
         this.resLayoutId = resLayoutId;
@@ -67,6 +69,8 @@ public class TimeListEdit {
         this.data1 = data1;
         this.data2 = data2;
         this.step = step;
+        this.min = min;
+        this.max = max;
         this.formatter = formatter;
         this.save = save;
         buildView();
@@ -239,8 +243,8 @@ public class TimeListEdit {
         if (i == 0) next = ONEHOURINSECONDS;
         fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
-        editText1.setParams(value1(i), 0.1d, 100d, step, formatter, false);
-        editText2.setParams(value2(i), 0.1d, 100d, step, formatter, false);
+        editText1.setParams(value1(i), min, max, step, formatter, false);
+        editText2.setParams(value2(i), min, max, step, formatter, false);
 
         if (data2 == null) {
             editText2.setVisibility(View.GONE);

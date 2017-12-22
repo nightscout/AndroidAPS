@@ -27,6 +27,8 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
+    private static String FORMAT_DATE_ISO_OUT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ssZ";
     private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     private static String FORMAT_DATE_ISO_MSEC_UTC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -79,7 +81,7 @@ public class DateUtil {
      * @return the iso-formatted date string
      */
     public static String toISOString(Date date, String format, TimeZone tz) {
-        if (format == null) format = FORMAT_DATE_ISO;
+        if (format == null) format = FORMAT_DATE_ISO_OUT;
         if (tz == null) tz = TimeZone.getDefault();
         DateFormat f = new SimpleDateFormat(format, Locale.getDefault());
         f.setTimeZone(tz);
@@ -87,11 +89,11 @@ public class DateUtil {
     }
 
     public static String toISOString(Date date) {
-        return toISOString(date, FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
+        return toISOString(date, FORMAT_DATE_ISO_OUT, TimeZone.getTimeZone("UTC"));
     }
 
     public static String toISOString(long date) {
-        return toISOString(new Date(date), FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
+        return toISOString(new Date(date), FORMAT_DATE_ISO_OUT, TimeZone.getTimeZone("UTC"));
     }
 
     public static Date toDate(Integer seconds) {

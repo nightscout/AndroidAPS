@@ -344,7 +344,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
-                                        ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 120, true, new Callback() {
+                                        ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
