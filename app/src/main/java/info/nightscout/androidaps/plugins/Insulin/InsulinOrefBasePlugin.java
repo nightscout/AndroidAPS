@@ -64,7 +64,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
     }
 
     @Override
-    public Iob iobCalcForTreatment(Treatment treatment, long time, Double dia) {
+    public Iob iobCalcForTreatment(Treatment treatment, long time, double dia) {
         Iob result = new Iob();
 
         int peak = getPeak();
