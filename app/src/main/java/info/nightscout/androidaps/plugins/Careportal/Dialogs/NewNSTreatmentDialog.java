@@ -360,6 +360,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_reuse_layout), options.profile && ps != null && ps.isCPP);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
 
+        setCancelable(false);
         return view;
     }
 

@@ -52,7 +52,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -113,6 +112,7 @@ import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.SingleClickButton;
 import info.nightscout.utils.ToastUtils;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -156,11 +156,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayoutManager llm;
 
     LinearLayout acceptTempLayout;
-    Button treatmentButton;
-    Button wizardButton;
-    Button calibrationButton;
-    Button acceptTempButton;
-    Button quickWizardButton;
+    SingleClickButton treatmentButton;
+    SingleClickButton wizardButton;
+    SingleClickButton calibrationButton;
+    SingleClickButton acceptTempButton;
+    SingleClickButton quickWizardButton;
 
     CheckBox lockScreen;
 
@@ -244,16 +244,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
             iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
 
-            treatmentButton = (Button) view.findViewById(R.id.overview_treatmentbutton);
+            treatmentButton = (SingleClickButton) view.findViewById(R.id.overview_treatmentbutton);
             treatmentButton.setOnClickListener(this);
-            wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
+            wizardButton = (SingleClickButton) view.findViewById(R.id.overview_wizardbutton);
             wizardButton.setOnClickListener(this);
-            acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
+            acceptTempButton = (SingleClickButton) view.findViewById(R.id.overview_accepttempbutton);
             if (acceptTempButton != null)
                 acceptTempButton.setOnClickListener(this);
-            quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizardbutton);
+            quickWizardButton = (SingleClickButton) view.findViewById(R.id.overview_quickwizardbutton);
             quickWizardButton.setOnClickListener(this);
-            calibrationButton = (Button) view.findViewById(R.id.overview_calibrationbutton);
+            calibrationButton = (SingleClickButton) view.findViewById(R.id.overview_calibrationbutton);
             if (calibrationButton != null)
                 calibrationButton.setOnClickListener(this);
 
@@ -320,6 +320,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return view;
         } catch (Exception e) {
             Crashlytics.logException(e);
+            log.debug("Runtime Exception", e);
         }
 
         return null;
