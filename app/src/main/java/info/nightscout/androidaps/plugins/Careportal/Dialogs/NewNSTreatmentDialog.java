@@ -175,7 +175,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSpinner.setAdapter(adapter);
         // set selected to actual profile
         for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName(false)))
                 profileSpinner.setSelection(p);
         }
 

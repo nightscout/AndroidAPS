@@ -736,6 +736,10 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return getProfileName(System.currentTimeMillis());
     }
 
+    public String getProfileName(boolean customized) {
+        return getProfileName(System.currentTimeMillis(), customized);
+    }
+
     public String getProfileName(long time) {
         return getProfileName(time, true);
     }
