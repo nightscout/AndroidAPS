@@ -354,7 +354,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <info.nightscout.utils.SingleClickButton
                 android:id="@+id/overview_accepttemplayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -370,7 +370,7 @@
                     android:layout_weight="0.5"
                     android:text="Accept new temp\n0.25U/h"
                     android:textColor="@color/colorAcceptTempButton" />
-            </LinearLayout>
+            </info.nightscout.utils.SingleClickButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
