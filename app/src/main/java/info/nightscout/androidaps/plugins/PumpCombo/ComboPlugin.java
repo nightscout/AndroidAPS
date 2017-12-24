@@ -82,7 +82,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.0d;
+        pumpDescription.basalMinimumRate = 0.05d;
 
         pumpDescription.isRefillingCapable = true;
     }
