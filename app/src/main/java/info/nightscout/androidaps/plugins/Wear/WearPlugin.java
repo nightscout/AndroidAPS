@@ -215,6 +215,8 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
+        if(ev.result == null) return;
+
         String status;
         if(ev.result.success){
             status = MainApp.sResources.getString(R.string.success);
