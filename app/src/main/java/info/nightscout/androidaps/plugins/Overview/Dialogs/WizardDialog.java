@@ -104,7 +104,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     Integer calculatedCarbs = 0;
     Double calculatedTotalInsulin = 0d;
     JSONObject boluscalcJSON;
-    boolean cobAvailable = false;
 
     Context context;
 
@@ -138,25 +137,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     public void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventOpenAPSUpdateGui e) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(System.currentTimeMillis() - 11 * 60 * 1000L))) {
-                        cobLayout.setVisibility(View.VISIBLE);
-                        cobAvailable = true;
-                    } else {
-                        cobLayout.setVisibility(View.GONE);
-                        cobAvailable = false;
-                    }
-                    calculateInsulin();
-                }
-            });
     }
 
     @Subscribe
@@ -441,14 +421,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(-bolusIob.iob) + "U");
         basalIobInsulin.setText(DecimalFormatter.to2Decimal(-basalIob.basaliob) + "U");
 
-        // COB only if AMA is selected
-        if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin) {
-            cobLayout.setVisibility(View.VISIBLE);
-            cobAvailable = true;
-        } else {
-            cobLayout.setVisibility(View.GONE);
-            cobAvailable = false;
-        }
         calculateInsulin();
     }
 
@@ -485,7 +457,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         // COB
         Double c_cob = 0d;
-        if (cobAvailable && cobCheckbox.isChecked()) {
+        if (cobCheckbox.isChecked()) {
             AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
 
             if(autosensData != null && autosensData.time > System.currentTimeMillis() - 11 * 60 * 1000L) {
@@ -531,7 +503,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         bgTrendInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromTrend) + "U");
 
         // COB
-        if (cobAvailable && cobCheckbox.isChecked()) {
+        if (cobCheckbox.isChecked()) {
             cob.setText(DecimalFormatter.to2Decimal(c_cob) + "g IC: " + DecimalFormatter.to1Decimal(wizard.ic));
             cobInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromCOB) + "U");
         } else {

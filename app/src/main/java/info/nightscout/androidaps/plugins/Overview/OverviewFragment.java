@@ -60,6 +60,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.QuickWizardEntry;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -97,6 +98,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
+import info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
@@ -115,7 +117,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SingleClickButton;
 import info.nightscout.utils.ToastUtils;
 
-public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     TextView timeView;
@@ -253,6 +255,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 acceptTempButton.setOnClickListener(this);
             quickWizardButton = (SingleClickButton) view.findViewById(R.id.overview_quickwizardbutton);
             quickWizardButton.setOnClickListener(this);
+            quickWizardButton.setOnLongClickListener(this);
             calibrationButton = (SingleClickButton) view.findViewById(R.id.overview_calibrationbutton);
             if (calibrationButton != null)
                 calibrationButton.setOnClickListener(this);
@@ -577,6 +580,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.overview_quickwizardbutton:
+                Intent i = new Intent(v.getContext(), QuickWizardListActivity.class);
+                startActivity(i);
+                return true;
+        }
+        return false;
+    }
+
     private void onClickAcceptTemp() {
         if (ConfigBuilderPlugin.getActiveLoop() != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
@@ -620,11 +634,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
         final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
 
-        QuickWizard.QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
+        final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
-            BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, tempTarget, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            final BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, actualBg);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -683,6 +696,26 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             }
                             accepted = true;
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                if (wizard.superBolus) {
+                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                                    if (activeloop != null) {
+                                        activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                        MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                                    }
+                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
+                                        @Override
+                                        public void run() {
+                                            if (!result.success) {
+                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                i.putExtra("soundid", R.raw.boluserror);
+                                                i.putExtra("status", result.comment);
+                                                i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                MainApp.instance().startActivity(i);
+                                            }
+                                        }
+                                    });
+                                }
                                 DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                                 detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
                                 detailedBolusInfo.insulin = finalInsulinAfterConstraints;
@@ -1087,12 +1120,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         tempTargetView.setLongClickable(true);
 
         // QuickWizard button
-        QuickWizard.QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
+        QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
-            BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, tempTarget, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(units), 0d, true, true, false, false);
+            BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, lastBG);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
