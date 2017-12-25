@@ -46,6 +46,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.utils.PercentageSplitter;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -1633,6 +1634,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         }
                     }
                 }
+                // look for already added percentage from NS
+                profileSwitch.profileName = PercentageSplitter.pureName(profileSwitch.profileName);
                 getDaoProfileSwitch().create(profileSwitch);
                 log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 scheduleProfileSwitchChange();

@@ -192,4 +192,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:20.0'
     compile project(path: ':ruffyscripter')
+
+    compile 'net.danlew:android.joda:2.9.9.1'
+    testCompile 'joda-time:joda-time:2.9.4.2'
 }

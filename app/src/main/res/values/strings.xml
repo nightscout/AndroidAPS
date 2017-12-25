@@ -791,6 +791,7 @@
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
     <string name="nsclientbg">NSClient BG</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>

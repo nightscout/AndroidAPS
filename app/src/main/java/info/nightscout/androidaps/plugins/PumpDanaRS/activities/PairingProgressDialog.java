@@ -118,7 +118,7 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        super.dismissAllowingStateLoss();
         if (helperActivity != null) {
             helperActivity.finish();
         }
