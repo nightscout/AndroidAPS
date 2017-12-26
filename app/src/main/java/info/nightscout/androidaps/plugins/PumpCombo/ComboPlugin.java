@@ -324,56 +324,55 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return new Date(pump.lastSuccessfulCmdTime);
     }
 
-    /**
-     * Runs pump initializing if needed, checks for boluses given on the pump, updates the
-     * reservoir level and checks the running TBR on the pump.
-     */
+    /** Runs pump initializing if needed and reads the pump state from the main screen. */
     @Override
     public synchronized void getPumpStatus() {
         log.debug("getPumpStatus called");
         if (!pump.initialized) {
-            long maxWait = System.currentTimeMillis() + 15 * 1000;
-            while (!ruffyScripter.isPumpAvailable()) {
-                log.debug("Waiting for ruffy service to come up ...");
-                SystemClock.sleep(100);
-                if (System.currentTimeMillis() > maxWait) {
-                    log.debug("ruffy service unavailable, wtf");
-                    return;
-                }
+            initializePump();
+        } else {
+            runCommand(MainApp.sResources.getString(R.string.combo_pump_action_refreshing), 1, ruffyScripter::readPumpState);
+        }
+    }
+
+    private synchronized void initializePump() {
+        long maxWait = System.currentTimeMillis() + 15 * 1000;
+        while (!ruffyScripter.isPumpAvailable()) {
+            log.debug("Waiting for ruffy service to come up ...");
+            SystemClock.sleep(100);
+            if (System.currentTimeMillis() > maxWait) {
+                log.debug("ruffy service unavailable, wtf");
+                return;
             }
         }
 
-        CommandResult stateResult = runCommand(pump.initialized ? MainApp.sResources.getString(R.string.combo_pump_action_refreshing) : MainApp.sResources.getString(R.string.combo_pump_action_initializing),
-                1, ruffyScripter::readPumpState);
+        CommandResult stateResult = runCommand(MainApp.sResources.getString(R.string.combo_pump_action_initializing),1, ruffyScripter::readPumpState);
         if (!stateResult.success) {
             return;
         }
 
-        // read basal profile into cache and update pump profile if needed
-        if (!pump.initialized) {
-            if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
-                Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
-                        MainApp.sResources.getString(R.string.combo_force_disabled_notification),
-                        Notification.URGENT);
-                n.soundId = R.raw.alarm;
-                MainApp.bus().post(new EventNewNotification(n));
-                violationWarningRaisedForViolationAt = lowSuspendOnlyLoopEnforcedUntil;
-                return;
-            }
-            CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
-            if (!readBasalResult.success) {
-                return;
-            }
-            pump.basalProfile = readBasalResult.basalProfile;
-            validBasalRateProfileSelectedOnPump = true;
-
-            pump.initialized = true;
-            MainApp.bus().post(new EventInitializationChanged());
+        if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
+            Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
+                    MainApp.sResources.getString(R.string.combo_force_disabled_notification),
+                    Notification.URGENT);
+            n.soundId = R.raw.alarm;
+            MainApp.bus().post(new EventNewNotification(n));
+            violationWarningRaisedForViolationAt = lowSuspendOnlyLoopEnforcedUntil;
+            return;
         }
 
-        // ComboFragment updates state fully only after the pump has initialized,
-        // this fetches state again and updates the UI proper
-        runCommand(null, 0, ruffyScripter::readPumpState);
+        // read basal profile into cache (KeepAlive will trigger a profile update if needed)
+        CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
+        if (!readBasalResult.success) {
+            return;
+        }
+        pump.basalProfile = readBasalResult.basalProfile;
+        validBasalRateProfileSelectedOnPump = true;
+        pump.initialized = true;
+        MainApp.bus().post(new EventInitializationChanged());
+
+        // ComboFragment updates state fully only after the pump has initialized, so run this manually here
+        updateLocalData(readBasalResult);
     }
 
     private void updateLocalData(CommandResult result) {
