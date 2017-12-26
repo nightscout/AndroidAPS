@@ -76,6 +76,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         unitsView = (TextView) view.findViewById(R.id.overview_calibration_units);
         unitsView.setText(units);
 
+        setCancelable(false);
         return view;
     }
 

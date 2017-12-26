@@ -53,6 +53,8 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
@@ -251,6 +253,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
 
+        setCancelable(false);
         return view;
     }
 
@@ -344,7 +347,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
-                                        ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(0d, 120, true, new Callback() {
+                                        ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
@@ -439,7 +442,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         basalIobInsulin.setText(DecimalFormatter.to2Decimal(-basalIob.basaliob) + "U");
 
         // COB only if AMA is selected
-        if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(System.currentTimeMillis() - 11 * 60 * 1000L))) {
+        if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin) {
             cobLayout.setVisibility(View.VISIBLE);
             cobAvailable = true;
         } else {
@@ -483,12 +486,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // COB
         Double c_cob = 0d;
         if (cobAvailable && cobCheckbox.isChecked()) {
-            if (ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(System.currentTimeMillis() - 11 * 60 * 1000L))) {
-                try {
-                    c_cob = SafeParse.stringToDouble(ConfigBuilderPlugin.getActiveAPS().getLastAPSResult().json().getString("COB"));
-                } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
-                }
+            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+
+            if(autosensData != null && autosensData.time > System.currentTimeMillis() - 11 * 60 * 1000L) {
+                c_cob = autosensData.cob;
             }
         }
 

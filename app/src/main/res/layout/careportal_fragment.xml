@@ -51,7 +51,7 @@
                     android:padding="10dip"
                     app:columnCount="3">
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_bgcheck"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0px"
@@ -66,7 +66,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_exercise"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -80,7 +80,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_temporarytarget"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -111,7 +111,7 @@
                     android:padding="10dip"
                     app:columnCount="3">
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_snackbolus"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -125,7 +125,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_mealbolus"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -139,7 +139,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_correctionbolus"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -153,7 +153,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_carbscorrection"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -167,7 +167,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="2" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_combobolus"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -181,7 +181,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="2" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_tempbasalstart"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -195,7 +195,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="2" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_tempbasalend"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -225,7 +225,7 @@
                     android:padding="10dip"
                     app:columnCount="3">
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_cgmsensorstart"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -240,7 +240,7 @@
                         app:layout_row="1" />
 
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_cgmsensorinsert"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -255,7 +255,7 @@
                         app:layout_row="1" />
 
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_openapsoffline"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -270,7 +270,7 @@
                         app:layout_row="1" />
 
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_announcement"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -284,7 +284,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="4" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_question"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -298,7 +298,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="4" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_note"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -328,7 +328,7 @@
                     android:padding="10dip"
                     app:columnCount="3">
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_pumpsitechange"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -342,7 +342,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_insulincartridgechange"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -356,7 +356,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_profileswitch"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"
@@ -371,7 +371,7 @@
                         app:layout_row="0" />
 
 
-                    <Button
+                    <info.nightscout.utils.SingleClickButton
                         android:id="@+id/careportal_pumpbatterychange"
                         style="@style/ButtonSmallFontStyle"
                         android:layout_width="0dp"

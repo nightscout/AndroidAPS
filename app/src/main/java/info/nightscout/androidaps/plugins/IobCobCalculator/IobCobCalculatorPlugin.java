@@ -364,6 +364,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 // check if data already exists
                 long bgTime = bucketed_data.get(i).date;
                 bgTime = roundUpTime(bgTime);
+                if (bgTime > System.currentTimeMillis())
+                    continue;
                 Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
 
                 AutosensData existing;

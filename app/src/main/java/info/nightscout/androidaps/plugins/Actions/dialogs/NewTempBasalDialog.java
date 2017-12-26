@@ -102,6 +102,8 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
         basalTypeRadioGroup.setOnCheckedChangeListener(this);
+
+        setCancelable(false);
         return view;
     }
 
@@ -155,7 +157,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                 }
                             };
                             if (setAsPercent) {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, callback);
+                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, callback);
                             } else {
                                 ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, callback);
                             }

@@ -304,7 +304,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {

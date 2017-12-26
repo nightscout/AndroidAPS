@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.utils.SingleClickButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,13 +45,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         return actionsPlugin;
     }
 
-    Button profileSwitch;
-    Button tempTarget;
-    Button extendedBolus;
-    Button extendedBolusCancel;
-    Button tempBasal;
-    Button tempBasalCancel;
-    Button fill;
+    SingleClickButton profileSwitch;
+    SingleClickButton tempTarget;
+    SingleClickButton extendedBolus;
+    SingleClickButton extendedBolusCancel;
+    SingleClickButton tempBasal;
+    SingleClickButton tempBasalCancel;
+    SingleClickButton fill;
 
     public ActionsFragment() {
         super();
@@ -64,13 +64,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         try {
             View view = inflater.inflate(R.layout.actions_fragment, container, false);
 
-            profileSwitch = (Button) view.findViewById(R.id.actions_profileswitch);
-            tempTarget = (Button) view.findViewById(R.id.actions_temptarget);
-            extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
-            extendedBolusCancel = (Button) view.findViewById(R.id.actions_extendedbolus_cancel);
-            tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
-            tempBasalCancel = (Button) view.findViewById(R.id.actions_canceltempbasal);
-            fill = (Button) view.findViewById(R.id.actions_fill);
+            profileSwitch = (SingleClickButton) view.findViewById(R.id.actions_profileswitch);
+            tempTarget = (SingleClickButton) view.findViewById(R.id.actions_temptarget);
+            extendedBolus = (SingleClickButton) view.findViewById(R.id.actions_extendedbolus);
+            extendedBolusCancel = (SingleClickButton) view.findViewById(R.id.actions_extendedbolus_cancel);
+            tempBasal = (SingleClickButton) view.findViewById(R.id.actions_settempbasal);
+            tempBasalCancel = (SingleClickButton) view.findViewById(R.id.actions_canceltempbasal);
+            fill = (SingleClickButton) view.findViewById(R.id.actions_fill);
 
             profileSwitch.setOnClickListener(this);
             tempTarget.setOnClickListener(this);
