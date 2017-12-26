@@ -351,14 +351,22 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // read basal profile into cache and update pump profile if needed
         if (!pump.initialized) {
+            if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
+                Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
+                        MainApp.sResources.getString(R.string.combo_force_disabled_notification),
+                        Notification.URGENT);
+                n.soundId = R.raw.alarm;
+                MainApp.bus().post(new EventNewNotification(n));
+                violationWarningRaisedForViolationAt = lowSuspendOnlyLoopEnforcedUntil;
+                return;
+            }
             CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
             if (!readBasalResult.success) {
                 return;
             }
             pump.basalProfile = readBasalResult.basalProfile;
-        }
+            validBasalRateProfileSelectedOnPump = true;
 
-        if (!pump.initialized) {
             pump.initialized = true;
             MainApp.bus().post(new EventInitializationChanged());
         }
@@ -716,9 +724,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             if (commandResult.success) {
                 pump.lastSuccessfulCmdTime = System.currentTimeMillis();
-            }
-
-            if (commandResult.success) {
+                validBasalRateProfileSelectedOnPump = commandResult.state.unsafeUsageDetected != PumpState.UNSUPPORTED_BASAL_RATE_PROFILE;
                 updateLocalData(commandResult);
             }
         } finally {
@@ -811,7 +817,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (commandResult == null) return;
 
         long lastViolation = 0;
-        if (commandResult.state.unsafeUsageDetected) {
+        if (commandResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BOLUS_TYPE) {
             lastViolation = System.currentTimeMillis();
         } else if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
             lastViolation = commandResult.lastBolus.timestamp;
@@ -823,14 +829,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
         if (lastViolation > 0) {
-            lowSuspendOnlyLoopEnforcetTill = lastViolation + 6 * 60 * 60 * 1000;
-            if (lowSuspendOnlyLoopEnforcetTill > System.currentTimeMillis() && violationWarningRaisedFor != lowSuspendOnlyLoopEnforcetTill) {
+            lowSuspendOnlyLoopEnforcedUntil = lastViolation + 6 * 60 * 60 * 1000;
+            if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis() && violationWarningRaisedForViolationAt != lowSuspendOnlyLoopEnforcedUntil) {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
-                        MainApp.sResources.getString(R.string.combo_force_disabled_notification),
+                        MainApp.sResources.getString(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
-                violationWarningRaisedFor = lowSuspendOnlyLoopEnforcetTill;
+                violationWarningRaisedForViolationAt = lowSuspendOnlyLoopEnforcedUntil;
             }
         }
     }
@@ -1058,8 +1064,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     // Constraints interface
-    private long lowSuspendOnlyLoopEnforcetTill = 0;
-    private long violationWarningRaisedFor = 0;
+    private long lowSuspendOnlyLoopEnforcedUntil = 0;
+    private long violationWarningRaisedForViolationAt = 0;
+    private boolean validBasalRateProfileSelectedOnPump = false;
 
     @Override
     public boolean isLoopEnabled() {
@@ -1068,7 +1075,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isClosedModeEnabled() {
-        return true;
+        return validBasalRateProfileSelectedOnPump;
     }
 
     @Override
@@ -1103,6 +1110,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public Double applyMaxIOBConstraints(Double maxIob) {
-        return lowSuspendOnlyLoopEnforcetTill < System.currentTimeMillis() ? maxIob : 0;
+        return lowSuspendOnlyLoopEnforcedUntil < System.currentTimeMillis() ? maxIob : 0;
     }
 }

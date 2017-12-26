@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 
 import de.jotomo.ruffy.spi.BasalProfile;
+import de.jotomo.ruffy.spi.PumpState;
 
 public class ReadBasalProfileCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(ReadBasalProfileCommand.class);
@@ -17,6 +18,9 @@ public class ReadBasalProfileCommand extends BaseCommand {
     @Override
     public void execute() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        if (scripter.readPumpStateInternal().unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
+            throw new CommandException("Active basal rate profile != 1");
+        }
         scripter.navigateToMenu(MenuType.BASAL_1_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.BASAL_1_MENU);
         scripter.pressCheckKey();

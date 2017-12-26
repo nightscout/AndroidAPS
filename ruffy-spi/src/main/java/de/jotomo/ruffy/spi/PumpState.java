@@ -30,8 +30,12 @@ public class PumpState {
     public int insulinState = UNKNOWN;
 
     public int activeBasalProfileNumber;
+
+    public static final int SAFE_USAGE = 0;
+    public static final int UNSUPPORTED_BOLUS_TYPE = 1;
+    public static final int UNSUPPORTED_BASAL_RATE_PROFILE = 2;
     /** True if use of an extended or multiwave bolus has been detected */
-    public boolean unsafeUsageDetected;
+    public int unsafeUsageDetected = SAFE_USAGE;
 
     public PumpState menu(String menu) {
         this.menu = menu;

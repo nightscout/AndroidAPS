@@ -85,6 +85,8 @@ Usage:
 - The integration of the Combo with AndroidAPS is designed with the assumption that all inputs are
   made via AndroidAPS. Boluses entered on the pump will NOT be detected by AAPS and may therefore
   result in too much insulin being delivered.
+- The pump's first basal rate profile is read on app start and is updated by AAPS. Manually changing
+  the pump's basal rate profile will lead to wrong basals being delivered and is NOT supported.
 - It's recommended to enable key lock on the pump to prevent bolusing from the pump, esp. when the
   pump was used before and quick bolusing was a habit.
   Also, with keylock enabled, accidentally pressing a key will NOT interrupt a running command
