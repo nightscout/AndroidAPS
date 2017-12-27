@@ -682,7 +682,6 @@
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
     <string name="combopump" translatable="false">Accu-Chek Combo</string>
-    <string name="combopump_settings">Accu-Chek Combo settings</string>
     <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>

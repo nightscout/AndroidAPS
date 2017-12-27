@@ -190,7 +190,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public int getPreferencesId() {
-        return R.xml.pref_combo;
+        return -1;
     }
 
     @Override
