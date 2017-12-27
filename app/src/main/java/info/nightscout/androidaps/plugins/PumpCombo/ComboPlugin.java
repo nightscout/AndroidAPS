@@ -175,7 +175,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return type == PUMP;
     }
 
     @Override
