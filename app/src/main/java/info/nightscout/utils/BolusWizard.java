@@ -14,15 +14,15 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 public class BolusWizard {
     // Inputs
-    Profile specificProfile = null;
-    TempTarget tempTarget;
+    private Profile specificProfile = null;
+    private TempTarget tempTarget;
     public Integer carbs = 0;
-    Double bg = 0d;
-    Double correction;
-    Boolean includeBolusIOB = true;
-    Boolean includeBasalIOB = true;
-    Boolean superBolus = false;
-    Boolean trend = false;
+    private Double bg = 0d;
+    private Double correction;
+    private Boolean includeBolusIOB = true;
+    private Boolean includeBasalIOB = true;
+    public Boolean superBolus = false;
+    private Boolean trend = false;
 
     // Intermediate
     public Double sens = 0d;
