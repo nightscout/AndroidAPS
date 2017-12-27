@@ -501,8 +501,10 @@ public class RuffyScripter implements RuffyCommands {
             BolusType bolusType = (BolusType) menu.getAttribute(MenuAttribute.BOLUS_TYPE);
             Integer activeBasalRate = (Integer) menu.getAttribute(MenuAttribute.BASAL_SELECTED);
 
-            if (bolusType != null && bolusType != BolusType.NORMAL || !activeBasalRate.equals(1)) {
-                state.unsafeUsageDetected = true;
+            if (!activeBasalRate.equals(1)) {
+                state.unsafeUsageDetected = PumpState.UNSUPPORTED_BASAL_RATE_PROFILE;
+            } else if (bolusType != null && bolusType != BolusType.NORMAL) {
+                state.unsafeUsageDetected = PumpState.UNSUPPORTED_BOLUS_TYPE;
             } else if (tbrPercentage != null && tbrPercentage != 100) {
                 state.tbrActive = true;
                 Double displayedTbr = (Double) menu.getAttribute(MenuAttribute.TBR);

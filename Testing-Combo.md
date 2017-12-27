@@ -74,12 +74,19 @@
   - [ ] Check displayed data (state, battery, reservoir, temp basal) is the same
         as on the pump
 - [ ] Unsafe usage
-  - [ ] An extended or multiwave bolus given within the last six hour must raise an alert and
-        restrict the loop functionality to low-suspend only (setting maxIOB to zero)
+  - [ ] An active extended or multiwave bolus must raise an alert and
+        restrict the loop functionality to low-suspend only for the next 6h (setting maxIOB to zero)
+        and cancel an active TBR.
   - [ ] Closed loop functionality must resume 6 h after the last ext/multiwave bolus
-  - [ ] An active ext/multiwave bolus must also raise an alert and restrict the loop
-  - [ ] If a basal rate other than profile 1 is activated, this must also raise an alert and disable
-        the restrict the loop
+  - [ ] If a basal rate other than profile 1 is active on start, the pump must refuse to finish
+        initialization and disable the loop. When setting the profile to 1 and refreshing,
+        the pump must finish initialization and enable the loop (the overview screen will
+        still show "closed loop", but the Combo and Loop tabs will say the loop is disabled
+        due to a constraint violation).
+  - [ ] When changing profile to one other than the first after AAPS has started and read the first
+        basal profile, a warning must be shown, the loop must be disabled and the active TBR be cancelled.
+  - [ ] A request to change the AAPS profil (e.g. increase to 110%) must be rejected if the pump
+        doesn't have profile one active.
 - [ ] Reading/setting basal profile
   - [ ] AAPS reads basal rate properly
   - [ ] Test profile with 115% (or something like that) change to ask the
