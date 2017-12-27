@@ -263,7 +263,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!setResult.success) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.failedupdatebasalprofile));
         }
 
 /* don't re-read basal profile to not trigger pump bug; setBasalProfile command checks the total at the end, which must suffice
