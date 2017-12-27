@@ -1081,7 +1081,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     // Constraints interface
     private long lowSuspendOnlyLoopEnforcedUntil = 0;
     private long violationWarningRaisedForBolusAt = 0;
-    private boolean validBasalRateProfileSelectedOnPump = false;
+    private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Override
     public boolean isLoopEnabled() {
