@@ -477,7 +477,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(true).enacted(false);
             }
 
-            BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : ComboPlugin.bolusProgressReporter;
+            BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter;
 
             // start bolus delivery
             bolusInProgress = true;
