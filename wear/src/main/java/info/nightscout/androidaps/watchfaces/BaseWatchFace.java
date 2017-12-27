@@ -257,7 +257,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             if (layoutSet && bundle != null) {
                 DataMap dataMap = DataMap.fromBundle(bundle);
                 wakeLock.acquire(50);
-                sBasalRate = dataMap.getString("tempBasal");
+                sBasalRate = dataMap.getString("currentBasal");
                 sUploaderBattery = dataMap.getString("battery");
                 sRigBattery = dataMap.getString("rigBattery");
                 detailedIOB = dataMap.getBoolean("detailedIob");
