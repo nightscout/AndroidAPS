@@ -41,6 +41,7 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -138,7 +139,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     String getStateSummary() {
         PumpState ps = pump.state;
-        if (ps.activeAlert != null) {
+        if (!validBasalRateProfileSelectedOnPump) {
+            return MainApp.sResources.getString(R.string.loopdisabled);
+        } else if (ps.activeAlert != null) {
             return ps.activeAlert.errorCode != null
                     ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
                     : "W" + ps.activeAlert.warningCode + ": " + ps.activeAlert.message;
@@ -258,6 +261,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return new PumpEnactResult().success(true).enacted(false);
         }
 
+        CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
+        if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
+            return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_force_disabled_notification));
+        }
+
         CommandResult setResult = runCommand(MainApp.sResources.getString(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
@@ -357,7 +365,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     Notification.URGENT);
             n.soundId = R.raw.alarm;
             MainApp.bus().post(new EventNewNotification(n));
-            violationWarningRaisedForViolationAt = lowSuspendOnlyLoopEnforcedUntil;
             return;
         }
 
@@ -723,7 +730,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             if (commandResult.success) {
                 pump.lastSuccessfulCmdTime = System.currentTimeMillis();
-                validBasalRateProfileSelectedOnPump = commandResult.state.unsafeUsageDetected != PumpState.UNSUPPORTED_BASAL_RATE_PROFILE;
+                if (validBasalRateProfileSelectedOnPump && commandResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
+                    validBasalRateProfileSelectedOnPump = false;
+                    Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
+                            MainApp.sResources.getString(R.string.combo_force_disabled_notification),
+                            Notification.URGENT);
+                    n.soundId = R.raw.alarm;
+                    MainApp.bus().post(new EventNewNotification(n));
+                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                }
                 updateLocalData(commandResult);
             }
         } finally {
@@ -765,7 +780,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 notification.date = new Date();
                 notification.id = Notification.COMBO_PUMP_ALARM;
                 notification.level = Notification.URGENT;
-                notification.text = MainApp.sResources.getString(R.string.combo_is_in_error_state);
+                notification.text = MainApp.sResources.getString(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message);
                 MainApp.bus().post(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
@@ -829,13 +844,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         if (lastViolation > 0) {
             lowSuspendOnlyLoopEnforcedUntil = lastViolation + 6 * 60 * 60 * 1000;
-            if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis() && violationWarningRaisedForViolationAt != lowSuspendOnlyLoopEnforcedUntil) {
+            if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis() && violationWarningRaisedForBolusAt != lowSuspendOnlyLoopEnforcedUntil) {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         MainApp.sResources.getString(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
-                violationWarningRaisedForViolationAt = lowSuspendOnlyLoopEnforcedUntil;
+                violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
+                ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
             }
         }
     }
@@ -1064,17 +1080,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     // Constraints interface
     private long lowSuspendOnlyLoopEnforcedUntil = 0;
-    private long violationWarningRaisedForViolationAt = 0;
+    private long violationWarningRaisedForBolusAt = 0;
     private boolean validBasalRateProfileSelectedOnPump = false;
 
     @Override
     public boolean isLoopEnabled() {
-        return true;
+        return validBasalRateProfileSelectedOnPump;
     }
 
     @Override
     public boolean isClosedModeEnabled() {
-        return validBasalRateProfileSelectedOnPump;
+        return true;
     }
 
     @Override
