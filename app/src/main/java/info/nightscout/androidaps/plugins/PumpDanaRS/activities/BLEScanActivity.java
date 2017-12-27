@@ -162,6 +162,7 @@ public class BLEScanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SP.putString(R.string.key_danars_address, item.device.getAddress());
                 SP.putString(R.string.key_danars_name, mName.getText().toString());
+                item.device.createBond();
                 MainApp.bus().post(new EventDanaRSDeviceChange());
                 finish();
             }
