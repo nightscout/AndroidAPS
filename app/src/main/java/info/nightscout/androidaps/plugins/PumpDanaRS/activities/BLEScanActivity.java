@@ -7,8 +7,10 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +33,6 @@ import info.nightscout.utils.SP;
 public class BLEScanActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(BLEScanActivity.class);
 
-    private Context mContext = null;
 
     private ListView listView = null;
     private ListAdapter mListAdapter = null;
@@ -53,26 +54,20 @@ public class BLEScanActivity extends AppCompatActivity {
         listView.setEmptyView(findViewById(R.id.danars_blescanner_nodevice));
         listView.setAdapter(mListAdapter);
 
-        initView();
-    }
-
-    private void initView() {
-        mContext = getApplicationContext();
-
-        BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-
-        // MIKE: test mBluetoothLeScanner for null (bt disabled)
-
         mListAdapter.notifyDataSetChanged();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+
+        if (mBluetoothLeScanner == null) {
+            mBluetoothAdapter.enable();
+            mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+        }
         startScan();
     }
 
@@ -138,7 +133,7 @@ public class BLEScanActivity extends AppCompatActivity {
             ViewHolder holder;
 
             if (v == null) {
-                v = View.inflate(mContext, R.layout.danars_blescanner_item, null);
+                v = View.inflate(getApplicationContext(), R.layout.danars_blescanner_item, null);
                 holder = new ViewHolder(v);
                 v.setTag(holder);
             } else {
@@ -167,6 +162,7 @@ public class BLEScanActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SP.putString(R.string.key_danars_address, item.device.getAddress());
                 SP.putString(R.string.key_danars_name, mName.getText().toString());
+                item.device.createBond();
                 MainApp.bus().post(new EventDanaRSDeviceChange());
                 finish();
             }

@@ -153,6 +153,10 @@ public class CommandQueue {
         // remove all unfinished boluses
         removeAll(Command.CommandType.BOLUS);
 
+        // apply constraints
+        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+
         // add new command to queue
         add(new CommandBolus(detailedBolusInfo, callback));
 
@@ -162,12 +166,8 @@ public class CommandQueue {
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
         // Bring up bolus progress dialog
-        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
-
-        BolusProgressDialog bolusProgressDialog = null;
         if (detailedBolusInfo.context != null) {
-            bolusProgressDialog = new BolusProgressDialog();
+            BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
             bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
         } else {
@@ -203,7 +203,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalPercent(int percent, int durationInMinutes, Callback callback) {
+    public boolean tempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -216,7 +216,7 @@ public class CommandQueue {
         Integer percentAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(percent);
 
         // add new command to queue
-        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, callback));
+        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));
 
         notifyAboutNewCommand();
 
@@ -326,14 +326,14 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean readStatus(String reason, Callback callback) {
-        if (isRunning(Command.CommandType.READSTATUS)) {
-            if (callback != null)
-                callback.result(executingNowError()).run();
-            return false;
-        }
+        //if (isRunning(Command.CommandType.READSTATUS)) {
+        //    if (callback != null)
+        //        callback.result(executingNowError()).run();
+        //    return false;
+        //}
 
         // remove all unfinished 
-        removeAll(Command.CommandType.READSTATUS);
+        //removeAll(Command.CommandType.READSTATUS);
 
         // add new command to queue
         add(new CommandReadStatus(reason, callback));

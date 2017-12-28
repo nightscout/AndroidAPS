@@ -96,6 +96,8 @@ public class UploadQueue {
     }
 
     public static void removeID(final String action, final String _id) {
+        if (_id == null || _id.equals(""))
+            return;
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(new Runnable() {

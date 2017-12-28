@@ -107,7 +107,7 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
     }
 
     @Override
-    public Iob iobCalcForTreatment(Treatment treatment, long time, Double dia) {
+    public Iob iobCalcForTreatment(Treatment treatment, long time, double dia) {
         Iob result = new Iob();
 
         double scaleFactor = 3.0 / dia;

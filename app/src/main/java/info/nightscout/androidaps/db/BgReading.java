@@ -53,6 +53,7 @@ public class BgReading implements DataPointWithLabelInterface {
         value = sgv.getMgdl();
         raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
+        _id = sgv.getId();
     }
 
     public Double valueToUnits(String units) {

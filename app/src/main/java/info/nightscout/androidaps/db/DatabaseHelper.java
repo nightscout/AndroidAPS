@@ -46,6 +46,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.utils.PercentageSplitter;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -367,6 +368,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return false;
     }
 
+    public void update(BgReading bgReading) {
+        bgReading.date = roundDateToSec(bgReading.date);
+        try {
+            getDaoBgReadings().update(bgReading);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void scheduleBgChange() {
         class PostRunnable implements Runnable {
             public void run() {
@@ -397,7 +407,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
             queryBuilder.orderBy("date", false);
             queryBuilder.limit(1L);
-            queryBuilder.where().gt("value", 38);
+            queryBuilder.where().gt("value", 38).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgList = daoBgReadings.query(preparedQuery);
 
@@ -435,7 +445,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("date", mills).and().gt("value", 38);
+            where.ge("date", mills).and().gt("value", 38).and().eq("isValid", true);
+            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
+            bgReadings = daoBgreadings.query(preparedQuery);
+            return bgReadings;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<BgReading>();
+    }
+
+    public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
+        try {
+            Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
+            List<BgReading> bgReadings;
+            QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
@@ -1572,6 +1599,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         }
                     }
                 }
+                // look for already added percentage from NS
+                profileSwitch.profileName = PercentageSplitter.pureName(profileSwitch.profileName);
                 getDaoProfileSwitch().create(profileSwitch);
                 log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 scheduleProfileSwitchChange();

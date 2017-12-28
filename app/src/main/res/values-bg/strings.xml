@@ -212,7 +212,6 @@
     <string name="connecting">Свързване</string>
     <string name="connected">Свързана</string>
     <string name="disconnected">Не е сврзана</string>
-    <string name="syncprofiletopump_title">Синхронизирай помпата с профила</string>
     <string name="danar_pump_settings">DanaR настройки</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
