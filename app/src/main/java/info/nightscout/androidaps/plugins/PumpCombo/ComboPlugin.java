@@ -467,7 +467,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
-        long pumpTimeWhenBolusWasRequested = runCommand(null, 1, ruffyScripter::readPumpState).state.pumpTime;
+        CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
+        long pumpTimeWhenBolusWasRequested = stateResult .state.pumpTime;
+        if (!stateResult.success || pumpTimeWhenBolusWasRequested == 0) {
+            return new PumpEnactResult().success(false).enacted(false)
+                    .comment(MainApp.sResources.getString(R.string.combo_error_no_bolus_delivered));
+        }
 
         try {
             pump.activity = MainApp.sResources.getString(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
@@ -539,6 +544,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         if (lastBolus == null // no bolus ever given
                 || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for
+                || lastBolus.amount - detailedBolusInfo.insulin  > 0.01 // this one neither, big than requested bolus
                 || !lastBolus.isValid) { // ext/multiwave bolus
             log.debug("No bolus was delivered");
             return new PumpEnactResult().success(false).enacted(false)
@@ -549,21 +555,21 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             detailedBolusInfo.insulin = lastBolus.amount;
             detailedBolusInfo.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments (requested: %.2f", lastBolus.amount, requestedBolus));
+            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments (requested: %.2f"), lastBolus.amount, requestedBolus);
 
             return new PumpEnactResult().success(false).enacted(true)
                     .comment(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered,
                             lastBolus.amount, requestedBolus));
+        } else {
+            // bolus was correctly and fully delivered
+            detailedBolusInfo.insulin = lastBolus.amount;
+            detailedBolusInfo.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            log.debug("Added correctly delivered bolus to treatments");
+            return new PumpEnactResult().success(true).enacted(true)
+                    .bolusDelivered(lastBolus.amount)
+                    .carbsDelivered(detailedBolusInfo.carbs);
         }
-
-        // bolus was correctly and fully delivered
-        detailedBolusInfo.insulin = lastBolus.amount;
-        detailedBolusInfo.source = Source.USER;
-        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-        log.debug("Added correctly delivered bolus to treatments");
-        return new PumpEnactResult().success(true).enacted(true)
-                .bolusDelivered(lastBolus.amount)
-                .carbsDelivered(detailedBolusInfo.carbs);
     }
 
     @Override
