@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.IobCobCalculator.events;
+package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 /**
  * Created by mike on 10.06.2017.
