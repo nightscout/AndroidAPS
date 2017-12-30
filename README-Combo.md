@@ -138,6 +138,9 @@ Known issues:
 - Overall the integration seems rather robust, but there are limits to the way the
   pump is controlled and how stable BT is, so there will be minor issues like the above
   from time to time, though they're small compared to what works well.
+- AAPS might be unresponsive for 10-30s or so when starting and calculating sensitivity.
+  AAPS might also be unresponsive when doing background work, e.g. after receiving a new
+  glucose reading.
 
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused
