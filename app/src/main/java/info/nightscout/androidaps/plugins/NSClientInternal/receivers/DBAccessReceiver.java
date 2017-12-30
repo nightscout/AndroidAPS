@@ -30,14 +30,6 @@ public class DBAccessReceiver extends BroadcastReceiver {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 DBAccessReceiver.class.getSimpleName());
-        NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
-        if (!nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
-            return;
-        }
-        if (SP.getBoolean(R.string.key_ns_noupload, false)) {
-            log.debug("Upload disabled. Message dropped");
-            return;
-        }
         wakeLock.acquire();
         try {
             Bundle bundles = intent.getExtras();
@@ -83,22 +75,33 @@ public class DBAccessReceiver extends BroadcastReceiver {
             }
 
             if (action.equals("dbRemove")) {
-                DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id);
-                UploadQueue.add(dbr);
+                if (shouldUpload()) {
+                    DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id);
+                    UploadQueue.add(dbr);
+                }
             } else {
                 DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), data);
                 // this is not used as mongo _id but only for searching in UploadQueue database
                 // if record has to be removed from queue before upload
                 dbr._id = nsclientid.toString();
-                UploadQueue.add(dbr);
-                if (collection.equals("treatments"))
+
+                if (shouldUpload()) {
+                    UploadQueue.add(dbr);
+                }
+                if (collection.equals("treatments")) {
                     genereateTreatmentOfflineBroadcast(dbr);
+                }
             }
 
         } finally {
             wakeLock.release();
         }
 
+    }
+
+    public boolean shouldUpload() {
+        NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+        return nsClientInternalPlugin.isEnabled(PluginBase.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
     }
 
     public void genereateTreatmentOfflineBroadcast(DbRequest request) {
