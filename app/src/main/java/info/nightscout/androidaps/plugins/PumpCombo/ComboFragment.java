@@ -193,7 +193,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setText(R.string.combo_pump_connected_now);
                         lastConnectionView.setTextColor(Color.WHITE);
                     } else if (plugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
-                        lastConnectionView.setText(getString(R.string.combo_no_pump_connection, min));
+                        lastConnectionView.setText(MainApp.sResources.getString(R.string.combo_no_pump_connection, min));
                         lastConnectionView.setTextColor(Color.RED);
                     } else {
                         lastConnectionView.setText(minAgo);
@@ -206,7 +206,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         long minSinceRead = (System.currentTimeMillis() - plugin.getPump().state.timestamp) / 1000 / 60;
                         long remaining = ps.tbrRemainingDuration - minSinceRead;
                         if (remaining >= 0) {
-                            tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
+                            tbrStr = MainApp.sResources.getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
                         }
                     }
                     tempBasalText.setText(tbrStr);
