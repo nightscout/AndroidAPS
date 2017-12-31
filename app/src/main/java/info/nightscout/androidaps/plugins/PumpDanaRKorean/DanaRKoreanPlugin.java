@@ -787,6 +787,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         return true;
     }
 
+    @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
     @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {

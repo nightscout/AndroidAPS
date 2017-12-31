@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpVirtual;
 
-import android.content.SharedPreferences;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +14,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
@@ -24,7 +23,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.utils.DateUtil;
@@ -65,6 +63,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     private static VirtualPumpPlugin plugin = null;
+
     public static VirtualPumpPlugin getPlugin() {
         loadFakingStatus();
         if (plugin == null)
@@ -401,8 +400,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public JSONObject getJSONStatus() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        if (!preferences.getBoolean("virtualpump_uploadstatus", false)) {
+        if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
             return null;
         }
         JSONObject pump = new JSONObject();
