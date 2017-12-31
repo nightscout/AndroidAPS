@@ -260,7 +260,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
      **/
     @Override
     public boolean isLoopEnabled() {
-        return objectives.get(1).started.getTime() > 0;
+        return objectives.get(0).started.getTime() > 0;
     }
 
     @Override
