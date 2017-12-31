@@ -259,18 +259,6 @@ public class LoopPlugin implements PluginBase {
             if (!isEnabled(PluginBase.LOOP))
                 return;
 
-            if (isSuspended()) {
-                log.debug(MainApp.sResources.getString(R.string.loopsuspended));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopsuspended)));
-                return;
-            }
-
-            if (pump.isSuspended()) {
-                log.debug(MainApp.sResources.getString(R.string.pumpsuspended));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.pumpsuspended)));
-                return;
-            }
-
             if (MainApp.getConfigBuilder().getProfile() == null) {
                 log.debug(MainApp.sResources.getString(R.string.noprofileselected));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noprofileselected)));
@@ -280,7 +268,7 @@ public class LoopPlugin implements PluginBase {
             // Check if pump info is loaded
             if (pump.getBaseBasalRate() < 0.01d) return;
 
-            APSInterface usedAPS = MainApp.getConfigBuilder().getActiveAPS();
+            APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
                 usedAPS.invoke(initiator);
                 result = usedAPS.getLastAPSResult();
@@ -302,6 +290,20 @@ public class LoopPlugin implements PluginBase {
             lastRun.lastAPSRun = new Date();
             lastRun.source = ((PluginBase) usedAPS).getName();
             lastRun.setByPump = null;
+
+            NSUpload.uploadDeviceStatus();
+
+            if (isSuspended()) {
+                log.debug(MainApp.sResources.getString(R.string.loopsuspended));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopsuspended)));
+                return;
+            }
+
+            if (pump.isSuspended()) {
+                log.debug(MainApp.sResources.getString(R.string.pumpsuspended));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.pumpsuspended)));
+                return;
+            }
 
             if (constraintsInterface.isClosedModeEnabled()) {
                 if (result.changeRequested) {
@@ -363,7 +365,6 @@ public class LoopPlugin implements PluginBase {
             }
 
             MainApp.bus().post(new EventLoopUpdateGui());
-            NSUpload.uploadDeviceStatus();
         } finally {
             if (Config.logFunctionCalls)
                 log.debug("invoke end");

@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
@@ -268,13 +269,15 @@ public class ActionStringHandler {
         } else if ("tddstats".equals(act[0])) {
             Object activePump = MainApp.getConfigBuilder().getActivePump();
             PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
+            PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
             PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
             PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
 
 
             if ((dana == null || dana != activePump) &&
                     (danaV2 == null || danaV2 != activePump) &&
-                    (danaKorean == null || danaKorean != activePump)
+                    (danaKorean == null || danaKorean != activePump) &&
+                    (danaRS == null || danaRS != activePump)
                     ) {
                 sendError("Pump does not support TDDs!");
                 return;
