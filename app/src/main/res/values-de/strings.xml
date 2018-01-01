@@ -97,7 +97,7 @@
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_extendedbolus_label">Verlängerter Bolus</string>
-    <string name="pump_tempbasal_label">Temp Basal</string>
+    <string name="pump_tempbasal_label">TBR</string>
     <string name="visible">Sichtbar</string>
     <string name="treatments_wizard_total_label">GESAMT</string>
     <string name="unsupportedclientver">Nicht unterstützte Version des Nightscout-Clients</string>
@@ -320,7 +320,7 @@
     <string name="error_only_numeric_digits_range_allowed">Bitte verwende nur Ziffern von %1$s - %2$s.</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
     <string name="wear">Wear</string>
-    <string name="always_use_shortavg">Verwende das kurze durchschnittliche Delta statt des einfachen Deltas</string>
+    <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
     <string name="always_use_shortavg_summary">Sinnvoll, wenn die Daten von einer ungefilterten Quelle Signalrauschen haben.</string>
     <string name="approachingdailylimit">Tagesinsulin-Limit wird erreicht</string>
     <string name="basalshortlabel">BR</string>
@@ -549,7 +549,7 @@
     <string name="pleaseallowpermission">Bitte Rechte gewähren</string>
     <string name="prefs_range_summary">Hoch- und Niedrig-Werte für die Übersicht- und die Smartwatch-Anzeige</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
-    <string name="sensitivity_warning">Stelle bei aktivierter Autosense-Funktion sicher, dass du alle gegessenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrate-Abweichung zu falsche Resistenz-/Empfindlichkeitswerten führen!</string>
+    <string name="sensitivity_warning">Stelle bei aktivierter Autosense-Funktion sicher, dass du alle gegessenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrate-Abweichung zu falschen Resistenz-/Empfindlichkeitswerten führen!</string>
     <string name="sensitivityaaps">Sensitivität AAPS</string>
     <string name="sensitivityoref0">Sensitivität Oref0</string>
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
@@ -593,7 +593,7 @@
     <string name="wear_overviewnotifications_summary">Zeige die Übersichtsbenachrichtigungen auch auf der Uhr an.</string>
     <string name="short_avgdelta">Kurzes durchschnittl. Delta</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="openapsama_autosens_adjusttargets_summary">Vorgabe: true. Erlaubt Autosense den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Vorgabe: erlaubt. Erlaubt Autosense den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
     <string name="openapsama_autosens_period">Intervall für Autosense [h]</string>
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, ist nicht berücksichtigt)</string>
     <string name="objectives_2_gate">Entscheide anhand von dieser Erfahrung, wie hoch max Basal sein sollte, und übernehme den Wert in die Pumpen- und AAPS-Einstellungen</string>
@@ -726,8 +726,6 @@
     <string name="closedmodeenabled">Closed mode aktiviert</string>
     <string name="virtualpump_lastconnection_label">Letzte Verbindung</string>
     <string name="virtualpump_basebasalrate_label">Basis-Basalrate</string>
-    <string name="virtualpump_tempbasal_label">TBR</string>
-    <string name="virtualpump_battery_label">Batterie</string>
     <string name="virtualpump_reservoir_label">Reservoir</string>
     <string name="danar_lastbolus">Letzter Bolus:</string>
     <string name="objectives_7_objective">Aktiviere zusätzliche Funktionen wie z. B. den SMB</string>
@@ -742,7 +740,7 @@
     <string name="pump_errors_history">Fehlerprotokol</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_state_disconnected">Keine Verbindung zur Pumpe</string>
-    <string name="combo_pump_state_suspended_by_user">Durch Benuzter gestoppt</string>
+    <string name="combo_pump_state_suspended_by_user">Durch Benutzer gestoppt</string>
     <string name="combo_pump_state_suspended_due_to_error">Wegen Fehler gestoppt</string>
     <string name="combo_pump_state_running">Normaler Betrieb</string>
     <string name="combo_tdds">TDDS</string>
