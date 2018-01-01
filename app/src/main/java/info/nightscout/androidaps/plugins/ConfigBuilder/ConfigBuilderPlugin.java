@@ -16,9 +16,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -38,8 +38,8 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
@@ -482,14 +482,26 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
     @Override
     public boolean isAMAModeEnabled() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        boolean result = preferences.getBoolean("openapsama_useautosens", false);
+        boolean result = SP.getBoolean("openapsama_useautosens", false);
 
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             result = result && constrain.isAMAModeEnabled();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isSMBModeEnabled() {
+        boolean result = true; // TODO update for SMB // SP.getBoolean("openapsama_useautosens", false);
+
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            result = result && constrain.isSMBModeEnabled();
         }
         return result;
     }

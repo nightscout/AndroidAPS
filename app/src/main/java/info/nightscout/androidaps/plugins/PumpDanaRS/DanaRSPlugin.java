@@ -290,6 +290,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         double origAbsoluteRate = absoluteRate;
         if (pump != null) {

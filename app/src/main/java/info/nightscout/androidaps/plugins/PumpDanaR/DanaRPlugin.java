@@ -785,6 +785,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         return true;
     }
 
+    @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
     @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
