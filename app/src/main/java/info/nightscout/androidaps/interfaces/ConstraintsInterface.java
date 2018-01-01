@@ -15,6 +15,8 @@ public interface ConstraintsInterface {
 
     boolean isAMAModeEnabled();
 
+    boolean isSMBModeEnabled();
+
     Double applyBasalConstraints(Double absoluteRate);
 
     Integer applyBasalConstraints(Integer percentRate);

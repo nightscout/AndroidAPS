@@ -31,7 +31,6 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 
@@ -546,6 +545,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 //log.debug(">>> getAutosensData Cache hit " + data.log(time));
                 return data;
             } else {
+                if (time > now) {
+                    // data may not be calculated yet, use last data
+                    return getLastAutosensData();
+                }
                 //log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
                 return null;
             }
@@ -557,7 +560,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         if (autosensDataTable.size() < 1)
             return null;
         AutosensData data = autosensDataTable.valueAt(autosensDataTable.size() - 1);
-        if (data.time < System.currentTimeMillis() - 5 * 60 * 1000) {
+        if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
             return null;
         } else {
             return data;
