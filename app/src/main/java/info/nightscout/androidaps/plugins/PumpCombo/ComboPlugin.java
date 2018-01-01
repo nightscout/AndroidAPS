@@ -1110,6 +1110,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         return absoluteRate;
     }
