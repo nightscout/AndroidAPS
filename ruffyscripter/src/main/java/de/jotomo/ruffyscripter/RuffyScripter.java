@@ -202,7 +202,7 @@ public class RuffyScripter implements RuffyCommands {
             return;
         }
         try {
-            log.debug("Disconnecting, requested by ...", new Exception());
+            log.debug("Disconnecting");
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
             // ignore
