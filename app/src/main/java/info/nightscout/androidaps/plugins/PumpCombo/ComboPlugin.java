@@ -555,7 +555,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             detailedBolusInfo.insulin = lastBolus.amount;
             detailedBolusInfo.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments (requested: %.2f"), lastBolus.amount, requestedBolus);
+            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments (requested: %.2f)", lastBolus.amount, requestedBolus));
 
             return new PumpEnactResult().success(false).enacted(true)
                     .comment(MainApp.sResources.getString(R.string.combo_error_partial_bolus_delivered,
