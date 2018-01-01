@@ -45,8 +45,9 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * Created by emmablack on 12/29/14.
- * Updated by andrew-warrington on 11/15/17.
+ * Updated by andrew-warrington on 02-Jan-2018.
  */
+
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
@@ -87,6 +88,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     public boolean detailedIOB = false;
     public boolean showBGI = false;
+    public boolean forceSquareCanvas = false;  //set to true by the Steampunk watch face.
     public long openApsStatus;
     public String externalStatusString = "no status";
     public String sSgv = "---";
@@ -108,17 +110,17 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     @Override
     public void onCreate() {
         super.onCreate();
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-                .getDefaultDisplay();
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getSize(displaySize);
         wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Clock");
 
-        specW = View.MeasureSpec.makeMeasureSpec(displaySize.x,
-                View.MeasureSpec.EXACTLY);
-        specH = View.MeasureSpec.makeMeasureSpec(displaySize.y,
-                View.MeasureSpec.EXACTLY);
-        sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
+        specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY);
+        if (forceSquareCanvas) {
+            specH = specW;
+        } else {
+            specH = View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY);
+        }
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -224,7 +226,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     protected void onDraw(Canvas canvas) {
         if (layoutSet) {
             setupCharts();
-            this.mRelativeLayout.draw(canvas);
+
+            mRelativeLayout.measure(specW, specH);
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
+            mRelativeLayout.draw(canvas);
             Log.d("onDraw", "draw");
         }
     }
@@ -239,8 +248,12 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             missedReadingAlert();
 
             mRelativeLayout.measure(specW, specH);
-            mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
-                    mRelativeLayout.getMeasuredHeight());
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
+            invalidate();
         }
     }
 
@@ -295,8 +308,11 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             }
 
             mRelativeLayout.measure(specW, specH);
-            mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
-                    mRelativeLayout.getMeasuredHeight());
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
             invalidate();
         }
     }

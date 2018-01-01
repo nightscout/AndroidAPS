@@ -16,9 +16,9 @@
             android:id="@+id/glucose_dial"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/steampunk_dial_mgdl"
             android:layout_gravity="center"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:src="@drawable/steampunk_dial_mgdl" />
 
     </LinearLayout>
 
@@ -245,7 +245,7 @@
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -303,7 +303,7 @@
                     android:text="-'"
                     android:textAlignment="center"
                     android:textColor="@color/black_86p"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
             </LinearLayout>

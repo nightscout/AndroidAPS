@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
@@ -25,6 +23,7 @@ public class Steampunk extends BaseWatchFace {
 
     @Override
     public void onCreate() {
+        forceSquareCanvas = true;
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_steampunk, null);
