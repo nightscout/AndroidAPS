@@ -80,7 +80,7 @@ public class QuickWizardEntry {
 
         // COB
         double cob = 0d;
-        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
         if (autosensData != null && useCOB() == YES) {
             cob = autosensData.cob;
         }

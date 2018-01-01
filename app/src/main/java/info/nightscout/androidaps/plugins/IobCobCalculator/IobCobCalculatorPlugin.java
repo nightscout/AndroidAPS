@@ -560,7 +560,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         if (autosensDataTable.size() < 1)
             return null;
         AutosensData data = autosensDataTable.valueAt(autosensDataTable.size() - 1);
-        if (data.time < System.currentTimeMillis() - 5 * 60 * 1000) {
+        if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
             return null;
         } else {
             return data;

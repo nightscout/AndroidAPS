@@ -654,7 +654,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private String generateCOBString() {
 
         String cobStringResult = "--";
-        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
         if (autosensData != null) {
             cobStringResult = (int) autosensData.cob + "g";
         }
