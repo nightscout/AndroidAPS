@@ -290,6 +290,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         double origAbsoluteRate = absoluteRate;
         if (pump != null) {
@@ -580,7 +585,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public synchronized PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public synchronized PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         percent = configBuilderPlugin.applyBasalConstraints(percent);
@@ -595,7 +600,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (runningTB != null && runningTB.percentRate == percent) {
+        if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;

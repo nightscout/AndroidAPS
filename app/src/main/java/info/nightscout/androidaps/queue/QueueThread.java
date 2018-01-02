@@ -59,7 +59,7 @@ public class QueueThread extends Thread {
                 }
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
-                    MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult()));
+                    MainApp.bus().post(new EventDismissBolusprogressIfRunning(null));
                     MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.connectiontimedout)));
                     log.debug("QUEUE: timed out");
                     pump.stopConnecting();
@@ -79,7 +79,7 @@ public class QueueThread extends Thread {
                         mBluetoothAdapter.enable();
                         SystemClock.sleep(1000);
                         //start over again once after watchdog barked
-                        connectionStartTime = System.currentTimeMillis();
+                        connectionStartTime = lastCommandTime = System.currentTimeMillis();
                     } else {
                         queue.clear();
                         return;

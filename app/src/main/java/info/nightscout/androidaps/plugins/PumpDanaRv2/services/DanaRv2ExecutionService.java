@@ -527,7 +527,10 @@ public class DanaRv2ExecutionService extends Service {
             waitMsec(100);
         }
         waitMsec(200);
-        lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - 45 * 60 * 1000L; //always load last 45 min;
+        if (MsgHistoryEvents_v2.lastEventTimeLoaded != 0)
+            lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - 45 * 60 * 1000L; //always load last 45 min;
+        else
+            lastHistoryFetched = 0;
         return new PumpEnactResult().success(true);
     }
 

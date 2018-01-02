@@ -14,9 +14,14 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.SP;
 
 /**
@@ -152,14 +157,35 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     RequirementResult requirementsMet(Integer objNum) {
         switch (objNum) {
             case 0:
-                return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
+                boolean isVirtualPump = VirtualPumpPlugin.getPlugin().isEnabled(PluginBase.PUMP);
+                boolean vpUploadEnabled = SP.getBoolean("virtualpump_uploadstatus", false);
+                boolean vpUploadNeeded = !isVirtualPump || vpUploadEnabled;
+
+                boolean apsEnabled = false;
+                APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+                if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS))
+                    apsEnabled = true;
+
+                return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
                         MainApp.sResources.getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + " " + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS));
+                                + " " + MainApp.sResources.getString(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
+                                + (isVirtualPump ? " " + MainApp.sResources.getString(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
+                                + " " + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
+                                + " " + MainApp.sResources.getString(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP))
+                                + " " + MainApp.sResources.getString(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
+                );
             case 1:
                 return new RequirementResult(manualEnacts >= manualEnactsNeeded,
                         MainApp.sResources.getString(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
             case 2:
                 return new RequirementResult(true, "");
+            case 3:
+                boolean closedModeEnabled = SafetyPlugin.getPlugin().isClosedModeEnabled();
+                return new RequirementResult(closedModeEnabled, MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedModeEnabled));
+            case 4:
+                double maxIOB = MainApp.getConfigBuilder().applyMaxIOBConstraints(1000d);
+                boolean maxIobSet =  maxIOB > 0;
+                return new RequirementResult(maxIobSet, MainApp.sResources.getString(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
             default:
                 return new RequirementResult(true, "");
         }
@@ -212,7 +238,13 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 MainApp.sResources.getString(R.string.objectives_6_objective),
                 "",
                 new Date(0),
-                14,
+                28,
+                new Date(0)));
+        objectives.add(new Objective(7,
+                MainApp.sResources.getString(R.string.objectives_7_objective),
+                "",
+                new Date(0),
+                28,
                 new Date(0)));
     }
 
@@ -260,7 +292,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
      **/
     @Override
     public boolean isLoopEnabled() {
-        return objectives.get(1).started.getTime() > 0;
+        return objectives.get(0).started.getTime() > 0;
     }
 
     @Override
@@ -276,6 +308,11 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public boolean isAMAModeEnabled() {
         return objectives.get(6).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean isSMBModeEnabled() {
+        return objectives.get(7).started.getTime() > 0;
     }
 
     @Override

@@ -533,7 +533,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             String iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
             String iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
             String cobString = generateCOBString();
-            String tempBasal = generateBasalString(treatmentsInterface);
+            String currentBasal = generateBasalString(treatmentsInterface);
 
             //bgi
             String bgiString = "";
@@ -543,7 +543,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
             }
 
-            String status = generateStatusString(profile, tempBasal,iobSum, iobDetail, bgiString);
+            String status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
 
             //batteries
             int phoneBattery = getBatteryLevel(getApplicationContext());
@@ -567,7 +567,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("iobDetail", iobDetail);
             dataMapRequest.getDataMap().putBoolean("detailedIob", mPrefs.getBoolean("wear_detailediob", false));
             dataMapRequest.getDataMap().putString("cob", cobString);
-            dataMapRequest.getDataMap().putString("tempBasal", tempBasal);
+            dataMapRequest.getDataMap().putString("currentBasal", currentBasal);
             dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
             dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
             dataMapRequest.getDataMap().putLong("openApsStatus", openApsStatus);
@@ -598,7 +598,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     @NonNull
-    private String generateStatusString(Profile profile, String tempBasal, String iobSum, String iobDetail, String bgiString) {
+    private String generateStatusString(Profile profile, String currentBasal, String iobSum, String iobDetail, String bgiString) {
 
         String status = "";
 
@@ -623,7 +623,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             iobString = iobSum + "U";
         }
 
-        status += tempBasal + " " + iobString;
+        status += currentBasal + " " + iobString;
 
         //add BGI if shown, otherwise return
         if (mPrefs.getBoolean("wear_showbgi", false)) {
@@ -636,10 +636,16 @@ public class WatchUpdaterService extends WearableListenerService implements
     @NonNull
     private String generateBasalString(TreatmentsInterface treatmentsInterface) {
 
-        String basalStringResult = "-.--U/h";
+        String basalStringResult;
         TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             basalStringResult = activeTemp.toStringShort();
+        } else {
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
+                basalStringResult = "100%";
+            } else {
+                basalStringResult = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
+            }
         }
         return basalStringResult;
     }
@@ -648,7 +654,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private String generateCOBString() {
 
         String cobStringResult = "--";
-        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
         if (autosensData != null) {
             cobStringResult = (int) autosensData.cob + "g";
         }

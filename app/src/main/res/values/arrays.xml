@@ -59,4 +59,43 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="quickWizardUseBGArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseCOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBolusIOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBasalOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+        <item>@string/positiveonly</item>
+        <item>@string/negativeonly</item>
+    </string-array>
+
+    <string-array name="quickWizardUseTrendArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+        <item>@string/positiveonly</item>
+        <item>@string/negativeonly</item>
+    </string-array>
+
+    <string-array name="quickWizardUseSuperBolusArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+    </string-array>
+
+    <string-array name="quickWizardUseTempTargetArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+    </string-array>
+
 </resources>

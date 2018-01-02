@@ -117,6 +117,11 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         Double origAbsoluteRate = absoluteRate;
         Double maxBasal = SP.getDouble("openapsma_max_basal", 1d);

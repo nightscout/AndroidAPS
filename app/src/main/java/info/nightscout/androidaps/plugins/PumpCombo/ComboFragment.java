@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -137,11 +138,14 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY
                         || ps.activeAlert != null && ps.activeAlert.errorCode != null) {
                     stateView.setTextColor(Color.RED);
+                    stateView.setTypeface(null, Typeface.BOLD);
                 } else if (plugin.getPump().state.suspended
                         || ps.activeAlert != null && ps.activeAlert.warningCode != null) {
                     stateView.setTextColor(Color.YELLOW);
+                    stateView.setTypeface(null, Typeface.BOLD);
                 } else {
                     stateView.setTextColor(Color.WHITE);
+                    stateView.setTypeface(null, Typeface.NORMAL);
                 }
 
                 // activity
@@ -171,12 +175,15 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     if (ps.insulinState == PumpState.LOW) {
                         reservoirView.setTextColor(Color.YELLOW);
                         reservoirView.setText(R.string.combo_reservoir_low);
+                        reservoirView.setTypeface(null, Typeface.BOLD);
                     } else if (ps.insulinState == PumpState.EMPTY) {
                         reservoirView.setTextColor(Color.RED);
                         reservoirView.setText(R.string.combo_reservoir_empty);
+                        reservoirView.setTypeface(null, Typeface.BOLD);
                     } else {
                         reservoirView.setTextColor(Color.WHITE);
                         reservoirView.setText(R.string.combo_reservoir_normal);
+                        reservoirView.setTypeface(null, Typeface.NORMAL);
                     }
 
                     // last connection
@@ -186,7 +193,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setText(R.string.combo_pump_connected_now);
                         lastConnectionView.setTextColor(Color.WHITE);
                     } else if (plugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
-                        lastConnectionView.setText(getString(R.string.combo_no_pump_connection, min));
+                        lastConnectionView.setText(MainApp.sResources.getString(R.string.combo_no_pump_connection, min));
                         lastConnectionView.setTextColor(Color.RED);
                     } else {
                         lastConnectionView.setText(minAgo);
@@ -199,7 +206,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         long minSinceRead = (System.currentTimeMillis() - plugin.getPump().state.timestamp) / 1000 / 60;
                         long remaining = ps.tbrRemainingDuration - minSinceRead;
                         if (remaining >= 0) {
-                            tbrStr = getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
+                            tbrStr = MainApp.sResources.getString(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);
                         }
                     }
                     tempBasalText.setText(tbrStr);

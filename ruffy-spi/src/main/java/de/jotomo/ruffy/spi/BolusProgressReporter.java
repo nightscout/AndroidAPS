@@ -7,8 +7,7 @@ public interface BolusProgressReporter {
         DELIVERED,
         STOPPING,
         STOPPED,
-        RECOVERING,
-        FINISHED
+        RECOVERING
     }
 
     void report(State state, int percent, double delivered);
