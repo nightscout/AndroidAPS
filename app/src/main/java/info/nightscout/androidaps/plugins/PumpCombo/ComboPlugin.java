@@ -804,9 +804,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (state.pumpTime == 0) {
             // time couldn't be read (e.g. a warning is displayed on the menu , hiding the time field)
         } else if (Math.abs(state.pumpTime - System.currentTimeMillis()) >= 10 * 60 * 1000) {
+            log.debug("Pump clock needs update, pump time: " + state.pumpTime + " (" + new Date(state.pumpTime) + ")");
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         } else if (Math.abs(state.pumpTime - System.currentTimeMillis()) >= 3 * 60 * 1000) {
+            log.debug("Pump clock needs update, pump time: " + state.pumpTime + " (" + new Date(state.pumpTime) + ")");
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_notification_check_time_date), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
         }
