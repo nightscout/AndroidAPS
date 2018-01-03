@@ -177,8 +177,8 @@ public class Steampunk extends BaseWatchFace {
             midColor = ContextCompat.getColor(getApplicationContext(), R.color.black);
             gridColor = ContextCompat.getColor(getApplicationContext(), R.color.grey_steampunk);
             basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
-            pointSize = 2;
+            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
+            pointSize = 1;
             setupCharts();
         }
 
