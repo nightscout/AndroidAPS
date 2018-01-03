@@ -50,6 +50,7 @@
         android:weightSum="1">
 
         <LinearLayout
+            android:id="@+id/main_menu_tap"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="0.7"
@@ -163,6 +164,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/chart_zoom_tap"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="0.27"
