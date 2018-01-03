@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
@@ -163,15 +164,19 @@ public class Profile {
         for (Integer index = 0; index < array.length(); index++) {
             try {
                 final JSONObject o = array.getJSONObject(index);
-                long tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
+                long tas = 0;
+                try {
+                    tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
+                } catch (JSONException e) {
+                    String time = o.getString("time");
+                    tas = getShitfTimeSecs(DateUtil.toSeconds(time));
+                    //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
+                }
                 Double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
-                try {
-                    log.error(array.getJSONObject(index).toString());
-                } catch (JSONException e1) {
-                }
+                log.error(json.toString());
             }
         }
 

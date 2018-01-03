@@ -128,7 +128,7 @@ public class CommandQueue {
 
     // After new command added to the queue
     // start thread again if not already running
-    private void notifyAboutNewCommand() {
+    private synchronized void notifyAboutNewCommand() {
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
