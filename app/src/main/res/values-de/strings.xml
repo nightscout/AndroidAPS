@@ -330,9 +330,9 @@
     <string name="copied_to_clipboard">In den Zwischenspeicher kopiert</string>
     <string name="copy_to_clipboard">In den Zwischenspeicher kopieren</string>
     <string name="danar_bluetooth_status">Bluetooth-Status</string>
-    <string name="danar_stats_cumulative_tdd">Kumulative tägl. Gesamtdosis</string>
+    <string name="danar_stats_cumulative_tdd">Kumulative TDD</string>
     <string name="danar_stats_date">Datum</string>
-    <string name="danar_stats_expweight">Exponentiell gewichtete tägl. Gesamtdosis</string>
+    <string name="danar_stats_expweight">Exponentiell gewichtete TDD</string>
     <string name="danar_stats_olddata_Message">Veraltete Daten, bitte klicke auf \"Reload\"</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="xdripstatus">xDrip+ Statuszeile (Uhr)</string>
