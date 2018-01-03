@@ -50,6 +50,24 @@ public class Steampunk extends BaseWatchFace {
 
     protected void setColorDark() {
 
+        if (mLinearLayout2 != null) {
+            if (ageLevel() <= 0) {
+                mLinearLayout2.setBackgroundResource(R.drawable.redline);
+                mTimestamp.setTextColor(getResources().getColor(R.color.red_600));
+            } else {
+                mLinearLayout2.setBackgroundResource(0);
+                mTimestamp.setTextColor(getResources().getColor(R.color.black_86p));
+            }
+        }
+
+        if (mLoop != null) {
+            if (loopLevel == 0) {
+                mLoop.setTextColor(getResources().getColor(R.color.red_600));
+            } else {
+                mLoop.setTextColor(getResources().getColor(R.color.black_86p));
+            }
+        }
+
         if (!sSgv.equals("---")) {
             //ensure the glucose dial is the correct units
             if (!sUnits.equals("-")) {
@@ -65,7 +83,9 @@ public class Steampunk extends BaseWatchFace {
             if (sUnits.equals("mmol")) {
                 rotationAngle = Float.valueOf(sSgv) * 18f;  //convert to mg/dL, which is equivalent to degrees
             } else {
-                rotationAngle = Float.valueOf(sSgv);       //if glucose a value is received, use it to determine the amount of rotation of the dial.
+                if (!sUnits.equals("-")) {
+                    rotationAngle = Float.valueOf(sSgv);       //if glucose a value is received, use it to determine the amount of rotation of the dial.
+                }
             }
             if (rotationAngle > 330) rotationAngle = 330;                       //if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
             if (rotationAngle != 0 && rotationAngle < 30) rotationAngle = 30;   //if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
@@ -116,7 +136,7 @@ public class Steampunk extends BaseWatchFace {
                     }
                 }
             }
-            if (deltaRotationAngle > 35) deltaRotationAngle = 35f;
+            if (deltaRotationAngle > 40) deltaRotationAngle = 40f;
             mDeltaGauge.setRotation(deltaRotationAngle * deltaIsNegative);
         }
 
@@ -157,22 +177,41 @@ public class Steampunk extends BaseWatchFace {
 
     protected void setTextSizes() {
 
+        float fontSmall = 10f;
+        float fontMedium = 11f;
+        float fontLarge = 12f;
+
         if (bIsRound) {
-            mCOB2.setTextSize(13);
-            mBasalRate.setTextSize(13);
-            mIOB2.setTextSize(12);
-            mTimestamp.setTextSize(12);
-            mLoop.setTextSize(12);
-            mUploaderBattery.setTextSize(11);
-            mRigBattery.setTextSize(11);
+            fontSmall = 11f;
+            fontMedium = 12f;
+            fontLarge = 13f;
+        }
+
+        //top row. large font unless text too big (i.e. detailedIOB)
+        mCOB2.setTextSize(fontLarge);
+        mBasalRate.setTextSize(fontLarge);
+        if (sIOB2.length() < 7) {
+            mIOB2.setTextSize(fontLarge);
         } else {
-            mCOB2.setTextSize(11);
-            mBasalRate.setTextSize(11);
-            mIOB2.setTextSize(10);
-            mTimestamp.setTextSize(9);
-            mLoop.setTextSize(9);
-            mUploaderBattery.setTextSize(9);
-            mRigBattery.setTextSize(9);
+            mIOB2.setTextSize(fontSmall);
+        }
+
+        //bottom row. font medium unless text too long (i.e. longer than 9' timestamp)
+        if (mTimestamp.getText().length() < 3 || mLoop.getText().length() < 3) {     //always resize these fields together, for symmetry.
+            mTimestamp.setTextSize(fontMedium);
+            mLoop.setTextSize(fontMedium);
+        } else {
+            mTimestamp.setTextSize(fontSmall);
+            mLoop.setTextSize(fontSmall);
+        }
+
+        //if both batteries are shown, make them smaller.
+        if (sharedPrefs.getBoolean("show_uploader_battery", true) && sharedPrefs.getBoolean("show_rig_battery", false)) {
+            mUploaderBattery.setTextSize(fontSmall);
+            mRigBattery.setTextSize(fontSmall);
+        } else {
+            mUploaderBattery.setTextSize(fontMedium);
+            mRigBattery.setTextSize(fontMedium);
         }
     }
 }
