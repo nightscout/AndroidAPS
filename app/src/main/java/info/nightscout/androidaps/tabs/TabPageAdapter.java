@@ -9,8 +9,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.interfaces.PluginBase;
 
 /**
@@ -21,6 +25,8 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     ArrayList<PluginBase> visibleFragmentList = new ArrayList<>();
 
     Context context;
+
+    private static Logger log = LoggerFactory.getLogger(TabPageAdapter.class);
 
     public TabPageAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -40,6 +46,8 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
             super.finishUpdate(container);
         } catch (NullPointerException nullPointerException){
             System.out.println("Catch the NullPointerException in FragmentStatePagerAdapter.finishUpdate");
+        } catch (IllegalStateException e){
+            log.error(e.getMessage());
         }
     }
 
