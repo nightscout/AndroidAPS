@@ -141,6 +141,14 @@
         android:summary="Input Design"
         android:title="Input Design" />
 
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/delta_granularity"
+        android:entryValues="@array/delta_granularity_values"
+        android:key="delta_granularity"
+        android:summary="Delta Granularity (Steampunk)"
+        android:title="Delta Granularity (Steampunk)" />
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="showBigNumbers"
