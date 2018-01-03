@@ -724,10 +724,6 @@
     <string name="nsclienthaswritepermission">Nightscout-Client hat Schreibrechte</string>
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
     <string name="closedmodeenabled">Closed mode aktiviert</string>
-    <string name="virtualpump_lastconnection_label">Letzte Verbindung</string>
-    <string name="virtualpump_basebasalrate_label">Basis-Basalrate</string>
-    <string name="virtualpump_reservoir_label">Reservoir</string>
-    <string name="danar_lastbolus">Letzter Bolus:</string>
     <string name="objectives_7_objective">Aktiviere zusätzliche Funktionen wie z. B. den SMB</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
