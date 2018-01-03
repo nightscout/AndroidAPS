@@ -17,7 +17,8 @@ import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 public class Steampunk extends BaseWatchFace {
 
-    private long sgvTapTime = 0;
+    private long chartTapTime = 0;
+    private long mainMenuTapTime = 0;
     private float lastEndDegrees = 0f;
     private float deltaRotationAngle = 0f;
 
@@ -33,13 +34,27 @@ public class Steampunk extends BaseWatchFace {
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
 
-        if (tapType == TAP_TYPE_TAP) {
-            if (eventTime - sgvTapTime < 800) {
+        if (tapType == TAP_TYPE_TAP&&
+                x >= mChartTap.getLeft() &&
+                x <= mChartTap.getRight()&&
+                y >= mChartTap.getTop() &&
+                y <= mChartTap.getBottom()){
+            if (eventTime - chartTapTime < 800){
+                changeChartTimeframe();
+            }
+            chartTapTime = eventTime;
+
+        } else if (tapType == TAP_TYPE_TAP&&
+                x >= mMainMenuTap.getLeft() &&
+                x <= mMainMenuTap.getRight()&&
+                y >= mMainMenuTap.getTop() &&
+                y <= mMainMenuTap.getBottom()){
+            if (eventTime - mainMenuTapTime < 800){
                 Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
-            sgvTapTime = eventTime;
+            mainMenuTapTime = eventTime;
         }
     }
 
@@ -218,4 +233,11 @@ public class Steampunk extends BaseWatchFace {
             mRigBattery.setTextSize(fontMedium);
         }
     }
+
+    private void changeChartTimeframe() {
+        int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
+        timeframe = (timeframe%5) + 1;
+        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
+    }
+
 }

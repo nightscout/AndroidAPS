@@ -55,7 +55,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public long datetime;
     public RelativeLayout mRelativeLayout;
-    public LinearLayout mLinearLayout, mLinearLayout2, mDate;
+    public LinearLayout mLinearLayout, mLinearLayout2, mDate, mChartTap, mMainMenuTap;
     public long sgvLevel = 0;
     public int ageLevel = 1;
     public int loopLevel = 1;
@@ -171,6 +171,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mDeltaGauge = (ImageView) stub.findViewById(R.id.delta_pointer);
                 mHourHand = (ImageView) stub.findViewById(R.id.hour_hand);
                 mMinuteHand = (ImageView) stub.findViewById(R.id.minute_hand);
+                mChartTap = (LinearLayout) stub.findViewById(R.id.chart_zoom_tap);
+                mMainMenuTap = (LinearLayout) stub.findViewById(R.id.main_menu_tap);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
                 layoutSet = true;
 
