@@ -146,7 +146,7 @@ public class BgGraphBuilder {
 
         for (TempWatchData twd: tempWatchDataList) {
             if(twd.endTime > start_time) {
-                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight?3:2));
+                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight?(pointSize+1):pointSize));
                 if(highlight){
                     lines.add(tempValuesLine(twd, (float) minChart, factor, true, 1));
                 }
