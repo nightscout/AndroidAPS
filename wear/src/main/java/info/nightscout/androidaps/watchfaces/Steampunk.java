@@ -69,27 +69,31 @@ public class Steampunk extends BaseWatchFace {
         }
 
         if (!sSgv.equals("---")) {
-            //ensure the glucose dial is the correct units
+
+            float rotationAngle = 0f;                                           //by default, show ? on the dial (? is at 0 degrees on the dial)
+
             if (!sUnits.equals("-")) {
+
+                //ensure the glucose dial is the correct units
                 if (sUnits.equals("mmol")) {
                     mGlucoseDial.setImageResource(R.drawable.steampunk_dial_mmol);
                 } else {
                     mGlucoseDial.setImageResource(R.drawable.steampunk_dial_mgdl);
                 }
-            }
 
-            //rotate glucose dial
-            float rotationAngle = 0f;                                           //by default, show ? on the dial (? is at 0 degrees on the dial)
-            if (sUnits.equals("mmol")) {
-                rotationAngle = Float.valueOf(sSgv) * 18f;  //convert to mg/dL, which is equivalent to degrees
-            } else {
-                if (!sUnits.equals("-")) {
+                //convert the Sgv to degrees of rotation
+                if (sUnits.equals("mmol")) {
+                    rotationAngle = Float.valueOf(sSgv) * 18f;  //convert to mg/dL, which is equivalent to degrees
+                } else {
                     rotationAngle = Float.valueOf(sSgv);       //if glucose a value is received, use it to determine the amount of rotation of the dial.
                 }
+
             }
+
             if (rotationAngle > 330) rotationAngle = 330;                       //if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
             if (rotationAngle != 0 && rotationAngle < 30) rotationAngle = 30;   //if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
 
+            //rotate glucose dial
             RotateAnimation rotate = new RotateAnimation(
                     lastEndDegrees, rotationAngle - lastEndDegrees,
                     Animation.RELATIVE_TO_SELF, 0.5f,
