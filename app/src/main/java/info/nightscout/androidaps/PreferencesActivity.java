@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -58,8 +59,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (key.equals("language")) {
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
-            recreate();
-            MainApp.bus().post(new EventRefreshGui());
+            MainApp.bus().post(new EventRefreshGui(true));
+            //recreate() does not update language so better close settings
+            finish();
         }
         if (key.equals("short_tabtitles")) {
             MainApp.bus().post(new EventRefreshGui());

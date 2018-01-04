@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -178,6 +179,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
+
+    final Object updateSync = new Object();
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -902,9 +905,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @SuppressLint("SetTextI18n")
-    public void updateGUI(String from) {
+    public void updateGUI(final String from) {
         log.debug("updateGUI entered from: " + from);
-        Date updateGUIStart = new Date();
+        final Date updateGUIStart = new Date();
 
         if (getActivity() == null)
             return;
@@ -926,7 +929,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         String units = profile.getUnits();
@@ -938,8 +941,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
-        double lowLine = SP.getDouble("low_mark", 0d);
-        double highLine = SP.getDouble("high_mark", 0d);
+        final double lowLine = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
+        final double highLine = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -1143,16 +1146,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
 
-        if (lowLine < 1) {
-            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        }
-        if (highLine < 1) {
-            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
-        }
-
         // **** BG value ****
         if (lastBG == null) { //left this here as it seems you want to exit at this point if it is null...
-
             return;
         }
         Integer flag = bgView.getPaintFlags();
@@ -1171,24 +1166,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
         if (shorttextmode) {
-            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + " U";
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U";
             iobView.setText(iobtext);
             iobView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + " U\n"
-                            + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + " U\n"
-                            + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + " U\n";
+                    String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U\n"
+                            + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U\n"
+                            + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U\n";
                     OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.iob), iobtext, null);
                 }
             });
         } else if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
-            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + " U ("
-                    + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + " U "
-                    + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + " U)";
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                    + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                    + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
             iobView.setText(iobtext);
         } else {
-            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + " U ("
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                     + DecimalFormatter.to2Decimal(bolusIob.iob) + "/"
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
             iobView.setText(iobtext);
@@ -1203,7 +1198,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
+        final boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
         if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
             showPredictionView.setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
@@ -1247,105 +1242,121 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // ****** GRAPH *******
 
-        // allign to hours
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.add(Calendar.HOUR, 1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // allign to hours
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.MILLISECOND, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.add(Calendar.HOUR, 1);
 
-        int hoursToFetch;
-        long toTime;
-        long fromTime;
-        long endTime;
-        if (showPrediction) {
-            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
-            predHours = Math.min(2, predHours);
-            predHours = Math.max(0, predHours);
-            hoursToFetch = rangeToDisplay - predHours;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime + predHours * 60 * 60 * 1000L;
-        } else {
-            hoursToFetch = rangeToDisplay;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime;
-        }
+                int hoursToFetch;
+                final long toTime;
+                final long fromTime;
+                final long endTime;
+                if (showPrediction) {
+                    int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
+                    predHours = Math.min(2, predHours);
+                    predHours = Math.max(0, predHours);
+                    hoursToFetch = rangeToDisplay - predHours;
+                    toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
+                    fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                    endTime = toTime + predHours * 60 * 60 * 1000L;
+                } else {
+                    hoursToFetch = rangeToDisplay;
+                    toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
+                    fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                    endTime = toTime;
+                }
 
 
-        long now = System.currentTimeMillis();
+                final long now = System.currentTimeMillis();
 
-        // 2nd graph
-        // remove old data
-        iobGraph.getSeries().clear();
+                //  ------------------ 1st graph
+                Profiler.log(log, from + " - 1st graph - START", updateGUIStart);
 
-        GraphData secondGraphData = new GraphData();
+                final GraphData graphData = new GraphData(bgGraph);
 
-        boolean useIobForScale = false;
-        boolean useCobForScale = false;
-        boolean useDevForScale = false;
-        boolean useRatioForScale = false;
+                // **** In range Area ****
+                graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
 
-        if (showIobView.isChecked()) {
-            useIobForScale = true;
-        } else if (showCobView.isChecked()) {
-            useCobForScale = true;
-        } else if (showDeviationsView.isChecked()) {
-            useDevForScale = true;
-        } else if (showRatiosView.isChecked()) {
-            useRatioForScale = true;
-        }
+                // **** BG ****
+                if (showPrediction)
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
+                else
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
 
-        if (showIobView.isChecked())
-            secondGraphData.addIob(iobGraph, fromTime, now, useIobForScale, 1d);
-        if (showCobView.isChecked())
-            secondGraphData.addCob(iobGraph, fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
-        if (showDeviationsView.isChecked())
-            secondGraphData.addDeviations(iobGraph, fromTime, now, useDevForScale, 1d);
-        if (showRatiosView.isChecked())
-            secondGraphData.addRatio(iobGraph, fromTime, now, useRatioForScale, 1d);
+                // set manual x bounds to have nice steps
+                graphData.formatAxis(fromTime, endTime);
 
-        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
-            iobGraph.setVisibility(View.VISIBLE);
-        } else {
-            iobGraph.setVisibility(View.GONE);
-        }
+                // Treatments
+                graphData.addTreatments(fromTime, endTime);
 
-        // remove old data from graph
-        bgGraph.getSeries().clear();
+                // add basal data
+                if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
+                    graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2d);
+                }
 
-        GraphData graphData = new GraphData();
+                // **** NOW line ****
+                graphData.addNowLine(now);
 
-        // **** In range Area ****
-        graphData.addInRangeArea(bgGraph, fromTime, endTime, lowLine, highLine);
+                // ------------------ 2nd graph
+                Profiler.log(log, from + " - 2nd graph - START", updateGUIStart);
 
-        // **** BG ****
-        if (showPrediction)
-            graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
-        else
-            graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, null);
+                final GraphData secondGraphData = new GraphData(iobGraph);
 
-        // set manual x bounds to have nice steps
-        graphData.formatAxis(bgGraph, fromTime, endTime);
-        secondGraphData.formatAxis(iobGraph, fromTime, endTime);
+                boolean useIobForScale = false;
+                boolean useCobForScale = false;
+                boolean useDevForScale = false;
+                boolean useRatioForScale = false;
 
-        // Treatments
-        graphData.addTreatments(bgGraph, fromTime, endTime);
+                if (showIobView.isChecked()) {
+                    useIobForScale = true;
+                } else if (showCobView.isChecked()) {
+                    useCobForScale = true;
+                } else if (showDeviationsView.isChecked()) {
+                    useDevForScale = true;
+                } else if (showRatiosView.isChecked()) {
+                    useRatioForScale = true;
+                }
 
-        // add basal data
-        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            graphData.addBasals(bgGraph, fromTime, now, lowLine / graphData.maxY / 1.2d);
-        }
+                if (showIobView.isChecked())
+                    secondGraphData.addIob(fromTime, now, useIobForScale, 1d);
+                if (showCobView.isChecked())
+                    secondGraphData.addCob(fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
+                if (showDeviationsView.isChecked())
+                    secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
+                if (showRatiosView.isChecked())
+                    secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
 
-        // **** NOW line ****
-        graphData.addNowLine(bgGraph, now);
-        secondGraphData.addNowLine(iobGraph, now);
+                // **** NOW line ****
+                // set manual x bounds to have nice steps
+                secondGraphData.formatAxis(fromTime, endTime);
+                secondGraphData.addNowLine(now);
 
-        // finaly enforce drawing of graphs
-        bgGraph.onDataChanged(false, false);
-        iobGraph.onDataChanged(false, false);
+                // do GUI update
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
+                                iobGraph.setVisibility(View.VISIBLE);
+                            } else {
+                                iobGraph.setVisibility(View.GONE);
+                            }
+                            // finally enforce drawing of graphs
+                            graphData.performUpdate();
+                            secondGraphData.performUpdate();
+                            Profiler.log(log, from + " - onDataChanged", updateGUIStart);
+                        }
+                    });
+                }
+            }
+        }).start();
 
         Profiler.log(log, from, updateGUIStart);
     }
@@ -1431,6 +1442,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         }
+
     }
 
     void updateNotifications() {

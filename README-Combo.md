@@ -141,6 +141,10 @@ Known issues:
 - AAPS might be unresponsive for 10-30s or so when starting and calculating sensitivity.
   AAPS might also be unresponsive when doing background work, e.g. after receiving a new
   glucose reading.
+- Since the pump's date & time can't be updated automatically at this time, daylight saving changes
+  will cause an alert asking to update the pump clock. A usable workaround should be to disable
+  the automatic update of the phone's clock for the night and then enabling it again in the morning
+  when also updating the pump.
 
 Reporting bugs:
 - Note the precise time the problem occurred and describe the circumstances and steps that caused
