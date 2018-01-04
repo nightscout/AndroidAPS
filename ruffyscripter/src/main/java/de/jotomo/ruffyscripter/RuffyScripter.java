@@ -187,10 +187,7 @@ public class RuffyScripter implements RuffyCommands {
             if (!ruffyService.isConnected()) {
                 return false;
             }
-            if (System.currentTimeMillis() - menuLastUpdated >= 1500) {
-                waitForScreenUpdate();
-            }
-            return System.currentTimeMillis() - menuLastUpdated < 1500;
+            return ruffyService.isConnected() && System.currentTimeMillis() - menuLastUpdated < 10 * 1000;
         } catch (RemoteException e) {
             return false;
         }
