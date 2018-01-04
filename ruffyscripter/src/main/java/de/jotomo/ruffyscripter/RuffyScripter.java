@@ -203,6 +203,8 @@ public class RuffyScripter implements RuffyCommands {
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
             // ignore
+        } catch (Exception e) {
+            log.warn("Disconnect not happy", e);
         }
     }
 
