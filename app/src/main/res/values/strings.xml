@@ -806,5 +806,6 @@
     <string name="nsclienthaswritepermission">NSClient has write permission</string>
     <string name="closedmodeenabled">Closed mode enabled</string>
     <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
 </resources>
 
