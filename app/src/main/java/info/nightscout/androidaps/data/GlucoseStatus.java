@@ -64,14 +64,21 @@ public class GlucoseStatus {
         return this;
     }
 
+
+
     @Nullable
-    public static GlucoseStatus getGlucoseStatusData() {
+    public static GlucoseStatus getGlucoseStatusData(){
+        return getGlucoseStatusData(false);
+    }
+
+    @Nullable
+    public static GlucoseStatus getGlucoseStatusData(boolean allowOldData) {
         // load 45min
         long fromtime = (long) (System.currentTimeMillis() - 60 * 1000L * 45);
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
-        if (sizeRecords < 1 || data.get(0).date < System.currentTimeMillis() - 7 * 60 * 1000L) {
+        if (sizeRecords < 1 || (data.get(0).date < System.currentTimeMillis() - 7 * 60 * 1000L && !allowOldData)) {
             return null;
         }
 
