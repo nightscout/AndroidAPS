@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -518,7 +520,12 @@ public class DataService extends IntentService {
     }
 
     private void handleRemovedFoodRecord(String _id) {
-        MainApp.getDbHelper().foodHelper.deleteFoodById(_id);
+
+        try {
+            MainApp.getDbHelper().foodHelper.getDao().deleteByNSId(_id);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
     }
 
     public void handleAddChangeFoodRecord(JSONObject trJson) throws JSONException {

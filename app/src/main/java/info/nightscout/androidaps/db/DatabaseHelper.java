@@ -68,7 +68,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
-    public static final String DATABASE_FOODS = "Foods";
 
     private static final int DATABASE_VERSION = 8;
 
@@ -95,11 +94,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
 
-    public FoodHelper foodHelper = new FoodHelper(this);
+    public FoodHelper foodHelper;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         onCreate(getWritableDatabase(), getConnectionSource());
+        foodHelper = new FoodHelper(getConnectionSource());
         //onUpgrade(getWritableDatabase(), getConnectionSource(), 1,1);
     }
 
