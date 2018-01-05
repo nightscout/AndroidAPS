@@ -24,11 +24,12 @@ import info.nightscout.utils.SP;
 public class BroadcastTreatment {
     private static Logger log = LoggerFactory.getLogger(BroadcastTreatment.class);
 
-    public static void handleNewTreatment(JSONObject treatment, boolean isDelta) {
+    public static void handleNewTreatment(JSONObject treatment, boolean isDelta, boolean isLocalBypass) {
 
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
+        bundle.putBoolean("islocal", isLocalBypass);
         Intent intent = new Intent(Intents.ACTION_NEW_TREATMENT);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

@@ -181,7 +181,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useBG");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return YES;
     }
@@ -190,7 +190,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useCOB");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return NO;
     }
@@ -199,7 +199,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useBolusIOB");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return YES;
     }
@@ -208,7 +208,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useBasalIOB");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return YES;
     }
@@ -217,7 +217,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useTrend");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return NO;
     }
@@ -226,7 +226,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useSuperBolus");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return NO;
     }
@@ -235,7 +235,7 @@ public class QuickWizardEntry {
         try {
             return storage.getInt("useTempTarget");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //log.error("Unhandled exception", e);
         }
         return NO;
     }

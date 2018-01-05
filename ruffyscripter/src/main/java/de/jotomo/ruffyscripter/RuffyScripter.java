@@ -187,10 +187,7 @@ public class RuffyScripter implements RuffyCommands {
             if (!ruffyService.isConnected()) {
                 return false;
             }
-            if (System.currentTimeMillis() - menuLastUpdated >= 1500) {
-                waitForScreenUpdate();
-            }
-            return System.currentTimeMillis() - menuLastUpdated < 1500;
+            return ruffyService.isConnected() && System.currentTimeMillis() - menuLastUpdated < 10 * 1000;
         } catch (RemoteException e) {
             return false;
         }
@@ -202,10 +199,12 @@ public class RuffyScripter implements RuffyCommands {
             return;
         }
         try {
-            log.debug("Disconnecting, requested by ...", new Exception());
+            log.debug("Disconnecting");
             ruffyService.doRTDisconnect();
         } catch (RemoteException e) {
             // ignore
+        } catch (Exception e) {
+            log.warn("Disconnect not happy", e);
         }
     }
 
