@@ -162,9 +162,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             baseic[i] = SP.getDouble(SETTINGS_PREFIX + "baseic" + i, baseic[i]);
             baseisf[i] = SP.getDouble(SETTINGS_PREFIX + "baseisf" + i, baseisf[i]);
         }
-
-
-        createConvertedProfile();
     }
 
     public String externallySetParameters(int timeshift, int percentage) {
@@ -347,6 +344,9 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+
         performLimitCheck();
         return convertedProfile;
     }
@@ -358,6 +358,9 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     @Override
     public String getProfileName() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+
         performLimitCheck();
         return convertedProfileName;
     }

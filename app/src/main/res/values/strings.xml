@@ -808,6 +808,9 @@
     <string name="nsclienthaswritepermission">NSClient has write permission</string>
     <string name="closedmodeenabled">Closed mode enabled</string>
     <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
+    <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
+    <string name="zerovalueinprofile">Zero value in profile</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>

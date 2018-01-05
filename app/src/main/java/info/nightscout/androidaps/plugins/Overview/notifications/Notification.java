@@ -58,6 +58,8 @@ public class Notification {
     public static final int BG_READINGS_MISSED = 27;
     public static final int UNSUPPORTED_FIRMWARE = 28;
     public static final int MINIMAL_BASAL_VALUE_REPLACED = 29;
+    public static final int BASAL_PROFILE_NOT_ALIGNED_TO_HOURS = 30;
+    public static final int ZERO_VALUE_IN_PROFILE = 31;
 
     public int id;
     public Date date;
