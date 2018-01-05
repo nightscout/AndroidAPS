@@ -35,7 +35,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -55,6 +54,14 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PercentageSplitter;
 
+/**
+ * This Helper contains all resource to provide a central DB management functionality. Only methods handling
+ * data-structure (and not the DB content) should be contained in here (meaning DDL and not SQL).
+ *
+ * This class can safely be called from Services, but should not call Services to avoid circular dependencies.
+ * One major issue with this (right now) are the scheduled events, which are put into the service. Therefor all
+ * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
+ */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
 
@@ -94,12 +101,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
 
-    public FoodHelper foodHelper;
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         onCreate(getWritableDatabase(), getConnectionSource());
-        foodHelper = new FoodHelper(getConnectionSource());
         //onUpgrade(getWritableDatabase(), getConnectionSource(), 1,1);
     }
 
@@ -219,7 +223,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            foodHelper.resetFood();
+            resetFood();
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -232,7 +236,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
         scheduleProfileSwitchChange();
-        foodHelper.scheduleFoodChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -307,6 +310,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         scheduleProfileSwitchChange();
     }
+
+    public void resetFood() {
+        try {
+            TableUtils.dropTable(this.getConnectionSource(), Food.class, true);
+            TableUtils.createTableIfNotExists(this.getConnectionSource(), Food.class);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
+
+
 
     // ------------------ getDao -------------------------------------------
 

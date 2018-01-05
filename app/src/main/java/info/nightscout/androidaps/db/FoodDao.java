@@ -86,7 +86,6 @@ public class FoodDao extends BaseDaoImpl<Food, Long> {
                         old.copyFrom(food);
                         this.create(old);
                         log.debug("FOOD: Updating record by _id: " + old.toString());
-                        FoodHelper.scheduleFoodChange();
                         return true;
                     } else {
                         return false;
@@ -95,45 +94,11 @@ public class FoodDao extends BaseDaoImpl<Food, Long> {
             }
             this.createOrUpdate(food);
             log.debug("FOOD: New record: " + food.toString());
-            FoodHelper.scheduleFoodChange();
             return true;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
         return false;
-    }
-
-    /**
-     * deletes an entry by its NS Id.
-     *
-     * Basically a convenience method for findByNSId and deleteFood.
-     *
-     * should be moved to a Service
-     *
-     * @param _id
-     */
-    public void deleteByNSId(String _id) throws SQLException {
-        Food stored = findByNSId(_id);
-        if (stored != null) {
-            log.debug("FOOD: Removing Food record from database: " + stored.toString());
-            this.deleteFood(stored);
-        }
-    }
-
-    /**
-     * deletes the food and sends the foodChange Event
-     *
-     * should be moved ot a Service
-     *
-     * @param food
-     */
-    public void deleteFood(Food food) {
-        try {
-            this.delete(food);
-            FoodHelper.scheduleFoodChange();
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
     }
 
     /**

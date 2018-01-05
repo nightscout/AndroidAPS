@@ -30,6 +30,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.DataServiceManager;
 import info.nightscout.androidaps.db.Food;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
@@ -121,7 +122,7 @@ public class FoodFragment extends SubscriberFragment {
                 }
             });
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().foodHelper.getDao().getFoodData());
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(DataServiceManager.getInstance().getFoodService().getFoodData());
             recyclerView.setAdapter(adapter);
 
             loadData();
@@ -144,7 +145,7 @@ public class FoodFragment extends SubscriberFragment {
     }
 
     void loadData() {
-        unfiltered = MainApp.getDbHelper().foodHelper.getDao().getFoodData();
+        unfiltered = DataServiceManager.getInstance().getFoodService().getFoodData();
     }
 
     void fillCategories() {
@@ -299,7 +300,7 @@ public class FoodFragment extends SubscriberFragment {
                                 if (_id != null && !_id.equals("")) {
                                     NSUpload.removeFoodFromNS(_id);
                                 }
-                                MainApp.getDbHelper().foodHelper.getDao().deleteFood(food);
+                                DataServiceManager.getInstance().getFoodService().delete(food);
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

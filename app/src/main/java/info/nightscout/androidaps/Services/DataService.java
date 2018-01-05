@@ -20,6 +20,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.DataServiceManager;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
@@ -522,14 +523,14 @@ public class DataService extends IntentService {
     private void handleRemovedFoodRecord(String _id) {
 
         try {
-            MainApp.getDbHelper().foodHelper.getDao().deleteByNSId(_id);
+            DataServiceManager.getInstance().getFoodService().deleteByNSId(_id);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
     }
 
     public void handleAddChangeFoodRecord(JSONObject trJson) throws JSONException {
-        MainApp.getDbHelper().foodHelper.createFoodFromJsonIfNotExists(trJson);
+        DataServiceManager.getInstance().getFoodService().createFoodFromJsonIfNotExists(trJson);
     }
 
     private void handleRemovedRecordFromNS(String _id) {
