@@ -45,15 +45,18 @@ import info.nightscout.utils.Round;
 
 public class GraphData {
 
-    public GraphData() {
-        units = MainApp.getConfigBuilder().getProfileUnits();
-    }
-
+    private GraphView graph;
     public double maxY = 0;
     private List<BgReading> bgReadingsArray;
     private String units;
+    private List<Series> series = new ArrayList<>();
 
-    public void addBgReadings(GraphView bgGraph, long fromTime, long toTime, double lowLine, double highLine, DetermineBasalResultAMA amaResult) {
+    public GraphData(GraphView graph) {
+        units = MainApp.getConfigBuilder().getProfileUnits();
+        this.graph = graph;
+    }
+
+    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, DetermineBasalResultAMA amaResult) {
         double maxBgValue = 0d;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
@@ -81,20 +84,18 @@ public class GraphData {
         DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
         bg = bgListArray.toArray(bg);
 
-        if (bg.length > 0) {
-            addSeriesWithoutInvalidate(bgGraph, new PointsWithLabelGraphSeries<>(bg));
-        }
 
         maxY = maxBgValue;
         // set manual y bounds to have nice steps
-        bgGraph.getViewport().setMaxY(maxY);
-        bgGraph.getViewport().setMinY(0);
-        bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
+        graph.getViewport().setMaxY(maxY);
+        graph.getViewport().setMinY(0);
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
 
+        addSeries(new PointsWithLabelGraphSeries<>(bg));
     }
 
-    public void addInRangeArea(GraphView bgGraph, long fromTime, long toTime, double lowLine, double highLine) {
+    public void addInRangeArea(long fromTime, long toTime, double lowLine, double highLine) {
         AreaGraphSeries<DoubleDataPoint> inRangeAreaSeries;
 
         DoubleDataPoint[] inRangeAreaDataPoints = new DoubleDataPoint[]{
@@ -102,14 +103,15 @@ public class GraphData {
                 new DoubleDataPoint(toTime, lowLine, highLine)
         };
         inRangeAreaSeries = new AreaGraphSeries<>(inRangeAreaDataPoints);
-        addSeriesWithoutInvalidate(bgGraph, inRangeAreaSeries);
         inRangeAreaSeries.setColor(0);
         inRangeAreaSeries.setDrawBackground(true);
         inRangeAreaSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.inrangebackground));
+
+        addSeries(inRangeAreaSeries);
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addBasals(GraphView bgGraph, long fromTime, long toTime, double scale) {
+    public void addBasals(long fromTime, long toTime, double scale) {
         LineGraphSeries<ScaledDataPoint> basalsLineSeries;
         LineGraphSeries<ScaledDataPoint> absoluteBasalsLineSeries;
         LineGraphSeries<ScaledDataPoint> baseBasalsSeries;
@@ -194,7 +196,7 @@ public class GraphData {
         basalsLineSeries = new LineGraphSeries<>(basalLine);
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity*2);
+        paint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity * 2);
         paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
         paint.setColor(MainApp.sResources.getColor(R.color.basal));
         basalsLineSeries.setCustomPaint(paint);
@@ -204,19 +206,19 @@ public class GraphData {
         absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
         Paint absolutePaint = new Paint();
         absolutePaint.setStyle(Paint.Style.STROKE);
-        absolutePaint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity*2);
+        absolutePaint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity * 2);
         absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
         absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
 
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound);
 
-        addSeriesWithoutInvalidate(bgGraph, baseBasalsSeries);
-        addSeriesWithoutInvalidate(bgGraph, tempBasalsSeries);
-        addSeriesWithoutInvalidate(bgGraph, basalsLineSeries);
-        addSeriesWithoutInvalidate(bgGraph, absoluteBasalsLineSeries);
+        addSeries(baseBasalsSeries);
+        addSeries(tempBasalsSeries);
+        addSeries(basalsLineSeries);
+        addSeries(absoluteBasalsLineSeries);
     }
 
-    public void addTreatments(GraphView bgGraph, long fromTime, long endTime) {
+    public void addTreatments(long fromTime, long endTime) {
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
@@ -262,9 +264,7 @@ public class GraphData {
 
         DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
         treatmentsArray = filteredTreatments.toArray(treatmentsArray);
-        if (treatmentsArray.length > 0) {
-            addSeriesWithoutInvalidate(bgGraph, new PointsWithLabelGraphSeries<>(treatmentsArray));
-        }
+        addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
     }
 
     double getNearestBg(long date) {
@@ -279,7 +279,7 @@ public class GraphData {
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addIob(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
+    public void addIob(long fromTime, long toTime, boolean useForScale, double scale) {
         FixedLineGraphSeries<ScaledDataPoint> iobSeries;
         List<ScaledDataPoint> iobArray = new ArrayList<>();
         Double maxIobValueFound = 0d;
@@ -310,11 +310,11 @@ public class GraphData {
 
         iobScale.setMultiplier(maxY * scale / maxIobValueFound);
 
-        addSeriesWithoutInvalidate(graph, iobSeries);
+        addSeries(iobSeries);
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addCob(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
+    public void addCob(long fromTime, long toTime, boolean useForScale, double scale) {
         FixedLineGraphSeries<ScaledDataPoint> cobSeries;
         List<ScaledDataPoint> cobArray = new ArrayList<>();
         Double maxCobValueFound = 0d;
@@ -349,11 +349,11 @@ public class GraphData {
 
         cobScale.setMultiplier(maxY * scale / maxCobValueFound);
 
-        addSeriesWithoutInvalidate(graph, cobSeries);
+        addSeries(cobSeries);
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addDeviations(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
+    public void addDeviations(long fromTime, long toTime, boolean useForScale, double scale) {
         class DeviationDataPoint extends ScaledDataPoint {
             public int color;
 
@@ -396,11 +396,11 @@ public class GraphData {
 
         devScale.setMultiplier(maxY * scale / maxDevValueFound);
 
-        addSeriesWithoutInvalidate(graph, devSeries);
+        addSeries(devSeries);
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addRatio(GraphView graph, long fromTime, long toTime, boolean useForScale, double scale) {
+    public void addRatio(long fromTime, long toTime, boolean useForScale, double scale) {
         LineGraphSeries<DataPoint> ratioSeries;
         List<DataPoint> ratioArray = new ArrayList<>();
         Double maxRatioValueFound = 0d;
@@ -426,11 +426,11 @@ public class GraphData {
 
         ratioScale.setMultiplier(maxY * scale / maxRatioValueFound);
 
-        addSeriesWithoutInvalidate(graph, ratioSeries);
+        addSeries(ratioSeries);
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addNowLine(GraphView graph, long now) {
+    public void addNowLine(long now) {
         LineGraphSeries<DataPoint> seriesNow;
         DataPoint[] nowPoints = new DataPoint[]{
                 new DataPoint(now, 0),
@@ -447,10 +447,10 @@ public class GraphData {
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
 
-        addSeriesWithoutInvalidate(graph, seriesNow);
+        addSeries(seriesNow);
     }
 
-    public void formatAxis(GraphView graph, long fromTime, long endTime) {
+    public void formatAxis(long fromTime, long endTime) {
         graph.getViewport().setMaxX(endTime);
         graph.getViewport().setMinX(fromTime);
         graph.getViewport().setXAxisBoundsManual(true);
@@ -458,11 +458,23 @@ public class GraphData {
         graph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
     }
 
-    private void addSeriesWithoutInvalidate(GraphView bgGraph, Series s) {
-        if (!s.isEmpty()) {
-            s.onGraphViewAttached(bgGraph);
-            bgGraph.getSeries().add(s);
-        }
+    private void addSeries(Series s) {
+        series.add(s);
     }
 
+    public void performUpdate() {
+        // clear old data
+        graph.getSeries().clear();
+        
+        // add precalculated series
+        for (Series s: series) {
+            if (!s.isEmpty()) {
+                s.onGraphViewAttached(graph);
+                graph.getSeries().add(s);
+            }
+        }
+        
+        // draw it
+        graph.onDataChanged(false, false);
+    }
 }

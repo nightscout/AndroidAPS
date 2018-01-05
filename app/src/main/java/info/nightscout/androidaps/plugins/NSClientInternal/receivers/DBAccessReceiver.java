@@ -110,7 +110,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 JSONObject data = new JSONObject(request.data);
                 data.put("mills", DateUtil.fromISODateString(data.getString("created_at")).getTime());
                 data.put("_id", data.get("NSCLIENT_ID")); // this is only fake id
-                BroadcastTreatment.handleNewTreatment(data, false);
+                BroadcastTreatment.handleNewTreatment(data, false, true);
             } catch (Exception e) {
                 log.error("Unhadled exception", e);
             }

@@ -96,7 +96,12 @@ public class DataService extends IntentService {
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
-        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
+        boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
+        Bundle bundles = intent.getExtras();
+        if (bundles != null && bundles.containsKey("islocal")) {
+            acceptNSData = acceptNSData || bundles.getBoolean("islocal");
+        }
+
 
         if (intent != null) {
             final String action = intent.getAction();
@@ -125,7 +130,7 @@ public class DataService extends IntentService {
             } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
                 // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
                 handleNewDataFromNSClient(intent);
-            } else if (!nsUploadOnly &&
+            } else if (acceptNSData &&
                     (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                             Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
                             Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
