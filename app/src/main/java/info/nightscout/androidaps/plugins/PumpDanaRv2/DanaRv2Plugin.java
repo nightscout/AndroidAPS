@@ -257,6 +257,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+            MainApp.bus().post(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
