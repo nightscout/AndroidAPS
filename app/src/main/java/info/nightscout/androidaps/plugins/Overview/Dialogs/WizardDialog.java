@@ -233,7 +233,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
 
-        setCancelable(false);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 
