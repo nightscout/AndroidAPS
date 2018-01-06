@@ -19,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.common.util.concurrent.ServiceManager;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +59,27 @@ public class FoodFragment extends SubscriberFragment {
 
     final String EMPTY = MainApp.sResources.getString(R.string.none);
 
+    private static final String json = "    {\n" +
+            "        \"_id\": \"551ee3ad368e06e80856e6a9\",\n" +
+            "        \"type\": \"food\",\n" +
+            "        \"category\": \"Category\",\n" +
+            "        \"subcategory\": \"Subcatgory\",\n" +
+            "        \"name\": \"Name\",\n" +
+            "        \"portion\": 250,\n" +
+            "        \"carbs\": 12,\n" +
+            "        \"gi\": 1,\n" +
+            "        \"created_at\": \"2015-04-14T06:59:16.500Z\",\n" +
+            "        \"unit\": \"ml\"\n" +
+            "    }";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
+            log.info("Strartup...");
+            JSONObject food = new JSONObject(json);
+            DataServiceManager.getInstance().getFoodService().createFoodFromJsonIfNotExists(food);
+
             View view = inflater.inflate(R.layout.food_fragment, container, false);
             filter = (EditText) view.findViewById(R.id.food_filter);
             clearFilter = (ImageView) view.findViewById(R.id.food_clearfilter);
