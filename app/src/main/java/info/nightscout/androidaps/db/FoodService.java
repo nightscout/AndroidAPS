@@ -32,6 +32,10 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledFoodEventPost = null;
 
+    public FoodService() {
+        this.onCreate();
+    }
+
     public FoodDao getDao() {
         return FoodDao.with(this.getConnectionSource());
     }

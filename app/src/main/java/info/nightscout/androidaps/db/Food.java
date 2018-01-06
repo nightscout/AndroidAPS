@@ -16,7 +16,7 @@ import info.nightscout.utils.JsonHelper;
  * Created by mike on 20.09.2017.
  */
 
-@DatabaseTable(tableName = Food.TABLE_FOODS)
+@DatabaseTable(tableName = Food.TABLE_FOODS, daoClass=FoodDao.class)
 public class Food {
     private static Logger log = LoggerFactory.getLogger(Food.class);
 
