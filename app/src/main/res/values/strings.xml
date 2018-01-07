@@ -864,5 +864,6 @@
     <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually create a bolus record using the Careportal tab if a bolus was delivered.</string>
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin left in reservoir for bolus</string>
 </resources>
 

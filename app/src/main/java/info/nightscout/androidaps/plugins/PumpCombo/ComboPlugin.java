@@ -470,11 +470,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
-        CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
+        CommandResult stateResult = runCommand(null, 1, ruffyScripter::readReservoirLevelAndLastBolus);
         long pumpTimeWhenBolusWasRequested = stateResult .state.pumpTime;
         if (!stateResult.success || pumpTimeWhenBolusWasRequested == 0) {
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.sResources.getString(R.string.combo_error_no_bolus_delivered));
+        }
+
+        if (stateResult.reservoirLevel < detailedBolusInfo.insulin) {
+            return new PumpEnactResult().success(false).enacted(false)
+                    .comment(MainApp.sResources.getString(R.string.combo_reservoir_level_insufficient_for_bolus));
         }
 
         try {
