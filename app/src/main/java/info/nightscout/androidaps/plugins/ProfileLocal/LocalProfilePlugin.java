@@ -178,7 +178,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             } catch (JSONException ignored) {
             }
         }
-        createConvertedProfile();
     }
 
     /*
@@ -244,6 +243,8 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
         return convertedProfile;
     }
 
@@ -254,6 +255,8 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public String getProfileName() {
+        if (convertedProfile == null)
+            createConvertedProfile();
         return DecimalFormatter.to2Decimal(convertedProfile.getDefaultProfile().percentageBasalSum()) + "U ";
     }
 

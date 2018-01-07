@@ -149,12 +149,13 @@ public class BGSourceFragment extends SubscriberFragment {
                         builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(profile.getUnits()));
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                final String _id = bgReading._id;
+/*                                final String _id = bgReading._id;
                                 if (NSUpload.isIdValid(_id)) {
                                     NSUpload.removeFoodFromNS(_id);
                                 } else {
                                     UploadQueue.removeID("dbAdd", _id);
                                 }
+*/
                                 bgReading.isValid = false;
                                 MainApp.getDbHelper().update(bgReading);
                                 updateGUI();

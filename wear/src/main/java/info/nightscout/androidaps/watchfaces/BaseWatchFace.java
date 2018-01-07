@@ -569,6 +569,10 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
 
+        if("delta_granularity".equals(key)){
+            ListenerService.requestData(this);
+        }
+        
         if(layoutSet){
             setDataFields();
             setColor();

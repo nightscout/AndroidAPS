@@ -55,7 +55,8 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
 
-        setCancelable(false);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 
