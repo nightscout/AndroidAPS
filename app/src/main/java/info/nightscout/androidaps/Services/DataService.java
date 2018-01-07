@@ -12,16 +12,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.DataServiceManager;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.NsFoodEvent;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -477,60 +475,17 @@ public class DataService extends IntentService {
             }
         }
 
-        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD) || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
-            try {
-                if (bundles.containsKey("food")) {
-                    String trstring = bundles.getString("food");
-                    handleAddChangeFoodRecord(new JSONObject(trstring));
-                }
-                if (bundles.containsKey("foods")) {
-                    String trstring = bundles.getString("foods");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        handleAddChangeFoodRecord(trJson);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
+                || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
+            int mode =  Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? NsFoodEvent.ADD : NsFoodEvent.UPDATE;
+            NsFoodEvent evt = new NsFoodEvent(mode, bundles);
+            MainApp.bus().post(evt);
         }
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            try {
-                if (bundles.containsKey("food")) {
-                    String trstring = bundles.getString("food");
-                    JSONObject trJson = new JSONObject(trstring);
-                    String _id = trJson.getString("_id");
-                    handleRemovedFoodRecord(_id);
-                }
-
-                if (bundles.containsKey("foods")) {
-                    String trstring = bundles.getString("foods");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String _id = trJson.getString("_id");
-                        handleRemovedFoodRecord(_id);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+            NsFoodEvent evt = new NsFoodEvent(NsFoodEvent.REMOVE, bundles);
+            MainApp.bus().post(evt);
         }
-    }
-
-    private void handleRemovedFoodRecord(String _id) {
-
-        try {
-            DataServiceManager.getInstance().getFoodService().deleteByNSId(_id);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-    }
-
-    public void handleAddChangeFoodRecord(JSONObject trJson) throws JSONException {
-        DataServiceManager.getInstance().getFoodService().createFoodFromJsonIfNotExists(trJson);
     }
 
     private void handleRemovedRecordFromNS(String _id) {

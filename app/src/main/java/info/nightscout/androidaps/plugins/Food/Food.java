@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.db;
+package info.nightscout.androidaps.plugins.Food;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -16,7 +16,7 @@ import info.nightscout.utils.JsonHelper;
  * Created by mike on 20.09.2017.
  */
 
-@DatabaseTable(tableName = Food.TABLE_FOODS, daoClass=FoodDao.class)
+@DatabaseTable(tableName = Food.TABLE_FOODS)
 public class Food {
     private static Logger log = LoggerFactory.getLogger(Food.class);
 
