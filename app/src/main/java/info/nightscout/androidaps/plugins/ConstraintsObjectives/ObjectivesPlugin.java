@@ -14,6 +14,7 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -160,19 +161,21 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 boolean isVirtualPump = VirtualPumpPlugin.getPlugin().isEnabled(PluginBase.PUMP);
                 boolean vpUploadEnabled = SP.getBoolean("virtualpump_uploadstatus", false);
                 boolean vpUploadNeeded = !isVirtualPump || vpUploadEnabled;
+                boolean hasBGData = DatabaseHelper.lastBg()!=null;
 
                 boolean apsEnabled = false;
                 APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS))
                     apsEnabled = true;
 
-                return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
+                return new RequirementResult(hasBGData&&bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
                         MainApp.sResources.getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + " " + MainApp.sResources.getString(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
-                                + (isVirtualPump ? " " + MainApp.sResources.getString(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
-                                + " " + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
-                                + " " + MainApp.sResources.getString(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP))
-                                + " " + MainApp.sResources.getString(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
+                                + "\n" + MainApp.sResources.getString(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
+                                + (isVirtualPump ? "\n" + MainApp.sResources.getString(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
+                                + "\n" + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
+                                + "\n" + MainApp.sResources.getString(R.string.hasbgdata) + ": " + yesOrNo(hasBGData)
+                                + "\n" + MainApp.sResources.getString(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP))
+                                + "\n" + MainApp.sResources.getString(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
                 );
             case 1:
                 return new RequirementResult(manualEnacts >= manualEnactsNeeded,

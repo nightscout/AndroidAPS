@@ -172,8 +172,12 @@ public class Profile {
                     tas = getShitfTimeSecs(DateUtil.toSeconds(time));
                     //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
                 }
-                Double value = o.getDouble("value") * multiplier;
+                double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
+                if (value == 0) {
+                    Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, MainApp.sResources.getString(R.string.zerovalueinprofile), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
                 log.error(json.toString());
@@ -337,6 +341,14 @@ public class Profile {
     public Double getBasal(Integer timeAsSeconds) {
         if (basal_v == null) {
             basal_v = convertToSparseArray(basal);
+            for (int index = 0; index < basal_v.size(); index++) {
+                long secondsFromMidnight = basal_v.keyAt(index);
+                if (secondsFromMidnight % 3600 != 0) {
+                    Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, MainApp.sResources.getString(R.string.basalprofilenotaligned), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
+            }
+
             // Check for minimal basal value
             PumpInterface pump = ConfigBuilderPlugin.getActivePump();
             if (pump != null) {

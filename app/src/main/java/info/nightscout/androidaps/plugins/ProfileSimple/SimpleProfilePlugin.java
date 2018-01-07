@@ -13,9 +13,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -28,7 +28,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     public static SimpleProfilePlugin getPlugin() {
         if (simpleProfilePlugin == null)
-            simpleProfilePlugin  = new SimpleProfilePlugin();
+            simpleProfilePlugin = new SimpleProfilePlugin();
         return simpleProfilePlugin;
     }
 
@@ -146,7 +146,6 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         basal = SP.getDouble("SimpleProfile" + "basal", 1d);
         targetLow = SP.getDouble("SimpleProfile" + "targetlow", 80d);
         targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 120d);
-        createConvertedProfile();
     }
 
     /*
@@ -211,6 +210,8 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
         return convertedProfile;
     }
 

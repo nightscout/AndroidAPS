@@ -17,6 +17,7 @@ class ComboPump {
     public volatile String activity;
     @NonNull
     volatile PumpState state = new PumpState();
+    volatile int reservoirLevel = -1;
     @NonNull
     volatile BasalProfile basalProfile = new BasalProfile();
 
