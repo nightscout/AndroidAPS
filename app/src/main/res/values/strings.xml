@@ -809,5 +809,6 @@
     <string name="hasbgdata">BG available from selected source</string>
     <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
     <string name="zerovalueinprofile">Zero value in profile</string>
+    <string name="nolocaleprofilefound">Received profile switch from NS but profile doesn\'t exist localy</string>
 </resources>
 
