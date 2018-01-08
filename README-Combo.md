@@ -11,7 +11,7 @@ Hardware requirements:
   Software to configure the pump.
   Roche sends out Smartpix devices and the configuration software
   free of charge to their customers upon request.
-- A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod)
+- A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod) or Android 8.1 (Oreo)
 - To build AndroidAPS with Combo support you need the latest Android Studio 3 version
 
 Limitations:
