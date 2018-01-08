@@ -227,7 +227,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return false;
+        return true;
     }
 
     @Override
