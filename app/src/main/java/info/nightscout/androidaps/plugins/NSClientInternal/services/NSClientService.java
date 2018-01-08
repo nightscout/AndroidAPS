@@ -114,6 +114,18 @@ public class NSClientService extends Service {
         initialize();
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWakeLock.acquire();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mWakeLock.release();
+    }
+
     public class LocalBinder extends Binder {
         public NSClientService getServiceInstance() {
             return NSClientService.this;
@@ -182,8 +194,6 @@ public class NSClientService extends Service {
     public void initialize() {
         dataCounter = 0;
 
-        NSClientService.mWakeLock.acquire();
-
         readPreferences();
 
         if (!nsAPISecret.equals(""))
@@ -221,7 +231,6 @@ public class NSClientService extends Service {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "No NS URL specified"));
             MainApp.bus().post(new EventNSClientStatus("Not configured"));
         }
-        NSClientService.mWakeLock.release();
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -242,6 +251,15 @@ public class NSClientService extends Service {
 
     public void destroy() {
         if (mSocket != null) {
+            mSocket.off(Socket.EVENT_CONNECT);
+            mSocket.off(Socket.EVENT_DISCONNECT);
+            mSocket.off(Socket.EVENT_PING);
+            mSocket.off("dataUpdate");
+            mSocket.off("announcement");
+            mSocket.off("alarm");
+            mSocket.off("urgent_alarm");
+            mSocket.off("clear_alarm");
+
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "destroy"));
             isConnected = false;
             hasWriteAuth = false;
