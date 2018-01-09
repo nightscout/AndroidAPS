@@ -593,7 +593,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -607,7 +607,7 @@
                     android:textColor="@color/colorTreatmentButton"
                     android:textSize="10sp" />
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -622,7 +622,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"

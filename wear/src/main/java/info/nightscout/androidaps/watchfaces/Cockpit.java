@@ -27,21 +27,13 @@ public class Cockpit extends BaseWatchFace {
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
 
-        if (mSgv != null) {
-
-            int extra = (mSgv.getRight() - mSgv.getLeft()) / 2;
-            if (tapType == TAP_TYPE_TAP &&
-                    x + extra >= mSgv.getLeft() &&
-                    x - extra <= mSgv.getRight() &&
-                    y >= mSgv.getTop() &&
-                    y <= mSgv.getBottom()) {
-                if (eventTime - sgvTapTime < 800) {
-                    Intent intent = new Intent(this, MainMenuActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-                sgvTapTime = eventTime;
+        if (tapType == TAP_TYPE_TAP ) {
+            if (eventTime - sgvTapTime < 800) {
+                Intent intent = new Intent(this, MainMenuActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
+            sgvTapTime = eventTime;
         }
     }
 

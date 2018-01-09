@@ -175,7 +175,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSpinner.setAdapter(adapter);
         // set selected to actual profile
         for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName(false)))
                 profileSpinner.setSelection(p);
         }
 
@@ -360,6 +360,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_reuse_layout), options.profile && ps != null && ps.isCPP);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
 
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 
@@ -532,7 +534,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             if (options.eventType == R.id.careportal_combobolus) {
                 Double enteredInsulin = SafeParse.stringToDouble(editInsulin.getText());
                 data.put("enteredinsulin", enteredInsulin);
-                data.put("insulin", enteredInsulin * SafeParse.stringToDouble(editInsulin.getText()) / 100);
+                data.put("insulin", enteredInsulin * SafeParse.stringToDouble(editSplit.getText()) / 100);
                 data.put("relative", enteredInsulin * (100 - SafeParse.stringToDouble(editSplit.getText())) / 100 / SafeParse.stringToDouble(editDuration.getText()) * 60);
             }
         } catch (JSONException e) {

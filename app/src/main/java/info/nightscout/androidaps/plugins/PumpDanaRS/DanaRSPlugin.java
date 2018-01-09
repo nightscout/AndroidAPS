@@ -290,6 +290,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         double origAbsoluteRate = absoluteRate;
         if (pump != null) {
@@ -400,6 +405,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+            MainApp.bus().post(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
@@ -580,7 +587,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public synchronized PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public synchronized PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         percent = configBuilderPlugin.applyBasalConstraints(percent);
@@ -595,7 +602,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (runningTB != null && runningTB.percentRate == percent) {
+        if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;

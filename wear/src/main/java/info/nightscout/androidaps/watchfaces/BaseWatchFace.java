@@ -21,6 +21,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,15 +45,17 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * Created by emmablack on 12/29/14.
- * Updated by andrew-warrington on 11/15/17.
+ * Updated by andrew-warrington on 02-Jan-2018.
  */
+
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
     public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public long datetime;
     public RelativeLayout mRelativeLayout;
-    public LinearLayout mLinearLayout, mLinearLayout2, mDate;
+    public LinearLayout mLinearLayout, mLinearLayout2, mDate, mChartTap, mMainMenuTap;
     public long sgvLevel = 0;
     public int ageLevel = 1;
     public int loopLevel = 1;
@@ -85,6 +88,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     public boolean detailedIOB = false;
     public boolean showBGI = false;
+    public boolean forceSquareCanvas = false;  //set to true by the Steampunk watch face.
     public long openApsStatus;
     public String externalStatusString = "no status";
     public String sSgv = "---";
@@ -99,21 +103,24 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public String sCOB1 = "Carb";
     public String sCOB2 = "--g";
     public String sBgi = "--";
+    public String sMinute = "0";
+    public String sHour = "0";
+    public String sUnits = "-";
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
-                .getDefaultDisplay();
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getSize(displaySize);
         wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Clock");
 
-        specW = View.MeasureSpec.makeMeasureSpec(displaySize.x,
-                View.MeasureSpec.EXACTLY);
-        specH = View.MeasureSpec.makeMeasureSpec(displaySize.y,
-                View.MeasureSpec.EXACTLY);
-        sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this);
+        specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY);
+        if (forceSquareCanvas) {
+            specH = specW;
+        } else {
+            specH = View.MeasureSpec.makeMeasureSpec(displaySize.y, View.MeasureSpec.EXACTLY);
+        }
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -160,10 +167,17 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
                 mLinearLayout = (LinearLayout) stub.findViewById(R.id.secondary_layout);
                 mLinearLayout2 = (LinearLayout) stub.findViewById(R.id.tertiary_layout);
+                mGlucoseDial = (ImageView) stub.findViewById(R.id.glucose_dial);
+                mDeltaGauge = (ImageView) stub.findViewById(R.id.delta_pointer);
+                mHourHand = (ImageView) stub.findViewById(R.id.hour_hand);
+                mMinuteHand = (ImageView) stub.findViewById(R.id.minute_hand);
+                mChartTap = (LinearLayout) stub.findViewById(R.id.chart_zoom_tap);
+                mMainMenuTap = (LinearLayout) stub.findViewById(R.id.main_menu_tap);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
                 layoutSet = true;
 
                 setDataFields();
+                setColor();
                 }
             }
         );
@@ -214,7 +228,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     protected void onDraw(Canvas canvas) {
         if (layoutSet) {
             setupCharts();
-            this.mRelativeLayout.draw(canvas);
+
+            mRelativeLayout.measure(specW, specH);
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
+            mRelativeLayout.draw(canvas);
             Log.d("onDraw", "draw");
         }
     }
@@ -225,11 +246,16 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             wakeLock.acquire(50);
 
             setDataFields();
+            setColor();
             missedReadingAlert();
 
             mRelativeLayout.measure(specW, specH);
-            mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
-                    mRelativeLayout.getMeasuredHeight());
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
+            invalidate();
         }
     }
 
@@ -247,6 +273,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 sDirection = dataMap.getString("slopeArrow");
                 sDelta = dataMap.getString("delta");
                 sAvgDelta = dataMap.getString("avgDelta");
+                sUnits = dataMap.getString("glucoseUnits");
                 if (chart != null) {
                     addToWatchSet(dataMap);
                     setupCharts();
@@ -257,7 +284,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             if (layoutSet && bundle != null) {
                 DataMap dataMap = DataMap.fromBundle(bundle);
                 wakeLock.acquire(50);
-                sBasalRate = dataMap.getString("tempBasal");
+                sBasalRate = dataMap.getString("currentBasal");
                 sUploaderBattery = dataMap.getString("battery");
                 sRigBattery = dataMap.getString("rigBattery");
                 detailedIOB = dataMap.getBoolean("detailedIob");
@@ -273,6 +300,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             }
 
             setDataFields();
+            setColor();
 
             bundle = intent.getBundleExtra("basals");
             if (layoutSet && bundle != null) {
@@ -282,10 +310,12 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             }
 
             mRelativeLayout.measure(specW, specH);
-            mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
-                    mRelativeLayout.getMeasuredHeight());
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
             invalidate();
-            setColor();
         }
     }
 
@@ -476,15 +506,22 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public void setDateAndTime() {
 
         final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BaseWatchFace.this);
-        mTime.setText(timeFormat.format(System.currentTimeMillis()));
+        if (mTime != null) {
+            mTime.setText(timeFormat.format(System.currentTimeMillis()));
+        }
+
+        Date now = new Date();
+        SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+        SimpleDateFormat sdfMinute = new SimpleDateFormat("mm");
+        sHour = sdfHour.format(now);
+        sMinute = sdfMinute.format(now);
 
         if (mDate != null && mDay != null && mMonth != null) {
             if (sharedPrefs.getBoolean("show_date", false)) {
-                Date today = new Date();
                 SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
                 SimpleDateFormat sdfMonth = new SimpleDateFormat("MMM");
-                mDay.setText(sdfDay.format(today));
-                mMonth.setText(sdfMonth.format(today));
+                mDay.setText(sdfDay.format(now));
+                mMonth.setText(sdfMonth.format(now));
                 mDate.setVisibility(View.VISIBLE);
             } else {
                 mDate.setVisibility(View.GONE);
@@ -532,8 +569,13 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
 
+        if("delta_granularity".equals(key)){
+            ListenerService.requestData(this);
+        }
+        
         if(layoutSet){
             setDataFields();
+            setColor();
         }
         invalidate();
     }

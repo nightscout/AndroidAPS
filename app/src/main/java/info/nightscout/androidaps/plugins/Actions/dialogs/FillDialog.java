@@ -100,6 +100,9 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         if (button1.getVisibility() == View.GONE && button2.getVisibility() == View.GONE && button3.getVisibility() == View.GONE) {
             divider.setVisibility(View.GONE);
         }
+
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 

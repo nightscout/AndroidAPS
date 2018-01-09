@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -58,8 +59,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (key.equals("language")) {
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
-            recreate();
-            MainApp.bus().post(new EventRefreshGui());
+            MainApp.bus().post(new EventRefreshGui(true));
+            //recreate() does not update language so better close settings
+            finish();
         }
         if (key.equals("short_tabtitles")) {
             MainApp.bus().post(new EventRefreshGui());
@@ -148,10 +150,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginBase.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginBase.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginBase.SENSITIVITY);
-
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
-                    addPreferencesFromResource(R.xml.pref_profile);
-                }
 
                 if (Config.DANAR) {
                     addPreferencesFromResourceIfEnabled(DanaRPlugin.getPlugin(), PluginBase.PUMP);

@@ -96,7 +96,12 @@ public class DataService extends IntentService {
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
-        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
+        boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
+        Bundle bundles = intent.getExtras();
+        if (bundles != null && bundles.containsKey("islocal")) {
+            acceptNSData = acceptNSData || bundles.getBoolean("islocal");
+        }
+
 
         if (intent != null) {
             final String action = intent.getAction();
@@ -117,17 +122,15 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                // always handle SGV if NS-Client is the source
-                if (nsClientEnabled) {
-                    handleNewDataFromNSClient(intent);
-                }
+                // always backfill SGV from NS
+                handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
             } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
                 // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
                 handleNewDataFromNSClient(intent);
-            } else if (!nsUploadOnly &&
+            } else if (acceptNSData &&
                     (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                             Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
                             Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
@@ -301,7 +304,7 @@ public class DataService extends IntentService {
                     log.error("Unhandled exception", e);
                 }
                 if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
-                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.URGENT);
+                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.NORMAL);
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else {
                     MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));

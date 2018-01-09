@@ -208,7 +208,6 @@
     <string name="connecting">Σύνδεση</string>
     <string name="connected">Συνδέθηκε</string>
     <string name="disconnected">Αποσύνδεση</string>
-    <string name="syncprofiletopump_title">Συγχρονισμός προφίλ στην αντλία</string>
     <string name="danar_pump_settings">Ρυθμίσεις αντλίας DanaR</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Άδεια χρήσης τελικού χρήστη</string>

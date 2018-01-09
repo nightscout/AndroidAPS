@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -84,15 +85,17 @@ public class LocalProfileFragment extends SubscriberFragment {
                 }
             };
 
+            PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
+
             View layout = inflater.inflate(R.layout.localprofile_fragment, container, false);
             diaView = (NumberPicker) layout.findViewById(R.id.localprofile_dia);
             diaView.setParams(localProfilePlugin.dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
             mgdlView = (RadioButton) layout.findViewById(R.id.localprofile_mgdl);
             mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
-            icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label) + ":", getPlugin().ic, null, 0.1d, new DecimalFormat("0.0"), save);
-            isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", getPlugin().isf, null, 0.1d, new DecimalFormat("0.0"), save);
-            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), getPlugin().basal, null, 0.01d, new DecimalFormat("0.00"), save);
-            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label) + ":", getPlugin().targetLow, getPlugin().targetHigh, 0.1d, new DecimalFormat("0.0"), save);
+            icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label) + ":", getPlugin().ic, null, 0.5, 50d, 0.1d, new DecimalFormat("0.0"), save);
+            isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", getPlugin().isf, null, 0.5, 500d, 0.1d, new DecimalFormat("0.0"), save);
+            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), getPlugin().basal, null, pumpDescription.basalMinimumRate, 10, 0.01d, new DecimalFormat("0.00"), save);
+            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label) + ":", getPlugin().targetLow, getPlugin().targetHigh, 3d, 200, 0.1d, new DecimalFormat("0.0"), save);
             profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
 
             if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {

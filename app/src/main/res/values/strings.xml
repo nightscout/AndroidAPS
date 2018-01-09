@@ -223,7 +223,6 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="syncprofiletopump_title">Sync profile to pump</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -317,6 +316,7 @@
     <string name="objectives_5_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
+    <string name="objectives_7_objective">Enabling additional features for daytime use, such as SMB</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -788,5 +788,27 @@
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
+    <string name="nsclientbg">NSClient BG</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value</string>
+    <string name="overview_editquickwizard_usebg">BG calculation</string>
+    <string name="overview_editquickwizard_usebolusiob">Bolus IOB calculation</string>
+    <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
+    <string name="overview_editquickwizard_usetrend">Trend calculation</string>
+    <string name="overview_editquickwizard_usesuperbolus">Superbolus calculation</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="positiveonly">Positive only</string>
+    <string name="negativeonly">Negative only</string>
+    <string name="overview_editquickwizard_usecob">COB calculation</string>
+    <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="loopenabled">Loop enabled</string>
+    <string name="apsselected">APS selected</string>
+    <string name="nsclienthaswritepermission">NSClient has write permission</string>
+    <string name="closedmodeenabled">Closed mode enabled</string>
+    <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
+    <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
+    <string name="zerovalueinprofile">Zero value in profile</string>
+    <string name="nolocaleprofilefound">Received profile switch from NS but profile doesn\'t exist localy</string>
 </resources>
 

@@ -17,9 +17,13 @@ import java.util.TimeZone;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
@@ -160,15 +164,23 @@ public class Profile {
         for (Integer index = 0; index < array.length(); index++) {
             try {
                 final JSONObject o = array.getJSONObject(index);
-                long tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
-                Double value = o.getDouble("value") * multiplier;
+                long tas = 0;
+                try {
+                    tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
+                } catch (JSONException e) {
+                    String time = o.getString("time");
+                    tas = getShitfTimeSecs(DateUtil.toSeconds(time));
+                    //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
+                }
+                double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
+                if (value == 0) {
+                    Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, MainApp.sResources.getString(R.string.zerovalueinprofile), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
-                try {
-                    log.error(array.getJSONObject(index).toString());
-                } catch (JSONException e1) {
-                }
+                log.error(json.toString());
             }
         }
 
@@ -327,8 +339,35 @@ public class Profile {
     }
 
     public Double getBasal(Integer timeAsSeconds) {
-        if (basal_v == null)
+        if (basal_v == null) {
             basal_v = convertToSparseArray(basal);
+            for (int index = 0; index < basal_v.size(); index++) {
+                long secondsFromMidnight = basal_v.keyAt(index);
+                if (secondsFromMidnight % 3600 != 0) {
+                    Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, MainApp.sResources.getString(R.string.basalprofilenotaligned), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
+            }
+
+            // Check for minimal basal value
+            PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+            if (pump != null) {
+                PumpDescription description = pump.getPumpDescription();
+                for (int i = 0; i < basal_v.size(); i++) {
+                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
+                        basal_v.setValueAt(i, description.basalMinimumRate);
+                        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, MainApp.sResources.getString(R.string.minimalbasalvaluereplaced), Notification.NORMAL)));
+                    }
+                }
+                return getValueToTime(basal_v, timeAsSeconds);
+            } else {
+                // if pump not available (at start)
+                // do not store converted array
+                Double value = getValueToTime(basal_v, timeAsSeconds);
+                basal_v = null;
+                return value;
+            }
+        }
         return getValueToTime(basal_v, timeAsSeconds);
     }
 
