@@ -811,6 +811,7 @@
     <string name="hasbgdata">BG available from selected source</string>
     <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
     <string name="zerovalueinprofile">Zero value in profile</string>
+    <string name="nolocaleprofilefound">Received profile switch from NS but profile doesn\'t exist localy</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
