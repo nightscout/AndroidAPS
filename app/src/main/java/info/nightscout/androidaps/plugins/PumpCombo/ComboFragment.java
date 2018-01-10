@@ -172,17 +172,17 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
 
                     // reservoir
-                    int reservoirLevel = plugin.getPump().reservoirLevel;
-                    reservoirView.setText(reservoirLevel == -1 ? "" : "" + reservoirLevel + " "
-                            + MainApp.sResources.getString(R.string.treatments_wizard_unit_label));
                     if (ps.insulinState == PumpState.LOW) {
                         reservoirView.setTextColor(Color.YELLOW);
+                        reservoirView.setText(R.string.combo_reservoir_low);
                         reservoirView.setTypeface(null, Typeface.BOLD);
                     } else if (ps.insulinState == PumpState.EMPTY) {
                         reservoirView.setTextColor(Color.RED);
+                        reservoirView.setText(R.string.combo_reservoir_empty);
                         reservoirView.setTypeface(null, Typeface.BOLD);
                     } else {
                         reservoirView.setTextColor(Color.WHITE);
+                        reservoirView.setText(R.string.combo_reservoir_normal);
                         reservoirView.setTypeface(null, Typeface.NORMAL);
                     }
 
