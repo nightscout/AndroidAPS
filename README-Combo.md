@@ -11,7 +11,7 @@ Hardware requirements:
   Software to configure the pump.
   Roche sends out Smartpix devices and the configuration software
   free of charge to their customers upon request.
-- A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod)
+- A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod) or Android 8.1 (Oreo)
 - To build AndroidAPS with Combo support you need the latest Android Studio 3 version
 
 Limitations:
@@ -49,6 +49,7 @@ Setup:
     menus/actions on the pump and hide those which are unsupported (extended/multiwave bolus,
     multiple basal rates), which cause the loop functionality to be restricted when used because
     it's not possible to run the loop in a safe manner when used.
+  - Verify the _Quick Info Text_ is set to "QUICK INFO" (without the quotes, found under _Insulin Pump Options_).
   - Set maximum TBR to 500%
   - Disable end of TBR alert
   - Set TBR duration step-size to 15 min

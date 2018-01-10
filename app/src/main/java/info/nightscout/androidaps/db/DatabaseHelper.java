@@ -30,7 +30,9 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
@@ -43,7 +45,10 @@ import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.PercentageSplitter;
@@ -1709,6 +1714,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 profileSwitch.percentage = trJson.getInt("percentage");
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
+            else {
+                ProfileStore store = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+                Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                if (profile != null) {
+                    profileSwitch.profileJson = profile.getData().toString();
+                    log.debug("Profile switch prefilled with JSON from local store");
+                } else {
+                    Notification notification = new Notification(Notification.NO_LOCALE_PROFILE_FOUND, MainApp.sResources.getString(R.string.nolocaleprofilefound), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                    log.debug("JSON for profile switch doesn't exist. Ignoring ...");
+                    return;
+                }
+            }
             if (trJson.has("profilePlugin"))
                 profileSwitch.profilePlugin = trJson.getString("profilePlugin");
             createOrUpdate(profileSwitch);
