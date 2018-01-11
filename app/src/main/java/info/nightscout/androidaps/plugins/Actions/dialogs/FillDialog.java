@@ -101,7 +101,8 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             divider.setVisibility(View.GONE);
         }
 
-        setCancelable(false);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 
