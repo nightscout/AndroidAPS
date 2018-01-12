@@ -12,6 +12,8 @@ Hardware requirements:
   Roche sends out Smartpix devices and the configuration software
   free of charge to their customers upon request.
 - A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod) or Android 8.1 (Oreo)
+  If the daily-driver phone wich wnated to be used can not fullfill the LineageOS or Android requirement, 
+  an other way could be tryed, but with no gurantee (see here: https://github.com/gregorybel/combo-pairing/blob/master/README.md
 - To build AndroidAPS with Combo support you need the latest Android Studio 3 version
 
 Limitations:
@@ -58,8 +60,11 @@ Setup:
 - Get Android Studio 3 https://developer.android.com/studio/index.html
 - Follow the link http://ruffy.AndroidAPS.org and clone via git (branch `combo-scripter-v2`)
 - Pair the pump using ruffy, if it doesn't work after multiple attempts, switch to the `pairing` branch, pair,
-  then switch back the original branch. If the pump is already paired and
-  can be controlled via ruffy, installing the above version is sufficient.
+  then switch back the original branch. 
+  As Ruffy has on some phones problems during screen rotation,
+  it is helpfull to put the setting of automatic screen rotation to off. 
+  If the pump is already paired and can be controlled via ruffy, installing the 
+  above version is sufficient.
   If AAPS is already installed, switch to the MDI plugin to avoid the Combo
   plugin from interfering with ruffy during the pairing process.
   Note that the pairing processing is somewhat fragile (but only has to be done once)
