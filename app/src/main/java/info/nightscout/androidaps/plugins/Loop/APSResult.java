@@ -42,14 +42,24 @@ public class APSResult {
     public String toString() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (changeRequested) {
+            String ret;
+            // rate
             if (rate == 0 && duration == 0)
-                return MainApp.sResources.getString(R.string.canceltemp);
+                ret = MainApp.sResources.getString(R.string.canceltemp) + "\n";
+            else if (rate == -1)
+                ret = MainApp.sResources.getString(R.string.let_tbr_run) + "\n";
             else
-                return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%)\n" +
-                        MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
-                        (smb != 0 ? ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n") : "") +
-                        MainApp.sResources.getString(R.string.reason) + ": " + reason;
+                ret = MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) \n" +
+                        MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to2Decimal(duration) + " min\n";
+
+            // smb
+            if (smb != 0)
+                ret += ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n");
+
+            // reason
+            ret += MainApp.sResources.getString(R.string.reason) + ": " + reason;
+            return ret;
         } else
             return MainApp.sResources.getString(R.string.nochangerequested);
     }
@@ -57,14 +67,23 @@ public class APSResult {
     public Spanned toSpanned() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (changeRequested) {
-            String ret = "";
-            if (rate == 0 && duration == 0) ret = MainApp.sResources.getString(R.string.canceltemp);
+            String ret;
+            // rate
+            if (rate == 0 && duration == 0)
+                ret = MainApp.sResources.getString(R.string.canceltemp) + "<br>";
+            else if (rate == -1)
+                ret = MainApp.sResources.getString(R.string.let_tbr_run) + "<br>";
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
-                        "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
-                        (smb != 0 ? ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>") : "") +
-                        "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
+                      "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
+                      "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
+
+            // smb
+            if (smb != 0)
+                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>");
+
+            // reason
+            ret += "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);
         } else
             return Html.fromHtml(MainApp.sResources.getString(R.string.nochangerequested));
