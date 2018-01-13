@@ -11,9 +11,10 @@ Hardware requirements:
   Software to configure the pump.
   Roche sends out Smartpix devices and the configuration software
   free of charge to their customers upon request.
-- A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod) or Android 8.1 (Oreo)
-  If the daily-driver phone wich wnated to be used can not fullfill the LineageOS or Android requirement, 
-  an other way could be tryed, but with no gurantee (see here: https://github.com/gregorybel/combo-pairing/blob/master/README.md
+- A compatible phone: An Android phone with a phone running LineageOS 14.1 (formerly CyanogenMod) or Android 8.1 (Oreo).
+  For advanced users, it is possible to perform the pairing on a rooted phone and transfer it to another rooted
+  phone to use with ruffy/AAPS, which must also be rooted. This allows using phones with Android < 8.1 but
+  has not been widely tested: https://github.com/gregorybel/combo-pairing/blob/master/README.md
 - To build AndroidAPS with Combo support you need the latest Android Studio 3 version
 
 Limitations:
@@ -59,18 +60,17 @@ Setup:
   - Enable keylock (can also be set on the pump directly, see usage section on reasoning)
 - Get Android Studio 3 https://developer.android.com/studio/index.html
 - Follow the link http://ruffy.AndroidAPS.org and clone via git (branch `combo-scripter-v2`)
-- Pair the pump using ruffy, if it doesn't work after multiple attempts, switch to the `pairing` branch, pair,
-  then switch back the original branch. 
-  As Ruffy has on some phones problems during screen rotation,
-  it is helpfull to put the setting of automatic screen rotation to off. 
-  If the pump is already paired and can be controlled via ruffy, installing the 
-  above version is sufficient.
+- Pair the pump using ruffy. If it doesn't work after multiple attempts, switch to the `pairing` branch,
+  pair the pump and then switch back the original branch.
+  If the pump is already paired and can be controlled via ruffy, installing the
+  `combo-scripter-v2` branch is sufficient.
   If AAPS is already installed, switch to the MDI plugin to avoid the Combo
   plugin from interfering with ruffy during the pairing process.
   Note that the pairing processing is somewhat fragile (but only has to be done once)
-  and may need a few attempts;
-  quickly acknowledge prompts and when starting over, remove the pump device
-  from the bluetooth settings beforehand.
+  and may need a few attempts; quickly acknowledge prompts and when starting over, remove the pump device
+  from the bluetooth settings beforehand. Another option to try is to go to the bluetooth menu after
+  initiating the pairing process (this keeps the phone's bluetooth discoverable as long as the menu is displayed
+  and switch back to ruffy after confirming the pairing on the pump, when the pump displays the authorization code.
   When AAPS is using ruffy, the ruffy app can't be used. The easiest way is to just
   reboot the phone after the pairing process and let AAPS start ruffy in the background.
 - Clone AndroidAPS from https://github.com/jotomo/AndroidAPS (branch `combo-scripter-v2`)
