@@ -631,7 +631,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     @Override
     @Nullable
     public TemporaryBasal getTempBasalFromHistory(long time) {
-        return activeTreatments.getTempBasalFromHistory(time);
+        return activeTreatments != null ? activeTreatments.getTempBasalFromHistory(time) : null;
     }
 
     @Override
