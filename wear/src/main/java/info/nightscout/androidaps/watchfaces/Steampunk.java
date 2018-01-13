@@ -178,7 +178,11 @@ public class Steampunk extends BaseWatchFace {
             gridColor = ContextCompat.getColor(getApplicationContext(), R.color.grey_steampunk);
             basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
             basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-            pointSize = 1;
+            if (Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3")) < 3) {
+                pointSize = 2;
+            } else {
+                pointSize = 1;
+            }
             setupCharts();
         }
 
@@ -237,7 +241,12 @@ public class Steampunk extends BaseWatchFace {
     private void changeChartTimeframe() {
         int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
         timeframe = (timeframe%5) + 1;
+        if (timeframe < 3) {
+            pointSize = 2;
+        } else {
+            pointSize = 1;
+        }
+        setupCharts();
         sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
     }
-
 }

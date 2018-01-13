@@ -115,7 +115,7 @@
     <string name="danar_historyreload">Ricaricare</string>
     <string name="danar_invalidinput">Data Errata</string>
     <string name="danar_iob_label">IOB Microinfusore</string>
-    <string name="danar_lastbolus">Ultimo Bolo</string>
+    <string name="pump_lastbolus_label">Ultimo Bolo</string>
     <string name="danar_password_title">Password Microinfusore</string>
     <string name="danar_pump_settings">Setting Micro</string>
     <string name="danar_refill">ricarica</string>
@@ -412,7 +412,7 @@
     <string name="objectives_6_objective">Abilitazione di funzioni aggiuntive per l\'uso quotidiano, ad esempio assistenza avanzata del pasto</string>
     <string name="objectives_manualenacts"></string>
     <string name="virtualpump_sqlerror">Errore SQL</string>
-    <string name="virtualpump_tempbasal_label">Basale temporale</string>
+    <string name="pump_tempbasal_label">Basale temporale</string>
     <string name="visible">Visibile</string>
     <string name="vitualpump_label">Pompa Virtuale</string>
     <string name="waitingforpump">In attesa del micro</string>
@@ -437,12 +437,12 @@
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="virtualpump_settings">Impostazioni del Micro virtuale</string>
     <string name="virtualpump_resultok">ok</string>
-    <string name="virtualpump_reservoir_label">Serbatoio</string>
-    <string name="virtualpump_lastconnection_label">Ultima conessione</string>
+    <string name="pump_reservoir_label">Serbatoio</string>
+    <string name="pump_lastconnection_label">Ultima conessione</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_extendedbolus_label">Bolo Esteso</string>
-    <string name="virtualpump_battery_label">Batteria</string>
-    <string name="virtualpump_basebasalrate_label">Base basale</string>
+    <string name="pump_battery_label">Batteria</string>
+    <string name="pump_basebasalrate_label">Base basale</string>
     <string name="virtualpump">Micro Virtuale</string>
     <string name="uploading">UpLoading</string>
     <string name="updatingbasalrates">Aggiornamento basale</string>

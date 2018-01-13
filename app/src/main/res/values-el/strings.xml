@@ -50,11 +50,11 @@
     <string name="treatments_wizard_total_label">Σύνολο</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
-    <string name="virtualpump_basebasalrate_label">Βάση Βασικού Ρυθμού</string>
-    <string name="virtualpump_tempbasal_label">Προσωρ. Ρυθμός</string>
+    <string name="pump_basebasalrate_label">Βάση Βασικού Ρυθμού</string>
+    <string name="pump_tempbasal_label">Προσωρ. Ρυθμός</string>
     <string name="virtualpump_extendedbolus_label">Εκτετεμμένο bolus</string>
-    <string name="virtualpump_battery_label">Μπαταρία</string>
-    <string name="virtualpump_reservoir_label">Ρεζερβουάρ</string>
+    <string name="pump_battery_label">Μπαταρία</string>
+    <string name="pump_reservoir_label">Ρεζερβουάρ</string>
     <string name="virtualpump_resultok">ΟΚ</string>
     <string name="virtualpump_sqlerror">Λάθος SQL</string>
     <string name="openapsma_lastrun_label">Τελευταίος Υπολογισμός</string>
@@ -219,7 +219,7 @@
     <string name="connectionerror">Λάθος σύνδεσης αντλίας</string>
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="danar_dailyunits">"Μονάδες ανά ημέρα "</string>
-    <string name="danar_lastbolus">Τελευταίο Bolus:</string>
+    <string name="pump_lastbolus_label">Τελευταίο Bolus:</string>
     <string name="hoursago">ώρες πριν</string>
     <string name="danar_invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
@@ -540,7 +540,7 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="basalshortlabel">Β.Ρ.</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="virtualpump_lastconnection_label">Τελευταία σύνδεση</string>
+    <string name="pump_lastconnection_label">Τελευταία σύνδεση</string>
     <string name="danar_bluetooth_status">Κατάσταση Bluetooth</string>
     <string name="nav_about">Σχετικά με</string>
     <string name="smscommunicator_missingsmspermission">Λείπει εξουσιοδότηση SMS</string>
