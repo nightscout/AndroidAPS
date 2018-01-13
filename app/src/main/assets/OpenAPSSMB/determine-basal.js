@@ -442,7 +442,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     // 20 g/h means that anything <= 60g will get a remainingCATimeMin, 80g will get 4h, and 120g 6h
     // when actual absorption ramps up it will take over from remainingCATime
     var assumedCarbAbsorptionRate = 20; // g/h; maximum rate to assume carbs will absorb if no CI observed
-    var remainingCATime;
+    var remainingCATime = remainingCATimeMin; // added by mike https://github.com/openaps/oref0/issues/884
     if (meal_data.carbs) {
         // if carbs * assumedCarbAbsorptionRate > remainingCATimeMin, raise it
         // so <= 90g is assumed to take 3h, and 120g=4h
