@@ -246,7 +246,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableSMB_always", SMBDefaults.enableSMB_always);
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_COB);
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_temptarget);
-        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && (SourceDexcomG5Plugin.getPlugin().isEnabled(PluginBase.APS) || SMBDefaults.enableSMB_after_carbs));
+        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && (SourceDexcomG5Plugin.getPlugin().isEnabled(PluginBase.BGSOURCE) || SMBDefaults.enableSMB_after_carbs));
         mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.allowSMB_with_high_temptarget);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
