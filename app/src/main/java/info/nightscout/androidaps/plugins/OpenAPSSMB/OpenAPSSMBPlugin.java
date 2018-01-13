@@ -68,7 +68,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.smb_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -179,8 +179,8 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
-        double minBg =  Profile.toMgdl(profile.getTargetLow(), units);
-        double maxBg =  Profile.toMgdl(profile.getTargetHigh(), units);
+        double minBg = Profile.toMgdl(profile.getTargetLow(), units);
+        double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = (minBg + maxBg) / 2;
 
         minBg = Round.roundTo(minBg, 0.1d);
@@ -251,10 +251,13 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
             determineBasalResultSMB.changeRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
-            if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1)
+            if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
+                // going to cancel
+            } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
                 determineBasalResultSMB.changeRequested = false;
-            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - pump.getBaseBasalRate()) < 0.1)
+            } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - pump.getBaseBasalRate()) < 0.1) {
                 determineBasalResultSMB.changeRequested = false;
+            }
         }
 
         determineBasalResultSMB.iob = iobArray[0];

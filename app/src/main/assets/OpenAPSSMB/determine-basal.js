@@ -213,6 +213,9 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     var lastTempAge;
     if (typeof iob_data.lastTemp !== 'undefined' ) {
         lastTempAge = round(( new Date().getTime() - iob_data.lastTemp.date ) / 60000); // in minutes
+    // }  ---- added to not produce errors
+    } else {
+        lastTempAge = 0;
     }
     //console.error("currenttemp:",currenttemp,"lastTemp:",JSON.stringify(iob_data.lastTemp),"lastTempAge:",lastTempAge,"m");
     tempModulus = (lastTempAge + currenttemp.duration) % 30;

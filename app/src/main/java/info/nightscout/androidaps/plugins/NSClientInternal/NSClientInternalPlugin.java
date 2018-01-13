@@ -222,4 +222,8 @@ public class NSClientInternalPlugin implements PluginBase {
     public String url() {
         return NSClientService.nsURL;
     }
+
+    public boolean hasWritePermission() {
+        return nsClientService.hasWriteAuth;
+    }
 }

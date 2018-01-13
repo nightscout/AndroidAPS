@@ -316,6 +316,7 @@
     <string name="objectives_5_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
+    <string name="objectives_7_objective">Enabling additional features for daytime use, such as SMB</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -811,5 +812,14 @@
     <string name="negativeonly">Negative only</string>
     <string name="overview_editquickwizard_usecob">COB calculation</string>
     <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="loopenabled">Loop enabled</string>
+    <string name="apsselected">APS selected</string>
+    <string name="nsclienthaswritepermission">NSClient has write permission</string>
+    <string name="closedmodeenabled">Closed mode enabled</string>
+    <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
+    <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
+    <string name="zerovalueinprofile">Zero value in profile</string>
+    <string name="nolocaleprofilefound">Received profile switch from NS but profile doesn\'t exist localy</string>
 </resources>
 

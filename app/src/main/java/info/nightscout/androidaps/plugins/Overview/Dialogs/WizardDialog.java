@@ -233,7 +233,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
 
-        setCancelable(false);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 
@@ -458,9 +459,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // COB
         Double c_cob = 0d;
         if (cobCheckbox.isChecked()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
 
-            if(autosensData != null && autosensData.time > System.currentTimeMillis() - 11 * 60 * 1000L) {
+            if(autosensData != null) {
                 c_cob = autosensData.cob;
             }
         }
