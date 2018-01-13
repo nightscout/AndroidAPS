@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+ext {
+    supportLibraryVersion = "23.0.1"
+    wearableVersion = "2.0.1"    
+}
+
 def generateGitBuild = { ->
 
     StringBuilder stringBuilder = new StringBuilder();
@@ -60,12 +65,12 @@ allprojects {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    //compile 'com.ustwo.android:clockwise-wearable:1.0.2'
-    provided 'com.google.android.wearable:wearable:2.0.1'
-    compile 'com.google.android.support:wearable:2.0.1'
-    compile 'com.google.android.gms:play-services-wearable:7.3.0'
-    compile files('libs/hellocharts-library-1.5.5.jar')
-    compile(name:'ustwo-clockwise-debug', ext:'aar')
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
+    compile files("libs/hellocharts-library-1.5.5.jar")
+    //compile "com.ustwo.android:clockwise-wearable:1.0.2"
+    provided "com.google.android.wearable:wearable:${wearableVersion}"
+    compile "com.google.android.support:wearable:${wearableVersion}"
+    compile "com.google.android.gms:play-services-wearable:7.3.0"
+    compile(name:"ustwo-clockwise-debug", ext:"aar")
+    compile "com.android.support:support-v4:23.0.1"
+    compile "me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0"
 }

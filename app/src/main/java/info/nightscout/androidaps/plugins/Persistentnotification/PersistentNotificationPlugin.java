@@ -139,8 +139,8 @@ public class PersistentNotificationPlugin implements PluginBase {
             }
         }
 
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
             line1 += "  " + activeTemp.toStringShort();
         }
 
