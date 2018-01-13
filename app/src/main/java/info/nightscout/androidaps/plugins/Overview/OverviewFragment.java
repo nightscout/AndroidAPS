@@ -1059,9 +1059,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             baseBasalView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String fullText = MainApp.sResources.getString(R.string.virtualpump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h\n";
+                    String fullText = MainApp.sResources.getString(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h\n";
                     if (activeTemp != null) {
-                        fullText += MainApp.sResources.getString(R.string.virtualpump_tempbasal_label) + ": " + activeTemp.toStringFull();
+                        fullText += MainApp.sResources.getString(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                     }
                     OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.basal), fullText, null);
                 }
