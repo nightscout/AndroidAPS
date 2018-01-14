@@ -91,6 +91,7 @@ android {
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
             buildConfigField "boolean", "G5UPLOADER", "false"
+            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
         openloop {
             dimension "standard"
@@ -104,6 +105,7 @@ android {
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "false"
+            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
         pumpcontrol {
             dimension "standard"
@@ -117,6 +119,7 @@ android {
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "false"
+            buildConfigField "boolean", "PUMPCONTROL", "true"
         }
         nsclient {
             dimension "standard"
@@ -130,6 +133,7 @@ android {
             buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "false"
+            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
         g5uploader {
             dimension "standard"
@@ -143,6 +147,7 @@ android {
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "true"
+            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
     }
 }
