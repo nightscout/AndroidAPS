@@ -29,7 +29,7 @@ public abstract class Command {
     public void cancel() {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.sResources.getString(R.string.connectiontimedout);
+        result.comment = MainApp.gs(R.string.connectiontimedout);
         if (callback != null)
             callback.result(result).run();
     }

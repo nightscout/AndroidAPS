@@ -424,6 +424,7 @@ public class DanaRv2ExecutionService extends Service {
             MainApp.bus().post(bolusingEvent);
             SystemClock.sleep(1000);
         }
+        // do not call loadEvents() directly, reconnection may be needed
         ConfigBuilderPlugin.getCommandQueue().loadEvents(new Callback() {
             @Override
             public void run() {

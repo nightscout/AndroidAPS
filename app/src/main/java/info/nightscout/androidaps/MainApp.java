@@ -229,6 +229,10 @@ public class MainApp extends Application {
         return sBus;
     }
 
+    public static String gs(int id) {
+        return sResources.getString(id);
+    }
+
     public static MainApp instance() {
         return sInstance;
     }
