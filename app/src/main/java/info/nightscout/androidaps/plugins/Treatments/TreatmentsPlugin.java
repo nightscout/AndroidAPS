@@ -403,8 +403,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public double getTempBasalRemainingMinutesFromHistory() {
-        if (isTempBasalInProgress())
-            return getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes();
+        TemporaryBasal activeTemp = getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            return activeTemp.getPlannedRemainingMinutes();
+        }
         return 0;
     }
 
