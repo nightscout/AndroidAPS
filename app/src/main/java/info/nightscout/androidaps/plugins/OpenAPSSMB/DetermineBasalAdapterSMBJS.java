@@ -243,7 +243,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_use_smb, false) && (SourceDexcomG5Plugin.getPlugin().isEnabled(PluginBase.BGSOURCE) || SMBDefaults.enableSMB_always);
+        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_use_smb, false) && (SourceDexcomG5Plugin.getPlugin().isEnabled(PluginBase.BGSOURCE) || SMBDefaults.enableSMB_always));
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_COB);
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SMBDefaults.enableSMB_with_temptarget);
         mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && (SourceDexcomG5Plugin.getPlugin().isEnabled(PluginBase.BGSOURCE) || SMBDefaults.enableSMB_after_carbs));
