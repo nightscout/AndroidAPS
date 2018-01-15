@@ -69,7 +69,7 @@ Setup:
   Note that the pairing processing is somewhat fragile (but only has to be done once)
   and may need a few attempts; quickly acknowledge prompts and when starting over, remove the pump device
   from the bluetooth settings beforehand. Another option to try is to go to the bluetooth menu after
-  initiating the pairing process (this keeps the phone's bluetooth discoverable as long as the menu is displayed
+  initiating the pairing process (this keeps the phone's bluetooth discoverable as long as the menu is displayed)
   and switch back to ruffy after confirming the pairing on the pump, when the pump displays the authorization code.
   When AAPS is using ruffy, the ruffy app can't be used. The easiest way is to just
   reboot the phone after the pairing process and let AAPS start ruffy in the background.
