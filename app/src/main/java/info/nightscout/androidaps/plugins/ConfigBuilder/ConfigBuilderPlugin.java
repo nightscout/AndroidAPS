@@ -437,22 +437,6 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return true;
     }
 
-/*
-    @Override
-    public PumpDescription getPumpDescription() {
-        if (activePump != null)
-            return activePump.getPumpDescription();
-        else {
-            PumpDescription emptyDescription = new PumpDescription();
-            emptyDescription.isBolusCapable = false;
-            emptyDescription.isExtendedBolusCapable = false;
-            emptyDescription.isSetBasalProfileCapable = false;
-            emptyDescription.isTempBasalCapable = true; // needs to be true before real driver is selected
-            emptyDescription.isRefillingCapable = false;
-            return emptyDescription;
-        }
-    }
-*/
 
     /**
      * Constraints interface
@@ -652,7 +636,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     @Override
     @Nullable
     public TemporaryBasal getTempBasalFromHistory(long time) {
-        return activeTreatments.getTempBasalFromHistory(time);
+        return activeTreatments != null ? activeTreatments.getTempBasalFromHistory(time) : null;
     }
 
     @Override

@@ -120,7 +120,7 @@ public class Profile {
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.invalidprofile));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.invalidprofile));
         }
     }
 
@@ -386,6 +386,8 @@ public class Profile {
     }
 
     public BasalValue[] getBasalValues() {
+        if (basal_v == null)
+            basal_v = convertToSparseArray(basal);
         BasalValue[] ret = new BasalValue[basal_v.size()];
 
         for (Integer index = 0; index < basal_v.size(); index++) {

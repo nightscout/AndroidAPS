@@ -136,7 +136,7 @@
     <string name="danar_historyreload">замена</string>
     <string name="danar_invalidinput">введенные данные неверны</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
-    <string name="danar_lastbolus">предыдущий болюс</string>
+    <string name="pump_lastbolus_label">предыдущий болюс</string>
     <string name="danar_model" formatted="false">модель: %02X протокол: %02X код: %02X</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="danar_pump_settings">настройки помпы DanaR</string>
@@ -527,17 +527,17 @@
     <string name="updatingbasalrates">обновление значений базала</string>
     <string name="uploading">передача данных</string>
     <string name="virtualpump">виртуальная помпа</string>
-    <string name="virtualpump_basebasalrate_label">базовая величина базала</string>
-    <string name="virtualpump_battery_label">батарея</string>
+    <string name="pump_basebasalrate_label">базовая величина базала</string>
+    <string name="pump_battery_label">батарея</string>
     <string name="virtualpump_extendedbolus_label">продленный болюс</string>
     <string name="virtualpump_firmware_label">прошивка</string>
-    <string name="virtualpump_lastconnection_label">прошлое соединение</string>
-    <string name="virtualpump_reservoir_label">резервуар</string>
+    <string name="pump_lastconnection_label">прошлое соединение</string>
+    <string name="pump_reservoir_label">резервуар</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>
     <string name="virtualpump_sqlerror">ошибка SQL</string>
-    <string name="virtualpump_tempbasal_label">врем базал</string>
+    <string name="pump_tempbasal_label">врем базал</string>
     <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
     <string name="visible">виден</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
