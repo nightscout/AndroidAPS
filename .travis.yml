@@ -15,4 +15,7 @@ android:
   
 script:
   # Unit Test
-  - ./gradlew test
+  - ./gradlew test jacocoTestReport
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

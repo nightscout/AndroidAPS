@@ -812,8 +812,6 @@
     <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
     <string name="zerovalueinprofile">Zero value in profile</string>
     <string name="nolocaleprofilefound">Received profile switch from NS but profile doesn\'t exist localy</string>
-    <string name="bolusstopping">Stopping bolus delivery</string>
-    <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
     <string name="combo_tdds">TDDS</string>
@@ -831,8 +829,6 @@
     <string name="combo_pump_action_setting_tbr">Setting TBR (%d%% / %d min)</string>
     <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Refreshing</string>
-    <string name="key_raise_urgent_alarms_as_android_notification" translatable="false">raise_urgent_alarms_as_android_notification</string>
-    <string name="raise_urgent_alarms_as_android_notification">Use system notifications for alerts</string>
     <string name="combo_pump_never_connected">Never</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
@@ -848,7 +844,6 @@
     <string name="combo_is_in_error_state">The pump is showing the error E%d: %s</string>
     <string name="combo_no_alert_data_note">To read the pump\'s error history, long press the ALERTS button\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
     <string name="combo_no_tdd_data_note">To read the pump\'s TDD history, long press the TDDS button\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
-    <string name="key_sync_profile_to_pump">sync_profile_to_pump</string>
     <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
     <string name="combo_tdd_average">Average: %3.1f U</string>
     <string name="combo_tdd_maximum">Maximum: %3.1f U</string>
@@ -865,5 +860,6 @@
     <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually create a bolus record using the Careportal tab if a bolus was delivered.</string>
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
 </resources>
 

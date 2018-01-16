@@ -716,9 +716,9 @@
     <string name="pump_errors_history">Fehlerprotokol</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_state_disconnected">Keine Verbindung zur Pumpe</string>
-    <string name="combo_pump_state_suspended_by_user">Durch Benutzer gestoppt</string>
-    <string name="combo_pump_state_suspended_due_to_error">Wegen Fehler gestoppt</string>
-    <string name="combo_pump_state_running">Normaler Betrieb</string>
+    <string name="combo_pump_state_suspended_by_user">Gestoppt (Benutzer)</string>
+    <string name="combo_pump_state_suspended_due_to_error">Gestoppt (Fehler)</string>
+    <string name="combo_pump_state_running">In Betrieb</string>
     <string name="combo_tdds">TDDS</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
     <string name="combo_pump_action_cancelling_tbr">TBR wird abgebrochen</string>
@@ -760,6 +760,7 @@
     <string name="combo_no_tdd_data_note">Um die TDD-Statistik der Pumpe zu lesen, drücken Sie den TDDS Knopf lange.\nWARNUNG: Es gibt einen bekannten Fehler in der Pumpe der dazu führt, dass die Pumpe nach dieser Aktion erst wieder Verbindungen annimmt, wenn auf der Pumpe selbst ein Konpf gedrückt wird. Aus diesem Grund sollte diese Aktion nicht durchgeführt werden.</string>
     <string name="combo_read_full_history_warning">Dies wird den gesamten Speicher und den Status der Pumpe auslesen sowie alle Einträge in „Meine Daten“ und die Basalrate. Boli und TBR werden unter Behandlungen gespeichert, sofern sie nicht bereits vorhanden sind. Dies kann zu doppelten Einträgen führen, wenn die Uhrzeit der Pumpe abweicht. Das Auslesen des Speichers ist normaler Weise für das Loopen unnötig und nur für besondere Umstände vorgesehen. Wenn Du es dennoch tun willst, drücke noch einmal länger den Button. ACHTUNG: Dies kann einen Fehler auslösen, der dazu führt, dass die Pumpe keine Verbindungsversuche mehr akzeptiert. Erst die Betätigung einer Taste an der Pumpe beendet diesen Zustand. Nach Möglichkeit sollte daher das Auslesen vermieden werden.</string>
     <string name="combo_read_full_history_confirmation">Möchtest Du wirklich den gesamten Speicher der Pumpe auslesen und die möglichen Konsequenzen des Vorgangs tragen?</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Nicht mehr genug Insulin im Reservoir für den Bolus</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="overview_editquickwizard_usebg">BZ Berechnung</string>
