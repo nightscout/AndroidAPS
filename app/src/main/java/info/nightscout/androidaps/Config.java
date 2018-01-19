@@ -11,6 +11,7 @@ public class Config {
     // PLUGINS
     public static final boolean NSCLIENT = BuildConfig.NSCLIENTOLNY;
     public static final boolean G5UPLOADER = BuildConfig.G5UPLOADER;
+    public static final boolean PUMPCONTROL = BuildConfig.PUMPCONTROL;
 
     public static final boolean COMBO = true && BuildConfig.PUMPDRIVERS;
     public static final boolean DANAR = BuildConfig.PUMPDRIVERS;

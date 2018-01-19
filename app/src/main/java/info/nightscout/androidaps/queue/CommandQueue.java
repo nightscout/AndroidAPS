@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.queue;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -37,42 +38,41 @@ import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
 /**
  * Created by mike on 08.11.2017.
- *
+ * <p>
  * DATA FLOW:
  * ---------
- *
+ * <p>
  * (request) - > ConfigBuilder.getCommandQueue().bolus(...)
- *
+ * <p>
  * app no longer waits for result but passes Callback
- *
+ * <p>
  * request is added to queue, if another request of the same type already exists in queue, it's removed prior adding
  * but if request of the same type is currently executed (probably important only for bolus which is running long time), new request is declined
  * new QueueThread is created and started if current if finished
  * CommandReadStatus is added automatically before command if queue is empty
- *
+ * <p>
  * biggest change is we don't need exec pump commands in Handler because it's finished immediately
  * command queueing if not realized by stacking in different Handlers and threads anymore but by internal queue with better control
- *
+ * <p>
  * QueueThread calls ConfigBuilder#connect which is passed to getActivePump().connect
  * connect should be executed on background and return immediately. afterwards isConnecting() is expected to be true
- *
+ * <p>
  * while isConnecting() == true GUI is updated by posting connection progress
- *
+ * <p>
  * if connect is successful: isConnected() becomes true, isConnecting() becomes false
- *      CommandQueue starts calling execute() of commands. execute() is expected to be blocking (return after finish).
- *      callback with result is called after finish automatically
+ * CommandQueue starts calling execute() of commands. execute() is expected to be blocking (return after finish).
+ * callback with result is called after finish automatically
  * if connect failed: isConnected() becomes false, isConnecting() becomes false
- *      connect() is called again
- *
+ * connect() is called again
+ * <p>
  * when queue is empty, disconnect is called
- *
  */
 
 public class CommandQueue {
     private static Logger log = LoggerFactory.getLogger(CommandQueue.class);
 
     private LinkedList<Command> queue = new LinkedList<>();
-    private Command performing;
+    protected Command performing;
 
     private QueueThread thread = null;
 
@@ -94,10 +94,19 @@ public class CommandQueue {
         }
     }
 
+    private synchronized boolean isLastScheduled(Command.CommandType type) {
+        if (queue.size() > 0 && queue.get(queue.size() - 1).commandType == type) {
+            return true;
+        }
+        return false;
+    }
+
+    private synchronized void inject(Command command) {
+        // inject as a first command
+        queue.addFirst(command);
+    }
+
     private synchronized void add(Command command) {
-        // inject reading of status when adding first command to the queue
-        if (queue.size() == 0 && command.commandType != Command.CommandType.READSTATUS)
-            queue.add(new CommandReadStatus("Queue", null));
         queue.add(command);
     }
 
@@ -128,7 +137,7 @@ public class CommandQueue {
 
     // After new command added to the queue
     // start thread again if not already running
-    private synchronized void notifyAboutNewCommand() {
+    protected synchronized void notifyAboutNewCommand() {
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
@@ -166,17 +175,7 @@ public class CommandQueue {
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
         // Bring up bolus progress dialog
-        if (detailedBolusInfo.context != null) {
-            BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
-            bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
-        } else {
-            Intent i = new Intent();
-            i.putExtra("insulin", detailedBolusInfo.insulin);
-            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApp.instance().startActivity(i);
-        }
+        showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
 
         return true;
     }
@@ -231,7 +230,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints =  MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);
@@ -326,11 +325,12 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean readStatus(String reason, Callback callback) {
-        //if (isRunning(Command.CommandType.READSTATUS)) {
-        //    if (callback != null)
-        //        callback.result(executingNowError()).run();
-        //    return false;
-        //}
+        if (isLastScheduled(Command.CommandType.READSTATUS)) {
+            log.debug("QUEUE: READSTATUS " + reason + " ignored as duplicated");
+            if (callback != null)
+                callback.result(executingNowError()).run();
+            return false;
+        }
 
         // remove all unfinished 
         //removeAll(Command.CommandType.READSTATUS);
@@ -407,6 +407,20 @@ public class CommandQueue {
             }
             return result;
         } else return true;
+    }
+
+    protected void showBolusProgressDialog(Double insulin, Context context) {
+        if (context != null) {
+            BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(insulin);
+            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+        } else {
+            Intent i = new Intent();
+            i.putExtra("insulin", insulin);
+            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
+        }
     }
 
 }

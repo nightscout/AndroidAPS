@@ -69,7 +69,7 @@ public class QuickWizardEntry {
         return Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo();
     }
 
-    public BolusWizard doCalc(Profile profile, TempTarget tempTarget, BgReading lastBG) {
+    public BolusWizard doCalc(Profile profile, TempTarget tempTarget, BgReading lastBG, boolean _synchronized) {
         BolusWizard wizard = new BolusWizard();
 
         //BG
@@ -80,7 +80,12 @@ public class QuickWizardEntry {
 
         // COB
         double cob = 0d;
-        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
+        AutosensData autosensData;
+        if (_synchronized)
+            autosensData = IobCobCalculatorPlugin.getLastAutosensDataSynchronized("QuickWizard COB");
+        else
+            autosensData = IobCobCalculatorPlugin.getLastAutosensData("QuickWizard COB");
+
         if (autosensData != null && useCOB() == YES) {
             cob = autosensData.cob;
         }

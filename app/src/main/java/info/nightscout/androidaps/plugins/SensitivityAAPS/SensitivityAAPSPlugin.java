@@ -118,7 +118,7 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime);
+        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             log.debug("No autosens data available");
             return new AutosensResult();
