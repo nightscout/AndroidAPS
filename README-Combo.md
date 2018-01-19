@@ -57,6 +57,9 @@ Setup:
   - Disable end of TBR alert
   - Set TBR duration step-size to 15 min
   - Set low cartridge alarm to your liking
+  - Configure a max bolus suited for your therapy to protect against bugs in the software
+  - Similarly, configure maximum TBR duration as a safeguard. Allow at least 3 hours, since
+    the option to disconnect the pump for 3 hours sets a 0% for 3 hours.
   - Enable keylock (can also be set on the pump directly, see usage section on reasoning)
 - Get Android Studio 3 https://developer.android.com/studio/index.html
 - Follow the link http://ruffy.AndroidAPS.org and clone via git (branch `combo-scripter-v2`)

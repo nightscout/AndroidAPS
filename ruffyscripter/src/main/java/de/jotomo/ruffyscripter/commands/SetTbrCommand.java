@@ -47,10 +47,6 @@ public class SetTbrCommand extends BaseCommand {
             }
         }
 
-        if (percentage == 0 && duration > 180) {
-            violations.add("Max allowed zero-temp duration is 3h");
-        }
-
         return violations;
     }
 
