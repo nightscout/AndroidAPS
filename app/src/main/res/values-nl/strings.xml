@@ -767,7 +767,7 @@
 	<string name="combo_pump_state_suspended_by_user">Gestopt door de gebruiker</string>
 	<string name="combo_pump_state_running">Actief</string>
 	<string name="combo_pump_cartridge_low_warrning">Insuline ampul is bijna leeg</string>
-	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp</string>
+	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp: E%d %s</string>
 	<string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
 	<string name="combo_tdd_minimum">Minimum: %3.1f E</string>
 	<string name="combo_tdd_average">Gemiddelde: %3.1f E</string>
