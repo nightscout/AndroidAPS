@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import de.jotomo.ruffy.spi.PumpState;
+import de.jotomo.ruffy.spi.history.Bolus;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
@@ -29,6 +30,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView batteryView;
     private TextView reservoirView;
     private TextView lastConnectionView;
+    private TextView lastBolusView;
     private TextView baseBasalRate;
     private TextView tempBasalText;
     private Button refreshButton;
@@ -45,6 +47,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         activityView = (TextView) view.findViewById(R.id.combo_activity);
         batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
+        lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
         baseBasalRate = (TextView) view.findViewById(R.id.combo_base_basal_rate);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
@@ -190,6 +193,28 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     } else {
                         lastConnectionView.setText(minAgo);
                         lastConnectionView.setTextColor(Color.WHITE);
+                    }
+
+                    // last bolus
+                    Bolus bolus = plugin.getPump().lastBolus;
+                    if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
+                        long agoMsc = System.currentTimeMillis() - bolus.timestamp;
+                        double bolusMinAgo = agoMsc / 60d / 1000d;
+                        double bolusHoursAgo = agoMsc / 60d / 60d / 1000d;
+                        // TODO i18n
+                        if ((agoMsc < 60 * 1000)) {
+                            lastBolusView.setText(String.format("%.1f U (now)", bolus.amount));
+                        } else if (bolusMinAgo < 60) {
+                            lastBolusView.setText(String.format("%.1f U (%d min ago)", bolus.amount, (int) bolusMinAgo));
+//                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,
+//                                    getString(R.string.minago, bolusMinAgo), DateUtil.timeString(bolus.timestamp)));
+                        } else {
+                            lastBolusView.setText(String.format("%.1f U (%.1f h ago)", bolus.amount, bolusHoursAgo));
+//                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,
+//                                    String.format("%.1f", bolusHoursAgo) + getString(R.string.hoursago), DateUtil.timeString(bolus.timestamp)));
+                        }
+                    } else {
+                        lastBolusView.setText("");
                     }
 
                     // base basal rate

@@ -413,6 +413,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (result.reservoirLevel != PumpState.UNKNOWN) {
             pump.reservoirLevel = result.reservoirLevel;
         }
+        if (result.lastBolus != null) {
+            pump.lastBolus = result.lastBolus;
+        } else if (result.history != null && !result.history.bolusHistory.isEmpty()) {
+            pump.lastBolus = result.history.bolusHistory.get(0);
+        }
         if (result.state.menu != null) {
             pump.state = result.state;
         }

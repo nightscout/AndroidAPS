@@ -236,7 +236,6 @@
 
             </LinearLayout>
 
-<!-- reading last bolus from pump triggers pump bug
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
@@ -281,7 +280,6 @@
                     android:textSize="14sp" />
 
             </LinearLayout>
--->
 
             <View
                 android:layout_width="fill_parent"

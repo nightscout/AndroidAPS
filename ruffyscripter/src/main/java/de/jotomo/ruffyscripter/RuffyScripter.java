@@ -479,7 +479,7 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     /**
-     * This reads the state of the, which is whatever is currently displayed on the display,
+     * This reads the state of the pump, which is whatever is currently displayed on the display,
      * no actions are performed.
      */
     public PumpState readPumpStateInternal() {
