@@ -354,7 +354,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!pump.initialized) {
             initializePump();
         } else {
-            runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 1, ruffyScripter::readPumpState);
+            runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 1, ruffyScripter::readReservoirLevelAndLastBolus);
             // note that since the history is checked upon every connect, the above already updated
             // the DB with any changed history records
         }
@@ -406,10 +406,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         MainApp.bus().post(new EventInitializationChanged());
 
         // ComboFragment updates state fully only after the pump has initialized, so read full state here
-        updateLocalData(readBasalResult);
+        updateLocalData(runCommand(null, 1, ruffyScripter::readReservoirLevelAndLastBolus));
     }
 
     private void updateLocalData(CommandResult result) {
+        if (result.reservoirLevel != PumpState.UNKNOWN) {
+            pump.reservoirLevel = result.reservoirLevel;
+        }
         if (result.state.menu != null) {
             pump.state = result.state;
         }
@@ -1111,9 +1114,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             JSONObject pumpJson = new JSONObject();
             pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
 
-            int level = 150;
-            if (pump.state.insulinState == PumpState.LOW) level = 8;
+            int level;
+            if (pump.reservoirLevel != -1) level = pump.reservoirLevel;
+            else if (pump.state.insulinState == PumpState.LOW) level = 8;
             else if (pump.state.insulinState == PumpState.EMPTY) level = 0;
+            else level = 150;
             pumpJson.put("reservoir", level);
 
             JSONObject statusJson = new JSONObject();
