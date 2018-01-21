@@ -212,6 +212,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void getPumpStatus() {
+        lastDataTime = new Date();
     }
 
     @Override

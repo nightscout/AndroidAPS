@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -780,14 +781,17 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return "Default";
     }
 
+    @Nullable
     public Profile getProfile() {
         return getProfile(System.currentTimeMillis());
     }
 
     public String getProfileUnits() {
-        return getProfile().getUnits();
+        Profile profile = getProfile();
+        return profile != null ? profile.getUnits() : Constants.MGDL;
     }
 
+    @Nullable
     public Profile getProfile(long time) {
         if (activeTreatments == null)
             return null; //app not initialized

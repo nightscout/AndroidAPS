@@ -13,9 +13,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
@@ -25,6 +25,14 @@ import info.nightscout.utils.SP;
 public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     public static final String LOCAL_PROFILE = "LocalProfile";
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
+
+    private static LocalProfilePlugin localProfilePlugin;
+
+    public static LocalProfilePlugin getPlugin() {
+        if (localProfilePlugin == null)
+            localProfilePlugin = new LocalProfilePlugin();
+        return localProfilePlugin;
+    }
 
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = false;
@@ -128,7 +136,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         editor.apply();
         createConvertedProfile();
         if (Config.logPrefsChange)
-            log.debug("Storing settings: " + getProfile().getData().toString());
+            log.debug("Storing settings: " + getRawProfile().getData().toString());
     }
 
     public void loadSettings() {
@@ -243,6 +251,14 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+        if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.localprofile)))
+            return null;
+        return convertedProfile;
+    }
+
+    public ProfileStore getRawProfile() {
         if (convertedProfile == null)
             createConvertedProfile();
         return convertedProfile;

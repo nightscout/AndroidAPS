@@ -116,7 +116,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime);
+        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             if (Config.logAutosensData)
                 log.debug("No autosens data available");

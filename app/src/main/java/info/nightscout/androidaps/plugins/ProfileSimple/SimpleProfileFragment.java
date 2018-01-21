@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
@@ -18,6 +19,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
@@ -39,6 +41,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
     EditText targetlowView;
     EditText targethighView;
     Button profileswitchButton;
+    TextView invalidProfile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,13 +57,12 @@ public class SimpleProfileFragment extends SubscriberFragment {
             targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
             targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
             profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
+            invalidProfile = (TextView) layout.findViewById(R.id.invalidprofile);
 
             if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
                 layout.findViewById(R.id.simpleprofile_basalrate).setVisibility(View.GONE);
                 layout.findViewById(R.id.simpleprofile_basalrate_label).setVisibility(View.GONE);
             }
-
-            updateGUI();
 
             mgdlView.setChecked(SimpleProfilePlugin.getPlugin().mgdl);
             mmolView.setChecked(SimpleProfilePlugin.getPlugin().mmol);
@@ -122,6 +124,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
                     SimpleProfilePlugin.getPlugin().targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
                     SimpleProfilePlugin.getPlugin().targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
                     SimpleProfilePlugin.getPlugin().storeSettings();
+                    updateGUI();
                 }
             };
 
@@ -131,8 +134,6 @@ public class SimpleProfileFragment extends SubscriberFragment {
             basalView.addTextChangedListener(textWatch);
             targetlowView.addTextChangedListener(textWatch);
             targethighView.addTextChangedListener(textWatch);
-
-            updateGUI();
 
             return layout;
         } catch (Exception e) {
@@ -154,11 +155,16 @@ public class SimpleProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
+                    boolean isValid = SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile));
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended() || !isValid) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);
                     }
+                    if (isValid)
+                        invalidProfile.setVisibility(View.GONE);
+                    else
+                        invalidProfile.setVisibility(View.VISIBLE);
                 }
             });
     }
