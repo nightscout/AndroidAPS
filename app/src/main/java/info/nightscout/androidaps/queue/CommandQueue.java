@@ -147,8 +147,6 @@ public class CommandQueue {
     public static void independentConnect(String reason, Callback callback) {
         CommandQueue tempCommandQueue = new CommandQueue();
         tempCommandQueue.readStatus(reason, callback);
-        QueueThread tempThread = new QueueThread(tempCommandQueue);
-        tempThread.start();
     }
 
     // returns true if command is queued
