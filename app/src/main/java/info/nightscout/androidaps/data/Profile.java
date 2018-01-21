@@ -20,9 +20,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
@@ -47,6 +47,9 @@ public class Profile {
 
     private int percentage = 100;
     private int timeshift = 0;
+
+    private boolean isValid = true;
+    private boolean isValidated = false;
 
     public Profile(JSONObject json, String units) {
         this(json, 100, 0);
@@ -121,6 +124,8 @@ public class Profile {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.invalidprofile));
+            isValid = false;
+            isValidated = true;
         }
     }
 
@@ -174,10 +179,6 @@ public class Profile {
                 }
                 double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
-                if (value == 0) {
-                    Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, MainApp.sResources.getString(R.string.zerovalueinprofile), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
                 log.error(json.toString());
@@ -190,6 +191,71 @@ public class Profile {
             sparse.put(0, sparse.valueAt(sparse.size() - 1));
         }
         return sparse;
+    }
+
+    public boolean isValid(String from) {
+        if (!isValid)
+            return false;
+        if (!isValidated) {
+            if (basal_v == null)
+                basal_v = convertToSparseArray(basal);
+            validate(basal_v);
+            if (isf_v == null)
+                isf_v = convertToSparseArray(isf);
+            validate(isf_v);
+            if (ic_v == null)
+                ic_v = convertToSparseArray(ic);
+            validate(ic_v);
+            if (targetLow_v == null)
+                targetLow_v = convertToSparseArray(targetLow);
+            validate(targetLow_v);
+            if (targetHigh_v == null)
+                targetHigh_v = convertToSparseArray(targetHigh);
+            validate(targetHigh_v);
+            isValidated = true;
+        }
+
+        if (isValid) {
+            // Check for hours alignment
+            for (int index = 0; index < basal_v.size(); index++) {
+                long secondsFromMidnight = basal_v.keyAt(index);
+                if (secondsFromMidnight % 3600 != 0) {
+                    Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
+            }
+
+            // Check for minimal basal value
+            PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+            if (pump != null) {
+                PumpDescription description = pump.getPumpDescription();
+                for (int i = 0; i < basal_v.size(); i++) {
+                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
+                        basal_v.setValueAt(i, description.basalMinimumRate);
+                        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+                    }
+                }
+            } else {
+                // if pump not available (at start)
+                // do not store converted array
+                basal_v = null;
+            }
+
+         }
+        return isValid;
+    }
+
+    private void validate(LongSparseArray array) {
+        if (array.size() == 0) {
+            isValid = false;
+            return;
+        }
+        for (int index = 0; index < array.size(); index++) {
+            if (array.valueAt(index).equals(0d)) {
+                isValid = false;
+                return;
+            }
+        }
     }
 
     private Double getValueToTime(JSONArray array, Integer timeAsSeconds) {
@@ -341,32 +407,6 @@ public class Profile {
     public Double getBasal(Integer timeAsSeconds) {
         if (basal_v == null) {
             basal_v = convertToSparseArray(basal);
-            for (int index = 0; index < basal_v.size(); index++) {
-                long secondsFromMidnight = basal_v.keyAt(index);
-                if (secondsFromMidnight % 3600 != 0) {
-                    Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, MainApp.sResources.getString(R.string.basalprofilenotaligned), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
-            }
-
-            // Check for minimal basal value
-            PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-            if (pump != null) {
-                PumpDescription description = pump.getPumpDescription();
-                for (int i = 0; i < basal_v.size(); i++) {
-                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
-                        basal_v.setValueAt(i, description.basalMinimumRate);
-                        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, MainApp.sResources.getString(R.string.minimalbasalvaluereplaced), Notification.NORMAL)));
-                    }
-                }
-                return getValueToTime(basal_v, timeAsSeconds);
-            } else {
-                // if pump not available (at start)
-                // do not store converted array
-                Double value = getValueToTime(basal_v, timeAsSeconds);
-                basal_v = null;
-                return value;
-            }
         }
         return getValueToTime(basal_v, timeAsSeconds);
     }

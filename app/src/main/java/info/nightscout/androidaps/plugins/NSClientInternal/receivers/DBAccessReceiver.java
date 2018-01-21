@@ -79,6 +79,11 @@ public class DBAccessReceiver extends BroadcastReceiver {
                     DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id);
                     UploadQueue.add(dbr);
                 }
+            } else  if (action.equals("dbUpdate")) {
+                if (shouldUpload()) {
+                    DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id, data);
+                    UploadQueue.add(dbr);
+                }
             } else {
                 DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), data);
                 // this is not used as mongo _id but only for searching in UploadQueue database

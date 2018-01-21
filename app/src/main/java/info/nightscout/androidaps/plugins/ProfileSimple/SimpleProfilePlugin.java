@@ -132,6 +132,8 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
         editor.apply();
         createConvertedProfile();
+        if (Config.logPrefsChange)
+            log.debug("Storing settings: " + getRawProfile().getData().toString());
     }
 
     private void loadSettings() {
@@ -141,11 +143,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         mgdl = SP.getBoolean("SimpleProfile" + "mgdl", true);
         mmol = SP.getBoolean("SimpleProfile" + "mmol", false);
         dia = SP.getDouble("SimpleProfile" + "dia", Constants.defaultDIA);
-        ic = SP.getDouble("SimpleProfile" + "ic", 20d);
-        isf = SP.getDouble("SimpleProfile" + "isf", 200d);
-        basal = SP.getDouble("SimpleProfile" + "basal", 1d);
-        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 80d);
-        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 120d);
+        ic = SP.getDouble("SimpleProfile" + "ic", 0d);
+        isf = SP.getDouble("SimpleProfile" + "isf", 0d);
+        basal = SP.getDouble("SimpleProfile" + "basal", 0d);
+        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 0d);
+        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 0d);
     }
 
     /*
@@ -210,6 +212,14 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+        if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile)))
+            return null;
+        return convertedProfile;
+    }
+
+    public ProfileStore getRawProfile() {
         if (convertedProfile == null)
             createConvertedProfile();
         return convertedProfile;

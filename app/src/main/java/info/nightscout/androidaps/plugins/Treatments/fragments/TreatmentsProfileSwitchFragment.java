@@ -83,6 +83,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             holder.remove.setTag(profileSwitch);
             holder.name.setTag(profileSwitch);
             holder.date.setTag(profileSwitch);
+            holder.invalid.setVisibility(profileSwitch.isValid() ? View.GONE : View.VISIBLE);
 
         }
 
@@ -104,6 +105,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             TextView remove;
             TextView ph;
             TextView ns;
+            TextView invalid;
 
             ProfileSwitchViewHolder(View itemView) {
                 super(itemView);
@@ -113,6 +115,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                 name = (TextView) itemView.findViewById(R.id.profileswitch_name);
                 ph = (TextView) itemView.findViewById(R.id.pump_sign);
                 ns = (TextView) itemView.findViewById(R.id.ns_sign);
+                invalid = (TextView) itemView.findViewById(R.id.invalid_sign);
                 remove = (TextView) itemView.findViewById(R.id.profileswitch_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
