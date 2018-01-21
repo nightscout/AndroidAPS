@@ -147,6 +147,11 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         return durationInMinutes == 0;
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
     // -------- Interval interface end ---------
 
     public String log() {

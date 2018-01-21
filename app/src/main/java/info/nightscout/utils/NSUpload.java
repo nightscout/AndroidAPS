@@ -296,6 +296,39 @@ public class NSUpload {
         }
     }
 
+    public static void updateProfileSwitch(ProfileSwitch profileSwitch) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.PROFILESWITCH);
+            data.put("duration", profileSwitch.durationInMinutes);
+            data.put("profile", profileSwitch.getCustomizedName());
+            data.put("profileJson", profileSwitch.profileJson);
+            data.put("profilePlugin", profileSwitch.profilePlugin);
+            if (profileSwitch.isCPP) {
+                data.put("CircadianPercentageProfile", true);
+                data.put("timeshift", profileSwitch.timeshift);
+                data.put("percentage", profileSwitch.percentage);
+            }
+            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            if (profileSwitch._id != null) {
+                Context context = MainApp.instance().getApplicationContext();
+                Bundle bundle = new Bundle();
+                bundle.putString("action", "dbUpdate");
+                bundle.putString("collection", "treatments");
+                bundle.putString("data", data.toString());
+                bundle.putString("_id", profileSwitch._id);
+                Intent intent = new Intent(Intents.ACTION_DATABASE);
+                intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.sendBroadcast(intent);
+                DbLogger.dbAdd(intent, data.toString());
+            }
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
+
     public static void uploadCareportalEntryToNS(JSONObject data) {
         try {
             if (data.has("preBolus") && data.has("carbs")) {
