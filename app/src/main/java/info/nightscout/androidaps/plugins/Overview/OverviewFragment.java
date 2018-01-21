@@ -497,6 +497,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
@@ -510,6 +520,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
@@ -523,6 +543,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
@@ -536,6 +566,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
