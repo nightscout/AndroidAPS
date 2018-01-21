@@ -685,7 +685,6 @@
     <string name="bolusstopping">estopt Bolus toediening wordt</string>
     <string name="shortfat">Vet</string>
     <string name="bolusstopped">Bolus toediening gestopt</string>
-    <string name="raise_urgent_alarms_as_android_notification">Gebruik systeem notificaties voor waarschuwingen</string>
     <string name="wear_detailed_delta_title">Toon gedetaillieerde delta</string>
     <string name="unsupportedfirmware">Niet ondersteune pomp firmware</string>
     <string name="DexcomG5">DexcomG5 App (aangepast)</string>

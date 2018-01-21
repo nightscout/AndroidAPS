@@ -297,6 +297,8 @@
     <string name="pumpbusy">Pump is busy</string>
     <string name="overview_bolusprogress_delivered">Delivered</string>
     <string name="overview_bolusprogress_stoped">Stopped</string>
+    <string name="bolusstopped">Bolus stopped</string>
+    <string name="bolusstopping">Stopping bolus</string>
     <string name="occlusion">Occlusion</string>
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
