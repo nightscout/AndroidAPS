@@ -727,7 +727,6 @@
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu. Andernfalls wird AndroidAPS nicht protokolliert (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)</string>
     <string name="pump_tempbasal_label">TBR</string>
     <string name="combo_last_bolus">%.1f IE (%s, %s)</string>
-    <string name="raise_urgent_alarms_as_android_notification">Nutze System-Benachrichtigungen für Alarme</string>
     <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in der letzten Minute angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
     <string name="combo_activity_reading_pump_history">Historie wird gelesen</string>
     <string name="combo_activity_setting_basal_profile">Basalratenprofil wird aktualisiert</string>

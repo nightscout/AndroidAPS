@@ -51,6 +51,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PercentageSplitter;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -1720,10 +1722,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (profile != null) {
                     profileSwitch.profileJson = profile.getData().toString();
                     log.debug("Profile switch prefilled with JSON from local store");
+                    // Update data in NS
+                    NSUpload.updateProfileSwitch(profileSwitch);
                 } else {
-                    Notification notification = new Notification(Notification.NO_LOCALE_PROFILE_FOUND, MainApp.sResources.getString(R.string.nolocaleprofilefound), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                    log.debug("JSON for profile switch doesn't exist. Ignoring ...");
+                    log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
             }

@@ -297,6 +297,8 @@
     <string name="pumpbusy">Pump is busy</string>
     <string name="overview_bolusprogress_delivered">Delivered</string>
     <string name="overview_bolusprogress_stoped">Stopped</string>
+    <string name="bolusstopped">Bolus stopped</string>
+    <string name="bolusstopping">Stopping bolus</string>
     <string name="occlusion">Occlusion</string>
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
@@ -809,9 +811,8 @@
     <string name="closedmodeenabled">Closed mode enabled</string>
     <string name="maxiobset">Maximal IOB set properly</string>
     <string name="hasbgdata">BG available from selected source</string>
-    <string name="basalprofilenotaligned">Basal values not aligned to hours</string>
-    <string name="zerovalueinprofile">Zero value in profile</string>
-    <string name="nolocaleprofilefound">Received profile switch from NS but profile doesn\'t exist localy</string>
+    <string name="basalprofilenotaligned" formatted="false">Basal values not aligned to hours: %s</string>
+    <string name="zerovalueinprofile" formatted="false">Invalid profile: %s</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
     <string name="combo_tdds">TDDS</string>

@@ -685,7 +685,6 @@
     <string name="bolusstopping">estopt Bolus toediening wordt</string>
     <string name="shortfat">Vet</string>
     <string name="bolusstopped">Bolus toediening gestopt</string>
-    <string name="raise_urgent_alarms_as_android_notification">Gebruik systeem notificaties voor waarschuwingen</string>
     <string name="wear_detailed_delta_title">Toon gedetaillieerde delta</string>
     <string name="unsupportedfirmware">Niet ondersteune pomp firmware</string>
     <string name="DexcomG5">DexcomG5 App (aangepast)</string>
@@ -733,13 +732,11 @@
     <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="none"><![CDATA[<geen>]]></string>
     <string name="app_name">AndroidAPS</string>
-    <string name="zerovalueinprofile">Nul waarde in basaal profiel</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
     <string name="positiveonly">Enkel positief</string>
     <string name="negativeonly">Enkel negatief</string>
     <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="overview_editquickwizard_usetrend">Trend berekening</string>
-    <string name="nolocaleprofilefound">Profiel wissel ontvangen via NS maar dit profiel bestaat niet op gsm</string>
     <string name="combo_programming_bolus">"Bolus in pomp programmeren "</string>
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
@@ -767,7 +764,7 @@
 	<string name="combo_pump_state_suspended_by_user">Gestopt door de gebruiker</string>
 	<string name="combo_pump_state_running">Actief</string>
 	<string name="combo_pump_cartridge_low_warrning">Insuline ampul is bijna leeg</string>
-	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp</string>
+	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp: E%d %s</string>
 	<string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
 	<string name="combo_tdd_minimum">Minimum: %3.1f E</string>
 	<string name="combo_tdd_average">Gemiddelde: %3.1f E</string>
