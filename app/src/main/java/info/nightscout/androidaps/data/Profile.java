@@ -193,7 +193,7 @@ public class Profile {
         return sparse;
     }
 
-    public boolean isValid(String from) {
+    public synchronized boolean isValid(String from) {
         if (!isValid)
             return false;
         if (!isValidated) {
@@ -404,7 +404,7 @@ public class Profile {
         return getBasal(secondsFromMidnight(time));
     }
 
-    public Double getBasal(Integer timeAsSeconds) {
+    public synchronized Double getBasal(Integer timeAsSeconds) {
         if (basal_v == null) {
             basal_v = convertToSparseArray(basal);
         }
@@ -425,7 +425,7 @@ public class Profile {
         public Double value;
     }
 
-    public BasalValue[] getBasalValues() {
+    public synchronized BasalValue[] getBasalValues() {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
         BasalValue[] ret = new BasalValue[basal_v.size()];
