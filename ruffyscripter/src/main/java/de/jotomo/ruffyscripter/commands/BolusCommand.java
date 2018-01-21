@@ -39,8 +39,8 @@ public class BolusCommand extends BaseCommand {
     public List<String> validateArguments() {
         List<String> violations = new ArrayList<>();
 
-        if (bolus <= 0 || bolus > 25) {
-            violations.add("Requested bolus " + bolus + " out of limits (0-25)");
+        if (bolus <= 0) {
+            violations.add("Requested bolus non-positive: " + bolus);
         }
 
         return violations;

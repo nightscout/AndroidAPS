@@ -118,7 +118,7 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getLastAutosensData();
+        AutosensData current = IobCobCalculatorPlugin.getLastAutosensData("SensitivityOref0"); // this is running inside lock already
         if (current == null) {
             log.debug("No current autosens data available");
             return new AutosensResult();

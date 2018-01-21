@@ -55,6 +55,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
@@ -141,6 +142,18 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Subscribe
     public void onStatusEvent(final EventNewBG e) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    calculateInsulin();
+                }
+            });
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventAutosensCalculationFinished e) {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
@@ -459,7 +472,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // COB
         Double c_cob = 0d;
         if (cobCheckbox.isChecked()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
+            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("Wizard COB");
 
             if(autosensData != null) {
                 c_cob = autosensData.cob;

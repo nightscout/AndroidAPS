@@ -167,10 +167,16 @@ public class MainApp extends Application {
             MainApp.getConfigBuilder().initialize();
         }
         NSUpload.uploadAppStart();
-        if (MainApp.getConfigBuilder().isClosedModeEnabled())
+        if (Config.NSCLIENT)
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
+        else if (Config.G5UPLOADER)
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
+        else if (Config.PUMPCONTROL)
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
+        else if (MainApp.getConfigBuilder().isClosedModeEnabled())
             Answers.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
         else
-            Answers.getInstance().logCustom(new CustomEvent("AppStart"));
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
 
         new Thread(new Runnable() {
             @Override
@@ -223,6 +229,10 @@ public class MainApp extends Application {
 
     public static Bus bus() {
         return sBus;
+    }
+
+    public static String gs(int id) {
+        return sResources.getString(id);
     }
 
     public static MainApp instance() {
