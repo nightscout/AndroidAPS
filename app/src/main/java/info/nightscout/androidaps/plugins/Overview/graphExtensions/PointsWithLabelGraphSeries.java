@@ -141,9 +141,6 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         Iterator<E> values = getValues(minX, maxX);
 
         // draw background
-        double lastEndY = 0;
-        double lastEndX = 0;
-
         // draw data
 
         double diffY = maxY - minY;
@@ -154,9 +151,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         float graphLeft = graphView.getGraphContentLeft();
         float graphTop = graphView.getGraphContentTop();
 
-        lastEndY = 0;
-        lastEndX = 0;
-        float firstX = 0;
+        float scaleX = (float) (graphWidth / diffX);
+
         int i=0;
         while (values.hasNext()) {
             E value = values.next();
@@ -171,9 +167,6 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             double ratX = valX / diffX;
             double x = graphWidth * ratX;
 
-            double orgX = x;
-            double orgY = y;
-
             // overdraw
             boolean overdraw = false;
             if (x > graphWidth) { // end right
@@ -185,6 +178,14 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             if (y > graphHeight) { // end top
                 overdraw = true;
             }
+
+            long duration = value.getDuration();
+            float endWithDuration = (float) (x + duration * scaleX + graphLeft + 1);
+            // cut off to graph start if needed
+            if (x < 0 && endWithDuration > 0) {
+                x = 0;
+            }
+
             /* Fix a bug that continue to show the DOT after Y axis */
             if(x < 0) {
                 overdraw = true;
@@ -195,8 +196,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             registerDataPoint(endX, endY, value);
 
             float xpluslength = 0;
-            if (value.getDuration() > 0) {
-                xpluslength = endX + Math.min((float) (value.getDuration() * graphWidth / diffX), graphLeft + graphWidth);
+            if (duration > 0) {
+                xpluslength = Math.min(endWithDuration, graphLeft + graphWidth);
             }
 
             // draw data point
