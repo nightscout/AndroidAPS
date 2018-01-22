@@ -191,6 +191,17 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         return Translator.translate(eventType);
     }
 
+    public String getNotes() {
+        try {
+            JSONObject object = new JSONObject(json);
+            if (object.has("notes"))
+                return object.getString("notes");
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        return "";
+    }
+
     @Override
     public long getDuration() {
         try {

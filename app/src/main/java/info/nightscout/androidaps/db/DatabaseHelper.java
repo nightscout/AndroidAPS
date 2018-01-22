@@ -1473,7 +1473,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<CareportalEvent>();
+        return new ArrayList<>();
+    }
+
+    public List<CareportalEvent> getCareportalEventsFromTime(boolean ascending) {
+        try {
+            List<CareportalEvent> careportalEvents;
+            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
+            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            return careportalEvents;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
     }
 
     public void deleteCareportalEventById(String _id) {

@@ -239,6 +239,7 @@ public class Profile {
                 // if pump not available (at start)
                 // do not store converted array
                 basal_v = null;
+                isValidated = false;
             }
 
          }
