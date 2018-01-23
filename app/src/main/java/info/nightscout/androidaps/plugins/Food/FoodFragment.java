@@ -61,7 +61,7 @@ public class FoodFragment extends SubscriberFragment {
                              Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.food_fragment, container, false);
-
+log.debug(">>>>>>> start onCreateView");
             filter = (EditText) view.findViewById(R.id.food_filter);
             clearFilter = (ImageView) view.findViewById(R.id.food_clearfilter);
             category = new SpinnerHelper(view.findViewById(R.id.food_category));
@@ -129,6 +129,7 @@ public class FoodFragment extends SubscriberFragment {
             fillCategories();
             fillSubcategories();
             filterData();
+            log.debug(">>>>>>> end onCreateView");
             return view;
         } catch (Exception e) {
             Crashlytics.logException(e);
