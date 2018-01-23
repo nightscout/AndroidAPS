@@ -257,6 +257,8 @@ public class BLEComm {
         log.debug("setCharacteristicNotification");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
+            isConnecting = false;
+            isConnected = false;
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
@@ -266,6 +268,8 @@ public class BLEComm {
         log.debug("readCharacteristic");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
+            isConnecting = false;
+            isConnected = false;
             return;
         }
         mBluetoothGatt.readCharacteristic(characteristic);
@@ -274,6 +278,8 @@ public class BLEComm {
     public void writeCharacteristic_NO_RESPONSE(final BluetoothGattCharacteristic characteristic, final byte[] data) {
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
+            isConnecting = false;
+            isConnected = false;
             return;
         }
 
@@ -306,6 +312,8 @@ public class BLEComm {
         log.debug("getSupportedGattServices");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
+            isConnecting = false;
+            isConnected = false;
             return null;
         }
 
