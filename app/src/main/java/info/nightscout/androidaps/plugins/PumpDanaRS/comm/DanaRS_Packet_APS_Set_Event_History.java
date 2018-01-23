@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.utils.DateUtil;
 
 public class DanaRS_Packet_APS_Set_Event_History extends DanaRS_Packet {
     private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_APS_Set_Event_History.class);
@@ -30,6 +31,8 @@ public class DanaRS_Packet_APS_Set_Event_History extends DanaRS_Packet {
         this.time = time;
         this.param1 = param1;
         this.param2 = param2;
+        if (Config.logDanaMessageDetail)
+            log.debug("Set history entry: " + DateUtil.dateAndTimeString(time) + " type: " + type + " param1: " + param1 + " param2: " + param2);
     }
 
     @Override
