@@ -15,20 +15,22 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
@@ -37,7 +39,6 @@ import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.utils.BundleLogger;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -365,8 +366,10 @@ public class DataService extends IntentService {
                 String profile = bundles.getString("profile");
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
                 NSProfilePlugin.storeNewProfile(profileStore);
-                MainApp.bus().post(new EventNewBasalProfile());
-
+                MainApp.bus().post(new EventNSProfileUpdateGUI());
+                // if there are no profile switches this should lead to profile update
+                if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)
+                    MainApp.bus().post(new EventNewBasalProfile());
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
