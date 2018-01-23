@@ -164,6 +164,8 @@ public class BLEComm {
         scheduledDisconnection = null;
 
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
+            log.debug("disconnect not possible: (mBluetoothAdapter == null) " + (mBluetoothAdapter == null));
+            log.debug("disconnect not possible: (mBluetoothGatt == null) " + (mBluetoothGatt == null));
             return;
         }
         setCharacteristicNotification(getUARTReadBTGattChar(), false);
