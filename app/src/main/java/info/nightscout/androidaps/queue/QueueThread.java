@@ -34,7 +34,7 @@ public class QueueThread extends Thread {
     private PowerManager.WakeLock mWakeLock;
 
     public QueueThread(CommandQueue queue) {
-        super(QueueThread.class.toString());
+        super();
 
         this.queue = queue;
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);

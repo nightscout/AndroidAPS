@@ -253,7 +253,7 @@ public class GraphData {
         }
 
         // Careportal
-        List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
+        List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true);
 
         for (int tx = 0; tx < careportalEvents.size(); tx++) {
             DataPointWithLabelInterface t = careportalEvents.get(tx);
