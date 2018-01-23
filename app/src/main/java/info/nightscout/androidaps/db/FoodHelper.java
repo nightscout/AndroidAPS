@@ -70,7 +70,7 @@ public class FoodHelper {
     public boolean createOrUpdate(Food food) {
         try {
             // find by NS _id
-            if (food._id != null) {
+            if (food._id != null && !food._id.equals("")) {
                 Food old;
 
                 QueryBuilder<Food, Long> queryBuilder = getDaoFood().queryBuilder();
@@ -90,12 +90,13 @@ public class FoodHelper {
                     } else {
                         return false;
                     }
+                } else {
+                    getDaoFood().createOrUpdate(food);
+                    log.debug("FOOD: New record: " + food.toString());
+                    scheduleFoodChange();
+                    return true;
                 }
             }
-            getDaoFood().createOrUpdate(food);
-            log.debug("FOOD: New record: " + food.toString());
-            scheduleFoodChange();
-            return true;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
