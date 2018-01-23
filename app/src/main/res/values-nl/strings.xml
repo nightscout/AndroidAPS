@@ -784,4 +784,5 @@
 	<string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wafe bolussen zijn actief. Loop is naar onderdruk lage waardes enkel overgeschakeld gedurende 6 uur. Alleen gewone bolussen worden onderdsteund in loop modus.</string>
 	<string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="careportal_combobolus">Combinatie-Bolus</string>
+    <string name="pump_basebasalrate">%.2f E/u</string>
 </resources>

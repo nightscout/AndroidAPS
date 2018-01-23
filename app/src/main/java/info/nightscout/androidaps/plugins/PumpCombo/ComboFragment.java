@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView batteryView;
     private TextView reservoirView;
     private TextView lastConnectionView;
+    private TextView baseBasalRate;
     private TextView tempBasalText;
     private Button refreshButton;
     private Button alertsButton;
@@ -46,6 +46,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
+        baseBasalRate = (TextView) view.findViewById(R.id.combo_base_basal_rate);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
 
         refreshButton = (Button) view.findViewById(R.id.combo_refresh_button);
@@ -196,6 +197,9 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                         lastConnectionView.setText(minAgo);
                         lastConnectionView.setTextColor(Color.WHITE);
                     }
+
+                    // base basal rate
+                    baseBasalRate.setText(MainApp.sResources.getString(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
 
                     // TBR
                     String tbrStr = "";
