@@ -568,7 +568,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
         //log.debug("Locking onNewHistoryData");
         stopCalculation("onEventNewHistoryData");
         synchronized (dataLock) {
-            long time = ev.time;
+            // clear up 5 min back for proper COB calculation
+            long time = ev.time - 5 * 60 * 1000L;
             log.debug("Invalidating cached data to: " + new Date(time).toLocaleString());
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
