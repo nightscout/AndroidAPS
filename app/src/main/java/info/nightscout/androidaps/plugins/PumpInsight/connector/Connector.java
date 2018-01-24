@@ -1,16 +1,13 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.RemoteException;
 import android.util.Log;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
+import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import sugar.free.sightparser.handling.ServiceConnectionCallback;
 import sugar.free.sightparser.handling.SightServiceConnector;
 import sugar.free.sightparser.handling.StatusCallback;
@@ -44,24 +41,11 @@ public class Connector {
             synchronized (this) {
                 log("Status change: " + status);
                 lastStatus = status;
-                lastStatusTime = tsl();
+                lastStatusTime = Helpers.tsl();
                 switch (status) {
                     // TODO automated reactions to change in status
                 }
                 MainApp.bus().post(new EventInsightPumpUpdateGui());
-            }
-        }
-    };
-
-    private BroadcastReceiver statusReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context ctx, Intent intent) {
-            log("Receiving broadcast!");
-            final String str = intent.getStringExtra("STATUS_MESSAGE");
-            try {
-                statusCallback.onStatusChange(str);
-            } catch (RemoteException e) {
-                log("Remote exception: " + e);
             }
         }
     };
@@ -81,7 +65,6 @@ public class Connector {
     };
 
     private Connector() {
-        registerReceiver();
     }
 
     public static Connector get() {
@@ -97,9 +80,6 @@ public class Connector {
         }
     }
 
-    private static long tsl() {
-        return System.currentTimeMillis();
-    }
 
     private static boolean isCompanionAppInstalled() {
         return checkPackageExists(MainApp.instance(), COMPANION_APP_PACKAGE);
@@ -127,14 +107,6 @@ public class Connector {
         android.util.Log.e("PUMPPUMP", msg);
     }
 
-    private void registerReceiver() {
-        try {
-            MainApp.instance().unregisterReceiver(statusReceiver);
-        } catch (Exception e) {
-            //
-        }
-        MainApp.instance().registerReceiver(statusReceiver, new IntentFilter(STATUS_RECEIVER));
-    }
 
     public synchronized void init() {
         log("init");

@@ -85,7 +85,7 @@ public class InsightPumpFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     InsightPumpPlugin insightPumpPlugin = InsightPumpPlugin.getPlugin();
-                    basaBasalRateView.setText(insightPumpPlugin.getBaseBasalRate() + "U");
+                    basaBasalRateView.setText(insightPumpPlugin.getBaseBasalRateString() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                         tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                     } else {
