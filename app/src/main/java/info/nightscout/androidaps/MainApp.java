@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.PumpInsight.InsightPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
@@ -129,6 +130,7 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(InsightPumpPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
