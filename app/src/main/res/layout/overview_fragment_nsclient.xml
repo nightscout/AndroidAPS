@@ -499,6 +499,7 @@
                     app:buttonTint="@color/basal" />
 
                 <TextView
+                    android:id="@+id/overview_showbasals_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -515,6 +516,7 @@
                     app:buttonTint="@color/iob" />
 
                 <TextView
+                    android:id="@+id/overview_showiob_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -532,6 +534,7 @@
                     app:buttonTint="@color/cob" />
 
                 <TextView
+                    android:id="@+id/overview_showcob_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -548,6 +551,7 @@
                     app:buttonTint="@color/deviations" />
 
                 <TextView
+                    android:id="@+id/overview_showdeviations_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -563,6 +567,7 @@
                     android:layout_gravity="center" />
 
                 <TextView
+                    android:id="@+id/overview_showratios_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
