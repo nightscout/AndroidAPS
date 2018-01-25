@@ -862,6 +862,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="insightpump">Insight</string>
+    <string name="insightpump">Insight Pump</string>
 </resources>
 

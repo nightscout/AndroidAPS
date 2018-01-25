@@ -1,9 +1,14 @@
 package info.nightscout.androidaps.plugins.PumpInsight.utils;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 
 /**
  * Created by jamorham on 24/01/2018.
@@ -34,4 +39,24 @@ public class Helpers {
         return System.currentTimeMillis();
     }
 
+    public static long msSince(long when) {
+        return (tsl() - when);
+    }
+
+    public static long msTill(long when) {
+        return (when - tsl());
+    }
+
+    public static boolean checkPackageExists(Context context, String TAG, String packageName) {
+        try {
+            final PackageManager pm = context.getPackageManager();
+            final PackageInfo pi = pm.getPackageInfo(packageName, 0);
+            return pi.packageName.equals(packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        } catch (Exception e) {
+            Log.wtf(TAG, "Exception trying to determine packages! " + e);
+            return false;
+        }
+    }
 }

@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
@@ -28,7 +23,6 @@ public class Connector {
 
     private static final String TAG = "InsightConnector";
     private static final String COMPANION_APP_PACKAGE = "sugar.free.sightremote";
-    private static final String STATUS_RECEIVER = "sugar.free.sightparser.handling.StatusCallback";
     private static volatile Connector instance;
     private volatile SightServiceConnector serviceConnector;
     private volatile Status lastStatus = null;
@@ -80,22 +74,8 @@ public class Connector {
         }
     }
 
-
     private static boolean isCompanionAppInstalled() {
-        return checkPackageExists(MainApp.instance(), COMPANION_APP_PACKAGE);
-    }
-
-    private static boolean checkPackageExists(Context context, String packageName) {
-        try {
-            final PackageManager pm = context.getPackageManager();
-            final PackageInfo pi = pm.getPackageInfo(packageName, 0);
-            return pi.packageName.equals(packageName);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        } catch (Exception e) {
-            Log.wtf(TAG, "Exception trying to determine packages! " + e);
-            return false;
-        }
+        return Helpers.checkPackageExists(MainApp.instance(), TAG, COMPANION_APP_PACKAGE);
     }
 
     public static void connectToPump() {
@@ -120,6 +100,11 @@ public class Connector {
                 log("Trying to connect");
             } else {
                 log("Not trying init due to missing companion app");
+            }
+        } else {
+            if (!serviceConnector.isConnectedToService()) {
+                log("Trying to reconnect to service");
+                serviceConnector.connectToService();
             }
         }
     }
@@ -148,7 +133,6 @@ public class Connector {
     }
 
     public boolean isPumpConnected() {
-        //return isConnected() && serviceConnector.isUseable();
         return isConnected() && getLastStatus() == Status.CONNECTED;
     }
 
@@ -159,6 +143,10 @@ public class Connector {
         }
 
         if (!isConnected()) {
+            log("Not connected to companion");
+            if (Helpers.ratelimit("insight-app-not-connected", 5)) {
+                init();
+            }
             return "Not connected to companion app!";
         }
 
