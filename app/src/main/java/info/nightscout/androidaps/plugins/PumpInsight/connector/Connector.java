@@ -115,7 +115,7 @@ public class Connector {
             }
         } else {
             if (!serviceConnector.isConnectedToService()) {
-                if (serviceReconnects > 2) {
+                if (serviceReconnects > 0) {
                     serviceConnector = null;
                     init();
                 } else {
