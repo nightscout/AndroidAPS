@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -191,8 +192,10 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
             log.debug(ratioLimit);
         }
 
-        log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio);
-        log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
+        if (Config.logAutosensData) {
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
+        }
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

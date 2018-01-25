@@ -740,7 +740,8 @@
     <string name="combo_programming_bolus">"Bolus in pomp programmeren "</string>
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
-	<string name="combo_no_pump_connection">Geen verbinding</string><string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
+	<string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
+    <string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
 	<string name="combo_last_bolus">%.1f E (%s, %s)</string>
 	<string name="combo_pump_action_initializing">Initialiseren</string>
 	<string name="combo_pump_state_disconnected">Verbinding verbroken</string>
@@ -784,4 +785,5 @@
 	<string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wafe bolussen zijn actief. Loop is naar onderdruk lage waardes enkel overgeschakeld gedurende 6 uur. Alleen gewone bolussen worden onderdsteund in loop modus.</string>
 	<string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="careportal_combobolus">Combinatie-Bolus</string>
+    <string name="pump_basebasalrate">%.2f E/u</string>
 </resources>

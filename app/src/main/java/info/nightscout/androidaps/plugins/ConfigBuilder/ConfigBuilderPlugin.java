@@ -28,6 +28,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -144,6 +145,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     public void initialize() {
         pluginList = MainApp.getPluginsList();
         loadSettings();
+        MainApp.bus().post(new EventAppInitialized());
     }
 
     public void storeSettings() {

@@ -197,6 +197,7 @@ public class ObjectivesFragment extends Fragment {
             ObjectivesPlugin.objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
             ObjectivesPlugin.objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
             ObjectivesPlugin.objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
+            ObjectivesPlugin.objectives.get(7).objective = MainApp.sResources.getString(R.string.objectives_7_objective);
             ObjectivesPlugin.objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
             ObjectivesPlugin.objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
             ObjectivesPlugin.objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);

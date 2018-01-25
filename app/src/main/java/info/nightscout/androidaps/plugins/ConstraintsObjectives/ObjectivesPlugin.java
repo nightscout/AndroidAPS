@@ -161,14 +161,14 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 boolean isVirtualPump = VirtualPumpPlugin.getPlugin().isEnabled(PluginBase.PUMP);
                 boolean vpUploadEnabled = SP.getBoolean("virtualpump_uploadstatus", false);
                 boolean vpUploadNeeded = !isVirtualPump || vpUploadEnabled;
-                boolean hasBGData = DatabaseHelper.lastBg()!=null;
+                boolean hasBGData = DatabaseHelper.lastBg() != null;
 
                 boolean apsEnabled = false;
                 APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS))
                     apsEnabled = true;
 
-                return new RequirementResult(hasBGData&&bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
+                return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
                         MainApp.sResources.getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
                                 + "\n" + MainApp.sResources.getString(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
                                 + (isVirtualPump ? "\n" + MainApp.sResources.getString(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
@@ -187,7 +187,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 return new RequirementResult(closedModeEnabled, MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedModeEnabled));
             case 4:
                 double maxIOB = MainApp.getConfigBuilder().applyMaxIOBConstraints(1000d);
-                boolean maxIobSet =  maxIOB > 0;
+                boolean maxIobSet = maxIOB > 0;
                 return new RequirementResult(maxIobSet, MainApp.sResources.getString(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
             default:
                 return new RequirementResult(true, "");
@@ -320,12 +320,12 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public Double applyMaxIOBConstraints(Double maxIob) {
-        if (objectives.get(4).started.getTime() > 0 || objectives.get(2).accomplished.getTime() == 0)
-            return maxIob;
-        else {
+        if (objectives.get(3).started.getTime() > 0 && objectives.get(3).accomplished.getTime() == 0) {
             if (Config.logConstraintsChanges)
                 log.debug("Limiting maxIOB " + maxIob + " to " + 0 + "U");
             return 0d;
+        } else {
+            return maxIob;
         }
     }
 

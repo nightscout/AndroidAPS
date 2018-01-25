@@ -16,6 +16,8 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.SP;
 
@@ -34,7 +36,7 @@ public class QueueThread extends Thread {
     private PowerManager.WakeLock mWakeLock;
 
     public QueueThread(CommandQueue queue) {
-        super(QueueThread.class.toString());
+        super();
 
         this.queue = queue;
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
@@ -51,12 +53,6 @@ public class QueueThread extends Thread {
             while (true) {
                 PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                 long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
-                if (pump.isConnecting()) {
-                    log.debug("QUEUE: connecting " + secondsElapsed);
-                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
-                    SystemClock.sleep(1000);
-                    continue;
-                }
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     MainApp.bus().post(new EventDismissBolusprogressIfRunning(null));
@@ -73,18 +69,36 @@ public class QueueThread extends Thread {
                         //write time
                         SP.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis());
                         //toggle BT
+                        pump.stopConnecting();
+                        pump.disconnect("watchdog");
+                        SystemClock.sleep(1000);
                         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                         mBluetoothAdapter.disable();
                         SystemClock.sleep(1000);
                         mBluetoothAdapter.enable();
                         SystemClock.sleep(1000);
                         //start over again once after watchdog barked
+                        //Notification notification = new Notification(Notification.OLD_NSCLIENT, "Watchdog", Notification.URGENT);
+                        //MainApp.bus().post(new EventNewNotification(notification));
                         connectionStartTime = lastCommandTime = System.currentTimeMillis();
+                        pump.connect("watchdog");
                     } else {
                         queue.clear();
+                        log.debug("QUEUE: no connection possible");
+                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+                        pump.disconnect("Queue empty");
+                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
                         return;
                     }
                 }
+
+                if (pump.isConnecting()) {
+                    log.debug("QUEUE: connecting " + secondsElapsed);
+                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
+                    SystemClock.sleep(1000);
+                    continue;
+                }
+
 
                 if (!pump.isConnected()) {
                     log.debug("QUEUE: connect");

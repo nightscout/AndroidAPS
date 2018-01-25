@@ -507,7 +507,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return 0;
     }
 
-    public int deleteDbRequestbyMongoId(String action, String id) {
+    public void deleteDbRequestbyMongoId(String action, String id) {
         try {
             QueryBuilder<DbRequest, String> queryBuilder = getDaoDbRequest().queryBuilder();
             Where where = queryBuilder.where();
@@ -515,16 +515,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.limit(10L);
             PreparedQuery<DbRequest> preparedQuery = queryBuilder.prepare();
             List<DbRequest> dbList = getDaoDbRequest().query(preparedQuery);
-            if (dbList.size() != 1) {
-                log.error("deleteDbRequestbyMongoId query size: " + dbList.size());
-            } else {
-                //log.debug("Treatment findTreatmentById found: " + trList.get(0).log());
-                return delete(dbList.get(0));
+            log.error("deleteDbRequestbyMongoId query size: " + dbList.size());
+            for (DbRequest r : dbList) {
+                delete(r);
             }
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return 0;
     }
 
     public void deleteAllDbRequests() {
@@ -1508,7 +1505,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<CareportalEvent>();
+        return new ArrayList<>();
+    }
+
+    public List<CareportalEvent> getCareportalEventsFromTime(boolean ascending) {
+        try {
+            List<CareportalEvent> careportalEvents;
+            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
+            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            return careportalEvents;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
     }
 
     public void deleteCareportalEventById(String _id) {
