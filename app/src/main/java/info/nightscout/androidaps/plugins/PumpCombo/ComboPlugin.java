@@ -374,7 +374,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // read basal profile into cache (KeepAlive will trigger a profile update if needed)
-        CommandResult readBasalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
+        CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
         if (!readBasalResult.success) {
             return;
         }
@@ -1007,7 +1007,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 */
 
-        CommandResult basalResult = runCommand("Reading basal profile", 2, ruffyScripter::readBasalProfile);
+        CommandResult basalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
         if (!basalResult.success) {
             return;
         }
