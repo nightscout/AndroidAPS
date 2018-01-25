@@ -103,6 +103,11 @@ public class IobCobThread extends Thread {
                         continue;
                     }
 
+                    if (profile == null) {
+                        log.debug("Aborting calculation thread (no profile): " + from);
+                        return; // profile not set yet
+                    }
+
                     if (profile.getIsf(bgTime) == null) {
                         log.debug("Aborting calculation thread (no ISF): " + from);
                         return; // profile not set yet

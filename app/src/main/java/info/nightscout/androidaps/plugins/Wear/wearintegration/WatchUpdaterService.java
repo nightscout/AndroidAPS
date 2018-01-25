@@ -637,6 +637,11 @@ public class WatchUpdaterService extends WearableListenerService implements
     private String generateBasalString(TreatmentsInterface treatmentsInterface) {
 
         String basalStringResult;
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null)
+            return "";
+
         TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             basalStringResult = activeTemp.toStringShort();
@@ -644,7 +649,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
                 basalStringResult = "100%";
             } else {
-                basalStringResult = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
+                basalStringResult = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             }
         }
         return basalStringResult;
