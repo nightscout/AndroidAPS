@@ -28,9 +28,12 @@ public class Connector {
     private volatile Status lastStatus = null;
     private volatile long lastStatusTime = -1;
     private boolean companionAppInstalled = false;
+    private int serviceReconnects = 0;
+
     private StatusCallback statusCallback = new StatusCallback() {
         @Override
         public void onStatusChange(Status status) {
+
 
             synchronized (this) {
                 log("Status change: " + status);
@@ -55,6 +58,15 @@ public class Connector {
         @Override
         public void onServiceDisconnected() {
             log("Disconnected from service");
+            if (Helpers.ratelimit("insight-automatic-reconnect", 30)) {
+                log("Scheduling automatic service reconnection");
+                Helpers.runOnUiThreadDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        init();
+                    }
+                }, 20000);
+            }
         }
     };
 
@@ -84,12 +96,12 @@ public class Connector {
     }
 
     private static void log(String msg) {
-        android.util.Log.e("PUMPPUMP", msg);
+        android.util.Log.e("INSIGHTPUMP", msg);
     }
 
 
     public synchronized void init() {
-        log("init");
+        log("Connector::init()");
         if (serviceConnector == null) {
             companionAppInstalled = isCompanionAppInstalled();
             if (companionAppInstalled) {
@@ -103,8 +115,16 @@ public class Connector {
             }
         } else {
             if (!serviceConnector.isConnectedToService()) {
-                log("Trying to reconnect to service");
-                serviceConnector.connectToService();
+                if (serviceReconnects > 2) {
+                    serviceConnector = null;
+                    init();
+                } else {
+                    log("Trying to reconnect to service (" + serviceReconnects + ")");
+                    serviceConnector.connectToService();
+                    serviceReconnects++;
+                }
+            } else {
+                serviceReconnects = 0; // everything ok
             }
         }
     }
