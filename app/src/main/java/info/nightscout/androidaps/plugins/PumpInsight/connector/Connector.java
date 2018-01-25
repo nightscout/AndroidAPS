@@ -34,7 +34,6 @@ public class Connector {
         @Override
         public void onStatusChange(Status status) {
 
-
             synchronized (this) {
                 log("Status change: " + status);
                 lastStatus = status;
@@ -175,8 +174,24 @@ public class Connector {
         }
 
         switch (lastStatus) {
+
+            case CONNECTED:
+                if (lastStatusTime < 1) {
+                    tryToGetStatusAgain();
+                }
+
             default:
                 return lastStatus.toString();
+        }
+    }
+
+    private void tryToGetStatusAgain() {
+        if (Helpers.ratelimit("insight-retry-status-request", 5)) {
+            try {
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("Insight. Status missing", null);
+            } catch (NullPointerException e) {
+                //
+            }
         }
     }
 
