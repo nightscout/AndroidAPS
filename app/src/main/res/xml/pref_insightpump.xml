@@ -4,5 +4,8 @@
         android:key="insightpump"
         android:title="@string/insightpump">
     </PreferenceCategory>
-
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="insight_always_connected"
+        android:title="Stay always connected" />
 </PreferenceScreen>
