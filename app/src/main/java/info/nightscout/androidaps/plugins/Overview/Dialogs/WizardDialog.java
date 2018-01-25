@@ -528,12 +528,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
             String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
             String carbsText = calculatedCarbs > 0d ? (DecimalFormatter.to0Decimal(calculatedCarbs) + "g") : "";
-            total.setText(getString(R.string.result) + ": " + insulinText + " " + carbsText);
+            total.setText(MainApp.gs(R.string.result) + ": " + insulinText + " " + carbsText);
             okButton.setVisibility(View.VISIBLE);
         } else {
             // TODO this should also be run when loading the dialog as the OK button is initially visible
             //      but does nothing if neither carbs nor insulin is > 0
-            total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
+            total.setText(MainApp.gs(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
             okButton.setVisibility(View.INVISIBLE);
         }
 
