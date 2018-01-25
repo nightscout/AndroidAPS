@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpd
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
 import sugar.free.sightparser.applayer.AppLayerMessage;
 import sugar.free.sightparser.applayer.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.remote_control.ExtendedBolusMessage;
@@ -66,22 +67,21 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private static Logger log = LoggerFactory.getLogger(InsightPumpPlugin.class);
 
     private static volatile InsightPumpPlugin plugin;
-
+    private final Handler handler = new Handler();
+    private final InsightPumpAsyncAdapter async = new InsightPumpAsyncAdapter();
     private Date lastDataTime = new Date(0);
     private TaskRunner taskRunner;
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
     private PumpDescription pumpDescription = new PumpDescription();
-    private final Handler handler = new Handler();
-    private final InsightPumpAsyncAdapter async = new InsightPumpAsyncAdapter();
     private StatusTaskRunner.StatusResult statusResult;
     private double basalRate = 0;
     private final TaskRunner.ResultCallback statusResultHandler = new TaskRunner.ResultCallback() {
 
         @Override
         public void onError(Exception e) {
-            log("Got error taskrunner: " +e);
-            android.util.Log.e("INSIGHTPUMP","taskrunner stacktrace: ",e);
+            log("Got error taskrunner: " + e);
+            android.util.Log.e("INSIGHTPUMP", "taskrunner stacktrace: ", e);
 
             if (e instanceof sugar.free.sightparser.error.DisconnectedError) {
                 if (Helpers.ratelimit("insight-reconnect", 2)) {
@@ -253,6 +253,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return Connector.get().isPumpConnected();
     }
 
+    // TODO implement
     @Override
     public boolean isConnecting() {
         return false;
@@ -260,6 +261,21 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void connect(String reason) {
+        log("InsightPumpPlugin::connect()");
+        try {
+            if (!connector.isPumpConnected()) {
+              if (Helpers.ratelimit("insight-connect-timer",40)) {
+                  log("Actually requesting a connect");
+                  connector.getServiceConnector().connect();
+              }
+            } else {
+                log("Already connected");
+            }
+        } catch (NullPointerException e) {
+            log("Could not sconnect - null pointer: " + e);
+        }
+
+        // TODO review
         if (!Config.NSCLIENT && !Config.G5UPLOADER)
             NSUpload.uploadDeviceStatus();
         lastDataTime = new Date();
@@ -267,8 +283,16 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void disconnect(String reason) {
+        log("InsightPumpPlugin::disconnect()");
         try {
-             connector.getServiceConnector().disconnect();
+
+            // TODO Timeout timer?
+            if (!SP.getBoolean("insight_always_connected", false)) {
+                log("Requesting disconnect");
+                connector.getServiceConnector().disconnect();
+            } else {
+                log("Not disconnecting due to preference");
+            }
         } catch (NullPointerException e) {
             log("Could not disconnect - null pointer: " + e);
         }
@@ -343,7 +367,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
 
         result.percent = 100;
-        result.success = cs == Cstatus.SUCCESS;;
+        result.success = cs == Cstatus.SUCCESS;
 
         if (result.success) {
             log("Success!");
@@ -365,10 +389,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return result;
     }
 
+    // TODO implement
     @Override
     public void stopBolusDelivering() {
 
     }
+
+    // Temporary Basals
 
     // TODO implement
     @Override
@@ -399,74 +426,149 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         log("Set TBR %");
-        final UUID cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes), "Set TBR " + percent+"%" + " " + durationInMinutes + "m");
-
-        if (cmd == null) {
-            return new PumpEnactResult().success(false).enacted(false);
-        }
-
-        Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
-        log("Got command status: " + cs);
-
-        // create log entry
-        final TemporaryBasal tempBasal = new TemporaryBasal();
-        tempBasal.date = System.currentTimeMillis();
-        tempBasal.isAbsolute = false;
-        tempBasal.percentRate = percent;
-        tempBasal.durationInMinutes = durationInMinutes;
-        tempBasal.source = Source.USER; // TODO check this is correct
-        MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
-
-        PumpEnactResult pumpEnactResult = new PumpEnactResult().success(true).enacted(true).isPercent(true).duration(durationInMinutes);
-        pumpEnactResult.percent = percent;
-        pumpEnactResult.success = cs == Cstatus.SUCCESS;
-        pumpEnactResult.isTempCancel = percent == 100; // 100% temp basal is a cancellation
-        pumpEnactResult.comment=async.getCommandComment(cmd);
-
-        return  pumpEnactResult;
-    }
-
-
-    // TODO update
-    @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        log("Set Extended Bolus");
-        ExtendedBolusMessage extendedBolusMessage = new ExtendedBolusMessage();
-        extendedBolusMessage.setAmount((float) ((double) insulin));
-        extendedBolusMessage.setDuration((short) ((int) durationInMinutes));
-        SingleMessageTaskRunner singleMessageTaskRunner = new SingleMessageTaskRunner(connector.getServiceConnector(), extendedBolusMessage);
-        try {
-            singleMessageTaskRunner.fetch(new TaskRunner.ResultCallback() {
-                @Override
-                public void onResult(Object o) {
-                    log("OK TBR %");
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    log("Error TBR %");
-                }
-            });
-            return new PumpEnactResult().enacted(true).success(true).bolusDelivered(insulin).duration(durationInMinutes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new PumpEnactResult().success(false).enacted(false);
-    }
-
-    @Override
-    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        log("Cancel TBR");
-        final UUID cmd = aSyncSingleCommand(new CancelTBRMessage(),"Cancel Temp Basal");;
+        final UUID cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes), "Set TBR " + percent + "%" + " " + durationInMinutes + "m");
 
         if (cmd == null) {
             return pumpEnactFailure();
         }
 
-        final Cstatus cs = async.busyWaitForCommandResult(cmd,10000);
+        Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        log("Got command status: " + cs);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
+        pumpEnactResult.percent = percent;
+        pumpEnactResult.success = cs == Cstatus.SUCCESS;
+        pumpEnactResult.isTempCancel = percent == 100; // 100% temp basal is a cancellation
+        pumpEnactResult.comment = async.getCommandComment(cmd);
+
+        if (pumpEnactResult.success) {
+            // create log entry
+            final TemporaryBasal tempBasal = new TemporaryBasal();
+            tempBasal.date = System.currentTimeMillis();
+            tempBasal.isAbsolute = false;
+            tempBasal.percentRate = percent;
+            tempBasal.durationInMinutes = durationInMinutes;
+            tempBasal.source = Source.USER; // TODO check this is correct
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
+        }
+
+        updateGui();
+        return pumpEnactResult;
+    }
+
+
+    @Override
+    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
+        log("Cancel TBR");
+        final UUID cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
+
+        if (cmd == null) {
+            return pumpEnactFailure();
+        }
+
+        // TODO isn't conditional on one apparently being in progress only the history change
+        boolean enacted = false;
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            enacted = true;
+            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
+            tempStop.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
+        }
+        lastDataTime = new Date();
+        updateGui();
+        if (Config.logPumpComm)
+            log.debug("Canceling temp basal: "); // TODO get more info
+
         return new PumpEnactResult().success(cs == Cstatus.SUCCESS).enacted(true).isTempCancel(true);
     }
 
+
+    // Extended Boluses
+
+    @Override
+    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        log("Set Extended bolus " + insulin + " " + durationInMinutes);
+        ExtendedBolusMessage extendedBolusMessage = new ExtendedBolusMessage();
+        extendedBolusMessage.setAmount((float) ((double) insulin));
+        extendedBolusMessage.setDuration((short) ((int) durationInMinutes));
+        final UUID cmd = aSyncSingleCommand(extendedBolusMessage, "Extended bolus U" + insulin + " mins:" + durationInMinutes);
+        if (cmd == null) {
+            return pumpEnactFailure();
+        }
+
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        log("Got command status: " + cs);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).bolusDelivered(insulin).duration(durationInMinutes);
+        pumpEnactResult.success = cs == Cstatus.SUCCESS;
+        pumpEnactResult.comment = async.getCommandComment(cmd);
+
+        if (pumpEnactResult.success) {
+            // create log entry
+            final ExtendedBolus extendedBolus = new ExtendedBolus();
+            extendedBolus.date = System.currentTimeMillis();
+            extendedBolus.insulin = insulin;
+            extendedBolus.durationInMinutes = durationInMinutes;
+            extendedBolus.source = Source.USER; // TODO check this is correct
+            MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+        }
+
+        if (Config.logPumpComm)
+            log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes+" "+pumpEnactResult.comment);
+
+        updateGui();
+        return pumpEnactResult;
+    }
+
+    @Override
+    public PumpEnactResult cancelExtendedBolus() {
+
+        log("Cancel Extended bolus");
+
+        // TODO note always sends cancel to pump but only changes history if present
+
+        final UUID cmd = aSyncTaskRunner(new CancelBolusTaskRunner(connector.getServiceConnector(), BolusType.EXTENDED), "Cancel extended bolus");
+
+        if (cmd == null) {
+            return pumpEnactFailure();
+        }
+
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+
+        // TODO logging? history
+
+        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+            ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
+            exStop.source = Source.USER;
+            // TODO does this need any specific cancel flag?
+            MainApp.getConfigBuilder().addToHistoryExtendedBolus(exStop);
+        }
+
+        updateGui();
+        return new PumpEnactResult().success(cs == Cstatus.SUCCESS).enacted(true);
+
+
+    }
+
+
+    private synchronized UUID deliverBolus(float bolusValue) {
+        log("!!!!!!!!!! DeliverBolus: " + bolusValue);
+
+        // Bare sanity checking should be done elsewhere
+        if (bolusValue == 0) return null;
+
+        if (bolusValue < 0) return null;
+
+        if (bolusValue > 20) return null;
+
+        // TODO check limits here?
+
+        final StandardBolusMessage message = new StandardBolusMessage();
+        message.setAmount(bolusValue);
+
+        return aSyncSingleCommand(message, "Deliver Bolus " + bolusValue);
+    }
 
 
     /*
@@ -537,85 +639,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return result;
     }*/
 
-    private synchronized UUID aSyncSingleCommand(final AppLayerMessage msg, final String name) {
-        // if (!isConnected()) return false;
-        //if (isBusy()) return false;
-        log("asyncSinglecommand called: "+name);
-        final EventInsightPumpCallback event = new EventInsightPumpCallback();
-        new Thread() {
-            @Override
-            public void run() {
-                log("asyncSingleCommand thread");
-                final SingleMessageTaskRunner singleMessageTaskRunner = new SingleMessageTaskRunner(connector.getServiceConnector(), msg);
-                try {
-                    singleMessageTaskRunner.fetch(new TaskRunner.ResultCallback() {
-                        @Override
-                        public void onResult(Object o) {
-                            log(name+" success");
-                            event.success = true;
-                            pushCallbackEvent(event);
-                        }
 
-                        @Override
-                        public void onError(Exception e) {
-                            log(name+" error");
-                            event.message = e.getMessage();
-                            pushCallbackEvent(event);
-                        }
-                    });
 
-                } catch (Exception e) {
-                    log("EXCEPTION" + e.toString());
-                }
-            }}.start();
-        return event.request_uuid;
-    }
-
-    private synchronized UUID aSyncTaskRunner(final TaskRunner task, final String name) {
-        // if (!isConnected()) return false;
-        //if (isBusy()) return false;
-        log("asyncTaskRunner called: "+name);
-        final EventInsightPumpCallback event = new EventInsightPumpCallback();
-        new Thread() {
-            @Override
-            public void run() {
-                log("asyncTaskRunner thread");
-                try {
-                    task.fetch(new TaskRunner.ResultCallback() {
-                        @Override
-                        public void onResult(Object o) {
-                            log(name+" success");
-                            event.success = true;
-                            pushCallbackEvent(event);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            log(name+" error");
-                            event.message = e.getMessage();
-                            pushCallbackEvent(event);
-                        }
-                    });
-
-                } catch (Exception e) {
-                    log("EXCEPTION" + e.toString());
-                }
-            }}.start();
-        return event.request_uuid;
-    }
-
-    // TODO update
-    @Override
-    public PumpEnactResult cancelExtendedBolus() {
-        CancelBolusTaskRunner cancelBolusTaskRunner = new CancelBolusTaskRunner(connector.getServiceConnector(), BolusType.EXTENDED);
-        try {
-            cancelBolusTaskRunner.fetchBlockingCall();
-            return new PumpEnactResult().success(true).enacted(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new PumpEnactResult().success(false).enacted(false);
-    }
 
     @Override
     public JSONObject getJSONStatus() {
@@ -683,22 +708,77 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
     }
 
-    private synchronized UUID deliverBolus(float bolusValue) {
-        log("!!!!!!!!!! DeliverBolus: " + bolusValue);
+    // Utility
 
-        // Bare sanity checking
-        if (bolusValue == 0) return null;
-        if (bolusValue > 10) return null;
-        if (bolusValue < 0) return null;
+    private synchronized UUID aSyncSingleCommand(final AppLayerMessage msg, final String name) {
+        // if (!isConnected()) return false;
+        //if (isBusy()) return false;
+        log("asyncSinglecommand called: " + name);
+        final EventInsightPumpCallback event = new EventInsightPumpCallback();
+        new Thread() {
+            @Override
+            public void run() {
+                log("asyncSingleCommand thread");
+                final SingleMessageTaskRunner singleMessageTaskRunner = new SingleMessageTaskRunner(connector.getServiceConnector(), msg);
+                try {
+                    singleMessageTaskRunner.fetch(new TaskRunner.ResultCallback() {
+                        @Override
+                        public void onResult(Object o) {
+                            log(name + " success");
+                            event.success = true;
+                            pushCallbackEvent(event);
+                        }
 
-        // TODO check limits here?
+                        @Override
+                        public void onError(Exception e) {
+                            log(name + " error");
+                            event.message = e.getMessage();
+                            pushCallbackEvent(event);
+                        }
+                    });
 
-        final StandardBolusMessage message = new StandardBolusMessage();
-        message.setAmount(bolusValue);
-
-        return aSyncSingleCommand(message,"Deliver Bolus "+bolusValue);
-
+                } catch (Exception e) {
+                    log("EXCEPTION" + e.toString());
+                }
+            }
+        }.start();
+        return event.request_uuid;
     }
+
+    private synchronized UUID aSyncTaskRunner(final TaskRunner task, final String name) {
+        // if (!isConnected()) return false;
+        //if (isBusy()) return false;
+        log("asyncTaskRunner called: " + name);
+        final EventInsightPumpCallback event = new EventInsightPumpCallback();
+        new Thread() {
+            @Override
+            public void run() {
+                log("asyncTaskRunner thread");
+                try {
+                    task.fetch(new TaskRunner.ResultCallback() {
+                        @Override
+                        public void onResult(Object o) {
+                            log(name + " success");
+                            event.success = true;
+                            pushCallbackEvent(event);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            log(name + " error");
+                            event.message = e.getMessage();
+                            pushCallbackEvent(event);
+                        }
+                    });
+
+                } catch (Exception e) {
+                    log("EXCEPTION" + e.toString());
+                }
+            }
+        }.start();
+        return event.request_uuid;
+    }
+
 
     private PumpEnactResult pumpEnactFailure() {
         return new PumpEnactResult().success(false).enacted(false);
