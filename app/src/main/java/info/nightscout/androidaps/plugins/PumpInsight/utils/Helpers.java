@@ -3,11 +3,13 @@ package info.nightscout.androidaps.plugins.PumpInsight.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 
 /**
@@ -59,4 +61,9 @@ public class Helpers {
             return false;
         }
     }
+
+    public static boolean runOnUiThreadDelayed(Runnable theRunnable, long delay) {
+        return new Handler(MainApp.instance().getMainLooper()).postDelayed(theRunnable, delay);
+    }
+
 }
