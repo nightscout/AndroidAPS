@@ -147,12 +147,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView sage;
     TextView pbage;
 
-    CheckBox showPredictionView;
-    CheckBox showBasalsView;
-    CheckBox showIobView;
-    CheckBox showCobView;
-    CheckBox showDeviationsView;
-    CheckBox showRatiosView;
+    TextView showPredictionLabel;
+    CheckBox showPredictionCheckbox;
+    TextView showBasalsLabel;
+    CheckBox showBasalsCheckbox;
+    TextView showIobLabel;
+    CheckBox showIobCheckbox;
+    TextView showCobLabel;
+    CheckBox showCobCheckbox;
+    TextView showDeviationsLabel;
+    CheckBox showDeviationsCheckbox;
+    TextView showRatiosLabel;
+    CheckBox showRatiosCheckbox;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -264,24 +270,37 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
-            showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
-            showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
-            showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
-            showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
-            showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
-            showRatiosView = (CheckBox) view.findViewById(R.id.overview_showratios);
-            showPredictionView.setChecked(SP.getBoolean("showprediction", false));
-            showBasalsView.setChecked(SP.getBoolean("showbasals", true));
-            showIobView.setChecked(SP.getBoolean("showiob", false));
-            showCobView.setChecked(SP.getBoolean("showcob", false));
-            showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
-            showRatiosView.setChecked(SP.getBoolean("showratios", false));
-            showPredictionView.setOnCheckedChangeListener(this);
-            showBasalsView.setOnCheckedChangeListener(this);
-            showIobView.setOnCheckedChangeListener(this);
-            showCobView.setOnCheckedChangeListener(this);
-            showDeviationsView.setOnCheckedChangeListener(this);
-            showRatiosView.setOnCheckedChangeListener(this);
+            showPredictionCheckbox = (CheckBox) view.findViewById(R.id.overview_showprediction);
+            showBasalsCheckbox = (CheckBox) view.findViewById(R.id.overview_showbasals);
+            showIobCheckbox = (CheckBox) view.findViewById(R.id.overview_showiob);
+            showCobCheckbox = (CheckBox) view.findViewById(R.id.overview_showcob);
+            showDeviationsCheckbox = (CheckBox) view.findViewById(R.id.overview_showdeviations);
+            showRatiosCheckbox = (CheckBox) view.findViewById(R.id.overview_showratios);
+            showPredictionCheckbox.setChecked(SP.getBoolean("showprediction", false));
+            showBasalsCheckbox.setChecked(SP.getBoolean("showbasals", true));
+            showIobCheckbox.setChecked(SP.getBoolean("showiob", false));
+            showCobCheckbox.setChecked(SP.getBoolean("showcob", false));
+            showDeviationsCheckbox.setChecked(SP.getBoolean("showdeviations", false));
+            showRatiosCheckbox.setChecked(SP.getBoolean("showratios", false));
+            showPredictionCheckbox.setOnCheckedChangeListener(this);
+            showBasalsCheckbox.setOnCheckedChangeListener(this);
+            showIobCheckbox.setOnCheckedChangeListener(this);
+            showCobCheckbox.setOnCheckedChangeListener(this);
+            showDeviationsCheckbox.setOnCheckedChangeListener(this);
+            showRatiosCheckbox.setOnCheckedChangeListener(this);
+
+            showPredictionLabel = (TextView) view.findViewById(R.id.overview_showprediction_label);
+            showPredictionLabel.setOnClickListener(this);
+            showBasalsLabel = (TextView) view.findViewById(R.id.overview_showbasals_label);
+            showBasalsLabel.setOnClickListener(this);
+            showIobLabel = (TextView) view.findViewById(R.id.overview_showiob_label);
+            showIobLabel.setOnClickListener(this);
+            showCobLabel = (TextView) view.findViewById(R.id.overview_showcob_label);
+            showCobLabel.setOnClickListener(this);
+            showDeviationsLabel = (TextView) view.findViewById(R.id.overview_showdeviations_label);
+            showDeviationsLabel.setOnClickListener(this);
+            showRatiosLabel = (TextView) view.findViewById(R.id.overview_showratios_label);
+            showRatiosLabel.setOnClickListener(this);
 
             notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
             notificationsView.setHasFixedSize(true);
@@ -374,24 +393,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             case R.id.overview_showiob:
                 break;
             case R.id.overview_showcob:
-                showDeviationsView.setOnCheckedChangeListener(null);
-                showDeviationsView.setChecked(false);
-                showDeviationsView.setOnCheckedChangeListener(this);
+                showDeviationsCheckbox.setOnCheckedChangeListener(null);
+                showDeviationsCheckbox.setChecked(false);
+                showDeviationsCheckbox.setOnCheckedChangeListener(this);
                 break;
             case R.id.overview_showdeviations:
-                showCobView.setOnCheckedChangeListener(null);
-                showCobView.setChecked(false);
-                showCobView.setOnCheckedChangeListener(this);
+                showCobCheckbox.setOnCheckedChangeListener(null);
+                showCobCheckbox.setChecked(false);
+                showCobCheckbox.setOnCheckedChangeListener(this);
                 break;
             case R.id.overview_showratios:
                 break;
         }
-        SP.putBoolean("showiob", showIobView.isChecked());
-        SP.putBoolean("showprediction", showPredictionView.isChecked());
-        SP.putBoolean("showbasals", showBasalsView.isChecked());
-        SP.putBoolean("showcob", showCobView.isChecked());
-        SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-        SP.putBoolean("showratios", showRatiosView.isChecked());
+        SP.putBoolean("showiob", showIobCheckbox.isChecked());
+        SP.putBoolean("showprediction", showPredictionCheckbox.isChecked());
+        SP.putBoolean("showbasals", showBasalsCheckbox.isChecked());
+        SP.putBoolean("showcob", showCobCheckbox.isChecked());
+        SP.putBoolean("showdeviations", showDeviationsCheckbox.isChecked());
+        SP.putBoolean("showratios", showRatiosCheckbox.isChecked());
         scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
     }
 
@@ -496,6 +515,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
@@ -509,6 +538,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
@@ -522,6 +561,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
@@ -535,6 +584,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
@@ -577,6 +636,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             case R.id.overview_pumpstatus:
                 if (ConfigBuilderPlugin.getActivePump().isSuspended() || !ConfigBuilderPlugin.getActivePump().isInitialized())
                     ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
+                break;
+            case R.id.overview_showprediction_label:
+                showPredictionCheckbox.toggle();
+                break;
+            case R.id.overview_showbasals_label:
+                showBasalsCheckbox.toggle();
+                break;
+            case R.id.overview_showiob_label:
+                showIobCheckbox.toggle();
+                break;
+            case R.id.overview_showcob_label:
+                showCobCheckbox.toggle();
+                break;
+            case R.id.overview_showdeviations_label:
+                showDeviationsCheckbox.toggle();
+                break;
+            case R.id.overview_showratios_label:
+                showRatiosCheckbox.toggle();
                 break;
         }
 
@@ -1208,11 +1285,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         final boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
         if (predictionsAvailable) {
-            showPredictionView.setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
+            showPredictionCheckbox.setVisibility(View.VISIBLE);
+            showPredictionLabel.setVisibility(View.VISIBLE);
         } else {
-            showPredictionView.setVisibility(View.GONE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
+            showPredictionCheckbox.setVisibility(View.GONE);
+            showPredictionLabel.setVisibility(View.GONE);
         }
 
         // pump status from ns
@@ -1265,7 +1342,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final long toTime;
                 final long fromTime;
                 final long endTime;
-                if (predictionsAvailable && showPredictionView.isChecked()) {
+                if (predictionsAvailable && showPredictionCheckbox.isChecked()) {
                     int predHours = (int) (Math.ceil(finalLastRun.constraintsProcessed.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
                     predHours = Math.min(2, predHours);
                     predHours = Math.max(0, predHours);
@@ -1292,7 +1369,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
 
                 // **** BG ****
-                if (predictionsAvailable && showPredictionView.isChecked())
+                if (predictionsAvailable && showPredictionCheckbox.isChecked())
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, finalLastRun.constraintsProcessed);
                 else
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
@@ -1304,7 +1381,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 graphData.addTreatments(fromTime, endTime);
 
                 // add basal data
-                if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
+                if (pump.getPumpDescription().isTempBasalCapable && showBasalsCheckbox.isChecked()) {
                     graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2d);
                 }
 
@@ -1322,25 +1399,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 boolean useRatioForScale = false;
                 boolean useDSForScale = false;
 
-                if (showIobView.isChecked()) {
+                if (showIobCheckbox.isChecked()) {
                     useIobForScale = true;
-                } else if (showCobView.isChecked()) {
+                } else if (showCobCheckbox.isChecked()) {
                     useCobForScale = true;
-                } else if (showDeviationsView.isChecked()) {
+                } else if (showDeviationsCheckbox.isChecked()) {
                     useDevForScale = true;
-                } else if (showRatiosView.isChecked()) {
+                } else if (showRatiosCheckbox.isChecked()) {
                     useRatioForScale = true;
                 } else if (Config.displayDeviationSlope) {
                     useDSForScale = true;
                 }
 
-                if (showIobView.isChecked())
+                if (showIobCheckbox.isChecked())
                     secondGraphData.addIob(fromTime, now, useIobForScale, 1d);
-                if (showCobView.isChecked())
+                if (showCobCheckbox.isChecked())
                     secondGraphData.addCob(fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
-                if (showDeviationsView.isChecked())
+                if (showDeviationsCheckbox.isChecked())
                     secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
-                if (showRatiosView.isChecked())
+                if (showRatiosCheckbox.isChecked())
                     secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
                 if (Config.displayDeviationSlope)
                     secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
@@ -1356,7 +1433,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked() || Config.displayDeviationSlope) {
+                            if (showIobCheckbox.isChecked() || showCobCheckbox.isChecked() || showDeviationsCheckbox.isChecked() || showRatiosCheckbox.isChecked() || Config.displayDeviationSlope) {
                                 iobGraph.setVisibility(View.VISIBLE);
                             } else {
                                 iobGraph.setVisibility(View.GONE);

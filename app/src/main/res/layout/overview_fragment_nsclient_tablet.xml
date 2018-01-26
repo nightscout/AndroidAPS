@@ -563,7 +563,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:buttonTint="@color/prediction" />
+                        android:buttonTint="@color/prediction" />
 
                     <TextView
                         android:id="@+id/overview_showprediction_label"
@@ -580,9 +580,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:buttonTint="@color/basal" />
+                        android:buttonTint="@color/basal" />
 
                     <TextView
+                        android:id="@+id/overview_showbasals_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -596,9 +597,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:buttonTint="@color/iob" />
+                        android:buttonTint="@color/iob" />
 
                     <TextView
+                        android:id="@+id/overview_showiob_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -613,9 +615,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:buttonTint="@color/cob" />
+                        android:buttonTint="@color/cob" />
 
                     <TextView
+                        android:id="@+id/overview_showcob_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -629,9 +632,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:buttonTint="@color/deviations" />
+                        android:buttonTint="@color/deviations" />
 
                     <TextView
+                        android:id="@+id/overview_showdeviations_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -647,6 +651,7 @@
                         android:layout_gravity="center" />
 
                     <TextView
+                        android:id="@+id/overview_showratios_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
