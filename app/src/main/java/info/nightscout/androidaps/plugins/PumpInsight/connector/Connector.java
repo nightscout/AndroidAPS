@@ -40,9 +40,8 @@ public class Connector {
 
     private StatusCallback statusCallback = new StatusCallback() {
         @Override
-        public void onStatusChange(Status status) {
+        public synchronized void onStatusChange(Status status) {
 
-            synchronized (this) {
                 log("Status change: " + status);
                 lastStatus = status;
                 lastStatusTime = Helpers.tsl();
@@ -51,19 +50,23 @@ public class Connector {
                 }
                 MainApp.bus().post(new EventInsightPumpUpdateGui());
             }
-        }
+
     };
 
     private ServiceConnectionCallback connectionCallback = new ServiceConnectionCallback() {
         @Override
-        public void onServiceConnected() {
+        public synchronized void onServiceConnected() {
             log("On service connected");
-            serviceConnector.connect();
+            try {
+                serviceConnector.connect();
+            } catch (NullPointerException e) {
+                log("ERROR: null pointer when trying to connect to pump");
+            }
             statusCallback.onStatusChange(safeGetStatus());
         }
 
         @Override
-        public void onServiceDisconnected() {
+        public synchronized void onServiceDisconnected() {
             log("Disconnected from service");
             if (Helpers.ratelimit("insight-automatic-reconnect", 30)) {
                 log("Scheduling automatic service reconnection");
@@ -119,7 +122,7 @@ public class Connector {
         get().getServiceConnector().connect();
     }
 
-    private static void log(String msg) {
+    static void log(String msg) {
         android.util.Log.e("INSIGHTPUMP", msg);
     }
 
@@ -130,6 +133,7 @@ public class Connector {
             companionAppInstalled = isCompanionAppInstalled();
             if (companionAppInstalled) {
                 serviceConnector = new SightServiceConnector(MainApp.instance());
+                serviceConnector.removeStatusCallback(statusCallback);
                 serviceConnector.addStatusCallback(statusCallback);
                 serviceConnector.setConnectionCallback(connectionCallback);
                 serviceConnector.connectToService();
