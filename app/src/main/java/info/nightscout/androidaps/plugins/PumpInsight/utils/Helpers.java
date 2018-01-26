@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 
 /**
  * Created by jamorham on 24/01/2018.
@@ -65,5 +65,19 @@ public class Helpers {
     public static boolean runOnUiThreadDelayed(Runnable theRunnable, long delay) {
         return new Handler(MainApp.instance().getMainLooper()).postDelayed(theRunnable, delay);
     }
+
+    public static PowerManager.WakeLock getWakeLock(final String name, int millis) {
+        final PowerManager pm = (PowerManager) MainApp.instance().getSystemService(Context.POWER_SERVICE);
+        if (pm == null) return null;
+        final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, name);
+        wl.acquire(millis);
+        return wl;
+    }
+
+    public static void releaseWakeLock(PowerManager.WakeLock wl) {
+        if (wl == null) return;
+        if (wl.isHeld()) wl.release();
+    }
+
 
 }
