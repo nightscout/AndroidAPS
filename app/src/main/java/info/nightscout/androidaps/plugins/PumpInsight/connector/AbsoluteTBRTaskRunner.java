@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
+import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import sugar.free.sightparser.applayer.AppLayerMessage;
 import sugar.free.sightparser.applayer.remote_control.ChangeTBRMessage;
 import sugar.free.sightparser.applayer.remote_control.SetTBRMessage;
@@ -12,13 +13,25 @@ import sugar.free.sightparser.handling.TaskRunner;
 
 public class AbsoluteTBRTaskRunner extends TaskRunner {
 
-    private float absolute;
+    private double absolute;
     private int amount;
     private int duration;
+    private int calculated_percentage;
+    private double calculated_absolute;
 
-    public AbsoluteTBRTaskRunner(SightServiceConnector serviceConnector, float absolute, int duration) {
+    public AbsoluteTBRTaskRunner(SightServiceConnector serviceConnector, double absolute, int duration) {
         super(serviceConnector);
+        if (absolute < 0) absolute = 0;
         this.absolute = absolute;
+        this.duration = duration;
+    }
+
+    public int getCalculatedPercentage() {
+        return calculated_percentage;
+    }
+
+    public double getCalculatedAbsolute() {
+        return calculated_absolute;
     }
 
     @Override
@@ -26,9 +39,12 @@ public class AbsoluteTBRTaskRunner extends TaskRunner {
         if (message == null) return new CurrentBasalMessage();
         else if (message instanceof CurrentBasalMessage) {
             float currentBasal = ((CurrentBasalMessage) message).getCurrentBasalAmount();
-            amount = (int) (100F / currentBasal * absolute);
+            amount = (int) (100d / currentBasal * absolute);
             amount = ((int) amount / 10) * 10;
             if (amount > 250) amount = 250;
+            calculated_percentage = amount;
+            calculated_absolute = Helpers.roundDouble(calculated_percentage * (double) currentBasal / 100d, 3);
+            Connector.log("Asked: " + absolute + " current: " + currentBasal + " calculated as: " + amount + "%" + " = " + calculated_absolute);
             return new CurrentTBRMessage();
         } else if (message instanceof CurrentTBRMessage) {
             SetTBRMessage setTBRMessage;

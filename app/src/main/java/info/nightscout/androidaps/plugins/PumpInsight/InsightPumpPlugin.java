@@ -26,10 +26,10 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.PumpInsight.connector.AbsoluteTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
@@ -49,6 +49,8 @@ import sugar.free.sightparser.handling.SingleMessageTaskRunner;
 import sugar.free.sightparser.handling.TaskRunner;
 import sugar.free.sightparser.handling.taskrunners.SetTBRTaskRunner;
 import sugar.free.sightparser.handling.taskrunners.StatusTaskRunner;
+
+import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.roundDouble;
 
 
 /**
@@ -73,7 +75,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private static volatile InsightPumpPlugin plugin;
     private final Handler handler = new Handler();
     private final InsightPumpAsyncAdapter async = new InsightPumpAsyncAdapter();
-    StatusTaskRunner.StatusResult statusResult;
+    private StatusTaskRunner.StatusResult statusResult;
+    private long statusResultTime = -1;
     private Date lastDataTime = new Date(0);
     private TaskRunner taskRunner;
     private boolean fragmentEnabled = true;
@@ -96,9 +99,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
 
         @Override
-        public void onResult(Object result) {
+        public synchronized void onResult(Object result) {
             log("GOT STATUS RESULT!!!");
             statusResult = (StatusTaskRunner.StatusResult) result;
+            statusResultTime = Helpers.tsl();
             processStatusResult();
             updateGui();
         }
@@ -401,29 +405,45 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     // Temporary Basals
 
-    // TODO implement
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        TemporaryBasal tempBasal = new TemporaryBasal();
-        tempBasal.date = System.currentTimeMillis();
-        tempBasal.isAbsolute = true;
-        tempBasal.absoluteRate = absoluteRate;
-        tempBasal.durationInMinutes = durationInMinutes;
-        tempBasal.source = Source.USER;
-        PumpEnactResult result = new PumpEnactResult();
-        result.success = false;
-        result.enacted = true;
-        result.isTempCancel = false;
-        result.absolute = absoluteRate;
-        result.duration = durationInMinutes;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        treatmentsInterface.addToHistoryTempBasal(tempBasal);
+        absoluteRate = Helpers.roundDouble(absoluteRate, 3);
+        log("Set TBR absolute: " + absoluteRate);
+
+        final AbsoluteTBRTaskRunner task = new AbsoluteTBRTaskRunner(connector.getServiceConnector(), absoluteRate, durationInMinutes);
+        final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
+
+        if (cmd == null) {
+            return pumpEnactFailure();
+        }
+
+        Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        log("Got command status: " + cs);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(false).duration(durationInMinutes);
+        pumpEnactResult.absolute = absoluteRate; // TODO get converted value?
+        pumpEnactResult.success = cs == Cstatus.SUCCESS;
+        pumpEnactResult.isTempCancel = false; // do we test this here?
+        pumpEnactResult.comment = async.getCommandComment(cmd);
+
+        if (pumpEnactResult.success) {
+            // create log entry
+            final TemporaryBasal tempBasal = new TemporaryBasal();
+            tempBasal.date = System.currentTimeMillis();
+            tempBasal.isAbsolute = true;
+            tempBasal.absoluteRate = task.getCalculatedAbsolute(); // is this the correct figure to use?
+            tempBasal.durationInMinutes = durationInMinutes;
+            tempBasal.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
+        }
+
         if (Config.logPumpComm)
-            log.debug("Setting temp basal absolute: " + result);
-        MainApp.bus().post(new EventInsightPumpUpdateGui());
+            log.debug("Setting temp basal absolute: " + pumpEnactResult.success);
+
         lastDataTime = new Date();
-        return result;
+
+        updateGui();
+        return pumpEnactResult;
     }
 
 
@@ -705,7 +725,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         if (statusResult != null) {
             batteryPercent = statusResult.getBatteryAmountMessage().getBatteryAmount();
             reservoirInUnits = (int) statusResult.getCartridgeAmountMessage().getCartridgeAmount();
-            basalRate = statusResult.getCurrentBasalMessage().getCurrentBasalAmount();
+            basalRate = roundDouble(statusResult.getCurrentBasalMessage().getCurrentBasalAmount(),2);
             initialized = true; // basic communication test
         }
     }
@@ -735,6 +755,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
 
         if (statusResult != null) {
+            l.add(new StatusItem("Status Updated", Helpers.niceTimeScalar(Helpers.msSince(statusResultTime)) + " ago"));
             l.add(new StatusItem(gs(R.string.pump_battery_label), batteryPercent + "%", batteryPercent < 100 ?
                     (batteryPercent < 90 ?
                             (batteryPercent < 70 ?
