@@ -1,5 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
@@ -23,6 +29,8 @@ public class Connector {
 
     private static final String TAG = "InsightConnector";
     private static final String COMPANION_APP_PACKAGE = "sugar.free.sightremote";
+    private static final String HISTORY_IDENTIFIER = "sugar.free.sightremote.history";
+    private static final String HISTORY_RECEIVER = "sugar.free.sightremote.HISTORY";
     private static volatile Connector instance;
     private volatile SightServiceConnector serviceConnector;
     private volatile Status lastStatus = null;
@@ -69,7 +77,24 @@ public class Connector {
         }
     };
 
+    private BroadcastReceiver historyReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            log("Receiving history broadcast!");
+
+            // TODO check action
+            final Bundle bundle = intent.getBundleExtra(HISTORY_IDENTIFIER);
+            if (bundle != null) {
+                //HistoryArray history = (HistoryArray) bundle.getSerializable("history");
+            } else {
+                log("History bundle was null!");
+            }
+        }
+    };
+
+
     private Connector() {
+        registerHistoryReceiver();
     }
 
     public static Connector get() {
@@ -185,6 +210,23 @@ public class Connector {
         }
     }
 
+    public String getNiceLastStatusTime() {
+        if (lastStatusTime < 1) {
+            return "STARTUP";
+        } else {
+            return Helpers.niceTimeScalar(Helpers.msSince(lastStatusTime)) + " ago";
+        }
+    }
+
+    public boolean uiFresh() {
+        // todo check other changes
+        if (Helpers.msSince(lastStatusTime) < 70000) {
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressWarnings("AccessStaticViaInstance")
     private void tryToGetStatusAgain() {
         if (Helpers.ratelimit("insight-retry-status-request", 5)) {
             try {
@@ -193,6 +235,17 @@ public class Connector {
                 //
             }
         }
+    }
+
+    private synchronized void registerHistoryReceiver() {
+        try {
+            MainApp.instance().unregisterReceiver(historyReceiver);
+        } catch (Exception e) {
+            //
+        }
+        MainApp.instance().registerReceiver(historyReceiver, new IntentFilter(HISTORY_RECEIVER));
+
+
     }
 
     public boolean lastStatusRecent() {

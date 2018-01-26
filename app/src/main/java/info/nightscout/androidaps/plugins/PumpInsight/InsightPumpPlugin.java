@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import info.nightscout.androidaps.BuildConfig;
@@ -33,6 +35,7 @@ import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
+import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -41,6 +44,7 @@ import sugar.free.sightparser.applayer.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.remote_control.ExtendedBolusMessage;
 import sugar.free.sightparser.applayer.remote_control.StandardBolusMessage;
 import sugar.free.sightparser.applayer.status.BolusType;
+import sugar.free.sightparser.applayer.status.PumpStatus;
 import sugar.free.sightparser.handling.SingleMessageTaskRunner;
 import sugar.free.sightparser.handling.TaskRunner;
 import sugar.free.sightparser.handling.taskrunners.SetTBRTaskRunner;
@@ -69,12 +73,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private static volatile InsightPumpPlugin plugin;
     private final Handler handler = new Handler();
     private final InsightPumpAsyncAdapter async = new InsightPumpAsyncAdapter();
+    StatusTaskRunner.StatusResult statusResult;
     private Date lastDataTime = new Date(0);
     private TaskRunner taskRunner;
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
     private PumpDescription pumpDescription = new PumpDescription();
-    private StatusTaskRunner.StatusResult statusResult;
     private double basalRate = 0;
     private final TaskRunner.ResultCallback statusResultHandler = new TaskRunner.ResultCallback() {
 
@@ -264,10 +268,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         log("InsightPumpPlugin::connect()");
         try {
             if (!connector.isPumpConnected()) {
-              if (Helpers.ratelimit("insight-connect-timer",40)) {
-                  log("Actually requesting a connect");
-                  connector.getServiceConnector().connect();
-              }
+                if (Helpers.ratelimit("insight-connect-timer", 40)) {
+                    log("Actually requesting a connect");
+                    connector.getServiceConnector().connect();
+                }
             } else {
                 log("Already connected");
             }
@@ -515,7 +519,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
 
         if (Config.logPumpComm)
-            log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes+" "+pumpEnactResult.comment);
+            log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes + " " + pumpEnactResult.comment);
 
         updateGui();
         return pumpEnactResult;
@@ -640,8 +644,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     }*/
 
 
-
-
     @Override
     public JSONObject getJSONStatus() {
 
@@ -706,6 +708,67 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             basalRate = statusResult.getCurrentBasalMessage().getCurrentBasalAmount();
             initialized = true; // basic communication test
         }
+    }
+
+    private String gs(int id) {
+        return MainApp.instance().getString(id);
+    }
+
+    public List<StatusItem> getStatusItems() {
+        final List<StatusItem> l = new ArrayList<>();
+
+        // Todo last contact time
+
+        l.add(new StatusItem("Status", connector.getLastStatusMessage()));
+        l.add(new StatusItem("Changed",connector.getNiceLastStatusTime()));
+
+        boolean pumpRunning;
+        // also check time since received
+        if (statusResult != null) {
+
+            pumpRunning = statusResult.getPumpStatusMessage().getPumpStatus() == PumpStatus.STARTED;
+            if (pumpRunning) {
+                l.add(new StatusItem(gs(R.string.pump_basebasalrate_label), getBaseBasalRateString() + "U"));
+            } else {
+                l.add(new StatusItem("Warning", "PUMP STOPPED", StatusItem.Highlight.CRITICAL));
+            }
+        }
+
+        if (statusResult != null) {
+            l.add(new StatusItem(gs(R.string.pump_battery_label), batteryPercent + "%", batteryPercent < 100 ?
+                    (batteryPercent < 90 ?
+                            (batteryPercent < 70 ?
+                                    (StatusItem.Highlight.BAD) : StatusItem.Highlight.NOTICE) : StatusItem.Highlight.NORMAL) : StatusItem.Highlight.GOOD));
+            l.add(new StatusItem(gs(R.string.pump_reservoir_label), reservoirInUnits + "U"));
+        }
+
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            try {
+                l.add(new StatusItem(gs(R.string.pump_tempbasal_label), MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull()));
+            } catch (NullPointerException e) {
+                //
+            }
+        }
+
+        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+            try {
+
+                l.add(new StatusItem(gs(R.string.virtualpump_extendedbolus_label), MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString()));
+            } catch (NullPointerException e) {
+                //
+            }
+        }
+
+        if (connector.uiFresh()) {
+            Helpers.runOnUiThreadDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateGui();
+                }
+            },1000);
+        }
+
+        return l;
     }
 
     // Utility
