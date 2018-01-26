@@ -112,6 +112,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         pumpDescription.basalMinimumRate = 0.1d;
 
         pumpDescription.isRefillingCapable = true;
+
+        pumpDescription.storesCarbInfo = true;
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

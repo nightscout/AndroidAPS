@@ -110,6 +110,8 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         pumpDescription.basalMinimumRate = 0.04d;
 
         pumpDescription.isRefillingCapable = true;
+
+        pumpDescription.storesCarbInfo = true;
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

@@ -12,9 +12,10 @@ buildscript {
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
 apply plugin: "jacoco-android"
+apply plugin: 'com.jakewharton.butterknife'
 
 ext {
-    supportLibraryVersion = "23.4.0"
+    supportLibraryVersion = "27.0.2"
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
@@ -47,8 +48,8 @@ def generateGitBuild = { ->
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "${supportLibraryVersion}"
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
@@ -208,6 +209,9 @@ dependencies {
     compile "com.google.guava:guava:20.0"
 
     compile "net.danlew:android.joda:2.9.9.1"
+
+    api "com.jakewharton:butterknife:8.8.1"
+    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
     testCompile "junit:junit:4.12"
     testCompile "org.json:json:20140107"

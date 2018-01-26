@@ -231,8 +231,8 @@
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
     <string formatted="false" name="smscommunicator_bolusreplywithcode">Para entregar bolo% .2fU responder con código% s</string>
     <string name="smscommunicator_bolusfailed">Bolo falló</string>
-    <string formatted="false" name="bolusdelivered">Bolo% .2fU entregado con éxito</string>
-    <string formatted="false" name="bolusdelivering">Entregando% .2fU</string>
+    <string formatted="false" name="bolusdelivered">Bolo %.2fU entregado con éxito</string>
+    <string formatted="false" name="bolusdelivering">Entregando %.2fU</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolo remoto no permitido</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
