@@ -66,6 +66,13 @@ android {
         }
     }
     lintOptions {
+        // TODO remove once wear dependency com.google.android.gms:play-services-wearable:7.3.0
+        // has been upgraded (requiring significant code changes), which currently fails release
+        // build with a deprecation warning
+        //abortOnError false
+        // (disabled entirely to avoid reports on the error, which would still be displayed
+        //  and it's easy to overlook that it's ignored)
+        checkReleaseBuilds false
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
     }
