@@ -52,8 +52,8 @@ public class InsightPumpFragment extends SubscriberFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
-            View view = inflater.inflate(R.layout.insightpump_fragment, container, false);
-            holder = view.findViewById(R.id.insightholder);
+            final View view = inflater.inflate(R.layout.insightpump_fragment, container, false);
+            holder = (LinearLayout) view.findViewById(R.id.insightholder);
             viewAdapter = new StatusItemViewAdapter(getActivity(), holder);
 
             return view;
