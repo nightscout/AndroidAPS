@@ -2,272 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.PumpInsight.InsightPumpFragment">
+    tools:context="info.nightscout.androidaps.plugins.PumpInsight.InsightPumpFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-
         <LinearLayout
+            android:id="@+id/insighttopholder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
                 android:text="@string/insightpump"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
+                android:id="@+id/insightholder"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="Status"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/insightpump_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/pump_basebasalrate_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/insightpump_basabasalrate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/pump_tempbasal_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/insightpump_tempbasal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/virtualpump_extendedbolus_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/insightpump_extendedbolus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/pump_battery_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/insightpump_battery"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/listdelimiter" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:paddingRight="5dp"
-                    android:text="@string/pump_reservoir_label"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:gravity="center_horizontal"
-                    android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:text=":"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/insightpump_reservoir"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:paddingLeft="5dp"
-                    android:textSize="14sp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             </LinearLayout>
         </LinearLayout>
