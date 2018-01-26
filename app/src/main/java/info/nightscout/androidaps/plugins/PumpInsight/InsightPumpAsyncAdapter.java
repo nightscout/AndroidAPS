@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpInsight;
 
+import android.os.PowerManager;
+
 import com.squareup.otto.Subscribe;
 
 import java.util.UUID;
@@ -8,7 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
 
+import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.getWakeLock;
 import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.msSince;
+import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.releaseWakeLock;
 import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.tsl;
 
 /**
@@ -53,23 +57,28 @@ public class InsightPumpAsyncAdapter {
 
     // blocking call to wait for result callback
     Cstatus busyWaitForCommandResult(final UUID uuid, long wait_time) {
-        log("busy wait for command " + uuid);
-        if (uuid == null) return Cstatus.FAILURE;
-        final long start_time = tsl();
-        Cstatus status = checkCommandResult(uuid);
-        while ((status == Cstatus.PENDING) && msSince(start_time) < wait_time) {
-            //log("command result waiting");
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                log("Got interrupted exception! " + e);
+        final PowerManager.WakeLock wl = getWakeLock("insight-wait-cmd", 60000);
+        try {
+            log("busy wait for command " + uuid);
+            if (uuid == null) return Cstatus.FAILURE;
+            final long start_time = tsl();
+            Cstatus status = checkCommandResult(uuid);
+            while ((status == Cstatus.PENDING) && msSince(start_time) < wait_time) {
+                //log("command result waiting");
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    log("Got interrupted exception! " + e);
+                }
+                status = checkCommandResult(uuid);
             }
-            status = checkCommandResult(uuid);
-        }
-        if (status == Cstatus.PENDING) {
-            return Cstatus.TIMEOUT;
-        } else {
-            return status;
+            if (status == Cstatus.PENDING) {
+                return Cstatus.TIMEOUT;
+            } else {
+                return status;
+            }
+        } finally {
+            releaseWakeLock(wl);
         }
     }
 
