@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,9 @@ public class Helpers {
     private static final String TAG = "InsightHelpers";
 
     private static final Map<String, Long> rateLimits = new HashMap<>();
+    // singletons to avoid repeated allocation
+    private static DecimalFormatSymbols dfs;
+    private static DecimalFormat df;
 
     // return true if below rate limit
     public static synchronized boolean ratelimit(String name, int seconds) {
@@ -77,6 +82,77 @@ public class Helpers {
     public static void releaseWakeLock(PowerManager.WakeLock wl) {
         if (wl == null) return;
         if (wl.isHeld()) wl.release();
+    }
+
+    public static String niceTimeSince(long t) {
+        return niceTimeScalar(msSince(t));
+    }
+
+    public static String niceTimeTill(long t) {
+        return niceTimeScalar(-msSince(t));
+    }
+
+    public static String niceTimeScalar(long t) {
+        String unit = "second";
+        t = t / 1000;
+        if (t > 59) {
+            unit = "minute";
+            t = t / 60;
+            if (t > 59) {
+                unit = "hour";
+                t = t / 60;
+                if (t > 24) {
+                    unit = "day";
+                    t = t / 24;
+                    if (t > 28) {
+                        unit = "week";
+                        t = t / 7;
+                    }
+                }
+            }
+        }
+        if (t != 1) unit = unit + "s";
+        return qs((double) t, 0) + " " + unit;
+    }
+
+    public static String qs(double x, int digits) {
+
+        if (digits == -1) {
+            digits = 0;
+            if (((int) x != x)) {
+                digits++;
+                if ((((int) x * 10) / 10 != x)) {
+                    digits++;
+                    if ((((int) x * 100) / 100 != x)) digits++;
+                }
+            }
+        }
+
+        if (dfs == null) {
+            final DecimalFormatSymbols local_dfs = new DecimalFormatSymbols();
+            local_dfs.setDecimalSeparator('.');
+            dfs = local_dfs; // avoid race condition
+        }
+
+        final DecimalFormat this_df;
+        // use singleton if on ui thread otherwise allocate new as DecimalFormat is not thread safe
+        if (Thread.currentThread().getId() == 1) {
+            if (df == null) {
+                final DecimalFormat local_df = new DecimalFormat("#", dfs);
+                local_df.setMinimumIntegerDigits(1);
+                df = local_df; // avoid race condition
+            }
+            this_df = df;
+        } else {
+            this_df = new DecimalFormat("#", dfs);
+        }
+
+        this_df.setMaximumFractionDigits(digits);
+        return this_df.format(x);
+    }
+
+    public static String niceTimeScalarRedux(long t) {
+        return niceTimeScalar(t).replaceFirst("^1 ", "");
     }
 
 
