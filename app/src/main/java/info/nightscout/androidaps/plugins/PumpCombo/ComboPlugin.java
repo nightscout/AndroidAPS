@@ -89,6 +89,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.basalMinimumRate = 0.05d;
 
         pumpDescription.isRefillingCapable = true;
+
+        pumpDescription.storesCarbInfo = false;
     }
 
     @NonNull
