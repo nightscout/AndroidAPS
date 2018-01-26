@@ -30,10 +30,10 @@ public class StatusItemViewAdapter {
     public View inflateStatus(StatusItem statusItem) {
         if (activity == null) return null;
         final View child = activity.getLayoutInflater().inflate(R.layout.insightpump_statuselements, null);
-        final TextView name = child.findViewById(R.id.insightstatuslabel);
-        final TextView value = child.findViewById(R.id.insightstatusvalue);
-        final TextView spacer = child.findViewById(R.id.insightstatusspacer);
-        final LinearLayout layout = child.findViewById(R.id.insightstatuslayout);
+        final TextView name = (TextView) child.findViewById(R.id.insightstatuslabel);
+        final TextView value = (TextView)child.findViewById(R.id.insightstatusvalue);
+        final TextView spacer = (TextView)child.findViewById(R.id.insightstatusspacer);
+        final LinearLayout layout = (LinearLayout)child.findViewById(R.id.insightstatuslayout);
 
         if (statusItem.name.equals("line-break")) {
             spacer.setVisibility(View.GONE);
@@ -55,6 +55,11 @@ public class StatusItemViewAdapter {
         name.setBackgroundColor(this_color);
         value.setBackgroundColor(this_color);
         spacer.setBackgroundColor(this_color);
+
+        if (this_color != Color.TRANSPARENT) {
+            name.setTextColor(Color.WHITE);
+            spacer.setTextColor(Color.WHITE);
+        }
 
         if (holder != null) {
             holder.addView(child);
