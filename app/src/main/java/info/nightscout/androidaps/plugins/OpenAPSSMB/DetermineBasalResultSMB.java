@@ -35,7 +35,7 @@ public class DetermineBasalResultSMB extends APSResult {
             if (result.has("carbsReq")) carbsReq = result.getDouble("carbsReq");
 
             if (result.has("rate") && result.has("duration")) {
-                tbrRequested = true;
+                tempBasalReqested = true;
                 rate = result.getDouble("rate");
                 if (rate < 0d) rate = 0d;
                 duration = result.getInt("duration");
@@ -74,7 +74,7 @@ public class DetermineBasalResultSMB extends APSResult {
         newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tbrRequested = tbrRequested;
+        newResult.tempBasalReqested = tempBasalReqested;
         newResult.bolusRequested = bolusRequested;
         newResult.rate = rate;
         newResult.duration = duration;

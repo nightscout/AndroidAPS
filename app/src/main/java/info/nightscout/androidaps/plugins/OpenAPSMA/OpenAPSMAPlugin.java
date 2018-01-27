@@ -229,15 +229,15 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
         // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
-            determineBasalResultMA.tbrRequested = false;
+            determineBasalResultMA.tempBasalReqested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
                 // going to cancel
             } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
-                determineBasalResultMA.tbrRequested = false;
+                determineBasalResultMA.tempBasalReqested = false;
             } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultMA.tbrRequested = false;
+                determineBasalResultMA.tempBasalReqested = false;
         }
 
         determineBasalResultMA.iob = iobTotal;

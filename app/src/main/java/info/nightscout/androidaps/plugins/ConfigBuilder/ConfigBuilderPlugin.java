@@ -381,7 +381,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
 
-        if (request.tbrRequested) {
+        if (request.tempBasalReqested) {
             if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
                 if (isTempBasalInProgress()) {
                     if (Config.logCongigBuilderActions)

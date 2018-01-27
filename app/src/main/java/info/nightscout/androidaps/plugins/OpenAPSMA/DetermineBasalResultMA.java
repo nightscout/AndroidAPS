@@ -20,7 +20,7 @@ public class DetermineBasalResultMA extends APSResult {
         json = j;
         if (result.containsKey("error")) {
             reason = (String) result.get("error");
-            tbrRequested = false;
+            tempBasalReqested = false;
             rate = -1;
             duration = -1;
             mealAssist = "";
@@ -31,17 +31,17 @@ public class DetermineBasalResultMA extends APSResult {
             if (result.containsKey("rate")) {
                 rate = (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
-                tbrRequested = true;
+                tempBasalReqested = true;
             } else {
                 rate = -1;
-                tbrRequested = false;
+                tempBasalReqested = false;
             }
             if (result.containsKey("duration")) {
                 duration = ((Double) result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;
-                tbrRequested = false;
+                tempBasalReqested = false;
             }
             if (result.containsKey("mealAssist")) {
                 mealAssist = result.get("mealAssist").toString();
@@ -58,10 +58,10 @@ public class DetermineBasalResultMA extends APSResult {
         newResult.reason = new String(reason);
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tbrRequested = isChangeRequested();
+        newResult.tempBasalReqested = isChangeRequested();
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tbrRequested = isChangeRequested();
+        newResult.tempBasalReqested = isChangeRequested();
 
         try {
             newResult.json = new JSONObject(json.toString());

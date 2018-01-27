@@ -31,7 +31,7 @@ public class APSResult {
     public String reason;
     public double rate;
     public int duration;
-    public boolean tbrRequested = false;
+    public boolean tempBasalReqested = false;
     public boolean bolusRequested = false;
     public IobTotal iob;
     public JSONObject json = new JSONObject();
@@ -48,7 +48,7 @@ public class APSResult {
             if (rate == 0 && duration == 0)
                 ret = MainApp.sResources.getString(R.string.canceltemp) + "\n";
             else if (rate == -1)
-                ret = MainApp.sResources.getString(R.string.let_tbr_run) + "\n";
+                ret = MainApp.sResources.getString(R.string.let_temp_basal_run) + "\n";
             else
                 ret = MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                         "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) \n" +
@@ -73,7 +73,7 @@ public class APSResult {
             if (rate == 0 && duration == 0)
                 ret = MainApp.sResources.getString(R.string.canceltemp) + "<br>";
             else if (rate == -1)
-                ret = MainApp.sResources.getString(R.string.let_tbr_run) + "<br>";
+                ret = MainApp.sResources.getString(R.string.let_temp_basal_run) + "<br>";
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                       "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
@@ -98,7 +98,7 @@ public class APSResult {
         newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tbrRequested = tbrRequested;
+        newResult.tempBasalReqested = tempBasalReqested;
         newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
         return newResult;
@@ -216,6 +216,6 @@ public class APSResult {
     }
 
     public boolean isChangeRequested() {
-        return tbrRequested || bolusRequested;
+        return tempBasalReqested || bolusRequested;
     }
 }
