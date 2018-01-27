@@ -209,6 +209,7 @@
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
     <string name="it_lang">Italian</string>
+    <string name="ro_lang">Romanian</string>
     <string name="ru_lang">Russian</string>
     <string name="sv_lang">Swedish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
