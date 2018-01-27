@@ -31,7 +31,8 @@ public class APSResult {
     public String reason;
     public double rate;
     public int duration;
-    public boolean changeRequested = false;
+    public boolean tbrRequested = false;
+    public boolean bolusRequested = false;
     public IobTotal iob;
     public JSONObject json = new JSONObject();
     public boolean hasPredictions = false;
@@ -41,7 +42,7 @@ public class APSResult {
     @Override
     public String toString() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        if (changeRequested) {
+        if (isChangeRequested()) {
             String ret;
             // rate
             if (rate == 0 && duration == 0)
@@ -66,7 +67,7 @@ public class APSResult {
 
     public Spanned toSpanned() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        if (changeRequested) {
+        if (isChangeRequested()) {
             String ret;
             // rate
             if (rate == 0 && duration == 0)
@@ -94,10 +95,11 @@ public class APSResult {
 
     public APSResult clone() {
         APSResult newResult = new APSResult();
-        newResult.reason = new String(reason);
+        newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
+        newResult.tbrRequested = tbrRequested;
+        newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
         return newResult;
     }
@@ -105,7 +107,7 @@ public class APSResult {
     public JSONObject json() {
         JSONObject json = new JSONObject();
         try {
-            if (changeRequested) {
+            if (isChangeRequested()) {
                 json.put("rate", rate);
                 json.put("duration", duration);
                 json.put("reason", reason);
@@ -213,4 +215,7 @@ public class APSResult {
         return latest;
     }
 
+    public boolean isChangeRequested() {
+        return tbrRequested || bolusRequested;
+    }
 }
