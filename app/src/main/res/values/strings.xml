@@ -864,5 +864,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="pump_basebasalrate">%.2f U/h</string>
+    <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
 </resources>
 

@@ -235,6 +235,10 @@ public class MainApp extends Application {
         return sResources.getString(id);
     }
 
+    public static String gs(int id, Object... args) {
+        return sResources.getString(id, args);
+    }
+
     public static MainApp instance() {
         return sInstance;
     }
