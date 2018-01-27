@@ -872,5 +872,20 @@
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
+    <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
+    <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
+    <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
+    <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
+    <string name="key_allowSMB_with_high_temptarget" translatable="false">enableSMB_with_high_temptarget</string>
+    <string name="enablesmbalways">Enable SMB always</string>
+    <string name="enablesmbalways_summary">Enable SMB always independently to boluses. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enablesmbaftercarbs">Enable SMB after carbs</string>
+    <string name="enablesmbaftercarbs_summary">Enable SMB for 6h after carbs, even with 0 COB. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enablesmbwithcob">Enable SMB with COB</string>
+    <string name="enablesmbwithcob_summary">Enable SMB when there is COB active.</string>
+    <string name="enablesmbwithtemptarget">Enable SMB with temp targets</string>
+    <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
+    <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
+    <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
 </resources>
 
