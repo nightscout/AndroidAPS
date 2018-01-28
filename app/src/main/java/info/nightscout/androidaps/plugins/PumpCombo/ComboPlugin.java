@@ -490,10 +490,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        // guard against boluses issued multiple times within a minute
+        // Guard against boluses issued multiple times within two minutes.
+        // Two minutes, so that the resulting timestamp and bolus are different with the Combo
+        // history records which only store with minute-precision
         if (lastRequestedBolus != null
                 && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
-                && lastRequestedBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
+                && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
             log.error("Bolus delivery failure at stage 0", new Exception());
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
@@ -557,9 +559,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                         .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered));
             }
 
-            // seems we actually made it ...
-            detailedBolusInfo.date = lastBolus.timestamp;
-            detailedBolusInfo.pumpId = lastBolus.timestamp + ((int) lastBolus.amount * 10);
+            // seems we actually made it this far, let's add a treatment record
+            detailedBolusInfo.date = lastBolus.timestamp + (Math.min((int) lastBolus.amount * 10 * 1000, 59 * 1000));
+            detailedBolusInfo.pumpId = lastBolus.timestamp + (Math.min((int) lastBolus.amount * 10 * 1000, 59 * 1000));
             detailedBolusInfo.source = Source.PUMP;
             detailedBolusInfo.insulin = lastBolus.amount;
             boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
@@ -955,8 +957,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         // Bolus
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
-            dbi.date = pumpBolus.timestamp;
-            dbi.pumpId = pumpBolus.timestamp + ((int) pumpBolus.amount * 10);
+            dbi.date = pumpBolus.timestamp + (Math.min((int) pumpBolus.amount * 10 * 1000, 59 * 1000));
+            dbi.pumpId = pumpBolus.timestamp + (Math.min((int) pumpBolus.amount * 10 * 1000, 59 * 1000));
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;

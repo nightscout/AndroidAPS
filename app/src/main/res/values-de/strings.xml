@@ -780,4 +780,6 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung! Normalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
     <string name="pump_basebasalrate">%.2f IE/h</string>
     <string name="combo_actvity_reading_basal_profile">Basalratenprofil wird gelesen</string>
+    <string name="pump_basebasalrate">%.2f IE/h</string>
+    <string name="urgent_alarm">Dringender Alarm</string>
 </resources>

@@ -866,7 +866,7 @@
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait a minute since boluses with the same amount are blocked when requested within the same minute for saftery (regardless of whether they were administered or not).</string>
-    <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the same minute. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute.</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait a minute since boluses with the same amount are blocked when requested with less than tow minutes between them for safety (regardless of whether they were administered or not).</string>
+    <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
 </resources>
 
