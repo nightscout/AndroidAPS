@@ -4,18 +4,12 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import de.jotomo.ruffy.spi.BasalProfile;
 import de.jotomo.ruffy.spi.BolusProgressReporter;
@@ -103,12 +97,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private volatile boolean cancelBolus;
 
     private Bolus lastRequestedBolus;
-//    private long pumpHistoryLastChecked;
-    private volatile long timestampOfLastKnownBolusRecord;
 
     /** this is set whenever a connection to the pump is made and indicates if new history
        records on the pump have been found */
     private volatile boolean pumpHistoryChanged = false;
+    private volatile long timestampOfLastKnownPumpBolusRecord;
 
     public static ComboPlugin getPlugin() {
         if (plugin == null)
@@ -1041,7 +1034,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         // and only read My Data history when quick info shows a new record
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest()
-                        .bolusHistory(timestampOfLastKnownBolusRecord)));
+                        .bolusHistory(timestampOfLastKnownPumpBolusRecord)));
         if (!historyResult.success) {
             return;
         }
@@ -1049,7 +1042,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
 
         if (!historyResult.history.bolusHistory.isEmpty()) {
-           timestampOfLastKnownBolusRecord = historyResult.history.bolusHistory.get(0).timestamp;
+           timestampOfLastKnownPumpBolusRecord = historyResult.history.bolusHistory.get(0).timestamp;
         }
 
         long end = System.currentTimeMillis();
