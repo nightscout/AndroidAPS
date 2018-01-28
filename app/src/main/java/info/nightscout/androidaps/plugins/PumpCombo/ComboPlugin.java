@@ -498,9 +498,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
         }
-        // TODO only check this after a bolus was successfully applied? NO, because in error condition
-        // we can't say with certainty if a bolus was delivered (we find out when refreshing history next)
-        // so, be on the annoying but safe side
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
         CommandResult stateResult = runCommand(null, 2, ruffyScripter::readReservoirLevelAndLastBolus);
@@ -535,7 +532,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // start bolus delivery
             bolusInProgress = true;
-            CommandResult bolusCmdResult = runCommand(null, 0,
+            runCommand(null, 0,
                     () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
             bolusInProgress = false;
 
@@ -543,9 +540,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // a connection problem, ruffyscripter tried to recover and we can just check the
             // history below
 
-            // TODO test and check error messages, they're not as fine-grained as they used to be.
-            // maybe they shouldn't even be, if there was an error, the user should check anyways
-            CommandResult postBolusStateResult = runCommand(null, 1, ruffyScripter::readReservoirLevelAndLastBolus);
+            CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
@@ -554,102 +549,35 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Bolus lastBolus = postBolusStateResult.lastBolus;
             if (lastBolus == null || lastBolus.equals(previousBolus)) {
                 return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
+                        .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
             }
 
-            List<Bolus> bolusList = new ArrayList<>(1);
-            bolusList.add(lastBolus);
-            boolean pumpRecordedAdded = updateDbFromPumpHistory(new PumpHistory().bolusHistory(bolusList));
-            if (!pumpRecordedAdded) {
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
+            if (Math.abs(lastBolus.amount - detailedBolusInfo.insulin) > 0.01) {
+                return new PumpEnactResult().success(false).enacted(true)
+                        .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered));
+            }
 
+            // seems we actually made it ...
+            detailedBolusInfo.date = lastBolus.timestamp;
+            detailedBolusInfo.pumpId = lastBolus.timestamp + ((int) lastBolus.amount * 10);
+            detailedBolusInfo.source = Source.PUMP;
+            detailedBolusInfo.insulin = lastBolus.amount;
+            boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            if (!treatmentCreated) {
+                return new PumpEnactResult().success(false).enacted(true)
+                        .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
             }
 
             return new PumpEnactResult()
                     .success(true)
-                    .enacted(bolusCmdResult.delivered > 0)
-                    .bolusDelivered(bolusCmdResult.delivered)
+                    .enacted(lastBolus.amount > 0)
+                    .bolusDelivered(lastBolus.amount)
                     .carbsDelivered(detailedBolusInfo.carbs);
-
-//            if (bolusCmdResult.success) {
-//                if (bolusCmdResult.delivered > 0) {
-//                    detailedBolusInfo.insulin = bolusCmdResult.delivered;
-//                    detailedBolusInfo.source = Source.USER;
-//                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-//                }
-//                return new PumpEnactResult()
-//                        .success(true)
-//                        .enacted(bolusCmdResult.delivered > 0)
-//                        .bolusDelivered(bolusCmdResult.delivered)
-//                        .carbsDelivered(detailedBolusInfo.carbs);
-//            } else {
-//                progressReporter.report(BolusProgressReporter.State.RECOVERING, 0, 0);
-//                return recoverFromErrorDuringBolusDelivery(detailedBolusInfo, pumpTimeWhenBolusWasRequested);
-//            }
         } finally {
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
-            MainApp.bus().post(new EventRefreshOverview("Combo Bolus"));
+            MainApp.bus().post(new EventRefreshOverview("Bolus"));
             cancelBolus = false;
-        }
-    }
-
-    /**
-     * If there was an error during BolusCommand the scripter reconnects and cleans up. The pump
-     * refuses connections while a bolus delivery is still in progress (once bolus delivery started
-     * it  continues regardless of a connection loss).
-     * Then verify the bolus record we read has a date which is >= the time the bolus was requested
-     * (using the pump's time!). If there is such a bolus with <= the requested amount, then it's
-     * from this command and shall be added to treatments. If the bolus wasn't delivered in full,
-     * add it to treatments but raise a warning. Raise a warning as well if no bolus was delivered
-     * at all.
-     * This all still might fail for very large boluses and earthquakes in which case an error
-     * is raised asking to user to deal with it.
-     */
-    private PumpEnactResult recoverFromErrorDuringBolusDelivery(DetailedBolusInfo detailedBolusInfo, long pumpTimeWhenBolusWasRequested) {
-        log.debug("Trying to determine from pump history what was actually delivered");
-        CommandResult readLastBolusResult = runCommand(null , 2,
-                () -> ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
-        if (!readLastBolusResult.success || readLastBolusResult.history == null) {
-            // this happens when the cartridge runs empty during delivery, the pump will be in an error
-            // state with multiple alarms ringing and no chance of reading history
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
-        }
-
-        List<Bolus> bolusHistory = readLastBolusResult.history.bolusHistory;
-        Bolus lastBolus = !bolusHistory.isEmpty() ? bolusHistory.get(0) : null;
-        log.debug("Last bolus read from history: " + lastBolus + ", request time: " +
-                pumpTimeWhenBolusWasRequested + " (" + new Date(pumpTimeWhenBolusWasRequested) + ")");
-
-        if (lastBolus == null // no bolus ever given
-                || lastBolus.timestamp < pumpTimeWhenBolusWasRequested // this is not the bolus you're looking for
-                || lastBolus.amount - detailedBolusInfo.insulin  > 0.01 // this one neither, big than requested bolus
-                || !lastBolus.isValid) { // ext/multiwave bolus
-            log.debug("No bolus was delivered");
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
-        } else if (Math.abs(lastBolus.amount - detailedBolusInfo.insulin) > 0.01) { // bolus only partially delivered
-            double requestedBolus = detailedBolusInfo.insulin;
-
-            detailedBolusInfo.insulin = lastBolus.amount;
-            detailedBolusInfo.source = Source.USER;
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            log.debug(String.format(Locale.getDefault(), "Added partial bolus of %.2f to treatments (requested: %.2f)", lastBolus.amount, requestedBolus));
-
-            return new PumpEnactResult().success(false).enacted(true)
-                    .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered,
-                            lastBolus.amount, requestedBolus));
-        } else {
-            // bolus was correctly and fully delivered
-            detailedBolusInfo.insulin = lastBolus.amount;
-            detailedBolusInfo.source = Source.USER;
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            log.debug("Added correctly delivered bolus to treatments");
-            return new PumpEnactResult().success(true).enacted(true)
-                    .bolusDelivered(lastBolus.amount)
-                    .carbsDelivered(detailedBolusInfo.carbs);
         }
     }
 
@@ -1080,6 +1008,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private void checkHistory() {
         long start = System.currentTimeMillis();
+        // TODO optimize for the default case where no new records exists by checking quick info;
+        // and only read My Data history when quick info shows a new record
 //        long lastCheckInitiated = System.currentTimeMillis();
 
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
