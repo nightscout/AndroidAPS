@@ -1017,7 +1017,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     void readAllPumpData() {
         readHistory(new PumpHistoryRequest()
                 .bolusHistory(PumpHistoryRequest.FULL)
-                .tbrHistory(PumpHistoryRequest.FULL)
+//                .tbrHistory(PumpHistoryRequest.FULL)
                 .pumpErrorHistory(PumpHistoryRequest.FULL)
                 .tddHistory(PumpHistoryRequest.FULL)
         );
