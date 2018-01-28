@@ -385,13 +385,13 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">연속 알림</string>
     <string name="old_data">OLD DATA</string>
-    <string name="minago">%d분전</string>
-    <string name="sms_minago">%dmin ago</string>
+    <string name="minago" formatted="false">%d분전</string>
+    <string name="sms_minago" formatted="false">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Short avg. delta</string>
     <string name="long_avgdelta">Long avg. delta</string>
-    <string name="array_of_elements">Array of %d elements.\nActual value:</string>
+    <string name="array_of_elements" formatted="false">Array of %d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">AMA autosens 기능 사용하기</string>
@@ -449,7 +449,7 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
-    <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
+    <string name="error_only_numeric_digits_range_allowed" formatted="false">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
     <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
     <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
@@ -516,7 +516,6 @@
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
     <string name="pleaseallowpermission">권한을 허용하세요.</string>
-    <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor" formatted="false">일시중지중 (%d분)</string>
     <string name="loopsuperbolusfor" formatted="false">수퍼 식사주입 (%d분)</string>
@@ -693,35 +692,25 @@
     <string name="pumpdrivercorrected">펌프 드라이버가 수정되었습니다.</string>
     <string name="pump_unreachable">펌프에 연결할 수 없습니다.</string>
     <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
-    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
-    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
-    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="localalertsettings_title">자체 경고 기능</string>
     <string name="enable_missed_bg_readings_alert">혈당 데이터 누락시 경고하기</string>
     <string name="enable_pump_unreachable_alert">펌프와 연결불가시 경고하기</string>
     <string name="pump_unreachable_threshold">펌프 연결불가 기준시간[분]</string>
-    <string name="key_pump_unreachable_threshold" translatable="false">pump_unreachable_threshold</string>
-    <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
     <string name="urgent_alarm">긴급 알람</string>
     <string name="info">정보</string>
-    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
-    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="bluetooth">블루투스</string>
     <string name="btwatchdog_title">블루투스 감시기능</string>
     <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
     <string name="DexcomG5">(패치된) DexcomG5 앱</string>
     <string name="dexcomg5_nsupload_title">NS에 혈당데이터 업로드하기</string>
-    <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5업로드 세팅</string>
     <string name="customapp">Customized APK for download</string>
     <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
     <string name="wear_detailed_delta_summary">소수점 한자리 더 추가된 델타 보여주기</string>
     <string name="unsupportedfirmware">지원되지 않는 펌프 펌웨어</string>
     <string name="dexcomg5_xdripupload_title">혈당 데이터를 xDrip+에 전송하기</string>
-    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
     <string name="dexcomg5_xdripupload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
-    <string name="nsclientbg">NSClient BG</string>
     <string name="minimalbasalvaluereplaced">지원되는 최소값으로 기초주입량이 대체되었습니다.</string>
     <string name="overview_editquickwizard_usebg">혈당 계산</string>
     <string name="overview_editquickwizard_usebolusiob">식사주입 IOB 계산</string>
@@ -742,54 +731,6 @@
     <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
     <string name="basalprofilenotaligned" formatted="false">기초주입값이 시간단위로 설정되지 않았습니다: %s</string>
     <string name="zerovalueinprofile" formatted="false">유효하지 않은 프로파일: %s</string>
-    <string name="combo_programming_bolus">Programming pump for bolusing</string>
-    <string name="combo_refresh">Refresh</string>
-    <string name="combo_tdds">TDDS</string>
-    <string name="combo_pump_state_label">State</string>
-    <string name="combo_pump_activity_label">Activity</string>
-    <string name="combo_no_pump_connection">No connection for %d min</string>
-    <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
-    <string name="combo_last_bolus" translatable="false">%.1f U (%s, %s)</string>
-    <string name="combo_pump_action_initializing">Initializing</string>
-    <string name="combo_pump_state_disconnected">Disconnected</string>
-    <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
-    <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
-    <string name="combo_pump_state_running">Running</string>
-    <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
-    <string name="combo_pump_action_setting_tbr">Setting TBR (%d%% / %d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
-    <string name="combo_pump_action_refreshing">Refreshing</string>
-    <string name="combo_pump_never_connected">Never</string>
-    <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
-    <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
-    <string name="combo_force_disabled_notification">Unsafe usage: the pump uses a different basal rate profile than the first. The loop has been disabled. Select the first profile on the pump and refresh.</string>
-    <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. To prevent accidental double boluses and to guard against bugs this is disallowed.</string>
-    <string name="combo_pump_connected_now">Now</string>
-    <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="danar_history">펌프 이력</string>
-    <string name="combo_pump_alerts">Alerts</string>
-    <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
-    <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
-    <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
-    <string name="combo_is_in_error_state">The pump is showing the error E%d: %s</string>
-    <string name="combo_no_alert_data_note">To read the pump\'s error history, long press the ALERTS button\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
-    <string name="combo_no_tdd_data_note">To read the pump\'s TDD history, long press the TDDS button\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
-    <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
-    <string name="combo_tdd_average">Average: %3.1f U</string>
-    <string name="combo_tdd_maximum">Maximum: %3.1f U</string>
-    <string name="combo_reservoir_low">Low</string>
-    <string name="combo_reservoir_empty">Empty</string>
-    <string name="combo_reservoir_normal">Normal</string>
-    <string name="combo_notification_check_time_date">Pump clock update needed</string>
-    <string name="combo_history">History</string>
-    <string name="combo_warning">Warning</string>
-    <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in My Data and the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.  WARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
-    <string name="combo_read_full_history_confirmation">Are you really sure you want to read all pump data and take the consequences of this action?</string>
-    <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
-    <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
-    <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
-    <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually create a bolus record using the Careportal tab if a bolus was delivered.</string>
-    <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
-    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">확장식사주입 에러</string>
 </resources>
