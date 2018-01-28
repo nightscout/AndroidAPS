@@ -34,17 +34,19 @@ import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusTaskR
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
+import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
+import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import sugar.free.sightparser.applayer.AppLayerMessage;
+import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
+import sugar.free.sightparser.applayer.descriptors.PumpStatus;
 import sugar.free.sightparser.applayer.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.remote_control.ExtendedBolusMessage;
 import sugar.free.sightparser.applayer.remote_control.StandardBolusMessage;
-import sugar.free.sightparser.applayer.status.BolusType;
-import sugar.free.sightparser.applayer.status.PumpStatus;
 import sugar.free.sightparser.handling.SingleMessageTaskRunner;
 import sugar.free.sightparser.handling.TaskRunner;
 import sugar.free.sightparser.handling.taskrunners.SetTBRTaskRunner;
@@ -83,6 +85,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private boolean fragmentVisible = true;
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
+    private Connector connector;
     private final TaskRunner.ResultCallback statusResultHandler = new TaskRunner.ResultCallback() {
 
         @Override
@@ -105,9 +108,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             statusResultTime = Helpers.tsl();
             processStatusResult();
             updateGui();
+            connector.requestHistoryReSync();
+            connector.requestHistorySync();
         }
     };
-    private Connector connector;
 
     private InsightPumpPlugin() {
         log("InsightPumpPlugin");
@@ -336,6 +340,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         lastDataTime = new Date();
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
+        result.enacted = false;
         result.success = false;
         Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
         MainApp.bus().post(new EventNewNotification(notification));
@@ -364,24 +369,28 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        PumpEnactResult result = new PumpEnactResult();
-        result.success = true;
+        final PumpEnactResult result = new PumpEnactResult();
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.enacted = result.bolusDelivered > 0 || result.carbsDelivered > 0;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
 
-        final UUID cmd = deliverBolus((float) detailedBolusInfo.insulin); // actually request delivery
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
-
         result.percent = 100;
-        result.success = cs == Cstatus.SUCCESS;
+
+        // is there an insulin component to the treatment?
+        if (detailedBolusInfo.insulin > 0) {
+            final UUID cmd = deliverBolus((float) detailedBolusInfo.insulin); // actually request delivery
+            if (cmd == null) {
+                return pumpEnactFailure();
+            }
+            final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+            result.success = cs.success();
+        } else {
+            result.success = true; // always true with carb only treatments
+        }
 
         if (result.success) {
             log("Success!");
-
-            if (Config.logPumpComm)
-                log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
 
             final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
             bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
@@ -391,9 +400,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         } else {
             log.debug("Failure to deliver treatment");
         }
-        MainApp.bus().post(new EventInsightPumpUpdateGui());
-        lastDataTime = new Date();
 
+        if (Config.logPumpComm)
+            log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
+
+        updateGui();
+
+        lastDataTime = new Date();
+        connector.requestHistorySync(30000);
         return result;
     }
 
@@ -422,7 +436,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(false).duration(durationInMinutes);
         pumpEnactResult.absolute = absoluteRate; // TODO get converted value?
-        pumpEnactResult.success = cs == Cstatus.SUCCESS;
+        pumpEnactResult.success = cs.success();
         pumpEnactResult.isTempCancel = false; // do we test this here?
         pumpEnactResult.comment = async.getCommandComment(cmd);
 
@@ -443,6 +457,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         lastDataTime = new Date();
 
         updateGui();
+
+        connector.requestHistorySync(5000);
+
         return pumpEnactResult;
     }
 
@@ -461,7 +478,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
         pumpEnactResult.percent = percent;
-        pumpEnactResult.success = cs == Cstatus.SUCCESS;
+        pumpEnactResult.success = cs.success();
         pumpEnactResult.isTempCancel = percent == 100; // 100% temp basal is a cancellation
         pumpEnactResult.comment = async.getCommandComment(cmd);
 
@@ -477,6 +494,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
 
         updateGui();
+
+        if (Config.logPumpComm)
+            log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
+
+        connector.requestHistorySync(5000);
+
         return pumpEnactResult;
     }
 
@@ -493,6 +516,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         // TODO isn't conditional on one apparently being in progress only the history change
         boolean enacted = false;
         final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             enacted = true;
             TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
@@ -504,7 +528,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         if (Config.logPumpComm)
             log.debug("Canceling temp basal: "); // TODO get more info
 
-        return new PumpEnactResult().success(cs == Cstatus.SUCCESS).enacted(true).isTempCancel(true);
+        connector.requestHistorySync(5000);
+
+        return new PumpEnactResult().success(cs.success()).enacted(true).isTempCancel(true);
     }
 
 
@@ -525,7 +551,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         log("Got command status: " + cs);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).bolusDelivered(insulin).duration(durationInMinutes);
-        pumpEnactResult.success = cs == Cstatus.SUCCESS;
+        pumpEnactResult.success = cs.success();
         pumpEnactResult.comment = async.getCommandComment(cmd);
 
         if (pumpEnactResult.success) {
@@ -542,6 +568,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes + " " + pumpEnactResult.comment);
 
         updateGui();
+
+        connector.requestHistorySync(30000);
+
         return pumpEnactResult;
     }
 
@@ -552,15 +581,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         // TODO note always sends cancel to pump but only changes history if present
 
-        final UUID cmd = aSyncTaskRunner(new CancelBolusTaskRunner(connector.getServiceConnector(), BolusType.EXTENDED), "Cancel extended bolus");
+        final UUID cmd = aSyncTaskRunner(new CancelBolusTaskRunner(connector.getServiceConnector(), ActiveBolusType.EXTENDED), "Cancel extended bolus");
 
         if (cmd == null) {
             return pumpEnactFailure();
         }
 
         final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
-
-        // TODO logging? history
 
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
             ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
@@ -569,19 +596,22 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             MainApp.getConfigBuilder().addToHistoryExtendedBolus(exStop);
         }
 
+        if (Config.logPumpComm)
+            log.debug("Cancel extended bolus:");
+
         updateGui();
-        return new PumpEnactResult().success(cs == Cstatus.SUCCESS).enacted(true);
 
+        connector.requestHistorySync(5000);
 
+        return new PumpEnactResult().success(cs.success()).enacted(true);
     }
 
 
     private synchronized UUID deliverBolus(float bolusValue) {
-        log("!!!!!!!!!! DeliverBolus: " + bolusValue);
+        log("DeliverBolus: " + bolusValue);
 
         // Bare sanity checking should be done elsewhere
         if (bolusValue == 0) return null;
-
         if (bolusValue < 0) return null;
 
         if (bolusValue > 20) return null;
@@ -593,76 +623,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         return aSyncSingleCommand(message, "Deliver Bolus " + bolusValue);
     }
-
-
-    /*
-    @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        PumpEnactResult result = cancelExtendedBolus();
-        if (!result.success)
-            return result;
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = System.currentTimeMillis();
-        extendedBolus.insulin = insulin;
-        extendedBolus.durationInMinutes = durationInMinutes;
-        extendedBolus.source = Source.USER;
-        result.success = false;
-        result.enacted = true;
-        result.bolusDelivered = insulin;
-        result.isTempCancel = false;
-        result.duration = durationInMinutes;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        treatmentsInterface.addToHistoryExtendedBolus(extendedBolus);
-        if (Config.logPumpComm)
-            log.debug("Setting extended bolus: " + result);
-        MainApp.bus().post(new EventInsightPumpUpdateGui());
-        lastDataTime = new Date();
-        return result;
-    }
-    */
-
-   /* @Override
-    public PumpEnactResult cancelTempBasal(boolean force) {
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        PumpEnactResult result = new PumpEnactResult();
-        result.success = true;
-        result.isTempCancel = true;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        if (treatmentsInterface.isTempBasalInProgress()) {
-            result.enacted = true;
-            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
-            tempStop.source = Source.USER;
-            treatmentsInterface.addToHistoryTempBasal(tempStop);
-            //tempBasal = null;
-            if (Config.logPumpComm)
-                log.debug("Canceling temp basal: " + result);
-            MainApp.bus().post(new EventInsightPumpUpdateGui());
-        }
-        lastDataTime = new Date();
-        return result;
-    }
-*/
-  /*  @Override
-    public PumpEnactResult cancelExtendedBolus() {
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        PumpEnactResult result = new PumpEnactResult();
-        if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
-            ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
-            exStop.source = Source.USER;
-            treatmentsInterface.addToHistoryExtendedBolus(exStop);
-        }
-        result.success = false;
-        result.enacted = true;
-        result.isTempCancel = true;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        if (Config.logPumpComm)
-            log.debug("Canceling extended basal: " + result);
-        MainApp.bus().post(new EventInsightPumpUpdateGui());
-        lastDataTime = new Date();
-        return result;
-    }*/
-
 
     @Override
     public JSONObject getJSONStatus() {
@@ -725,7 +685,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         if (statusResult != null) {
             batteryPercent = statusResult.getBatteryAmountMessage().getBatteryAmount();
             reservoirInUnits = (int) statusResult.getCartridgeAmountMessage().getCartridgeAmount();
-            basalRate = roundDouble(statusResult.getCurrentBasalMessage().getCurrentBasalAmount(),2);
+            basalRate = roundDouble(statusResult.getCurrentBasalMessage().getCurrentBasalAmount(), 2);
             initialized = true; // basic communication test
         }
     }
@@ -734,13 +694,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return MainApp.instance().getString(id);
     }
 
-    public List<StatusItem> getStatusItems() {
+    List<StatusItem> getStatusItems() {
         final List<StatusItem> l = new ArrayList<>();
 
         // Todo last contact time
 
         l.add(new StatusItem("Status", connector.getLastStatusMessage()));
-        l.add(new StatusItem("Changed",connector.getNiceLastStatusTime()));
+        l.add(new StatusItem("Changed", connector.getNiceLastStatusTime()));
 
         boolean pumpRunning;
         // also check time since received
@@ -780,13 +740,21 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             }
         }
 
+        l.add(new StatusItem("Log book", HistoryReceiver.getStatusString()));
+
+        if (LiveHistory.getStatus().length() > 0) {
+            l.add(new StatusItem("Last Action", LiveHistory.getStatus()));
+        }
+
+        Connector.get().requestHistorySync();
+
         if (connector.uiFresh()) {
             Helpers.runOnUiThreadDelayed(new Runnable() {
                 @Override
                 public void run() {
                     updateGui();
                 }
-            },1000);
+            }, 1000);
         }
 
         return l;
