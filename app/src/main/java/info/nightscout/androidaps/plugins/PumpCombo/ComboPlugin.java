@@ -352,8 +352,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private synchronized void initializePump() {
-        Answers.getInstance().logCustom(new CustomEvent("ComboInit")
-                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION));
         long maxWait = System.currentTimeMillis() + 15 * 1000;
         while (!ruffyScripter.isPumpAvailable()) {
             log.debug("Waiting for ruffy service to come up ...");

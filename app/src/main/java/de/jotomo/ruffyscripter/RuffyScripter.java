@@ -10,6 +10,8 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.common.base.Joiner;
 
 import org.monkey.d.ruffy.ruffy.driver.IRTHandler;
@@ -44,6 +46,7 @@ import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.ReadReservoirLevelAndLastBolus;
 import de.jotomo.ruffyscripter.commands.SetBasalProfileCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
+import info.nightscout.androidaps.BuildConfig;
 
 /**
  * Provides scripting 'runtime' and operations. consider moving operations into a separate
@@ -167,6 +170,9 @@ public class RuffyScripter implements RuffyCommands {
 
         if (!boundSucceeded) {
             log.error("No connection to ruffy. Pump control unavailable.");
+        } else {
+            Answers.getInstance().logCustom(new CustomEvent("RuffyScripterInit")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION));
         }
     }
 
@@ -417,6 +423,8 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
         log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromConnectionLoss")
+                .putCustomAttribute("success", connected ? "true" : "else"));
         return connected;
     }
 
@@ -439,7 +447,9 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
         try {
-            return readPumpStateInternal();
+            PumpState pumpState = readPumpStateInternal();
+            Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailureSucceded"));
+            return pumpState;
         } catch (Exception e) {
             log.debug("Reading pump state during recovery failed", e);
             return new PumpState();
@@ -462,6 +472,7 @@ public class RuffyScripter implements RuffyCommands {
             long initialUpdateTime = menuLastUpdated;
             while (initialUpdateTime == menuLastUpdated) {
                 if (System.currentTimeMillis() > timeoutExpired) {
+                    Answers.getInstance().logCustom(new CustomEvent("ComboConnectTimeout"));
                     throw new CommandException("Timeout connecting to pump");
                 }
                 SystemClock.sleep(50);
@@ -768,12 +779,14 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter) {
+        Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmd"));
         return runCommand(new BolusCommand(amount, bolusProgressReporter));
     }
 
     @Override
     public void cancelBolus() {
         if (activeCmd instanceof BolusCommand) {
+            Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmdCancel"));
             ((BolusCommand) activeCmd).requestCancellation();
         } else {
             log.error("cancelBolus called, but active command is not a bolus:" + activeCmd);
@@ -782,16 +795,19 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult setTbr(int percent, int duration) {
+        Answers.getInstance().logCustom(new CustomEvent("ComboSetTbrCmd"));
         return runCommand(new SetTbrCommand(percent, duration));
     }
 
     @Override
     public CommandResult cancelTbr() {
+        Answers.getInstance().logCustom(new CustomEvent("ComboCancelTbrCmd"));
         return runCommand(new CancelTbrCommand());
     }
 
     @Override
     public CommandResult confirmAlert(int warningCode) {
+        Answers.getInstance().logCustom(new CustomEvent("ComboConfirmAlertCmd"));
         return runCommand(new ConfirmAlertCommand(warningCode));
     }
 
@@ -802,11 +818,13 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readBasalProfile() {
+        Answers.getInstance().logCustom(new CustomEvent("ComboReadBasalProfileCmd"));
         return runCommand(new ReadBasalProfileCommand());
     }
 
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
+        Answers.getInstance().logCustom(new CustomEvent("ComboSetBasalProfileCmd"));
         return runCommand(new SetBasalProfileCommand(basalProfile));
     }
 
