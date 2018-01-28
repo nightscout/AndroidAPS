@@ -736,7 +736,7 @@
     <string name="combo_error_partial_bolus_delivered">Wegen eines Fehlers wurden nur %.2f IE von den angeforderten %.2f IE abgegeben. Bitte prüfe den abgegebenen Bolus auf der Pumpe.</string>
     <string name="combo_history">Historie</string>
     <string name="combo_pump_action_refreshing">Status wird aktualisiert</string>
-    <string name="combo_pump_action_initializing">Die Pumpe wird initialisiert</string>
+    <string name="combo_pump_state_initializing">Die Pumpe wird initialisiert</string>
     <string name="combo_pump_connected_now">Jetzt</string>
     <string name="combo_pump_never_connected">Nie</string>
     <string name="combo_pump_tbr_cancelled_warrning">Der Alarm \"TBR ABBRUCH\" wurde bestätigt</string>

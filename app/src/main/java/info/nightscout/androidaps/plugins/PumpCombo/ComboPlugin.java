@@ -36,10 +36,8 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -159,7 +157,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
                     : "W" + ps.activeAlert.warningCode + ": " + ps.activeAlert.message;
         } else if (ps.menu == null)
-            return MainApp.gs(R.string.combo_pump_state_disconnected);
+            return MainApp.gs(R.string.combo_pump_state_initializing);
         else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
             return MainApp.gs(R.string.combo_pump_state_suspended_due_to_error);
         else if (ps.suspended)
@@ -373,7 +371,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_initializing),1, ruffyScripter::readPumpState);
+        CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_refreshing),1, ruffyScripter::readPumpState);
         if (!stateResult.success) {
             return;
         }
