@@ -819,9 +819,38 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         checkForUnsafeUsage(preCheckResult);
         checkAndResolveTbrMismatch(preCheckResult.state);
         checkPumpTime(preCheckResult.state);
+        checkBasalRate(preCheckResult.state);
         checkHistory();
 
         return null;
+    }
+
+
+    private void checkBasalRate(PumpState state) {
+        if (!pump.initialized) {
+            // no cached profile to compare against
+            return;
+        }
+        if (state.tbrActive && state.tbrPercent == 0) {
+            // can't infer base basal rate if TBR is 0
+            return;
+        }
+        double pumpBasalRate = state.tbrActive
+                ? state.basalRate * 100 / state.tbrPercent
+                : state.basalRate;
+        int pumpHour = new Date(state.pumpTime).getHours();
+        int phoneHour = new Date().getHours();
+        if (pumpHour != phoneHour) {
+            // only check if clocks are close
+            return;
+        }
+
+        if (pumpBasalRate != getBaseBasalRate()) {
+            CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
+            if (readBasalResult.success) {
+                pump.basalProfile = readBasalResult.basalProfile;
+            }
+        }
     }
 
     /** Check pump time (on the main menu) and raise notification if time is off.
@@ -1082,7 +1111,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             extendedJson.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             PumpState ps = pump.state;
             if (ps.tbrActive) {
-                extendedJson.put("TempBasalAbsoluteRate", ps.tbrRate);
+                extendedJson.put("TempBasalAbsoluteRate", ps.basalRate);
                 extendedJson.put("TempBasalPercent", ps.tbrPercent);
                 extendedJson.put("TempBasalRemaining", ps.tbrRemainingDuration);
             }

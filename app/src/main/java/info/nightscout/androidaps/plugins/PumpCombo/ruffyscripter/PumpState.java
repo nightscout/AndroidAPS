@@ -13,8 +13,8 @@ public class PumpState {
     public boolean tbrActive = false;
     /** TBR percentage. 100% means no TBR active, just the normal basal rate running. */
     public int tbrPercent = -1;
-    /** The absolute rate the TBR is running, e.g. 0.80U/h. */
-    public double tbrRate = -1;
+    /** The absolute rate the pump is running (regular basal rate or TBR), e.g. 0.80U/h. */
+    public double basalRate = -1;
     /** Remaining time of an active TBR. Note that 0:01 is te lowest displayed, the pump
      * jumps from that to TBR end, skipping 0:00(xx). */
     public int tbrRemainingDuration = -1;
@@ -52,8 +52,8 @@ public class PumpState {
         return this;
     }
 
-    public PumpState tbrRate(double tbrRate) {
-        this.tbrRate = tbrRate;
+    public PumpState basalRate(double basalRate) {
+        this.basalRate = basalRate;
         return this;
     }
 
@@ -91,7 +91,7 @@ public class PumpState {
                 ", suspended=" + suspended +
                 ", tbrActive=" + tbrActive +
                 ", tbrPercent=" + tbrPercent +
-                ", tbrRate=" + tbrRate +
+                ", basalRate=" + basalRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
                 ", activeAlert=" + activeAlert +
                 ", batteryState=" + batteryState +

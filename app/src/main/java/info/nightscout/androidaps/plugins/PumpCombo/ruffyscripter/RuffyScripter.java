@@ -520,7 +520,7 @@ public class RuffyScripter implements RuffyCommands {
                 state.tbrPercent = displayedTbr.intValue();
                 MenuTime durationMenuTime = ((MenuTime) menu.getAttribute(MenuAttribute.RUNTIME));
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
-                state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
+                state.basalRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
             if (menu.attributes().contains(MenuAttribute.BATTERY_STATE)) {
                 state.batteryState = ((int) menu.getAttribute(MenuAttribute.BATTERY_STATE));
