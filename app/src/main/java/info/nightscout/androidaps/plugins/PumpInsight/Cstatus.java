@@ -11,5 +11,10 @@ enum Cstatus {
     PENDING,
     SUCCESS,
     FAILURE,
-    TIMEOUT
+    TIMEOUT;
+
+    boolean success() {
+       return this == SUCCESS;
+    }
+
 }
