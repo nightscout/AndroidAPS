@@ -560,12 +560,28 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             // seems we actually made it this far, let's add a treatment record
-            detailedBolusInfo.date = lastBolus.timestamp + (Math.min((int) lastBolus.amount * 10 * 1000, 59 * 1000));
-            detailedBolusInfo.pumpId = lastBolus.timestamp + (Math.min((int) lastBolus.amount * 10 * 1000, 59 * 1000));
+            detailedBolusInfo.date = calculateFakeBolusDate(lastBolus);
+            detailedBolusInfo.pumpId = calculateFakeBolusDate(lastBolus);
             detailedBolusInfo.source = Source.PUMP;
             detailedBolusInfo.insulin = lastBolus.amount;
-            boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-            if (!treatmentCreated) {
+            try {
+                boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                if (!treatmentCreated) {
+                    if (detailedBolusInfo.isSMB) {
+                        Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                        MainApp.bus().post(new EventNewNotification(notification));
+                        return new PumpEnactResult().success(false).enacted(true)
+                                .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
+                    }
+                    return new PumpEnactResult().success(false).enacted(true)
+                            .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
+                }
+            } catch (Exception e) {
+                log.error("Adding treatment record failed", e);
+                if (detailedBolusInfo.isSMB) {
+                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
             }
@@ -957,8 +973,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         // Bolus
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
-            dbi.date = pumpBolus.timestamp + (Math.min((int) pumpBolus.amount * 10 * 1000, 59 * 1000));
-            dbi.pumpId = pumpBolus.timestamp + (Math.min((int) pumpBolus.amount * 10 * 1000, 59 * 1000));
+            dbi.date = calculateFakeBolusDate(pumpBolus);
+            dbi.pumpId = calculateFakeBolusDate(pumpBolus);
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
@@ -982,6 +998,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         return updated;
+    }
+
+    /** Adds the bolus to the timestamp to be able to differentiate multiple boluses in the same
+     * minute. Best effort, since this covers only boluses up to 5.9 U and relies on other code
+     * to prevent a boluses with the same amount to be delivered within the same minute.
+     * Should be good enough, even with command mode, it's a challenge to create that situation
+     * and most time clashes will be around SMBs which are covered.
+     */
+    private long calculateFakeBolusDate(Bolus pumpBolus) {
+        return pumpBolus.timestamp + (Math.min((int) (pumpBolus.amount - 0.1) * 10 * 1000, 59 * 1000));
     }
 
     // TODO queue
@@ -1010,16 +1036,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private void checkHistory() {
         long start = System.currentTimeMillis();
-        // TODO optimize for the default case where no new records exists by checking quick info;
-        // and only read My Data history when quick info shows a new record
-//        long lastCheckInitiated = System.currentTimeMillis();
 
+        // TODO maybe optimize for the default case where no new records exists by checking quick info;
+        // and only read My Data history when quick info shows a new record
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest()
-                        .bolusHistory(timestampOfLastKnownBolusRecord)
-                        // TODO TBR history will almost always produce changes
-//                        .tbrHistory(pumpHistoryLastChecked))
-        ));
+                        .bolusHistory(timestampOfLastKnownBolusRecord)));
         if (!historyResult.success) {
             return;
         }
@@ -1029,7 +1051,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!historyResult.history.bolusHistory.isEmpty()) {
            timestampOfLastKnownBolusRecord = historyResult.history.bolusHistory.get(0).timestamp;
         }
-//        pumpHistoryLastChecked = lastCheckInitiated;
+
         long end = System.currentTimeMillis();
         log.debug("History check took: " + ((end - start) / 1000) + "s");
     }
