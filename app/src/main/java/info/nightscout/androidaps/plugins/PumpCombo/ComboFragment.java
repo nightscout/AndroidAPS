@@ -75,6 +75,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh_button:
+                // TODO why is activity in ComboPump?
+                ComboPlugin.getPlugin().getPump().activity = MainApp.gs(R.string.combo_pump_action_refreshing);
                 ConfigBuilderPlugin.getCommandQueue().readStatus("User request", null);
                 break;
             case R.id.combo_alerts_button:
