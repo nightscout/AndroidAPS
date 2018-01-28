@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.history.Bolus;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;

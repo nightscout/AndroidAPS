@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jotomo.ruffyscripter.BasalProfile;
-import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.history.Bolus;
-import de.jotomo.ruffyscripter.history.PumpAlert;
-import de.jotomo.ruffyscripter.history.Tdd;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpAlert;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
 
 class ComboPump {
     boolean initialized = false;
