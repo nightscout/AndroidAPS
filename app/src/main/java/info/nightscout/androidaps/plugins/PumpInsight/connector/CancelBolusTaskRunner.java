@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
 import sugar.free.sightparser.applayer.AppLayerMessage;
+import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
 import sugar.free.sightparser.applayer.remote_control.CancelBolusMessage;
 import sugar.free.sightparser.applayer.status.ActiveBolusesMessage;
-import sugar.free.sightparser.applayer.status.BolusType;
 import sugar.free.sightparser.handling.SightServiceConnector;
 import sugar.free.sightparser.handling.TaskRunner;
 
@@ -11,9 +11,9 @@ import sugar.free.sightparser.handling.TaskRunner;
 
 public class CancelBolusTaskRunner extends TaskRunner {
 
-    private BolusType bolusType;
+    private ActiveBolusType bolusType;
 
-    public CancelBolusTaskRunner(SightServiceConnector serviceConnector, BolusType bolusType) {
+    public CancelBolusTaskRunner(SightServiceConnector serviceConnector, ActiveBolusType bolusType) {
         super(serviceConnector);
         this.bolusType = bolusType;
     }
