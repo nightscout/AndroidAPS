@@ -509,7 +509,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
         }
 
-        if (stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
+        if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
         }
