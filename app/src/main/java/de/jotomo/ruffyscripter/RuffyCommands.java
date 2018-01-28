@@ -1,6 +1,6 @@
-package de.jotomo.ruffy.spi;
+package de.jotomo.ruffyscripter;
 
-import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
+import de.jotomo.ruffyscripter.history.PumpHistoryRequest;
 
 public interface RuffyCommands {
     /** Issues a bolus issues updates on progress through via {@link BolusProgressReporter}. */

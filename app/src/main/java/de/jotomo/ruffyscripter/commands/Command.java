@@ -3,7 +3,7 @@ package de.jotomo.ruffyscripter.commands;
 import java.util.List;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
-import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffyscripter.CommandResult;
 
 /**
  * Interface for all commands to be executed by the pump.

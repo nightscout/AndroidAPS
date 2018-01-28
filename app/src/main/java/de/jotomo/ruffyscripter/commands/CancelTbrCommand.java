@@ -4,8 +4,8 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.jotomo.ruffy.spi.PumpState;
-import de.jotomo.ruffy.spi.PumpWarningCodes;
+import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.PumpWarningCodes;
 
 public class CancelTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(CancelTbrCommand.class);

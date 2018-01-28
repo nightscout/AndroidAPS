@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi;
+package de.jotomo.ruffyscripter;
 
 public class PumpWarningCodes {
     public static final int CARTRIDGE_LOW = 1;

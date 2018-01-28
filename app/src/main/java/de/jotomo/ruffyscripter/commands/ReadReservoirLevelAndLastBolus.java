@@ -10,7 +10,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 
 import java.util.Date;
 
-import de.jotomo.ruffy.spi.history.Bolus;
+import de.jotomo.ruffyscripter.history.Bolus;
 
 public class ReadReservoirLevelAndLastBolus extends BaseCommand {
     @Override

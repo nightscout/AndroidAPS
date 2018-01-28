@@ -3,7 +3,8 @@ package de.jotomo.ruffyscripter.commands;
 import java.util.Collections;
 import java.util.List;
 
-import de.jotomo.ruffy.spi.CommandResult;
+import de.jotomo.ruffyscripter.CommandResult;
+import de.jotomo.ruffyscripter.PumpWarningCodes;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 public abstract class BaseCommand implements Command {
@@ -29,7 +30,7 @@ public abstract class BaseCommand implements Command {
     /**
      * A warning id (or null) caused by a disconnect we can safely confirm on reconnect,
      * knowing it's not severe as it was caused by this command.
-     * @see de.jotomo.ruffy.spi.PumpWarningCodes
+     * @see PumpWarningCodes
      */
     @Override
     public Integer getReconnectWarningId() {

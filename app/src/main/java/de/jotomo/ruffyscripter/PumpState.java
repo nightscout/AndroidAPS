@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi;
+package de.jotomo.ruffyscripter;
 
 /** State displayed on the main screen of the pump. */
 public class PumpState {

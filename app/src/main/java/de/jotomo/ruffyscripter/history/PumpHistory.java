@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi.history;
+package de.jotomo.ruffyscripter.history;
 
 import android.support.annotation.NonNull;
 

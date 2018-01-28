@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi;
+package de.jotomo.ruffyscripter;
 
 public interface BolusProgressReporter {
     enum State {

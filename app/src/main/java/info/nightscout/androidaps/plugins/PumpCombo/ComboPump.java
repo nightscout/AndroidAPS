@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jotomo.ruffy.spi.BasalProfile;
-import de.jotomo.ruffy.spi.PumpState;
-import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpAlert;
-import de.jotomo.ruffy.spi.history.Tdd;
+import de.jotomo.ruffyscripter.BasalProfile;
+import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.history.Bolus;
+import de.jotomo.ruffyscripter.history.PumpAlert;
+import de.jotomo.ruffyscripter.history.Tdd;
 
 class ComboPump {
     boolean initialized = false;

@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi;
+package de.jotomo.ruffyscripter;
 
 public class PumpErrorCodes {
     public static final int CARTRIDGE_EMPTY = 1;

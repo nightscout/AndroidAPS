@@ -11,18 +11,18 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 import java.util.Date;
 
-import de.jotomo.ruffy.spi.BasalProfile;
-import de.jotomo.ruffy.spi.BolusProgressReporter;
-import de.jotomo.ruffy.spi.CommandResult;
-import de.jotomo.ruffy.spi.PumpState;
-import de.jotomo.ruffy.spi.PumpWarningCodes;
-import de.jotomo.ruffy.spi.RuffyCommands;
-import de.jotomo.ruffy.spi.WarningOrErrorCode;
-import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpHistory;
-import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
-import de.jotomo.ruffy.spi.history.Tbr;
-import de.jotomo.ruffyscripter.RuffyCommandsV1Impl;
+import de.jotomo.ruffyscripter.BasalProfile;
+import de.jotomo.ruffyscripter.BolusProgressReporter;
+import de.jotomo.ruffyscripter.CommandResult;
+import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.PumpWarningCodes;
+import de.jotomo.ruffyscripter.RuffyCommands;
+import de.jotomo.ruffyscripter.RuffyScripter;
+import de.jotomo.ruffyscripter.WarningOrErrorCode;
+import de.jotomo.ruffyscripter.history.Bolus;
+import de.jotomo.ruffyscripter.history.PumpHistory;
+import de.jotomo.ruffyscripter.history.PumpHistoryRequest;
+import de.jotomo.ruffyscripter.history.Tbr;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -113,7 +113,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
 
     private ComboPlugin() {
-        ruffyScripter = RuffyCommandsV1Impl.getInstance(MainApp.instance());
+        ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
     }
 
     public ComboPump getPump() {

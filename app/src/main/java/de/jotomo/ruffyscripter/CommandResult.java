@@ -1,12 +1,12 @@
-package de.jotomo.ruffy.spi;
+package de.jotomo.ruffyscripter;
 
 import android.support.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpHistory;
+import de.jotomo.ruffyscripter.history.Bolus;
+import de.jotomo.ruffyscripter.history.PumpHistory;
 
 public class CommandResult {
     /** Whether the command was executed successfully. */

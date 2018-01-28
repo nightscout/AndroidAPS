@@ -1,4 +1,4 @@
-package de.jotomo.ruffy.spi.history;
+package de.jotomo.ruffyscripter.history;
 
 public abstract class HistoryRecord {
     public final long timestamp;

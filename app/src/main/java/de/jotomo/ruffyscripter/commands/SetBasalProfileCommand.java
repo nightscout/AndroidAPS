@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jotomo.ruffy.spi.BasalProfile;
-import de.jotomo.ruffy.spi.PumpState;
+import de.jotomo.ruffyscripter.BasalProfile;
+import de.jotomo.ruffyscripter.PumpState;
 
 public class SetBasalProfileCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetBasalProfileCommand.class);

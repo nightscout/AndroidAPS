@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import de.jotomo.ruffy.spi.BolusProgressReporter;
-import de.jotomo.ruffy.spi.PumpWarningCodes;
-import de.jotomo.ruffy.spi.WarningOrErrorCode;
-import de.jotomo.ruffy.spi.history.Bolus;
+import de.jotomo.ruffyscripter.BolusProgressReporter;
+import de.jotomo.ruffyscripter.PumpWarningCodes;
+import de.jotomo.ruffyscripter.WarningOrErrorCode;
+import de.jotomo.ruffyscripter.history.Bolus;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERED;
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.DELIVERING;
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.PROGRAMMING;
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.STOPPED;
-import static de.jotomo.ruffy.spi.BolusProgressReporter.State.STOPPING;
+import static de.jotomo.ruffyscripter.BolusProgressReporter.State.DELIVERED;
+import static de.jotomo.ruffyscripter.BolusProgressReporter.State.DELIVERING;
+import static de.jotomo.ruffyscripter.BolusProgressReporter.State.PROGRAMMING;
+import static de.jotomo.ruffyscripter.BolusProgressReporter.State.STOPPED;
+import static de.jotomo.ruffyscripter.BolusProgressReporter.State.STOPPING;
 
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);

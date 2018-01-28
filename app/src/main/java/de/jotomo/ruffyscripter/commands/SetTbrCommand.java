@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import de.jotomo.ruffy.spi.PumpState;
-import de.jotomo.ruffy.spi.PumpWarningCodes;
-import de.jotomo.ruffy.spi.WarningOrErrorCode;
+import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.PumpWarningCodes;
+import de.jotomo.ruffyscripter.WarningOrErrorCode;
 
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);

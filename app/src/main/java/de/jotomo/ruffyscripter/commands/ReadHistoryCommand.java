@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 import java.util.Date;
 
-import de.jotomo.ruffy.spi.history.Bolus;
-import de.jotomo.ruffy.spi.history.PumpAlert;
-import de.jotomo.ruffy.spi.history.PumpHistory;
-import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
-import de.jotomo.ruffy.spi.history.Tbr;
-import de.jotomo.ruffy.spi.history.Tdd;
+import de.jotomo.ruffyscripter.history.Bolus;
+import de.jotomo.ruffyscripter.history.PumpAlert;
+import de.jotomo.ruffyscripter.history.PumpHistory;
+import de.jotomo.ruffyscripter.history.PumpHistoryRequest;
+import de.jotomo.ruffyscripter.history.Tbr;
+import de.jotomo.ruffyscripter.history.Tdd;
 
 // Note: TBRs are added to history only after they've completed running
 // TODO remove duplication

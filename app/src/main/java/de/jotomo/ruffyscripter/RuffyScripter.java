@@ -28,13 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import de.jotomo.ruffy.spi.BasalProfile;
-import de.jotomo.ruffy.spi.BolusProgressReporter;
-import de.jotomo.ruffy.spi.CommandResult;
-import de.jotomo.ruffy.spi.PumpState;
-import de.jotomo.ruffy.spi.RuffyCommands;
-import de.jotomo.ruffy.spi.WarningOrErrorCode;
-import de.jotomo.ruffy.spi.history.PumpHistoryRequest;
+import de.jotomo.ruffyscripter.history.PumpHistoryRequest;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
@@ -127,7 +121,7 @@ public class RuffyScripter implements RuffyCommands {
         }
     };
 
-    RuffyScripter(Context context) {
+    public RuffyScripter(Context context) {
         boolean boundSucceeded = false;
 
         try {
