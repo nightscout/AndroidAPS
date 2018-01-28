@@ -1021,7 +1021,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 .pumpErrorHistory(PumpHistoryRequest.FULL)
                 .tddHistory(PumpHistoryRequest.FULL)
         );
-        runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
+        CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
+        if (readBasalResult.success) {
+            pump.basalProfile = readBasalResult.basalProfile;
+        }
         ruffyScripter.disconnect();
     }
 
