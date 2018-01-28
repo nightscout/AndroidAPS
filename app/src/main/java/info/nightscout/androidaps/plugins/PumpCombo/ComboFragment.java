@@ -85,7 +85,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
             case R.id.combo_full_history_button:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(R.string.combo_warning);
-                builder.setMessage(R.string.combo_read_full_history_warning);
+                builder.setMessage(R.string.combo_read_full_history_info);
                 builder.show();
                 break;
         }
@@ -101,13 +101,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 new Thread(() -> ComboPlugin.getPlugin().readTddData()).start();
                 return true;
             case R.id.combo_full_history_button:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(R.string.combo_warning);
-                builder.setMessage(R.string.combo_read_full_history_confirmation);
-                builder.setPositiveButton(R.string.ok, (dialog, which) ->
-                        new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start());
-                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                builder.show();
+                new Thread(() -> ComboPlugin.getPlugin().readAllPumpData()).start();
                 return true;
         }
         return false;

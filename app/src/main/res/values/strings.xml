@@ -854,6 +854,7 @@
     <string name="combo_notification_check_time_date">Pump clock update needed</string>
     <string name="combo_history">History</string>
     <string name="combo_warning">Warning</string>
+    <string name="combo_read_full_history_info">Long press this button to (re)read all history data and basal profile from the pump. This is generally not needed, but can be useful if the pump\'s date and time was significantly off or the basal profile was changed on the pump (which should never be done under normal circumstances).</string>
     <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in \"My Data\" and  the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
     <string name="combo_read_full_history_confirmation">Are you really sure you want to read all pump data and take the consequences of this action?</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
@@ -865,5 +866,6 @@
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait a minute since boluses with the same amount are blocked when requested within the same minute for saftery (regardless of whether they were administered or not).</string>
 </resources>
 

@@ -60,47 +60,51 @@ public class ReadHistoryCommand extends BaseCommand {
             }
         }
 
-        // error history
-        scripter.pressMenuKey();
-        scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
-        if (request.pumpErrorHistory != PumpHistoryRequest.SKIP) {
-            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-            if (totalRecords > 0) {
-                if (request.pumpErrorHistory == PumpHistoryRequest.LAST) {
-                    PumpAlert error = readAlertRecord();
-                    history.pumpAlertHistory.add(error);
-                } else {
-                    readAlertRecords(request.pumpErrorHistory);
+        if (request.pumpErrorHistory == PumpHistoryRequest.SKIP
+                && request.tddHistory == PumpHistoryRequest.SKIP
+                && request.tbrHistory == PumpHistoryRequest.SKIP) {
+            // error history
+            scripter.pressMenuKey();
+            scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
+            if (request.pumpErrorHistory != PumpHistoryRequest.SKIP) {
+                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+                if (totalRecords > 0) {
+                    if (request.pumpErrorHistory == PumpHistoryRequest.LAST) {
+                        PumpAlert error = readAlertRecord();
+                        history.pumpAlertHistory.add(error);
+                    } else {
+                        readAlertRecords(request.pumpErrorHistory);
+                    }
                 }
             }
-        }
 
-        // tdd history
-        scripter.pressMenuKey();
-        scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
-        if (request.tddHistory != PumpHistoryRequest.SKIP) {
-            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-            if (totalRecords > 0) {
-                if (request.tddHistory == PumpHistoryRequest.LAST) {
-                    Tdd tdd = readTddRecord();
-                    history.tddHistory.add(tdd);
-                } else {
-                    readTddRecords(request.tbrHistory);
+            // tdd history
+            scripter.pressMenuKey();
+            scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
+            if (request.tddHistory != PumpHistoryRequest.SKIP) {
+                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+                if (totalRecords > 0) {
+                    if (request.tddHistory == PumpHistoryRequest.LAST) {
+                        Tdd tdd = readTddRecord();
+                        history.tddHistory.add(tdd);
+                    } else {
+                        readTddRecords(request.tbrHistory);
+                    }
                 }
             }
-        }
 
-        // tbr history
-        scripter.pressMenuKey();
-        scripter.verifyMenuIsDisplayed(MenuType.TBR_DATA);
-        if (request.tbrHistory != PumpHistoryRequest.SKIP) {
-            int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
-            if (totalRecords > 0) {
-                if (request.tbrHistory == PumpHistoryRequest.LAST) {
-                    Tbr tbr = readTbrRecord();
-                    history.tbrHistory.add(tbr);
-                } else {
-                    readTbrRecords(request.tbrHistory);
+            // tbr history
+            scripter.pressMenuKey();
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_DATA);
+            if (request.tbrHistory != PumpHistoryRequest.SKIP) {
+                int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
+                if (totalRecords > 0) {
+                    if (request.tbrHistory == PumpHistoryRequest.LAST) {
+                        Tbr tbr = readTbrRecord();
+                        history.tbrHistory.add(tbr);
+                    } else {
+                        readTbrRecords(request.tbrHistory);
+                    }
                 }
             }
         }
