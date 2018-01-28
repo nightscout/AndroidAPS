@@ -51,6 +51,8 @@ import de.jotomo.ruffyscripter.commands.SetTbrCommand;
  * operations and are cleanly separated from the thread management, connection management etc
  */
 public class RuffyScripter implements RuffyCommands {
+    private final boolean readQuickInfoMenu = true;
+
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
     private IRuffyService ruffyService;
@@ -215,7 +217,10 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readReservoirLevelAndLastBolus() {
-        return runCommand(new ReadReservoirLevelAndLastBolus());
+        if (readQuickInfoMenu) {
+            return runCommand(new ReadReservoirLevelAndLastBolus());
+        }
+        return runCommand(new ReadHistoryCommand(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
     }
 
     public void returnToRootMenu() {
