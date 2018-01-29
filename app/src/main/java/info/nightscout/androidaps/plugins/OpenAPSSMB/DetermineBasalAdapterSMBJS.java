@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
@@ -255,6 +256,11 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_max", SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
+
+        if (units.equals(Constants.MMOL)) {
+            mProfile.put("out_units", "mmol/L");
+        }
+
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
