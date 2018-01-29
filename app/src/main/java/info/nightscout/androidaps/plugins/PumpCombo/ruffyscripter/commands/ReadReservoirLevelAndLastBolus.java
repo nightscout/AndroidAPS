@@ -8,9 +8,12 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuDate;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 
 public class ReadReservoirLevelAndLastBolus extends BaseCommand {
     @Override
@@ -22,7 +25,9 @@ public class ReadReservoirLevelAndLastBolus extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.QUICK_INFO);
         result.reservoirLevel = ((Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.REMAINING_INSULIN)).intValue();
         scripter.pressCheckKey();
-        result.lastBolus = readBolusRecord();
+        List<Bolus> bolusHistory = new ArrayList<>(1);
+        bolusHistory.add(readBolusRecord());
+        result.history = new PumpHistory().bolusHistory(bolusHistory);
         scripter.returnToRootMenu();
         result.success = true;
     }

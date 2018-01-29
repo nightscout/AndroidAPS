@@ -402,9 +402,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (result.reservoirLevel != PumpState.UNKNOWN) {
             pump.reservoirLevel = result.reservoirLevel;
         }
-        if (result.lastBolus != null) {
-            pump.lastBolus = result.lastBolus;
-        } else if (result.history != null && !result.history.bolusHistory.isEmpty()) {
+        if (result.history != null && !result.history.bolusHistory.isEmpty()) {
             pump.lastBolus = result.history.bolusHistory.get(0);
         }
         if (result.state.menu != null) {
@@ -487,7 +485,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (lastRequestedBolus != null
                 && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
                 && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
-            log.error("Bolus delivery failure at stage 0", new Exception());
+            log.error("Bolus request rejected, same bolus requested recently: " + lastRequestedBolus);
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
         }
@@ -509,7 +507,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
         }
 
-        Bolus previousBolus = stateResult.lastBolus != null ? stateResult.lastBolus : new Bolus(0, 0, false);
+        Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
+                ? stateResult.history.bolusHistory.get(0)
+                : new Bolus(0, 0, false);
 
         try {
             pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
@@ -536,7 +536,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
             }
-            Bolus lastPumpBolus = postBolusStateResult.lastBolus;
+            Bolus lastPumpBolus = postBolusStateResult.history != null && !postBolusStateResult.history.bolusHistory.isEmpty()
+                    ? postBolusStateResult.history.bolusHistory.get(0)
+                    : null;
             if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
@@ -892,8 +894,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         long lastViolation = 0;
         if (commandResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BOLUS_TYPE) {
             lastViolation = System.currentTimeMillis();
-        } else if (commandResult.lastBolus != null && !commandResult.lastBolus.isValid) {
-            lastViolation = commandResult.lastBolus.timestamp;
         } else if (commandResult.history != null) {
             for (Bolus bolus : commandResult.history.bolusHistory) {
                 if (!bolus.isValid && bolus.timestamp > lastViolation) {

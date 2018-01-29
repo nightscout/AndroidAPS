@@ -27,10 +27,6 @@ public class CommandResult {
 
     public int reservoirLevel = -1;
 
-    /** Only set when by ReadReservoirLevelCommand. */
-    @Nullable
-    public Bolus lastBolus;
-
     public CommandResult success(boolean success) {
         this.success = success;
         return this;
@@ -59,7 +55,6 @@ public class CommandResult {
                 ", history=" + history +
                 ", basalProfile=" + basalProfile +
                 ", forwardedWarnings='" + forwardedWarnings + '\'' +
-                ", lastBolus=" + lastBolus +
                 '}';
     }
 }

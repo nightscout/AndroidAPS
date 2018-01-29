@@ -188,7 +188,9 @@ public class BolusCommand extends BaseCommand {
             ReadReservoirLevelAndLastBolus readReservoirLevelAndLastBolus = new ReadReservoirLevelAndLastBolus();
             readReservoirLevelAndLastBolus.setScripter(scripter);
             readReservoirLevelAndLastBolus.execute();
-            Bolus lastBolus = readReservoirLevelAndLastBolus.result.lastBolus;
+            Bolus lastBolus = readReservoirLevelAndLastBolus.result.history != null && !readReservoirLevelAndLastBolus.result.history.bolusHistory.isEmpty()
+                    ? readReservoirLevelAndLastBolus.result.history.bolusHistory.get(0)
+                    : null;
             if (lastBolus == null || Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
                 throw new CommandException("Unable to determine last bolus");
             }
