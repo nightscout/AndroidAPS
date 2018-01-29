@@ -70,7 +70,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public boolean layoutSet = false;
     public boolean bIsRound = false;
     public int pointSize = 2;
-    public int missed_readings_alert_id = 818;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
@@ -181,7 +180,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 }
             }
         );
-        ListenerService.requestData(this);
         wakeLock.acquire(50);
     }
 
@@ -639,7 +637,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             chart.setViewportCalculationEnabled(true);
             chart.setMaximumViewport(chart.getMaximumViewport());
         } else {
-            ListenerService.requestData(this);
+            //ListenerService.requestData(this);
         }
     }
 
