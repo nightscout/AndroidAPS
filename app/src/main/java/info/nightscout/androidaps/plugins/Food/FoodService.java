@@ -307,7 +307,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public boolean createOrUpdateByNS(Food food) {
         try {
             // find by NS _id
-            if (food._id != null) {
+            if (food._id != null && !food._id.equals("")) {
                 Food old = this.findByNSId(food._id);
 
                 if (old != null) {
@@ -322,11 +322,12 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                         return false;
                     }
                 }
+            } else {
+                this.getDao().createOrUpdate(food);
+                log.debug("FOOD: New record: " + food.toString());
+                this.scheduleFoodChange();
+                return true;
             }
-            this.getDao().createOrUpdate(food);
-            log.debug("FOOD: New record: " + food.toString());
-            this.scheduleFoodChange();
-            return true;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
