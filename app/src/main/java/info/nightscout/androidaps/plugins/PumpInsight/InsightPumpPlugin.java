@@ -83,6 +83,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private TaskRunner taskRunner;
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
+    private boolean fauxTBRcancel = true;
+    private static final long BUSY_WAIT_TIME = 20000;
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
     private Connector connector;
@@ -297,8 +299,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     public void disconnect(String reason) {
         log("InsightPumpPlugin::disconnect()");
         try {
-
-            // TODO Timeout timer?
             if (!SP.getBoolean("insight_always_connected", false)) {
                 log("Requesting disconnect");
                 connector.getServiceConnector().disconnect();
@@ -383,7 +383,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             if (cmd == null) {
                 return pumpEnactFailure();
             }
-            final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+            final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
             result.success = cs.success();
         } else {
             result.success = true; // always true with carb only treatments
@@ -431,7 +431,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
         log("Got command status: " + cs);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(false).duration(durationInMinutes);
@@ -473,7 +473,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
         log("Got command status: " + cs);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
@@ -507,15 +507,26 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         log("Cancel TBR");
-        final UUID cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
 
+
+        fauxTBRcancel = !SP.getBoolean("insight_real_tbr_cancel", false);
+
+        final UUID cmd;
+
+        if (fauxTBRcancel) {
+            final int faux_percent = 90;
+            final int faux_duration = 15;
+            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), faux_percent, 15), "Faux Cancel TBR - setting " + faux_percent + "%" + " " + faux_duration + "m");
+        } else {
+            cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
+        }
         if (cmd == null) {
             return pumpEnactFailure();
         }
 
         // TODO isn't conditional on one apparently being in progress only the history change
         boolean enacted = false;
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             enacted = true;
@@ -547,7 +558,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
         log("Got command status: " + cs);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).bolusDelivered(insulin).duration(durationInMinutes);
@@ -587,7 +598,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, 10000);
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
             ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
