@@ -493,18 +493,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
+        // check pump is ready and all pump bolus records are known
         CommandResult stateResult = runCommand(null, 2, ruffyScripter::readReservoirLevelAndLastBolus);
-        long pumpTimeWhenBolusWasRequested = stateResult .state.pumpTime;
-        if (!stateResult.success || pumpTimeWhenBolusWasRequested == 0) {
+        if (!stateResult.success) {
             return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
+                    .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
         }
-
         if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
         }
-
         // the commands above ensured a connection was made, which updated this field
         if (pumpHistoryChanged) {
             return new PumpEnactResult().success(false).enacted(false)
@@ -529,32 +527,30 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
             bolusInProgress = false;
 
-            // Note that the result of the issues the bolus command is not checked. If there was
+            // Note that the result of the issued bolus command is not checked. If there was
             // a connection problem, ruffyscripter tried to recover and we can just check the
-            // history below
+            // history below to see what was actually delivered
 
             CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
             }
-
-            Bolus lastBolus = postBolusStateResult.lastBolus;
-            if (lastBolus == null || lastBolus.equals(previousBolus)) {
+            Bolus lastPumpBolus = postBolusStateResult.lastBolus;
+            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
             }
-
-            if (Math.abs(lastBolus.amount - detailedBolusInfo.insulin) > 0.01) {
+            if (Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01) {
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered));
             }
 
             // seems we actually made it this far, let's add a treatment record
-            detailedBolusInfo.date = calculateFakeBolusDate(lastBolus);
-            detailedBolusInfo.pumpId = calculateFakeBolusDate(lastBolus);
+            detailedBolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
+            detailedBolusInfo.pumpId = calculateFakeBolusDate(lastPumpBolus);
             detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.insulin = lastBolus.amount;
+            detailedBolusInfo.insulin = lastPumpBolus.amount;
             try {
                 boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 if (!treatmentCreated) {
@@ -579,8 +575,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             return new PumpEnactResult()
                     .success(true)
-                    .enacted(lastBolus.amount > 0)
-                    .bolusDelivered(lastBolus.amount)
+                    .enacted(lastPumpBolus.amount > 0)
+                    .bolusDelivered(lastPumpBolus.amount)
                     .carbsDelivered(detailedBolusInfo.carbs);
         } finally {
             pump.activity = null;
