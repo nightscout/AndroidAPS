@@ -10,7 +10,7 @@ import android.os.Bundle;
  * subscriber.
  */
 
-public class NsFoodEvent extends Event {
+public class EventNsFood extends Event {
 
     public static final int ADD = 0;
     public static final int UPDATE = 1;
@@ -20,7 +20,7 @@ public class NsFoodEvent extends Event {
 
     private final Bundle payload;
 
-    public NsFoodEvent(int mode, Bundle payload) {
+    public EventNsFood(int mode, Bundle payload) {
         this.mode = mode;
         this.payload = payload;
     }

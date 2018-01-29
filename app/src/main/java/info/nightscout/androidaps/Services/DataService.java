@@ -19,7 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.events.NsFoodEvent;
+import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -477,13 +477,13 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
                 || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
-            int mode =  Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? NsFoodEvent.ADD : NsFoodEvent.UPDATE;
-            NsFoodEvent evt = new NsFoodEvent(mode, bundles);
+            int mode =  Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
+            EventNsFood evt = new EventNsFood(mode, bundles);
             MainApp.bus().post(evt);
         }
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            NsFoodEvent evt = new NsFoodEvent(NsFoodEvent.REMOVE, bundles);
+            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
             MainApp.bus().post(evt);
         }
     }

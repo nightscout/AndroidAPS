@@ -32,7 +32,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
-import info.nightscout.androidaps.events.NsFoodEvent;
+import info.nightscout.androidaps.events.EventNsFood;
 
 /**
  * Created by mike on 24.09.2017.
@@ -79,14 +79,14 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     @Subscribe
-    public void handleNsEvent(NsFoodEvent event) {
+    public void handleNsEvent(EventNsFood event) {
         int mode = event.getMode();
         Bundle payload = event.getPayload();
 
         try {
             if (payload.containsKey("food")) {
                 JSONObject json = new JSONObject(payload.getString("food"));
-                if (mode == NsFoodEvent.ADD || mode == NsFoodEvent.UPDATE) {
+                if (mode == EventNsFood.ADD || mode == EventNsFood.UPDATE) {
                     this.createFoodFromJsonIfNotExists(json);
                 } else {
                     this.deleteNS(json);
@@ -95,7 +95,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
             if (payload.containsKey("foods")) {
                 JSONArray array = new JSONArray(payload.getString("foods"));
-                if (mode == NsFoodEvent.ADD || mode == NsFoodEvent.UPDATE) {
+                if (mode == EventNsFood.ADD || mode == EventNsFood.UPDATE) {
                     this.createFoodFromJsonIfNotExists(array);
                 } else {
                     this.deleteNS(array);
