@@ -197,7 +197,7 @@ public class Connector {
 
             case CONNECTED:
                 if (lastStatusTime < 1) {
-                    tryToGetStatusAgain();
+                    tryToGetPumpStatusAgain();
                 }
 
             default:
@@ -226,7 +226,7 @@ public class Connector {
     }
 
     @SuppressWarnings("AccessStaticViaInstance")
-    private void tryToGetStatusAgain() {
+    public void tryToGetPumpStatusAgain() {
         if (Helpers.ratelimit("insight-retry-status-request", 5)) {
             try {
                 MainApp.getConfigBuilder().getCommandQueue().readStatus("Insight. Status missing", null);
