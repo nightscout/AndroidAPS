@@ -31,7 +31,8 @@ public class APSResult {
     public String reason;
     public double rate;
     public int duration;
-    public boolean changeRequested = false;
+    public boolean tempBasalReqested = false;
+    public boolean bolusRequested = false;
     public IobTotal iob;
     public JSONObject json = new JSONObject();
     public boolean hasPredictions = false;
@@ -41,30 +42,49 @@ public class APSResult {
     @Override
     public String toString() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        if (changeRequested) {
+        if (isChangeRequested()) {
+            String ret;
+            // rate
             if (rate == 0 && duration == 0)
-                return MainApp.sResources.getString(R.string.canceltemp);
+                ret = MainApp.sResources.getString(R.string.canceltemp) + "\n";
+            else if (rate == -1)
+                ret = MainApp.sResources.getString(R.string.let_temp_basal_run) + "\n";
             else
-                return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%)\n" +
-                        MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
-                        (smb != 0 ? ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n") : "") +
-                        MainApp.sResources.getString(R.string.reason) + ": " + reason;
+                ret = MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) \n" +
+                        MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to2Decimal(duration) + " min\n";
+
+            // smb
+            if (smb != 0)
+                ret += ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n");
+
+            // reason
+            ret += MainApp.sResources.getString(R.string.reason) + ": " + reason;
+            return ret;
         } else
             return MainApp.sResources.getString(R.string.nochangerequested);
     }
 
     public Spanned toSpanned() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        if (changeRequested) {
-            String ret = "";
-            if (rate == 0 && duration == 0) ret = MainApp.sResources.getString(R.string.canceltemp);
+        if (isChangeRequested()) {
+            String ret;
+            // rate
+            if (rate == 0 && duration == 0)
+                ret = MainApp.sResources.getString(R.string.canceltemp) + "<br>";
+            else if (rate == -1)
+                ret = MainApp.sResources.getString(R.string.let_temp_basal_run) + "<br>";
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
-                        "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
-                        (smb != 0 ? ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>") : "") +
-                        "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
+                      "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
+                      "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
+
+            // smb
+            if (smb != 0)
+                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>");
+
+            // reason
+            ret += "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);
         } else
             return Html.fromHtml(MainApp.sResources.getString(R.string.nochangerequested));
@@ -75,10 +95,11 @@ public class APSResult {
 
     public APSResult clone() {
         APSResult newResult = new APSResult();
-        newResult.reason = new String(reason);
+        newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
+        newResult.tempBasalReqested = tempBasalReqested;
+        newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
         return newResult;
     }
@@ -86,7 +107,7 @@ public class APSResult {
     public JSONObject json() {
         JSONObject json = new JSONObject();
         try {
-            if (changeRequested) {
+            if (isChangeRequested()) {
                 json.put("rate", rate);
                 json.put("duration", duration);
                 json.put("reason", reason);
@@ -194,4 +215,7 @@ public class APSResult {
         return latest;
     }
 
+    public boolean isChangeRequested() {
+        return tempBasalReqested || bolusRequested;
+    }
 }

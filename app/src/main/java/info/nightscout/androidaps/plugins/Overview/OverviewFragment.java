@@ -93,7 +93,6 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
@@ -674,7 +673,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (ConfigBuilderPlugin.getActiveLoop() != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-            if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
+            if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(getContext().getString(R.string.confirmation));
                 builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
@@ -1105,7 +1104,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
-            showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
+            showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && ConfigBuilderPlugin.getActiveLoop() != null) {
                 acceptTempLayout.setVisibility(View.VISIBLE);

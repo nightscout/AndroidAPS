@@ -357,13 +357,8 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
     /**
      * expect absolute request and allow both absolute and percent response based on pump capabilities
-     *
-     * @param request
-     * @return true if command is going to be executed
-     * false if error
      */
-
-    public boolean applyAPSRequest(APSResult request, Callback callback) {
+    public void applyAPSRequest(APSResult request, Callback callback) {
         PumpInterface pump = getActivePump();
         request.rate = applyBasalConstraints(request.rate);
 
@@ -372,7 +367,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
-            return false;
+            return;
         }
 
         if (pump.isSuspended()) {
@@ -380,46 +375,41 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
-            return false;
+            return;
         }
 
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
-        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
-            if (isTempBasalInProgress()) {
+
+        if (request.tempBasalReqested) {
+            if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+                if (isTempBasalInProgress()) {
+                    if (Config.logCongigBuilderActions)
+                        log.debug("applyAPSRequest: cancelTempBasal()");
+                    getCommandQueue().cancelTempBasal(false, callback);
+                } else {
+                    if (Config.logCongigBuilderActions)
+                        log.debug("applyAPSRequest: Basal set correctly");
+                    if (callback != null) {
+                        callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
+                    }
+                }
+            } else if (isTempBasalInProgress()
+                    && getTempBasalRemainingMinutesFromHistory() > 5
+                    && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < pump.getPumpDescription().basalStep) {
                 if (Config.logCongigBuilderActions)
-                    log.debug("applyAPSRequest: cancelTempBasal()");
-                getCommandQueue().cancelTempBasal(false, callback);
-                if (request.smb == 0)
-                    return true;
+                    log.debug("applyAPSRequest: Temp basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(getTempBasalAbsoluteRateHistory()).duration(getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
+                }
             } else {
                 if (Config.logCongigBuilderActions)
-                    log.debug("applyAPSRequest: Basal set correctly");
-                if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
-                }
-                if (request.smb == 0)
-                    return false;
+                    log.debug("applyAPSRequest: setTempBasalAbsolute()");
+                getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
             }
-        } else if (isTempBasalInProgress()
-                && getTempBasalRemainingMinutesFromHistory() > 5
-                && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < pump.getPumpDescription().basalStep) {
-            if (Config.logCongigBuilderActions)
-                log.debug("applyAPSRequest: Temp basal set correctly");
-            if (callback != null) {
-                callback.result(new PumpEnactResult().absolute(getTempBasalAbsoluteRateHistory()).duration(getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
-            }
-            if (request.smb == 0)
-                return false;
-        } else {
-            if (Config.logCongigBuilderActions)
-                log.debug("applyAPSRequest: setTempBasalAbsolute()");
-            getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
-
-            if (request.smb == 0) return true;
         }
-        log.debug("SMB requested in config is: " + request.smb);
-        if (request.smb != 0) {
+
+        if (request.bolusRequested) {
             long lastBolusTime = getLastBolusTime();
             if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
                 log.debug("SMB requsted but still in 3 min interval");
@@ -430,16 +420,10 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 detailedBolusInfo.isSMB = true;
                 detailedBolusInfo.source = Source.USER;
                 detailedBolusInfo.deliverAt = request.deliverAt;
-                boolean smbDelivered = getCommandQueue().bolus(detailedBolusInfo, callback);
-                if (smbDelivered)
-                    return true;
-                else
-                    return false;
+                getCommandQueue().bolus(detailedBolusInfo, callback);
             }
         }
-        return true;
     }
-
 
     /**
      * Constraints interface

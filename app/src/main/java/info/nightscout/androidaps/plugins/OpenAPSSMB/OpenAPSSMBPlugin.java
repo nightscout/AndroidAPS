@@ -246,17 +246,18 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
         Profiler.log(log, "SMB calculation", start);
+        // TODO still needed with oref1?
         // Fix bug determine basal
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
-            determineBasalResultSMB.changeRequested = false;
+            determineBasalResultSMB.tempBasalReqested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel
             } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
-                determineBasalResultSMB.changeRequested = false;
+                determineBasalResultSMB.tempBasalReqested = false;
             } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - pump.getBaseBasalRate()) < 0.1) {
-                determineBasalResultSMB.changeRequested = false;
+                determineBasalResultSMB.tempBasalReqested = false;
             }
         }
 
@@ -278,11 +279,11 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
     }
 
     // safety checks
-    public static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+    private static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
         return value.equals(verifyHardLimits(value, valueName, lowLimit, highLimit));
     }
 
-    public static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+    private static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
         Double newvalue = value;
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit);

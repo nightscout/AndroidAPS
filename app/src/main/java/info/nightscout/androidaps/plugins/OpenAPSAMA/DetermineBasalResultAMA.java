@@ -22,7 +22,7 @@ public class DetermineBasalResultAMA extends APSResult {
         json = j;
         if (result.containsKey("error")) {
             reason = result.get("error").toString();
-            changeRequested = false;
+            tempBasalReqested = false;
             rate = -1;
             duration = -1;
         } else {
@@ -32,19 +32,20 @@ public class DetermineBasalResultAMA extends APSResult {
             if (result.containsKey("rate")) {
                 rate = (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
-                changeRequested = true;
+                tempBasalReqested = true;
             } else {
                 rate = -1;
-                changeRequested = false;
+                tempBasalReqested = false;
             }
             if (result.containsKey("duration")) {
                 duration = ((Double) result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;
-                changeRequested = false;
+                tempBasalReqested = false;
             }
         }
+        bolusRequested = false;
     }
 
     public DetermineBasalResultAMA() {
@@ -54,13 +55,12 @@ public class DetermineBasalResultAMA extends APSResult {
     @Override
     public DetermineBasalResultAMA clone() {
         DetermineBasalResultAMA newResult = new DetermineBasalResultAMA();
-        newResult.reason = new String(reason);
+        newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
+        newResult.tempBasalReqested = tempBasalReqested;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
 
         try {
             newResult.json = new JSONObject(json.toString());

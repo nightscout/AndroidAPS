@@ -315,7 +315,7 @@ public class LoopPlugin implements PluginBase {
             }
 
             if (constraintsInterface.isClosedModeEnabled()) {
-                if (result.changeRequested) {
+                if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     final PumpEnactResult previousResult = lastRun.setByPump;
                     waiting.queued = true;
@@ -339,7 +339,7 @@ public class LoopPlugin implements PluginBase {
                     lastRun.source = null;
                 }
             } else {
-                if (result.changeRequested && allowNotification) {
+                if (result.isChangeRequested() && allowNotification) {
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
                     builder.setSmallIcon(R.drawable.notif_icon)
