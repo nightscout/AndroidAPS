@@ -23,7 +23,7 @@ public class MsgSettingBasal extends MessageBase {
         pump.pumpProfiles[pump.activeProfile] = new double[24];
         for (int index = 0; index < 24; index++) {
             int basal = intFromBuff(bytes, 2 * index, 2);
-            if (basal < DanaRPlugin.pumpDescription.basalMinimumRate) basal = 0;
+            if (basal < DanaRPlugin.getPlugin().pumpDescription.basalMinimumRate) basal = 0;
             pump.pumpProfiles[pump.activeProfile][index] = basal / 100d;
         }
 

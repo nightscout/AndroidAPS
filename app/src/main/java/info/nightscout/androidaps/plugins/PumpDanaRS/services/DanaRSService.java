@@ -131,8 +131,8 @@ public class DanaRSService extends Service {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
             bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
 
-            Date now = new Date();
-            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
+            long now = System.currentTimeMillis();
+            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
                 bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
@@ -357,7 +357,7 @@ public class DanaRSService extends Service {
         bleComm.sendMessage(msgSet);
         DanaRS_Packet_Basal_Set_Profile_Number msgActivate = new DanaRS_Packet_Basal_Set_Profile_Number(0);
         bleComm.sendMessage(msgActivate);
-        danaRPump.lastSettingsRead = new Date(0); // force read full settings
+        danaRPump.lastSettingsRead = 0; // force read full settings
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;

@@ -56,8 +56,8 @@ public class DanaRPump {
     public static final int CARBS = 14;
     public static final int PRIMECANNULA = 15;
 
-    public Date lastConnection = new Date(0);
-    public Date lastSettingsRead = new Date(0);
+    public long lastConnection = 0;
+    public long lastSettingsRead =0;
 
     // Info
     public String serialNumber = "";
