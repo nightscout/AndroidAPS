@@ -288,12 +288,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public long getLastBolusTime() {
+        long now = System.currentTimeMillis();
         long last = 0;
-        for (Integer pos = 0; pos < treatments.size(); pos++) {
-            Treatment t = treatments.get(pos);
-            if (!t.isValid)
-                continue;
-            if (t.date > last)
+        for (Treatment t : treatments) {
+            if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now)
                 last = t.date;
         }
         log.debug("Last bolus time: " + new Date(last).toLocaleString());
