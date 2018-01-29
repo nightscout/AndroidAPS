@@ -861,5 +861,6 @@
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
+    <string name="nav_historybrowser">History browser</string>
 </resources>
 
