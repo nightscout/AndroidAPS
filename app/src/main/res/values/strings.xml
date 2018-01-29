@@ -235,7 +235,7 @@
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
     <string name="pump_lastbolus_label">Last bolus</string>
-    <string name="hoursago">%dh ago</string>
+    <string name="hoursago">%.1fh ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
     <string name="reloadprofile">Reload profile</string>
