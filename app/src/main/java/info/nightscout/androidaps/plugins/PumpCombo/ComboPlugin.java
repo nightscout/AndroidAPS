@@ -345,7 +345,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!pump.initialized) {
             initializePump();
         } else {
-            runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 1, ruffyScripter::readReservoirLevelAndLastBolus);
+            runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 1, ruffyScripter::readQuickInfo);
             // note that since the history is checked upon every connect, the above already updated
             // the DB with any changed history records
         }
@@ -395,9 +395,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         MainApp.bus().post(new EventInitializationChanged());
 
         // ComboFragment updates state fully only after the pump has initialized, so read full state here
-        updateLocalData(runCommand(null, 1, ruffyScripter::readReservoirLevelAndLastBolus));
+        updateLocalData(runCommand(null, 1, ruffyScripter::readQuickInfo));
     }
 
+    /** Updates local cache with state (reservoir level, last bolus ...) returned from the pump */
     private void updateLocalData(CommandResult result) {
         if (result.reservoirLevel != PumpState.UNKNOWN) {
             pump.reservoirLevel = result.reservoirLevel;
@@ -492,7 +493,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
 
         // check pump is ready and all pump bolus records are known
-        CommandResult stateResult = runCommand(null, 2, ruffyScripter::readReservoirLevelAndLastBolus);
+        CommandResult stateResult = runCommand(null, 2, ruffyScripter::readQuickInfo);
         if (!stateResult.success) {
             return new PumpEnactResult().success(false).enacted(false)
                     .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
@@ -531,7 +532,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // a connection problem, ruffyscripter tried to recover and we can just check the
             // history below to see what was actually delivered
 
-            CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readReservoirLevelAndLastBolus);
+            CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readQuickInfo);
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));

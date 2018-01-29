@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.CommandResult;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.WarningOrErrorCode;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
@@ -185,17 +186,18 @@ public class BolusCommand extends BaseCommand {
 
         if (cancelInProgress) {
             log.debug("Stage 4: reading last bolus from pump history since a cancellation was requested during bolus delivery");
-            ReadReservoirLevelAndLastBolus readReservoirLevelAndLastBolus = new ReadReservoirLevelAndLastBolus();
-            readReservoirLevelAndLastBolus.setScripter(scripter);
-            readReservoirLevelAndLastBolus.execute();
-            Bolus lastBolus = readReservoirLevelAndLastBolus.result.history != null && !readReservoirLevelAndLastBolus.result.history.bolusHistory.isEmpty()
-                    ? readReservoirLevelAndLastBolus.result.history.bolusHistory.get(0)
+            ReadQuickInfoCommand readQuickInfoCommand = new ReadQuickInfoCommand();
+            readQuickInfoCommand.setScripter(scripter);
+            readQuickInfoCommand.execute();
+            CommandResult quickInfoResult = readQuickInfoCommand.result;
+            Bolus lastBolus = quickInfoResult.history != null && !quickInfoResult.history.bolusHistory.isEmpty()
+                    ? quickInfoResult.history.bolusHistory.get(0)
                     : null;
             if (lastBolus == null || Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
                 throw new CommandException("Unable to determine last bolus");
             }
             log.debug("Stage 4: " + lastBolus.amount + " U delivered before cancellation according to history");
-            result.delivered = lastBolus.amount;
+            this.result.delivered = lastBolus.amount;
         } else {
             log.debug("Stage 4: full bolus of " + bolus + " U was successfully delivered");
             result.delivered = bolus;

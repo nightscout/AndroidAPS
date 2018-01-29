@@ -15,7 +15,7 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 
-public class ReadReservoirLevelAndLastBolus extends BaseCommand {
+public class ReadQuickInfoCommand extends BaseCommand {
     @Override
     public void execute() {
         scripter.verifyRootMenuIsDisplayed();
@@ -62,6 +62,6 @@ public class ReadReservoirLevelAndLastBolus extends BaseCommand {
 
     @Override
     public String toString() {
-        return "ReadReservoirLevelAndLastBolus{}";
+        return "ReadQuickInfoCommand{}";
     }
 }

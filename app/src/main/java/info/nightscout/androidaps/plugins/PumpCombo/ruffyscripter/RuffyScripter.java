@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.ReadQuickInfoCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.CancelTbrCommand;
@@ -37,7 +38,6 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.Confi
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.ReadBasalProfileCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.ReadHistoryCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.ReadPumpStateCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.ReadReservoirLevelAndLastBolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.SetBasalProfileCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
@@ -48,7 +48,7 @@ import info.nightscout.androidaps.BuildConfig;
  * operations and are cleanly separated from the thread management, connection management etc
  */
 public class RuffyScripter implements RuffyCommands {
-    private final boolean readQuickInfoMenu = true;
+    private final boolean readQuickInfo = true;
 
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
@@ -217,10 +217,10 @@ public class RuffyScripter implements RuffyCommands {
     }
 
     @Override
-    public CommandResult readReservoirLevelAndLastBolus() {
-        if (readQuickInfoMenu) {
+    public CommandResult readQuickInfo() {
+        if (readQuickInfo) {
             Answers.getInstance().logCustom(new CustomEvent("ComboReadQuickInfoCmd"));
-            return runCommand(new ReadReservoirLevelAndLastBolus());
+            return runCommand(new ReadQuickInfoCommand());
         }
         Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd"));
         return runCommand(new ReadHistoryCommand(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
