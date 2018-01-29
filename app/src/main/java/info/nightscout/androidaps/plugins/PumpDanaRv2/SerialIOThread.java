@@ -13,13 +13,14 @@ import java.io.OutputStream;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.PumpDanaR.services.AbstractSerialIOThread;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MessageHashTable_v2;
 import info.nightscout.utils.CRC;
 
 /**
  * Created by mike on 17.07.2016.
  */
-public class SerialIOThread extends Thread {
+public class SerialIOThread extends AbstractSerialIOThread {
     private static Logger log = LoggerFactory.getLogger(SerialIOThread.class);
 
     private InputStream mInputStream = null;
@@ -29,10 +30,10 @@ public class SerialIOThread extends Thread {
     private boolean mKeepRunning = true;
     private byte[] mReadBuff = new byte[0];
 
-    MessageBase processedMessage;
+    private MessageBase processedMessage;
 
     public SerialIOThread(BluetoothSocket rfcommSocket) {
-        super(SerialIOThread.class.toString());
+        super();
 
         mRfCommSocket = rfcommSocket;
         try {
@@ -138,6 +139,7 @@ public class SerialIOThread extends Thread {
         }
     }
 
+    @Override
     public synchronized void sendMessage(MessageBase message) {
         if (!mRfCommSocket.isConnected()) {
             log.error("Socket not connected on sendMessage");
@@ -173,6 +175,7 @@ public class SerialIOThread extends Thread {
         }
     }
 
+    @Override
     public void disconnect(String reason) {
         mKeepRunning = false;
         try {

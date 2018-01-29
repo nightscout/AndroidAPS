@@ -40,6 +40,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         pump.protocol = intFromBuff(bytes, 1, 1);
         pump.productCode = intFromBuff(bytes, 2, 1);
         if (pump.model != DanaRPump.EXPORT_MODEL) {
+            pump.lastConnection = 0;
             Notification notification = new Notification(Notification.WRONG_DRIVER,  MainApp.sResources.getString(R.string.pumpdrivercorrected), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
             MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
@@ -48,7 +49,7 @@ public class MsgCheckValue_v2 extends MessageBase {
             MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginBase.PUMP, true);
             MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentEnabled(PluginBase.PUMP, false);
             MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginBase.PUMP, false);
-            DanaRPump.getInstance().lastConnection = new Date(0); // mark not initialized
+            DanaRPump.getInstance().lastConnection = 0; // mark not initialized
 
             //If profile coming from pump, switch it as well
             if(MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PROFILE)){
@@ -63,6 +64,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         }
 
         if (pump.protocol != 2) {
+            pump.lastConnection = 0;
             Notification notification = new Notification(Notification.WRONG_DRIVER,  MainApp.sResources.getString(R.string.pumpdrivercorrected), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");

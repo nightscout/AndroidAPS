@@ -20,6 +20,7 @@
         <item>@string/el_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
+        <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
         <item>@string/sv_lang</item>
     </string-array>
@@ -33,6 +34,7 @@
         <item>el</item>
         <item>it</item>
         <item>ko</item>
+        <item>ro</item>
         <item>ru</item>
         <item>sv</item>
     </string-array>
