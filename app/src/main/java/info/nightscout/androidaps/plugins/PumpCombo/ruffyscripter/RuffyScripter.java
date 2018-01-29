@@ -219,8 +219,10 @@ public class RuffyScripter implements RuffyCommands {
     @Override
     public CommandResult readReservoirLevelAndLastBolus() {
         if (readQuickInfoMenu) {
+            Answers.getInstance().logCustom(new CustomEvent("ComboReadQuickInfoCmd"));
             return runCommand(new ReadReservoirLevelAndLastBolus());
         }
+        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd"));
         return runCommand(new ReadHistoryCommand(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
     }
 
@@ -819,6 +821,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
+        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd"));
         return runCommand(new ReadHistoryCommand(request));
     }
 
