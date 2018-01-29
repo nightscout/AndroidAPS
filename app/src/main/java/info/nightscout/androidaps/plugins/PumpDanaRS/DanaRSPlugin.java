@@ -348,7 +348,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Nullable
     @Override
     public ProfileStore getProfile() {
-        if (pump.lastSettingsRead.getTime() == 0)
+        if (pump.lastSettingsRead == 0)
             return null; // no info now
         return pump.createConvertedProfile();
     }
@@ -367,7 +367,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection.getTime() > 0  && pump.maxBasal > 0;
+        return pump.lastConnection > 0  && pump.maxBasal > 0;
     }
 
     @Override
@@ -438,7 +438,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public Date lastDataTime() {
-        return pump.lastConnection;
+        return new Date(pump.lastConnection);
     }
 
     @Override
@@ -753,7 +753,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public JSONObject getJSONStatus() {
-        if (pump.lastConnection.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (pump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
         JSONObject pumpjson = new JSONObject();
@@ -812,8 +812,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Override
     public String shortStatus(boolean veryShort) {
         String ret = "";
-        if (pump.lastConnection.getTime() != 0) {
-            Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
+        if (pump.lastConnection != 0) {
+            Long agoMsec = System.currentTimeMillis() - pump.lastConnection;
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
