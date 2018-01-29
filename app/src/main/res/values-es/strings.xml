@@ -214,7 +214,6 @@
     <string name="danar_iob_label">Bomba IOB</string>
     <string name="danar_dailyunits">Unidades diarias</string>
     <string name="pump_lastbolus_label">Último bolo:</string>
-    <string name="hoursago">h antes</string>
     <string name="danar_invalidinput">Datos invalidos</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="reloadprofile">Recargar Perfil</string>

@@ -633,7 +633,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         if (pumpHistoryChanged && percent > 110) {
             return new PumpEnactResult().success(false).enacted(false)
-                    .comment("Rejecting high temp since calculation didn't consider recently changed pump history");
+                    .comment(MainApp.gs(R.string.combo_high_temp_rejected_due_to_pump_history_changes));
         }
 
         int adjustedPercent = percent;

@@ -75,8 +75,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh_button:
-                // TODO why is activity in ComboPump?
-                ComboPlugin.getPlugin().getPump().activity = MainApp.gs(R.string.combo_pump_action_refreshing);
                 ConfigBuilderPlugin.getCommandQueue().readStatus("User request", null);
                 break;
             case R.id.combo_alerts_button:
@@ -213,19 +211,16 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
                         long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                         double bolusMinAgo = agoMsc / 60d / 1000d;
-                        double bolusHoursAgo = agoMsc / 60d / 60d / 1000d;
-                        // TODO i18n
+                        String unit = MainApp.gs(R.string.treatments_wizard_unit_label);
+                        String ago;
                         if ((agoMsc < 60 * 1000)) {
-                            lastBolusView.setText(String.format("%.1f U (now)", bolus.amount));
+                            ago = MainApp.gs(R.string.combo_pump_connected_now);
                         } else if (bolusMinAgo < 60) {
-                            lastBolusView.setText(String.format("%.1f U (%d min ago)", bolus.amount, (int) bolusMinAgo));
-//                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,
-//                                    getString(R.string.minago, bolusMinAgo), DateUtil.timeString(bolus.timestamp)));
+                            ago = DateUtil.minAgo(bolus.timestamp);
                         } else {
-                            lastBolusView.setText(String.format("%.1f U (%.1f h ago)", bolus.amount, bolusHoursAgo));
-//                            lastBolusView.setText(getString(R.string.combo_last_bolus, bolus.amount,
-//                                    String.format("%.1f", bolusHoursAgo) + getString(R.string.hoursago), DateUtil.timeString(bolus.timestamp)));
+                            ago = DateUtil.hourAgo(bolus.timestamp);
                         }
+                        lastBolusView.setText(MainApp.gs(R.string.combo_last_bolus, bolus.amount, unit, ago));
                     } else {
                         lastBolusView.setText("");
                     }

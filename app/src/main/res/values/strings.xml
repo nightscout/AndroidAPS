@@ -235,7 +235,7 @@
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
     <string name="pump_lastbolus_label">Last bolus</string>
-    <string name="hoursago">h ago</string>
+    <string name="hoursago">%dh ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
     <string name="reloadprofile">Reload profile</string>
@@ -820,7 +820,7 @@
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
-    <string name="combo_last_bolus">%.1f U (%s, %s)</string>
+    <string name="combo_last_bolus">%.1f %s (%s)</string>
     <string name="combo_pump_state_initializing">Initializing</string>
     <string name="combo_pump_state_disconnected">Disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
@@ -869,5 +869,6 @@
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait a minute since boluses with the same amount are blocked when requested with less than tow minutes between them for safety (regardless of whether they were administered or not).</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejecting high temp since calculation didn\'t consider recently changed pump history</string>
 </resources>
 

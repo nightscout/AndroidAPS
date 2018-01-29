@@ -419,7 +419,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="overview_calibration">Kalibratie</string>
     <string name="danar_stats_olddata_Message">Oude gegevens druk \"VERNIEUW\" a.u.b.</string>
-    <string name="hoursago">u geleden</string>
     <string name="minago">%d min geleden</string>
     <string name="reason">Berekening</string>
     <string name="rate">Dosis</string>
