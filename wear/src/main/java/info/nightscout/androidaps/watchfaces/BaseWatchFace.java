@@ -636,8 +636,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             chart.setLineChartData(bgGraphBuilder.lineData());
             chart.setViewportCalculationEnabled(true);
             chart.setMaximumViewport(chart.getMaximumViewport());
-        } else {
-            //ListenerService.requestData(this);
         }
     }
 
