@@ -21,6 +21,8 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -120,6 +122,7 @@ public class DanaRFragment extends SubscriberFragment {
 
     @OnClick(R.id.danar_btconnection) void onBtConnectionClick() {
         log.debug("Clicked connect to pump");
+        DanaRPump.getInstance().lastConnection = 0;
         ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);
     }
 
@@ -181,8 +184,8 @@ public class DanaRFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     DanaRPump pump = DanaRPump.getInstance();
-                    if (pump.lastConnection.getTime() != 0) {
-                        Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
+                    if (pump.lastConnection != 0) {
+                        Long agoMsec = System.currentTimeMillis() - pump.lastConnection;
                         int agoMin = (int) (agoMsec / 60d / 1000d);
                         lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
