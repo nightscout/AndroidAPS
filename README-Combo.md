@@ -86,7 +86,7 @@ Setup:
 Usage:
 - Keep in mind that this is not a product, esp. in the beginning the user needs to monitor and understand the system,
   its limitations and how it can fail. It is strongly advised NOT to use this system when the person
-  using is not able to fully understand the system.
+  using it is not able to fully understand the system.
 - This integration uses the same functionality which the meter provides that comes with the Combo.
   The meter allows to mirror the pump screen and forwards button presses to the pump. The connection
   to the pump and this forwarding is what the ruffy app does. A `scripter` components reads the screen

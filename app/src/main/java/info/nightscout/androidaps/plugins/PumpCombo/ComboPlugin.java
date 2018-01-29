@@ -98,8 +98,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private Bolus lastRequestedBolus;
 
-    /** this is set whenever a connection to the pump is made and indicates if new history
-       records on the pump have been found */
+    /**
+     * This is set whenever a connection to the pump is made and indicates if new history
+     * records on the pump have been found. This effectively blocks high temps and boluses
+     * till the queue is empty and the connection is shut down. The next reconnect will
+     * then reset this flag. This might cause some grief when attempting to bolus again within
+     * the 5s of idling it takes before the connecting is shut down.
+     */
     private volatile boolean pumpHistoryChanged = false;
     private volatile long timestampOfLastKnownPumpBolusRecord;
 
@@ -362,7 +367,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_refreshing),1, ruffyScripter::readPumpState);
+        CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_refreshing),1, ruffyScripter::readQuickInfo);
         if (!stateResult.success) {
             return;
         }
@@ -394,8 +399,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pump.initialized = true;
         MainApp.bus().post(new EventInitializationChanged());
 
-        // ComboFragment updates state fully only after the pump has initialized, so read full state here
-        updateLocalData(runCommand(null, 1, ruffyScripter::readQuickInfo));
+        // ComboFragment updates state fully only after the pump has initialized,
+        // so force an update after initialization completed
+        updateLocalData(stateResult);
     }
 
     /** Updates local cache with state (reservoir level, last bolus ...) returned from the pump */
