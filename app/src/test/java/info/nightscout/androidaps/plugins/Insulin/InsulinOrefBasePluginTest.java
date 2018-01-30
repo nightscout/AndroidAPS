@@ -47,11 +47,33 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
         assertEquals(expected, this.iobCalcForTreatment(treatment, 0, 0d));
 
         this.peak = 30;
+        this.dia = 4;
         long time = System.currentTimeMillis();
+
+        // check directly after bolus
+        treatment.date = time;
+        treatment.insulin = 10d;
+        assertEquals(10d, this.iobCalcForTreatment(treatment, time).iobContrib, 0.1);
+
+        // check after 1 hour
         treatment.date = time - 1 * 60 * 60 * 1000; // 1 hour
         treatment.insulin = 10d;
-
         assertEquals(3.92, this.iobCalcForTreatment(treatment, time).iobContrib, 0.1);
+
+        // check after 2 hour
+        treatment.date = time - 2 * 60 * 60 * 1000; // 1 hour
+        treatment.insulin = 10d;
+        assertEquals(0.77, this.iobCalcForTreatment(treatment, time).iobContrib, 0.1);
+
+        // check after 3 hour
+        treatment.date = time - 3 * 60 * 60 * 1000; // 1 hour
+        treatment.insulin = 10d;
+        assertEquals(0.10, this.iobCalcForTreatment(treatment, time).iobContrib, 0.1);
+
+        // check after dia
+        treatment.date = time - 4 * 60 * 60 * 1000;
+        treatment.insulin = 10d;
+        assertEquals(0d, this.iobCalcForTreatment(treatment, time).iobContrib, 0.1);
     }
 
 
