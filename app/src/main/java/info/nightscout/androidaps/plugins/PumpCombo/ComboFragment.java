@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.StringUtils;
+
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.MainApp;
@@ -193,7 +195,13 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
             // activity
             String activity = plugin.getPump().activity;
-            activityView.setText(activity != null ? activity : "");
+            if (StringUtils.isNotEmpty(activity)) {
+                activityView.setTextSize(14);
+                activityView.setText(activity);
+            } else {
+                activityView.setTextSize(18);
+                activityView.setText("{fa-bed}");
+            }
 
             if (plugin.isInitialized()) {
                 refreshButton.setVisibility(View.VISIBLE);
