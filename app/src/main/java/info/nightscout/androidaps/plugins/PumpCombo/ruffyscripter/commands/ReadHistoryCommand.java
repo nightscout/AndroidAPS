@@ -20,8 +20,6 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHi
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tbr;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
 
-// Note: TBRs are added to history only after they've completed running
-// TODO remove duplication
 public class ReadHistoryCommand extends BaseCommand {
     private static Logger log = LoggerFactory.getLogger(ReadHistoryCommand.class);
 
@@ -78,7 +76,7 @@ public class ReadHistoryCommand extends BaseCommand {
                 }
             }
 
-            // tdd history
+            // tdd history (TBRs are added to history only after they've completed running)
             scripter.pressMenuKey();
             scripter.verifyMenuIsDisplayed(MenuType.DAILY_DATA);
             if (request.tddHistory != PumpHistoryRequest.SKIP) {
@@ -234,16 +232,6 @@ public class ReadHistoryCommand extends BaseCommand {
         }
     }
 
-    @NonNull
-    private Bolus readBolusRecord() {
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
-        BolusType bolusType = (BolusType) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
-        boolean isValid = bolusType == BolusType.NORMAL;
-        Double bolus = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
-        long recordDate = readRecordDate();
-        return new Bolus(recordDate, bolus, isValid);
-    }
-
     private void readAlertRecords(long requestedTime) {
         int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
@@ -275,22 +263,6 @@ public class ReadHistoryCommand extends BaseCommand {
         String message = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
         long recordDate = readRecordDate();
         return new PumpAlert(recordDate, warningCode, errorCode, message);
-    }
-
-    private long readRecordDate() {
-        MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
-        MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
-
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        if (date.getMonth() > Calendar.getInstance().get(Calendar.MONTH) + 1) {
-            year -= 1;
-        }
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), 0);
-
-        // round to second
-        return calendar.getTimeInMillis() - calendar.getTimeInMillis() % 1000;
-
     }
 
     @Override

@@ -1,11 +1,21 @@
 package info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands;
 
+import android.support.annotation.NonNull;
+
+import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
+import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
+import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
+import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuDate;
+import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
+
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.CommandResult;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 
 public abstract class BaseCommand implements Command {
     // RS will inject itself here
@@ -45,5 +55,31 @@ public abstract class BaseCommand implements Command {
     @Override
     public CommandResult getResult() {
         return result;
+    }
+
+    @NonNull
+    protected Bolus readBolusRecord() {
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_DATA);
+        BolusType bolusType = (BolusType) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_TYPE);
+        boolean isValid = bolusType == BolusType.NORMAL;
+        Double bolus = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
+        long recordDate = readRecordDate();
+        return new Bolus(recordDate, bolus, isValid);
+    }
+
+    protected long readRecordDate() {
+        MenuDate date = (MenuDate) scripter.getCurrentMenu().getAttribute(MenuAttribute.DATE);
+        MenuTime time = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.TIME);
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        if (date.getMonth() > Calendar.getInstance().get(Calendar.MONTH) + 1) {
+            year -= 1;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), 0);
+
+        // round to second
+        return calendar.getTimeInMillis() - calendar.getTimeInMillis() % 1000;
+
     }
 }
