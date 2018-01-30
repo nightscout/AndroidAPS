@@ -239,11 +239,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     public void createFoodFromJsonIfNotExists(Food food) {
-        try {
-            this.getDao().createOrUpdate(food);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
+        this.createOrUpdateByNS(food);
     }
 
     public void deleteNS(JSONObject json) {
@@ -305,33 +301,46 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
      * @return
      */
     public boolean createOrUpdateByNS(Food food) {
-        try {
-            // find by NS _id
-            if (food._id != null && !food._id.equals("")) {
-                Food old = this.findByNSId(food._id);
+        // find by NS _id
+        if (food._id != null && !food._id.equals("")) {
+            Food old = this.findByNSId(food._id);
 
-                if (old != null) {
-                    if (!old.isEqual(food)) {
-                        this.delete(old); // need to delete/create because date may change too
-                        old.copyFrom(food);
-                        this.getDao().create(old);
-                        log.debug("FOOD: Updating record by _id: " + old.toString());
-                        this.scheduleFoodChange();
-                        return true;
-                    } else {
-                        return false;
-                    }
+            if (old != null) {
+                if (!old.isEqual(food)) {
+                    this.delete(old); // need to delete/create because date may change too
+                    old.copyFrom(food);
+                    this.create(old);
+                    return true;
+                } else {
+                    return false;
                 }
-            } else {
-                this.getDao().createOrUpdate(food);
-                log.debug("FOOD: New record: " + food.toString());
-                this.scheduleFoodChange();
-                return true;
             }
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+        } else {
+            this.createOrUpdate(food);
+            return true;
         }
+
         return false;
+    }
+
+    public void createOrUpdate(Food food) {
+        try {
+            this.getDao().createOrUpdate(food);
+            log.debug("FOOD: Created or Updated: " + food.toString());
+        } catch (SQLException e) {
+            log.error("Unable to createOrUpdate Food", e);
+        }
+        this.scheduleFoodChange();
+    }
+
+    public void create(Food food) {
+        try {
+            this.getDao().create(food);
+            log.debug("FOOD: New record: " + food.toString());
+        } catch (SQLException e) {
+            log.error("Unable to create Food", e);
+        }
+        this.scheduleFoodChange();
     }
 
     /**

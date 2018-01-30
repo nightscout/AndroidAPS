@@ -236,7 +236,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-//            resetFood();
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);

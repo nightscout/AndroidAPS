@@ -121,7 +121,8 @@ public class FoodFragment extends SubscriberFragment {
                 }
             });
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getSpecificPlugin(FoodPlugin.class).getService().getFoodData());
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp
+                    .getSpecificPlugin(FoodPlugin.class).getService().getFoodData());
             recyclerView.setAdapter(adapter);
 
             loadData();

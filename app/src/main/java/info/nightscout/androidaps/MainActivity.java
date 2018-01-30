@@ -42,6 +42,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
@@ -367,6 +368,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 MainApp.getDbHelper().resetDatabases();
+                                                // should be handled by Plugin-Interface and
+                                                // additional service interface and plugin registry
+                                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().resetFood();
                                             }
                                         })
                                         .create()
