@@ -997,7 +997,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private boolean updateDbFromPumpHistory(@NonNull PumpHistory history) {
         boolean updated = false;
-        // Bolus
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
             dbi.date = calculateFakeBolusDate(pumpBolus);
@@ -1009,21 +1008,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 updated = true;
             }
         }
-
-        // TBRs
-        for (Tbr pumpTbr : history.tbrHistory) {
-            TemporaryBasal temporaryBasal = new TemporaryBasal();
-            temporaryBasal.date = pumpTbr.timestamp;
-            temporaryBasal.pumpId = pumpTbr.timestamp + pumpTbr.percent;
-            temporaryBasal.source = Source.PUMP;
-            temporaryBasal.percentRate = pumpTbr.percent;
-            temporaryBasal.durationInMinutes = pumpTbr.duration;
-            temporaryBasal.isAbsolute = false;
-            if (MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal)) {
-                updated = true;
-            }
-        }
-
         return updated;
     }
 
