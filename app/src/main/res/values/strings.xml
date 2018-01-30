@@ -854,7 +854,7 @@
     <string name="combo_notification_check_time_date">Pump clock update needed</string>
     <string name="combo_history">History</string>
     <string name="combo_warning">Warning</string>
-    <string name="combo_read_full_history_info">Long press this button to force a full read of history and basal profile from the pump. This is generally not needed, but can be useful if the pump\'s date and time was significantly off or the basal profile was changed on the pump (which should never be done under normal circumstances).</string>
+    <string name="combo_read_full_history_info">Long press this button to force a full read of history and basal profile from the pump. This is generally not needed, but can be useful if the pump\'s date and time changed significantly or the pump was replaced.</string>
     <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in \"My Data\" and  the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
     <string name="combo_read_full_history_confirmation">Are you really sure you want to read all pump data and take the consequences of this action?</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
@@ -870,5 +870,9 @@
     <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait a minute since boluses with the same amount are blocked when requested with less than tow minutes between them for safety (regardless of whether they were administered or not).</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejecting high temp since calculation didn\'t consider recently changed pump history</string>
+    <string name="combo_activity_checking_pump_state">Refreshing pump state</string>
+    <string name="combo_warning_pump_basal_rate_changed">The basal rate on the pump has changed and will be updated soon</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Basal rate changed on pump, but reading it failed</string>
+    <string name="combo_activity_checking_for_history_changes">Checking for history changes</string>
 </resources>
 

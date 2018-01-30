@@ -1021,30 +1021,46 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return pumpBolus.timestamp + (Math.min((int) (pumpBolus.amount - 0.1) * 10 * 1000, 59 * 1000));
     }
 
-    // TODO queue
-    void readTddData() {
-        readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
+    // TODO use queue once ready
+    void readTddData(Callback post) {
+//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
+//            @Override
+//            public void run() {
+                readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
+//            }
+//        }, post);
+        post.run();
         ruffyScripter.disconnect();
     }
 
-    // TODO queue
-    void readAlertData() {
-        readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
+    // TODO use queue once ready
+    void readAlertData(Callback post) {
+//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
+//            @Override
+//            public void run() {
+                readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
+//            }
+//        }, post);
+        post.run();
         ruffyScripter.disconnect();
     }
 
-    // TODO queue
-    void readAllPumpData() {
-        readHistory(new PumpHistoryRequest()
-                .bolusHistory(PumpHistoryRequest.FULL)
-//                .tbrHistory(PumpHistoryRequest.FULL)
-                .pumpErrorHistory(PumpHistoryRequest.FULL)
-                .tddHistory(PumpHistoryRequest.FULL)
-        );
-        CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
-        if (readBasalResult.success) {
-            pump.basalProfile = readBasalResult.basalProfile;
-        }
+    // TODO use queue once ready
+    void readAllPumpData(Callback post) {
+//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
+//            @Override
+//            public void run() {
+                readHistory(new PumpHistoryRequest()
+                        .bolusHistory(PumpHistoryRequest.FULL)
+                        .pumpErrorHistory(PumpHistoryRequest.FULL)
+                        .tddHistory(PumpHistoryRequest.FULL));
+                CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
+                if (readBasalResult.success) {
+                    pump.basalProfile = readBasalResult.basalProfile;
+                }
+//            }
+//        }, post);
+        post.run();
         ruffyScripter.disconnect();
     }
 
@@ -1061,13 +1077,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return null;
         }
 
-        // TODO maybe optimize for the default case where no new records exists by checking quick info;
-        // and only read My Data history when quick info shows a new record
+        // OPTIMIZE this reads the entire history on start, so this could be optimized by persisting
+        // `timestampOfLastKnownPumpBolusRecord`, though this should be thought through, to make sure
+        // all scenarios are covered
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest()
                         .bolusHistory(timestampOfLastKnownPumpBolusRecord)));
         if (!historyResult.success) {
-            return;
+            return historyResult;
         }
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
@@ -1076,8 +1093,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
            timestampOfLastKnownPumpBolusRecord = historyResult.history.bolusHistory.get(0).timestamp;
         }
 
-        long end = System.currentTimeMillis();
-        log.debug("History check took: " + ((end - start) / 1000) + "s");
+        return null;
     }
 
     @Override
