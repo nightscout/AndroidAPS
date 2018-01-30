@@ -58,9 +58,9 @@ public class ReadHistoryCommand extends BaseCommand {
             }
         }
 
-        if (request.pumpErrorHistory == PumpHistoryRequest.SKIP
-                && request.tddHistory == PumpHistoryRequest.SKIP
-                && request.tbrHistory == PumpHistoryRequest.SKIP) {
+        if (request.pumpErrorHistory != PumpHistoryRequest.SKIP
+                || request.tddHistory != PumpHistoryRequest.SKIP
+                || request.tbrHistory != PumpHistoryRequest.SKIP) {
             // error history
             scripter.pressMenuKey();
             scripter.verifyMenuIsDisplayed(MenuType.ERROR_DATA);
