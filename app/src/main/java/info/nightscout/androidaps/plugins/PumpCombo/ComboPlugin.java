@@ -829,7 +829,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         checkAndResolveTbrMismatch(preCheckResult.state);
         checkPumpTime(preCheckResult.state);
         checkBasalRate(preCheckResult.state);
-        checkHistory();
+        CommandResult historyCheckError = checkHistory();
+        if (historyCheckError != null) {
+            return historyCheckError;
+        }
 
         return null;
     }
@@ -840,12 +843,18 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // no cached profile to compare against
             return;
         }
+        if (state.unsafeUsageDetected != PumpState.SAFE_USAGE) {
+            // with an extended or multiwavo bolus running it's not (easily) possible
+            // to infer base basal rate and not supported either. Also don't compare
+            // if set basal rate profile is != -1.
+            return;
+        }
         if (state.tbrActive && state.tbrPercent == 0) {
             // can't infer base basal rate if TBR is 0
             return;
         }
         double pumpBasalRate = state.tbrActive
-                ? state.basalRate * 100 / state.tbrPercent
+                ? Math.round(state.basalRate * 100 / state.tbrPercent * 100) / 100d
                 : state.basalRate;
         int pumpHour = new Date(state.pumpTime).getHours();
         int phoneHour = new Date().getHours();
@@ -854,10 +863,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
 
-        if (pumpBasalRate != getBaseBasalRate()) {
+        if (Math.abs(pumpBasalRate - getBaseBasalRate()) > 0.001) {
             CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
             if (readBasalResult.success) {
                 pump.basalProfile = readBasalResult.basalProfile;
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_warning_pump_basal_rate_changed), Notification.NORMAL);
+                MainApp.bus().post(new EventNewNotification(notification));
+            } else {
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_failure_reading_changed_basal_rate), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
             }
         }
     }
