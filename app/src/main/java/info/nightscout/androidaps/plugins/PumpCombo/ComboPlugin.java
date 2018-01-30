@@ -151,13 +151,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         PumpState ps = pump.state;
         if (!validBasalRateProfileSelectedOnPump) {
             return MainApp.gs(R.string.loopdisabled);
+        } else if (!pump.initialized) {
+            return MainApp.gs(R.string.combo_pump_state_initializing);
         } else if (ps.activeAlert != null) {
             return ps.activeAlert.errorCode != null
                     ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
                     : "W" + ps.activeAlert.warningCode + ": " + ps.activeAlert.message;
-        } else if (ps.menu == null)
-            return MainApp.gs(R.string.combo_pump_state_initializing);
-        else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
+        } else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
             return MainApp.gs(R.string.combo_pump_state_suspended_due_to_error);
         else if (ps.suspended)
             return MainApp.gs(R.string.combo_pump_state_suspended_by_user);
