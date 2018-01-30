@@ -75,7 +75,6 @@ public class RuffyScripter implements RuffyCommands {
 
         @Override
         public void fail(String message) throws RemoteException {
-            // TODO 10-28 19:50:54.059  1426  1826 W RuffyScripter: [Thread-268] WARN  [info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.RuffyScripter$1:78]: Ruffy warns: no connection possible
             log.warn("Ruffy warns: " + message);
         }
 
@@ -845,21 +844,6 @@ public class RuffyScripter implements RuffyCommands {
     @Override
     public CommandResult setDateAndTime() {
         throw new RuntimeException("Not supported");
-    }
-
-    @Override
-    public void requestPairing() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void sendAuthKey(String key) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void unpair() {
-        throw new UnsupportedOperationException();
     }
 
     /**

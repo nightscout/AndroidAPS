@@ -45,13 +45,5 @@ public interface RuffyCommands {
     CommandResult getDateAndTime();
 
     CommandResult setDateAndTime();
-
-    // TODO below methods are drafts
-    void requestPairing();
-
-    /** Send the key displayed on the pump during pairing/bonding. */
-    void sendAuthKey(String key);
-
-    void unpair();
 }
 
