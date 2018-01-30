@@ -8,21 +8,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BasalProfile;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BolusProgressReporter;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpWarningCodes;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.RuffyCommands;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.WarningOrErrorCode;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tbr;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -44,6 +33,18 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpWarningCodes;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.RuffyCommands;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.WarningOrErrorCode;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -350,9 +351,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!pump.initialized) {
             initializePump();
         } else {
-            runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 1, ruffyScripter::readQuickInfo);
-            // note that since the history is checked upon every connect, the above already updated
-            // the DB with any changed history records
+            // trigger a connect, which will update state and check history
+            runCommand(null, 3, ruffyScripter::readPumpState);
         }
     }
 
@@ -367,7 +367,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_refreshing),1, ruffyScripter::readQuickInfo);
+        // trigger a connect, which will update state and check history
+        CommandResult stateResult = runCommand(null,1, ruffyScripter::readPumpState);
         if (!stateResult.success) {
             return;
         }
@@ -1060,8 +1061,18 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         ruffyScripter.disconnect();
     }
 
-    private void checkHistory() {
-        long start = System.currentTimeMillis();
+    /**
+     * Reads QuickInfo to update reservoir level and determine if new boluses exist on the pump
+     * and if so, queries the history for all new records.
+     *
+     * @return null on success or the failed command result
+     */
+    private CommandResult checkHistory() {
+        CommandResult quickInfoResult = runCommand(MainApp.gs(R.string.combo_activity_checking_for_history_changes), 3, ruffyScripter::readQuickInfo);
+        if (quickInfoResult.history != null && !quickInfoResult.history.bolusHistory.isEmpty()
+                && quickInfoResult.history.bolusHistory.get(0).timestamp == timestampOfLastKnownPumpBolusRecord) {
+            return null;
+        }
 
         // TODO maybe optimize for the default case where no new records exists by checking quick info;
         // and only read My Data history when quick info shows a new record
