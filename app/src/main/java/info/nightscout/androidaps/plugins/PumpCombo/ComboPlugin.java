@@ -735,22 +735,25 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     /**
      * Runs a command, sets an activity if provided, retries if requested and updates fields
      * concerned with last connection.
-     * NO history, reservoir level fields are updated, this make be done separately if desired.
+     * Local cache (history, reservoir level, pump state) are updated via #updateLocalData()
+     * if returned by a command.
      */
     private synchronized CommandResult runCommand(String activity, int retries, CommandExecution commandExecution) {
         CommandResult commandResult;
         try {
-            if (activity != null) {
-                pump.activity = activity;
-                MainApp.bus().post(new EventComboPumpUpdateGUI());
-            }
-
             if (!ruffyScripter.isConnected()) {
+                pump.activity = MainApp.gs(R.string.combo_activity_checking_pump_state);
+                MainApp.bus().post(new EventComboPumpUpdateGUI());
                 CommandResult preCheckError = runOnConnectChecks();
                 if (preCheckError != null) {
                     updateLocalData(preCheckError);
                     return preCheckError;
                 }
+            }
+
+            if (activity != null) {
+                pump.activity = activity;
+                MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
 
             commandResult = commandExecution.execute();
