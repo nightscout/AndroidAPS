@@ -148,10 +148,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     String getStateSummary() {
         PumpState ps = pump.state;
-        if (!validBasalRateProfileSelectedOnPump) {
-            return MainApp.gs(R.string.loopdisabled);
-        } else if (!pump.initialized) {
+        if (!pump.initialized) {
             return MainApp.gs(R.string.combo_pump_state_initializing);
+        } else if (!validBasalRateProfileSelectedOnPump) {
+            return MainApp.gs(R.string.loopdisabled);
         } else if (ps.activeAlert != null) {
             return ps.activeAlert.errorCode != null
                     ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
@@ -401,7 +401,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
-        updateLocalData(stateResult);
+        updateLocalData(runCommand(null, 1, ruffyScripter::readQuickInfo));
     }
 
     /** Updates local cache with state (reservoir level, last bolus ...) returned from the pump */
