@@ -824,6 +824,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private CommandResult runOnConnectChecks() {
         // connect, get status and check if an alarm is active
         CommandResult preCheckResult = ruffyScripter.readPumpState();
+        for (int retries = 2; !preCheckResult.success && retries > 0; retries--) {
+            preCheckResult = ruffyScripter.readPumpState();
+        }
         if (!preCheckResult.success) {
             return preCheckResult;
         }
@@ -1115,6 +1118,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 && quickInfoResult.history.bolusHistory.get(0).timestamp == timestampOfLastKnownPumpBolusRecord) {
             return null;
         }
+
+        // TODO still regularly continues even though no changes on pump exist ...
 
         // OPTIMIZE this reads the entire history on start, so this could be optimized by persisting
         // `timestampOfLastKnownPumpBolusRecord`, though this should be thought through, to make sure
