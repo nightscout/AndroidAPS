@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
-import sugar.free.sightparser.applayer.AppLayerMessage;
-import sugar.free.sightparser.applayer.remote_control.ChangeTBRMessage;
-import sugar.free.sightparser.applayer.remote_control.SetTBRMessage;
-import sugar.free.sightparser.applayer.status.CurrentBasalMessage;
-import sugar.free.sightparser.applayer.status.CurrentTBRMessage;
+import sugar.free.sightparser.applayer.messages.AppLayerMessage;
+import sugar.free.sightparser.applayer.messages.remote_control.ChangeTBRMessage;
+import sugar.free.sightparser.applayer.messages.remote_control.SetTBRMessage;
+import sugar.free.sightparser.applayer.messages.status.CurrentBasalMessage;
+import sugar.free.sightparser.applayer.messages.status.CurrentTBRMessage;
 import sugar.free.sightparser.handling.SightServiceConnector;
 import sugar.free.sightparser.handling.TaskRunner;
 

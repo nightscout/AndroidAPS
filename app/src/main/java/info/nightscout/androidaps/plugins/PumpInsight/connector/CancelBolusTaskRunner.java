@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.PumpInsight.connector;
 
-import sugar.free.sightparser.applayer.AppLayerMessage;
+import sugar.free.sightparser.applayer.messages.AppLayerMessage;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
-import sugar.free.sightparser.applayer.remote_control.CancelBolusMessage;
-import sugar.free.sightparser.applayer.status.ActiveBolusesMessage;
+import sugar.free.sightparser.applayer.messages.remote_control.CancelBolusMessage;
+import sugar.free.sightparser.applayer.messages.status.ActiveBolusesMessage;
 import sugar.free.sightparser.handling.SightServiceConnector;
 import sugar.free.sightparser.handling.TaskRunner;
 
