@@ -538,7 +538,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // a connection problem, ruffyscripter tried to recover and we can just check the
             // history below to see what was actually delivered
 
-            // get last bolus from pump histqry for verification
+            // get last bolus from pump history for verification
             CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readQuickInfo);
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
@@ -571,7 +571,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     return new PumpEnactResult().success(true).enacted(true);
                 }
                 return new PumpEnactResult().success(false).enacted(true)
-                        .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered));
+                        .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered,
+                                lastPumpBolus.amount, detailedBolusInfo.insulin));
             }
 
             // full bolus was delivered successfully
@@ -594,15 +595,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * but if they do, the user should be warned since a bolus will be missing from calculations.
      */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
-        detailedBolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
-        detailedBolusInfo.pumpId = calculateFakeBolusDate(lastPumpBolus);
-        detailedBolusInfo.source = Source.PUMP;
-        detailedBolusInfo.insulin = lastPumpBolus.amount;
+        DetailedBolusInfo dbi = detailedBolusInfo.copy();
+        dbi.date = calculateFakeBolusDate(lastPumpBolus);
+        dbi.pumpId = calculateFakeBolusDate(lastPumpBolus);
+        dbi.source = Source.PUMP;
+        dbi.insulin = lastPumpBolus.amount;
         try {
-            boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(dbi);
             if (!treatmentCreated) {
-                log.error("Adding treatment record overrode an existing necord: " + detailedBolusInfo);
-                if (detailedBolusInfo.isSMB) {
+                log.error("Adding treatment record overrode an existing record: " + dbi);
+                if (dbi.isSMB) {
                     Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 }
@@ -610,7 +612,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
-            if (detailedBolusInfo.isSMB) {
+            if (dbi.isSMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
             }
