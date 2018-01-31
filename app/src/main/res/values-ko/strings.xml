@@ -225,7 +225,6 @@
     <string name="danar_iob_label">펌프 IOB</string>
     <string name="danar_dailyunits">일 인슐린 총량</string>
     <string name="pump_lastbolus_label">최근 식사주입:</string>
-    <string name="hoursago">시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
     <string name="reloadprofile">Reload profile</string>

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.List;
 
-import de.jotomo.ruffy.spi.history.PumpAlert;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpAlert;
 import info.nightscout.androidaps.R;
 
 public class ComboAlertHistoryDialog extends DialogFragment {

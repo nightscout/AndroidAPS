@@ -178,7 +178,6 @@
     <string name="gettingpumpstatus">Stato Micro</string>
     <string name="glucose">Glucosio</string>
     <string name="glucosetype_sensor">Sensore</string>
-    <string name="hoursago">h fa</string>
     <string name="import_from">Importa impstazioni da</string>
     <string name="initializing">Inizzializzazione</string>
     <string name="insulin_shortname">INS</string>

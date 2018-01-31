@@ -1,1 +1,1 @@
-include ':app', ':wear', ':ruffyscripter', ':ruffy-spi'
+include ':app', ':wear'

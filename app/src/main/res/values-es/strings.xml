@@ -214,7 +214,6 @@
     <string name="danar_iob_label">Bomba IOB</string>
     <string name="danar_dailyunits">Unidades diarias</string>
     <string name="pump_lastbolus_label">Último bolo:</string>
-    <string name="hoursago">h antes</string>
     <string name="danar_invalidinput">Datos invalidos</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="reloadprofile">Recargar Perfil</string>
@@ -229,7 +228,7 @@
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
-    <string formatted="false" name="smscommunicator_bolusreplywithcode">Para entregar bolo% .2fU responder con código% s</string>
+    <string formatted="false" name="smscommunicator_bolusreplywithcode">Para entregar bolo %.2fU responder con código% s</string>
     <string name="smscommunicator_bolusfailed">Bolo falló</string>
     <string formatted="false" name="bolusdelivered">Bolo %.2fU entregado con éxito</string>
     <string formatted="false" name="bolusdelivering">Entregando %.2fU</string>

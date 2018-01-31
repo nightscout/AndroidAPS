@@ -220,7 +220,6 @@
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="danar_dailyunits">"Μονάδες ανά ημέρα "</string>
     <string name="pump_lastbolus_label">Τελευταίο Bolus:</string>
-    <string name="hoursago">ώρες πριν</string>
     <string name="danar_invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
