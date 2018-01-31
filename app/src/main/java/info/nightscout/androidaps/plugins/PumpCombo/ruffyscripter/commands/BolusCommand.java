@@ -185,19 +185,8 @@ public class BolusCommand extends BaseCommand {
         }
 
         if (cancelInProgress) {
-            log.debug("Stage 4: reading last bolus from pump history since a cancellation was requested during bolus delivery");
-            ReadQuickInfoCommand readQuickInfoCommand = new ReadQuickInfoCommand();
-            readQuickInfoCommand.setScripter(scripter);
-            readQuickInfoCommand.execute();
-            CommandResult quickInfoResult = readQuickInfoCommand.result;
-            Bolus lastBolus = quickInfoResult.history != null && !quickInfoResult.history.bolusHistory.isEmpty()
-                    ? quickInfoResult.history.bolusHistory.get(0)
-                    : null;
-            if (lastBolus == null || Math.abs(System.currentTimeMillis() - lastBolus.timestamp) >= 10 * 60 * 1000) {
-                throw new CommandException("Unable to determine last bolus");
-            }
-            log.debug("Stage 4: " + lastBolus.amount + " U delivered before cancellation according to history");
-            this.result.delivered = lastBolus.amount;
+            log.debug("Stage 4: bolus was cancelled, with unknown amount delivered");
+            this.result.delivered = -1;
         } else {
             log.debug("Stage 4: full bolus of " + bolus + " U was successfully delivered");
             result.delivered = bolus;
