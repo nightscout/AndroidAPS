@@ -39,7 +39,7 @@
     <string name="treatments_newtreatment_insulinamount_label">Insulina [U]</string>
     <string name="treatments_newtreatment_carbsamount_label">Carbohidratos [g]</string>
     <string name="treatments_wizard_bg_label">Glucosa</string>
-    <string name="treatments_wizard_carbs_label">Hidratos Carbono</string>
+    <string name="treatments_wizard_carbs_label">Carbohidratos</string>
     <string name="treatments_wizard_correction_label">Corrección</string>
     <string name="treatments_wizard_unit_label">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolo IOB</string>
@@ -53,7 +53,7 @@
     <string name="virtualpump_reservoir_label">Depósito:</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Error de SQL</string>
-    <string name="openapsma_lastrun_label">Última ejecución</string>
+    <string name="openapsma_lastrun_label">Última acción</string>
     <string name="openapsma_inputparameters_label">Parámetros de entrada</string>
     <string name="openapsma_glucosestatus_label">Estado de glucosa</string>
     <string name="openapsma_currenttemp_label">Basal temporal actual</string>
@@ -61,7 +61,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Datos de comidas</string>
     <string name="result">Resultado</string>
-    <string name="openapsma_noglucosedata">No hay disponibles datos de glucosa</string>
+    <string name="openapsma_noglucosedata">No hay datos disponibles de glucosa</string>
     <string name="openapsma_noprofile">Sin perfil disponible</string>
     <string name="openapsma_nopump">No se dispone de bomba</string>
     <string name="nochangerequested">Ninguna acción requerida</string>
@@ -86,7 +86,7 @@
 
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_treatments">Tratamientos</string>
-    <string name="configbuilder_tempbasals">Temp Basales</string>
+    <string name="configbuilder_tempbasals">Basales temporales</string>
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
@@ -128,11 +128,11 @@
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
-    <string name="unsupportedclientver">Versión de NSClient no soportada</string>
+    <string name="unsupportedclientver">Versión de NSClient no apoyada</string>
     <string name="nsclientnotinstalled">NSClient no instalado. Registro perdido!</string>
     <string name="objectives_bgavailableinns">BG disponible en NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado de la bomba disponible en NS</string>
-    <string name="objectives_manualenacts">Aceptados</string>
+    <string name="objectives_manualenacts">Acceptado manualmente</string>
     <string name="loopdisabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
     <string name="cs_lang">Czech</string>
     <string name="en_lang">English</string>
@@ -144,7 +144,7 @@
     <string name="careportal_note">NOTA</string>
     <string name="careportal_question">Pregunta</string>
     <string name="careportal_exercise">Ejercicio</string>
-    <string name="careportal_pumpsitechange">Cambio Lugar Bomba</string>
+    <string name="careportal_pumpsitechange">Cambio Lugar Cánula</string>
     <string name="careportal_cgmsensorinsert">Insertar sensor</string>
     <string name="careportal_cgmsensorstart">Iniciar sensor</string>
     <string name="careportal_insulincartridgechange">Cambio Cartucho insulina</string>
@@ -155,14 +155,14 @@
     <string name="careportal_combobolus">Combo bolo</string>
     <string name="careportal_tempbasalstart">Basal Temporal Inicio</string>
     <string name="careportal_tempbasalend">Basal Temporal Fin</string>
-    <string name="careportal_carbscorrection">Hidratos Carbono Corrección</string>
+    <string name="careportal_carbscorrection">Corrección Carbohidratos</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
 
     <string name="careportal_newnstreatment_eventtype">Tipo de evento</string>
     <string name="careportal_newnstreatment_other">Otro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_carbs_label">Hidratos Carbono</string>
+    <string name="careportal_newnstreatment_carbs_label">Carbohidratos</string>
     <string name="careportal_newnstreatment_insulin_label">Insulina</string>
     <string name="careportal_newnstreatment_carbtime_label">Tiempo absorción</string>
     <string name="careportal_newnstreatment_split_label">Dividir</string>
@@ -207,7 +207,7 @@
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">No deben utilizarse para tomar decisiones médicas. NO HAY GARANTÍA PARA EL PROGRAMA, la extensión permitida por la legislación aplicable. Excepto cuando se indique de otra forma por escrito, los tenedores del copyright y / u otras partes proporcionan el programa \"tal cual\" sin garantía de ningún tipo, ya sea expresa o implícita, incluyendo, pero no limitado a, las garantías implícitas de COMERCIALIZACIÓN E IDONEIDAD PARA UN FIN DETERMINADO . TODO EL RIESGO EN CUANTO A LA CALIDAD Y RENDIMIENTO DEL PROGRAMA ES CON USTED. SI EL PROGRAMA TIENE UN ERROR, asume el coste de cualquier servicio, reparación o corrección.</string>
     <string name="end_user_license_agreement_i_understand">Entiendo y acepto</string>
-    <string name="save">Salvar</string>
+    <string name="save">Guardar</string>
     <string name="nobtadapter">No se encuentra adaptador Bluetooth</string>
     <string name="devicenotfound">El dispositivo seleccionado no se encuentra</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
@@ -216,7 +216,7 @@
     <string name="danar_dailyunits">Unidades diarias</string>
     <string name="danar_lastbolus">Último bolo:</string>
     <string name="hoursago">h antes</string>
-    <string name="danar_invalidinput">Datos invalidos</string>
+    <string name="danar_invalidinput">Datos inválidos</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="reloadprofile">Recargar Perfil</string>
     <string name="danar_viewprofile">Ver perfil</string>
@@ -275,8 +275,8 @@
     <string name="occlusion">Oclusión</string>
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">Parar pulsado</string>
-    <string name="waitingforpumpclicktorefresh">Esperando bomba. Click to refresh.</string>
-    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Va a entregar% .2fU</string>
+    <string name="waitingforpumpclicktorefresh">Esperando bomba. Pulsar para actualizar.</string>
+    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Se entregará % .2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitoreo, y el análisis de los basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_1_objective">Empezar con bucle abierto</string>
@@ -295,26 +295,26 @@
     <string name="ko_lang">Korean</string>
     <string name="actions">Acciones</string>
     <string name="correctionbous">Corr</string>
-    <string name="disabledloop">Loop Inactivo</string>
+    <string name="disabledloop">Lazo Inactivo</string>
     <string name="mealbolus">Bolo Comida</string>
     <string name="openapsma_valueoutofrange">Valor %s fuera de limites</string>
     <string name="overview_editquickwizard_buttontext">Botón Texto:</string>
-    <string name="overview_editquickwizard_carbs">Carbs:</string>
+    <string name="overview_editquickwizard_carbs">Carbohidratos:</string>
     <string name="overview_editquickwizard_valid">Validar:</string>
     <string name="overview_editquickwizardlistactivity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
     <string name="overview_quickwizard_item_remove_button">Eliminar</string>
     <string name="quickwizard">Asistente</string>
     <string name="quickwizardsettings">Ajustes asistente</string>
-    <string name="smscommunicator_loophasbeendisabled">Loop se ha desactivado</string>
-    <string name="smscommunicator_loophasbeenenabled">Loop se ha activado</string>
-    <string name="smscommunicator_loopisdisabled">Loop inactivo</string>
-    <string name="smscommunicator_loopisenabled">loop activo</string>
+    <string name="smscommunicator_loophasbeendisabled">Lazo se ha desactivado</string>
+    <string name="smscommunicator_loophasbeenenabled">Lazo se ha activado</string>
+    <string name="smscommunicator_loopisdisabled">Lazo inactivo</string>
+    <string name="smscommunicator_loopisenabled">Lazo activo</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temporal cancelada</string>
     <string name="smscommunicator_tempbasalcancelfailed">Fallo cancelación  basal temporal</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
     <string formatted="false" name="smscommunicator_tempbasalset">Basal temporal %.2fU/h para %d min iniciada correctamente</string>
-    <string name="smscommunicator_remotecommandsallowed">Permitir comandos SMS remotos</string>
+    <string name="smscommunicator_remotecommandsallowed">Permitir ordenes SMS remotas</string>
     <string name="smscommunicator_basalstopreplywithcode">Para parar basal temporal responder con codigo %s</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="es_lang">Español</string>
@@ -327,26 +327,26 @@
     <string name="smscommunicator_unknowncommand">Comando desconocido o respuesta incorrecta</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
     <string formatted="false" name="smscommunicator_basalreplywithcode">Para iniciar basal %.2fU/h responder con código %s</string>
-    <string name="actions_shortname">" "</string>
-    <string name="wear_shortname">" "</string>
-    <string name="virtualpump_shortname">" "</string>
-    <string name="treatments_shortname">" "</string>
-    <string name="temptargetrange_shortname">" "</string>
-    <string name="tempbasals_shortname">" "</string>
-    <string name="smscommunicator_shortname">" "</string>
-    <string name="simpleprofile_shortname">" "</string>
-    <string name="profileviewer_shortname">" "</string>
-    <string name="overview_shortname">" "</string>
-    <string name="objectives_shortname">" "</string>
-    <string name="oaps_shortname">" "</string>
-    <string name="loop_shortname">" "</string>
-    <string name="localprofile_shortname">" "</string>
-    <string name="danarpump_shortname">" "</string>
-    <string name="configbuilder_shortname">" "</string>
-    <string name="circadian_percentage_profile_shortname">" "</string>
-    <string name="careportal_shortname">" "</string>
+    <string name="actions_shortname">"ACC"</string>
+    <string name="wear_shortname">"REL"</string>
+    <string name="virtualpump_shortname">"BombaV"</string>
+    <string name="treatments_shortname">"Trat"</string>
+    <string name="temptargetrange_shortname">"ObjTempAmpl"</string>
+    <string name="tempbasals_shortname">"ObjTemp"</string>
+    <string name="smscommunicator_shortname">"SMS"</string>
+    <string name="simpleprofile_shortname">"PerfSipmple"</string>
+    <string name="profileviewer_shortname">"Perf"</string>
+    <string name="overview_shortname">"General"</string>
+    <string name="objectives_shortname">"Obj"</string>
+    <string name="oaps_shortname">"Oaps"</string>
+    <string name="loop_shortname">"Lazo"</string>
+    <string name="localprofile_shortname">"PerfLoc"</string>
+    <string name="danarpump_shortname">"Dana"</string>
+    <string name="configbuilder_shortname">"Conf"</string>
+    <string name="circadian_percentage_profile_shortname">"CPP"</string>
+    <string name="careportal_shortname">"CP"</string>
     <string name="activity">Actividad</string>
-    <string name="alert_dialog_storage_permission_text">Por favo reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardara registros (importantes para trazar y verificar que el algoritmo funciona correctamente)</string>
+    <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importantes para trazar y verificar que el algoritmo funcione correctamente)</string>
     <string name="array_of_elements">Matriz de %d elementos. Valor actual:</string>
     <string name="basal_rate">Ratio Basal:</string>
     <string name="basalvaluebelowminimum">Valor basal menor del mínimo. Perfil no fijado.</string>
@@ -357,7 +357,7 @@
     <string name="danar_disableeasymode">Inhabilitar EasyUI modo en bomba</string>
     <string name="danar_enableextendedbolus">Habilitar bolos extendidos en bomba</string>
     <string name="danar_switchtouhmode">Cambio de modo de U/d a U/h en bomba</string>
-    <string name="eatingsoon">Comida temprano</string>
+    <string name="eatingsoon">Comer pronto</string>
     <string name="high_mark">Marca ALTA</string>
     <string name="initializing">Iniciando . . .</string>
     <string name="localprofile">Perfil Local</string>
