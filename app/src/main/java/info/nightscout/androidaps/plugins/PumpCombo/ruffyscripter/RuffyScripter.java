@@ -165,8 +165,9 @@ public class RuffyScripter implements RuffyCommands {
         if (!boundSucceeded) {
             log.error("No connection to ruffy. Pump control unavailable.");
         } else {
-            Answers.getInstance().logCustom(new CustomEvent("RuffyScripterInit")
-                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION));
+            Answers.getInstance().logCustom(new CustomEvent("ComboScripterInit")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION));
         }
     }
 
@@ -218,10 +219,14 @@ public class RuffyScripter implements RuffyCommands {
     @Override
     public CommandResult readQuickInfo() {
         if (readQuickInfo) {
-            Answers.getInstance().logCustom(new CustomEvent("ComboReadQuickInfoCmd"));
+            Answers.getInstance().logCustom(new CustomEvent("ComboReadQuickInfoCmd")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION));
             return runCommand(new ReadQuickInfoCommand());
         }
-        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ReadHistoryCommand(new PumpHistoryRequest().bolusHistory(PumpHistoryRequest.LAST)));
     }
 
@@ -421,6 +426,8 @@ public class RuffyScripter implements RuffyCommands {
         }
         log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
         Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromConnectionLoss")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION)
                 .putCustomAttribute("activeCommand", "" + activeCmd)
                 .putCustomAttribute("success", connected ? "true" : "else"));
         return connected;
@@ -434,6 +441,8 @@ public class RuffyScripter implements RuffyCommands {
         Menu menu = this.currentMenu;
         if (menu == null) {
             Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("activeCommand", "" + activeCmd)
                     .putCustomAttribute("success", "false"));
             return new PumpState();
@@ -449,11 +458,16 @@ public class RuffyScripter implements RuffyCommands {
         }
         try {
             PumpState pumpState = readPumpStateInternal();
-            Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailureSucceded")
-                                        .putCustomAttribute("activeCommand", "" + activeCmd));
+            Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("activeCommand", "" + activeCmd)
+                    .putCustomAttribute("success", "true"));
             return pumpState;
         } catch (Exception e) {
             Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("activeCommand", "" + activeCmd)
                     .putCustomAttribute("success", "false"));
             log.debug("Reading pump state during recovery failed", e);
@@ -478,6 +492,8 @@ public class RuffyScripter implements RuffyCommands {
             while (initialUpdateTime == menuLastUpdated) {
                 if (System.currentTimeMillis() > timeoutExpired) {
                     Answers.getInstance().logCustom(new CustomEvent("ComboConnectTimeout")
+                            .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                            .putCustomAttribute("version", BuildConfig.VERSION)
                             .putCustomAttribute("activeCommand", "" + activeCmd)
                             .putCustomAttribute("previousCommand", previousCommand));
                     throw new CommandException("Timeout connecting to pump");
@@ -786,14 +802,18 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new BolusCommand(amount, bolusProgressReporter));
     }
 
     @Override
     public void cancelBolus() {
         if (activeCmd instanceof BolusCommand) {
-            Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmdCancel"));
+            Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmdCancel")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION));
             ((BolusCommand) activeCmd).requestCancellation();
         } else {
             log.error("cancelBolus called, but active command is not a bolus:" + activeCmd);
@@ -802,37 +822,49 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult setTbr(int percent, int duration) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboSetTbrCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboSetTbrCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new SetTbrCommand(percent, duration));
     }
 
     @Override
     public CommandResult cancelTbr() {
-        Answers.getInstance().logCustom(new CustomEvent("ComboCancelTbrCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboCancelTbrCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new CancelTbrCommand());
     }
 
     @Override
     public CommandResult confirmAlert(int warningCode) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboConfirmAlertCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboConfirmAlertCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ConfirmAlertCommand(warningCode));
     }
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ReadHistoryCommand(request));
     }
 
     @Override
     public CommandResult readBasalProfile() {
-        Answers.getInstance().logCustom(new CustomEvent("ComboReadBasalProfileCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboReadBasalProfileCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ReadBasalProfileCommand());
     }
 
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboSetBasalProfileCmd"));
+        Answers.getInstance().logCustom(new CustomEvent("ComboSetBasalProfileCmd")
+                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new SetBasalProfileCommand(basalProfile));
     }
 
