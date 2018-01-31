@@ -186,10 +186,8 @@ public class BolusCommand extends BaseCommand {
 
         if (cancelInProgress) {
             log.debug("Stage 4: bolus was cancelled, with unknown amount delivered");
-            this.result.delivered = -1;
         } else {
             log.debug("Stage 4: full bolus of " + bolus + " U was successfully delivered");
-            result.delivered = bolus;
             bolusProgressReporter.report(DELIVERED, 100, bolus);
         }
         result.success = true;
