@@ -15,6 +15,7 @@ import sugar.free.sightparser.pipeline.Status;
 
 import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_START_RESYNC;
 import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_START_SYNC;
+import static sugar.free.sightparser.handling.SightService.COMPATIBILITY_VERSION;
 
 /**
  * Created by jamorham on 23/01/2018.
@@ -37,6 +38,7 @@ public class Connector {
     private static volatile HistoryReceiver historyReceiver;
     private volatile SightServiceConnector serviceConnector;
     private volatile Status lastStatus = null;
+    private String compatabilityMessage = null;
     private volatile long lastStatusTime = -1;
     private boolean companionAppInstalled = false;
     private int serviceReconnects = 0;
@@ -58,7 +60,16 @@ public class Connector {
         public synchronized void onServiceConnected() {
             log("On service connected");
             try {
-                serviceConnector.connect();
+                final String remoteVersion = serviceConnector.getRemoteVersion();
+                if (remoteVersion.equals(COMPATIBILITY_VERSION)) {
+                    serviceConnector.connect();
+                } else {
+                    log("PROTOCOL VERSION MISMATCH!  local: " + COMPATIBILITY_VERSION + " remote: " + remoteVersion);
+                    statusCallback.onStatusChange(Status.INCOMPATIBLE);
+                    compatabilityMessage = "Incompatible companion app, we need version " + getLocalVersion();
+                    serviceConnector.disconnectFromService();
+
+                }
             } catch (NullPointerException e) {
                 log("ERROR: null pointer when trying to connect to pump");
             }
@@ -110,6 +121,10 @@ public class Connector {
         android.util.Log.e("INSIGHTPUMP", msg);
     }
 
+    static String getLocalVersion() {
+        return COMPATIBILITY_VERSION;
+    }
+
     @SuppressWarnings("AccessStaticViaInstance")
     private synchronized void initializeHistoryReceiver() {
         if (historyReceiver == null) {
@@ -159,8 +174,12 @@ public class Connector {
     }
 
     public Status safeGetStatus() {
-        if (isConnected()) return serviceConnector.getStatus();
-        return Status.DISCONNECTED;
+        try {
+            if (isConnected()) return serviceConnector.getStatus();
+            return Status.DISCONNECTED;
+        } catch (IllegalArgumentException e) {
+            return Status.INCOMPATIBLE;
+        }
     }
 
     public Status getLastStatus() {
@@ -186,7 +205,15 @@ public class Connector {
             if (Helpers.ratelimit("insight-app-not-connected", 5)) {
                 init();
             }
-            return "Not connected to companion app!";
+
+            if ((lastStatus == null) || (lastStatus != Status.INCOMPATIBLE)) {
+                if (compatabilityMessage != null) {
+                    // if disconnected but previous state was incompatible
+                    return compatabilityMessage;
+                } else {
+                    return "Not connected to companion app!";
+                }
+            }
         }
 
         if (lastStatus == null) {
@@ -194,15 +221,16 @@ public class Connector {
         }
 
         switch (lastStatus) {
-
             case CONNECTED:
                 if (lastStatusTime < 1) {
                     tryToGetPumpStatusAgain();
                 }
-
-            default:
-                return lastStatus.toString();
+                // TODO other refresh?
+                break;
+            case INCOMPATIBLE:
+                return lastStatus.toString() + " needs " + getLocalVersion();
         }
+        return lastStatus.toString();
     }
 
     public String getNiceLastStatusTime() {
