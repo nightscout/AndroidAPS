@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -539,6 +538,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // a connection problem, ruffyscripter tried to recover and we can just check the
             // history below to see what was actually delivered
 
+            // get last bolus from pump histqry for verification
             CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readQuickInfo);
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
@@ -547,42 +547,34 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Bolus lastPumpBolus = postBolusStateResult.history != null && !postBolusStateResult.history.bolusHistory.isEmpty()
                     ? postBolusStateResult.history.bolusHistory.get(0)
                     : null;
-            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
+
+            // no bolus delivered?
+            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)  ) {
+                if (cancelBolus) {
+                    return new PumpEnactResult().success(true).enacted(false);
+                } else {
+                    return new PumpEnactResult()
+                            .success(false)
+                            .enacted(false)
+                            .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
+                }
             }
+
+            // at least some insulin delivered, so add it to treatments
+            if (!addBolusToTreatments(detailedBolusInfo, lastPumpBolus))
+                return new PumpEnactResult().success(false).enacted(true)
+                        .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
+
+            // partial bolus was delivered
             if (Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01) {
+                if (cancelBolus) {
+                    return new PumpEnactResult().success(true).enacted(true);
+                }
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered));
             }
 
-            // seems we actually made it this far, let's add a treatment record
-            detailedBolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
-            detailedBolusInfo.pumpId = calculateFakeBolusDate(lastPumpBolus);
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.insulin = lastPumpBolus.amount;
-            try {
-                boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                if (!treatmentCreated) {
-                    if (detailedBolusInfo.isSMB) {
-                        Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
-                        MainApp.bus().post(new EventNewNotification(notification));
-                        return new PumpEnactResult().success(false).enacted(true)
-                                .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
-                    }
-                    return new PumpEnactResult().success(false).enacted(true)
-                            .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
-                }
-            } catch (Exception e) {
-                log.error("Adding treatment record failed", e);
-                if (detailedBolusInfo.isSMB) {
-                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
-                return new PumpEnactResult().success(false).enacted(true)
-                        .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
-            }
-
+            // full bolus was delivered successfully
             return new PumpEnactResult()
                     .success(true)
                     .enacted(lastPumpBolus.amount > 0)
@@ -594,6 +586,37 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.bus().post(new EventRefreshOverview("Bolus"));
             cancelBolus = false;
         }
+    }
+
+    /**
+     * Updates a DetailedBolusInfo from a pump bolus and adds it as a Treatment to the DB.
+     * Handles edge cases when dates aren't unique which are extremely unlikely to occur,
+     * but if they do, the user should be warned since a bolus will be missing from calculations.
+     */
+    private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
+        detailedBolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
+        detailedBolusInfo.pumpId = calculateFakeBolusDate(lastPumpBolus);
+        detailedBolusInfo.source = Source.PUMP;
+        detailedBolusInfo.insulin = lastPumpBolus.amount;
+        try {
+            boolean treatmentCreated = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            if (!treatmentCreated) {
+                log.error("Adding treatment record overrode an existing necord: " + detailedBolusInfo);
+                if (detailedBolusInfo.isSMB) {
+                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("Adding treatment record failed", e);
+            if (detailedBolusInfo.isSMB) {
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+            }
+            return false;
+        }
+        return true;
     }
 
     @Override
