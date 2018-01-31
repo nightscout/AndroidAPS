@@ -69,13 +69,21 @@ public class RuffyScripter implements RuffyCommands {
         @Override
         public void log(String message) throws RemoteException {
             if (log.isTraceEnabled()) {
-                log.debug("Ruffy says: " + message);
+                log.trace("Ruffy says: " + message);
             }
         }
 
         @Override
         public void fail(String message) throws RemoteException {
             log.warn("Ruffy warns: " + message);
+            if (message.startsWith("no connection possible"))
+                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "no connection possible"));
+            else if (message.startsWith("Error sending keep alive while rtModeRunning is still true"))
+                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "Error sending keep alive while rtModeRunning is still true"));
+            else if (message.startsWith("Error sending keep alive. rtModeRunning is false, so this is most likely a race condition during disconnect"))
+                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "Error sending keep alive. rtModeRunning is false, so this is most likely a race condition during disconnect"));
+            else
+                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", message.substring(0, 98)));
         }
 
         @Override
