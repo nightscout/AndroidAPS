@@ -30,7 +30,6 @@ import static sugar.free.sightparser.handling.SightService.COMPATIBILITY_VERSION
 
 public class Connector {
 
-    //public static final String ACTION_START_RESYNC = "sugar.free.sightremote.services.HistorySyncService.START_RESYNC";
     private static final String TAG = "InsightConnector";
     private static final String COMPANION_APP_PACKAGE = "sugar.free.sightremote";
     private final static long FRESH_MS = 70000;
@@ -192,6 +191,10 @@ public class Connector {
 
     public boolean isPumpConnected() {
         return isConnected() && getLastStatus() == Status.CONNECTED;
+    }
+
+    public boolean isPumpConnecting() {
+        return isConnected() && getLastStatus() == Status.CONNECTING;
     }
 
     public String getLastStatusMessage() {

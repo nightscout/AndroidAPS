@@ -41,10 +41,10 @@ import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
-import sugar.free.sightparser.applayer.messages.AppLayerMessage;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolus;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
 import sugar.free.sightparser.applayer.descriptors.PumpStatus;
+import sugar.free.sightparser.applayer.messages.AppLayerMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.ExtendedBolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.StandardBolusMessage;
@@ -133,7 +133,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         pumpDescription.tempDurationStep = 15; // 15 minutes up to 24 hours
         pumpDescription.tempMaxDuration = 24 * 60;
-
 
         pumpDescription.isSetBasalProfileCapable = false; // leave this for now
         pumpDescription.basalStep = 0.01d;
@@ -253,7 +252,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isSuspended() {
-        return false;
+        return !isPumpRunning();
     }
 
     @Override
@@ -266,10 +265,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return Connector.get().isPumpConnected();
     }
 
-    // TODO implement
     @Override
     public boolean isConnecting() {
-        return false;
+        return Connector.get().isPumpConnecting();
     }
 
     @Override
@@ -311,6 +309,21 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void stopConnecting() {
+        log("InsightPumpPlugin::stopConnecting()");
+        try {
+            if (isConnecting()) {
+                if (!SP.getBoolean("insight_always_connected", false)) {
+                    log("Requesting disconnect");
+                    connector.getServiceConnector().disconnect();
+                } else {
+                    log("Not disconnecting due to preference");
+                }
+            } else {
+                log("Not currently trying to connect so not stopping connection");
+            }
+        } catch (NullPointerException e) {
+            log("Could not stop connecting - null pointer: " + e);
+        }
     }
 
     @Override
@@ -411,10 +424,16 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return result;
     }
 
-    // TODO implement
     @Override
     public void stopBolusDelivering() {
+        final UUID cmd = aSyncTaskRunner(new CancelBolusTaskRunner(connector.getServiceConnector(), ActiveBolusType.STANDARD), "Cancel standard bolus");
 
+        if (cmd == null) {
+            return;
+        }
+
+        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        log("Got command status: " + cs);
     }
 
     // Temporary Basals
@@ -574,7 +593,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             extendedBolus.date = System.currentTimeMillis();
             extendedBolus.insulin = insulin;
             extendedBolus.durationInMinutes = durationInMinutes;
-            extendedBolus.source = Source.USER; // TODO check this is correct
+            extendedBolus.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
         }
 
@@ -607,7 +626,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
             ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
             exStop.source = Source.USER;
-            // TODO does this need any specific cancel flag?
             MainApp.getConfigBuilder().addToHistoryExtendedBolus(exStop);
         }
 
@@ -710,6 +728,11 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return MainApp.instance().getString(id);
     }
 
+    private boolean isPumpRunning() {
+        if (statusResult == null) return true; // assume running if we have no information
+        return statusResult.getPumpStatusMessage().getPumpStatus() == PumpStatus.STARTED;
+    }
+
     List<StatusItem> getStatusItems() {
         final List<StatusItem> l = new ArrayList<>();
 
@@ -722,7 +745,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         // also check time since received
         if (statusResult != null) {
 
-            pumpRunning = statusResult.getPumpStatusMessage().getPumpStatus() == PumpStatus.STARTED;
+            pumpRunning = isPumpRunning();
             if (pumpRunning) {
                 l.add(new StatusItem(gs(R.string.pump_basebasalrate_label), getBaseBasalRateString() + "U"));
             } else {
