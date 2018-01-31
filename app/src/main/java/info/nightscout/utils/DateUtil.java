@@ -127,6 +127,11 @@ public class DateUtil {
         return String.format(MainApp.sResources.getString(R.string.minago), mins);
     }
 
+    public static String hourAgo(long time) {
+        double hours = (System.currentTimeMillis() - time) / 1000d / 60 / 60;
+        return String.format(MainApp.sResources.getString(R.string.hoursago), hours);
+    }
+
     private static LongSparseArray<String> timeStrings = new LongSparseArray<>();
 
     public static String timeStringFromSeconds(int seconds) {

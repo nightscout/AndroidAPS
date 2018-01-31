@@ -11,7 +11,7 @@ import java.text.DateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffy.spi.history.Tdd;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.R;
 
 public class ComboTddHistoryDialog extends DialogFragment {

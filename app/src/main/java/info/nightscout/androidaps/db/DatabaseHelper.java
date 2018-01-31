@@ -713,24 +713,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     }
 
-    @Nullable
-    public Treatment getTreatmentByDate(long mills) {
-        try {
-            Dao<Treatment, Long> daoTreatments = getDaoTreatments();
-            List<Treatment> treatments;
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("date", mills);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = daoTreatments.query(preparedQuery);
-            // date is unique
-            return treatments.isEmpty() ? null : treatments.get(0);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-            return null;
-        }
-    }
-
     public List<Treatment> getTreatmentDataFromTime(long mills, boolean ascending) {
         try {
             Dao<Treatment, Long> daoTreatments = getDaoTreatments();
@@ -1084,23 +1066,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         scheduleTemporaryBasalChange();
-    }
-
-    @Nullable
-    public TemporaryBasal getTemporaryBasalsDataByDate(long startTime) {
-        try {
-            List<TemporaryBasal> tempbasals;
-            QueryBuilder<TemporaryBasal, Long> queryBuilder = getDaoTemporaryBasal().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("date", startTime);
-            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
-            tempbasals = getDaoTemporaryBasal().query(preparedQuery);
-            // date is unique
-            return tempbasals.isEmpty() ? null : tempbasals.get(0);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        return null;
     }
 
     public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {

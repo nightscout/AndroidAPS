@@ -57,7 +57,7 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 1500
-        version "1.57-combo-csv2-test"
+        version "1.57-combo-csv2-beta"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
@@ -175,7 +175,6 @@ allprojects {
 
 dependencies {
     wearApp project(':wear')
-    compile project(path: ':ruffyscripter')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile("com.crashlytics.sdk.android:crashlytics:2.6.7@aar") {

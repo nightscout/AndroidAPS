@@ -206,9 +206,8 @@
     <string name="glucosetype_sensor">Sensor</string>
     <string name="high_mark">HÖG markering</string>
     <string name="hours">timmar</string>
-    <string name="hoursago">h sedan</string>
     <string name="import_from">Importera inställningar från</string>
-    <string name="initializing">Startar...</string>
+    <string name="initializing">Startar…</string>
     <string name="invalidprofile">Ogiltig profil !!!</string>
     <string name="iob">IOB</string>
     <string name="it_lang">Italienska</string>

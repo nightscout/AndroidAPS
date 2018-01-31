@@ -224,7 +224,6 @@
     <string name="danar_iob_label">IOB на помпата</string>
     <string name="danar_dailyunits">Инсулин за деня</string>
     <string name="pump_lastbolus_label">Последен болус:</string>
-    <string name="hoursago">ч по-рано</string>
     <string name="danar_invalidinput">Грешни входящи данни</string>
     <string name="danar_valuenotsetproperly">Неправилна стойност</string>
     <string name="reloadprofile">Презареди профил</string>

@@ -221,7 +221,6 @@
     <string name="glucosetype_finger">палец</string>
     <string name="glucosetype_sensor">сенсор</string>
     <string name="high_mark">ВЕРХНЯЯ отметка</string>
-    <string name="hoursago">час. назад</string>
     <string name="import_from">импортировать настройки из</string>
     <string name="initializing">инициализация...</string>
     <string name="insulin_shortname">ИНС</string>
