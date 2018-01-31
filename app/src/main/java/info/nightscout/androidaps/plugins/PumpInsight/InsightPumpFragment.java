@@ -25,27 +25,33 @@ import info.nightscout.androidaps.plugins.PumpInsight.utils.ui.StatusItemViewAda
 
 
 public class InsightPumpFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(InsightPumpFragment.class);
-    private static Handler sLoopHandler = new Handler();
-    private static Runnable sRefreshLoop = null;
-
+    private static final Logger log = LoggerFactory.getLogger(InsightPumpFragment.class);
+    private static final Handler sLoopHandler = new Handler();
+    private static volatile boolean refresh = false;
+    private static volatile boolean pending = false;
     StatusItemViewAdapter viewAdapter;
     LinearLayout holder;
+    private final Runnable sRefreshLoop = new Runnable() {
+        @Override
+        public void run() {
+            pending = false;
+            updateGUI();
+            if (refresh) {
+                scheduleRefresh();
+            }
+        }
+    };
+
+    private synchronized void scheduleRefresh() {
+        if (!pending) {
+            pending = true;
+            sLoopHandler.postDelayed(sRefreshLoop, 30 * 1000L);
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (sRefreshLoop == null) {
-            sRefreshLoop = new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                    sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-                }
-            };
-            sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-        }
     }
 
     @Override
@@ -64,6 +70,22 @@ public class InsightPumpFragment extends SubscriberFragment {
         return null;
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible) {
+            refresh = true;
+            pending = false;
+            updateGUI();
+            scheduleRefresh();
+        } else {
+            refresh = false;
+            //sLoopHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+
     @Subscribe
     public void onStatusEvent(final EventInsightPumpUpdateGui ev) {
         updateGUI();
@@ -77,7 +99,7 @@ public class InsightPumpFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     final InsightPumpPlugin insightPumpPlugin = InsightPumpPlugin.getPlugin();
-                    final List<StatusItem> l = insightPumpPlugin.getStatusItems();
+                    final List<StatusItem> l = insightPumpPlugin.getStatusItems(refresh);
 
                     holder.removeAllViews();
 

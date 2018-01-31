@@ -39,6 +39,7 @@ public class Connector {
     private volatile Status lastStatus = null;
     private String compatabilityMessage = null;
     private volatile long lastStatusTime = -1;
+    private volatile long lastContactTime = -1;
     private boolean companionAppInstalled = false;
     private int serviceReconnects = 0;
     private StatusCallback statusCallback = new StatusCallback() {
@@ -48,6 +49,9 @@ public class Connector {
             log("Status change: " + status);
             lastStatus = status;
             lastStatusTime = Helpers.tsl();
+            if (status == Status.CONNECTED) {
+                lastContactTime = lastStatusTime;
+            }
 
             MainApp.bus().post(new EventInsightPumpUpdateGui());
         }
@@ -197,6 +201,10 @@ public class Connector {
         return isConnected() && getLastStatus() == Status.CONNECTING;
     }
 
+    public long getLastContactTime() {
+        return lastContactTime;
+    }
+
     public String getLastStatusMessage() {
 
         if (!companionAppInstalled) {
@@ -225,10 +233,9 @@ public class Connector {
 
         switch (lastStatus) {
             case CONNECTED:
-                if (lastStatusTime < 1) {
+                if (Helpers.msSince(lastStatusTime) > (60 * 10 * 1000)) {
                     tryToGetPumpStatusAgain();
                 }
-                // TODO other refresh?
                 break;
             case INCOMPATIBLE:
                 return lastStatus.toString() + " needs " + getLocalVersion();

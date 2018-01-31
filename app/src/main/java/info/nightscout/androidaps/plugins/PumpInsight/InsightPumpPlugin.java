@@ -73,6 +73,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     static Integer batteryPercent = 0;
     static Integer reservoirInUnits = 0;
     static boolean initialized = false;
+    private static volatile boolean update_pending = false;
     private static Logger log = LoggerFactory.getLogger(InsightPumpPlugin.class);
     private static volatile InsightPumpPlugin plugin;
     private final Handler handler = new Handler();
@@ -167,6 +168,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     }
 
     private static void updateGui() {
+        update_pending = false;
         MainApp.bus().post(new EventInsightPumpUpdateGui());
     }
 
@@ -644,13 +646,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private synchronized UUID deliverBolus(float bolusValue) {
         log("DeliverBolus: " + bolusValue);
 
-        // Bare sanity checking should be done elsewhere
         if (bolusValue == 0) return null;
         if (bolusValue < 0) return null;
 
-        if (bolusValue > 20) return null;
-
-        // TODO check limits here?
+        // TODO check limits here or they already occur via a previous constraint interface?
 
         final StandardBolusMessage message = new StandardBolusMessage();
         message.setAmount(bolusValue);
@@ -661,15 +660,19 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public JSONObject getJSONStatus() {
 
-        // TODO review
+        if (Helpers.msSince(connector.getLastContactTime()) > (60 * 60 * 1000)) {
+            log("getJSONStatus not returning as data likely stale");
+            return null;
+        }
 
-        JSONObject pump = new JSONObject();
-        JSONObject battery = new JSONObject();
-        JSONObject status = new JSONObject();
-        JSONObject extended = new JSONObject();
+        final JSONObject pump = new JSONObject();
+        final JSONObject battery = new JSONObject();
+        final JSONObject status = new JSONObject();
+        final JSONObject extended = new JSONObject();
         try {
             battery.put("percent", batteryPercent);
-            status.put("status", "normal");
+            status.put("status", isSuspended() ? "suspended" : "normal");
+            status.put("timestamp", DateUtil.toISOString(connector.getLastContactTime()));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
@@ -733,7 +736,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         return statusResult.getPumpStatusMessage().getPumpStatus() == PumpStatus.STARTED;
     }
 
-    List<StatusItem> getStatusItems() {
+    List<StatusItem> getStatusItems(boolean refresh) {
         final List<StatusItem> l = new ArrayList<>();
 
         // Todo last contact time
@@ -802,17 +805,21 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
 
         Connector.get().requestHistorySync();
+        if (refresh) scheduleGUIUpdate();
 
-        if (connector.uiFresh()) {
+        return l;
+    }
+
+    private synchronized void scheduleGUIUpdate() {
+        if (!update_pending && connector.uiFresh()) {
+            update_pending = true;
             Helpers.runOnUiThreadDelayed(new Runnable() {
                 @Override
                 public void run() {
                     updateGui();
                 }
-            }, 1000);
+            }, 500);
         }
-
-        return l;
     }
 
     private void statusActiveBolus(ActiveBolus activeBolus, long offset_mins, List<StatusItem> l) {
