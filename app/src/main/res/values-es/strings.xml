@@ -431,8 +431,6 @@
     <string name="danar_stats_olddata_Message">Datos caducados pro favor pincha RELOAD</string>
     <string name="danar_stats_tbb">Basal total</string>
     <string name="danar_stats_tbb2">Basal diaria *2</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
-    <string name="wear_shortname">Reloj</string>
     <string name="short_tabtitles">Tab titulo corto</string>
     <string name="prefs_delta_title">Ajustes Delta</string>
     <string name="always_use_shortavg">Usa siempre delta media corto en vez de delta simple</string>
