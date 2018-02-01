@@ -95,4 +95,12 @@ public class InsightPumpAsyncAdapter {
         }
     }
 
+    int getResponseID(UUID uuid) {
+        if (checkCommandResult(uuid) == Cstatus.SUCCESS) {
+            return commandResults.get(uuid).response_id;
+        } else {
+            return -2; // invalid
+        }
+    }
+
 }

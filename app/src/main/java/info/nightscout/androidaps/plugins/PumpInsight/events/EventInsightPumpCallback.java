@@ -12,6 +12,7 @@ public class EventInsightPumpCallback extends Event {
     public UUID request_uuid;
     public boolean success = false;
     public String message = null;
+    public int response_id = -1;
 
     public EventInsightPumpCallback() {
         request_uuid = UUID.randomUUID();

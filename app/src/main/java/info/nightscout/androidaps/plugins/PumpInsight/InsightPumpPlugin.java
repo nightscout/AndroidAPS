@@ -45,6 +45,7 @@ import sugar.free.sightparser.applayer.descriptors.ActiveBolus;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
 import sugar.free.sightparser.applayer.descriptors.PumpStatus;
 import sugar.free.sightparser.applayer.messages.AppLayerMessage;
+import sugar.free.sightparser.applayer.messages.remote_control.BolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.ExtendedBolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.StandardBolusMessage;
@@ -53,6 +54,7 @@ import sugar.free.sightparser.handling.TaskRunner;
 import sugar.free.sightparser.handling.taskrunners.SetTBRTaskRunner;
 import sugar.free.sightparser.handling.taskrunners.StatusTaskRunner;
 
+import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.getRecordUniqueID;
 import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.roundDouble;
 
 
@@ -140,6 +142,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         pumpDescription.basalMinimumRate = 0.02d;
 
         pumpDescription.isRefillingCapable = false;
+        //pumpDescription.storesCarbInfo = false; // uncomment when PumpDescription updated to include this
 
         this.connector = Connector.get();
         this.connector.init();
@@ -399,6 +402,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             }
             final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
             result.success = cs.success();
+            if (cs.success()) {
+                detailedBolusInfo.pumpId = getRecordUniqueID(async.getResponseID(cmd));
+            }
         } else {
             result.success = true; // always true with carb only treatments
         }
@@ -596,6 +602,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             extendedBolus.insulin = insulin;
             extendedBolus.durationInMinutes = durationInMinutes;
             extendedBolus.source = Source.USER;
+            extendedBolus.pumpId = getRecordUniqueID(async.getResponseID(cmd));
             MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
         }
 
@@ -867,6 +874,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
                         @Override
                         public void onResult(Object o) {
                             log(name + " success");
+                            if (o instanceof BolusMessage) {
+                                event.response_id = ((BolusMessage)o).getBolusId();
+                            }
                             event.success = true;
                             pushCallbackEvent(event);
                         }

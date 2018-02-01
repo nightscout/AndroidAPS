@@ -4,7 +4,10 @@ import android.content.Intent;
 
 import java.util.Date;
 
+import info.nightscout.utils.SP;
 import sugar.free.sightparser.handling.HistoryBroadcast;
+
+import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.updatePumpSerialNumber;
 
 /**
  * Created by jamorham on 27/01/2018.
@@ -13,7 +16,7 @@ import sugar.free.sightparser.handling.HistoryBroadcast;
  *
  */
 
-public class HistoryIntentAdapter {
+class HistoryIntentAdapter {
 
     private HistoryLogAdapter logAdapter = new HistoryLogAdapter();
 
@@ -25,7 +28,8 @@ public class HistoryIntentAdapter {
         android.util.Log.e("HistoryIntentAdapter", msg);
     }
 
-    private static long getRecordUniqueID(long pump_serial_number, long pump_record_id) {
+    static long getRecordUniqueID(long pump_serial_number, long pump_record_id) {
+        updatePumpSerialNumber(pump_serial_number);
         return (pump_serial_number * 10000000) + pump_record_id;
     }
 
@@ -54,6 +58,7 @@ public class HistoryIntentAdapter {
     void processDeliveredBolusIntent(Intent intent) {
 
         final String bolus_type = intent.getStringExtra(HistoryBroadcast.EXTRA_BOLUS_TYPE);
+        final int bolus_id = intent.getIntExtra(HistoryBroadcast.EXTRA_BOLUS_ID,-1);
         final int pump_record_id = intent.getIntExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
         final long pump_serial_number = Long.parseLong(intent.getStringExtra(HistoryBroadcast.EXTRA_PUMP_SERIAL_NUMBER));
         final Date event_time = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
@@ -62,7 +67,7 @@ public class HistoryIntentAdapter {
         final float extended_insulin = intent.getFloatExtra(HistoryBroadcast.EXTRA_EXTENDED_AMOUNT, -1);
         final int extended_minutes = intent.getIntExtra(HistoryBroadcast.EXTRA_DURATION, -1);
 
-        final long record_unique_id = getRecordUniqueID(pump_serial_number, pump_record_id);
+        final long record_unique_id = getRecordUniqueID(pump_serial_number, bolus_id > -1 ? bolus_id : pump_record_id);
 
         switch (bolus_type) {
             case "STANDARD":
