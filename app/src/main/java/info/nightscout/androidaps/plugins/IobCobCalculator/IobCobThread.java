@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.queue.QueueThread;
 
@@ -31,6 +32,7 @@ import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculat
 
 public class IobCobThread extends Thread {
     private static Logger log = LoggerFactory.getLogger(QueueThread.class);
+    private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private boolean bgDataReload;
@@ -38,12 +40,13 @@ public class IobCobThread extends Thread {
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobThread(IobCobCalculatorPlugin plugin, String from, boolean bgDataReload) {
+    public IobCobThread(IobCobCalculatorPlugin plugin, String from, boolean bgDataReload, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
         this.bgDataReload = bgDataReload;
         this.from = from;
+        this.cause = cause;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
@@ -235,7 +238,7 @@ public class IobCobThread extends Thread {
                         log.debug(autosensData.log(bgTime));
                 }
             }
-            MainApp.bus().post(new EventAutosensCalculationFinished());
+            MainApp.bus().post(new EventAutosensCalculationFinished(cause));
             log.debug("Finishing calculation thread: " + from);
         } finally {
             mWakeLock.release();
