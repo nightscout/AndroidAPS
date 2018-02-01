@@ -4,11 +4,15 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.BGSourceFragment;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
+
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private static SourceXdripPlugin plugin = null;
 
@@ -20,10 +24,8 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public String getFragmentClass() {
-        return null;
+        return BGSourceFragment.class.getName();
     }
-
-    private boolean fragmentEnabled = false;
 
     @Override
     public int getType() {
@@ -48,7 +50,7 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return false;
+        return type == BGSOURCE && fragmentVisible;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean hasFragment() {
-        return false;
+        return true;
     }
 
     @Override
@@ -73,6 +75,7 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
+        if (type == BGSOURCE) this.fragmentVisible = fragmentVisible;
     }
 
     @Override

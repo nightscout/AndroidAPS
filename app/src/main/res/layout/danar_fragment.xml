@@ -124,6 +124,13 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/danar_queue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="content"
+                    android:textAlignment="center" />
+
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
@@ -144,7 +151,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_battery_label"
+                        android:text="@string/pump_battery_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -190,7 +197,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_lastconnection_label"
+                        android:text="@string/pump_lastconnection_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -235,7 +242,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/danar_lastbolus"
+                        android:text="@string/pump_lastbolus_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -325,7 +332,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_basebasalrate_label"
+                        android:text="@string/pump_basebasalrate_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -370,7 +377,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_tempbasal_label"
+                        android:text="@string/pump_tempbasal_label"
                         android:textSize="14sp" />
 
                     <TextView
@@ -460,7 +467,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_reservoir_label"
+                        android:text="@string/pump_reservoir_label"
                         android:textSize="14sp" />
 
                     <TextView

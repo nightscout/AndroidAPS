@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
@@ -22,12 +23,15 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
@@ -35,12 +39,6 @@ import info.nightscout.utils.TimeListEdit;
 
 public class LocalProfileFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(LocalProfileFragment.class);
-
-    private static LocalProfilePlugin localProfilePlugin = new LocalProfilePlugin();
-
-    public static LocalProfilePlugin getPlugin() {
-        return localProfilePlugin;
-    }
 
     NumberPicker diaView;
     RadioButton mgdlView;
@@ -50,6 +48,7 @@ public class LocalProfileFragment extends SubscriberFragment {
     TimeListEdit basalView;
     TimeListEdit targetView;
     Button profileswitchButton;
+    TextView invalidProfile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +57,11 @@ public class LocalProfileFragment extends SubscriberFragment {
             Runnable save = new Runnable() {
                 @Override
                 public void run() {
-                    localProfilePlugin.storeSettings();
-                    if(basalView!=null){
-                        basalView.updateLabel(MainApp.sResources.getString(R.string.nsprofileview_basal_label)+ ": "+ getSumLabel());
+                    LocalProfilePlugin.getPlugin().storeSettings();
+                    if (basalView != null) {
+                        basalView.updateLabel(MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel());
                     }
+                    updateGUI();
                 }
             };
 
@@ -79,48 +79,49 @@ public class LocalProfileFragment extends SubscriberFragment {
                 @Override
                 public void onTextChanged(CharSequence s, int start,
                                           int before, int count) {
-                    localProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                    localProfilePlugin.storeSettings();
+                    LocalProfilePlugin.getPlugin().dia = SafeParse.stringToDouble(diaView.getText().toString());
+                    LocalProfilePlugin.getPlugin().storeSettings();
+                    updateGUI();
                 }
             };
 
+            PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
+
             View layout = inflater.inflate(R.layout.localprofile_fragment, container, false);
             diaView = (NumberPicker) layout.findViewById(R.id.localprofile_dia);
-            diaView.setParams(localProfilePlugin.dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
+            diaView.setParams(LocalProfilePlugin.getPlugin().dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
             mgdlView = (RadioButton) layout.findViewById(R.id.localprofile_mgdl);
             mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
-            icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label) + ":", getPlugin().ic, null, 0.1d, new DecimalFormat("0.0"), save);
-            isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", getPlugin().isf, null, 0.1d, new DecimalFormat("0.0"), save);
-            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label)+ ": " + getSumLabel(), getPlugin().basal, null, 0.01d, new DecimalFormat("0.00"), save);
-            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label)+ ":", getPlugin().targetLow, getPlugin().targetHigh, 0.1d, new DecimalFormat("0.0"), save);
+            icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.getPlugin().ic, null, 0.5, 50d, 0.1d, new DecimalFormat("0.0"), save);
+            isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.getPlugin().isf, null, 0.5, 500d, 0.1d, new DecimalFormat("0.0"), save);
+            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), LocalProfilePlugin.getPlugin().basal, null, pumpDescription.basalMinimumRate, 10, 0.01d, new DecimalFormat("0.00"), save);
+            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.getPlugin().targetLow, LocalProfilePlugin.getPlugin().targetHigh, 3d, 200, 0.1d, new DecimalFormat("0.0"), save);
             profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
+            invalidProfile = (TextView) layout.findViewById(R.id.invalidprofile);
 
-            PumpInterface pump = MainApp.getConfigBuilder();
-            if (!pump.getPumpDescription().isTempBasalCapable) {
+            if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
                 layout.findViewById(R.id.localprofile_basal).setVisibility(View.GONE);
             }
 
-            updateGUI();
-
-            mgdlView.setChecked(localProfilePlugin.mgdl);
-            mmolView.setChecked(localProfilePlugin.mmol);
+            mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
+            mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
 
             mgdlView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    localProfilePlugin.mgdl = mgdlView.isChecked();
-                    localProfilePlugin.mmol = !localProfilePlugin.mgdl;
-                    mmolView.setChecked(localProfilePlugin.mmol);
-                    localProfilePlugin.storeSettings();
+                    LocalProfilePlugin.getPlugin().mgdl = mgdlView.isChecked();
+                    LocalProfilePlugin.getPlugin().mmol = !LocalProfilePlugin.getPlugin().mgdl;
+                    mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
+                    LocalProfilePlugin.getPlugin().storeSettings();
                 }
             });
             mmolView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    localProfilePlugin.mmol = mmolView.isChecked();
-                    localProfilePlugin.mgdl = !localProfilePlugin.mmol;
-                    mgdlView.setChecked(localProfilePlugin.mgdl);
-                    localProfilePlugin.storeSettings();
+                    LocalProfilePlugin.getPlugin().mmol = mmolView.isChecked();
+                    LocalProfilePlugin.getPlugin().mgdl = !LocalProfilePlugin.getPlugin().mmol;
+                    mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
+                    LocalProfilePlugin.getPlugin().storeSettings();
                 }
             });
 
@@ -136,7 +137,6 @@ public class LocalProfileFragment extends SubscriberFragment {
             });
 
 
-            updateGUI();
             return layout;
         } catch (Exception e) {
             log.error("Unhandled exception: ", e);
@@ -148,7 +148,11 @@ public class LocalProfileFragment extends SubscriberFragment {
 
     @NonNull
     public String getSumLabel() {
-        return " ∑" + DecimalFormatter.to2Decimal(localProfilePlugin.getProfile().getDefaultProfile().baseBasalSum()) +"U";
+        ProfileStore profile = LocalProfilePlugin.getPlugin().getProfile();
+        if (profile != null)
+            return " ∑" + DecimalFormatter.to2Decimal(profile.getDefaultProfile().baseBasalSum()) + "U";
+        else
+            return MainApp.gs(R.string.localprofile);
     }
 
     @Subscribe
@@ -163,11 +167,16 @@ public class LocalProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
+                    boolean isValid = LocalProfilePlugin.getPlugin().getProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid(MainApp.gs(R.string.localprofile));
+                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended() || !isValid) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);
                     }
+                    if (isValid)
+                        invalidProfile.setVisibility(View.GONE);
+                    else
+                        invalidProfile.setVisibility(View.VISIBLE);
                 }
             });
     }

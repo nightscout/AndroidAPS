@@ -84,30 +84,36 @@ public class NSProfileFragment extends SubscriberFragment implements AdapterView
         }
 
         ProfileStore profileStore = NSProfilePlugin.getPlugin().getProfile();
-        ArrayList<CharSequence> profileList = profileStore.getProfileList();
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(),
-                R.layout.spinner_centered, profileList);
-        profileSpinner.setAdapter(adapter);
-        // set selected to actual profile
-        for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
-                profileSpinner.setSelection(p);
+        if (profileStore != null) {
+            ArrayList<CharSequence> profileList = profileStore.getProfileList();
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(),
+                    R.layout.spinner_centered, profileList);
+            profileSpinner.setAdapter(adapter);
+            // set selected to actual profile
+            for (int p = 0; p < profileList.size(); p++) {
+                if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+                    profileSpinner.setSelection(p);
+            }
         }
-
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String name = parent.getItemAtPosition(position).toString();
 
-        Profile profile = NSProfilePlugin.getPlugin().getProfile().getSpecificProfile(name);
-        units.setText(profile.getUnits());
-        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-        activeProfile.setText(name);
-        ic.setText(profile.getIcList());
-        isf.setText(profile.getIsfList());
-        basal.setText(profile.getBasalList());
-        target.setText(profile.getTargetList());
+        ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
+        if (store != null) {
+            Profile profile = store.getSpecificProfile(name);
+            if (profile != null) {
+                units.setText(profile.getUnits());
+                dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
+                activeProfile.setText(name);
+                ic.setText(profile.getIcList());
+                isf.setText(profile.getIsfList());
+                basal.setText(profile.getBasalList());
+                target.setText(profile.getTargetList());
+            }
+        }
     }
 
     @Override

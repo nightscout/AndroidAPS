@@ -5,13 +5,13 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -37,11 +36,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.Series;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -50,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +53,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -69,7 +61,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.data.QuickWizardEntry;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -87,6 +79,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
@@ -103,16 +96,18 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
+import info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -120,9 +115,10 @@ import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.SingleClickButton;
 import info.nightscout.utils.ToastUtils;
 
-public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     TextView timeView;
@@ -152,22 +148,28 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView sage;
     TextView pbage;
 
-    CheckBox showPredictionView;
-    CheckBox showBasalsView;
-    CheckBox showIobView;
-    CheckBox showCobView;
-    CheckBox showDeviationsView;
-    CheckBox showRatiosView;
+    TextView showPredictionLabel;
+    CheckBox showPredictionCheckbox;
+    TextView showBasalsLabel;
+    CheckBox showBasalsCheckbox;
+    TextView showIobLabel;
+    CheckBox showIobCheckbox;
+    TextView showCobLabel;
+    CheckBox showCobCheckbox;
+    TextView showDeviationsLabel;
+    CheckBox showDeviationsCheckbox;
+    TextView showRatiosLabel;
+    CheckBox showRatiosCheckbox;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
 
     LinearLayout acceptTempLayout;
-    Button treatmentButton;
-    Button wizardButton;
-    Button calibrationButton;
-    Button acceptTempButton;
-    Button quickWizardButton;
+    SingleClickButton treatmentButton;
+    SingleClickButton wizardButton;
+    SingleClickButton calibrationButton;
+    SingleClickButton acceptTempButton;
+    SingleClickButton quickWizardButton;
 
     CheckBox lockScreen;
 
@@ -176,24 +178,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     public static boolean shorttextmode = false;
 
+    private boolean accepted;
+
     private int rangeToDisplay = 6; // for graph
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
 
-    private static Handler sHandler;
-    private static HandlerThread sHandlerThread;
+    final Object updateSync = new Object();
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
     public OverviewFragment() {
         super();
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(OverviewFragment.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
     }
 
     @Override
@@ -206,15 +204,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             int screen_width = dm.widthPixels;
             int screen_height = dm.heightPixels;
-            smallWidth = screen_width < Constants.SMALL_WIDTH;
-            smallHeight = screen_height < Constants.SMALL_HEIGHT;
+            smallWidth = screen_width <= Constants.SMALL_WIDTH;
+            smallHeight = screen_height <= Constants.SMALL_HEIGHT;
             boolean landscape = screen_height < screen_width;
 
             View view;
 
-            if (MainApp.sResources.getBoolean(R.bool.isTablet) && BuildConfig.NSCLIENTOLNY) {
+            if (MainApp.sResources.getBoolean(R.bool.isTablet) && (Config.NSCLIENT || Config.G5UPLOADER)) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
-            } else if (BuildConfig.NSCLIENTOLNY) {
+            } else if (Config.NSCLIENT || Config.G5UPLOADER) {
                 view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
                 shorttextmode = true;
             } else if (smallHeight || landscape) {
@@ -257,39 +255,53 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
             iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
 
-            treatmentButton = (Button) view.findViewById(R.id.overview_treatmentbutton);
+            treatmentButton = (SingleClickButton) view.findViewById(R.id.overview_treatmentbutton);
             treatmentButton.setOnClickListener(this);
-            wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
+            wizardButton = (SingleClickButton) view.findViewById(R.id.overview_wizardbutton);
             wizardButton.setOnClickListener(this);
-            acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
+            acceptTempButton = (SingleClickButton) view.findViewById(R.id.overview_accepttempbutton);
             if (acceptTempButton != null)
                 acceptTempButton.setOnClickListener(this);
-            quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizardbutton);
+            quickWizardButton = (SingleClickButton) view.findViewById(R.id.overview_quickwizardbutton);
             quickWizardButton.setOnClickListener(this);
-            calibrationButton = (Button) view.findViewById(R.id.overview_calibrationbutton);
+            quickWizardButton.setOnLongClickListener(this);
+            calibrationButton = (SingleClickButton) view.findViewById(R.id.overview_calibrationbutton);
             if (calibrationButton != null)
                 calibrationButton.setOnClickListener(this);
 
             acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
-            showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
-            showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
-            showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
-            showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
-            showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
-            showRatiosView = (CheckBox) view.findViewById(R.id.overview_showratios);
-            showPredictionView.setChecked(SP.getBoolean("showprediction", false));
-            showBasalsView.setChecked(SP.getBoolean("showbasals", true));
-            showIobView.setChecked(SP.getBoolean("showiob", false));
-            showCobView.setChecked(SP.getBoolean("showcob", false));
-            showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
-            showRatiosView.setChecked(SP.getBoolean("showratios", false));
-            showPredictionView.setOnCheckedChangeListener(this);
-            showBasalsView.setOnCheckedChangeListener(this);
-            showIobView.setOnCheckedChangeListener(this);
-            showCobView.setOnCheckedChangeListener(this);
-            showDeviationsView.setOnCheckedChangeListener(this);
-            showRatiosView.setOnCheckedChangeListener(this);
+            showPredictionCheckbox = (CheckBox) view.findViewById(R.id.overview_showprediction);
+            showBasalsCheckbox = (CheckBox) view.findViewById(R.id.overview_showbasals);
+            showIobCheckbox = (CheckBox) view.findViewById(R.id.overview_showiob);
+            showCobCheckbox = (CheckBox) view.findViewById(R.id.overview_showcob);
+            showDeviationsCheckbox = (CheckBox) view.findViewById(R.id.overview_showdeviations);
+            showRatiosCheckbox = (CheckBox) view.findViewById(R.id.overview_showratios);
+            showPredictionCheckbox.setChecked(SP.getBoolean("showprediction", false));
+            showBasalsCheckbox.setChecked(SP.getBoolean("showbasals", true));
+            showIobCheckbox.setChecked(SP.getBoolean("showiob", false));
+            showCobCheckbox.setChecked(SP.getBoolean("showcob", false));
+            showDeviationsCheckbox.setChecked(SP.getBoolean("showdeviations", false));
+            showRatiosCheckbox.setChecked(SP.getBoolean("showratios", false));
+            showPredictionCheckbox.setOnCheckedChangeListener(this);
+            showBasalsCheckbox.setOnCheckedChangeListener(this);
+            showIobCheckbox.setOnCheckedChangeListener(this);
+            showCobCheckbox.setOnCheckedChangeListener(this);
+            showDeviationsCheckbox.setOnCheckedChangeListener(this);
+            showRatiosCheckbox.setOnCheckedChangeListener(this);
+
+            showPredictionLabel = (TextView) view.findViewById(R.id.overview_showprediction_label);
+            showPredictionLabel.setOnClickListener(this);
+            showBasalsLabel = (TextView) view.findViewById(R.id.overview_showbasals_label);
+            showBasalsLabel.setOnClickListener(this);
+            showIobLabel = (TextView) view.findViewById(R.id.overview_showiob_label);
+            showIobLabel.setOnClickListener(this);
+            showCobLabel = (TextView) view.findViewById(R.id.overview_showcob_label);
+            showCobLabel.setOnClickListener(this);
+            showDeviationsLabel = (TextView) view.findViewById(R.id.overview_showdeviations_label);
+            showDeviationsLabel.setOnClickListener(this);
+            showRatiosLabel = (TextView) view.findViewById(R.id.overview_showratios_label);
+            showRatiosLabel.setOnClickListener(this);
 
             notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
             notificationsView.setHasFixedSize(true);
@@ -333,6 +345,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return view;
         } catch (Exception e) {
             Crashlytics.logException(e);
+            log.debug("Runtime Exception", e);
         }
 
         return null;
@@ -344,6 +357,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+            final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
             if (activeloop == null)
                 return;
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
@@ -354,7 +368,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor3h));
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor10h));
-                    menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
+                    if (pumpDescription.tempDurationStep <= 30)
+                        menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor1h));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor2h));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor3h));
@@ -379,24 +394,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             case R.id.overview_showiob:
                 break;
             case R.id.overview_showcob:
-                showDeviationsView.setOnCheckedChangeListener(null);
-                showDeviationsView.setChecked(false);
-                showDeviationsView.setOnCheckedChangeListener(this);
+                showDeviationsCheckbox.setOnCheckedChangeListener(null);
+                showDeviationsCheckbox.setChecked(false);
+                showDeviationsCheckbox.setOnCheckedChangeListener(this);
                 break;
             case R.id.overview_showdeviations:
-                showCobView.setOnCheckedChangeListener(null);
-                showCobView.setChecked(false);
-                showCobView.setOnCheckedChangeListener(this);
+                showCobCheckbox.setOnCheckedChangeListener(null);
+                showCobCheckbox.setChecked(false);
+                showCobCheckbox.setOnCheckedChangeListener(this);
                 break;
             case R.id.overview_showratios:
                 break;
         }
-        SP.putBoolean("showiob", showIobView.isChecked());
-        SP.putBoolean("showprediction", showPredictionView.isChecked());
-        SP.putBoolean("showbasals", showBasalsView.isChecked());
-        SP.putBoolean("showcob", showCobView.isChecked());
-        SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-        SP.putBoolean("showratios", showRatiosView.isChecked());
+        SP.putBoolean("showiob", showIobCheckbox.isChecked());
+        SP.putBoolean("showprediction", showPredictionCheckbox.isChecked());
+        SP.putBoolean("showbasals", showBasalsCheckbox.isChecked());
+        SP.putBoolean("showcob", showCobCheckbox.isChecked());
+        SP.putBoolean("showdeviations", showDeviationsCheckbox.isChecked());
+        SP.putBoolean("showratios", showRatiosCheckbox.isChecked());
         scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
     }
 
@@ -408,10 +423,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -429,10 +443,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -443,10 +456,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -457,10 +469,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -471,10 +482,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -485,10 +495,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(System.currentTimeMillis() + 10 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -497,59 +506,95 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 30, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 30, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 60, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 2 * 60, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 2 * 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
             updateGUI("suspendmenu");
-            sHandler.post(new Runnable() {
+            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 3 * 60, true, new Callback() {
                 @Override
                 public void run() {
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 3 * 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
                 }
             });
+            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
+                    @Override
+                    public void run() {
+                        if (!result.success) {
+                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
+                        }
+                    }
+                });
+            }
             NSUpload.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
@@ -590,16 +635,40 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
                 break;
             case R.id.overview_pumpstatus:
-                if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
-                        }
-                    });
+                if (ConfigBuilderPlugin.getActivePump().isSuspended() || !ConfigBuilderPlugin.getActivePump().isInitialized())
+                    ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
+                break;
+            case R.id.overview_showprediction_label:
+                showPredictionCheckbox.toggle();
+                break;
+            case R.id.overview_showbasals_label:
+                showBasalsCheckbox.toggle();
+                break;
+            case R.id.overview_showiob_label:
+                showIobCheckbox.toggle();
+                break;
+            case R.id.overview_showcob_label:
+                showCobCheckbox.toggle();
+                break;
+            case R.id.overview_showdeviations_label:
+                showDeviationsCheckbox.toggle();
+                break;
+            case R.id.overview_showratios_label:
+                showRatiosCheckbox.toggle();
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.overview_quickwizardbutton:
+                Intent i = new Intent(v.getContext(), QuickWizardListActivity.class);
+                startActivity(i);
+                return true;
+        }
+        return false;
     }
 
     private void onClickAcceptTemp() {
@@ -612,14 +681,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                 builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        sHandler.post(new Runnable() {
+                        hideTempRecommendation();
+                        clearNotification();
+                        MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed, new Callback() {
                             @Override
                             public void run() {
-                                hideTempRecommendation();
-                                clearNotification();
-                                PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
-                                if (applyResult.enacted) {
-                                    finalLastRun.setByPump = applyResult;
+                                if (result.enacted) {
+                                    finalLastRun.setByPump = result;
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
@@ -646,11 +714,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
         final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
 
-        QuickWizard.QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
+        final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
-            BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, tempTarget, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            final BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, actualBg, true);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -696,40 +763,61 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                 final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
                 final Context context = getContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                accepted = false;
                 builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                 builder.setMessage(confirmMessage);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                            final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                            sHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                    detailedBolusInfo.context = context;
-                                    detailedBolusInfo.boluscalc = boluscalcJSON;
-                                    detailedBolusInfo.source = Source.USER;
-                                    PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
-                                    if (!result.success) {
-                                        try {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
-                                        } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                            // window has been destroyed
-                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                            MainApp.bus().post(new EventNewNotification(notification));
+                        synchronized (builder) {
+                            if (accepted) {
+                                log.debug("guarding: already accepted");
+                                return;
+                            }
+                            accepted = true;
+                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                if (wizard.superBolus) {
+                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                                    if (activeloop != null) {
+                                        activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                        MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
+                                    }
+                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
+                                        @Override
+                                        public void run() {
+                                            if (!result.success) {
+                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                i.putExtra("soundid", R.raw.boluserror);
+                                                i.putExtra("status", result.comment);
+                                                i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                MainApp.instance().startActivity(i);
+                                            }
+                                        }
+                                    });
+                                }
+                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                detailedBolusInfo.context = context;
+                                detailedBolusInfo.boluscalc = boluscalcJSON;
+                                detailedBolusInfo.source = Source.USER;
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
                                         }
                                     }
-                                }
-                            });
-                            Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                                });
+                                Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                            }
                         }
                     }
                 });
@@ -893,9 +981,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @SuppressLint("SetTextI18n")
-    public void updateGUI(String from) {
+    public void updateGUI(final String from) {
         log.debug("updateGUI entered from: " + from);
-        Date updateGUIStart = new Date();
+        final Date updateGUIStart = new Date();
 
         if (getActivity() == null)
             return;
@@ -917,7 +1005,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
-        PumpInterface pump = MainApp.getConfigBuilder();
+        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         String units = profile.getUnits();
@@ -929,8 +1017,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
-        double lowLine = SP.getDouble("low_mark", 0d);
-        double highLine = SP.getDouble("high_mark", 0d);
+        double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
+        double highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
+
+        if (lowLineSetting < 1)
+            lowLineSetting = Profile.fromMgdlToUnits(76d, units);
+        if (highLineSetting < 1)
+            highLineSetting = Profile.fromMgdlToUnits(180d, units);
+
+        final double lowLine = lowLineSetting;
+        final double highLine = highLineSetting;
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -959,7 +1055,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if (Config.APS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable) {
+        if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
             apsModeView.setTextColor(Color.BLACK);
@@ -1004,9 +1100,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
-        if (Config.NSCLIENT && tempTarget == null) {
-            tempTargetView.setVisibility(View.GONE);
-        }
 
         // **** Temp button ****
         if (acceptTempLayout != null) {
@@ -1043,9 +1136,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             baseBasalView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String fullText = MainApp.sResources.getString(R.string.virtualpump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h\n";
+                    String fullText = MainApp.sResources.getString(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h\n";
                     if (activeTemp != null) {
-                        fullText += MainApp.sResources.getString(R.string.virtualpump_tempbasal_label) + ": " + activeTemp.toStringFull();
+                        fullText += MainApp.sResources.getString(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                     }
                     OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.basal), fullText, null);
                 }
@@ -1055,7 +1148,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull() + " ";
             }
-            if (Config.NSCLIENT)
+            if (Config.NSCLIENT || Config.G5UPLOADER)
                 basalText += "(" + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
@@ -1072,15 +1165,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         final ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
         String extendedBolusText = "";
-        if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
-            extendedBolusText = extendedBolus.toString();
-        }
         if (extendedBolusView != null) { // must not exists in all layouts
             if (shorttextmode) {
                 if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
                     extendedBolusText = DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + "U/h";
-                } else {
-                    extendedBolusText = "";
                 }
                 extendedBolusView.setText(extendedBolusText);
                 extendedBolusView.setOnClickListener(new View.OnClickListener() {
@@ -1091,8 +1179,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 });
 
             } else {
+                if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
+                    extendedBolusText = extendedBolus.toString();
+                }
                 extendedBolusView.setText(extendedBolusText);
             }
+            if (extendedBolusText.equals(""))
+                extendedBolusView.setVisibility(View.GONE);
+            else
+                extendedBolusView.setVisibility(View.VISIBLE);
         }
 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
@@ -1113,12 +1208,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         tempTargetView.setLongClickable(true);
 
         // QuickWizard button
-        QuickWizard.QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
+        QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
-            BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, tempTarget, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(units), 0d, true, true, false, false);
+            BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, lastBG, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
@@ -1136,16 +1230,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
 
-        if (lowLine < 1) {
-            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        }
-        if (highLine < 1) {
-            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
-        }
-
         // **** BG value ****
         if (lastBG == null) { //left this here as it seems you want to exit at this point if it is null...
-
             return;
         }
         Integer flag = bgView.getPaintFlags();
@@ -1192,19 +1278,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // cob
         if (cobView != null) { // view must not exists
             String cobText = "";
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
+            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("Overview COB");
             if (autosensData != null)
                 cobText = (int) autosensData.cob + " g";
             cobView.setText(cobText);
         }
 
-        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
+        final boolean showPrediction = showPredictionCheckbox.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
         if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
-            showPredictionView.setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
+            showPredictionCheckbox.setVisibility(View.VISIBLE);
+            showPredictionLabel.setVisibility(View.VISIBLE);
         } else {
-            showPredictionView.setVisibility(View.GONE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
+            showPredictionCheckbox.setVisibility(View.GONE);
+            showPredictionLabel.setVisibility(View.GONE);
         }
 
         // pump status from ns
@@ -1242,105 +1328,121 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // ****** GRAPH *******
 
-        // allign to hours
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.add(Calendar.HOUR, 1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // allign to hours
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.MILLISECOND, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.add(Calendar.HOUR, 1);
 
-        int hoursToFetch;
-        long toTime;
-        long fromTime;
-        long endTime;
-        if (showPrediction) {
-            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
-            predHours = Math.min(2, predHours);
-            predHours = Math.max(0, predHours);
-            hoursToFetch = rangeToDisplay - predHours;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime + predHours * 60 * 60 * 1000L;
-        } else {
-            hoursToFetch = rangeToDisplay;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime;
-        }
+                int hoursToFetch;
+                final long toTime;
+                final long fromTime;
+                final long endTime;
+                if (showPrediction) {
+                    int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
+                    predHours = Math.min(2, predHours);
+                    predHours = Math.max(0, predHours);
+                    hoursToFetch = rangeToDisplay - predHours;
+                    toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
+                    fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                    endTime = toTime + predHours * 60 * 60 * 1000L;
+                } else {
+                    hoursToFetch = rangeToDisplay;
+                    toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
+                    fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                    endTime = toTime;
+                }
 
 
-        long now = System.currentTimeMillis();
+                final long now = System.currentTimeMillis();
 
-        // 2nd graph
-        // remove old data
-        iobGraph.getSeries().clear();
+                //  ------------------ 1st graph
+                Profiler.log(log, from + " - 1st graph - START", updateGUIStart);
 
-        GraphData secondGraphData = new GraphData();
+                final GraphData graphData = new GraphData(bgGraph);
 
-        boolean useIobForScale = false;
-        boolean useCobForScale = false;
-        boolean useDevForScale = false;
-        boolean useRatioForScale = false;
+                // **** In range Area ****
+                graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
 
-        if (showIobView.isChecked()) {
-            useIobForScale = true;
-        } else if (showCobView.isChecked()) {
-            useCobForScale = true;
-        } else if (showDeviationsView.isChecked()) {
-            useDevForScale = true;
-        } else if (showRatiosView.isChecked()) {
-            useRatioForScale = true;
-        }
+                // **** BG ****
+                if (showPrediction)
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
+                else
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
 
-        if (showIobView.isChecked())
-            secondGraphData.addIob(iobGraph, fromTime, now, useIobForScale, 1d);
-        if (showCobView.isChecked())
-            secondGraphData.addCob(iobGraph, fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
-        if (showDeviationsView.isChecked())
-            secondGraphData.addDeviations(iobGraph, fromTime, now, useDevForScale, 1d);
-        if (showRatiosView.isChecked())
-            secondGraphData.addRatio(iobGraph, fromTime, now, useRatioForScale, 1d);
+                // set manual x bounds to have nice steps
+                graphData.formatAxis(fromTime, endTime);
 
-        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
-            iobGraph.setVisibility(View.VISIBLE);
-        } else {
-            iobGraph.setVisibility(View.GONE);
-        }
+                // Treatments
+                graphData.addTreatments(fromTime, endTime);
 
-        // remove old data from graph
-        bgGraph.getSeries().clear();
+                // add basal data
+                if (pump.getPumpDescription().isTempBasalCapable && showBasalsCheckbox.isChecked()) {
+                    graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2d);
+                }
 
-        GraphData graphData = new GraphData();
+                // **** NOW line ****
+                graphData.addNowLine(now);
 
-        // **** In range Area ****
-        graphData.addInRangeArea(bgGraph, fromTime, endTime, lowLine, highLine);
+                // ------------------ 2nd graph
+                Profiler.log(log, from + " - 2nd graph - START", updateGUIStart);
 
-        // **** BG ****
-        if (showPrediction)
-            graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
-        else
-            graphData.addBgReadings(bgGraph, fromTime, toTime, lowLine, highLine, null);
+                final GraphData secondGraphData = new GraphData(iobGraph);
 
-        // set manual x bounds to have nice steps
-        graphData.formatAxis(bgGraph, fromTime, endTime);
-        secondGraphData.formatAxis(iobGraph, fromTime, endTime);
+                boolean useIobForScale = false;
+                boolean useCobForScale = false;
+                boolean useDevForScale = false;
+                boolean useRatioForScale = false;
 
-        // Treatments
-        graphData.addTreatments(bgGraph, fromTime, endTime);
+                if (showIobCheckbox.isChecked()) {
+                    useIobForScale = true;
+                } else if (showCobCheckbox.isChecked()) {
+                    useCobForScale = true;
+                } else if (showDeviationsCheckbox.isChecked()) {
+                    useDevForScale = true;
+                } else if (showRatiosCheckbox.isChecked()) {
+                    useRatioForScale = true;
+                }
 
-        // add basal data
-        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            graphData.addBasals(bgGraph, fromTime, now, lowLine / graphData.maxY / 1.2d);
-        }
+                if (showIobCheckbox.isChecked())
+                    secondGraphData.addIob(fromTime, now, useIobForScale, 1d);
+                if (showCobCheckbox.isChecked())
+                    secondGraphData.addCob(fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
+                if (showDeviationsCheckbox.isChecked())
+                    secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
+                if (showRatiosCheckbox.isChecked())
+                    secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
 
-        // **** NOW line ****
-        graphData.addNowLine(bgGraph, now);
-        secondGraphData.addNowLine(iobGraph, now);
+                // **** NOW line ****
+                // set manual x bounds to have nice steps
+                secondGraphData.formatAxis(fromTime, endTime);
+                secondGraphData.addNowLine(now);
 
-        // finaly enforce drawing of graphs
-        bgGraph.onDataChanged(false, false);
-        iobGraph.onDataChanged(false, false);
+                // do GUI update
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (showIobCheckbox.isChecked() || showCobCheckbox.isChecked() || showDeviationsCheckbox.isChecked() || showRatiosCheckbox.isChecked()) {
+                                iobGraph.setVisibility(View.VISIBLE);
+                            } else {
+                                iobGraph.setVisibility(View.GONE);
+                            }
+                            // finally enforce drawing of graphs
+                            graphData.performUpdate();
+                            secondGraphData.performUpdate();
+                            Profiler.log(log, from + " - onDataChanged", updateGUIStart);
+                        }
+                    });
+                }
+            }
+        }).start();
 
         Profiler.log(log, from, updateGUIStart);
     }
@@ -1426,6 +1528,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         }
+
     }
 
     void updateNotifications() {

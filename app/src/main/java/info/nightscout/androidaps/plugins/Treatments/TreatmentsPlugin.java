@@ -15,10 +15,10 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
@@ -33,8 +33,8 @@ import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.utils.SP;
@@ -108,7 +108,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -200,8 +200,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             if (!t.isSMB) {
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
-                long timeSinceTreatment =  time - t.date;
-                long snoozeTime = t.date + (long)(timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                long timeSinceTreatment = time - t.date;
+                long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
                 Iob bIOB = t.iobCalc(snoozeTime, dia);
                 total.bolussnooze += bIOB.iobContrib;
             } else {
@@ -210,7 +210,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             }
         }
 
-        if (!MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+        if (!ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
@@ -251,7 +251,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             }
         }
 
-        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
+        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensDataSynchronized("getMealData()");
         if (autosensData != null) {
             result.mealCOB = autosensData.cob;
         }
@@ -329,7 +329,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 total.plus(calc);
             }
         }
-        if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+        if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
             IobTotal totalExt = new IobTotal(time);
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
@@ -361,7 +361,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (tb != null)
             return tb;
         ExtendedBolus eb = getExtendedBolusFromHistory(time);
-        if (eb != null && MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+        if (eb != null && ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
             return new TemporaryBasal(eb);
         return null;
     }
@@ -384,18 +384,16 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public double getTempBasalAbsoluteRateHistory() {
-        PumpInterface pump = MainApp.getConfigBuilder();
-
         TemporaryBasal tb = getTempBasalFromHistory(System.currentTimeMillis());
         if (tb != null) {
-            if (tb.isFakeExtended){
-                double baseRate = pump.getBaseBasalRate();
+            if (tb.isFakeExtended) {
+                double baseRate = ConfigBuilderPlugin.getActivePump().getBaseBasalRate();
                 double tempRate = baseRate + tb.netExtendedRate;
                 return tempRate;
             } else if (tb.isAbsolute) {
                 return tb.absoluteRate;
             } else {
-                double baseRate = pump.getBaseBasalRate();
+                double baseRate = ConfigBuilderPlugin.getActivePump().getBaseBasalRate();
                 double tempRate = baseRate * (tb.percentRate / 100d);
                 return tempRate;
             }
@@ -405,8 +403,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public double getTempBasalRemainingMinutesFromHistory() {
-        if (isTempBasalInProgress())
-            return getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes();
+        TemporaryBasal activeTemp = getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            return activeTemp.getPlannedRemainingMinutes();
+        }
         return 0;
     }
 

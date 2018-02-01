@@ -31,7 +31,8 @@ public class ProfileIntervals<T extends Interval> {
 
     public synchronized void add(List<T> list) {
         for (T interval : list) {
-            rawData.put(interval.start(), interval);
+            if (interval.isValid())
+                rawData.put(interval.start(), interval);
         }
         merge();
     }
@@ -62,7 +63,7 @@ public class ProfileIntervals<T extends Interval> {
 
     public synchronized List<T> getReversedList() {
         List<T> list = new ArrayList<>();
-        for (int i = rawData.size() -1; i>=0; i--)
+        for (int i = rawData.size() - 1; i >= 0; i--)
             list.add(rawData.valueAt(i));
         return list;
     }

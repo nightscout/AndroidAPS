@@ -35,4 +35,6 @@ public class PumpDescription {
     public double basalMinimumRate = 0.04d;
 
     public boolean isRefillingCapable = false;
+
+    public boolean storesCarbInfo = true;
 }

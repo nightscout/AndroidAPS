@@ -53,6 +53,7 @@ public class BgReading implements DataPointWithLabelInterface {
         value = sgv.getMgdl();
         raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
+        _id = sgv.getId();
     }
 
     public Double valueToUnits(String units) {
@@ -96,7 +97,9 @@ public class BgReading implements DataPointWithLabelInterface {
                 direction.compareTo("NOT COMPUTABLE") == 0 ||
                 direction.compareTo("OUT_OF_RANGE") == 0 ||
                 direction.compareTo("OUT OF RANGE") == 0 ||
-                direction.compareTo("NONE") == 0) {
+                direction.compareTo("NONE") == 0 ||
+                direction.compareTo("NotComputable") == 0
+                ) {
             return true;
         } else {
             return false;
