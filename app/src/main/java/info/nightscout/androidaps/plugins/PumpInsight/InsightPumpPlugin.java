@@ -141,7 +141,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.02d;
 
-        pumpDescription.isRefillingCapable = false;
+        pumpDescription.isRefillingCapable = true;
         //pumpDescription.storesCarbInfo = false; // uncomment when PumpDescription updated to include this
 
         this.connector = Connector.get();
