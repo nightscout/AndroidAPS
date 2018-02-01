@@ -7,10 +7,10 @@
     <SwitchPreference
         android:defaultValue="false"
         android:key="insight_always_connected"
-        android:title="Stay always connected" />
+        android:title="@string/insight_stay_always_connected" />
     <SwitchPreference
         android:defaultValue="false"
         android:key="insight_real_tbr_cancel"
-        android:title="Use Real TBR cancels"
-        android:summary="Actually cancel a TBR (creates pump alarm) instead of setting 90% or 110% TBR for 15 minutes"/>
+        android:title="@string/insight_use_real_tbr_cancels"
+        android:summary="@string/insight_actually_cancel_tbr_summary"/>
 </PreferenceScreen  >

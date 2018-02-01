@@ -715,7 +715,11 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return "Insight Pump";
+        String msg = gs(R.string.insightpump_shortname) + " Batt: " + batteryPercent + " Reserv: " + reservoirInUnits + " Basal: " + basalRate;
+        if (LiveHistory.getStatus().length() > 0) {
+            msg += LiveHistory.getStatus();
+        }
+        return msg;
     }
 
     private void processStatusResult() {
@@ -741,8 +745,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         // Todo last contact time
 
-        l.add(new StatusItem("Status", connector.getLastStatusMessage()));
-        l.add(new StatusItem("Changed", connector.getNiceLastStatusTime()));
+        l.add(new StatusItem(gs(R.string.status_no_colon), connector.getLastStatusMessage()));
+        l.add(new StatusItem(gs(R.string.changed), connector.getNiceLastStatusTime()));
 
         boolean pumpRunning;
         // also check time since received
@@ -752,7 +756,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             if (pumpRunning) {
                 l.add(new StatusItem(gs(R.string.pump_basebasalrate_label), getBaseBasalRateString() + "U"));
             } else {
-                l.add(new StatusItem("Warning", "PUMP STOPPED", StatusItem.Highlight.CRITICAL));
+                l.add(new StatusItem(gs(R.string.combo_warning), gs(R.string.pump_stopped_uppercase), StatusItem.Highlight.CRITICAL));
             }
         }
 
@@ -760,7 +764,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         final long offset_minutes = offset_ms / 60000;
 
         if (statusResult != null) {
-            l.add(new StatusItem("Status Updated", Helpers.niceTimeScalar(Helpers.msSince(statusResultTime)) + " ago"));
+            l.add(new StatusItem(gs(R.string.status_updated), Helpers.niceTimeScalar(Helpers.msSince(statusResultTime)) + " " + gs(R.string.ago)));
             l.add(new StatusItem(gs(R.string.pump_battery_label), batteryPercent + "%", batteryPercent < 100 ?
                     (batteryPercent < 90 ?
                             (batteryPercent < 70 ?
@@ -768,9 +772,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             l.add(new StatusItem(gs(R.string.pump_reservoir_label), reservoirInUnits + "U"));
 
             if (statusResult.getCurrentTBRMessage().getPercentage() != 100) {
-                l.add(new StatusItem("Active TBR", statusResult.getCurrentTBRMessage().getPercentage() + "% with "
+                l.add(new StatusItem(gs(R.string.insight_active_tbr), statusResult.getCurrentTBRMessage().getPercentage() + "% " + gs(R.string.with) + " "
                         + Helpers.qs(statusResult.getCurrentTBRMessage().getLeftoverTime() - offset_minutes, 0)
-                        + " min left", StatusItem.Highlight.NOTICE));
+                        + " " + gs(R.string.insight_min_left), StatusItem.Highlight.NOTICE));
             }
 
         }
@@ -798,13 +802,16 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             }
         }
 
-        l.add(new StatusItem("Log book", HistoryReceiver.getStatusString()));
+        l.add(new StatusItem(gs(R.string.log_book), HistoryReceiver.getStatusString()));
 
         if (LiveHistory.getStatus().length() > 0) {
-            l.add(new StatusItem("Last Completed Action", LiveHistory.getStatus()));
+            l.add(new StatusItem(gs(R.string.insight_last_completed_action), LiveHistory.getStatus()));
         }
 
-        Connector.get().requestHistorySync();
+        if (Helpers.ratelimit("insight-status-ui-refresh", 10)) {
+            connector.tryToGetPumpStatusAgain();
+        }
+        connector.requestHistorySync();
         if (refresh) scheduleGUIUpdate();
 
         return l;
@@ -827,15 +834,15 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         switch (activeBolus.getBolusType()) {
 
             case STANDARD:
-                l.add(new StatusItem(activeBolus.getBolusType() + " Bolus", activeBolus.getInitialAmount() + "U", StatusItem.Highlight.NOTICE));
+                l.add(new StatusItem(activeBolus.getBolusType() + " " + gs(R.string.bolus), activeBolus.getInitialAmount() + "U", StatusItem.Highlight.NOTICE));
                 break;
             case EXTENDED:
-                l.add(new StatusItem(activeBolus.getBolusType() + " Bolus", activeBolus.getInitialAmount() + "U total with "
-                        + activeBolus.getLeftoverAmount() + "U remaining over " + (activeBolus.getDuration() - offset_mins) + " min", StatusItem.Highlight.NOTICE));
+                l.add(new StatusItem(activeBolus.getBolusType() + " " + gs(R.string.bolus), activeBolus.getInitialAmount() + "U " + gs(R.string.insight_total_with) + " "
+                        + activeBolus.getLeftoverAmount() + "U " + gs(R.string.insight_remaining_over) + " " + (activeBolus.getDuration() - offset_mins) + " " + gs(R.string.insight_min), StatusItem.Highlight.NOTICE));
                 break;
             case MULTIWAVE:
-                l.add(new StatusItem(activeBolus.getBolusType() + " Bolus", activeBolus.getInitialAmount() + "U upfront with "
-                        + activeBolus.getLeftoverAmount() + "U remaining over " + (activeBolus.getDuration() - offset_mins) + " min", StatusItem.Highlight.NOTICE));
+                l.add(new StatusItem(activeBolus.getBolusType() + " " + gs(R.string.bolus), activeBolus.getInitialAmount() + "U " + gs(R.string.insight_upfront_with) + " "
+                        + activeBolus.getLeftoverAmount() + "U " + gs(R.string.insight_remaining_over) + " " + (activeBolus.getDuration() - offset_mins) + " " + gs(R.string.insight_min), StatusItem.Highlight.NOTICE));
 
                 break;
             default:

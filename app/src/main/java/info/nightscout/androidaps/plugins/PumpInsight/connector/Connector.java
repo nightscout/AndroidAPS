@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.PowerManager;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
@@ -69,7 +70,7 @@ public class Connector {
                 } else {
                     log("PROTOCOL VERSION MISMATCH!  local: " + COMPATIBILITY_VERSION + " remote: " + remoteVersion);
                     statusCallback.onStatusChange(Status.INCOMPATIBLE);
-                    compatabilityMessage = "Incompatible companion app, we need version " + getLocalVersion();
+                    compatabilityMessage = gs(R.string.insight_incompatible_compantion_app_we_need_version) + " " + getLocalVersion();
                     serviceConnector.disconnectFromService();
 
                 }
@@ -126,6 +127,37 @@ public class Connector {
 
     static String getLocalVersion() {
         return COMPATIBILITY_VERSION;
+    }
+
+    private static String statusToString(Status status) {
+        switch (status) {
+
+            case EXCHANGING_KEYS:
+                return gs(R.string.connecting).toUpperCase();
+            case WAITING_FOR_CODE_CONFIRMATION:
+                return gs(R.string.insight_waiting_for_code).toUpperCase();
+            case CODE_REJECTED:
+                return gs(R.string.insight_code_rejected).toUpperCase();
+            case APP_BINDING:
+                return gs(R.string.insight_app_binding).toUpperCase();
+            case CONNECTING:
+                return gs(R.string.connecting).toUpperCase();
+            case CONNECTED:
+                return gs(R.string.connected).toUpperCase();
+            case DISCONNECTED:
+                return gs(R.string.disconnected).toUpperCase();
+            case NOT_AUTHORIZED:
+                return gs(R.string.insight_not_authorized).toUpperCase();
+            case INCOMPATIBLE:
+                return gs(R.string.insight_incompatible).toUpperCase();
+
+            default:
+                return status.toString();
+        }
+    }
+
+    private static String gs(int id) {
+        return MainApp.instance().getString(id);
     }
 
     @SuppressWarnings("AccessStaticViaInstance")
@@ -208,7 +240,7 @@ public class Connector {
     public String getLastStatusMessage() {
 
         if (!companionAppInstalled) {
-            return "Companion app does not appear to be installed!";
+            return gs(R.string.insight_companion_app_not_installed);
         }
 
         if (!isConnected()) {
@@ -222,13 +254,13 @@ public class Connector {
                     // if disconnected but previous state was incompatible
                     return compatabilityMessage;
                 } else {
-                    return "Not connected to companion app!";
+                    return gs(R.string.insight_not_connected_to_companion_app);
                 }
             }
         }
 
         if (lastStatus == null) {
-            return "Unknown";
+            return gs(R.string.insight_unknown);
         }
 
         switch (lastStatus) {
@@ -238,16 +270,16 @@ public class Connector {
                 }
                 break;
             case INCOMPATIBLE:
-                return lastStatus.toString() + " needs " + getLocalVersion();
+                return statusToString(lastStatus) + " " + gs(R.string.insight_needs) + " " + getLocalVersion();
         }
-        return lastStatus.toString();
+        return statusToString(lastStatus);
     }
 
     public String getNiceLastStatusTime() {
         if (lastStatusTime < 1) {
-            return "STARTUP";
+            return gs(R.string.insight_startup_uppercase);
         } else {
-            return Helpers.niceTimeScalar(Helpers.msSince(lastStatusTime)) + " ago";
+            return Helpers.niceTimeScalar(Helpers.msSince(lastStatusTime)) + " " + gs(R.string.ago);
         }
     }
 

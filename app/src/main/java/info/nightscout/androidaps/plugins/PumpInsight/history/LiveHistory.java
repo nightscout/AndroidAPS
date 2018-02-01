@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpInsight.history;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 
 /**
@@ -15,7 +17,7 @@ public class LiveHistory {
 
     public static String getStatus() {
         if (status.equals("")) return status;
-        return status + " " + Helpers.niceTimeScalar(Helpers.msSince(status_time)) + " ago";
+        return status + " " + Helpers.niceTimeScalar(Helpers.msSince(status_time)) + " " + gs(R.string.ago);
     }
 
     public static long getStatusTime() {
@@ -29,4 +31,7 @@ public class LiveHistory {
         }
     }
 
+    private static String gs(int id) {
+        return MainApp.instance().getString(id);
+    }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver.Status.BUSY;
 import static info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver.Status.SYNCED;
@@ -100,10 +101,21 @@ public class HistoryReceiver {
     }
 
     enum Status {
-        IDLE,
-        SYNCING,
-        BUSY,
-        SYNCED
+        IDLE(R.string.insight_history_idle),
+        SYNCING(R.string.insight_history_syncing),
+        BUSY(R.string.insight_history_busy),
+        SYNCED(R.string.insight_history_synced);
+
+        private final int string_id;
+
+        Status(int string_id)  {
+            this.string_id = string_id;
+        }
+
+        @Override
+        public String toString() {
+            return MainApp.instance().getString(string_id);
+        }
     }
 
 }

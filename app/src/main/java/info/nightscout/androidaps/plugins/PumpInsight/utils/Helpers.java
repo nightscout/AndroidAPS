@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 
 /**
  * Created by jamorham on 24/01/2018.
@@ -95,26 +96,30 @@ public class Helpers {
     }
 
     public static String niceTimeScalar(long t) {
-        String unit = "second";
+        String unit = gs(R.string.second);
         t = t / 1000;
         if (t > 59) {
-            unit = "minute";
+            unit = gs(R.string.minute);
             t = t / 60;
             if (t > 59) {
-                unit = "hour";
+                unit = gs(R.string.hour);
                 t = t / 60;
                 if (t > 24) {
-                    unit = "day";
+                    unit = gs(R.string.day);
                     t = t / 24;
                     if (t > 28) {
-                        unit = "week";
+                        unit = gs(R.string.week);
                         t = t / 7;
                     }
                 }
             }
         }
-        if (t != 1) unit = unit + "s";
+        if (t != 1) unit = unit + gs(R.string.time_plural);
         return qs((double) t, 0) + " " + unit;
+    }
+
+    private static String gs(int id) {
+        return MainApp.instance().getString(id);
     }
 
     public static String qs(double x, int digits) {
