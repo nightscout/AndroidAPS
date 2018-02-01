@@ -232,19 +232,22 @@ dependencies {
 
 task unzip(type: Copy) {
     def zipPath = configurations.compile.find {it.name.startsWith("danars") }
-    println zipPath
     def zipFile = file(zipPath)
     def outputDir = file("${buildDir}/unpacked/dist")
 
     from zipTree(zipFile)
     into outputDir
+}
 
-    def src = new File(outputDir, "danars-support-lib-master")
-    def target = file("src/main/jniLibs")
-    target.mkdirs()
+task copyLibs(dependsOn: unzip, type: Copy) {
+    def outputDir = file("${buildDir}/unpacked/dist")
+    def src = file(new File(outputDir, "danars-support-lib-master"))
+    println src
+    def target = file("src/main/jniLibs/")
 
     from src
     into target
+    rename("danars-support-lib-master", "jniLibs")
 }
 
 task full_clean(type: Delete) {
@@ -252,4 +255,4 @@ task full_clean(type: Delete) {
 }
 
 clean.dependsOn full_clean
-preBuild.dependsOn unzip
+preBuild.dependsOn copyLibs
