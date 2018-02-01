@@ -199,7 +199,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 activityView.setTextSize(14);
                 activityView.setText(activity);
             } else {
-                activityView.setTextSize(18);
+                activityView.setTextSize(20);
                 activityView.setText("{fa-bed}");
             }
 

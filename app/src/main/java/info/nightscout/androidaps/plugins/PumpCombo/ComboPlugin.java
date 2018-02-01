@@ -717,11 +717,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         log.debug("cancelTempBasal called");
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (userRequested) {
-            log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
+        if (enforceNew) {
+            log.debug("cancelTempBasal: hard-cancelling TBR since force requested");
             CommandResult commandResult = runCommand(MainApp.gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
             if (!commandResult.state.tbrActive) {
                 TemporaryBasal tempBasal = new TemporaryBasal();
@@ -737,8 +737,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return new PumpEnactResult().success(true).enacted(false);
         } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep run (see below)
-            // Note that a connection to the pump is still opened, since the queue issues a getPumpStatus() call whenever an empty
-            // queue receives a new command. Probably not worth optimizing.
+            // Note that since this runs on the queue a connection is opened regardless, but this
+            // case doesn't occur all that often, so it's not worth optimizing (1.3k SetTBR vs 4 cancelTBR).
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
             return new PumpEnactResult().success(true).enacted(true)
                     .comment("cancelTempBasal skipping changing tbr since it already is at "
