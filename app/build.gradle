@@ -240,14 +240,11 @@ task unzip(type: Copy) {
 }
 
 task copyLibs(dependsOn: unzip, type: Copy) {
-    def outputDir = file("${buildDir}/unpacked/dist")
-    def src = file(new File(outputDir, "danars-support-lib-master"))
-    println src
+    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
     def target = file("src/main/jniLibs/")
 
     from src
     into target
-    rename("danars-support-lib-master", "jniLibs")
 }
 
 task full_clean(type: Delete) {
