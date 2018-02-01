@@ -198,6 +198,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
+            if (t.date > total.lastBolusTime)
+                total.lastBolusTime = t.date;
             if (!t.isSMB) {
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
@@ -205,12 +207,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
                 Iob bIOB = t.iobCalc(snoozeTime, dia);
                 total.bolussnooze += bIOB.iobContrib;
-            } else {
-                if (t.date > total.lastBolusTime)
-                    total.lastBolusTime = t.date;
-                total.basaliob += tIOB.iobContrib;
-                total.hightempinsulin += t.insulin;
-                total.netbasalinsulin += t.insulin;
             }
         }
 
