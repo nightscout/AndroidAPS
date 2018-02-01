@@ -211,7 +211,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 total.basaliob += tIOB.iobContrib;
                 total.hightempinsulin += t.insulin;
                 total.netbasalinsulin += t.insulin;
-                total.microBolusInsulin += t.insulin;
             }
         }
 

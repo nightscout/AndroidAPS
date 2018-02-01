@@ -21,7 +21,6 @@ public class IobTotal {
     public double hightempinsulin;
 
     // oref1
-    public double microBolusInsulin;
     public long lastBolusTime;
     public long lastTempDate;
     public int lastTempDuration;
@@ -44,7 +43,6 @@ public class IobTotal {
         copy.basaliob = basaliob;
         copy.netbasalinsulin = netbasalinsulin;
         copy.hightempinsulin = hightempinsulin;
-        copy.microBolusInsulin = microBolusInsulin;
         copy.lastBolusTime = lastBolusTime;
         copy.lastTempDate = lastTempDate;
         copy.lastTempDuration = lastTempDuration;
@@ -60,7 +58,6 @@ public class IobTotal {
         this.basaliob = 0d;
         this.netbasalinsulin = 0d;
         this.hightempinsulin = 0d;
-        this.microBolusInsulin = 0d;
         this.lastBolusTime = 0;
         this.time = time;
     }
@@ -74,7 +71,6 @@ public class IobTotal {
         hightempinsulin += other.hightempinsulin;
         netInsulin += other.netInsulin;
         extendedBolusInsulin += other.extendedBolusInsulin;
-        microBolusInsulin += other.microBolusInsulin;
         return this;
     }
 
@@ -86,7 +82,6 @@ public class IobTotal {
         result.basaliob = bolusIOB.basaliob + basalIob.basaliob;
         result.netbasalinsulin = bolusIOB.netbasalinsulin + basalIob.netbasalinsulin;
         result.hightempinsulin = basalIob.hightempinsulin + bolusIOB.hightempinsulin;
-        result.microBolusInsulin = bolusIOB.microBolusInsulin + basalIob.microBolusInsulin;
         result.lastBolusTime = bolusIOB.lastBolusTime;
         result.lastTempDate = basalIob.lastTempDate;
         result.lastTempRate = basalIob.lastTempRate;
@@ -102,7 +97,6 @@ public class IobTotal {
         this.basaliob = Round.roundTo(this.basaliob, 0.001);
         this.netbasalinsulin = Round.roundTo(this.netbasalinsulin, 0.001);
         this.hightempinsulin = Round.roundTo(this.hightempinsulin, 0.001);
-        this.microBolusInsulin = Round.roundTo(this.microBolusInsulin, 0.001);
         return this;
     }
 
