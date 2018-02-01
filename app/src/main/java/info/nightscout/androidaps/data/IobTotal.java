@@ -22,7 +22,6 @@ public class IobTotal {
 
     // oref1
     public double microBolusInsulin;
-    public double microBolusIOB;
     public long lastBolusTime;
     public long lastTempDate;
     public int lastTempDuration;
@@ -46,7 +45,6 @@ public class IobTotal {
         copy.netbasalinsulin = netbasalinsulin;
         copy.hightempinsulin = hightempinsulin;
         copy.microBolusInsulin = microBolusInsulin;
-        copy.microBolusIOB = microBolusIOB;
         copy.lastBolusTime = lastBolusTime;
         copy.lastTempDate = lastTempDate;
         copy.lastTempDuration = lastTempDuration;
@@ -63,7 +61,6 @@ public class IobTotal {
         this.netbasalinsulin = 0d;
         this.hightempinsulin = 0d;
         this.microBolusInsulin = 0d;
-        this.microBolusIOB = 0d;
         this.lastBolusTime = 0;
         this.time = time;
     }
@@ -78,7 +75,6 @@ public class IobTotal {
         netInsulin += other.netInsulin;
         extendedBolusInsulin += other.extendedBolusInsulin;
         microBolusInsulin += other.microBolusInsulin;
-        microBolusIOB += other.microBolusIOB;
         return this;
     }
 
@@ -91,7 +87,6 @@ public class IobTotal {
         result.netbasalinsulin = bolusIOB.netbasalinsulin + basalIob.netbasalinsulin;
         result.hightempinsulin = basalIob.hightempinsulin + bolusIOB.hightempinsulin;
         result.microBolusInsulin = bolusIOB.microBolusInsulin + basalIob.microBolusInsulin;
-        result.microBolusIOB = bolusIOB.microBolusIOB + basalIob.microBolusIOB;
         result.lastBolusTime = bolusIOB.lastBolusTime;
         result.lastTempDate = basalIob.lastTempDate;
         result.lastTempRate = basalIob.lastTempRate;
@@ -108,7 +103,6 @@ public class IobTotal {
         this.netbasalinsulin = Round.roundTo(this.netbasalinsulin, 0.001);
         this.hightempinsulin = Round.roundTo(this.hightempinsulin, 0.001);
         this.microBolusInsulin = Round.roundTo(this.microBolusInsulin, 0.001);
-        this.microBolusIOB = Round.roundTo(this.microBolusIOB, 0.001);
         return this;
     }
 

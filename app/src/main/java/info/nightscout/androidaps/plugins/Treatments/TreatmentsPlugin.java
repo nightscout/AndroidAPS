@@ -209,7 +209,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 if (t.date > total.lastBolusTime)
                     total.lastBolusTime = t.date;
                 total.basaliob += tIOB.iobContrib;
-                total.microBolusIOB += tIOB.iobContrib;
                 total.hightempinsulin += t.insulin;
                 total.netbasalinsulin += t.insulin;
                 total.microBolusInsulin += t.insulin;
