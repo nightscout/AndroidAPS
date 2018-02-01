@@ -15,6 +15,7 @@
         <item>@string/bg_lang</item>
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
+        <item>@string/fr_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
@@ -29,6 +30,7 @@
         <item>bg</item>
         <item>cs</item>
         <item>de</item>
+        <item>fr</item>
         <item>nl</item>
         <item>es</item>
         <item>el</item>
@@ -100,4 +102,5 @@
         <item>@string/yes</item>
     </string-array>
 
+    <string name="fr_lang">French</string>
 </resources>
