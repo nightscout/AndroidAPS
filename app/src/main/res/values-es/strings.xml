@@ -2,7 +2,6 @@
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
-
     <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Refrescar tratamientos desde NS</string>
     <string name="nav_backup">Backup</string>
@@ -12,7 +11,6 @@
     <string name="danar_useextended_title">Usar bolos extendidos para&gt; 200%</string>
     <string name="danar_bt_name_title">DanaR dispositivo Bluetooth</string>
     <string name="ns_sync_use_absolute_title">Usar siempre valor basal absoluto</string>
-
     <string name="objectives_objective_label_string">Objetivo:</string>
     <string name="objectives_gate_label_string">Meta:</string>
     <string name="objectives_button_start">Inicio</string>
@@ -72,7 +70,6 @@
     <string name="glucose">Glucosa</string>
     <string name="delta">Delta</string>
     <string name="avgdelta">Delta Media</string>
-
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objetivos</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -82,8 +79,6 @@
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
-
-
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_treatments">Tratamientos</string>
     <string name="configbuilder_tempbasals">Basales temporales</string>
@@ -93,7 +88,6 @@
     <string name="days">días</string>
     <string name="objectives_minimalduration">Duración mínima</string>
     <string name="configbuilder_constraints">Restricciones</string>
-
     <string name="loop">Lazo</string>
     <string name="configbuilder_loop">Lazo</string>
     <string name="loop_aps_label">APS</string>
@@ -124,7 +118,6 @@
     <string name="xdrip">xDrip</string>
     <string name="nsclient">NSClient</string>
     <string name="apsmode_title">Modo APS</string>
-
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
@@ -157,7 +150,6 @@
     <string name="careportal_tempbasalend">Basal Temporal Fin</string>
     <string name="careportal_carbscorrection">Corrección Carbohidratos</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-
     <string name="careportal_newnstreatment_eventtype">Tipo de evento</string>
     <string name="careportal_newnstreatment_other">Otro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
@@ -196,7 +188,6 @@
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DESCARTAR</string>
     <string name="language">Idioma</string>
-
     <string name="danarpump">DanaR</string>
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
@@ -314,7 +305,7 @@
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
     <string formatted="false" name="smscommunicator_tempbasalset">Basal temporal %.2fU/h para %d min iniciada correctamente</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos SMS remotos</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con codigo %s</string>
+    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con código %s</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="es_lang">Español</string>
     <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
@@ -396,14 +387,14 @@
     <string name="sv_lang">Sueco</string>
     <string name="openapsma_maxbasal_title">Max U/h para el perfil base</string>
     <string name="openapsma_maxiob_title">"Max IOB basal OpenAPs puede emitir "</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Para enviar calibracion %.2f responder con codigo %s</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Para enviar calibracion %.2f responder con código %s</string>
     <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
     <string name="pump_errors_history">Errores</string>
     <string name="objectives_7_objective">habilitar funciones adicionales para uso durante el día como SMB</string>
     <string name="openapsma_valuelimitedto" formatted="false">%.2f limitado a %.\"f</string>
     <string name="smscommunicator_remotecommandnotallowed">no permitido el mando remoto</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con codigo %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con código %s</string>
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillbolus_title">Llenar/Rellenar cantidad de insulina estándar</string>
     <string name="timeshift_hint">Tiempo en horas en el que el perfil será movido</string>
