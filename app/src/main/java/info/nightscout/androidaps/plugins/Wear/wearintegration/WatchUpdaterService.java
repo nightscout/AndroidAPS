@@ -523,27 +523,31 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void sendStatus() {
 
         if (googleApiClient.isConnected()) {
-
-            TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.updateTotalIOBTreatments();
-            IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
-            treatmentsInterface.updateTotalIOBTempBasals();
-            IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-
-            String iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
-            String iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-            String cobString = generateCOBString();
-            String currentBasal = generateBasalString(treatmentsInterface);
-
-            //bgi
-            String bgiString = "";
             Profile profile = MainApp.getConfigBuilder().getProfile();
+            String status = MainApp.instance().getString(R.string.noprofile);
+            String iobSum, iobDetail, cobString, currentBasal, bgiString;
+            iobSum =  iobDetail = cobString = currentBasal = bgiString = "";
             if(profile!=null) {
+                TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+                treatmentsInterface.updateTotalIOBTreatments();
+                IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
+                treatmentsInterface.updateTotalIOBTempBasals();
+                IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
+
+                iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+                iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+                cobString = generateCOBString();
+                currentBasal = generateBasalString(treatmentsInterface);
+
+                //bgi
+
+
                 double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+
+                status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
             }
 
-            String status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
 
             //batteries
             int phoneBattery = getBatteryLevel(getApplicationContext());
