@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.OpenAPSAMA;
+package info.nightscout.androidaps.plugins.OpenAPSSMB;
 
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -35,35 +36,38 @@ import info.nightscout.utils.ToastUtils;
 /**
  * Created by mike on 05.08.2016.
  */
-public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
-    private static Logger log = LoggerFactory.getLogger(OpenAPSAMAPlugin.class);
-
-    private static OpenAPSAMAPlugin openAPSAMAPlugin;
-
-    public static OpenAPSAMAPlugin getPlugin() {
-        if (openAPSAMAPlugin == null) {
-            openAPSAMAPlugin = new OpenAPSAMAPlugin();
-        }
-        return openAPSAMAPlugin;
-    }
+public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
+    private static Logger log = LoggerFactory.getLogger(OpenAPSSMBPlugin.class);
 
     // last values
-    DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
+    DetermineBasalAdapterSMBJS lastDetermineBasalAdapterSMBJS = null;
     Date lastAPSRun = null;
-    DetermineBasalResultAMA lastAPSResult = null;
+    DetermineBasalResultSMB lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
+    boolean fragmentEnabled = false;
+    boolean fragmentVisible = true;
+
+    private static OpenAPSSMBPlugin openAPSSMBPlugin;
+
+    private OpenAPSSMBPlugin() {
+    }
+
+    public static OpenAPSSMBPlugin getPlugin() {
+        if (openAPSSMBPlugin == null) {
+            openAPSSMBPlugin = new OpenAPSSMBPlugin();
+        }
+        return openAPSSMBPlugin;
+    }
 
     @Override
     public String getName() {
-        return MainApp.instance().getString(R.string.openapsama);
+        return MainApp.instance().getString(R.string.openapssmb);
     }
 
     @Override
     public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.oaps_shortname);
+        String name = MainApp.sResources.getString(R.string.smb_shortname);
         if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
@@ -106,7 +110,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public int getPreferencesId() {
-        return R.xml.pref_openapsama;
+        return R.xml.pref_openapssmb;
     }
 
     @Override
@@ -121,7 +125,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public String getFragmentClass() {
-        return OpenAPSAMAFragment.class.getName();
+        return OpenAPSSMBFragment.class.getName();
     }
 
     @Override
@@ -138,9 +142,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     public void invoke(String initiator) {
         log.debug("invoke from " + initiator);
         lastAPSResult = null;
-        DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS;
+        DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = null;
         try {
-            determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(MainApp.instance().getBaseContext()));
+            determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(MainApp.instance().getBaseContext()));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             return;
@@ -148,6 +152,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = MainApp.getConfigBuilder().getProfile();
+        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         if (profile == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.noprofileselected)));
@@ -183,7 +188,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         Date start = new Date();
         Date startPart = new Date();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.calculateIobArrayInDia();
+        IobTotal[] iobArray = IobCobCalculatorPlugin.calculateIobArrayForSMB();
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
@@ -210,13 +215,12 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
-        if (!checkOnlyHardLimits(profile.getIc(Profile.secondsFromMidnight()), "carbratio", 2, 100))
+        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100))
             return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
-        if (!checkOnlyHardLimits(ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), "current_basal", 0.01, 5))
-            return;
+        if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
         startPart = new Date();
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
@@ -225,47 +229,49 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             lastAutosensResult = new AutosensResult();
         }
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
-        Profiler.log(log, "AMA data gathering", start);
+        Profiler.log(log, "SMB data gathering", start);
 
         start = new Date();
-
         try {
-            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
+            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
                     lastAutosensResult.ratio, //autosensDataRatio
-                    isTempTarget
+                    isTempTarget,
+                    true //microBolusAllowed
             );
         } catch (JSONException e) {
-            log.error("Unable to set data: " + e.toString());
+            log.error(e.getMessage());
+            return;
         }
 
 
-        DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
-        Profiler.log(log, "AMA calculation", start);
+        DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
+        Profiler.log(log, "SMB calculation", start);
+        // TODO still needed with oref1?
         // Fix bug determine basal
-        if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
-            determineBasalResultAMA.tempBasalReqested = false;
+        if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
+            determineBasalResultSMB.tempBasalReqested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
-            if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {
+            if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel
-            } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultAMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
-                determineBasalResultAMA.tempBasalReqested = false;
-            } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultAMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultAMA.tempBasalReqested = false;
+            } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
+                determineBasalResultSMB.tempBasalReqested = false;
+            } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - pump.getBaseBasalRate()) < 0.1) {
+                determineBasalResultSMB.tempBasalReqested = false;
+            }
         }
 
-        determineBasalResultAMA.iob = iobArray[0];
-
+        determineBasalResultSMB.iob = iobArray[0];
         Date now = new Date();
 
         try {
-            determineBasalResultAMA.json.put("timestamp", DateUtil.toISOString(now));
+            determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
 
-        lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS;
-        lastAPSResult = determineBasalResultAMA;
+        lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;
+        lastAPSResult = determineBasalResultSMB;
         lastAPSRun = now;
         MainApp.bus().post(new EventOpenAPSUpdateGui());
 
@@ -273,11 +279,11 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     }
 
     // safety checks
-    public static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+    private static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
         return value.equals(verifyHardLimits(value, valueName, lowLimit, highLimit));
     }
 
-    public static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+    private static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
         Double newvalue = value;
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit);

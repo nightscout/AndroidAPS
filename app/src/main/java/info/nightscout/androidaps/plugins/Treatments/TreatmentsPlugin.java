@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
@@ -197,6 +198,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
+            if (t.date > total.lastBolusTime)
+                total.lastBolusTime = t.date;
             if (!t.isSMB) {
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
@@ -204,9 +207,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
                 Iob bIOB = t.iobCalc(snoozeTime, dia);
                 total.bolussnooze += bIOB.iobContrib;
-            } else {
-                total.basaliob += t.insulin;
-                total.microBolusIOB += tIOB.iobContrib;
             }
         }
 
@@ -244,6 +244,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             if (t > dia_ago && t <= now) {
                 if (treatment.carbs >= 1) {
                     result.carbs += treatment.carbs;
+                    result.lastCarbTime = t;
                 }
                 if (treatment.insulin > 0 && treatment.mealBolus) {
                     result.boluses += treatment.insulin;
@@ -254,7 +255,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensDataSynchronized("getMealData()");
         if (autosensData != null) {
             result.mealCOB = autosensData.cob;
+            result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation;
+            result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
         }
+        result.lastBolusTime = getLastBolusTime();
         return result;
     }
 
@@ -274,6 +278,18 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 in5minback.add(t);
         }
         return in5minback;
+    }
+
+    @Override
+    public long getLastBolusTime() {
+        long now = System.currentTimeMillis();
+        long last = 0;
+        for (Treatment t : treatments) {
+            if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now)
+                last = t.date;
+        }
+        log.debug("Last bolus time: " + new Date(last).toLocaleString());
+        return last;
     }
 
     @Override
@@ -327,6 +343,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 IobTotal calc = t.iobCalc(time);
                 //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
                 total.plus(calc);
+                if (!t.isEndingEvent()) {
+                    total.lastTempDate = t.date;
+                    total.lastTempDuration = t.durationInMinutes;
+                    total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date);
+                }
+
             }
         }
         if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
@@ -337,6 +359,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                     if (e.date > time) continue;
                     IobTotal calc = e.iobCalc(time);
                     totalExt.plus(calc);
+                    TemporaryBasal t = new TemporaryBasal(e);
+                    if (!t.isEndingEvent() && t.date > total.lastTempDate) {
+                        total.lastTempDate = t.date;
+                        total.lastTempDuration = t.durationInMinutes;
+                        total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date);
+                    }
                 }
             }
             // Convert to basal iob

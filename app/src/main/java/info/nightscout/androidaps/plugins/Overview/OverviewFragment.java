@@ -93,8 +93,6 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
@@ -675,7 +673,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (ConfigBuilderPlugin.getActiveLoop() != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-            if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
+            if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(getContext().getString(R.string.confirmation));
                 builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
@@ -1106,7 +1104,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
-            showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
+            showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && ConfigBuilderPlugin.getActiveLoop() != null) {
                 acceptTempLayout.setVisibility(View.VISIBLE);
@@ -1284,8 +1282,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        final boolean showPrediction = showPredictionCheckbox.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
-        if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
+        final boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
+        if (predictionsAvailable) {
             showPredictionCheckbox.setVisibility(View.VISIBLE);
             showPredictionLabel.setVisibility(View.VISIBLE);
         } else {
@@ -1343,8 +1341,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final long toTime;
                 final long fromTime;
                 final long endTime;
-                if (showPrediction) {
-                    int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
+                if (predictionsAvailable && showPredictionCheckbox.isChecked()) {
+                    int predHours = (int) (Math.ceil(finalLastRun.constraintsProcessed.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
                     predHours = Math.min(2, predHours);
                     predHours = Math.max(0, predHours);
                     hoursToFetch = rangeToDisplay - predHours;
@@ -1370,8 +1368,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
 
                 // **** BG ****
-                if (showPrediction)
-                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, (DetermineBasalResultAMA) finalLastRun.constraintsProcessed);
+                if (predictionsAvailable && showPredictionCheckbox.isChecked())
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, finalLastRun.constraintsProcessed);
                 else
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
 
@@ -1398,6 +1396,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 boolean useCobForScale = false;
                 boolean useDevForScale = false;
                 boolean useRatioForScale = false;
+                boolean useDSForScale = false;
 
                 if (showIobCheckbox.isChecked()) {
                     useIobForScale = true;
@@ -1407,6 +1406,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     useDevForScale = true;
                 } else if (showRatiosCheckbox.isChecked()) {
                     useRatioForScale = true;
+                } else if (Config.displayDeviationSlope) {
+                    useDSForScale = true;
                 }
 
                 if (showIobCheckbox.isChecked())
@@ -1417,6 +1418,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
                 if (showRatiosCheckbox.isChecked())
                     secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
+                if (Config.displayDeviationSlope)
+                    secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
                 // **** NOW line ****
                 // set manual x bounds to have nice steps
@@ -1429,7 +1432,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (showIobCheckbox.isChecked() || showCobCheckbox.isChecked() || showDeviationsCheckbox.isChecked() || showRatiosCheckbox.isChecked()) {
+                            if (showIobCheckbox.isChecked() || showCobCheckbox.isChecked() || showDeviationsCheckbox.isChecked() || showRatiosCheckbox.isChecked() || Config.displayDeviationSlope) {
                                 iobGraph.setVisibility(View.VISIBLE);
                             } else {
                                 iobGraph.setVisibility(View.GONE);

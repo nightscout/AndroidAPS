@@ -30,9 +30,12 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.Loop.events.EventLoopResult;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -152,8 +155,10 @@ public class LoopPlugin implements PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        invoke("EventNewBG", true);
+    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
+        if (ev.cause instanceof EventNewBG) {
+            invoke(ev.getClass().getSimpleName() + "(" + ev.cause.getClass().getSimpleName() + ")", true);
+        }
     }
 
     public long suspendedTo() {
@@ -283,6 +288,14 @@ public class LoopPlugin implements PluginBase {
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
             resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
+            resultAfterConstraints.smb = constraintsInterface.applyBolusConstraints(resultAfterConstraints.smb);
+
+            // safety check for multiple SMBs
+            long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
+            if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+                log.debug("SMB requsted but still in 3 min interval");
+                resultAfterConstraints.smb = 0;
+            }
 
             if (lastRun == null) lastRun = new LastRun();
             lastRun.request = result;
@@ -305,8 +318,10 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
+            MainApp.bus().post(new EventLoopResult(resultAfterConstraints));
+
             if (constraintsInterface.isClosedModeEnabled()) {
-                if (result.changeRequested) {
+                if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     final PumpEnactResult previousResult = lastRun.setByPump;
                     waiting.queued = true;
@@ -330,7 +345,7 @@ public class LoopPlugin implements PluginBase {
                     lastRun.source = null;
                 }
             } else {
-                if (result.changeRequested && allowNotification) {
+                if (result.isChangeRequested() && allowNotification) {
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
                     builder.setSmallIcon(R.drawable.notif_icon)

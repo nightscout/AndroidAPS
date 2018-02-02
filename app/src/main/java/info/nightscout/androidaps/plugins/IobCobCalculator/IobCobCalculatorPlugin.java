@@ -22,6 +22,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -129,7 +131,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return -1;
     }
 
-    IobCobCalculatorPlugin() {
+    private IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
     }
 
@@ -259,7 +261,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
 
-    public void createBucketedData5min() {
+    private void createBucketedData5min() {
         if (bgReadings == null || bgReadings.size() < 3) {
             bucketed_data = null;
             return;
@@ -347,6 +349,21 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
         IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginBase.APS)) {
+            // Add expected zere temp basal for next 240 mins
+            IobTotal basalIobWithZeroTemp = basalIob.clone();
+            TemporaryBasal t = new TemporaryBasal();
+            t.date = now + 60 * 1000L;
+            t.durationInMinutes = 240;
+            t.isAbsolute = true;
+            t.absoluteRate = 0;
+            if (t.date < time) {
+                IobTotal calc = t.iobCalc(time);
+                basalIobWithZeroTemp.plus(calc);
+            }
+
+            basalIob.iobWithZeroTemp = basalIobWithZeroTemp;
+        }
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         if (time < System.currentTimeMillis()) {
@@ -467,6 +484,23 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return array;
     }
 
+   public static IobTotal[] calculateIobArrayForSMB() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        // predict IOB out to DIA plus 30m
+        long time = System.currentTimeMillis();
+        time = roundUpTime(time);
+        int len = (4 * 60) / 5;
+        IobTotal[] array = new IobTotal[len];
+        int pos = 0;
+        for (int i = 0; i < len; i++) {
+            long t = time + i * 5 * 60000;
+            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t);
+            array[pos] = iob;
+            pos++;
+        }
+        return array;
+    }
+
     public static AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
             return detectSensitivity(fromTime, toTime);
@@ -487,13 +521,13 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Subscribe
     public void onEventAppInitialized(EventAppInitialized ev) {
-        runCalculation("onEventAppInitialized", true);
+        runCalculation("onEventAppInitialized", true, ev);
     }
 
     @Subscribe
     public void onEventNewBG(EventNewBG ev) {
         stopCalculation("onEventNewBG");
-        runCalculation("onEventNewBG", true);
+        runCalculation("onEventNewBG", true, ev);
     }
 
     private void stopCalculation(String from) {
@@ -507,10 +541,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
-    private void runCalculation(String from, boolean bgDataReload) {
+    private void runCalculation(String from, boolean bgDataReload, Event cause) {
         log.debug("Starting calculation thread: " + from);
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
-            thread = new IobCobThread(this, from, bgDataReload);
+            thread = new IobCobThread(this, from, bgDataReload, cause);
             thread.start();
         }
     }
@@ -532,7 +566,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
         }
-        runCalculation("onNewProfile", false);
+        runCalculation("onNewProfile", false, ev);
     }
 
     @Subscribe
@@ -547,7 +581,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 iobTable = new LongSparseArray<>();
                 autosensDataTable = new LongSparseArray<>();
             }
-            runCalculation("onEventPreferenceChange", false);
+            runCalculation("onEventPreferenceChange", false, ev);
         }
     }
 
@@ -559,7 +593,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
         }
-        runCalculation("onEventConfigBuilderChange", false);
+        runCalculation("onEventConfigBuilderChange", false, ev);
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
@@ -599,7 +633,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
             }
         }
-        runCalculation("onEventNewHistoryData", false);
+        runCalculation("onEventNewHistoryData", false, ev);
         //log.debug("Releasing onNewHistoryData");
     }
 

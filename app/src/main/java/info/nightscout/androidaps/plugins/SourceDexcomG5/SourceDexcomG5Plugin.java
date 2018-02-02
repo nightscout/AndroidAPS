@@ -82,4 +82,9 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
     public int getPreferencesId() {
         return R.xml.pref_dexcomg5;
     }
+
+    @Override
+    public boolean advancedFilteringSupported() {
+        return true;
+    }
 }

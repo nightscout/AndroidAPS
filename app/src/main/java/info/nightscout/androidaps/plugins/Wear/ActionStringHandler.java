@@ -503,7 +503,7 @@ public class ActionStringHandler {
             return "Last result not available!";
         }
 
-        if (!result.changeRequested) {
+        if (!result.isChangeRequested()) {
             ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
         } else if (result.rate == 0 && result.duration == 0) {
             ret += MainApp.sResources.getString(R.string.canceltemp) + "\n";

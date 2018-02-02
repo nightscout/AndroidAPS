@@ -35,6 +35,7 @@ public class GlucoseStatus {
     public double avgdelta = 0d;
     public double short_avgdelta = 0d;
     public double long_avgdelta = 0d;
+    public long date = 0L;
 
 
     @Override
@@ -133,6 +134,7 @@ public class GlucoseStatus {
 
         GlucoseStatus status = new GlucoseStatus();
         status.glucose = now.value;
+        status.date = now_date;
 
         status.short_avgdelta = average(short_deltas);
 

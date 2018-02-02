@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.queue.QueueThread;
 
@@ -31,6 +32,7 @@ import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculat
 
 public class IobCobThread extends Thread {
     private static Logger log = LoggerFactory.getLogger(QueueThread.class);
+    private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private boolean bgDataReload;
@@ -38,12 +40,13 @@ public class IobCobThread extends Thread {
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobThread(IobCobCalculatorPlugin plugin, String from, boolean bgDataReload) {
+    public IobCobThread(IobCobCalculatorPlugin plugin, String from, boolean bgDataReload, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
         this.bgDataReload = bgDataReload;
         this.from = from;
+        this.cause = cause;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
@@ -135,11 +138,45 @@ public class IobCobThread extends Thread {
                         continue;
                     }
                     delta = (bg - bucketed_data.get(i + 1).value);
+                    avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
 
                     IobTotal iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTemps(bgTime);
 
                     double bgi = -iob.activity * sens * 5;
                     double deviation = delta - bgi;
+                    double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
+
+                    double currentDeviation;
+                    double slopeFromMaxDeviation  = 0;
+                    double slopeFromMinDeviation  = 999;
+                    double maxDeviation = 0;
+                    double minDeviation = 999;
+
+                    // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
+                    if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
+                        long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
+                        AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
+                        if (hourAgoData != null) {
+                            currentDeviation = hourAgoData.avgDeviation;
+                            int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
+
+                            for (int past = 1; past < 12; past++) {
+                                AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
+                                double deviationSlope = (ad.avgDeviation - currentDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
+                                if (ad.avgDeviation > maxDeviation) {
+                                    slopeFromMaxDeviation = Math.min(0, deviationSlope);
+                                    maxDeviation = ad.avgDeviation;
+                                }
+                                if (avgDeviation < minDeviation) {
+                                    slopeFromMinDeviation = Math.max(0, deviationSlope);
+                                    minDeviation = avgDeviation;
+                                }
+
+                                //if (Config.logAutosensData)
+                                //    log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation);
+                            }
+                        }
+                    }
 
                     List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
                     for (int ir = 0; ir < recentTreatments.size(); ir++) {
@@ -170,6 +207,11 @@ public class IobCobThread extends Thread {
                     autosensData.deviation = deviation;
                     autosensData.bgi = bgi;
                     autosensData.delta = delta;
+                    autosensData.avgDelta = avgDelta;
+                    autosensData.avgDeviation = avgDeviation;
+                    autosensData.slopeFromMaxDeviation = slopeFromMaxDeviation;
+                    autosensData.slopeFromMinDeviation = slopeFromMinDeviation;
+
 
                     // calculate autosens only without COB
                     if (autosensData.cob <= 0) {
@@ -196,7 +238,7 @@ public class IobCobThread extends Thread {
                         log.debug(autosensData.log(bgTime));
                 }
             }
-            MainApp.bus().post(new EventAutosensCalculationFinished());
+            MainApp.bus().post(new EventAutosensCalculationFinished(cause));
             log.debug("Finishing calculation thread: " + from);
         } finally {
             mWakeLock.release();
