@@ -565,7 +565,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
 
-            // partial bolus was delivered
+            timestampOfLastKnownPumpBolusRecord = lastPumpBolus.timestamp;
+
+            // only a partial bolus was delivered
             if (Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01) {
                 if (cancelBolus) {
                     return new PumpEnactResult().success(true).enacted(true);
@@ -1118,8 +1120,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 && quickInfoResult.history.bolusHistory.get(0).timestamp == timestampOfLastKnownPumpBolusRecord) {
             return null;
         }
-
-        // TODO still regularly continues even though no changes on pump exist ...
 
         // OPTIMIZE this reads the entire history on start, so this could be optimized by persisting
         // `timestampOfLastKnownPumpBolusRecord`, though this should be thought through, to make sure
