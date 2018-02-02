@@ -771,7 +771,7 @@
 	<string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
 	<string name="combo_activity_reading_pump_history">Lezen van pomp historiek</string>
 	<string name="combo_read_full_history_confirmation">Ben je zeker dat je alle data van de pomp wil ophalen en de consequenties hiervan wil dragen?</string>
-	<string name="combo_no_alert_data_note">Om de pomp fouthistoriek op te halen, druk lang op de Storingen knop OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden.</string>
+    <string name="combo_no_alert_data_note">Om de pomp fouthistoriek op te halen, druk lang op de Storingen knop.</string>
 	<string name="combo_error_partial_bolus_delivered">Maar %.2f E van de gevraagde %.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
 	<string name="combo_no_tdd_data_note">"Om de TTD van de pomp op te halen, lang duwen op de TDDS knop OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden."</string>
 	<string name="combo_error_bolus_verification_failed">Toedienen en controleren van de bolus in de pomp historiek is mislukt, controleer de pomp en creëer een manuele bolus in het Careportal tabblad</string>
