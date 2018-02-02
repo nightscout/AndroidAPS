@@ -13,7 +13,7 @@ import info.nightscout.androidaps.db.Source;
  * Created by mike on 29.05.2017.
  */
 
-public class DetailedBolusInfo implements Cloneable {
+public class DetailedBolusInfo {
     public long date = System.currentTimeMillis();
     public String eventType = CareportalEvent.MEALBOLUS;
     public double insulin = 0;
