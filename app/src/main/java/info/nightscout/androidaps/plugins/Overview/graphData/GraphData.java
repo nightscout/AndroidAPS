@@ -122,7 +122,7 @@ public class GraphData {
         List<ScaledDataPoint> basalLineArray = new ArrayList<>();
         List<ScaledDataPoint> absoluteBasalLineArray = new ArrayList<>();
         double lastLineBasal = 0;
-        double lastAbsoluteLineBasal = 0;
+        double lastAbsoluteLineBasal = -1;
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
