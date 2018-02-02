@@ -794,10 +794,10 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                         return profile;
                 }
             }
-            // Unable to determine profile, failover to default
-            if (activeProfile.getProfile() == null)
-                return null; //app not initialized
         }
+        // Unable to determine profile, failover to default
+        if (activeProfile.getProfile() == null)
+            return null; //app not initialized
         Profile defaultProfile = activeProfile.getProfile().getDefaultProfile();
         if (defaultProfile != null)
             return defaultProfile;
