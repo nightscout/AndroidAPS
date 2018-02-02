@@ -151,7 +151,9 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        invoke("EventTreatmentChange", true);
+        if (ev.treatment == null || !ev.treatment.isSMB){
+            invoke("EventTreatmentChange", true);
+        }
     }
 
     @Subscribe
