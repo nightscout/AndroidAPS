@@ -532,8 +532,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // if the last bolus was given in the current minute, wait till the pump clock moves
             // to the next minute to ensure timestamps are unique and can be imported
-            CommandResult timeCheckResult = runCommand(null, 0, ruffyScripter::readPumpState);
-            long maxWaitTimeout = System.currentTimeMillis() + 65 * 1000;
+            CommandResult timeCheckResult = stateResult;
+            long waitStartTime = System.currentTimeMillis();
+            long maxWaitTimeout = waitStartTime + 65 * 1000;
             int waitLoops = 0;
             while (previousBolus.timestamp == timeCheckResult.state.pumpTime
                     && maxWaitTimeout < System.currentTimeMillis()) {
@@ -544,16 +545,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     return new PumpEnactResult().success(false).enacted(false)
                             .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
                 }
-                SystemClock.sleep(5000);
+                SystemClock.sleep(2000);
                 timeCheckResult = runCommand(null, 0, ruffyScripter::readPumpState);
                 waitLoops++;
             }
             if (waitLoops > 0) {
+                long waitDuration = (System.currentTimeMillis() - waitStartTime) / 1000;
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusTimestampWait")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
-                        .putCustomAttribute("waitTimeSecs", String.valueOf(waitLoops * 5)));
-                log.debug("Waited " + (waitLoops * 5) + "s for pump to switch to a fresh minute before bolusing");
+                        .putCustomAttribute("waitTimeSecs", String.valueOf(waitDuration)));
+                log.debug("Waited " + waitDuration + "s for pump to switch to a fresh minute before bolusing");
             }
 
             if (cancelBolus) {
@@ -811,9 +813,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         CommandResult commandResult;
         try {
             if (!ruffyScripter.isConnected()) {
+                String originalActivity = pump.activity;
                 pump.activity = MainApp.gs(R.string.combo_activity_checking_pump_state);
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
                 CommandResult preCheckError = runOnConnectChecks();
+                pump.activity = originalActivity;
                 if (preCheckError != null) {
                     updateLocalData(preCheckError);
                     return preCheckError;
