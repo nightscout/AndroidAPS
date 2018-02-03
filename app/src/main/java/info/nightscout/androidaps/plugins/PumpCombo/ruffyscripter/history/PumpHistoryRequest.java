@@ -5,8 +5,10 @@ import java.util.Date;
 /** What data a 'read history' request should return. */
 public class PumpHistoryRequest {
     /* History to read:
-       Either the timestamp of the last known record to fetch all newer records,
-       or one of the constants to read no history or all of it.
+       Either the timestamp of the last known record or one of the constants to read no history
+       or all of it. When a timestamp is provided all newer records and records matching the
+       timestamp are returned. Returning all records equal to the timestamp ensures a record
+       with a duplicate timestamp is also detected as a new record.
      */
     public static final long LAST = -2;
     public static final long SKIP = -1;
