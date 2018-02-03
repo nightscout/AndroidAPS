@@ -347,26 +347,17 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/overview_graphs_layout"
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/overview_bggraph"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_weight="1" />
 
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/overview_bggraph"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/overview_iobgraph"
-                        android:layout_width="wrap_content"
-                        android:layout_height="100dp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/overview_iobgraph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
