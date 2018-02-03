@@ -370,7 +370,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // trigger a connect, which will update state and check history
-        CommandResult stateResult = runCommand(null,1, ruffyScripter::readPumpState);
+        CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
         if (!stateResult.success) {
             return;
         }
@@ -404,7 +404,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
-        updateLocalData(runCommand(null, 1, ruffyScripter::readQuickInfo));
+        updateLocalData(runCommand(null, 1, () -> ruffyScripter.readQuickInfo(1)));
     }
 
     /** Updates local cache with state (reservoir level, last bolus ...) returned from the pump */
@@ -542,7 +542,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // history below to see what was actually delivered
 
             // get last bolus from pump history for verification
-            CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readQuickInfo);
+            CommandResult postBolusStateResult = runCommand(null, 3, () -> ruffyScripter.readQuickInfo(1));
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
@@ -552,7 +552,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     : null;
 
             // no bolus delivered?
-            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)  ) {
+            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
                 if (cancelBolus) {
                     return new PumpEnactResult().success(true).enacted(false);
                 } else {
@@ -855,7 +855,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 // turn benign warnings into notifications
                 notifyAboutPumpWarning(activeAlert);
                 ruffyScripter.confirmAlert(activeAlert.warningCode);
-            } else if (activeAlert.errorCode != null){
+            } else if (activeAlert.errorCode != null) {
                 Notification notification = new Notification();
                 notification.date = new Date();
                 notification.id = Notification.COMBO_PUMP_ALARM;
