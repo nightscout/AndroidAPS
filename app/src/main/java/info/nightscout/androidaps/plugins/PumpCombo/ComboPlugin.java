@@ -602,7 +602,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo dbi = detailedBolusInfo.copy();
         dbi.date = calculateFakeBolusDate(lastPumpBolus);
-        dbi.pumpId = calculateFakeBolusDate(lastPumpBolus);
+        dbi.pumpId = dbi.date;
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
@@ -1055,7 +1055,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
             dbi.date = calculateFakeBolusDate(pumpBolus);
-            dbi.pumpId = calculateFakeBolusDate(pumpBolus);
+            dbi.pumpId = dbi.date;
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
@@ -1067,13 +1067,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     /** Adds the bolus to the timestamp to be able to differentiate multiple boluses in the same
-     * minute. Best effort, since this covers only boluses up to 5.9 U and relies on other code
+     * minute. Best effort, since this covers only boluses up to 6.0 U and relies on other code
      * to prevent a boluses with the same amount to be delivered within the same minute.
      * Should be good enough, even with command mode, it's a challenge to create that situation
      * and most time clashes will be around SMBs which are covered.
      */
     private long calculateFakeBolusDate(Bolus pumpBolus) {
-        return pumpBolus.timestamp + (Math.min((int) (pumpBolus.amount - 0.1) * 10 * 1000, 59 * 1000));
+        double bolus = pumpBolus.amount - 0.1;
+        int secondsFromBolus = (int) (bolus * 10 * 1000);
+        return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
     }
 
     // TODO use queue once ready
