@@ -22,12 +22,14 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
@@ -36,6 +38,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.ScaledDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.Round;
 
 /**
@@ -213,6 +216,54 @@ public class GraphData {
         addSeries(tempBasalsSeries);
         addSeries(basalsLineSeries);
         addSeries(absoluteBasalsLineSeries);
+    }
+
+    public void addTargetLine(long fromTime, long toTime) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            return;
+        }
+
+        LineGraphSeries<DataPoint> targetsSeries;
+
+        Scale targetsScale = new Scale();
+        targetsScale.setMultiplier(1);
+
+        List<DataPoint> targetsSeriesArray = new ArrayList<>();
+        double lastTarget = 0;
+
+        if (LoopPlugin.lastRun != null && LoopPlugin.lastRun.constraintsProcessed != null) {
+            APSResult apsResult = LoopPlugin.lastRun.constraintsProcessed;
+            long latestPredictionsTime = apsResult.getLatestPredictionsTime();
+            if (latestPredictionsTime > toTime) {
+                toTime = latestPredictionsTime;
+            }
+        }
+
+        for (long time = fromTime; time < toTime; time += 60 * 1000L) {
+            TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
+            double value;
+            if (tt == null) {
+                value = (profile.getTargetLow() + profile.getTargetHigh())  / 2;
+            } else {
+                value = (tt.low + tt.high) / 2;
+            }
+            if (lastTarget > 0 && lastTarget != value) {
+                targetsSeriesArray.add(new DataPoint(time, lastTarget));
+            }
+            lastTarget = value;
+
+            targetsSeriesArray.add(new DataPoint(time, value));
+        }
+
+        DataPoint[] targets = new DataPoint[targetsSeriesArray.size()];
+        targets = targetsSeriesArray.toArray(targets);
+        targetsSeries = new LineGraphSeries<>(targets);
+        targetsSeries.setDrawBackground(false);
+        targetsSeries.setColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
+        targetsSeries.setThickness(2);
+
+        addSeries(targetsSeries);
     }
 
     public void addTreatments(long fromTime, long endTime) {
