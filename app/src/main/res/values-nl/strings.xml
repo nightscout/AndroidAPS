@@ -675,15 +675,12 @@
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="emptyreservoir">Ampull leeg</string>
     <string name="waitingforpairing">Wachten op koppelen van de pomp</string>
-    <string name="pump_errors_history">Storingen</string>
     <string name="profileswitch">Wijzigingen van profiel</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="food">Voeding</string>
     <string name="enable_pump_unreachable_alert">Waarschuwing bij niet bereikbare pomp</string>
     <string name="bolus_frequency_exceeded">Een bolus met dezelfde hoeveelheid was gevraagd binnen de minuut. Om accidentiële of door bugs veroorzaakte dubbele bolussen te vermijden is deze bolus geannuleerd</string>
-    <string name="bolusstopping">estopt Bolus toediening wordt</string>
     <string name="shortfat">Vet</string>
-    <string name="bolusstopped">Bolus toediening gestopt</string>
     <string name="wear_detailed_delta_title">Toon gedetaillieerde delta</string>
     <string name="unsupportedfirmware">Niet ondersteune pomp firmware</string>
     <string name="DexcomG5">DexcomG5 App (aangepast)</string>
