@@ -409,7 +409,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
-        updateLocalData(runCommand(null, 1, () -> ruffyScripter.readQuickInfo(1)));
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
     }
 
     /** Updates local cache with state (reservoir level, last bolus ...) returned from the pump */
@@ -532,7 +532,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // if the last bolus was given in the current minute, wait till the pump clock moves
             // to the next minute to ensure timestamps are unique and can be imported
-            CommandResult timeCheckResult = ruffyScripter.readPumpState();
+            CommandResult timeCheckResult = runCommand(null, 0, ruffyScripter::readPumpState);
             long maxWaitTimeout = System.currentTimeMillis() + 65 * 1000;
             int waitLoops = 0;
             while (previousBolus.timestamp == timeCheckResult.state.pumpTime
@@ -545,7 +545,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                             .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
                 }
                 SystemClock.sleep(5000);
-                timeCheckResult = ruffyScripter.readPumpState();
+                timeCheckResult = runCommand(null, 0, ruffyScripter::readPumpState);
                 waitLoops++;
             }
             if (waitLoops > 0) {
@@ -1167,28 +1167,29 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // compare recent records
-        List<Bolus> existingbolusHistory = quickInfoResult.history.bolusHistory;
-        if (existingbolusHistory.size() == 1 && recentBoluses.size() == 1
-                && quickInfoResult.history.bolusHistory.get(0).equals(recentBoluses.get(0))) {
+        List<Bolus> initialPumpBolusHistory = quickInfoResult.history.bolusHistory;
+        if (recentBoluses.size() == 1 && initialPumpBolusHistory.size() >= 1
+                && recentBoluses.get(0).equals(quickInfoResult.history.bolusHistory.get(0))) {
             return null;
-        } else if (existingbolusHistory.size() == 2 && recentBoluses.size() == 2
-                && quickInfoResult.history.bolusHistory.get(0).equals(recentBoluses.get(0))
-                && quickInfoResult.history.bolusHistory.get(1).equals(recentBoluses.get(1))) {
+        } else if (recentBoluses.size() == 2 && initialPumpBolusHistory.size() >= 2
+                && recentBoluses.get(0).equals(quickInfoResult.history.bolusHistory.get(0))
+                && recentBoluses.get(1).equals(quickInfoResult.history.bolusHistory.get(1))) {
             return null;
         }
 
         // fetch new records
+        long lastKnownPumpRecordTimestamp = recentBoluses.isEmpty() ? 0 : recentBoluses.get(0).timestamp;
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
-                ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(existingbolusHistory.get(0).timestamp)));
+                ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(lastKnownPumpRecordTimestamp)));
         if (!historyResult.success) {
             return historyResult;
         }
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
 
-        List<Bolus> updatedBolusHistory = historyResult.history.bolusHistory;
-        if (!updatedBolusHistory.isEmpty()) {
-            recentBoluses = updatedBolusHistory.subList(0, Math.min(updatedBolusHistory.size(), 2));
+        List<Bolus> updatedPumpBolusHistory = historyResult.history.bolusHistory;
+        if (!updatedPumpBolusHistory.isEmpty()) {
+            recentBoluses = updatedPumpBolusHistory.subList(0, Math.min(updatedPumpBolusHistory.size(), 2));
         }
 
         return null;
