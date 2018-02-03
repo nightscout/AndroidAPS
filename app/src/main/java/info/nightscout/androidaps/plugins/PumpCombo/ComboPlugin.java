@@ -489,41 +489,67 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        // Guard against boluses issued multiple times within two minutes.
-        // Two minutes, so that the resulting timestamp and bolus are different with the Combo
-        // history records which only store with minute-precision
-        if (lastRequestedBolus != null
-                && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
-                && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
-            log.error("Bolus request rejected, same bolus requested recently: " + lastRequestedBolus);
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
-        }
-        lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
-
-        // check pump is ready and all pump bolus records are known
-        CommandResult stateResult = runCommand(null, 2, ruffyScripter::readQuickInfo);
-        if (!stateResult.success) {
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
-        }
-        if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
-        }
-        // the commands above ensured a connection was made, which updated this field
-        if (pumpHistoryChanged) {
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
-        }
-
-        Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
-                ? stateResult.history.bolusHistory.get(0)
-                : new Bolus(0, 0, false);
-
         try {
             pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
+
+            // Guard against boluses issued multiple times within two minutes.
+            // Two minutes, so that the resulting timestamp and bolus are different with the Combo
+            // history records which only store with minute-precision
+            if (lastRequestedBolus != null
+                    && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
+                    && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
+                log.error("Bolus request rejected, same bolus requested recently: " + lastRequestedBolus);
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
+            }
+            lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
+
+            // check pump is ready and all pump bolus records are known
+            CommandResult stateResult = runCommand(null, 2, () -> ruffyScripter.readQuickInfo(1));
+            if (!stateResult.success) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
+            }
+            if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
+            }
+            // the commands above ensured a connection was made, which updated this field
+            if (pumpHistoryChanged) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
+            }
+
+            Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
+                    ? stateResult.history.bolusHistory.get(0)
+                    : new Bolus(0, 0, false);
+
+            // if the last bolus was given in the current minute, wait till the pump clock moves
+            // to the next minute to ensure timestamps are unique and can be imported
+            CommandResult timeCheckResult = ruffyScripter.readPumpState();
+            long maxWaitTimeout = System.currentTimeMillis() + 65 * 1000;
+            int waitLoops = 0;
+            while (previousBolus.timestamp == timeCheckResult.state.pumpTime
+                    && maxWaitTimeout < System.currentTimeMillis()) {
+                if (cancelBolus) {
+                    return new PumpEnactResult().success(true).enacted(false);
+                }
+                if (!timeCheckResult.success) {
+                    return new PumpEnactResult().success(false).enacted(false)
+                            .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
+                }
+                SystemClock.sleep(5000);
+                timeCheckResult = ruffyScripter.readPumpState();
+                waitLoops++;
+            }
+            if (waitLoops > 0) {
+                Answers.getInstance().logCustom(new CustomEvent("ComboBolusTimestampWait")
+                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                        .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("waitTimeSecs", String.valueOf(waitLoops * 5)));
+                log.debug("Waited " + (waitLoops * 5) + "s for pump to switch to a fresh minute before bolusing");
+            }
 
             if (cancelBolus) {
                 return new PumpEnactResult().success(true).enacted(false);
