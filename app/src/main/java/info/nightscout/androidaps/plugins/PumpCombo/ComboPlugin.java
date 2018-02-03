@@ -4,6 +4,9 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -610,6 +613,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 }
+                Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                        .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("issue", "record with same timestamp existed and was overridden"));
                 return false;
             }
         } catch (Exception e) {
@@ -617,6 +624,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (dbi.isSMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
+                Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                        .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("issue", "adding record caused exception"));
             }
             return false;
         }
