@@ -191,6 +191,17 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         return Translator.translate(eventType);
     }
 
+    public String getNotes() {
+        try {
+            JSONObject object = new JSONObject(json);
+            if (object.has("notes"))
+                return object.getString("notes");
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        return "";
+    }
+
     @Override
     public long getDuration() {
         try {
@@ -241,5 +252,10 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         if (eventType.equals(OPENAPSOFFLINE))
             return Color.GRAY;
         return Color.GRAY;
+    }
+
+    @Override
+    public int getSecondColor() {
+        return 0;
     }
 }

@@ -12,7 +12,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -28,7 +27,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
@@ -56,7 +55,7 @@ public class GraphData {
         this.graph = graph;
     }
 
-    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, DetermineBasalResultAMA amaResult) {
+    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {
         double maxBgValue = 0d;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
@@ -65,14 +64,12 @@ public class GraphData {
             return;
         }
 
-        Iterator<BgReading> it = bgReadingsArray.iterator();
-        while (it.hasNext()) {
-            BgReading bg = it.next();
+        for (BgReading bg : bgReadingsArray) {
             if (bg.value > maxBgValue) maxBgValue = bg.value;
             bgListArray.add(bg);
         }
-        if (amaResult != null) {
-            List<BgReading> predArray = amaResult.getPredictions();
+        if (apsResult != null) {
+            List<BgReading> predArray = apsResult.getPredictions();
             bgListArray.addAll(predArray);
         }
 
@@ -125,7 +122,7 @@ public class GraphData {
         List<ScaledDataPoint> basalLineArray = new ArrayList<>();
         List<ScaledDataPoint> absoluteBasalLineArray = new ArrayList<>();
         double lastLineBasal = 0;
-        double lastAbsoluteLineBasal = 0;
+        double lastAbsoluteLineBasal = -1;
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
@@ -253,7 +250,7 @@ public class GraphData {
         }
 
         // Careportal
-        List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
+        List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true);
 
         for (int tx = 0; tx < careportalEvents.size(); tx++) {
             DataPointWithLabelInterface t = careportalEvents.get(tx);
@@ -267,7 +264,7 @@ public class GraphData {
         addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
     }
 
-    double getNearestBg(long date) {
+    private double getNearestBg(long date) {
         double bg = 0;
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
@@ -401,21 +398,21 @@ public class GraphData {
 
     // scale in % of vertical size (like 0.3)
     public void addRatio(long fromTime, long toTime, boolean useForScale, double scale) {
-        LineGraphSeries<DataPoint> ratioSeries;
-        List<DataPoint> ratioArray = new ArrayList<>();
+        LineGraphSeries<ScaledDataPoint> ratioSeries;
+        List<ScaledDataPoint> ratioArray = new ArrayList<>();
         Double maxRatioValueFound = 0d;
         Scale ratioScale = new Scale(-1d);
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
-                ratioArray.add(new DataPoint(time, autosensData.autosensRatio));
+                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio, ratioScale));
                 maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
             }
         }
 
         // RATIOS
-        DataPoint[] ratioData = new DataPoint[ratioArray.size()];
+        ScaledDataPoint[] ratioData = new ScaledDataPoint[ratioArray.size()];
         ratioData = ratioArray.toArray(ratioData);
         ratioSeries = new LineGraphSeries<>(ratioData);
         ratioSeries.setColor(MainApp.sResources.getColor(R.color.ratio));
@@ -427,6 +424,50 @@ public class GraphData {
         ratioScale.setMultiplier(maxY * scale / maxRatioValueFound);
 
         addSeries(ratioSeries);
+    }
+
+    // scale in % of vertical size (like 0.3)
+    public void addDeviationSlope(long fromTime, long toTime, boolean useForScale, double scale) {
+        LineGraphSeries<ScaledDataPoint> dsMaxSeries;
+        LineGraphSeries<ScaledDataPoint> dsMinSeries;
+        List<ScaledDataPoint> dsMaxArray = new ArrayList<>();
+        List<ScaledDataPoint> dsMinArray = new ArrayList<>();
+        Double maxFromMaxValueFound = 0d;
+        Double maxFromMinValueFound = 0d;
+        Scale dsMaxScale = new Scale();
+        Scale dsMinScale = new Scale();
+
+        for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
+            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            if (autosensData != null) {
+                dsMaxArray.add(new ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale));
+                dsMinArray.add(new ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale));
+                maxFromMaxValueFound = Math.max(maxFromMaxValueFound, Math.abs(autosensData.slopeFromMaxDeviation));
+                maxFromMinValueFound = Math.max(maxFromMinValueFound, Math.abs(autosensData.slopeFromMinDeviation));
+            }
+        }
+
+        // Slopes
+        ScaledDataPoint[] ratioMaxData = new ScaledDataPoint[dsMaxArray.size()];
+        ratioMaxData = dsMaxArray.toArray(ratioMaxData);
+        dsMaxSeries = new LineGraphSeries<>(ratioMaxData);
+        dsMaxSeries.setColor(Color.MAGENTA);
+        dsMaxSeries.setThickness(3);
+
+        ScaledDataPoint[] ratioMinData = new ScaledDataPoint[dsMinArray.size()];
+        ratioMinData = dsMinArray.toArray(ratioMinData);
+        dsMinSeries = new LineGraphSeries<>(ratioMinData);
+        dsMinSeries.setColor(Color.YELLOW);
+        dsMinSeries.setThickness(3);
+
+        if (useForScale)
+            maxY = Math.max(maxFromMaxValueFound, maxFromMinValueFound);
+
+        dsMaxScale.setMultiplier(maxY * scale / maxFromMaxValueFound);
+        dsMinScale.setMultiplier(maxY * scale / maxFromMinValueFound);
+
+        addSeries(dsMaxSeries);
+        addSeries(dsMinSeries);
     }
 
     // scale in % of vertical size (like 0.3)

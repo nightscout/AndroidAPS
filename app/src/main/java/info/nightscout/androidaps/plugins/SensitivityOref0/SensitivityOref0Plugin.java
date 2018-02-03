@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -118,7 +120,7 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getLastAutosensData("SensitivityOref0"); // this is running inside lock already
+        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             log.debug("No current autosens data available");
             return new AutosensResult();
@@ -199,10 +201,8 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
             log.debug(ratioLimit);
         }
 
-        double newisf = Math.round(Profile.toMgdl(sens, profile.getUnits()) / ratio);
-        if (ratio != 1) {
-            log.debug("ISF adjusted from " + Profile.toMgdl(sens, profile.getUnits()) + " to " + newisf);
-        }
+        if (Config.logAutosensData)
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " ratio: " + ratio + " mealCOB: " + current.cob);
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

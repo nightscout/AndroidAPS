@@ -217,7 +217,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         }
 
         if (Config.logAutosensData)
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio);
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio + " mealCOB: " + current.cob);
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);
