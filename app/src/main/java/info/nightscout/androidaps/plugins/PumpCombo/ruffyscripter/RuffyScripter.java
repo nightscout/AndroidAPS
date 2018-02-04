@@ -428,7 +428,7 @@ public class RuffyScripter implements RuffyCommands {
         Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromConnectionLoss")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION)
-                .putCustomAttribute("activeCommand", "" + activeCmd)
+                .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
                 .putCustomAttribute("success", connected ? "true" : "else"));
         return connected;
     }
@@ -443,7 +443,8 @@ public class RuffyScripter implements RuffyCommands {
             Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("activeCommand", "" + activeCmd)
+                    .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
+                    .putCustomAttribute("exit", "1")
                     .putCustomAttribute("success", "false"));
             return new PumpState();
         }
@@ -461,15 +462,18 @@ public class RuffyScripter implements RuffyCommands {
             Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("activeCommand", "" + activeCmd)
+                    .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
+                    .putCustomAttribute("exit", "2")
                     .putCustomAttribute("success", "true"));
             return pumpState;
         } catch (Exception e) {
             Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("activeCommand", "" + activeCmd)
+                    .putCustomAttribute("exit", "3")
+                    .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
                     .putCustomAttribute("success", "false"));
+
             log.debug("Reading pump state during recovery failed", e);
             return new PumpState();
         }
@@ -494,7 +498,7 @@ public class RuffyScripter implements RuffyCommands {
                     Answers.getInstance().logCustom(new CustomEvent("ComboConnectTimeout")
                             .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                             .putCustomAttribute("version", BuildConfig.VERSION)
-                            .putCustomAttribute("activeCommand", "" + activeCmd)
+                            .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
                             .putCustomAttribute("previousCommand", previousCommand));
                     throw new CommandException("Timeout connecting to pump");
                 }
