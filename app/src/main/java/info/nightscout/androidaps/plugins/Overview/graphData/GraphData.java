@@ -244,7 +244,7 @@ public class GraphData {
             TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
             double value;
             if (tt == null) {
-                value = (profile.getTargetLow() + profile.getTargetHigh())  / 2;
+                value = (profile.getTargetLow(time) + profile.getTargetHigh(time))  / 2;
             } else {
                 value = (tt.low + tt.high) / 2;
             }
