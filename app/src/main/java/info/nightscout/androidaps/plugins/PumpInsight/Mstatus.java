@@ -18,7 +18,7 @@ class Mstatus {
         if (success()) {
             return "OK";
         } else {
-            return (event == null) ? "EVENT IS NULL" : event.message;
+            return (event == null) ? "EVENT DATA IS NULL - ERROR OR FIREWALL ENABLED?" : event.message;
         }
     }
 
