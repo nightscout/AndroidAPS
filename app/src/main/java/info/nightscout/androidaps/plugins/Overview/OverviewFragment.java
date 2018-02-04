@@ -1384,6 +1384,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2d);
                 }
 
+                // add target line
+                graphData.addTargetLine(fromTime, toTime);
+
                 // **** NOW line ****
                 graphData.addNowLine(now);
 
