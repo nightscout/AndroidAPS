@@ -444,7 +444,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">По подразбиране: 3.0\nТова е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл/5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">Позволени са само числа</string>
     <string name="error_only_numeric_digits_range_allowed" formatted="false">Позволени са числа между %1$s - %2$s</string>
     <string name="error_field_must_not_be_empty">Полето не може  да бъде празно</string>
@@ -676,4 +675,64 @@
     <string name="wear_settings">Настройки на часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
+    <string name="closedmodeenabled">Closed Loop е позволен</string>
+    <string name="combo_activity_reading_pump_history">Чете историята на помпата</string>
+    <string name="combo_activity_setting_basal_profile">Настройва базалният профил</string>
+    <string name="combo_error_bolus_recovery_progress">Опитва се да възстанови връзката</string>
+    <string name="combo_error_bolus_verification_failed">Доставянето на болуса и проверката на историята на помпата са неуспешни, моля, проверете помпата и ако е доставен болус го добавете като запис през Careportal</string>
+    <string name="customapp">Модифицирано приложение за изтегляне</string>
+    <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
+    <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
+    <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
+    <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
+    <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
+    <string name="enable_missed_bg_readings_alert">Аларма при липса на данни за КЗ</string>
+    <string name="enable_pump_unreachable_alert">Аларма при недостъпна помпа</string>
+    <string name="executingrightnow">Командата се изпълнява в момента</string>
+    <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
+    <string name="food">Храна</string>
+    <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
+    <string name="info">ИНФО</string>
+    <string name="localalertsettings_title">Локални аларми</string>
+    <string name="loopenabled">Loop разрешен</string>
+    <string name="maxiobset">Максимален IOB е зададен правилно</string>
+    <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално подържаната</string>
+    <string name="missed_bg_readings">Липсват данни за КЗ</string>
+    <string name="negativeonly">Само отрицателни</string>
+    <string name="no">Не</string>
+    <string name="none"><![CDATA[<празно>]]></string>
+    <string name="nsclientbg">КЗ от NS</string>
+    <string name="nsclienthaswritepermission">NSClient има права за запис</string>
+    <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
+    <string name="overview_editquickwizard_usebg">Калкулиране на КЗ</string>
+    <string name="overview_editquickwizard_usebolusiob">Калкулиране на Болус IOB</string>
+    <string name="overview_editquickwizard_usecob">Калкулиране на COB</string>
+    <string name="overview_editquickwizard_usesuperbolus">Калкулиране суперболус</string>
+    <string name="overview_editquickwizard_usetemptarget">Калкулиране на временни цели</string>
+    <string name="overview_editquickwizard_usetrend">Калкулиране на тенденция КЗ</string>
+    <string name="positiveonly">Само положителни</string>
+    <string name="processinghistory">Обработва се събитие</string>
+    <string name="pump_unreachable">Помпата е недостъпна</string>
+    <string name="pump_unreachable_threshold">Лимит за недостъпна помпа [мин]</string>
+    <string name="pumpdrivercorrected">Драйверът за помпата е коригиран</string>
+    <string name="remaininsulinalert">Оставащ инсулин</string>
+    <string name="startingbolus">Стартира доставка на болус</string>
+    <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
+    <string name="urgent_alarm">Спешна аларма</string>
+    <string name="waitingforestimatedbolusend" formatted="false">Очаква края на болуса. Остават %d сек.</string>
+    <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
+    <string name="wear_detailed_delta_title">Показвай подробна делта</string>
+    <string name="yes">Да</string>
+    <string name="zerovalueinprofile" formatted="false">Невалиден профил: %s</string>
+    <string name="shortenergy">En</string>
+    <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
+    <string name="combo_warning">Внимание</string>
+    <string name="combo_tdd_minimum" formatted="false">Минимум: %3.1f U</string>
+    <string name="combo_tdd_maximum" formatted="false">Максимум: %3.1f U</string>
+    <string name="combo_tdd_average" formatted="false">Средно: %3.1f U</string>
+    <string name="combo_reservoir_normal">Нормално</string>
+    <string name="combo_reservoir_low">Ниско</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
+    <string name="combo_reservoir_empty">Празен</string>
+    <string name="combo_refresh">Обнови</string>
 </resources>

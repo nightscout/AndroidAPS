@@ -275,7 +275,7 @@
     <string name="objectives_4_objective">Zapnout uzavřenou smyčku, zvyšovat max IOB nad 0 a snižovat cílovou glykémii</string>
     <string name="objectives_5_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
     <string name="objectives_5_objective">Upravit bazály a koeficinty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
-    <string name="objectives_6_objective">Povolit další fukce pro běžné používání jako AMA</string>
+    <string name="objectives_6_objective">Povolit další funkce pro běžné používání jako AMA</string>
     <string name="youareonallowedlimit">Dosaženo limitu</string>
     <string name="bolusdelivering" formatted="false">Aplikováno %.2fU</string>
     <string name="smscommunicator_loophasbeendisabled">Smyčka byla zakázána</string>
@@ -669,4 +669,113 @@
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="ultrarapid_oref">Ultra rychlý - Oref</string>
     <string name="waitingforestimatedbolusend" formatted="false">Čekání na konec bolusu. Zbývá %d sek.</string>
+    <string name="objectives_7_objective">Povolit další funkce pro běžné používání jako SMB</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3 Toto je klíčová hodnota zabezpečení. Říká, že maximánlní nastavitelný bazál je trojnásobkem maximálního denního bazálu. Patrně to nebudete muset měnit, případně si přečtete o tématu \"3x max denní; 4x aktuální\"</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4 Toto je druhá klíčová hodnota. Říká, že maximální hodnota dočasného bazálu nikdy nebude větší, než čtyřnásobek aktuálního bazálu. Je to proto, aby se lidé nedostali do hodnot nebezpečných bazálu dříve, než pochpí jak OpenAPS pracuje. Znovy vychozí hodnota je 4 a většina lidí ji nidky nebude muset změnit. Pokud nestačí, obvykle je problém někde jinde.</string>
+    <string name="openapsama_autosens_max_summary">Výchozí hodnota: 1.2 Toto je bezpečnostní nastavení pro detekci sensitivity. Říká, že autosens může zvýšit bazály, snížit ISF a snížit cílovou hodnotu glykémie o 20%</string>
+    <string name="openapsama_autosens_min_summary">Výchozí hodnota: 0.7 Toto je bezpečnostní nastavení pro detekci sensitivity. Říká, že autosens může snížit bazály, zvýšit ISF a zvýšit cílovou hodnotu glykémie na 70%</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Výchozí hodnota: zapnuto Toto nastavení říká, že autosens může měnit také cílové hodnoty glykémií.</string>
+    <string name="openapsama_bolussnooze_dia_divisor_summary">Výchozí hodnota: 2 Toto nastavení říká, po jakou část z hodnoty DIA smyčka po bolusu čeká a nereaguje na změny glykémií (zde 3DIA/2 = 1,5h)</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Výchozí hodnota: 3.0 Tato hodnota definuje minimální část strávených sacharidů za každých 5 min. Výchozí hodnota je 3mg/dl/5min. Tato hodnota ovlivňuje výpočet COB</string>
+    <string name="openapsama_link_to_preferncejson_doc_txt">Pozor! Za normálních okolností tyto hodnoty nemusíte měnit. Klikněte ZDE, PŘEČTĚTE si informace a UJISTĚTE se, že jim rozumíte dříve, než je začnete měnit.</string>
+    <string name="openapsama_autosens_period">Interval pro detekci senzitivity [h]</string>
+    <string name="openapsama_autosens_period_summary">Počet hodin do minulosti pro detekci senzitivity</string>
+    <string name="food">Jídlo</string>
+    <string name="shortgramm">g</string>
+    <string name="none"><![CDATA[<prázdný>]]></string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Tuk</string>
+    <string name="executingrightnow">Příkaz je právě prováděn</string>
+    <string name="pumpdrivercorrected">Ovladač pumpy opraven</string>
+    <string name="pump_unreachable">Pumpa nedostupná</string>
+    <string name="missed_bg_readings">Chybějící glykémie</string>
+    <string name="raise_notifications_as_android_notifications">Používat systémové notifikace pro výstrahy a oznámení</string>
+    <string name="localalertsettings_title">Místní výstrahy</string>
+    <string name="enable_missed_bg_readings_alert">Výstraha při nedostupných glykémiích</string>
+    <string name="enable_pump_unreachable_alert">Výstraha při nedostupné pumpě</string>
+    <string name="pump_unreachable_threshold">Limit pro nedostupnost pumpy [min]</string>
+    <string name="urgent_alarm">Urgetní alarm</string>
+    <string name="info">INFO</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">Hlídač BT</string>
+    <string name="btwatchdog_summary">Vypne na 1 sek bluetooth v telefonu, pokud se nedaří připojit k pumpě. Může to pomoci u telefonů, které mají problémy s BT</string>
+    <string name="DexcomG5">DexcomG5 aplikace (upravená)</string>
+    <string name="dexcomg5_nsupload_title">Nahrávat data do NS</string>
+    <string name="dexcomg5_upload">Nastavení nahrávání z G5</string>
+    <string name="customapp">Upravená aplikace pro stažení</string>
+    <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
+    <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
+    <string name="unsupportedfirmware">Nepodporovaný firmware v pumpě</string>
+    <string name="dexcomg5_xdripupload_title">Odesílat data do xDrip+</string>
+    <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
+    <string name="nsclientbg">Glykémie z NS</string>
+    <string name="minimalbasalvaluereplaced">Hodnota bazálu nahrazena minimální možnou</string>
+    <string name="overview_editquickwizard_usebg">Kalkulace  glykémie</string>
+    <string name="overview_editquickwizard_usebolusiob">Kalkulace bolusového IOB</string>
+    <string name="overview_editquickwizard_usebasaliob">Kalkulace bazálního IOB</string>
+    <string name="overview_editquickwizard_usetrend">Kalkulace trendu</string>
+    <string name="overview_editquickwizard_usesuperbolus">Kalkulace superbolusu</string>
+    <string name="yes">Ano</string>
+    <string name="no">No</string>
+    <string name="positiveonly">Pouze kladné</string>
+    <string name="negativeonly">Pouze záporné</string>
+    <string name="overview_editquickwizard_usecob">Kalkulace COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Kalkulace s dočasným cílem</string>
+    <string name="loopenabled">Smyčka povolena</string>
+    <string name="apsselected">APS vybráno</string>
+    <string name="nsclienthaswritepermission">NSClient má povolení k zápisu</string>
+    <string name="closedmodeenabled">Uzavřená smyčka povolena</string>
+    <string name="maxiobset">Maximální IOB nastaveno správně</string>
+    <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
+    <string name="basalprofilenotaligned" formatted="false">Bazální hodnoty nejsou zarovnané na celé hodiny: %s</string>
+    <string name="zerovalueinprofile" formatted="false">Chybný profil: %s</string>
+    <string name="combo_programming_bolus">Programování pumpy pro bolus</string>
+    <string name="combo_refresh">Obnovit</string>
+    <string name="combo_pump_state_label">Stav</string>
+    <string name="combo_pump_activity_label">Aktivita</string>
+    <string name="combo_no_pump_connection" formatted="false">Žádné spojení %d min</string>
+    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min zbývá)</string>
+    <string name="combo_pump_action_initializing">Inicializace</string>
+    <string name="combo_pump_state_disconnected">Odpojeno</string>
+    <string name="combo_pump_state_suspended_due_to_error">Vypnuto díky chybě</string>
+    <string name="combo_pump_state_suspended_by_user">Vypnuto uživatelem</string>
+    <string name="combo_pump_state_running">Beží</string>
+    <string name="combo_pump_action_cancelling_tbr">Rušení dočasného bazálu</string>
+    <string name="combo_pump_action_setting_tbr" formatted="false">Nastavování doč. bazálu (%d%% / %d min)</string>
+    <string name="combo_pump_action_bolusing" formatted="false">Bolus (%.1f U)</string>
+    <string name="combo_pump_action_refreshing">Obnovování</string>
+    <string name="combo_pump_never_connected">Nikdy</string>
+    <string name="combo_pump_unsupported_operation">Požadovaná operace není pumpou podporována</string>
+    <string name="combo_low_suspend_forced_notification">Nebezpečné použití: extended nebo multiwave bolus je aktivní. Pumpa byla vypnuta jen na 6 hodin. Povolené jsou pouze normální bolusy.</string>
+    <string name="combo_force_disabled_notification">Nebezpečné použití: pumpa má nastavený jiný bazální profil než první. Smyčka byla zakázána. Nastavete první profil a znovu načtěte.</string>
+    <string name="bolus_frequency_exceeded">Bolus stejné velikosti už byl během poslední minuty požadován. Jako preventivní ochrana před zdvojeným bolusem byla operace zakázána.</string>
+    <string name="combo_pump_connected_now">Teď</string>
+    <string name="combo_activity_reading_pump_history">Načítáni historie pumpy</string>
+    <string name="combo_pump_alerts">Výstrahy</string>
+    <string name="combo_activity_setting_basal_profile">Nastavení bazálního profilu</string>
+    <string name="combo_pump_cartridge_low_warrning">V zásobníku je málo inzulínu</string>
+    <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
+    <string name="combo_is_in_error_state" formatted="false">Pumpa hlásí chybu E%d: %s</string>
+    <string name="combo_error_bolus_recovery_progress">Pokouším se obnovit spojení</string>
+    <string name="combo_error_bolus_verification_failed">Provádění bolusu a čtení historie selhalo. Zkontrolujte pumpu a zadejte bolus přes péči</string>
+    <string name="combo_error_no_bolus_delivered">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
+    <string name="combo_error_partial_bolus_delivered" formatted="false">Pouze %.2f U z bolusu %.2f bylo podáno díky chybě. Zkontrolujte pumpu a proveďte nápravu.</string>
+    <string name="combo_history">Historie</string>
+    <string name="combo_pump_tbr_cancelled_warrning">Varování o ukončeném dočasném bazálu bylo potvrzeno.</string>
+    <string name="combo_warning">Varování</string>
+    <string name="combo_reservoir_empty">Prázdný</string>
+    <string name="combo_reservoir_low">Nízký</string>
+    <string name="combo_reservoir_normal">Normální</string>
+    <string name="combo_tdd_average" formatted="false">Průměr: %3.1f U</string>
+    <string name="combo_tdd_maximum" formatted="false">Maximum: %3.1f U</string>
+    <string name="combo_tdd_minimum" formatted="false">Minimum: %3.1f U</string>
+    <string name="combo_no_alert_data_note">Pro přečtení historie chyb dlouze stiskněte tlačítko ALERTS. Varování: může to způsobit chybu, že pumpa bude odmítat všechny připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
+    <string name="combo_notification_check_time_date">Je vyžadována aktualizace času na pumpě</string>
+    <string name="combo_no_tdd_data_note">Pro přečtení celkových denních dávek dlouze stikněte na pumpě tlačítko TDDS. Varování: může to způsobit chybu, že pumpa bude odmítat všechny připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
+    <string name="combo_read_full_history_warning">Toto načte kompletní historii pumpy a stavy. Všechno v My Data a hodnoty bazálů. Bolusy a dočasné bazály budou přidány do ošetření, pokud neexistují. Může to způsobit duplicity díky nepřesnosti času v pumpě. Neporučuje se pokud používáte smyčku a je určeno pouze pro speciální připady. Varování: může to způsobit chybu, že pumpa bude odmítat všechny připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
+    <string name="combo_read_full_history_confirmation">Opravdu chcete přečíst historii z pumpy a nést důsledky z toho vyplývající?</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
+    <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
 </resources>

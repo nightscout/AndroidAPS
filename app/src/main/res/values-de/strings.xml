@@ -710,9 +710,6 @@
     <string name="combo_pump_activity_label">Aktivität</string>
     <string name="combo_tbr_remaining">%d%% (%d Min. verbleibend)</string>
     <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %d Min.</string>
-    <string name="bolusstopped">Bolusabgabe gestoppt</string>
-    <string name="bolusstopping">Bolusabgabe wird abgebrochen</string>
-    <string name="pump_errors_history">Fehlerprotokol</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_state_disconnected">Keine Verbindung zur Pumpe</string>
     <string name="combo_pump_state_suspended_by_user">Gestoppt (Benutzer)</string>
@@ -726,7 +723,7 @@
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu. Andernfalls wird AndroidAPS nicht protokolliert (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)</string>
     <string name="pump_tempbasal_label">TBR</string>
     <string name="combo_last_bolus">%.1f %s (%s)</string>
-    <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in der letzten Minute angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
+    <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in den letzten zwei Minuten angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
     <string name="combo_activity_reading_pump_history">Historie wird gelesen</string>
     <string name="combo_activity_setting_basal_profile">Basalratenprofil wird aktualisiert</string>
     <string name="combo_error_bolus_recovery_progress">Verbindung wird wieder hergestellt</string>
@@ -753,7 +750,7 @@
     <string name="combo_is_in_error_state">Die Pumpe zeigt einen Fehler an E%d: %s</string>
     <string name="combo_force_disabled_notification">Unsichere Verwendung: In der Pumpe ist nicht das erste Basalratenprofil gewählt. Der Loop wird deaktiviert bis dies korrigiert ist.</string>
     <string name="combo_low_suspend_forced_notification">Unsichere Verwendung: Ein erweiterter oder Multiwave-Bolus ist aktiv. Der Loop wird für die nächsten 6 Stunden kein zusätzliches Insulin abgeben.</string>
-    <string name="combo_no_alert_data_note">Um die Fehlerhistorie der Pumpe zu lesen, drücke lange auf ALARME.\nWARNUNG: Es gibt einen bekannten Fehler in der Pumpe, der dazu führt, dass die Pumpe nach dieser Aktion erst wieder Verbindungen annimmt, wenn auf der Pumpe selbst eine Taste gedrückt wird. Aus diesem Grund sollte diese Aktion nicht durchgeführt werden.</string>
+    <string name="combo_no_alert_data_note">Um die Fehlerhistorie der Pumpe zu lesen, drücke lange auf ALARME.</string>
     <string name="combo_notification_check_time_date">Bitte aktualisiere die Uhrzeit der Pumpe</string>
     <string name="combo_no_tdd_data_note">Um die TDD-Statistik der Pumpe zu lesen, drücken Sie den TDDS Knopf lange.\nWARNUNG: Es gibt einen bekannten Fehler in der Pumpe der dazu führt, dass die Pumpe nach dieser Aktion erst wieder Verbindungen annimmt, wenn auf der Pumpe selbst ein Konpf gedrückt wird. Aus diesem Grund sollte diese Aktion nicht durchgeführt werden.</string>
     <string name="combo_read_full_history_warning">Dies wird den gesamten Speicher und den Status der Pumpe auslesen sowie alle Einträge in „Meine Daten“ und die Basalrate. Boli und TBR werden unter Behandlungen gespeichert, sofern sie nicht bereits vorhanden sind. Dies kann zu doppelten Einträgen führen, wenn die Uhrzeit der Pumpe abweicht. Das Auslesen des Speichers ist normaler Weise für das Loopen unnötig und nur für besondere Umstände vorgesehen. Wenn Du es dennoch tun willst, drücke noch einmal länger den Button. ACHTUNG: Dies kann einen Fehler auslösen, der dazu führt, dass die Pumpe keine Verbindungsversuche mehr akzeptiert. Erst die Betätigung einer Taste an der Pumpe beendet diesen Zustand. Nach Möglichkeit sollte daher das Auslesen vermieden werden.</string>

@@ -209,6 +209,7 @@
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
     <string name="it_lang">Italian</string>
+    <string name="ro_lang">Romanian</string>
     <string name="ru_lang">Russian</string>
     <string name="sv_lang">Swedish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
@@ -268,7 +269,6 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
-    <string name="pump_errors_history">Errors</string>
     <string name="danar_historyreload">Reload</string>
     <string name="uploading">Uploading</string>
     <string name="danar_ebolus">E bolus</string>
@@ -454,9 +454,9 @@
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3\nThis is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4\nThis is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
     <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
@@ -466,9 +466,9 @@
     <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0\nThis is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
+    <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">Only numeric digits are allowed.</string>
     <string name="error_only_numeric_digits_range_allowed">Only numeric digits within the range %1$s - %2$s are allowed.</string>
     <string name="error_field_must_not_be_empty">The field must not be empty</string>
@@ -783,7 +783,7 @@
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
-    <string name="key_dexcomg5_nsupload">dexcomg5_nsupload</string>
+    <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5 upload settings</string>
     <string name="customapp">Customized APK for download</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
@@ -820,7 +820,7 @@
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
-    <string name="combo_last_bolus">%.1f %s (%s)</string>
+    <string name="combo_last_bolus" translatable="false">%.1f %s (%s)</string>
     <string name="combo_pump_state_initializing">Initializing</string>
     <string name="combo_pump_state_disconnected">Disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
@@ -855,10 +855,10 @@
     <string name="combo_history">History</string>
     <string name="combo_warning">Warning</string>
     <string name="combo_read_full_history_info">Long press this button to force a full read of history and basal profile from the pump. This is generally not needed, since the pump\'s history is read continuously, but can be useful if the pump\'s date and time changed significantly or the pump was replaced.</string>
-    <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in \"My Data\" and  the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
+    <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in My Data and the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.  WARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
     <string name="combo_read_full_history_confirmation">Are you really sure you want to read all pump data and take the consequences of this action?</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
-    <string name="combo_error_no_connection_no_bolus_delivered">The pump could\'nt be reached. No bolus was given</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">The pump could not be reached. No bolus was given</string>
     <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
     <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually create a bolus record using the Careportal tab if a bolus was delivered.</string>
@@ -867,7 +867,7 @@
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait a minute since boluses with the same amount are blocked when requested with less than tow minutes between them for safety (regardless of whether they were administered or not).</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait two minutes since boluses with the same amount are blocked when requested with less than two minutes between them for safety (regardless of whether they were administered or not).</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejecting high temp since calculation didn\'t consider recently changed pump history</string>
     <string name="combo_activity_checking_pump_state">Refreshing pump state</string>
