@@ -179,6 +179,7 @@ dependencies {
     compile("com.crashlytics.sdk.android:answers:1.3.12@aar") {
         transitive = true;
     }
+    compile 'MilosKozak:danars-support-lib:master@zip'
 
     compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
     compile "com.android.support:support-v4:${supportLibraryVersion}"
@@ -231,3 +232,27 @@ dependencies {
     androidTestCompile "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
 }
+
+task unzip(type: Copy) {
+    def zipPath = configurations.compile.find {it.name.startsWith("danars") }
+    def zipFile = file(zipPath)
+    def outputDir = file("${buildDir}/unpacked/dist")
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
+task copyLibs(dependsOn: unzip, type: Copy) {
+    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
+    def target = file("src/main/jniLibs/")
+
+    from src
+    into target
+}
+
+task full_clean(type: Delete) {
+    delete file("src/main/jniLibs")
+}
+
+clean.dependsOn full_clean
+preBuild.dependsOn copyLibs
