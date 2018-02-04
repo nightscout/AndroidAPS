@@ -463,19 +463,12 @@
     <string name="advancedsettings_title">Setări avansate</string>
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Cod: %02X</string>
     <string name="profile">Profil</string>
-    <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3\nAceasta este o setare de critică de securitate a OpenAPS. Asta înseamnă că se limitează bazala lade 3x valoarea maximă a bazalelor tale.Cel mai probabil nu veți schimba această valoare, dar trebuie să țineți cont de ce se discută despre “3x max zilnic; 4x curent” ca valori de siguranță.</string>
-    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a "3x max zilnic; 4x curent" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
-    <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
-    <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">Valoare implicită: 0.7\nCealaltă parte a limitelor autosens, care limitează cât de jos poate ajusta bazalele și cât de mult poate mări ISF și țintele de glicemie.</string>
-    <string name="openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valoare implicită: adevărat\nAceasta se folosește pentru a permite autosens să ajusteze țintele de glicemie, pe lângă modificările asupra ISF și bazalelor.</string>
-    <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valoare implicită: 2\nAmânarea bolusului este aplicată după ce ați făcut un bolus de masă, astfel încât bucla să nu reacționeze cu ținte bazale temporare scăzute atunci când tocmai ați mâncat. Exemplul de față și valoarea implicită sunt 2; astfel o durată de acțiune a insulinei (DIA) de 3 ore duce la o eliminare treptată a întârzierii setării bazalelor temporare după 1.5 ore (3DIA/2).</string>
-    <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valoare implicită: 3.0\nAceasta este o setare ce privește impactul carbohidraților pe o durată de 5 minute. Valoarea implicită este de așteptat a fi 3mg/dl/5min. Aceasta afectează cât de mult se scade valoarea COB și cât de mare este presupusă a fi absorbția de carbohidrați în calcularea valorii prezise a glicemiei, atunci când glicemia scade cu mai mult decât s-a estimat sau când nu crește așa cum s-a așteptat.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenție!\nÎn mod normal nu este nevoie să modificați valorile de mai jos. Vă rog să APĂSAȚI AICI și să CITIȚI textul și să vă asigurați că l-ați ÎNȚELES înainte de a schimba valorile.</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
@@ -532,33 +525,18 @@
     <string name="queue">Coadă:</string>
     <string name="status">Status:</string>
     <string name="paused">Suspendat</string>
-    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
-    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
-    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
-    <string name="key_danar_password" translatable="false">danar_password</string>
-    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
-    <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Șterge istoricul</string>
-    <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
-    <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
     <string name="nowritepermission">NSCLIENT nu are permisiuni de scriere. Cheia API este corect scrisă?</string>
     <string name="wear_settings">Setări Wear</string>
     <string name="wear_detailedIOB_title">Arată IOB detaliat</string>
     <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
     <string name="notavailable">Nu este disponibil</string>
-    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
-    <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
     <string name="patientage">Vârsta pacientului</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
-    <string name="key_age" translatable="false">age</string>
-    <string name="key_child" translatable="false">child</string>
-    <string name="key_teenage" translatable="false">teenage</string>
-    <string name="key_adult" translatable="false">adult</string>
     <string name="patientage_summary">Vă rog să selectați vârsta pacientului în vederea stabilirii valorilor maxime admise de siguranță</string>
-    <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Se pare că dispozitivul nu suportă excluderea din lista de optimizare a bateriei!</string>
     <string name="pleaseallowpermission">Vă rog să activați permisiunea</string>
@@ -584,14 +562,12 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Înregistrează pornirea aplicației în NS</string>
-    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
     <string name="configbuilder_insulin">Insulină</string>
     <string name="fastactinginsulin">Insulină rapidă</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">INS</string>
     <string name="fastactinginsulinprolonged">Insulină rapidă cu efect prelungit</string>
-    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Activează superbolus în asistent</string>
     <string name="enablesuperbolus_summary">Activează funcționalitatea de superbolus în asistentul de buclă. Nu activați până nu înțelegeți ce face cu adevărat. DACĂ ESTE FOLOSIT ÎN NECUNOȘTINȚĂ DE CAUZĂ POATE DUCE LA SUPRADOZĂ DE INSULINĂ!</string>
     <string name="iob">IOB</string>
@@ -611,8 +587,6 @@
     <string name="wear_showbgi_summary">Adaugă BGI în linia de status</string>
     <string name="ns_noupload">Fără trimitere către NS</string>
     <string name="ns_noupload_summary">Toate trimiterile de date către NS sunt oprite. AAPS este conectat la NS dar nu se fac schimbări în NS</string>
-    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
-    <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="basal_step">Pas bazală</string>
     <string name="bolus_step">Pas bolus</string>
 </resources>
