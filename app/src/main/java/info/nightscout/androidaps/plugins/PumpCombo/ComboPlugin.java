@@ -619,6 +619,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
 
+            // update `recentBoluses` so the bolus was just delivered won't be detected as an new
+            // bolus that has been delivered on the pump
             recentBoluses = postBolusStateResult.history.bolusHistory;
 
             // only a partial bolus was delivered
@@ -1181,10 +1183,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * @return null on success or the failed command result
      */
     private CommandResult checkHistory() {
-        CommandResult quickInfoResult = runCommand(MainApp.gs(R.string.combo_activity_checking_for_history_changes), 3, () -> ruffyScripter.readQuickInfo(2));
+        CommandResult quickInfoResult = runCommand(MainApp.gs(R.string.combo_activity_checking_for_history_changes), 3,
+                () -> ruffyScripter.readQuickInfo(2));
 
         // no history, nothing to check or complain about
         if (quickInfoResult.history == null || quickInfoResult.history.bolusHistory.isEmpty()) {
+            log.debug("Setting 'pumpHistoryChanged' false");
+            pumpHistoryChanged = false;
             return null;
         }
 
@@ -1192,10 +1197,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         List<Bolus> initialPumpBolusHistory = quickInfoResult.history.bolusHistory;
         if (recentBoluses.size() == 1 && initialPumpBolusHistory.size() >= 1
                 && recentBoluses.get(0).equals(quickInfoResult.history.bolusHistory.get(0))) {
+            log.debug("Setting 'pumpHistoryChanged' false");
+            pumpHistoryChanged = false;
             return null;
         } else if (recentBoluses.size() == 2 && initialPumpBolusHistory.size() >= 2
                 && recentBoluses.get(0).equals(quickInfoResult.history.bolusHistory.get(0))
                 && recentBoluses.get(1).equals(quickInfoResult.history.bolusHistory.get(1))) {
+            log.debug("Setting 'pumpHistoryChanged' false");
+            pumpHistoryChanged = false;
             return null;
         }
 
@@ -1204,10 +1213,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(lastKnownPumpRecordTimestamp)));
         if (!historyResult.success) {
+            pumpHistoryChanged = true;
             return historyResult;
         }
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
+        if (pumpHistoryChanged) {
+            log.debug("Setting 'pumpHistoryChanged' true");
+        }
 
         List<Bolus> updatedPumpBolusHistory = historyResult.history.bolusHistory;
         if (!updatedPumpBolusHistory.isEmpty()) {
