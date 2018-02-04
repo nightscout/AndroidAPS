@@ -499,6 +499,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         log("Set TBR %");
+
+        if (percent == 100) {
+            // This would cause a cancel if a tbr is in progress so treat as a cancel
+            return cancelTempBasal(false);
+        }
+
         final UUID cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes), "Set TBR " + percent + "%" + " " + durationInMinutes + "m");
 
         if (cmd == null) {
@@ -787,11 +793,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
                             (batteryPercent < 70 ?
                                     (StatusItem.Highlight.BAD) : StatusItem.Highlight.NOTICE) : StatusItem.Highlight.NORMAL) : StatusItem.Highlight.GOOD));
             l.add(new StatusItem(gs(R.string.pump_reservoir_label), reservoirInUnits + "U"));
-
-            if (statusResult.getCurrentTBRMessage().getPercentage() != 100) {
-                l.add(new StatusItem(gs(R.string.insight_active_tbr), statusResult.getCurrentTBRMessage().getPercentage() + "% " + gs(R.string.with) + " "
-                        + Helpers.qs(statusResult.getCurrentTBRMessage().getLeftoverTime() - offset_minutes, 0)
-                        + " " + gs(R.string.insight_min_left), StatusItem.Highlight.NOTICE));
+            try {
+                if (statusResult.getCurrentTBRMessage().getPercentage() != 100) {
+                    l.add(new StatusItem(gs(R.string.insight_active_tbr), statusResult.getCurrentTBRMessage().getPercentage() + "% " + gs(R.string.with) + " "
+                            + Helpers.qs(statusResult.getCurrentTBRMessage().getLeftoverTime() - offset_minutes, 0)
+                            + " " + gs(R.string.insight_min_left), StatusItem.Highlight.NOTICE));
+                }
+            } catch (NullPointerException e) {
+                // currentTBRMessage may be null
             }
 
         }
@@ -805,9 +814,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         }
 
         if (statusResult != null) {
-            statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus1(), offset_minutes, l);
-            statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus2(), offset_minutes, l);
-            statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus3(), offset_minutes, l);
+            try {
+                statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus1(), offset_minutes, l);
+                statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus2(), offset_minutes, l);
+                statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus3(), offset_minutes, l);
+            } catch (NullPointerException e) {
+                // getActiveBolusesMessage() may be null
+            }
         }
 
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
