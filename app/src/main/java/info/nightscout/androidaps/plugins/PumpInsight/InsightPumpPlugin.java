@@ -454,6 +454,61 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         absoluteRate = Helpers.roundDouble(absoluteRate, 3);
         log("Set TBR absolute: " + absoluteRate);
+        final double base_basal = getBaseBasalRate();
+        if (base_basal == 0) {
+            log("Base basal rate appears to be zero!");
+            return pumpEnactFailure();
+        }
+        int amount = (int) Math.round(100d / base_basal * absoluteRate);
+        log("Calculated requested rate: " + absoluteRate + " base rate: " + base_basal + " percentage: " + amount + "%");
+        amount = (int) Math.round(((double) amount) / 10d) * 10;
+        log("Calculated final rate: " + amount + "%");
+        if (amount > 250) amount = 250;
+
+        final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), amount, durationInMinutes);
+        final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
+
+        if (cmd == null) {
+            return pumpEnactFailure();
+        }
+
+        Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        log("Got command status: " + ms);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(false).duration(durationInMinutes);
+        pumpEnactResult.absolute = absoluteRate; // TODO get converted value?
+        pumpEnactResult.success = ms.success();
+        pumpEnactResult.isTempCancel = false; // do we test this here?
+        pumpEnactResult.comment = ms.getCommandComment();
+
+        if (pumpEnactResult.success) {
+            // create log entry
+            final TemporaryBasal tempBasal = new TemporaryBasal();
+            tempBasal.date = System.currentTimeMillis();
+            tempBasal.isAbsolute = true;
+            tempBasal.absoluteRate = base_basal / 100d * ((double) amount); // is this the correct figure to use?
+            tempBasal.durationInMinutes = durationInMinutes;
+            tempBasal.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
+        }
+
+        if (Config.logPumpComm)
+            log.debug("Setting temp basal absolute: " + pumpEnactResult.success);
+
+        lastDataTime = new Date();
+
+        updateGui();
+
+        connector.requestHistorySync(5000);
+        connector.tryToGetPumpStatusAgain();
+
+        return pumpEnactResult;
+    }
+
+    //@Override
+    public PumpEnactResult setTempBasalAbsoluteOld(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
+        absoluteRate = Helpers.roundDouble(absoluteRate, 3);
+        log("Set TBR absolute: " + absoluteRate);
 
         final AbsoluteTBRTaskRunner task = new AbsoluteTBRTaskRunner(connector.getServiceConnector(), absoluteRate, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
@@ -500,10 +555,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         log("Set TBR %");
 
+        percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) {
             // This would cause a cancel if a tbr is in progress so treat as a cancel
             return cancelTempBasal(false);
         }
+
 
         final UUID cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes), "Set TBR " + percent + "%" + " " + durationInMinutes + "m");
 
@@ -899,7 +956,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
                             log(name + " success");
                             event.response_object = o;
                             if (o instanceof BolusMessage) {
-                                event.response_id = ((BolusMessage)o).getBolusId();
+                                event.response_id = ((BolusMessage) o).getBolusId();
                             }
                             event.success = true;
                             pushCallbackEvent(event);
