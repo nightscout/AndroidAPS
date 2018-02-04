@@ -24,6 +24,7 @@ ext {
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://jitpack.io' }
 }
 
 def generateGitBuild = { ->
@@ -213,6 +214,8 @@ dependencies {
     compile "com.google.guava:guava:20.0"
 
     compile "net.danlew:android.joda:2.9.9.1"
+
+    compile 'com.github.mozilla:rhino:Rhino1_7_7_2_Release'
 
     api "com.jakewharton:butterknife:8.8.1"
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
