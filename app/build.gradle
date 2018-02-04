@@ -215,6 +215,8 @@ dependencies {
 
     compile "net.danlew:android.joda:2.9.9.1"
 
+    compile 'org.mozilla:rhino:1.7.7.2'
+
     api "com.jakewharton:butterknife:8.8.1"
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
