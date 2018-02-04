@@ -98,22 +98,38 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @NonNull
     private static final ComboPump pump = new ComboPump();
 
-    private volatile boolean bolusInProgress;
+    /** This is used to determine when to pass a bolus cancel request to the scripter */
+    private volatile boolean scripterIsBolusing;
+    /** This is set to true to request a bolus cancellation. {@link #deliverBolus(DetailedBolusInfo)}
+     * will reset this flag. */
     private volatile boolean cancelBolus;
 
-    /** Used to reject boluses with the same amount requested within two minutes */
+    /** Used to reject boluses with the same amount requested within two minutes.
+     * Used solely by {@link #deliverBolus(DetailedBolusInfo)}. This is independent of the
+     * pump history and is meant as a safety feature to block multiple requests due to an
+     * application bug. Whether the requested bolus was delivered once is not taken into account. */
     private Bolus lastRequestedBolus;
 
     /**
-     * This is set whenever a connection to the pump is made and indicates if new history
-     * records on the pump have been found. This effectively blocks high temps and boluses
-     * till the queue is empty and the connection is shut down. The next reconnect will
-     * then reset this flag. This might cause some grief when attempting to bolus again within
-     * the 5s of idling it takes before the connecting is shut down. Or if the queue is very
-     * large, giving the user more time to input boluses. I don't have a good solution for this
-     * at the moment, but this is edge-casey to not address this at this point.
+     * This is set (in {@link #checkHistory()} whenever a connection to the pump is made and
+     * indicates if new history records on the pump have been found. This effectively blocks
+     * high temps ({@link #setTempBasalPercent(Integer, Integer)} and boluses
+     * ({@link #deliverBolus(DetailedBolusInfo)} till the queue is empty and the connection
+     * is shut down.
+     * {@link #initializePump()} resets this since on startup the history is allowed to have
+     * changed (and the user can't possible have already calculated anything with out of date IOB).
+     * The next reconnect will then reset this flag. This might cause some grief when attempting
+     * to bolus again within the 5s of idling it takes before the connecting is shut down. Or if
+     * the queue is very large, giving the user more time to input boluses. I don't have a good
+     * solution for this at the moment, but this is enough of an edge case - faulting in the right
+     * direction - so that adding more complexity yields little benefit.
      */
     private volatile boolean pumpHistoryChanged = false;
+
+    /** Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
+     * requiring reading pump more history. This is read/set in {@link #checkHistory()} when changed
+     * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
+     * after bolus delivery. */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
 
     public static ComboPlugin getPlugin() {
@@ -123,7 +139,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
+            .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
 
     private ComboPlugin() {
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
@@ -545,6 +561,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     return new PumpEnactResult().success(false).enacted(false)
                             .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
                 }
+                log.debug("Waiting for pump clock to advance for the next unused bolus record timestamp");
                 SystemClock.sleep(2000);
                 timeCheckResult = runCommand(null, 0, ruffyScripter::readPumpState);
                 waitLoops++;
@@ -565,16 +582,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter;
 
             // start bolus delivery
-            bolusInProgress = true;
+            scripterIsBolusing = true;
             runCommand(null, 0,
                     () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
-            bolusInProgress = false;
+            scripterIsBolusing = false;
 
             // Note that the result of the issued bolus command is not checked. If there was
             // a connection problem, ruffyscripter tried to recover and we can just check the
             // history below to see what was actually delivered
 
             // get last bolus from pump history for verification
+            // (reads 2 records to update `recentBoluses` further down)
             CommandResult postBolusStateResult = runCommand(null, 3, () -> ruffyScripter.readQuickInfo(2));
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
@@ -643,7 +661,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (!treatmentCreated) {
                 log.error("Adding treatment record overrode an existing record: " + dbi);
                 if (dbi.isSMB) {
-                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 }
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
@@ -655,7 +673,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
             if (dbi.isSMB) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
@@ -669,7 +687,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public void stopBolusDelivering() {
-        if (bolusInProgress) {
+        if (scripterIsBolusing) {
             ruffyScripter.cancelBolus();
         }
         cancelBolus = true;
@@ -1107,7 +1125,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * Should be good enough, even with command mode, it's a challenge to create that situation
      * and most time clashes will be around SMBs which are covered.
      */
-    private long calculateFakeBolusDate(Bolus pumpBolus) {
+    long calculateFakeBolusDate(Bolus pumpBolus) {
         double bolus = pumpBolus.amount - 0.1;
         int secondsFromBolus = (int) (bolus * 10 * 1000);
         return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
