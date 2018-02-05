@@ -32,7 +32,7 @@ public interface RuffyCommands {
     CommandResult readPumpState();
 
     /** Read reservoir level and last bolus via Quick Info */
-    CommandResult readQuickInfo();
+    CommandResult readQuickInfo(int numberOfBolusRecordsToRetrieve);
 
     /** Reads pump history via the My Data menu. The {@link PumpHistoryRequest} specifies
      * what types of data and how far back data is returned. */
