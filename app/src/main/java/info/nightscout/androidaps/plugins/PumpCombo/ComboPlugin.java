@@ -1233,7 +1233,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     .putCustomAttribute("bolus", "")
                     .putCustomAttribute("issue", "multiple pump history records with the same time and amount"));
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.
-                    combo_error_multiple_boluses_with_idential_timestamp), Notification.URGENT);
+                    combo_error_multiple_boluses_with_identical_timestamp), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         }
 
