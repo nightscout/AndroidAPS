@@ -11,8 +11,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -96,20 +99,39 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @NonNull
     private static final ComboPump pump = new ComboPump();
 
-    private volatile boolean bolusInProgress;
+    /** This is used to determine when to pass a bolus cancel request to the scripter */
+    private volatile boolean scripterIsBolusing;
+    /** This is set to true to request a bolus cancellation. {@link #deliverBolus(DetailedBolusInfo)}
+     * will reset this flag. */
     private volatile boolean cancelBolus;
 
+    /** Used to reject boluses with the same amount requested within two minutes.
+     * Used solely by {@link #deliverBolus(DetailedBolusInfo)}. This is independent of the
+     * pump history and is meant as a safety feature to block multiple requests due to an
+     * application bug. Whether the requested bolus was delivered once is not taken into account. */
     private Bolus lastRequestedBolus;
 
     /**
-     * This is set whenever a connection to the pump is made and indicates if new history
-     * records on the pump have been found. This effectively blocks high temps and boluses
-     * till the queue is empty and the connection is shut down. The next reconnect will
-     * then reset this flag. This might cause some grief when attempting to bolus again within
-     * the 5s of idling it takes before the connecting is shut down.
+     * This is set (in {@link #checkHistory()} whenever a connection to the pump is made and
+     * indicates if new history records on the pump have been found. This effectively blocks
+     * high temps ({@link #setTempBasalPercent(Integer, Integer)} and boluses
+     * ({@link #deliverBolus(DetailedBolusInfo)} till the queue is empty and the connection
+     * is shut down.
+     * {@link #initializePump()} resets this since on startup the history is allowed to have
+     * changed (and the user can't possible have already calculated anything with out of date IOB).
+     * The next reconnect will then reset this flag. This might cause some grief when attempting
+     * to bolus again within the 5s of idling it takes before the connecting is shut down. Or if
+     * the queue is very large, giving the user more time to input boluses. I don't have a good
+     * solution for this at the moment, but this is enough of an edge case - faulting in the right
+     * direction - so that adding more complexity yields little benefit.
      */
     private volatile boolean pumpHistoryChanged = false;
-    private volatile long timestampOfLastKnownPumpBolusRecord;
+
+    /** Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
+     * requiring reading pump more history. This is read/set in {@link #checkHistory()} when changed
+     * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
+     * after bolus delivery. */
+    private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
 
     public static ComboPlugin getPlugin() {
         if (plugin == null)
@@ -118,7 +140,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.sResources.getString(R.string.combo_pump_unsupported_operation));
+            .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
 
     private ComboPlugin() {
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
@@ -370,7 +392,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         // trigger a connect, which will update state and check history
-        CommandResult stateResult = runCommand(null,1, ruffyScripter::readPumpState);
+        CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
         if (!stateResult.success) {
             return;
         }
@@ -404,7 +426,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
-        updateLocalData(runCommand(null, 1, ruffyScripter::readQuickInfo));
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
     }
 
     /** Updates local cache with state (reservoir level, last bolus ...) returned from the pump */
@@ -489,41 +511,70 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @NonNull
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        // Guard against boluses issued multiple times within two minutes.
-        // Two minutes, so that the resulting timestamp and bolus are different with the Combo
-        // history records which only store with minute-precision
-        if (lastRequestedBolus != null
-                && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
-                && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
-            log.error("Bolus request rejected, same bolus requested recently: " + lastRequestedBolus);
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
-        }
-        lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
-
-        // check pump is ready and all pump bolus records are known
-        CommandResult stateResult = runCommand(null, 2, ruffyScripter::readQuickInfo);
-        if (!stateResult.success) {
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
-        }
-        if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
-        }
-        // the commands above ensured a connection was made, which updated this field
-        if (pumpHistoryChanged) {
-            return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
-        }
-
-        Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
-                ? stateResult.history.bolusHistory.get(0)
-                : new Bolus(0, 0, false);
-
         try {
             pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
+
+            // Guard against boluses issued multiple times within two minutes.
+            // Two minutes, so that the resulting timestamp and bolus are different with the Combo
+            // history records which only store with minute-precision
+            if (lastRequestedBolus != null
+                    && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
+                    && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
+                log.error("Bolus request rejected, same bolus requested recently: " + lastRequestedBolus);
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
+            }
+            lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
+
+            // check pump is ready and all pump bolus records are known
+            CommandResult stateResult = runCommand(null, 2, () -> ruffyScripter.readQuickInfo(1));
+            if (!stateResult.success) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
+            }
+            if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
+            }
+            // the commands above ensured a connection was made, which updated this field
+            if (pumpHistoryChanged) {
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
+            }
+
+            Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
+                    ? stateResult.history.bolusHistory.get(0)
+                    : new Bolus(0, 0, false);
+
+            // if the last bolus was given in the current minute, wait till the pump clock moves
+            // to the next minute to ensure timestamps are unique and can be imported
+            CommandResult timeCheckResult = stateResult;
+            long waitStartTime = System.currentTimeMillis();
+            long maxWaitTimeout = waitStartTime + 65 * 1000;
+            int waitLoops = 0;
+            while (previousBolus.timestamp == timeCheckResult.state.pumpTime
+                    && maxWaitTimeout > System.currentTimeMillis()) {
+                if (cancelBolus) {
+                    return new PumpEnactResult().success(true).enacted(false);
+                }
+                if (!timeCheckResult.success) {
+                    return new PumpEnactResult().success(false).enacted(false)
+                            .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
+                }
+                log.debug("Waiting for pump clock to advance for the next unused bolus record timestamp");
+                SystemClock.sleep(2000);
+                timeCheckResult = runCommand(null, 0, ruffyScripter::readPumpState);
+                waitLoops++;
+            }
+            if (waitLoops > 0) {
+                long waitDuration = (System.currentTimeMillis() - waitStartTime) / 1000;
+                Answers.getInstance().logCustom(new CustomEvent("ComboBolusTimestampWait")
+                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                        .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("waitTimeSecs", String.valueOf(waitDuration)));
+                log.debug("Waited " + waitDuration + "s for pump to switch to a fresh minute before bolusing");
+            }
 
             if (cancelBolus) {
                 return new PumpEnactResult().success(true).enacted(false);
@@ -532,17 +583,18 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter;
 
             // start bolus delivery
-            bolusInProgress = true;
+            scripterIsBolusing = true;
             runCommand(null, 0,
                     () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
-            bolusInProgress = false;
+            scripterIsBolusing = false;
 
             // Note that the result of the issued bolus command is not checked. If there was
             // a connection problem, ruffyscripter tried to recover and we can just check the
             // history below to see what was actually delivered
 
             // get last bolus from pump history for verification
-            CommandResult postBolusStateResult = runCommand(null, 3, ruffyScripter::readQuickInfo);
+            // (reads 2 records to update `recentBoluses` further down)
+            CommandResult postBolusStateResult = runCommand(null, 3, () -> ruffyScripter.readQuickInfo(2));
             if (!postBolusStateResult.success) {
                 return new PumpEnactResult().success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
@@ -552,7 +604,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     : null;
 
             // no bolus delivered?
-            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)  ) {
+            if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
                 if (cancelBolus) {
                     return new PumpEnactResult().success(true).enacted(false);
                 } else {
@@ -568,7 +620,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
 
-            timestampOfLastKnownPumpBolusRecord = lastPumpBolus.timestamp;
+            // update `recentBoluses` so the bolus was just delivered won't be detected as a new
+            // bolus that has been delivered on the pump
+            recentBoluses = postBolusStateResult.history.bolusHistory;
 
             // only a partial bolus was delivered
             if (Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01) {
@@ -602,7 +656,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo dbi = detailedBolusInfo.copy();
         dbi.date = calculateFakeBolusDate(lastPumpBolus);
-        dbi.pumpId = calculateFakeBolusDate(lastPumpBolus);
+        dbi.pumpId = dbi.date;
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
@@ -610,23 +664,25 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (!treatmentCreated) {
                 log.error("Adding treatment record overrode an existing record: " + dbi);
                 if (dbi.isSMB) {
-                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 }
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
                         .putCustomAttribute("issue", "record with same timestamp existed and was overridden"));
                 return false;
             }
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
             if (dbi.isSMB) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.sResources.getString(R.string.combo_error_updating_treatment_record), Notification.URGENT);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
                         .putCustomAttribute("issue", "adding record caused exception"));
             }
             return false;
@@ -636,7 +692,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public void stopBolusDelivering() {
-        if (bolusInProgress) {
+        if (scripterIsBolusing) {
             ruffyScripter.cancelBolus();
         }
         cancelBolus = true;
@@ -780,9 +836,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         CommandResult commandResult;
         try {
             if (!ruffyScripter.isConnected()) {
+                String originalActivity = pump.activity;
                 pump.activity = MainApp.gs(R.string.combo_activity_checking_pump_state);
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
                 CommandResult preCheckError = runOnConnectChecks();
+                pump.activity = originalActivity;
                 if (preCheckError != null) {
                     updateLocalData(preCheckError);
                     return preCheckError;
@@ -855,7 +913,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 // turn benign warnings into notifications
                 notifyAboutPumpWarning(activeAlert);
                 ruffyScripter.confirmAlert(activeAlert.warningCode);
-            } else if (activeAlert.errorCode != null){
+            } else if (activeAlert.errorCode != null) {
                 Notification notification = new Notification();
                 notification.date = new Date();
                 notification.id = Notification.COMBO_PUMP_ALARM;
@@ -1055,7 +1113,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
             dbi.date = calculateFakeBolusDate(pumpBolus);
-            dbi.pumpId = calculateFakeBolusDate(pumpBolus);
+            dbi.pumpId = dbi.date;
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
@@ -1067,13 +1125,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     /** Adds the bolus to the timestamp to be able to differentiate multiple boluses in the same
-     * minute. Best effort, since this covers only boluses up to 5.9 U and relies on other code
+     * minute. Best effort, since this covers only boluses up to 6.0 U and relies on other code
      * to prevent a boluses with the same amount to be delivered within the same minute.
      * Should be good enough, even with command mode, it's a challenge to create that situation
      * and most time clashes will be around SMBs which are covered.
      */
-    private long calculateFakeBolusDate(Bolus pumpBolus) {
-        return pumpBolus.timestamp + (Math.min((int) (pumpBolus.amount - 0.1) * 10 * 1000, 59 * 1000));
+    long calculateFakeBolusDate(Bolus pumpBolus) {
+        double bolus = pumpBolus.amount - 0.1;
+        int secondsFromBolus = (int) (bolus * 10 * 1000);
+        return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
     }
 
     // TODO use queue once ready
@@ -1126,26 +1186,65 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * @return null on success or the failed command result
      */
     private CommandResult checkHistory() {
-        CommandResult quickInfoResult = runCommand(MainApp.gs(R.string.combo_activity_checking_for_history_changes), 3, ruffyScripter::readQuickInfo);
-        if (quickInfoResult.history != null && !quickInfoResult.history.bolusHistory.isEmpty()
-                && quickInfoResult.history.bolusHistory.get(0).timestamp == timestampOfLastKnownPumpBolusRecord) {
+        CommandResult quickInfoResult = runCommand(MainApp.gs(R.string.combo_activity_checking_for_history_changes), 3,
+                () -> ruffyScripter.readQuickInfo(2));
+
+        // no history, nothing to check or complain about
+        if (quickInfoResult.history == null || quickInfoResult.history.bolusHistory.isEmpty()) {
+            log.debug("Setting 'pumpHistoryChanged' false");
+            pumpHistoryChanged = false;
             return null;
         }
 
-        // OPTIMIZE this reads the entire history on start, so this could be optimized by persisting
-        // `timestampOfLastKnownPumpBolusRecord`, though this should be thought through, to make sure
-        // all scenarios are covered
+        // compare recent records
+        List<Bolus> initialPumpBolusHistory = quickInfoResult.history.bolusHistory;
+        if (recentBoluses.size() == 1 && initialPumpBolusHistory.size() >= 1
+                && recentBoluses.get(0).equals(quickInfoResult.history.bolusHistory.get(0))) {
+            log.debug("Setting 'pumpHistoryChanged' false");
+            pumpHistoryChanged = false;
+            return null;
+        } else if (recentBoluses.size() == 2 && initialPumpBolusHistory.size() >= 2
+                && recentBoluses.get(0).equals(quickInfoResult.history.bolusHistory.get(0))
+                && recentBoluses.get(1).equals(quickInfoResult.history.bolusHistory.get(1))) {
+            log.debug("Setting 'pumpHistoryChanged' false");
+            pumpHistoryChanged = false;
+            return null;
+        }
+
+        // fetch new records
+        long lastKnownPumpRecordTimestamp = recentBoluses.isEmpty() ? 0 : recentBoluses.get(0).timestamp;
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () ->
-                ruffyScripter.readHistory(new PumpHistoryRequest()
-                        .bolusHistory(timestampOfLastKnownPumpBolusRecord)));
+                ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(lastKnownPumpRecordTimestamp)));
         if (!historyResult.success) {
+            pumpHistoryChanged = true;
             return historyResult;
         }
 
-        pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
+        // Check edge of multiple boluses with the same amount in the same minute being imported.
+        // This is about as edgy-casey as it can get. I'd be surprised of this one actually ever
+        // triggers. It might, so at least give a warning, since a delivered bolus isn't accounted
+        // for.
+        HashSet<Bolus> bolusSet = new HashSet<>(historyResult.history.bolusHistory);
+        if (bolusSet.size() != historyResult.history.bolusHistory.size()) {
+            log.debug("Bolus with same amount within the same minute imported. Only one will make it to the DB.");
+            Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("bolus", "")
+                    .putCustomAttribute("issue", "multiple pump history records with the same time and amount"));
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.
+                    combo_error_multiple_boluses_with_idential_timestamp), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        }
 
-        if (!historyResult.history.bolusHistory.isEmpty()) {
-           timestampOfLastKnownPumpBolusRecord = historyResult.history.bolusHistory.get(0).timestamp;
+        pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
+        if (pumpHistoryChanged) {
+            log.debug("Setting 'pumpHistoryChanged' true");
+        }
+
+        List<Bolus> updatedPumpBolusHistory = historyResult.history.bolusHistory;
+        if (!updatedPumpBolusHistory.isEmpty()) {
+            recentBoluses = updatedPumpBolusHistory.subList(0, Math.min(updatedPumpBolusHistory.size(), 2));
         }
 
         return null;

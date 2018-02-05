@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
-import org.monkey.d.ruffy.ruffy.driver.display.menu.BolusType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuDate;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
@@ -145,7 +144,7 @@ public class ReadHistoryCommand extends BaseCommand {
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
             Tdd tdd = readTddRecord();
-            if (requestedTime != PumpHistoryRequest.FULL && tdd.timestamp <= requestedTime) {
+            if (requestedTime != PumpHistoryRequest.FULL && tdd.timestamp < requestedTime) {
                 break;
             }
             log.debug("Read TDD record #" + record + "/" + totalRecords);
@@ -183,7 +182,7 @@ public class ReadHistoryCommand extends BaseCommand {
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
             Tbr tbr = readTbrRecord();
-            if (requestedTime != PumpHistoryRequest.FULL && tbr.timestamp <= requestedTime) {
+            if (requestedTime != PumpHistoryRequest.FULL && tbr.timestamp < requestedTime) {
                 break;
             }
             log.debug("Read TBR record #" + record + "/" + totalRecords);
@@ -215,7 +214,7 @@ public class ReadHistoryCommand extends BaseCommand {
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
             Bolus bolus = readBolusRecord();
-            if (requestedTime != PumpHistoryRequest.FULL && bolus.timestamp <= requestedTime) {
+            if (requestedTime != PumpHistoryRequest.FULL && bolus.timestamp < requestedTime) {
                 break;
             }
             log.debug("Read bolus record #" + record + "/" + totalRecords);
@@ -237,7 +236,7 @@ public class ReadHistoryCommand extends BaseCommand {
         int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
         while (true) {
             PumpAlert error = readAlertRecord();
-            if (requestedTime != PumpHistoryRequest.FULL && error.timestamp <= requestedTime) {
+            if (requestedTime != PumpHistoryRequest.FULL && error.timestamp < requestedTime) {
                 break;
             }
             log.debug("Read alert record #" + record + "/" + totalRecords);
