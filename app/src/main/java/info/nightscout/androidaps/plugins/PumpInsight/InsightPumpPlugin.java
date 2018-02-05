@@ -463,6 +463,11 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         log("Calculated requested rate: " + absoluteRate + " base rate: " + base_basal + " percentage: " + amount + "%");
         amount = (int) Math.round(((double) amount) / 10d) * 10;
         log("Calculated final rate: " + amount + "%");
+
+        if (amount == 100) {
+            return cancelTempBasal(false);
+        }
+
         if (amount > 250) amount = 250;
 
         final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), amount, durationInMinutes);
