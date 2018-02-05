@@ -415,7 +415,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if ((data.size() > 0) &&
             (data.get(0).date > millis - 7 * 60 * 1000L) &&
             (data.get(0).date < millis + 7 * 60 * 1000L)) {
-            editBg.setValue(data.get(0).value);
+            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
         }
     }
 
