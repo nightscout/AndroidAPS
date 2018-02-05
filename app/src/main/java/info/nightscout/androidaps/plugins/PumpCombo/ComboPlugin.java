@@ -553,7 +553,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             long maxWaitTimeout = waitStartTime + 65 * 1000;
             int waitLoops = 0;
             while (previousBolus.timestamp == timeCheckResult.state.pumpTime
-                    && maxWaitTimeout < System.currentTimeMillis()) {
+                    && maxWaitTimeout > System.currentTimeMillis()) {
                 if (cancelBolus) {
                     return new PumpEnactResult().success(true).enacted(false);
                 }
@@ -619,7 +619,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
 
-            // update `recentBoluses` so the bolus was just delivered won't be detected as an new
+            // update `recentBoluses` so the bolus was just delivered won't be detected as a new
             // bolus that has been delivered on the pump
             recentBoluses = postBolusStateResult.history.bolusHistory;
 
