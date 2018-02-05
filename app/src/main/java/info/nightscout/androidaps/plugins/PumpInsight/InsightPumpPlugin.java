@@ -459,18 +459,18 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             log("Base basal rate appears to be zero!");
             return pumpEnactFailure();
         }
-        int amount = (int) Math.round(100d / base_basal * absoluteRate);
-        log("Calculated requested rate: " + absoluteRate + " base rate: " + base_basal + " percentage: " + amount + "%");
-        amount = (int) Math.round(((double) amount) / 10d) * 10;
-        log("Calculated final rate: " + amount + "%");
+        int percent_amount = (int) Math.round(100d / base_basal * absoluteRate);
+        log("Calculated requested rate: " + absoluteRate + " base rate: " + base_basal + " percentage: " + percent_amount + "%");
+        percent_amount = (int) Math.round(((double) percent_amount) / 10d) * 10;
+        log("Calculated final rate: " + percent_amount + "%");
 
-        if (amount == 100) {
+        if (percent_amount == 100) {
             return cancelTempBasal(false);
         }
 
-        if (amount > 250) amount = 250;
+        if (percent_amount > 250) percent_amount = 250;
 
-        final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), amount, durationInMinutes);
+        final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
 
         if (cmd == null) {
@@ -480,18 +480,19 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
         log("Got command status: " + ms);
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(false).duration(durationInMinutes);
-        pumpEnactResult.absolute = absoluteRate; // TODO get converted value?
+        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
+        pumpEnactResult.percent = percent_amount;
         pumpEnactResult.success = ms.success();
-        pumpEnactResult.isTempCancel = false; // do we test this here?
+        pumpEnactResult.isTempCancel = percent_amount == 100; // 100% temp basal is a cancellation
         pumpEnactResult.comment = ms.getCommandComment();
+
 
         if (pumpEnactResult.success) {
             // create log entry
             final TemporaryBasal tempBasal = new TemporaryBasal();
             tempBasal.date = System.currentTimeMillis();
-            tempBasal.isAbsolute = true;
-            tempBasal.absoluteRate = base_basal / 100d * ((double) amount); // is this the correct figure to use?
+            tempBasal.isAbsolute = false;
+            tempBasal.percentRate = percent_amount;
             tempBasal.durationInMinutes = durationInMinutes;
             tempBasal.source = Source.USER;
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
