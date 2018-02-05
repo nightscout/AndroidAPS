@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
@@ -1217,6 +1218,23 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (!historyResult.success) {
             pumpHistoryChanged = true;
             return historyResult;
+        }
+
+        // Check edge of multiple boluses with the same amount in the same minute being imported.
+        // This is about as edgy-casey as it can get. I'd be surprised of this one actually ever
+        // triggers. It might, so at least give a warning, since a delivered bolus isn't accounted
+        // for.
+        HashSet<Bolus> bolusSet = new HashSet<>(historyResult.history.bolusHistory);
+        if (bolusSet.size() != historyResult.history.bolusHistory.size()) {
+            log.debug("Bolus with same amount within the same minute imported. Only one will make it to the DB.");
+            Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("bolus", "")
+                    .putCustomAttribute("issue", "multiple pump history records with the same time and amount"));
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.
+                    combo_error_multiple_boluses_with_idential_timestamp), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
         }
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
