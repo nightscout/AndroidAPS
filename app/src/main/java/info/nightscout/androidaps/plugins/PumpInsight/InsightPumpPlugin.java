@@ -84,8 +84,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     private long statusResultTime = -1;
     private Date lastDataTime = new Date(0);
     private TaskRunner taskRunner;
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
     private boolean fauxTBRcancel = true;
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
