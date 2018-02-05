@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.AbsoluteTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
+import info.nightscout.androidaps.plugins.PumpInsight.connector.SetTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
@@ -52,7 +53,6 @@ import sugar.free.sightparser.applayer.messages.remote_control.ExtendedBolusMess
 import sugar.free.sightparser.applayer.messages.remote_control.StandardBolusMessage;
 import sugar.free.sightparser.handling.SingleMessageTaskRunner;
 import sugar.free.sightparser.handling.TaskRunner;
-import sugar.free.sightparser.handling.taskrunners.SetTBRTaskRunner;
 import sugar.free.sightparser.handling.taskrunners.StatusTaskRunner;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.getRecordUniqueID;
@@ -85,8 +85,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     private long statusResultTime = -1;
     private Date lastDataTime = new Date(0);
     private TaskRunner taskRunner;
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
     private boolean fauxTBRcancel = true;
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
@@ -615,15 +615,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         final UUID cmd;
 
         if (fauxTBRcancel) {
-            final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-            // I'm not totally sure whether based on the times that this cancellation will occur
-            // whether the logic should actually be inverted as we are reversing a decision.
-            // I believe it also affects at most 2.5% of an hourly basal rate and the pump only
-            // delivers basal every 3 minutes when > 0.19U per hour, below that unspecified.
-            final int faux_percent = (activeTemp == null) ? 90 : (activeTemp.percentRate > 100) ? 110 : 90;
-
-            final int faux_duration = 15;
-            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), faux_percent, 15), "Faux Cancel TBR - setting " + faux_percent + "%" + " " + faux_duration + "m");
+            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" +  " 1m");
         } else {
             cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
         }
