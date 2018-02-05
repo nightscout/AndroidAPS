@@ -669,6 +669,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
                         .putCustomAttribute("issue", "record with same timestamp existed and was overridden"));
                 return false;
             }
@@ -680,6 +681,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
+                        .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
                         .putCustomAttribute("issue", "adding record caused exception"));
             }
             return false;
