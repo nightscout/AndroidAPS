@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import java.util.Date;
 
-import info.nightscout.utils.SP;
 import sugar.free.sightparser.handling.HistoryBroadcast;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.updatePumpSerialNumber;
@@ -50,9 +49,12 @@ class HistoryIntentAdapter {
         final long record_unique_id = getRecordUniqueID(pump_serial_number, pump_record_id);
 
         // other sanity checks
-        log("Creating TBR record: " + pump_tbr_percent + "% " + pump_tbr_duration + "m" + " id:" + record_unique_id);
-        logAdapter.createTBRrecord(start_time, pump_tbr_percent, pump_tbr_duration, record_unique_id);
-
+        if ((pump_tbr_percent == 90) && (pump_tbr_duration <= 1)) {
+            log("Not creating TBR record for faux cancel");
+        } else {
+            log("Creating TBR record: " + pump_tbr_percent + "% " + pump_tbr_duration + "m" + " id:" + record_unique_id);
+            logAdapter.createTBRrecord(start_time, pump_tbr_percent, pump_tbr_duration, record_unique_id);
+        }
     }
 
     void processDeliveredBolusIntent(Intent intent) {
