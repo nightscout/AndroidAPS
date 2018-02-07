@@ -738,7 +738,6 @@
 	<string name="combo_pump_state_label">Status</string>
 	<string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
     <string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
-	<string name="combo_last_bolus">%.1f E (%s, %s)</string>
 	<string name="combo_pump_state_initializing">Initialiseren</string>
 	<string name="combo_pump_state_disconnected">Verbinding verbroken</string>
 	<string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>

@@ -124,12 +124,12 @@ public class DateUtil {
 
     public static String minAgo(long time) {
         int mins = (int) ((System.currentTimeMillis() - time) / 1000 / 60);
-        return String.format(MainApp.sResources.getString(R.string.minago), mins);
+        return MainApp.gs(R.string.minago, mins);
     }
 
     public static String hourAgo(long time) {
         double hours = (System.currentTimeMillis() - time) / 1000d / 60 / 60;
-        return String.format(MainApp.sResources.getString(R.string.hoursago), hours);
+        return MainApp.gs(R.string.hoursago, hours);
     }
 
     private static LongSparseArray<String> timeStrings = new LongSparseArray<>();

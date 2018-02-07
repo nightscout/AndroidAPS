@@ -750,7 +750,6 @@
     <string name="combo_pump_activity_label">Actividad</string>
     <string name="combo_no_pump_connection" formatted="false">Ninguna coneccnion por %d min</string>
     <string name="combo_tbr_remaining" formatted="false">%d%% (%d min restan)</string>
-    <string name="combo_last_bolus" formatted="false">%.1f U (%s, %s)</string>
     <string name="combo_pump_action_initializing">Iniciando</string>
     <string name="combo_pump_state_disconnected">Desconectado</string>
     <string name="combo_pump_state_suspended_due_to_error">Apagado por error</string>

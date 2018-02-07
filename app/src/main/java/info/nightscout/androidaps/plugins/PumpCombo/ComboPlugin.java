@@ -785,16 +785,33 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return OPERATION_NOT_SUPPORTED;
     }
 
+    /** Cancel an active Temp Basal. Mostly sets a fake Temp Basal to avoid a TBR CANCELLED
+     * alert. This relies on TemporaryBasal objects to properly reflect the pumps state,
+     * which is ensured by {@link #checkAndResolveTbrMismatch(PumpState)}, which runs on each
+     * connect. When a hard cancel is requested, the pump is queried for it's TBR state to
+     * make absolutely sure no TBR is running (such a request is also made when resuming the
+     * loop, irregardless of whether a TBR is running or not).
+     */
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         log.debug("cancelTempBasal called");
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (enforceNew) {
+            CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 2, ruffyScripter::readPumpState);
+            if (!stateResult.success) {
+                return new PumpEnactResult().success(false).enacted(false);
+            }
+            if (!stateResult.state.tbrActive) {
+                return new PumpEnactResult().success(true).enacted(false);
+            }
             log.debug("cancelTempBasal: hard-cancelling TBR since force requested");
-            CommandResult commandResult = runCommand(MainApp.gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
-            if (!commandResult.state.tbrActive) {
+            CommandResult cancelResult = runCommand(MainApp.gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
+            if (!cancelResult.success) {
+                return new PumpEnactResult().success(false).enacted(false);
+            }
+            if (!cancelResult.state.tbrActive) {
                 TemporaryBasal tempBasal = new TemporaryBasal();
-                tempBasal.date = commandResult.state.timestamp;
+                tempBasal.date = cancelResult.state.timestamp;
                 tempBasal.durationInMinutes = 0;
                 tempBasal.source = Source.USER;
                 MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
