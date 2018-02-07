@@ -928,5 +928,6 @@
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
     <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
     <string name="let_temp_basal_run">Let current temp basal run</string>
+    <string name="mute">Mute</string>
 </resources>
 
