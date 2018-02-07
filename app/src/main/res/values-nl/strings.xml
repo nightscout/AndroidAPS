@@ -782,4 +782,22 @@
 	<string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="careportal_combobolus">Combinatie-Bolus</string>
     <string name="pump_basebasalrate">%.2f E/u</string>
+    <string name="combo_pump_action_initializing">Laden van pomp</string>
+    <string name="hoursago">%.1fu geleden</string>
+    <string name="bolusstopped">Bolus gestopt</string>
+    <string name="bolusstopping">Stoppen van bolus</string>
+    <string name="combo_actvity_reading_basal_profile">Basaal profiel wordt gelezen</string>
+    <string name="basalprofilenotaligned">Basale patroon niet geschikt op complete uren: %s</string>
+    <string name="zerovalueinprofile">Ongeldig profiel: %s</string>
+    <string name="combo_read_full_history_info">Lang duwen op deze knop zal de volledige historiek en basaal profiel uit de pomp ophalen. Dit is normaal gezien niet nodig, daar de pomp historiek permanent wordt gelezen, maar kan nuttig zijn wanneer de pomp dat en tijd grote afwijkingen hadden of de pomp vervangen is.</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Er kon geen verbinding met de pomp gemaakt worden. De Bolus is niet toegediend.</string>
+    <string name="extendedbolusdeliveryerror">Vertraagde bolus toedien storing</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig. Als dezelfde bolus hoeveelheid moet worden toegediend, gelieve 2 minuten te wachten. Gelijke bolussen worden geweigerd om veiligheidsredenen (toegediend of niet).</string>
+    <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegend van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Tijdelijk basaal geweigerd doordat de berekeningen geen rekening hielden met  de recente wijzigingen in de pomp historiek</string>
+    <string name="combo_activity_checking_pump_state">Vernieuwen van pomp status</string>
+    <string name="combo_warning_pump_basal_rate_changed">Het basaal patroon is op de pomp gewijzigd en zal binnenkort geupdate worden.</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Basaal patroon op de pomp is gewijzigd, maar konnen niet worden uitgelezen</string>
+    <string name="combo_activity_checking_for_history_changes">Controle van historiek op wijzigingen</string>
 </resources>
+
