@@ -264,7 +264,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
                 // last bolus
                 Bolus bolus = plugin.getPump().lastBolus;
-                if (bolus != null && bolus.timestamp + 6 * 60 * 60 * 1000 >= System.currentTimeMillis()) {
+                if (bolus != null) {
                     long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                     double bolusMinAgo = agoMsc / 60d / 1000d;
                     String unit = MainApp.gs(R.string.treatments_wizard_unit_label);
