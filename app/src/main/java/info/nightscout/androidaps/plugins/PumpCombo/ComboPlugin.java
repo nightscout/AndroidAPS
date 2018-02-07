@@ -792,6 +792,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (enforceNew) {
             log.debug("cancelTempBasal: hard-cancelling TBR since force requested");
             CommandResult commandResult = runCommand(MainApp.gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
+            if (!commandResult.success) {
+                return new PumpEnactResult().success(false).enacted(false);
+            }
             if (!commandResult.state.tbrActive) {
                 TemporaryBasal tempBasal = new TemporaryBasal();
                 tempBasal.date = commandResult.state.timestamp;
