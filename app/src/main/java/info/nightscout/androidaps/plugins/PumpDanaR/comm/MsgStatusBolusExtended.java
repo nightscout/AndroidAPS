@@ -69,8 +69,8 @@ public class MsgStatusBolusExtended extends MessageBase {
         DanaRPump pump = DanaRPump.getInstance();
         long now = System.currentTimeMillis();
 
-        if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
-            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolusFromHistory(System.currentTimeMillis());
+        ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (extendedBolus != null) {
             if (pump.isExtendedInProgress) {
                 if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
                     // Close current extended

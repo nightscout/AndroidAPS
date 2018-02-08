@@ -29,6 +29,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -216,8 +217,9 @@ public class DanaRFragment extends SubscriberFragment {
                             tempBasalView.setText("");
                         }
                     }
-                    if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString());
+                    ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+                    if (activeExtendedBolus != null) {
+                        extendedBolusView.setText(activeExtendedBolus.toString());
                     } else {
                         extendedBolusView.setText("");
                     }

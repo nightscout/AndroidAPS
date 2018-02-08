@@ -316,8 +316,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
-            PumpEnactResult cancelEx = cancelExtendedBolus();
-            return cancelEx;
+            return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
