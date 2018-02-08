@@ -244,96 +244,90 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         ArrayList<PluginBase> pluginsInCategory;
 
         // PluginBase.APS
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
-        activeAPS = (APSInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.APS);
-        if (activeAPS != null) {
-            if (Config.logConfigBuilder)
-                log.debug("Selected APS interface: " + ((PluginBase) activeAPS).getName());
-            for (PluginBase p : pluginsInCategory) {
-                if (!p.getName().equals(((PluginBase) activeAPS).getName())) {
-                    p.setFragmentVisible(PluginBase.APS, false);
-                }
-            }
-        }
+        activeAPS = this.setFragmentVisibility(APSInterface.class, PluginBase.APS);
 
         // PluginBase.INSULIN
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
-        activeInsulin = (InsulinInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.INSULIN);
-        if (Config.logConfigBuilder)
-            log.debug("Selected insulin interface: " + ((PluginBase) activeInsulin).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeInsulin).getName())) {
-                p.setFragmentVisible(PluginBase.INSULIN, false);
-            }
-        }
+        activeInsulin = this.setFragmentVisibility(InsulinInterface.class, PluginBase.INSULIN);
 
         // PluginBase.SENSITIVITY
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
-        activeSensitivity = (SensitivityInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.SENSITIVITY);
-        if (Config.logConfigBuilder)
-            log.debug("Selected sensitivity interface: " + ((PluginBase) activeSensitivity).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeSensitivity).getName())) {
-                p.setFragmentVisible(PluginBase.SENSITIVITY, false);
-            }
-        }
+        activeSensitivity = this.setFragmentVisibility(SensitivityInterface.class, PluginBase.SENSITIVITY);
 
         // PluginBase.PROFILE
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
-        activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PROFILE);
-        if (Config.logConfigBuilder)
-            log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeProfile).getName())) {
-                p.setFragmentVisible(PluginBase.PROFILE, false);
-            }
-        }
+        activeProfile = this.setFragmentVisibility(ProfileInterface.class, PluginBase.PROFILE);
 
         // PluginBase.BGSOURCE
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
-        activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.BGSOURCE);
-        if (Config.logConfigBuilder)
-            log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeBgSource).getName())) {
-                p.setFragmentVisible(PluginBase.BGSOURCE, false);
-            }
-        }
+        activeBgSource = this.setFragmentVisibility(BgSourceInterface.class, PluginBase.BGSOURCE);
 
         // PluginBase.PUMP
         pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.PUMP);
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
         if (activePump == null)
             activePump = VirtualPumpPlugin.getPlugin(); // for NSClient build
-        if (Config.logConfigBuilder)
-            log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activePump).getName())) {
-                p.setFragmentVisible(PluginBase.PUMP, false);
-            }
-        }
+        this.disableFragmentVisiblities(((PluginBase)activePump).getName(), pluginsInCategory, PluginBase.PUMP);
 
         // PluginBase.LOOP
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.LOOP);
-        activeLoop = (LoopPlugin) getTheOneEnabledInArray(pluginsInCategory, PluginBase.LOOP);
-        if (activeLoop != null) {
-            if (Config.logConfigBuilder)
-                log.debug("Selected loop interface: " + activeLoop.getName());
-            for (PluginBase p : pluginsInCategory) {
-                if (!p.getName().equals(activeLoop.getName())) {
-                    p.setFragmentVisible(PluginBase.LOOP, false);
-                }
-            }
-        }
+        activeLoop = this.setFragmentVisibility(PluginBase.LOOP);
 
         // PluginBase.TREATMENT
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.TREATMENT);
-        activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TREATMENT);
+        activeTreatments = this.setFragmentVisibility(PluginBase.TREATMENT);
+    }
+
+    /**
+     * disables the visibility for all fragments of Plugins with the given PluginType
+     * which are not equally named to the Plugin implementing the given Plugin Interface.
+     *
+     * @param pluginInterface
+     * @param pluginType
+     * @param <T>
+     * @return
+     */
+    private <T> T setFragmentVisibility(Class<T> pluginInterface, int pluginType) {
+        ArrayList<PluginBase> pluginsInCategory;
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(pluginInterface);
+
+        return this.setFragmentVisibility(pluginsInCategory, pluginType);
+    }
+
+    private <T> T setFragmentVisibility(int pluginType) {
+        ArrayList<PluginBase> pluginsInCategory;
+        pluginsInCategory = MainApp.getSpecificPluginsList(pluginType);
+
+        return this.setFragmentVisibility(pluginsInCategory, pluginType);
+    }
+
+    /**
+     * disables the visibility for all fragments of Plugins in the given pluginsInCategory
+     * with the given PluginType which are not equally named to the Plugin implementing the
+     * given Plugin Interface.
+     *
+     * TODO we are casting an interface to PluginBase, which seems to be rather odd, since
+     * TODO the interface is not implementing PluginBase (this is just avoiding errors through
+     * TODO conventions.
+     *
+     * @param pluginsInCategory
+     * @param pluginType
+     * @param <T>
+     * @return
+     */
+    private <T> T setFragmentVisibility(ArrayList<PluginBase> pluginsInCategory,
+                                        int pluginType) {
+        T activePlugin = (T) getTheOneEnabledInArray(pluginsInCategory, pluginType);
+
+        if (activePlugin != null) {
+            this.disableFragmentVisiblities(((PluginBase)activePlugin).getName(),
+                    pluginsInCategory, pluginType);
+        }
+
+        return activePlugin;
+    }
+
+    private void disableFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
+                                            int pluginType) {
         if (Config.logConfigBuilder)
-            log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
+            log.debug("Selected interface: " + activePluginName);
         for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeTreatments).getName())) {
-                p.setFragmentVisible(PluginBase.TREATMENT, false);
+            if (!p.getName().equals(activePluginName)) {
+                p.setFragmentVisible(pluginType, false);
             }
         }
     }
