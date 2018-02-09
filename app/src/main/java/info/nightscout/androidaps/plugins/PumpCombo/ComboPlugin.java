@@ -912,9 +912,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private CommandResult runOnConnectChecks() {
         // connect, get status and check if an alarm is active
         CommandResult preCheckResult = ruffyScripter.readPumpState();
-        for (int retries = 2; !preCheckResult.success && retries > 0; retries--) {
-            preCheckResult = ruffyScripter.readPumpState();
-        }
         if (!preCheckResult.success) {
             return preCheckResult;
         }

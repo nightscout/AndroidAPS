@@ -16,11 +16,19 @@
         android:layout_gravity="center_horizontal" />
 
     <Button
-        android:id="@+id/overview_error_ok"
+        android:id="@+id/overview_error_mute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
+        android:text="@string/mute" />
+
+    <Button
+        android:id="@+id/overview_error_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
         android:text="@string/ok" />
 
 </LinearLayout>
