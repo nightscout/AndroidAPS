@@ -323,6 +323,22 @@ public class MainApp extends Application {
         return newList;
     }
 
+    public static <T> ArrayList<T> getSpecificPluginsListByInterfaceTypeSafe(Class<T> interfaceClass) {
+        ArrayList<T> newList = new ArrayList<>();
+
+        if (pluginsList != null) {
+            for (PluginBase p : pluginsList) {
+                if (p.getClass() != ConfigBuilderPlugin.class
+                        && interfaceClass.isAssignableFrom(p.getClass()))
+                    newList.add((T) p);
+            }
+        } else {
+            log.error("pluginsList=null");
+        }
+
+        return newList;
+    }
+
     public static ArrayList<PluginBase> getSpecificPluginsVisibleInListByInterface(Class interfaceClass, int type) {
         ArrayList<PluginBase> newList = new ArrayList<>();
 
