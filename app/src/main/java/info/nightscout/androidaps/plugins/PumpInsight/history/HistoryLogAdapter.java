@@ -17,10 +17,39 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 
 class HistoryLogAdapter {
 
+    private static final long MAX_TIME_DIFFERENCE = 61000;
+
+    private static void log(String msg) {
+        android.util.Log.e("HISTORYLOG", msg);
+    }
+
     void createTBRrecord(Date eventDate, int percent, int duration, long record_id) {
 
-        final TemporaryBasal temporaryBasal = new TemporaryBasal();
-        temporaryBasal.date = eventDate.getTime();
+        TemporaryBasal temporaryBasal = new TemporaryBasal(eventDate.getTime());
+
+        final TemporaryBasal temporaryBasalFromHistory = MainApp.getConfigBuilder().getTempBasalFromHistory(eventDate.getTime());
+
+        if (temporaryBasalFromHistory == null) {
+            log("Create new TBR: " + eventDate + " " + percent + " " + duration);
+        } else {
+            log("Loaded existing TBR record: " + temporaryBasalFromHistory.toString());
+            if (Math.abs(eventDate.getTime() - temporaryBasalFromHistory.date) < MAX_TIME_DIFFERENCE) {
+                if (temporaryBasalFromHistory.source != Source.PUMP) {
+                    if (temporaryBasalFromHistory.percentRate == percent) {
+                        log("Things seem to match: %" + percent);
+                        temporaryBasal = temporaryBasalFromHistory;
+                        MainApp.getDbHelper().delete(temporaryBasalFromHistory);
+                    } else {
+                        log("This record has different percent rates: " + temporaryBasalFromHistory.percentRate + " vs us: " + percent);
+                    }
+                } else {
+                    log("This record is already a pump record!");
+                }
+            } else {
+                log("Time difference too great! : " + (eventDate.getTime() - temporaryBasalFromHistory.date));
+            }
+        }
+
         temporaryBasal.source = Source.PUMP;
         temporaryBasal.pumpId = record_id;
         temporaryBasal.percentRate = percent;
@@ -46,6 +75,8 @@ class HistoryLogAdapter {
     void createStandardBolusRecord(Date eventDate, double insulin, long record_id) {
 
         //DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(eventDate.getTime());
+
+        // TODO do we need to do the same delete + insert that we are doing for temporary basals here too?
 
         final DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
         detailedBolusInfo.date = eventDate.getTime();

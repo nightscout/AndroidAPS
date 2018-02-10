@@ -56,7 +56,7 @@ public class InsightPumpAsyncAdapter {
     }
 
     // blocking call to wait for result callback
-    Cstatus busyWaitForCommandResult(final UUID uuid, long wait_time) {
+    private Cstatus busyWaitForCommandInternal(final UUID uuid, long wait_time) {
         final PowerManager.WakeLock wl = getWakeLock("insight-wait-cmd", 60000);
         try {
             log("busy wait for command " + uuid);
@@ -82,25 +82,14 @@ public class InsightPumpAsyncAdapter {
         }
     }
 
-    // commend field preparation for results
-    String getCommandComment(final UUID uuid) {
-        if (commandResults.containsKey(uuid)) {
-            if (commandResults.get(uuid).success) {
-                return "OK";
-            } else {
-                return commandResults.get(uuid).message;
-            }
-        } else {
-            return "Unknown reference";
-        }
+    // wait for and then package result, cleanup and return
+    Mstatus busyWaitForCommandResult(final UUID uuid, long wait_time) {
+        final Mstatus mstatus = new Mstatus();
+        mstatus.cstatus = busyWaitForCommandInternal(uuid, wait_time);
+        mstatus.event = commandResults.get(uuid);
+        commandResults.remove(uuid);
+        return mstatus;
     }
 
-    int getResponseID(UUID uuid) {
-        if (checkCommandResult(uuid) == Cstatus.SUCCESS) {
-            return commandResults.get(uuid).response_id;
-        } else {
-            return -2; // invalid
-        }
-    }
 
 }

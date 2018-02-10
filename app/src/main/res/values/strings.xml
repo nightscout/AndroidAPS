@@ -890,7 +890,7 @@
     <string name="insight_upfront_with">upfront with</string>
     <string name="insight_stay_always_connected">Stay always connected</string>
     <string name="insight_use_real_tbr_cancels">Use Real TBR cancels</string>
-    <string name="insight_actually_cancel_tbr_summary">Actually cancel a TBR (creates pump alarm) instead of setting 90% or 110% TBR for 15 minutes</string>
+    <string name="insight_actually_cancel_tbr_summary">Actually cancel a TBR (creates pump alarm) instead of setting 90% for 1 minute</string>
     <string name="insight_history_idle">IDLE</string>
     <string name="insight_history_syncing">SYNCING</string>
     <string name="insight_history_busy">BUSY</string>

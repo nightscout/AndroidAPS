@@ -13,6 +13,7 @@ public class EventInsightPumpCallback extends Event {
     public boolean success = false;
     public String message = null;
     public int response_id = -1;
+    public Object response_object = null;
 
     public EventInsightPumpCallback() {
         request_uuid = UUID.randomUUID();
@@ -20,7 +21,7 @@ public class EventInsightPumpCallback extends Event {
 
     @Override
     public String toString() {
-        return "Event: " + request_uuid + " success: " + success + " msg: " + message;
+        return "Event: " + request_uuid + " success: " + success + " msg: " + message + " Object: " + response_object;
     }
 
 }

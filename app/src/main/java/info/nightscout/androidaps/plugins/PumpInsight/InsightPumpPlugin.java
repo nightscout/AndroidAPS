@@ -23,6 +23,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -32,6 +33,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.AbsoluteTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
+import info.nightscout.androidaps.plugins.PumpInsight.connector.SetTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
@@ -51,7 +53,6 @@ import sugar.free.sightparser.applayer.messages.remote_control.ExtendedBolusMess
 import sugar.free.sightparser.applayer.messages.remote_control.StandardBolusMessage;
 import sugar.free.sightparser.handling.SingleMessageTaskRunner;
 import sugar.free.sightparser.handling.TaskRunner;
-import sugar.free.sightparser.handling.taskrunners.SetTBRTaskRunner;
 import sugar.free.sightparser.handling.taskrunners.StatusTaskRunner;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.getRecordUniqueID;
@@ -69,7 +70,7 @@ import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.round
  *
  */
 
-public class InsightPumpPlugin implements PluginBase, PumpInterface {
+public class InsightPumpPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
 
     private static final long BUSY_WAIT_TIME = 20000;
     static Integer batteryPercent = 0;
@@ -202,7 +203,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == PUMP && fragmentEnabled;
+        if (type == PluginBase.PUMP) return fragmentEnabled;
+        else if (type == PluginBase.CONSTRAINTS) return fragmentEnabled;
+        return false;
     }
 
     @Override
@@ -400,10 +403,11 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             if (cmd == null) {
                 return pumpEnactFailure();
             }
-            final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-            result.success = cs.success();
-            if (cs.success()) {
-                detailedBolusInfo.pumpId = getRecordUniqueID(async.getResponseID(cmd));
+            final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+
+            result.success = ms.success();
+            if (ms.success()) {
+                detailedBolusInfo.pumpId = getRecordUniqueID(ms.getResponseID());
             }
         } else {
             result.success = true; // always true with carb only treatments
@@ -440,7 +444,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return;
         }
 
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        final Mstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
         log("Got command status: " + cs);
     }
 
@@ -448,6 +452,67 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
+        absoluteRate = Helpers.roundDouble(absoluteRate, 3);
+        log("Set TBR absolute: " + absoluteRate);
+        final double base_basal = getBaseBasalRate();
+        if (base_basal == 0) {
+            log("Base basal rate appears to be zero!");
+            return pumpEnactFailure();
+        }
+        int percent_amount = (int) Math.round(100d / base_basal * absoluteRate);
+        log("Calculated requested rate: " + absoluteRate + " base rate: " + base_basal + " percentage: " + percent_amount + "%");
+        percent_amount = (int) Math.round(((double) percent_amount) / 10d) * 10;
+        log("Calculated final rate: " + percent_amount + "%");
+
+        if (percent_amount == 100) {
+            return cancelTempBasal(false);
+        }
+
+        if (percent_amount > 250) percent_amount = 250;
+
+        final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
+        final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
+
+        if (cmd == null) {
+            return pumpEnactFailure();
+        }
+
+        Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        log("Got command status: " + ms);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
+        pumpEnactResult.percent = percent_amount;
+        pumpEnactResult.success = ms.success();
+        pumpEnactResult.isTempCancel = percent_amount == 100; // 100% temp basal is a cancellation
+        pumpEnactResult.comment = ms.getCommandComment();
+
+
+        if (pumpEnactResult.success) {
+            // create log entry
+            final TemporaryBasal tempBasal = new TemporaryBasal();
+            tempBasal.date = System.currentTimeMillis();
+            tempBasal.isAbsolute = false;
+            tempBasal.percentRate = percent_amount;
+            tempBasal.durationInMinutes = durationInMinutes;
+            tempBasal.source = Source.USER;
+            MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
+        }
+
+        if (Config.logPumpComm)
+            log.debug("Setting temp basal absolute: " + pumpEnactResult.success);
+
+        lastDataTime = new Date();
+
+        updateGui();
+
+        connector.requestHistorySync(5000);
+        connector.tryToGetPumpStatusAgain();
+
+        return pumpEnactResult;
+    }
+
+    //@Override
+    public PumpEnactResult setTempBasalAbsoluteOld(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         absoluteRate = Helpers.roundDouble(absoluteRate, 3);
         log("Set TBR absolute: " + absoluteRate);
 
@@ -458,14 +523,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + cs);
+        Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        log("Got command status: " + ms);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(false).duration(durationInMinutes);
         pumpEnactResult.absolute = absoluteRate; // TODO get converted value?
-        pumpEnactResult.success = cs.success();
+        pumpEnactResult.success = ms.success();
         pumpEnactResult.isTempCancel = false; // do we test this here?
-        pumpEnactResult.comment = async.getCommandComment(cmd);
+        pumpEnactResult.comment = ms.getCommandComment();
 
         if (pumpEnactResult.success) {
             // create log entry
@@ -495,20 +560,28 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         log("Set TBR %");
+
+        percent = (int) Math.round(((double) percent) / 10d) * 10;
+        if (percent == 100) {
+            // This would cause a cancel if a tbr is in progress so treat as a cancel
+            return cancelTempBasal(false);
+        }
+
+
         final UUID cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes), "Set TBR " + percent + "%" + " " + durationInMinutes + "m");
 
         if (cmd == null) {
             return pumpEnactFailure();
         }
 
-        Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + cs);
+        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        log("Got command status: " + ms);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
         pumpEnactResult.percent = percent;
-        pumpEnactResult.success = cs.success();
+        pumpEnactResult.success = ms.success();
         pumpEnactResult.isTempCancel = percent == 100; // 100% temp basal is a cancellation
-        pumpEnactResult.comment = async.getCommandComment(cmd);
+        pumpEnactResult.comment = ms.getCommandComment();
 
         if (pumpEnactResult.success) {
             // create log entry
@@ -543,9 +616,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         final UUID cmd;
 
         if (fauxTBRcancel) {
-            final int faux_percent = 90;
-            final int faux_duration = 15;
-            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), faux_percent, 15), "Faux Cancel TBR - setting " + faux_percent + "%" + " " + faux_duration + "m");
+            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" +  " 1m");
         } else {
             cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
         }
@@ -555,7 +626,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
         // TODO isn't conditional on one apparently being in progress only the history change
         boolean enacted = false;
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             enacted = true;
@@ -571,7 +642,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         connector.requestHistorySync(5000);
         connector.tryToGetPumpStatusAgain();
 
-        return new PumpEnactResult().success(cs.success()).enacted(true).isTempCancel(true);
+        return new PumpEnactResult().success(ms.success()).enacted(true).isTempCancel(true);
     }
 
 
@@ -588,12 +659,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + cs);
+        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        log("Got command status: " + ms);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).bolusDelivered(insulin).duration(durationInMinutes);
-        pumpEnactResult.success = cs.success();
-        pumpEnactResult.comment = async.getCommandComment(cmd);
+        pumpEnactResult.success = ms.success();
+        pumpEnactResult.comment = ms.getCommandComment();
 
         if (pumpEnactResult.success) {
             // create log entry
@@ -602,7 +673,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             extendedBolus.insulin = insulin;
             extendedBolus.durationInMinutes = durationInMinutes;
             extendedBolus.source = Source.USER;
-            extendedBolus.pumpId = getRecordUniqueID(async.getResponseID(cmd));
+            extendedBolus.pumpId = getRecordUniqueID(ms.getResponseID());
             MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
         }
 
@@ -630,7 +701,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
             return pumpEnactFailure();
         }
 
-        final Cstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
+        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
             ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
@@ -646,7 +717,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         connector.requestHistorySync(5000);
         connector.tryToGetPumpStatusAgain();
 
-        return new PumpEnactResult().success(cs.success()).enacted(true);
+        return new PumpEnactResult().success(ms.success()).enacted(true);
     }
 
 
@@ -777,11 +848,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
                             (batteryPercent < 70 ?
                                     (StatusItem.Highlight.BAD) : StatusItem.Highlight.NOTICE) : StatusItem.Highlight.NORMAL) : StatusItem.Highlight.GOOD));
             l.add(new StatusItem(gs(R.string.pump_reservoir_label), reservoirInUnits + "U"));
-
-            if (statusResult.getCurrentTBRMessage().getPercentage() != 100) {
-                l.add(new StatusItem(gs(R.string.insight_active_tbr), statusResult.getCurrentTBRMessage().getPercentage() + "% " + gs(R.string.with) + " "
-                        + Helpers.qs(statusResult.getCurrentTBRMessage().getLeftoverTime() - offset_minutes, 0)
-                        + " " + gs(R.string.insight_min_left), StatusItem.Highlight.NOTICE));
+            try {
+                if (statusResult.getCurrentTBRMessage().getPercentage() != 100) {
+                    l.add(new StatusItem(gs(R.string.insight_active_tbr), statusResult.getCurrentTBRMessage().getPercentage() + "% " + gs(R.string.with) + " "
+                            + Helpers.qs(statusResult.getCurrentTBRMessage().getLeftoverTime() - offset_minutes, 0)
+                            + " " + gs(R.string.insight_min_left), StatusItem.Highlight.NOTICE));
+                }
+            } catch (NullPointerException e) {
+                // currentTBRMessage may be null
             }
 
         }
@@ -795,9 +869,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
         }
 
         if (statusResult != null) {
-            statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus1(), offset_minutes, l);
-            statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus2(), offset_minutes, l);
-            statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus3(), offset_minutes, l);
+            try {
+                statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus1(), offset_minutes, l);
+                statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus2(), offset_minutes, l);
+                statusActiveBolus(statusResult.getActiveBolusesMessage().getBolus3(), offset_minutes, l);
+            } catch (NullPointerException e) {
+                // getActiveBolusesMessage() may be null
+            }
         }
 
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
@@ -874,8 +952,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
                         @Override
                         public void onResult(Object o) {
                             log(name + " success");
+                            event.response_object = o;
                             if (o instanceof BolusMessage) {
-                                event.response_id = ((BolusMessage)o).getBolusId();
+                                event.response_id = ((BolusMessage) o).getBolusId();
                             }
                             event.success = true;
                             pushCallbackEvent(event);
@@ -911,6 +990,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
                         @Override
                         public void onResult(Object o) {
                             log(name + " success");
+                            event.response_object = o;
                             event.success = true;
                             pushCallbackEvent(event);
                         }
@@ -934,6 +1014,60 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface {
 
     private PumpEnactResult pumpEnactFailure() {
         return new PumpEnactResult().success(false).enacted(false);
+    }
+
+    // Constraints
+
+    @Override
+    public boolean isLoopEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isClosedModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAutosensModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        return Math.min(absoluteRate, 25); // Maximum pump can support
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        return Math.min(percentRate, pumpDescription.maxTempPercent);
+    }
+
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        // TODO we could check what the current max is set on the pump and use that information here
+        // Pump can be reconfigured up to 50U max
+        return Math.min(insulin, 25);
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        return carbs;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        return maxIob;
     }
 
 
