@@ -1,7 +1,6 @@
 package info.nightscout.androidaps;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
