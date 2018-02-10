@@ -775,7 +775,6 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung! Normalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
     <string name="combo_actvity_reading_basal_profile">Basalratenprofil wird gelesen</string>
     <string name="pump_basebasalrate">%.2f IE/h</string>
-    <string name="ro_lang">Rumänisch</string>
     <string name="combo_read_full_history_info">Drücke den Button lange, um die gesamte Historie und das Basal-Profil der Pumpe auszulesen. Dies ist eigentlich unnötig, weil die Historie regelmäßig gelesen wird. Hilfreich kann dies jedoch sein, wenn Datum und Zeit grundlegend verändert wurden oder die Pumpe ausgetauscht wurde.</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Keine Verbindung zur Pumpe: Es wurde kein Bolus abgegeben.</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verlängerten Bolus</string>
@@ -792,4 +791,5 @@
     <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %s</string>
     <string name="zerovalueinprofile">Ungültiges Profil: %s</string>
     <string name="hoursago">vor %.1f h</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
 </resources>

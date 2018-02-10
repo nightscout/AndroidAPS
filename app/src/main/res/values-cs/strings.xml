@@ -737,7 +737,7 @@
     <string name="combo_pump_activity_label">Aktivita</string>
     <string name="combo_no_pump_connection" formatted="false">Žádné spojení %d min</string>
     <string name="combo_tbr_remaining" formatted="false">%d%% (%d min zbývá)</string>
-    <string name="combo_pump_action_initializing">Inicializace</string>
+    <string name="combo_pump_state_initializing">Inicializace</string>
     <string name="combo_pump_state_disconnected">Odpojeno</string>
     <string name="combo_pump_state_suspended_due_to_error">Vypnuto díky chybě</string>
     <string name="combo_pump_state_suspended_by_user">Vypnuto uživatelem</string>
