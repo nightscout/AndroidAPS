@@ -1062,6 +1062,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             log.debug("Creating temp basal from pump TBR");
+            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("type", "new TBR on pump"));
             TemporaryBasal newTempBasal = new TemporaryBasal();
             newTempBasal.date = now;
             newTempBasal.percentRate = state.tbrPercent;
@@ -1071,6 +1075,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             log.debug("Ending AAPS-TBR since pump has no TBR active");
+            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("type", "TBR cancelled on pump"));
             TemporaryBasal tempStop = new TemporaryBasal();
             tempStop.date = now;
             tempStop.durationInMinutes = 0;
@@ -1080,6 +1088,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 && (aapsTbr.percentRate != state.tbrPercent ||
                 Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
             log.debug("AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
+            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("type", "TBR on pump differs from AAPS TBR"));
             TemporaryBasal tempStop = new TemporaryBasal();
             tempStop.date = now - 1000;
             tempStop.durationInMinutes = 0;
