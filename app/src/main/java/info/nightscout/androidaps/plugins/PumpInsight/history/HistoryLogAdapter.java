@@ -17,7 +17,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 
 class HistoryLogAdapter {
 
-    private static final long MAX_TIME_DIFFERENCE = 5000;
+    private static final long MAX_TIME_DIFFERENCE = 61000;
 
     private static void log(String msg) {
         android.util.Log.e("HISTORYLOG", msg);
