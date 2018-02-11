@@ -285,7 +285,7 @@
     <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
     <string name="es_lang">Spanish</string>
     <string name="noprofileselected">Není vybrán žádný profil</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Hodnota %s je mimo přednastavený rozsah</string>
+    <string name="valueoutofrange" formatted="false">Hodnota %s je mimo přednastavený rozsah</string>
     <string name="smscommunicator_remotebasalnotallowed">Vzdálené posílání příkazů není povoleno</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Na spuštění bazálu %.2fU/h odpověz SMS s kódem %s</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Na ukončení bazálu odpověz SMS s kódem %s</string>
@@ -375,7 +375,7 @@
     <string name="openapsama_useautosens">Používat autodetekci senzitivity</string>
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f omezeno na %.2f</string>
+    <string name="valuelimitedto" formatted="false">%.2f omezeno na %.2f</string>
     <string name="removerecord">Odstranit záznam:</string>
     <string name="short_avgdelta">Krátkodobý průměr</string>
     <string name="refresheventsfromnightscout">Obnovit události z NS</string>

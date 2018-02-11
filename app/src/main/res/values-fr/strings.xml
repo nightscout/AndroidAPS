@@ -306,8 +306,8 @@
     <string name="smscommunicator_loophasbeenenabled">Loop a été désactivé</string>
     <string name="smscommunicator_loopisdisabled">"Loop est désactivé "</string>
     <string name="smscommunicator_loopisenabled">Loop est activé</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limité à %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">La valeur %s est hors limites strictes</string>
+    <string name="valuelimitedto" formatted="false">%.2f limité à %.2f</string>
+    <string name="valueoutofrange" formatted="false">La valeur %s est hors limites strictes</string>
     <string name="smscommunicator_remotebasalnotallowed">Le réglage du basal à distance n\'est pas autorisé</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Lancer le basal %.2fU/h retour avec un code %s</string>

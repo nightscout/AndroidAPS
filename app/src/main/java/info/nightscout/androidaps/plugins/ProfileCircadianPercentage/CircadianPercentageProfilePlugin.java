@@ -174,10 +174,10 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage") + "\n";
+            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Percentage") + "\n";
         }
         if (timeshift < 0 || timeshift > 23) {
-            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
+            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
         }
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
@@ -367,7 +367,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     private void performLimitCheck() {
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
+            String msg = String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Percentage");
             log.error(msg);
             NSUpload.uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);

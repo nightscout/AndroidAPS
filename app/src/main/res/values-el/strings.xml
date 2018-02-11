@@ -307,8 +307,8 @@
     <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
     <string name="smscommunicator_loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
+    <string name="valuelimitedto" formatted="false">%.2f limited to %.2f</string>
+    <string name="valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
     <string name="smscommunicator_remotebasalnotallowed">"Δεν επιτρέπεται η απομακρυσμένη ρύθμιση βασικού ρυθμού "</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Για έναρξη βασικού %.2fU/h SMS με κωσικό %s</string>

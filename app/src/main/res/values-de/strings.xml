@@ -481,7 +481,7 @@
     <string name="openaps_short">OAPS</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="openapsma_scriptdebugdata_label">Skript Debug</string>
-    <string name="openapsma_valueoutofrange">Wert %s ist außerhalb des festen Limits</string>
+    <string name="valueoutofrange">Wert %s ist außerhalb des festen Limits</string>
     <string name="overview_calibration">Kalibrierung</string>
     <string name="overview_calibration_bg_label">Kalibrierung</string>
     <string name="overview_editquickwizard_buttontext">Button-Text:</string>
@@ -579,7 +579,7 @@
     <string name="smscommunicator_unknowncommand">Unbekannter Befehl oder falsche Antwort</string>
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
     <string name="unlock_settings">Einstellungen freischalten</string>
-    <string formatted="false" name="openapsma_valuelimitedto">%.2f limitiert auf %.2f</string>
+    <string formatted="false" name="valuelimitedto">%.2f limitiert auf %.2f</string>
     <string name="danar_sbolus">S-Bolus</string>
     <string formatted="false" name="danar_model">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="configbuilder_sensitivity">Empfindlichkeitserkennung</string>

@@ -310,8 +310,8 @@
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничен до %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Стойността %s е извън границите</string>
+    <string name="valuelimitedto" formatted="false">%.2f ограничен до %.2f</string>
+    <string name="valueoutofrange" formatted="false">Стойността %s е извън границите</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>

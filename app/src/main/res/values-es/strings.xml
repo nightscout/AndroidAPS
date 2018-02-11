@@ -287,7 +287,7 @@
     <string name="correctionbous">Corr</string>
     <string name="disabledloop">Lazo Inactivo</string>
     <string name="mealbolus">Bolo Comida</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Valor %s fuera de limites</string>
+    <string name="valueoutofrange" formatted="false">Valor %s fuera de limites</string>
     <string name="overview_editquickwizard_buttontext">Botón Texto:</string>
     <string name="overview_editquickwizard_carbs">Carbohidratos:</string>
     <string name="overview_editquickwizard_valid">Validar:</string>
@@ -392,7 +392,7 @@
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
     <string name="pump_errors_history">Errores</string>
     <string name="objectives_7_objective">habilitar funciones adicionales para uso durante el día como SMB</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limitado a %.\"f</string>
+    <string name="valuelimitedto" formatted="false">%.2f limitado a %.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">no permitido el mando remoto</string>
     <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con código %s</string>
     <string name="primefill">Rellenar/Llenar</string>

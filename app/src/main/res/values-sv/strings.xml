@@ -477,8 +477,8 @@
     <string name="othersettings_title">Andra</string>
     <string name="openloop_newsuggestion">Ny behandlingsrekommendation tillgänglig</string>
     <string name="openloop">Open Loop</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Värde %s är utanför gränserna</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f begränsad till %.2f</string>
+    <string name="valueoutofrange" formatted="false">Värde %s är utanför gränserna</string>
+    <string name="valuelimitedto" formatted="false">%.2f begränsad till %.2f</string>
     <string name="openapsma_run">Kör nu</string>
     <string name="openapsma_request_label">Fråga</string>
     <string name="openapsma_profile_label">Profil</string>

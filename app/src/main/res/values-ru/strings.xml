@@ -362,8 +362,8 @@
     <string name="result">результат</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">величина %s недопустима</string>
+    <string name="valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
+    <string name="valueoutofrange" formatted="false">величина %s недопустима</string>
     <string name="openloop">открытый цикл</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="othersettings_title">другое</string>
