@@ -413,6 +413,8 @@ public class Profile {
     }
 
     public String getBasalList() {
+        if (basal_v == null)
+            basal_v = convertToSparseArray(basal);
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U");
     }
 
