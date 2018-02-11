@@ -333,7 +333,6 @@
     <string name="localprofile_shortname">"PerfLoc"</string>
     <string name="danarpump_shortname">"Dana"</string>
     <string name="configbuilder_shortname">"Conf"</string>
-    <string name="circadian_percentage_profile_shortname">"CPP"</string>
     <string name="careportal_shortname">"CP"</string>
     <string name="activity">Actividad</string>
     <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importantes para trazar y verificar que el algoritmo funcione correctamente)</string>
@@ -404,7 +403,6 @@
     <string name="edit_base_basal">Editar Base-Basal:</string>
     <string name="edit_base_isf">Edidat Base-ISF:</string>
     <string name="edit_base_ic">Editar Base-IC:</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
     <string name="wear">Reloj</string>
     <string name="open_settings_on_wear">Abrir ajustes en reloj</string>
     <string name="batterydischarged">Batería de la bomba descargada</string>
@@ -625,9 +623,8 @@
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Cancelar</string>
-    <string name="cpp_sync_setting_missing">necesita ser activado para mandar valores a la bomba!</string>
-    <string name="cpp_notloadedplugins">Faltan perfiles!</string>
-    <string name="cpp_valuesnotstored">Valores no guardados!</string>
+    <string name="notloadedplugins">Faltan perfiles!</string>
+    <string name="valuesnotstored">Valores no guardados!</string>
     <string name="wear_overviewnotifications">Resumen avisos</string>
     <string name="wear_overviewnotifications_summary">Mandar resumen de avisos como avisos de confirmacion por reloj.</string>
     <string name="combopump" translatable="false">Accu-Chek Combo</string>

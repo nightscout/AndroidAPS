@@ -313,7 +313,6 @@
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
     <string name="button3">Tlačítko 3</string>
-    <string name="circadian_percentage_profile">Cirkadiánní procentuální profil</string>
     <string name="dia">DIA:</string>
     <string name="disabledloop">Smyčka zakázána</string>
     <string name="edit_base_basal">Editovat základní bazál:</string>
@@ -395,7 +394,6 @@
     <string name="localprofile_shortname">MPRF</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="configbuilder_shortname">KONF</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="careportal_shortname">PÉČE</string>
     <string name="advancedsettings_title">Rozšířené nastavení</string>
     <string name="always_use_shortavg">Vždy používat krátkodobý průměrný rozdíl glykémií místo rozdílu posledních 2 hodnot</string>
@@ -550,9 +548,8 @@
     <string name="careportal_sensorage_label_short">SEN</string>
     <string name="cob">COB</string>
     <string name="configbuilder_sensitivity">Detekce citlivosti</string>
-    <string name="cpp_notloadedplugins">Všechny profily nenačteny</string>
-    <string name="cpp_sync_setting_missing">musí být aktivované, aby šly poslat hodnoty do pumpy!</string>
-    <string name="cpp_valuesnotstored">Hodnoty nejsou uloženy!</string>
+    <string name="notloadedplugins">Všechny profily nenačteny</string>
+    <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="dev">ODCH</string>
     <string name="device">Zařízení</string>

@@ -353,7 +353,6 @@
     <string name="edit_base_isf">"Éditer Facteur SI de Base: "</string>
     <string name="edit_base_ic">"Éditer I:G de Base: "</string>
     <string name="base_profile_label">Profil de Base:</string>
-    <string name="circadian_percentage_profile">Profil en Pourcentage Circadien</string>
     <string name="prefs_range_title">Écart de visualisation</string>
     <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l’apercu et la montre</string>
     <string name="low_mark">Repère BAS</string>
@@ -416,7 +415,6 @@
     <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">POMPEV</string>
@@ -608,9 +606,8 @@
     <string name="sensitivityweightedaverage">Sensibilité avec moyenne pondérée</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Annuler</string>
-    <string name="cpp_sync_setting_missing">Besoin d’être activé(e) pour que les valeurs soient envoyées à la pompe!</string>
-    <string name="cpp_notloadedplugins">Pas tous les profils sont téléchargés!</string>
-    <string name="cpp_valuesnotstored">Valeurs non enregistrées!</string>
+    <string name="notloadedplugins">Pas tous les profils sont téléchargés!</string>
+    <string name="valuesnotstored">Valeurs non enregistrées!</string>
     <string name="wear_overviewnotifications">Notifications d\'aperçu</string>
     <string name="wear_overviewnotifications_summary">Transférez les notifications d’aperçu comme des messages de confirmation sur la montre.</string>
     <string name="ns_localbroadcasts">Activer les transmissions de données sur d\'autres app. (ex. Xdrip)</string>

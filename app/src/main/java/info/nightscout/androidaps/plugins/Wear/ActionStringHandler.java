@@ -586,10 +586,10 @@ public class ActionStringHandler {
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null || profile.getBasal() == null) {
-            msg += MainApp.sResources.getString(R.string.cpp_notloadedplugins) + "\n";
+            msg += MainApp.sResources.getString(R.string.notloadedplugins) + "\n";
         }
         if (!"".equals(msg)) {
-            msg += MainApp.sResources.getString(R.string.cpp_valuesnotstored);
+            msg += MainApp.sResources.getString(R.string.valuesnotstored);
             String rTitle = "STATUS";
             String rAction = "statusmessage";
             WearPlugin.getPlugin().requestActionConfirmation(rTitle, msg, rAction);

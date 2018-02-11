@@ -79,8 +79,6 @@
     <string name="careportal_temporarytargetcancel">отмена времнной цели</string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="child">ребенок</string>
-    <string name="circadian_percentage_profile">суточный процентный профиль</string>
-    <string name="circadian_percentage_profile_shortname">СПП</string>
     <string name="clear_queue">очистка очереди</string>
     <string name="clearlog">очистка лога</string>
     <string name="closedloop">замкнутый цикл</string>
@@ -581,9 +579,8 @@
     <string name="careportal_sensorage_label">сенсор пропаботал</string>
     <string name="careportal_sensorage_label_short">ВОЗРСенс</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
-    <string name="cpp_notloadedplugins">не все профили загружены!</string>
-    <string name="cpp_sync_setting_missing">требует активации для отправки данных на помпу!</string>
-    <string name="cpp_valuesnotstored">Данные не сохранены!</string>
+    <string name="notloadedplugins">не все профили загружены!</string>
+    <string name="valuesnotstored">Данные не сохранены!</string>
     <string name="danar_visualizeextendedaspercentage_title">Просмотреть расширенный болюс %</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>

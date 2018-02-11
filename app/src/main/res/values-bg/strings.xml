@@ -357,7 +357,6 @@
     <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
     <string name="edit_base_ic">Редактирай Инс./ВХ</string>
     <string name="base_profile_label">Базов профил:</string>
-    <string name="circadian_percentage_profile">Процентен профил</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
     <string name="low_mark">Ниска КЗ под</string>
@@ -420,7 +419,6 @@
     <string name="temptargetrange_shortname">Вцел</string>
     <string name="localprofile_shortname">ЛПр</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">ППр</string>
     <string name="tempbasals_shortname">ВБ</string>
     <string name="overview_shortname">ОСН</string>
     <string name="virtualpump_shortname">ВП</string>
@@ -612,9 +610,8 @@
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Откажи</string>
-    <string name="cpp_sync_setting_missing">трябва да е активно за да изпрати стойностите към помпата!</string>
-    <string name="cpp_notloadedplugins">Не всички профили са заредени!</string>
-    <string name="cpp_valuesnotstored">Стойностите не са запазени!</string>
+    <string name="notloadedplugins">Не всички профили са заредени!</string>
+    <string name="valuesnotstored">Стойностите не са запазени!</string>
     <string name="clearlog">Изчисти лога</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">Недостъпно</string>

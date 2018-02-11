@@ -159,9 +159,8 @@
     <string name="copied_to_clipboard">Gekopieerd naar klembord</string>
     <string name="copy_to_clipboard">Kopieren naar klembord</string>
     <string name="correctionbous">Correctie</string>
-    <string name="cpp_notloadedplugins">Niet alle profielen zijn geladen!</string>
-    <string name="cpp_sync_setting_missing">Moet geactiveerd worden om waardes naat de pomp te verzenden!</string>
-    <string name="cpp_valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
+    <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="cs_lang">Čeština</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">Basaal uur</string>
@@ -308,7 +307,6 @@
     <string name="danar_invalidinput">Verkeerde ingave</string>
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="basal_rate">Basaal:</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_tbb">Totaal basaal</string>
@@ -521,7 +519,6 @@
     <string name="basal_step">Basaal stap</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
     <string name="carbsconstraintapplied">KH limiet ingesteld</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfiel</string>
     <string name="danar_sbolus">S Bolus</string>
     <string name="danar_stats">DanaR Statistiek</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>

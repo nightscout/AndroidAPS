@@ -379,7 +379,6 @@
     <string name="edit_base_isf">Editează ISF normal:</string>
     <string name="edit_base_ic">Editează IC normal:</string>
     <string name="base_profile_label">Profilul de bază:</string>
-    <string name="circadian_percentage_profile">ProfilulProcentuluiCircadian</string>
     <string name="androidaps_tempbasalendnote">Sfârșit bazală temporară</string>
     <string name="androidaps_tempbasalstartnote">Început bazală temporară</string>
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
@@ -446,7 +445,6 @@
     <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">ACASĂ</string>
     <string name="virtualpump_shortname">POMPĂV</string>

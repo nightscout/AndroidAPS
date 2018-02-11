@@ -311,7 +311,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="careportal_shortname">CP</string>
     <string name="error_only_numeric_digits_allowed">Bitte verwende nur Ziffern.</string>
     <string name="error_field_must_not_be_empty">Pflichtfeld</string>
@@ -394,9 +393,8 @@
     <string name="careportal_pumpbatterychange">Pumpenbatterie-Wechsel</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="configbuilder_insulin">Insulin</string>
-    <string name="cpp_notloadedplugins">Es sind nicht alle Profile geladen!</string>
-    <string name="cpp_sync_setting_missing">muss aktiviert werden, um Werte an die Pumpe zu senden!</string>
-    <string name="cpp_valuesnotstored">Werte nicht gespeichert!</string>
+    <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
+    <string name="valuesnotstored">Werte nicht gespeichert!</string>
     <string name="danar_enableextendedbolus">Aktiviere verlängerten Bolus in der Pumpe</string>
     <string name="danar_stats">DanaR Stats</string>
     <string name="danar_stats_amount_days"># Tage</string>
@@ -620,7 +618,6 @@
     <string name="careportal_newnstreatment_percentage_label">Prozentsatz</string>
     <string name="careportal_newnstreatment_timeshift_label">Zeitverschiebung</string>
     <string name="careportal_pbage_label_short">BAT</string>
-    <string name="circadian_percentage_profile">CircadianPercentage-Profil</string>
     <string name="connectiontimedout">Zeitüberschreitung der Verbindung</string>
     <string name="danar_history_prime">Füllen</string>
     <string name="danar_debolus">DE-Bolus</string>
