@@ -878,5 +878,8 @@
     <string name="mute">Mute</string>
     <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">The last bolus is older than 24 hours. Please check the date on the pump is set correctly.</string>
+    <string name="key_ns_create_announcements_from_errors">ns_create_announcements_from_errors</string>
+    <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
+    <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
 </resources>
 
