@@ -179,7 +179,8 @@
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/historyybrowse_bggraph"
                     android:layout_width="wrap_content"
-                    android:layout_height="160dip" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/historybrowse_iobgraph"
