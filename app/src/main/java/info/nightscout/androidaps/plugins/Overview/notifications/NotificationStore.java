@@ -21,8 +21,6 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
-import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-//Added by Rumen for snooze time 
 import info.nightscout.utils.SP;
 
 /**
@@ -44,16 +42,12 @@ public class NotificationStore {
         }
     }
 
-    public synchronized Notification get(int index) {
-        return store.get(index);
-    }
-
     public synchronized void add(Notification n) {
         log.info("Notification received: " + n.text);
-        for (int i = 0; i < store.size(); i++) {
-            if (get(i).id == n.id) {
-                get(i).date = n.date;
-                get(i).validTo = n.validTo;
+        for (Notification storeNotification : store) {
+            if (storeNotification.id == n.id) {
+                storeNotification.date = n.date;
+                storeNotification.validTo = n.validTo;
                 return;
             }
         }
@@ -70,6 +64,44 @@ public class NotificationStore {
         }
 
         Collections.sort(store, new NotificationComparator());
+    }
+
+    public synchronized boolean remove(int id) {
+        for (int i = 0; i < store.size(); i++) {
+            if (store.get(i).id == id) {
+                if (store.get(i).soundId != null) {
+                    Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                    MainApp.instance().stopService(alarm);
+                }
+                store.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized void removeExpired() {
+        for (int i = 0; i < store.size(); i++) {
+            Notification n = store.get(i);
+            if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
+                store.remove(i);
+                i--;
+            }
+        }
+    }
+
+    public void snoozeTo(long timeToSnooze) {
+        log.debug("Snoozing alarm until: " + timeToSnooze);
+        SP.putLong("snoozedTo", timeToSnooze);
+    }
+
+    public void unSnooze() {
+        if (Notification.isAlarmForStaleData()) {
+            Notification notification = new Notification(Notification.NSALARM, MainApp.sResources.getString(R.string.nsalarm_staledata), Notification.URGENT);
+            SP.putLong("snoozedTo", System.currentTimeMillis());
+            add(notification);
+            log.debug("Snoozed to current time and added back notification!");
+        }
     }
 
     private void raiseSystemNotification(Notification n) {
@@ -94,43 +126,5 @@ public class NotificationStore {
             ;
         }
         mgr.notify(n.id, notificationBuilder.build());
-    }
-
-    public synchronized boolean remove(int id) {
-        for (int i = 0; i < store.size(); i++) {
-            if (get(i).id == id) {
-                if (get(i).soundId != null) {
-                    Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
-                    MainApp.instance().stopService(alarm);
-                }
-                store.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public synchronized void removeExpired() {
-        for (int i = 0; i < store.size(); i++) {
-            Notification n = get(i);
-            if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
-                store.remove(i);
-                i--;
-            }
-        }
-    }
-
-    public void snoozeTo(long timeToSnooze) {
-        log.debug("Snoozing alarm until: " + timeToSnooze);
-        SP.putLong("snoozedTo", timeToSnooze);
-    }
-
-    public void unSnooze() {
-        if (Notification.isAlarmForStaleData()) {
-            Notification notification = new Notification(Notification.NSALARM, MainApp.sResources.getString(R.string.nsalarm_staledata), Notification.URGENT);
-            SP.putLong("snoozedTo", System.currentTimeMillis());
-            add(notification);
-            log.debug("Snoozed to current time and added back notification!");
-        }
     }
 }
