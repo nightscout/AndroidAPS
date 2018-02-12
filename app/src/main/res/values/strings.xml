@@ -929,5 +929,8 @@
     <string name="let_temp_basal_run">Let current temp basal run</string>
     <string name="mute">Mute</string>
     <string name="nav_historybrowser">History browser</string>
+    <string name="key_ns_create_announcements_from_errors">ns_create_announcements_from_errors</string>
+    <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
+    <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
 </resources>
 

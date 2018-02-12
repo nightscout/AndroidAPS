@@ -43,7 +43,9 @@ public class LocalAlertUtils {
             n.soundId = R.raw.alarm;
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
             MainApp.bus().post(new EventNewNotification(n));
-            NSUpload.uploadError(n.text);
+            if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
+                NSUpload.uploadError(n.text);
+            }
         }
     }
 
@@ -93,7 +95,9 @@ public class LocalAlertUtils {
             n.soundId = R.raw.alarm;
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
             MainApp.bus().post(new EventNewNotification(n));
-            NSUpload.uploadError(n.text);
+            if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
+                NSUpload.uploadError(n.text);
+            }
         }
     }
 }
