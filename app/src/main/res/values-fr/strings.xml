@@ -22,8 +22,8 @@
     <string name="nsprofileview_units_label">Unités</string>
     <string name="nsprofileview_dia_label">Durée d’Action</string>
     <string name="nsprofileview_activeprofile_label">Profil actif</string>
-    <string name="nsprofileview_ic_label">"I:G (Ratio Insuline/Glucides)                       "</string>
-    <string name="nsprofileview_isf_label">"Facteur SI                  "</string>
+    <string name="nsprofileview_ic_label">"I:G (Ratio Insuline/Glucides)"</string>
+    <string name="nsprofileview_isf_label">"Facteur SI"</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_target_label">Cible</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
