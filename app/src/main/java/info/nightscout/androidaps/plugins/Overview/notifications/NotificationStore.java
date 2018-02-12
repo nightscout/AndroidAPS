@@ -44,11 +44,11 @@ public class NotificationStore {
         }
     }
 
-    public Notification get(int index) {
+    public synchronized Notification get(int index) {
         return store.get(index);
     }
 
-    public void add(Notification n) {
+    public synchronized void add(Notification n) {
         log.info("Notification received: " + n.text);
         for (int i = 0; i < store.size(); i++) {
             if (get(i).id == n.id) {
@@ -96,7 +96,7 @@ public class NotificationStore {
         mgr.notify(n.id, notificationBuilder.build());
     }
 
-    public boolean remove(int id) {
+    public synchronized boolean remove(int id) {
         for (int i = 0; i < store.size(); i++) {
             if (get(i).id == id) {
                 if (get(i).soundId != null) {
@@ -110,7 +110,7 @@ public class NotificationStore {
         return false;
     }
 
-    public void removeExpired() {
+    public synchronized void removeExpired() {
         for (int i = 0; i < store.size(); i++) {
             Notification n = get(i);
             if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
