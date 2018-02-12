@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import info.nightscout.utils.NSUpload;
+
 public class ErrorHelperActivity extends AppCompatActivity {
     public ErrorHelperActivity() {
         super();
@@ -17,5 +19,7 @@ public class ErrorHelperActivity extends AppCompatActivity {
         errorDialog.setSound(getIntent().getIntExtra("soundid", 0));
         errorDialog.setTitle(getIntent().getStringExtra("title"));
         errorDialog.show(this.getSupportFragmentManager(), "Error");
+
+        NSUpload.uploadError(getIntent().getStringExtra("status"));
     }
 }
