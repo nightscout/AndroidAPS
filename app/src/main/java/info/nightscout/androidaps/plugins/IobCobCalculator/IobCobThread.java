@@ -22,10 +22,6 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.queue.QueueThread;
 
-import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin.getBucketedData;
-import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin.oldestDataAvailable;
-import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin.roundUpTime;
-
 /**
  * Created by mike on 23.01.2018.
  */
@@ -68,14 +64,14 @@ public class IobCobThread extends Thread {
 
             Object dataLock = iobCobCalculatorPlugin.dataLock;
 
-            long oldestTimeWithData = oldestDataAvailable();
+            long oldestTimeWithData = iobCobCalculatorPlugin.oldestDataAvailable();
 
             synchronized (dataLock) {
                 if (bgDataReload) {
                     iobCobCalculatorPlugin.loadBgData();
                     iobCobCalculatorPlugin.createBucketedData();
                 }
-                List<BgReading> bucketed_data = getBucketedData();
+                List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();
                 LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
                 if (bucketed_data == null || bucketed_data.size() < 3) {
@@ -83,7 +79,7 @@ public class IobCobThread extends Thread {
                     return;
                 }
 
-                long prevDataTime = roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
+                long prevDataTime = iobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
                 log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
@@ -95,7 +91,7 @@ public class IobCobThread extends Thread {
                     }
                     // check if data already exists
                     long bgTime = bucketed_data.get(i).date;
-                    bgTime = roundUpTime(bgTime);
+                    bgTime = iobCobCalculatorPlugin.roundUpTime(bgTime);
                     if (bgTime > System.currentTimeMillis())
                         continue;
                     Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);

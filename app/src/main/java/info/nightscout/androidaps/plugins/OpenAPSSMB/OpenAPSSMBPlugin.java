@@ -188,7 +188,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         Date start = new Date();
         Date startPart = new Date();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.calculateIobArrayForSMB();
+        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB();
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
@@ -224,7 +224,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         startPart = new Date();
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
-            lastAutosensResult = IobCobCalculatorPlugin.detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
+            lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
         }

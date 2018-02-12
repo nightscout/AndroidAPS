@@ -1276,7 +1276,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // cob
         if (cobView != null) { // view must not exists
             String cobText = "";
-            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("Overview COB");
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Overview COB");
             if (autosensData != null)
                 cobText = (int) autosensData.cob + " g";
             cobView.setText(cobText);

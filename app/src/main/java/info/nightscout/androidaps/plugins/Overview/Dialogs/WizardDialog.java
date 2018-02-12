@@ -476,7 +476,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // COB
         Double c_cob = 0d;
         if (cobCheckbox.isChecked()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("Wizard COB");
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Wizard COB");
 
             if(autosensData != null) {
                 c_cob = autosensData.cob;
