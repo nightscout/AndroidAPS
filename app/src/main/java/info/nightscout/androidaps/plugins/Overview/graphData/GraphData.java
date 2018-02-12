@@ -53,9 +53,12 @@ public class GraphData {
     private String units;
     private List<Series> series = new ArrayList<>();
 
-    public GraphData(GraphView graph) {
+    private IobCobCalculatorPlugin iobCobCalculatorPlugin;
+
+    public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
         units = MainApp.getConfigBuilder().getProfileUnits();
         this.graph = graph;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {

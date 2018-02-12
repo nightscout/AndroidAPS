@@ -1362,7 +1362,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 //  ------------------ 1st graph
                 Profiler.log(log, from + " - 1st graph - START", updateGUIStart);
 
-                final GraphData graphData = new GraphData(bgGraph);
+                final GraphData graphData = new GraphData(bgGraph, IobCobCalculatorPlugin.getPlugin());
 
                 // **** In range Area ****
                 graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
@@ -1393,7 +1393,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 // ------------------ 2nd graph
                 Profiler.log(log, from + " - 2nd graph - START", updateGUIStart);
 
-                final GraphData secondGraphData = new GraphData(iobGraph);
+                final GraphData secondGraphData = new GraphData(iobGraph, IobCobCalculatorPlugin.getPlugin());
 
                 boolean useIobForScale = false;
                 boolean useCobForScale = false;

@@ -131,7 +131,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return -1;
     }
 
-    private IobCobCalculatorPlugin() {
+    public IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
     }
 

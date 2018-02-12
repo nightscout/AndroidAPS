@@ -21,6 +21,7 @@ import butterknife.OnLongClick;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.utils.DateUtil;
@@ -55,6 +56,12 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
     private int rangeToDisplay = 24; // for graph
     private long start;
+
+    IobCobCalculatorPlugin iobCobCalculatorPlugin;
+
+    public HistoryBrowseActivity() {
+        iobCobCalculatorPlugin = new IobCobCalculatorPlugin();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +202,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         //  ------------------ 1st graph
 
-        final GraphData graphData = new GraphData(bgGraph);
+        final GraphData graphData = new GraphData(bgGraph, IobCobCalculatorPlugin.getPlugin());
 
         // **** In range Area ****
         graphData.addInRangeArea(fromTime, toTime, lowLine, highLine);
@@ -223,7 +230,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         // ------------------ 2nd graph
 
-        final GraphData secondGraphData = new GraphData(iobGraph);
+        final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
 
         boolean useIobForScale = false;
         boolean useCobForScale = false;
