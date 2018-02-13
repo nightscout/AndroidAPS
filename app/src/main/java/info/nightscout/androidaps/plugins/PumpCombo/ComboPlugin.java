@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -130,7 +131,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     /** Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
      * requiring reading pump more history. This is read/set in {@link #checkHistory()} when changed
      * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
-     * after bolus delivery. */
+     * after bolus delivery. Newest record is the first one. */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
 
     public static ComboPlugin getPlugin() {
@@ -423,6 +424,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         pump.initialized = true;
         MainApp.bus().post(new EventInitializationChanged());
+
+        // show notification to check pump date if last bolus is older than 24 hours
+        if (!recentBoluses.isEmpty() && recentBoluses.get(0).timestamp < System.currentTimeMillis() - 24 * 60 * 60 * 1000) {
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_check_date), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        }
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
@@ -1062,6 +1069,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             log.debug("Creating temp basal from pump TBR");
+            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("type", "new TBR on pump"));
             TemporaryBasal newTempBasal = new TemporaryBasal();
             newTempBasal.date = now;
             newTempBasal.percentRate = state.tbrPercent;
@@ -1071,6 +1082,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             log.debug("Ending AAPS-TBR since pump has no TBR active");
+            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("type", "TBR cancelled on pump"));
             TemporaryBasal tempStop = new TemporaryBasal();
             tempStop.date = now;
             tempStop.durationInMinutes = 0;
@@ -1080,6 +1095,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 && (aapsTbr.percentRate != state.tbrPercent ||
                 Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
             log.debug("AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
+            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("type", "TBR on pump differs from AAPS TBR"));
             TemporaryBasal tempStop = new TemporaryBasal();
             tempStop.date = now - 1000;
             tempStop.durationInMinutes = 0;
@@ -1096,12 +1115,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
-    /**
-     * Reads the pump's history and updates the DB accordingly.
-     * <p>
-     * Only ever called by #readAllPumpData which is triggered by the user via the combo fragment
-     * which warns the user against doing this.
-     */
+    /**Reads the pump's history and updates the DB accordingly. */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         if (!historyResult.success) {
@@ -1158,8 +1172,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
 //            }
 //        }, post);
-        post.run();
-        ruffyScripter.disconnect();
+        if (post != null) {
+            post.run();
+        }
+        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+        if (commandQueue.performing() == null && commandQueue.size() == 0) {
+            ruffyScripter.disconnect();
+        }
     }
 
     // TODO use queue once ready
@@ -1170,8 +1189,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
 //            }
 //        }, post);
-        post.run();
-        ruffyScripter.disconnect();
+        if (post != null) {
+            post.run();
+        }
+        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+        if (commandQueue.performing() == null && commandQueue.size() == 0) {
+            ruffyScripter.disconnect();
+        }
     }
 
     // TODO use queue once ready
@@ -1189,8 +1213,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
 //            }
 //        }, post);
-        post.run();
-        ruffyScripter.disconnect();
+        if (post != null) {
+            post.run();
+        }
+        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+        if (commandQueue.performing() == null && commandQueue.size() == 0) {
+            ruffyScripter.disconnect();
+        }
     }
 
     /**

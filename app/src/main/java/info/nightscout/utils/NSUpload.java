@@ -408,6 +408,7 @@ public class NSUpload {
         try {
             data.put("eventType", "Announcement");
             data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
             data.put("notes", error);
             data.put("isAnnouncement", true);
         } catch (JSONException e) {
