@@ -685,7 +685,7 @@
     <string name="unsupportedfirmware">"Firmware pompe incompatible "</string>
     <string name="dexcomg5_xdripupload_title">Transmettre les données G sur xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
-    <string name="nsclientbg">"G NSClient "</string>
+    <string name="nsclientbg">"Glycémie NSClient"</string>
     <string name="minimalbasalvaluereplaced">"Valeur du basal remplacée par la valeur minimale supportée "</string>
     <string name="overview_editquickwizard_usebg">Calcul de G</string>
     <string name="overview_editquickwizard_usebolusiob">Calcul IR du Bolus</string>
