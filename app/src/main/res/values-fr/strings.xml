@@ -22,8 +22,8 @@
     <string name="nsprofileview_units_label">Unités</string>
     <string name="nsprofileview_dia_label">Durée d’Action</string>
     <string name="nsprofileview_activeprofile_label">Profil actif</string>
-    <string name="nsprofileview_ic_label">"I:G (Ratio Insuline/Glucides)                       "</string>
-    <string name="nsprofileview_isf_label">"Facteur SI                  "</string>
+    <string name="nsprofileview_ic_label">"I:G (Ratio Insuline/Glucides)"</string>
+    <string name="nsprofileview_isf_label">"Facteur SI"</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_target_label">Cible</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
@@ -144,7 +144,7 @@
     <string name="careportal_bgcheck">Contrôle de Glycémie</string>
     <string name="careportal_announcement">Notification</string>
     <string name="careportal_note">Remarque</string>
-    <string name="careportal_exercise">Question</string>
+    <string name="careportal_exercise">Activité Physique</string>
     <string name="careportal_pumpsitechange">Changement Zone D\'insertion</string>
     <string name="careportal_cgmsensorinsert">Insertion Capteur CGM</string>
     <string name="careportal_cgmsensorstart">Début Capteur CGM</string>
@@ -685,7 +685,7 @@
     <string name="unsupportedfirmware">"Firmware pompe incompatible "</string>
     <string name="dexcomg5_xdripupload_title">Transmettre les données G sur xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
-    <string name="nsclientbg">"G NSClient "</string>
+    <string name="nsclientbg">"Glycémie NSClient"</string>
     <string name="minimalbasalvaluereplaced">"Valeur du basal remplacée par la valeur minimale supportée "</string>
     <string name="overview_editquickwizard_usebg">Calcul de G</string>
     <string name="overview_editquickwizard_usebolusiob">Calcul IR du Bolus</string>
