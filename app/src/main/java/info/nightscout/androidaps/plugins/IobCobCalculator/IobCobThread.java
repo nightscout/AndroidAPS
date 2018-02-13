@@ -33,16 +33,18 @@ public class IobCobThread extends Thread {
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private boolean bgDataReload;
     private String from;
+    private long start;
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobThread(IobCobCalculatorPlugin plugin, String from, boolean bgDataReload, Event cause) {
+    public IobCobThread(IobCobCalculatorPlugin plugin, String from, long start, boolean bgDataReload, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
         this.bgDataReload = bgDataReload;
         this.from = from;
         this.cause = cause;
+        this.start = start;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
@@ -68,7 +70,7 @@ public class IobCobThread extends Thread {
 
             synchronized (dataLock) {
                 if (bgDataReload) {
-                    iobCobCalculatorPlugin.loadBgData();
+                    iobCobCalculatorPlugin.loadBgData(start);
                     iobCobCalculatorPlugin.createBucketedData();
                 }
                 List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();

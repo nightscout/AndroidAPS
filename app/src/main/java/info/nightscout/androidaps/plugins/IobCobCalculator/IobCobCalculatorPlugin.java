@@ -169,9 +169,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return rouded;
     }
 
-    void loadBgData() {
-        bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia)), false);
-        log.debug("BG data loaded. Size: " + bgReadings.size());
+    void loadBgData(long start) {
+        bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (start - 60 * 60 * 1000L * (24 + dia)), false);
+        log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start));
     }
 
     private boolean isAbout5minData() {
@@ -521,13 +521,21 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Subscribe
     public void onEventAppInitialized(EventAppInitialized ev) {
-        runCalculation("onEventAppInitialized", true, ev);
+        if (this != getPlugin()) {
+            log.debug("Ignoring event for non default instance");
+            return;
+        }
+        runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, ev);
     }
 
     @Subscribe
     public void onEventNewBG(EventNewBG ev) {
+        if (this != getPlugin()) {
+            log.debug("Ignoring event for non default instance");
+            return;
+        }
         stopCalculation("onEventNewBG");
-        runCalculation("onEventNewBG", true, ev);
+        runCalculation("onEventNewBG", System.currentTimeMillis(), true, ev);
     }
 
     private void stopCalculation(String from) {
@@ -541,16 +549,20 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
-    private void runCalculation(String from, boolean bgDataReload, Event cause) {
+    private void runCalculation(String from, long start, boolean bgDataReload, Event cause) {
         log.debug("Starting calculation thread: " + from);
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
-            thread = new IobCobThread(this, from, bgDataReload, cause);
+            thread = new IobCobThread(this, from, start, bgDataReload, cause);
             thread.start();
         }
     }
 
     @Subscribe
     public void onNewProfile(EventNewBasalProfile ev) {
+        if (this != getPlugin()) {
+            log.debug("Ignoring event for non default instance");
+            return;
+        }
         if (MainApp.getConfigBuilder() == null)
             return; // app still initializing
         Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -566,11 +578,15 @@ public class IobCobCalculatorPlugin implements PluginBase {
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
         }
-        runCalculation("onNewProfile", false, ev);
+        runCalculation("onNewProfile", System.currentTimeMillis(), false, ev);
     }
 
     @Subscribe
     public void onEventPreferenceChange(EventPreferenceChange ev) {
+        if (this != getPlugin()) {
+            log.debug("Ignoring event for non default instance");
+            return;
+        }
         if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
                 ev.isChanged(R.string.key_age) ||
                 ev.isChanged(R.string.key_absorption_maxtime)
@@ -581,24 +597,32 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 iobTable = new LongSparseArray<>();
                 autosensDataTable = new LongSparseArray<>();
             }
-            runCalculation("onEventPreferenceChange", false, ev);
+            runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, ev);
         }
     }
 
     @Subscribe
     public void onEventConfigBuilderChange(EventConfigBuilderChange ev) {
+        if (this != getPlugin()) {
+            log.debug("Ignoring event for non default instance");
+            return;
+        }
         stopCalculation("onEventConfigBuilderChange");
         synchronized (dataLock) {
             log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
         }
-        runCalculation("onEventConfigBuilderChange", false, ev);
+        runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, ev);
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
     @Subscribe
     public void onEventNewHistoryData(EventNewHistoryData ev) {
+        if (this != getPlugin()) {
+            log.debug("Ignoring event for non default instance");
+            return;
+        }
         //log.debug("Locking onNewHistoryData");
         stopCalculation("onEventNewHistoryData");
         synchronized (dataLock) {
@@ -633,7 +657,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
             }
         }
-        runCalculation("onEventNewHistoryData", false, ev);
+        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), false, ev);
         //log.debug("Releasing onNewHistoryData");
     }
 
