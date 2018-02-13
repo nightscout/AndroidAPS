@@ -16,6 +16,7 @@ import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.MainApp;
@@ -205,8 +206,10 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
             if (plugin.isInitialized()) {
                 refreshButton.setVisibility(View.VISIBLE);
-                alertsButton.setVisibility(View.VISIBLE);
-                tddsButton.setVisibility(View.VISIBLE);
+                if (Config.enableComboBetaFeatures) {
+                    alertsButton.setVisibility(View.VISIBLE);
+                    tddsButton.setVisibility(View.VISIBLE);
+                }
                 fullHistoryButton.setVisibility(View.VISIBLE);
 
                 // battery
