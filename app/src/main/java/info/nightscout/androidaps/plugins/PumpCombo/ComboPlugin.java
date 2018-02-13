@@ -130,7 +130,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     /** Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
      * requiring reading pump more history. This is read/set in {@link #checkHistory()} when changed
      * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
-     * after bolus delivery. */
+     * after bolus delivery. Newest record is the first one. */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
 
     public static ComboPlugin getPlugin() {
@@ -423,6 +423,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         pump.initialized = true;
         MainApp.bus().post(new EventInitializationChanged());
+
+        // show notification to check pump date if last bolus is older than 24 hours
+        if (!recentBoluses.isEmpty() && recentBoluses.get(0).timestamp < System.currentTimeMillis() - 24 * 60 * 60 * 1000) {
+            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_check_date), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        }
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed

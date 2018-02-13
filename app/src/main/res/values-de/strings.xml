@@ -792,4 +792,5 @@
     <string name="zerovalueinprofile">Ungültiges Profil: %s</string>
     <string name="hoursago">vor %.1f h</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
+    <string name="combo_check_date">Der letzte Bolus liegt mehr als 24 Stunden zurück. Prüfe bitte das Datum auf der Uhr.</string>
 </resources>
