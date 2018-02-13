@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -1114,12 +1115,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
-    /**
-     * Reads the pump's history and updates the DB accordingly.
-     * <p>
-     * Only ever called by #readAllPumpData which is triggered by the user via the combo fragment
-     * which warns the user against doing this.
-     */
+    /**Reads the pump's history and updates the DB accordingly. */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         if (!historyResult.success) {
@@ -1176,8 +1172,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
 //            }
 //        }, post);
-        post.run();
-        ruffyScripter.disconnect();
+        if (post != null) {
+            post.run();
+        }
+        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+        if (commandQueue.performing() == null && commandQueue.size() == 0) {
+            ruffyScripter.disconnect();
+        }
     }
 
     // TODO use queue once ready
@@ -1188,8 +1189,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
 //            }
 //        }, post);
-        post.run();
-        ruffyScripter.disconnect();
+        if (post != null) {
+            post.run();
+        }
+        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+        if (commandQueue.performing() == null && commandQueue.size() == 0) {
+            ruffyScripter.disconnect();
+        }
     }
 
     // TODO use queue once ready
@@ -1207,8 +1213,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
 //            }
 //        }, post);
-        post.run();
-        ruffyScripter.disconnect();
+        if (post != null) {
+            post.run();
+        }
+        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+        if (commandQueue.performing() == null && commandQueue.size() == 0) {
+            ruffyScripter.disconnect();
+        }
     }
 
     /**
