@@ -16,6 +16,10 @@ public class EventOverviewBolusProgress extends Event {
      public EventOverviewBolusProgress() {
     }
 
+    public boolean isSMB(){
+         return (t != null) && t.isSMB;
+    }
+
     public static EventOverviewBolusProgress getInstance() {
         if(eventOverviewBolusProgress == null) {
             eventOverviewBolusProgress = new EventOverviewBolusProgress();
