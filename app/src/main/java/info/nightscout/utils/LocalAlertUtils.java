@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
+import info.nightscout.utils.NSUpload;
 
 /**
  * Created by adrian on 17/12/17.
@@ -42,6 +43,9 @@ public class LocalAlertUtils {
             n.soundId = R.raw.alarm;
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
             MainApp.bus().post(new EventNewNotification(n));
+            if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
+                NSUpload.uploadError(n.text);
+            }
         }
     }
 
@@ -91,6 +95,9 @@ public class LocalAlertUtils {
             n.soundId = R.raw.alarm;
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
             MainApp.bus().post(new EventNewNotification(n));
+            if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
+                NSUpload.uploadError(n.text);
+            }
         }
     }
 }

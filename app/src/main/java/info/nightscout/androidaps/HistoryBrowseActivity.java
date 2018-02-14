@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 
 import com.jjoe64.graphview.GraphView;
+import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +21,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.events.EventCustomCalculationFinished;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.utils.DateUtil;
@@ -55,6 +60,14 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
     private int rangeToDisplay = 24; // for graph
     private long start;
+
+    IobCobCalculatorPlugin iobCobCalculatorPlugin;
+
+    EventCustomCalculationFinished eventCustomCalculationFinished = new EventCustomCalculationFinished();
+
+    public HistoryBrowseActivity() {
+        iobCobCalculatorPlugin = new IobCobCalculatorPlugin();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +110,16 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     void onClickLeft() {
         start -= rangeToDisplay * 60 * 60 * 1000L;
         updateGUI("left");
+        iobCobCalculatorPlugin.clearCache();
+        iobCobCalculatorPlugin.runCalculation("onClickLeft", start, true, eventCustomCalculationFinished);
     }
 
     @OnClick(R.id.historybrowse_right)
     void onClickRight() {
         start += rangeToDisplay * 60 * 60 * 1000L;
         updateGUI("right");
+        iobCobCalculatorPlugin.clearCache();
+        iobCobCalculatorPlugin.runCalculation("onClickRight", start, true, eventCustomCalculationFinished);
     }
 
     @OnClick(R.id.historybrowse_end)
@@ -115,6 +132,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         start = calendar.getTimeInMillis();
         updateGUI("resetToMidnight");
+        iobCobCalculatorPlugin.clearCache();
+        iobCobCalculatorPlugin.runCalculation("onClickEnd", start, true, eventCustomCalculationFinished);
     }
 
     @OnClick(R.id.historybrowse_zoom)
@@ -134,6 +153,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         start = calendar.getTimeInMillis();
         updateGUI("resetToMidnight");
+        iobCobCalculatorPlugin.clearCache();
+        iobCobCalculatorPlugin.runCalculation("onLongClickZoom", start, true, eventCustomCalculationFinished);
         return true;
     }
 
@@ -145,11 +166,23 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     void onClickDate(View view) {
         //((CheckBox) view).toggle();
         updateGUI("checkboxToggle");
+        iobCobCalculatorPlugin.clearCache();
+        iobCobCalculatorPlugin.runCalculation("onClickDate", start, true, eventCustomCalculationFinished);
     }
 
 
-    void loadData() {
-
+    @Subscribe
+    public void onStatusEvent(final EventAutosensCalculationFinished e) {
+        Activity activity = this;
+        if (activity != null && e.cause == eventCustomCalculationFinished) {
+            log.debug("EventAutosensCalculationFinished");
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI("EventAutosensCalculationFinished");
+                }
+            });
+        }
     }
 
     void updateGUI(String from) {
@@ -195,7 +228,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         //  ------------------ 1st graph
 
-        final GraphData graphData = new GraphData(bgGraph);
+        final GraphData graphData = new GraphData(bgGraph, IobCobCalculatorPlugin.getPlugin());
 
         // **** In range Area ****
         graphData.addInRangeArea(fromTime, toTime, lowLine, highLine);
@@ -223,7 +256,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         // ------------------ 2nd graph
 
-        final GraphData secondGraphData = new GraphData(iobGraph);
+        final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
 
         boolean useIobForScale = false;
         boolean useCobForScale = false;

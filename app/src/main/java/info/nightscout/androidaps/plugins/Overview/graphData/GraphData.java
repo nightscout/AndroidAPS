@@ -53,9 +53,12 @@ public class GraphData {
     private String units;
     private List<Series> series = new ArrayList<>();
 
-    public GraphData(GraphView graph) {
+    private IobCobCalculatorPlugin iobCobCalculatorPlugin;
+
+    public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
         units = MainApp.getConfigBuilder().getProfileUnits();
         this.graph = graph;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {
@@ -129,7 +132,7 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            BasalData basalData = IobCobCalculatorPlugin.getBasalData(time);
+            BasalData basalData = IobCobCalculatorPlugin.getPlugin().getBasalData(time);
             double baseBasalValue = basalData.basal;
             double absoluteLineValue = baseBasalValue;
             double tempBasalValue = 0;
@@ -335,7 +338,7 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            double iob = IobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time).iob;
+            double iob = IobCobCalculatorPlugin.getPlugin().calculateFromTreatmentsAndTempsSynchronized(time).iob;
             if (Math.abs(lastIob - iob) > 0.02) {
                 if (Math.abs(lastIob - iob) > 0.2)
                     iobArray.add(new ScaledDataPoint(time, lastIob, iobScale));
@@ -370,7 +373,7 @@ public class GraphData {
         Scale cobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 int cob = (int) autosensData.cob;
                 if (cob != lastCob) {
@@ -417,7 +420,7 @@ public class GraphData {
         Scale devScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 int color = Color.BLACK; // "="
                 if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
@@ -455,7 +458,7 @@ public class GraphData {
         Scale ratioScale = new Scale(-1d);
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio, ratioScale));
                 maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
@@ -489,7 +492,7 @@ public class GraphData {
         Scale dsMinScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 dsMaxArray.add(new ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale));
                 dsMinArray.add(new ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale));

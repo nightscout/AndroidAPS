@@ -21,10 +21,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.queue.QueueThread;
-
-import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin.getBucketedData;
-import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin.oldestDataAvailable;
-import static info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin.roundUpTime;
+import info.nightscout.utils.DateUtil;
 
 /**
  * Created by mike on 23.01.2018.
@@ -37,16 +34,18 @@ public class IobCobThread extends Thread {
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private boolean bgDataReload;
     private String from;
+    private long start;
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobThread(IobCobCalculatorPlugin plugin, String from, boolean bgDataReload, Event cause) {
+    public IobCobThread(IobCobCalculatorPlugin plugin, String from, long start, boolean bgDataReload, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
         this.bgDataReload = bgDataReload;
         this.from = from;
         this.cause = cause;
+        this.start = start;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
@@ -68,14 +67,14 @@ public class IobCobThread extends Thread {
 
             Object dataLock = iobCobCalculatorPlugin.dataLock;
 
-            long oldestTimeWithData = oldestDataAvailable();
+            long oldestTimeWithData = iobCobCalculatorPlugin.oldestDataAvailable();
 
             synchronized (dataLock) {
                 if (bgDataReload) {
-                    iobCobCalculatorPlugin.loadBgData();
+                    iobCobCalculatorPlugin.loadBgData(start);
                     iobCobCalculatorPlugin.createBucketedData();
                 }
-                List<BgReading> bucketed_data = getBucketedData();
+                List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();
                 LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
                 if (bucketed_data == null || bucketed_data.size() < 3) {
@@ -83,7 +82,7 @@ public class IobCobThread extends Thread {
                     return;
                 }
 
-                long prevDataTime = roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
+                long prevDataTime = iobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
                 log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
@@ -95,7 +94,7 @@ public class IobCobThread extends Thread {
                     }
                     // check if data already exists
                     long bgTime = bucketed_data.get(i).date;
-                    bgTime = roundUpTime(bgTime);
+                    bgTime = iobCobCalculatorPlugin.roundUpTime(bgTime);
                     if (bgTime > System.currentTimeMillis())
                         continue;
                     Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
@@ -233,6 +232,7 @@ public class IobCobThread extends Thread {
 
                     previous = autosensData;
                     autosensDataTable.put(bgTime, autosensData);
+                    log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
                     autosensData.autosensRatio = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime).ratio;
                     if (Config.logAutosensData)
                         log.debug(autosensData.log(bgTime));

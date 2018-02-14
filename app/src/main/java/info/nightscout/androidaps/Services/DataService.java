@@ -600,7 +600,8 @@ public class DataService extends IntentService {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
             long date = trJson.getLong("mills");
             long now = System.currentTimeMillis();
-            if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
+            if (date > now - 15 * 60 * 1000L && trJson.has("notes")
+                    && !(trJson.has("enteredBy") && trJson.getString("enteredBy").equals(SP.getString("careportal_enteredby", "AndroidAPS")))) {
                 Notification announcement = new Notification(Notification.NSANNOUNCEMENT, trJson.getString("notes"), Notification.ANNOUNCEMENT, 60);
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
