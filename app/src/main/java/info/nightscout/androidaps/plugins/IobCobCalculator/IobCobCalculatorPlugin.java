@@ -484,7 +484,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return array;
     }
 
-   public IobTotal[] calculateIobArrayForSMB() {
+    public IobTotal[] calculateIobArrayForSMB() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         // predict IOB out to DIA plus 30m
         long time = System.currentTimeMillis();
@@ -549,7 +549,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
-    private void runCalculation(String from, long start, boolean bgDataReload, Event cause) {
+    public void runCalculation(String from, long start, boolean bgDataReload, Event cause) {
         log.debug("Starting calculation thread: " + from);
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new IobCobThread(this, from, start, bgDataReload, cause);
@@ -659,6 +659,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
         runCalculation("onEventNewHistoryData", System.currentTimeMillis(), false, ev);
         //log.debug("Releasing onNewHistoryData");
+    }
+
+    public void clearCache() {
+        synchronized (dataLock) {
+            log.debug("Clearing cached data.");
+            iobTable = new LongSparseArray<>();
+            autosensDataTable = new LongSparseArray<>();
+        }
     }
 
     // From https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2

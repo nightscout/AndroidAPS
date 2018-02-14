@@ -21,6 +21,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.queue.QueueThread;
+import info.nightscout.utils.DateUtil;
 
 /**
  * Created by mike on 23.01.2018.
@@ -231,6 +232,7 @@ public class IobCobThread extends Thread {
 
                     previous = autosensData;
                     autosensDataTable.put(bgTime, autosensData);
+                    log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
                     autosensData.autosensRatio = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime).ratio;
                     if (Config.logAutosensData)
                         log.debug(autosensData.log(bgTime));
