@@ -244,32 +244,32 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         ArrayList<PluginBase> pluginsInCategory;
 
         // PluginBase.APS
-        activeAPS = this.setFragmentVisibility(APSInterface.class, PluginBase.APS);
+        activeAPS = this.determineActivePlugin(APSInterface.class, PluginBase.APS);
 
         // PluginBase.INSULIN
-        activeInsulin = this.setFragmentVisibility(InsulinInterface.class, PluginBase.INSULIN);
+        activeInsulin = this.determineActivePlugin(InsulinInterface.class, PluginBase.INSULIN);
 
         // PluginBase.SENSITIVITY
-        activeSensitivity = this.setFragmentVisibility(SensitivityInterface.class, PluginBase.SENSITIVITY);
+        activeSensitivity = this.determineActivePlugin(SensitivityInterface.class, PluginBase.SENSITIVITY);
 
         // PluginBase.PROFILE
-        activeProfile = this.setFragmentVisibility(ProfileInterface.class, PluginBase.PROFILE);
+        activeProfile = this.determineActivePlugin(ProfileInterface.class, PluginBase.PROFILE);
 
         // PluginBase.BGSOURCE
-        activeBgSource = this.setFragmentVisibility(BgSourceInterface.class, PluginBase.BGSOURCE);
+        activeBgSource = this.determineActivePlugin(BgSourceInterface.class, PluginBase.BGSOURCE);
 
         // PluginBase.PUMP
         pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.PUMP);
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
         if (activePump == null)
             activePump = VirtualPumpPlugin.getPlugin(); // for NSClient build
-        this.disableFragmentVisiblities(((PluginBase)activePump).getName(), pluginsInCategory, PluginBase.PUMP);
+        this.setFragmentVisiblities(((PluginBase)activePump).getName(), pluginsInCategory, PluginBase.PUMP);
 
         // PluginBase.LOOP
-        activeLoop = this.setFragmentVisibility(PluginBase.LOOP);
+        activeLoop = this.determineActivePlugin(PluginBase.LOOP);
 
         // PluginBase.TREATMENT
-        activeTreatments = this.setFragmentVisibility(PluginBase.TREATMENT);
+        activeTreatments = this.determineActivePlugin(PluginBase.TREATMENT);
     }
 
     /**
@@ -281,18 +281,18 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * @param <T>
      * @return
      */
-    private <T> T setFragmentVisibility(Class<T> pluginInterface, int pluginType) {
+    private <T> T determineActivePlugin(Class<T> pluginInterface, int pluginType) {
         ArrayList<PluginBase> pluginsInCategory;
         pluginsInCategory = MainApp.getSpecificPluginsListByInterface(pluginInterface);
 
-        return this.setFragmentVisibility(pluginsInCategory, pluginType);
+        return this.determineActivePlugin(pluginsInCategory, pluginType);
     }
 
-    private <T> T setFragmentVisibility(int pluginType) {
+    private <T> T determineActivePlugin(int pluginType) {
         ArrayList<PluginBase> pluginsInCategory;
         pluginsInCategory = MainApp.getSpecificPluginsList(pluginType);
 
-        return this.setFragmentVisibility(pluginsInCategory, pluginType);
+        return this.determineActivePlugin(pluginsInCategory, pluginType);
     }
 
     /**
@@ -309,20 +309,20 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * @param <T>
      * @return
      */
-    private <T> T setFragmentVisibility(ArrayList<PluginBase> pluginsInCategory,
+    private <T> T determineActivePlugin(ArrayList<PluginBase> pluginsInCategory,
                                         int pluginType) {
         T activePlugin = (T) getTheOneEnabledInArray(pluginsInCategory, pluginType);
 
         if (activePlugin != null) {
-            this.disableFragmentVisiblities(((PluginBase)activePlugin).getName(),
+            this.setFragmentVisiblities(((PluginBase)activePlugin).getName(),
                     pluginsInCategory, pluginType);
         }
 
         return activePlugin;
     }
 
-    private void disableFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
-                                            int pluginType) {
+    private void setFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
+                                        int pluginType) {
         if (Config.logConfigBuilder)
             log.debug("Selected interface: " + activePluginName);
         for (PluginBase p : pluginsInCategory) {
