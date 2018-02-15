@@ -470,7 +470,7 @@
     <string name="overview_bolusprogress_stop">Stopp</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Kommer tillföra %.2fU</string>
     <string name="overview_bolusprogress_delivered">Tillförd</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview">Översikt</string>
     <string name="othersettings_title">Andra</string>
     <string name="openloop_newsuggestion">Ny behandlingsrekommendation tillgänglig</string>

@@ -108,7 +108,7 @@
     <string name="overview_newtempbasal_basalpercent">Valeur Basal [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Acceptez nouveau basal temp</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Calculateur de Bolus</string>
     <string name="constraintapllied">Restriction appliquée!</string>
     <string name="confirmation">Confirmation</string>

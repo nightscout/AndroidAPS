@@ -104,7 +104,7 @@
     <string name="overview_newtempbasal_basalpercent">Valor basal [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = actual)</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
-    <string name="overview_bolus_label">Bolo</string>
+    <string name="overview_treatment_label">Bolo</string>
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricción aplicada!</string>
     <string name="confirmation">Confirmación</string>
