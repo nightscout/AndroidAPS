@@ -34,7 +34,7 @@ public class HardLimits {
     public static final double MAXDIA = 7;
 
     public static final double MINIC = 2;
-    public static final double MAXIC = 40;
+    public static final double MAXIC = 100;
 
     public static final double MINISF = 2; // mgdl
     public static final double MAXISF = 720; // mgdl
