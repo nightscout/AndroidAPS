@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -184,7 +185,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         try {
             JSONObject object = new JSONObject(json);
             if (object.has("notes"))
-                return object.getString("notes");
+                return StringUtils.abbreviate(object.getString("notes"), 40);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

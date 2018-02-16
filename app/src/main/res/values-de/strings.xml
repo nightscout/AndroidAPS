@@ -775,4 +775,22 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung! Normalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
     <string name="combo_actvity_reading_basal_profile">Basalratenprofil wird gelesen</string>
     <string name="pump_basebasalrate">%.2f IE/h</string>
+    <string name="combo_read_full_history_info">Drücke den Button lange, um die gesamte Historie und das Basal-Profil der Pumpe auszulesen. Dies ist eigentlich unnötig, weil die Historie regelmäßig gelesen wird. Hilfreich kann dies jedoch sein, wenn Datum und Zeit grundlegend verändert wurden oder die Pumpe ausgetauscht wurde.</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Keine Verbindung zur Pumpe: Es wurde kein Bolus abgegeben.</string>
+    <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verlängerten Bolus</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Nach der Berechnung des Bolus hat sich die Pumpenhistorie geändert. Daher wurde kein Bolus abgegeben. Bitte prüfe, ob überhaupt noch ein Bolus benötigt wird. Wenn die gleiche Bolusmenge erforderlich ist, warte zwei Minuten ab, denn es werden aus Sicherheitsgründen keine gleich großen Boli abgegeben, wenn sie innerhalb von zwei Minuten angefordert wurden (unabhängig davon, ob sie verabreicht wurden oder nicht).</string>
+    <string name="combo_error_updating_treatment_record">Der Bolus wurde erfolgreich abgegeben, aber nicht als Behandlungseintrag gespeichert. Dies kann passieren, wenn zwei kleine, gleich große Boli innerhalb von zwei Minuten verabreicht werden. Bitte überprüfe die Pumpenhistorie und Behandlungseinträge. Verwende das Careportal, um fehlende Einträge hinzuzufügen. Stelle sicher, dass keine Einträge für genau dieselbe Minute und dieselbe Menge hinzugefügt werden.</string>
+    <string name="combo_activity_checking_pump_state">Status wird aktualisiert</string>
+    <string name="combo_warning_pump_basal_rate_changed">Die Basalrate in der Pumpe hat sich geändert und wird aktualisiert</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Das Einlesen der geänderten Basalrate in der Pumpe schlug fehl.</string>
+    <string name="combo_activity_checking_for_history_changes">Änderungen der Historie werden gesucht</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Der Import mehrerer Boli der gleichen Menge, abgegeben in der gleichen Minute, ist gescheitert: Nur ein Datensatz konnte den Behandlungen hinzugefügt werden. Bitte überprüfe die Pumpe und verwende das Careportal, um fehlende Einträge hinzuzufügen. Stelle sicher, dass keine Einträge für genau dieselbe Minute mit derselben  Menge hinzugefügt werden.</string>
+    <string name="mute">Alarm stoppen</string>
+    <string name="bolusstopped">Bolus gestoppt</string>
+    <string name="bolusstopping">Bolus wird gestoppt</string>
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %s</string>
+    <string name="zerovalueinprofile">Ungültiges Profil: %s</string>
+    <string name="hoursago">vor %.1f h</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
+    <string name="combo_check_date">Der letzte Bolus liegt mehr als 24 Stunden zurück. Prüfe bitte das Datum auf der Uhr.</string>
 </resources>

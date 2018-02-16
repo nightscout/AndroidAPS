@@ -57,7 +57,7 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 1500
-        version "1.57-combo-csv2-beta-3"
+        version "1.57-combo-csv2-beta-4"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
