@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -289,13 +290,17 @@ public class CommandQueue {
 
         // Check that there is a valid profileSwitch NOW
         if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
-            Notification noProfileSwitchNotif = new Notification(Notification.PROFILE_SWITCH_MISSING, MainApp.sResources.getString(R.string.profileswitch_ismissing), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(noProfileSwitchNotif));
-            if (callback != null) {
-                PumpEnactResult result = new PumpEnactResult().success(false).enacted(false).comment("Refuse to send profile to pump! No ProfileSwitch!");
-                callback.result(result).run();
+            // wait for DatabaseHelper.scheduleProfiSwitch() to do the profile switch // TODO clean this crap up
+            SystemClock.sleep(5000);
+            if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
+                Notification noProfileSwitchNotif = new Notification(Notification.PROFILE_SWITCH_MISSING, MainApp.sResources.getString(R.string.profileswitch_ismissing), Notification.NORMAL);
+                MainApp.bus().post(new EventNewNotification(noProfileSwitchNotif));
+                if (callback != null) {
+                    PumpEnactResult result = new PumpEnactResult().success(false).enacted(false).comment("Refuse to send profile to pump! No ProfileSwitch!");
+                    callback.result(result).run();
+                }
+                return false;
             }
-            return false;
         }
 
         // Compare with pump limits
