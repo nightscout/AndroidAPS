@@ -289,7 +289,7 @@ public class CommandQueue {
 
         // Check that there is a valid profileSwitch NOW
         if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
-            Notification noProfileSwitchNotif = new Notification(Notification.PROFILE_SWITCH_MISSING, MainApp.sResources.getString(R.string.profileswitch_missing), Notification.NORMAL);
+            Notification noProfileSwitchNotif = new Notification(Notification.PROFILE_SWITCH_MISSING, MainApp.sResources.getString(R.string.profileswitch_ismissing), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(noProfileSwitchNotif));
             if (callback != null) {
                 PumpEnactResult result = new PumpEnactResult().success(false).enacted(false).comment("Refuse to send profile to pump! No ProfileSwitch!");
