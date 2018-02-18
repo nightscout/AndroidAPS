@@ -226,7 +226,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return type == PUMP;
     }
 
     @Override
