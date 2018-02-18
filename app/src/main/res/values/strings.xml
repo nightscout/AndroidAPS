@@ -901,5 +901,8 @@
     <string name="day">day</string>
     <string name="week">week</string>
     <string name="time_plural">s</string>
+    <string name="insight_keepalive_format_string">%ds expires %s</string>
+    <string name="insight_keep_alive_status">Keep-alive status</string>
+    <string name="statistics">Statistics</string>
 </resources>
 

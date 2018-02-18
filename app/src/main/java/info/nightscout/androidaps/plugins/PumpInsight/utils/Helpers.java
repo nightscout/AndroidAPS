@@ -162,6 +162,31 @@ public class Helpers {
         return niceTimeScalar(t).replaceFirst("^1 ", "");
     }
 
+    public static String niceTimeScalarBrief(long t) {
+        // TODO i18n wont work for non-latin characterset
+        return niceTimeScalar(t).replaceFirst("([a-z])[a-z]*", "$1").replace(" ","");
+    }
+
+    public static String hourMinuteString(long timestamp) {
+        return android.text.format.DateFormat.format("kk:mm", timestamp).toString();
+    }
+
+    public static String hourMinuteSecondString(long timestamp) {
+        return android.text.format.DateFormat.format("kk:mm:ss", timestamp).toString();
+    }
+
+    public static String dateTimeText(long timestamp) {
+        return android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss", timestamp).toString();
+    }
+
+    public static String dateText(long timestamp) {
+        return android.text.format.DateFormat.format("yyyy-MM-dd", timestamp).toString();
+    }
+
+    public static String capitalize(String text) {
+        return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+    }
+
     public static double roundDouble(double value, int places) {
         if (places < 0) throw new IllegalArgumentException("Invalid decimal places");
         BigDecimal bd = new BigDecimal(value);
