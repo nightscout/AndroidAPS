@@ -103,6 +103,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
@@ -625,8 +626,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 wizardDialog.show(manager, "WizardDialog");
                 break;
             case R.id.overview_calibrationbutton:
-                CalibrationDialog calibrationDialog = new CalibrationDialog();
-                calibrationDialog.show(manager, "CalibrationDialog");
+                boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+                boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+                if (xdrip) {
+                    CalibrationDialog calibrationDialog = new CalibrationDialog();
+                    calibrationDialog.show(manager, "CalibrationDialog");
+                } else if (g5) {
+                    Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
+                    startActivity(i);
+                }
                 break;
             case R.id.overview_treatmentbutton:
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
@@ -1116,7 +1124,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Calibration button ****
         if (calibrationButton != null) {
-            if (MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
+            boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+            boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+            if ((xdrip || g5) && profile != null && DatabaseHelper.actualBg() != null) {
                 calibrationButton.setVisibility(View.VISIBLE);
             } else {
                 calibrationButton.setVisibility(View.GONE);
