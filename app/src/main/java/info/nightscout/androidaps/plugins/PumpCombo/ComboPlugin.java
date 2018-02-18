@@ -426,9 +426,14 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         MainApp.bus().post(new EventInitializationChanged());
 
         // show notification to check pump date if last bolus is older than 24 hours
-        if (!recentBoluses.isEmpty() && recentBoluses.get(0).timestamp < System.currentTimeMillis() - 24 * 60 * 60 * 1000) {
-            Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_check_date), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+        // or is in the future
+        if (!recentBoluses.isEmpty()) {
+            long lastBolusTimestamp = recentBoluses.get(0).timestamp;
+            long now = System.currentTimeMillis();
+            if (lastBolusTimestamp < now - 24 * 60 * 60 * 1000 || lastBolusTimestamp > now + 5 * 60 * 1000) {
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_check_date), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+            }
         }
 
         // ComboFragment updates state fully only after the pump has initialized,
@@ -626,6 +631,13 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (!addBolusToTreatments(detailedBolusInfo, lastPumpBolus))
                 return new PumpEnactResult().success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
+
+            // check pump bolus record has a sane timestamp
+            long now = System.currentTimeMillis();
+            if (lastPumpBolus.timestamp < now - 10 * 60 * 1000 || lastPumpBolus.timestamp > now + 10 * 60 * 1000) {
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_suspious_bolus_time), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+            }
 
             // update `recentBoluses` so the bolus was just delivered won't be detected as a new
             // bolus that has been delivered on the pump

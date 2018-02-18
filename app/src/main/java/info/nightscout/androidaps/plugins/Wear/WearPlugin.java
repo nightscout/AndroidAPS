@@ -29,8 +29,8 @@ import info.nightscout.utils.SP;
 
 public class WearPlugin implements PluginBase {
 
-    private static boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
+    private static boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
 
