@@ -40,6 +40,7 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -721,6 +722,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
+        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         activeTreatments.addToHistoryProfileSwitch(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }
