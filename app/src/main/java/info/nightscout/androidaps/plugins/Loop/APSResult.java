@@ -184,7 +184,7 @@ public class APSResult {
     public long getLatestPredictionsTime() {
         long latest = 0;
         try {
-            long startTime = date.getTime();
+            long startTime = date != null ? date.getTime() : 0;
             if (json.has("predBGs")) {
                 JSONObject predBGs = json.getJSONObject("predBGs");
                 if (predBGs.has("IOB")) {
