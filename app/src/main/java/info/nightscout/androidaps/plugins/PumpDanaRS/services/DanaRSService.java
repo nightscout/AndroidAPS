@@ -156,7 +156,6 @@ public class DanaRSService extends Service {
 
             loadEvents();
 
-            danaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
@@ -190,6 +189,7 @@ public class DanaRSService extends Service {
         else
             lastHistoryFetched = 0;
         log.debug("Events loaded");
+        danaRPump.lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
     }
 
