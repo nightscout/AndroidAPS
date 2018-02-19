@@ -80,7 +80,13 @@ public class SetBasalProfileCommand extends BaseCommand {
         double currentRate = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
         log.debug("Current rate: " + currentRate + ", requested: " + requestedRate);
         // the pump changes steps size from 0.01 to 0.05 when crossing 1.00 U
-        long steps = stepsToOne(currentRate) - stepsToOne(requestedRate);
+        long steps = 0;
+        if (currentRate == 0) {
+            // edge case of starting from 0.00;
+            steps = stepsToOne(0.05) - stepsToOne(requestedRate) + 1;
+        } else {
+            steps = stepsToOne(currentRate) - stepsToOne(requestedRate);
+        }
         if (steps == 0) {
             return 0;
         }
