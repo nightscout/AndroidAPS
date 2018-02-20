@@ -19,11 +19,15 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -35,6 +39,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
@@ -345,11 +350,13 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
 
         long now = System.currentTimeMillis();
-        long startTimeWindow = now - (long) (60000 * 60 * 5.5);
+        final long startTimeWindow = now - (long) (60000 * 60 * 5.5);
 
 
         ArrayList<DataMap> basals = new ArrayList<>();
         ArrayList<DataMap> temps = new ArrayList<>();
+        ArrayList<DataMap> boluses = new ArrayList<>();
+
 
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -447,9 +454,17 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
         }
 
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+        for (Treatment treatment:treatments) {
+            if(treatment.date > startTimeWindow){
+                boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB));
+            }
+
+        }
         DataMap dm = new DataMap();
         dm.putDataMapArrayList("basals", basals);
         dm.putDataMapArrayList("temps", temps);
+        dm.putDataMapArrayList("boluses", boluses);
 
         new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient).execute(dm);
     }
@@ -469,6 +484,15 @@ public class WatchUpdaterService extends WearableListenerService implements
         dm.putLong("starttime", startTime);
         dm.putLong("endtime", endTime);
         dm.putDouble("amount", amount);
+        return dm;
+    }
+
+    private DataMap treatmentMap(long date, double bolus, double carbs, boolean isSMB) {
+        DataMap dm = new DataMap();
+        dm.putLong("date", date);
+        dm.putDouble("bolus", bolus);
+        dm.putDouble("carbs", carbs);
+        dm.putBoolean("isSMB", isSMB);
         return dm;
     }
 
