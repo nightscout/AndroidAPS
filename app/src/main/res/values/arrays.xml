@@ -24,6 +24,7 @@
         <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
         <item>@string/sv_lang</item>
+        <item>@string/zh_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
         <item>en</item>
@@ -39,6 +40,7 @@
         <item>ro</item>
         <item>ru</item>
         <item>sv</item>
+        <item>zh-rCN</item>
     </string-array>
 
     <string-array name="ageArray">
@@ -104,5 +106,4 @@
         <item>@string/yes</item>
     </string-array>
 
-    <string name="fr_lang">French</string>
 </resources>
