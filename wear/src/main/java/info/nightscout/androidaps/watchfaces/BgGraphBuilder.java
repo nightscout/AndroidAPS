@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.data.BolusWatchData;
 import info.nightscout.androidaps.data.TempWatchData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -27,6 +28,7 @@ import lecho.lib.hellocharts.model.Viewport;
  * Created by emmablack on 11/15/14.
  */
 public class BgGraphBuilder {
+    private ArrayList<BolusWatchData> bolusWatchDataList;
     private ArrayList<BasalWatchData> basalWatchDataList;
     public List<TempWatchData> tempWatchDataList;
     private int timespan;
@@ -55,7 +57,7 @@ public class BgGraphBuilder {
 
 
     //used for low resolution screen.
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
         end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -70,12 +72,13 @@ public class BgGraphBuilder {
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
+        this.bolusWatchDataList = (bolusWatchDataList!=null)?bolusWatchDataList:new ArrayList<BolusWatchData>();
         this.gridColour = gridColour;
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
         end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -89,6 +92,7 @@ public class BgGraphBuilder {
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
+        this.bolusWatchDataList = (bolusWatchDataList!=null)?bolusWatchDataList:new ArrayList<BolusWatchData>();
         this.gridColour = gridColour;
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;

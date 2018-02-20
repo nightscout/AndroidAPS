@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.data.BolusWatchData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.TempWatchData;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
@@ -74,6 +75,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
+    public ArrayList<BolusWatchData> bolusWatchDataList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
     public View layoutView;
     private final Point displaySize = new Point();
@@ -398,6 +400,18 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 basalWatchDataList.add(bwd);
             }
         }
+        ArrayList<DataMap> boluses = dataMap.getDataMapArrayList("boluses");
+        if (boluses != null) {
+            bolusWatchDataList = new ArrayList<>();
+            for (DataMap basal : basals) {
+                BolusWatchData bwd = new BolusWatchData();
+                bwd.date = basal.getLong("date");
+                bwd.bolus = basal.getDouble("bolus");
+                bwd.carbs = basal.getDouble("carbs");
+                bwd.isSMB = basal.getBoolean("isSMB");
+                bolusWatchDataList.add(bwd);
+            }
+        }
     }
 
     private void showAgeAndStatus() {
@@ -640,9 +654,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (lowResMode) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());
