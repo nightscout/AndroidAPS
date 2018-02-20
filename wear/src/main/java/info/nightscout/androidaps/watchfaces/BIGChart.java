@@ -403,12 +403,12 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         ArrayList<DataMap> boluses = dataMap.getDataMapArrayList("boluses");
         if (boluses != null) {
             bolusWatchDataList = new ArrayList<>();
-            for (DataMap basal : basals) {
+            for (DataMap bolus : boluses) {
                 BolusWatchData bwd = new BolusWatchData();
-                bwd.date = basal.getLong("date");
-                bwd.bolus = basal.getDouble("bolus");
-                bwd.carbs = basal.getDouble("carbs");
-                bwd.isSMB = basal.getBoolean("isSMB");
+                bwd.date = bolus.getLong("date");
+                bwd.bolus = bolus.getDouble("bolus");
+                bwd.carbs = bolus.getDouble("carbs");
+                bwd.isSMB = bolus.getBoolean("isSMB");
                 bolusWatchDataList.add(bwd);
             }
         }

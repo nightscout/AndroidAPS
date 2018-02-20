@@ -158,6 +158,7 @@ public class BgGraphBuilder {
         }
 
         lines.add(basalLine((float) minChart, factor, highlight));
+        lines.add(bolusLine((float) minChart, factor));
 
         return lines;
     }
@@ -183,6 +184,31 @@ public class BgGraphBuilder {
 
 
     }
+
+    private Line bolusLine(float offset, double factor) {
+
+        List<PointValue> pointValues = new ArrayList<PointValue>();
+
+        for (BolusWatchData bwd: bolusWatchDataList) {
+            if(bwd.date > start_time) {
+                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset+2));
+            }
+        }
+
+
+        Line line = new Line(pointValues);
+        line.setColor(basalCenterColor);
+        line.setHasLines(false);
+        line.setPointRadius(pointSize);
+        line.setHasPoints(true);
+
+        return line;
+
+
+    }
+
+
+
 
     public Line highValuesLine() {
         Line highValuesLine = new Line(highValues);
