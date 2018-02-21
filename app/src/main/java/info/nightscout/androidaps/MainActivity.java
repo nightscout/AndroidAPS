@@ -35,9 +35,9 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -222,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         askForSMSPermissions();
         askForLocationPermissions();
+        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
     }
 
     @Override

@@ -70,6 +70,7 @@ import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.round
  *
  */
 
+@SuppressWarnings("AccessStaticViaInstance")
 public class InsightPumpPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
 
     private static final long BUSY_WAIT_TIME = 20000;
@@ -285,7 +286,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             if (!connector.isPumpConnected()) {
                 if (Helpers.ratelimit("insight-connect-timer", 40)) {
                     log("Actually requesting a connect");
-                    connector.getServiceConnector().connect();
+                    connector.connectToPump();
                 }
             } else {
                 log("Already connected");
@@ -306,7 +307,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         try {
             if (!SP.getBoolean("insight_always_connected", false)) {
                 log("Requesting disconnect");
-                connector.getServiceConnector().disconnect();
+                connector.disconnectFromPump();
             } else {
                 log("Not disconnecting due to preference");
             }
@@ -322,7 +323,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             if (isConnecting()) {
                 if (!SP.getBoolean("insight_always_connected", false)) {
                     log("Requesting disconnect");
-                    connector.getServiceConnector().disconnect();
+                    connector.disconnectFromPump();
                 } else {
                     log("Not disconnecting due to preference");
                 }
@@ -470,6 +471,22 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         if (percent_amount > 250) percent_amount = 250;
 
+        // TODO this is experimental and not enabled due to preference option
+        // ignore TBR changes if the setting is enabled and they are not 0% but are +- 30% of where we are now or we've been running is TBR < 15 minutes
+        if ((percent_amount != 0)
+                && (SP.getBoolean("insight_dont_change_active_tbr", false)
+                && MainApp.getConfigBuilder().isTempBasalInProgress())) {
+            final TemporaryBasal temporaryBasalFromHistory = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            if ((temporaryBasalFromHistory != null) && (temporaryBasalFromHistory.isInProgress())) {
+                // only change if it is +- 30% from where we are now or we have done more than 15 minutes already
+                if ((Math.abs(temporaryBasalFromHistory.percentRate - percent_amount) <= 30)
+                        || (temporaryBasalFromHistory.getRealDuration() < 15)) {
+                    log("Refusing to change TBR due to Insight plugin setting: " + percent_amount + " vs " + temporaryBasalFromHistory.percentRate + " running for: " + temporaryBasalFromHistory.getRealDuration());
+                    return new PumpEnactResult().enacted(false).success(true);
+                }
+            }
+        }
+
         final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
 
@@ -616,7 +633,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         final UUID cmd;
 
         if (fauxTBRcancel) {
-            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" +  " 1m");
+            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" + " 1m");
         } else {
             cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
         }
@@ -893,6 +910,16 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             l.add(new StatusItem(gs(R.string.insight_last_completed_action), LiveHistory.getStatus()));
         }
 
+        final String keep_alive_status = Connector.getKeepAliveString();
+        if (keep_alive_status != null) {
+            l.add(new StatusItem(gs(R.string.insight_keep_alive_status), keep_alive_status));
+        }
+
+        final List<StatusItem> status_statistics = connector.getStatusStatistics();
+        if (status_statistics.size() > 0) {
+            l.addAll(status_statistics);
+        }
+
         if (Helpers.ratelimit("insight-status-ui-refresh", 10)) {
             connector.tryToGetPumpStatusAgain();
         }
@@ -910,7 +937,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
                 public void run() {
                     updateGui();
                 }
-            }, 500);
+            }, 1000);
         }
     }
 

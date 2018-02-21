@@ -3,12 +3,23 @@ package info.nightscout.androidaps.plugins.PumpInsight.connector;
 import android.content.Intent;
 import android.os.PowerManager;
 
+import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
+import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
+import info.nightscout.utils.SP;
 import sugar.free.sightparser.handling.ServiceConnectionCallback;
 import sugar.free.sightparser.handling.SightServiceConnector;
 import sugar.free.sightparser.handling.StatusCallback;
@@ -31,11 +42,17 @@ import static sugar.free.sightparser.handling.SightService.COMPATIBILITY_VERSION
 
 public class Connector {
 
+    // TODO connection statistics
+
     private static final String TAG = "InsightConnector";
     private static final String COMPANION_APP_PACKAGE = "sugar.free.sightremote";
     private final static long FRESH_MS = 70000;
+    private static final Map<Status, Long> statistics = new HashMap<>();
     private static volatile Connector instance;
     private static volatile HistoryReceiver historyReceiver;
+    private static volatile long stayConnectedTill = -1;
+    private static volatile long stayConnectedTime = 0;
+    private static volatile boolean disconnect_thread_running = false;
     private volatile SightServiceConnector serviceConnector;
     private volatile Status lastStatus = null;
     private String compatabilityMessage = null;
@@ -47,14 +64,22 @@ public class Connector {
         @Override
         public synchronized void onStatusChange(Status status) {
 
-            log("Status change: " + status);
-            lastStatus = status;
-            lastStatusTime = Helpers.tsl();
-            if (status == Status.CONNECTED) {
-                lastContactTime = lastStatusTime;
-            }
+            if ((status != lastStatus) || (Helpers.msSince(lastStatusTime) > 2000)) {
+                log("Status change: " + status);
 
-            MainApp.bus().post(new EventInsightPumpUpdateGui());
+                updateStatusStatistics(lastStatus, lastStatusTime);
+                lastStatus = status;
+                lastStatusTime = Helpers.tsl();
+
+                if (status == Status.CONNECTED) {
+                    lastContactTime = lastStatusTime;
+                    extendKeepAliveIfActive();
+                }
+
+                MainApp.bus().post(new EventInsightPumpUpdateGui());
+            } else {
+                log("Same status as before: " + status);
+            }
         }
 
     };
@@ -97,6 +122,7 @@ public class Connector {
 
     private Connector() {
         initializeHistoryReceiver();
+        MainApp.bus().register(this);
     }
 
     public static Connector get() {
@@ -117,8 +143,28 @@ public class Connector {
     }
 
     public static void connectToPump() {
-        log("Attempting to connect to pump");
+        connectToPump(0);
+    }
+
+    public synchronized static void connectToPump(long keep_alive) {
+        log("Attempting to connect to pump.");
+        if (keep_alive > 0) {
+            stayConnectedTime = keep_alive;
+            stayConnectedTill = Helpers.tsl() + keep_alive;
+            log("Staying connected till: " + Helpers.dateTimeText(stayConnectedTill));
+            delayedDisconnectionThread();
+        }
         get().getServiceConnector().connect();
+    }
+
+    public static void disconnectFromPump() {
+        if (Helpers.tsl() >= stayConnectedTill) {
+            log("Requesting real pump disconnect");
+            get().getServiceConnector().disconnect();
+        } else {
+            log("Cannot disconnect as due to keep alive till: " + Helpers.dateTimeText(stayConnectedTill));
+            // TODO set a disconnection timer?
+        }
     }
 
     static void log(String msg) {
@@ -158,6 +204,67 @@ public class Connector {
 
     private static String gs(int id) {
         return MainApp.instance().getString(id);
+    }
+
+    private static synchronized void extendKeepAliveIfActive() {
+        if (keepAliveActive()) {
+            if (Helpers.ratelimit("extend-insight-keepalive", 10)) {
+                stayConnectedTill = Helpers.tsl() + stayConnectedTime;
+                log("Keep-alive extended until: " + Helpers.dateTimeText(stayConnectedTill));
+            }
+        }
+    }
+
+    private static boolean keepAliveActive() {
+        return Helpers.tsl() <= stayConnectedTill;
+    }
+
+    public static String getKeepAliveString() {
+        if (keepAliveActive()) {
+            return MainApp.instance().getString(R.string.insight_keepalive_format_string,
+                    stayConnectedTime / 1000, Helpers.hourMinuteSecondString(stayConnectedTill));
+
+        } else {
+            return null;
+        }
+    }
+
+
+    private static synchronized void delayedDisconnectionThread() {
+        if (keepAliveActive()) {
+            if (!disconnect_thread_running) {
+                disconnect_thread_running = true;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final PowerManager.WakeLock wl = Helpers.getWakeLock("insight-disconnection-timer", 600000);
+                        try {
+                            while (keepAliveActive()) {
+                                if (Helpers.ratelimit("insight-expiry-notice", 5)) {
+                                    log("Staying connected thread expires: " + Helpers.dateTimeText(stayConnectedTill));
+                                }
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    //
+                                }
+                            }
+                            log("Sending the real delayed disconnect");
+                            get().getServiceConnector().disconnect();
+                        } finally {
+                            Helpers.releaseWakeLock(wl);
+                            disconnect_thread_running = false;
+                        }
+                    }
+                }).start();
+            } else {
+                log("Disconnect thread already running");
+            }
+        }
+    }
+
+    private static long percentage(long t, long total) {
+        return (long) (Helpers.roundDouble(((double) t * 100) / total, 0));
     }
 
     @SuppressWarnings("AccessStaticViaInstance")
@@ -354,4 +461,50 @@ public class Connector {
         return true; // TODO evaluate whether current
     }
 
+    private void updateStatusStatistics(Status last, long since) {
+        if ((last != null) && (since > 0)) {
+            Long total = statistics.get(last);
+            if (total == null) total = 0L;
+            statistics.put(last, total + Helpers.msSince(since));
+            log("Updated statistics for: " + last + " total: " + Helpers.niceTimeScalar(statistics.get(last)));
+            // TODO persist data
+        }
+    }
+
+    public List<StatusItem> getStatusStatistics() {
+        final List<StatusItem> l = new ArrayList<>();
+        long total = 0;
+        for (Map.Entry entry : statistics.entrySet()) {
+            total += getEntryTime(entry);
+        }
+        for (Map.Entry entry : statistics.entrySet()) {
+            if ((long) entry.getValue() > 1000) {
+                l.add(new StatusItem(gs(R.string.statistics) + " " + Helpers.capitalize(entry.getKey().toString()),
+                        new Formatter().format("%4s %12s",
+                                percentage(getEntryTime(entry), total) + "%",
+                                Helpers.niceTimeScalar(getEntryTime(entry))).toString()));
+            }
+        }
+        return l;
+    }
+
+    private long getEntryTime(Map.Entry entry) {
+        return (long) entry.getValue() + (entry.getKey().equals(lastStatus) ? Helpers.msSince(lastStatusTime) : 0);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventFeatureRunning ev) {
+        if (SP.getBoolean("insight_preemptive_connect", true)) {
+            switch (ev.getFeature()) {
+                case WIZARD:
+                    log("Wizard feature detected, preconnecting to pump");
+                    connectToPump(120 * 1000);
+                    break;
+                case MAIN:
+                    log("Main feature detected, preconnecting to pump");
+                    connectToPump(30 * 1000);
+                    break;
+            }
+        }
+    }
 }

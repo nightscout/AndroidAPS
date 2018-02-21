@@ -36,7 +36,10 @@ class HistoryIntentAdapter {
 
         final int pump_tbr_duration = intent.getIntExtra(HistoryBroadcast.EXTRA_DURATION, -1);
         final int pump_tbr_percent = intent.getIntExtra(HistoryBroadcast.EXTRA_TBR_AMOUNT, -1);
-        final int pump_record_id = intent.getIntExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+        long pump_record_id = intent.getLongExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+        if (pump_record_id == -1) {
+            pump_record_id = intent.getIntExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+        }
         final long pump_serial_number = Long.parseLong(intent.getStringExtra(HistoryBroadcast.EXTRA_PUMP_SERIAL_NUMBER));
         final Date event_time = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
         final Date start_time = getDateExtra(intent, HistoryBroadcast.EXTRA_START_TIME);
@@ -60,8 +63,11 @@ class HistoryIntentAdapter {
     void processDeliveredBolusIntent(Intent intent) {
 
         final String bolus_type = intent.getStringExtra(HistoryBroadcast.EXTRA_BOLUS_TYPE);
-        final int bolus_id = intent.getIntExtra(HistoryBroadcast.EXTRA_BOLUS_ID,-1);
-        final int pump_record_id = intent.getIntExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+        final int bolus_id = intent.getIntExtra(HistoryBroadcast.EXTRA_BOLUS_ID, -1);
+        long pump_record_id = intent.getLongExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+        if (pump_record_id == -1) {
+            pump_record_id = intent.getIntExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+        }
         final long pump_serial_number = Long.parseLong(intent.getStringExtra(HistoryBroadcast.EXTRA_PUMP_SERIAL_NUMBER));
         final Date event_time = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
         final Date start_time = getDateExtra(intent, HistoryBroadcast.EXTRA_START_TIME);
