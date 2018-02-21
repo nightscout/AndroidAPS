@@ -248,7 +248,9 @@ public class BgGraphBuilder {
         Line line = new Line(pointValues);
         line.setColor(Color.MAGENTA);
         line.setHasLines(false);
-        line.setPointRadius(pointSize);
+        int size = pointSize/2;
+        size = (size>0)?size:1;
+        line.setPointRadius(size);
         line.setHasPoints(true);
         return line;
     }
@@ -412,7 +414,7 @@ public class BgGraphBuilder {
         //Add whole hours endTime the axis (as long as they are more than 15 mins away from the current time)
         for (int l = 0; l <= 24; l++) {
             long timestamp = endHour - (60000 * 60 * l);
-            if((timestamp - timeNow < 0) && (timestamp > start_time)) {
+            if((timestamp - endTime < 0) && (timestamp > start_time)) {
                 if(Math.abs(timestamp - timeNow) > (1000 * 60 * 8 * timespan)){
                     xAxisValues.add(new AxisValue(fuzz(timestamp), (timeFormat.format(timestamp)).toCharArray()));
                 }else {
