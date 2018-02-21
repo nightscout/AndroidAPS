@@ -30,6 +30,7 @@ import lecho.lib.hellocharts.model.Viewport;
  */
 public class BgGraphBuilder {
     public static final double MAX_PREDICTION__TIME_RATIO = (3d / 5);
+    private long predictionEndTime;
     private List<BgWatchData> predictionsList;
     private ArrayList<BolusWatchData> bolusWatchDataList;
     private ArrayList<BasalWatchData> basalWatchDataList;
@@ -62,7 +63,6 @@ public class BgGraphBuilder {
 
     //used for low resolution screen.
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList,  List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
-        end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
@@ -82,6 +82,7 @@ public class BgGraphBuilder {
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusColor = bolusColor;
+        this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
     }
 
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
@@ -104,6 +105,9 @@ public class BgGraphBuilder {
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusColor = bolusColor;
+        this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
+        this.predictionEndTime = getPredictionEndTime();
+        this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
     }
 
     public LineChartData lineData() {
