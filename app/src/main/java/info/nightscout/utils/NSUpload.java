@@ -199,17 +199,8 @@ public class NSUpload {
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
                 deviceStatus.suggested = apsResult.json();
 
-                if (lastRun.request instanceof DetermineBasalResultMA) {
-                    DetermineBasalResultMA result = (DetermineBasalResultMA) lastRun.request;
-                    deviceStatus.iob = result.iob.json();
-                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
-                }
-
-                if (lastRun.request instanceof DetermineBasalResultAMA) {
-                    DetermineBasalResultAMA result = (DetermineBasalResultAMA) lastRun.request;
-                    deviceStatus.iob = result.iob.json();
-                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
-                }
+                deviceStatus.iob = lastRun.request.iob.json();
+                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
 
                 if (lastRun.setByPump != null && lastRun.setByPump.enacted) { // enacted
                     deviceStatus.enacted = lastRun.request.json();
@@ -408,6 +399,7 @@ public class NSUpload {
         try {
             data.put("eventType", "Announcement");
             data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
             data.put("notes", error);
             data.put("isAnnouncement", true);
         } catch (JSONException e) {

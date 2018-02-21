@@ -83,4 +83,8 @@ public class SourceGlimpPlugin implements PluginBase, BgSourceInterface {
     }
 
 
+    @Override
+    public boolean advancedFilteringSupported() {
+        return false;
+    }
 }

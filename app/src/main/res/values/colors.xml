@@ -5,6 +5,8 @@
     <color name="iob">#FFFB8C00</color>
     <color name="bolus">#FFFFCC03</color>
     <color name="cob">#8BC34A</color>
+    <color name="uam">#ffea00</color>
+    <color name="zt">#ff9500</color>
     <color name="ratio">#FFFFFF</color>
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>

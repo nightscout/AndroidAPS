@@ -159,9 +159,8 @@
     <string name="copied_to_clipboard">Gekopieerd naar klembord</string>
     <string name="copy_to_clipboard">Kopieren naar klembord</string>
     <string name="correctionbous">Correctie</string>
-    <string name="cpp_notloadedplugins">Niet alle profielen zijn geladen!</string>
-    <string name="cpp_sync_setting_missing">Moet geactiveerd worden om waardes naat de pomp te verzenden!</string>
-    <string name="cpp_valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
+    <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="cs_lang">Čeština</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">Basaal uur</string>
@@ -308,7 +307,6 @@
     <string name="danar_invalidinput">Verkeerde ingave</string>
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="basal_rate">Basaal:</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_tbb">Totaal basaal</string>
@@ -451,7 +449,7 @@
     <string name="openapsma_noprofile">Geen profiel beschikbaar</string>
     <string name="openapsma_maxiob_title">Maximaal basaal IOB OpenAPS kan toedienen [E]</string>
     <string name="openapsma_profile_label">Profiel</string>
-    <string name="openapsma_valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
+    <string name="valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
     <string name="pump_basebasalrate_label">Basis basale dosis</string>
     <string name="openapsma_lastrun_label">Laatse berekening</string>
     <string name="openapsma_lastenact_label">Laatste uitvoering</string>
@@ -521,7 +519,6 @@
     <string name="basal_step">Basaal stap</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
     <string name="carbsconstraintapplied">KH limiet ingesteld</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfiel</string>
     <string name="danar_sbolus">S Bolus</string>
     <string name="danar_stats">DanaR Statistiek</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
@@ -627,7 +624,7 @@
     <string name="danar_model" formatted="false">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="danar_history_connectingfor">Verbonden gedurende %d s</string>
     <string name="danar_totaluploaded">Totaal %d gegevens geupload</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
+    <string name="valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
     <string name="smscommunicator_suspendreplywithcode" formatted="false">Om de loop te onderbreken voor %d minuten antwoord met de code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Tijdelijk basaal %.2fE/u voor %d minuten succesvol gestart</string>
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
@@ -676,16 +673,12 @@
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="emptyreservoir">Ampull leeg</string>
     <string name="waitingforpairing">Wachten op koppelen van de pomp</string>
-    <string name="pump_errors_history">Storingen</string>
     <string name="profileswitch">Wijzigingen van profiel</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="food">Voeding</string>
     <string name="enable_pump_unreachable_alert">Waarschuwing bij niet bereikbare pomp</string>
     <string name="bolus_frequency_exceeded">Een bolus met dezelfde hoeveelheid was gevraagd binnen de minuut. Om accidentiële of door bugs veroorzaakte dubbele bolussen te vermijden is deze bolus geannuleerd</string>
-    <string name="bolusstopping">estopt Bolus toediening wordt</string>
     <string name="shortfat">Vet</string>
-    <string name="bolusstopped">Bolus toediening gestopt</string>
-    <string name="raise_urgent_alarms_as_android_notification">Gebruik systeem notificaties voor waarschuwingen</string>
     <string name="wear_detailed_delta_title">Toon gedetaillieerde delta</string>
     <string name="unsupportedfirmware">Niet ondersteune pomp firmware</string>
     <string name="DexcomG5">DexcomG5 App (aangepast)</string>

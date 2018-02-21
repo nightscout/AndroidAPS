@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="others"
         android:title="@string/othersettings_title">
@@ -76,12 +77,16 @@
             android:defaultValue="true"
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert" />
-        <EditTextPreference
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            validate:testType="numericRange"
+            validate:minNumber="30"
+            validate:maxNumber="300"
             android:defaultValue="30"
             android:dependency="@string/key_enable_pump_unreachable_alert"
             android:inputType="number"
             android:key="@string/key_pump_unreachable_threshold"
-            android:title="@string/pump_unreachable_threshold"></EditTextPreference>
+            android:title="@string/pump_unreachable_threshold">
+        </com.andreabaccega.widget.ValidatingEditTextPreference>
     </PreferenceScreen>
     <SwitchPreference
         android:defaultValue="false"

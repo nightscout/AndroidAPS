@@ -101,7 +101,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
-        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getAutosensDataTable();
+        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
         String age = SP.getString(R.string.key_age, "");
         int defaultHours = 24;
@@ -116,7 +116,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
+        AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             if (Config.logAutosensData)
                 log.debug("No autosens data available");
@@ -217,7 +217,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         }
 
         if (Config.logAutosensData)
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio);
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio + " mealCOB: " + current.cob);
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

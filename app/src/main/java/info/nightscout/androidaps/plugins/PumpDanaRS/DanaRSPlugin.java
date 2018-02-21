@@ -189,6 +189,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         pumpDescription.basalMinimumRate = 0.04d;
 
         pumpDescription.isRefillingCapable = true;
+
+        pumpDescription.storesCarbInfo = true;
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -346,7 +348,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Nullable
     @Override
     public ProfileStore getProfile() {
-        if (pump.lastSettingsRead.getTime() == 0)
+        if (pump.lastSettingsRead == 0)
             return null; // no info now
         return pump.createConvertedProfile();
     }
@@ -365,7 +367,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection.getTime() > 0  && pump.maxBasal > 0;
+        return pump.lastConnection > 0  && pump.maxBasal > 0;
     }
 
     @Override
@@ -436,7 +438,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public Date lastDataTime() {
-        return pump.lastConnection;
+        return new Date(pump.lastConnection);
     }
 
     @Override
@@ -475,9 +477,10 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
+            t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, System.currentTimeMillis() + carbTime * 60 * 1000 + 1000, t); // +1000 to make the record different
+                connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, System.currentTimeMillis() + carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -751,7 +754,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public JSONObject getJSONStatus() {
-        if (pump.lastConnection.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (pump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
         JSONObject pumpjson = new JSONObject();
@@ -810,19 +813,21 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     @Override
     public String shortStatus(boolean veryShort) {
         String ret = "";
-        if (pump.lastConnection.getTime() != 0) {
-            Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
+        if (pump.lastConnection != 0) {
+            Long agoMsec = System.currentTimeMillis() - pump.lastConnection;
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull() + "\n";
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString() + "\n";
+        ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (activeExtendedBolus != null) {
+            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";

@@ -239,6 +239,7 @@ public class Profile {
                 // if pump not available (at start)
                 // do not store converted array
                 basal_v = null;
+                isValidated = false;
             }
 
          }
@@ -412,6 +413,8 @@ public class Profile {
     }
 
     public String getBasalList() {
+        if (basal_v == null)
+            basal_v = convertToSparseArray(basal);
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U");
     }
 

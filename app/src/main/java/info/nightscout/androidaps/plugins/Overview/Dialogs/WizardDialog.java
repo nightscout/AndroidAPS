@@ -365,19 +365,23 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                     detailedBolusInfo.carbTime = carbTime;
                                     detailedBolusInfo.boluscalc = boluscalcJSON;
                                     detailedBolusInfo.source = Source.USER;
-                                    ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                        @Override
-                                        public void run() {
-                                            if (!result.success) {
-                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                                i.putExtra("soundid", R.raw.boluserror);
-                                                i.putExtra("status", result.comment);
-                                                i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                MainApp.instance().startActivity(i);
+                                    if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+                                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                            @Override
+                                            public void run() {
+                                                if (!result.success) {
+                                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                    i.putExtra("soundid", R.raw.boluserror);
+                                                    i.putExtra("status", result.comment);
+                                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    MainApp.instance().startActivity(i);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                                    }
                                     Answers.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }
                             }
@@ -472,7 +476,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // COB
         Double c_cob = 0d;
         if (cobCheckbox.isChecked()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("Wizard COB");
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Wizard COB");
 
             if(autosensData != null) {
                 c_cob = autosensData.cob;
@@ -528,12 +532,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
             String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
             String carbsText = calculatedCarbs > 0d ? (DecimalFormatter.to0Decimal(calculatedCarbs) + "g") : "";
-            total.setText(getString(R.string.result) + ": " + insulinText + " " + carbsText);
+            total.setText(MainApp.gs(R.string.result) + ": " + insulinText + " " + carbsText);
             okButton.setVisibility(View.VISIBLE);
         } else {
             // TODO this should also be run when loading the dialog as the OK button is initially visible
             //      but does nothing if neither carbs nor insulin is > 0
-            total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
+            total.setText(MainApp.gs(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
             okButton.setVisibility(View.INVISIBLE);
         }
 

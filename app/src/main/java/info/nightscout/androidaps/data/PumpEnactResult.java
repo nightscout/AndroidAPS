@@ -57,6 +57,10 @@ public class PumpEnactResult extends Object {
         return this;
     }
 
+    public PumpEnactResult percent(Integer percent) {
+        this.percent = percent;
+        return this;
+    }
     public PumpEnactResult isPercent(boolean isPercent) {
         this.isPercent = isPercent;
         return this;
@@ -111,7 +115,7 @@ public class PumpEnactResult extends Object {
     }
 
     public Spanned toSpanned() {
-        String ret = MainApp.sResources.getString(R.string.success) + ": " + success;
+        String ret = "<b>" + MainApp.sResources.getString(R.string.success) + "</b>: " + success;
         if (queued) {
             ret = MainApp.sResources.getString(R.string.waitingforpumpresult);
         } else if (enacted) {
@@ -119,16 +123,19 @@ public class PumpEnactResult extends Object {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
                         "<br>" + MainApp.sResources.getString(R.string.canceltemp);
-            } else if (isPercent) {
+            } else if (isPercent && percent != -1) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.percent) + "</b>: " + percent + "%";
-            } else {
+            } else if (absolute != -1) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
+            }
+            if (bolusDelivered > 0) {
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.bolus) + "</b>: " + DecimalFormatter.to2Decimal(bolusDelivered) + " U";
             }
         } else {
             ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;

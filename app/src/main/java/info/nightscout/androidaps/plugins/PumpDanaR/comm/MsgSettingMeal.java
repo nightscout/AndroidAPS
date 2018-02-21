@@ -6,10 +6,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 
 /**
  * Created by mike on 13.12.2016.
@@ -38,6 +40,11 @@ public class MsgSettingMeal extends MessageBase {
             log.debug("Melody time: " + melodyTime);
             log.debug("Block time: " + blockTime);
             log.debug("Is Config U/d: " + pump.isConfigUD);
+        }
+
+        // DanaRKorean is not possible to set to 0.01 but it works when controlled from AAPS
+        if (DanaRKoreanPlugin.getPlugin().isEnabled(PluginBase.PUMP)) {
+            pump.basalStep = 0.01d;
         }
 
         if (pump.basalStep != 0.01d) {

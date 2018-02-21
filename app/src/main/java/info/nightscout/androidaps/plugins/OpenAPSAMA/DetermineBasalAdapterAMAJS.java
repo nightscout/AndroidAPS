@@ -29,6 +29,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterAMAJS {
@@ -189,8 +190,7 @@ public class DetermineBasalAdapterAMAJS {
                         GlucoseStatus glucoseStatus,
                         MealData mealData,
                         double autosensDataRatio,
-                        boolean tempTargetSet,
-                        double min_5m_carbimpact) throws JSONException {
+                        boolean tempTargetSet) throws JSONException {
 
         String units = profile.getUnits();
 
@@ -211,7 +211,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
-        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", 3d));
+        mProfile.put("min_5m_carbimpact", SP.getInt("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
 
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
