@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
@@ -28,6 +29,8 @@ import lecho.lib.hellocharts.model.Viewport;
  * Created by emmablack on 11/15/14.
  */
 public class BgGraphBuilder {
+    public static final double MAX_PREDICTION__TIME_RATIO = (3d / 5);
+    private List<BgWatchData> predictionsList;
     private ArrayList<BolusWatchData> bolusWatchDataList;
     private ArrayList<BasalWatchData> basalWatchDataList;
     public List<TempWatchData> tempWatchDataList;
@@ -58,10 +61,11 @@ public class BgGraphBuilder {
 
 
     //used for low resolution screen.
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList,  List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
         end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
+        this.predictionsList = predictionsList;
         this.context = context;
         this.highMark = aBgList.get(aBgList.size() - 1).high;
         this.lowMark = aBgList.get(aBgList.size() - 1).low;
@@ -80,10 +84,11 @@ public class BgGraphBuilder {
         this.bolusColor = bolusColor;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
         end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
+        this.predictionsList = predictionsList;
         this.context = context;
         this.highMark = aBgList.get(aBgList.size() - 1).high;
         this.lowMark = aBgList.get(aBgList.size() - 1).low;
@@ -109,6 +114,7 @@ public class BgGraphBuilder {
     }
 
     public List<Line> defaultLines() {
+
         addBgReadingValues();
         List<Line> lines = new ArrayList<Line>();
         lines.add(highLine());
@@ -163,6 +169,7 @@ public class BgGraphBuilder {
         lines.add(basalLine((float) minChart, factor, highlight));
         lines.add(bolusLine((float) minChart));
         lines.add(smbLine((float) minChart));
+        lines.add(predictionLine());
 
 
         return lines;
@@ -218,6 +225,24 @@ public class BgGraphBuilder {
         }
         Line line = new Line(pointValues);
         line.setColor(basalCenterColor);
+        line.setHasLines(false);
+        line.setPointRadius(pointSize);
+        line.setHasPoints(true);
+        return line;
+    }
+
+    private Line predictionLine() {
+
+        List<PointValue> pointValues = new ArrayList<PointValue>();
+
+        long endTime = getPredictionEndTime();
+        for (BgWatchData bwd: predictionsList) {
+            if(bwd.timestamp <= endTime) {
+                pointValues.add(new PointValue(fuzz(bwd.timestamp), (float) bwd.sgv));
+            }
+        }
+        Line line = new Line(pointValues);
+        line.setColor(Color.MAGENTA);
         line.setHasLines(false);
         line.setPointRadius(pointSize);
         line.setHasPoints(true);
@@ -365,9 +390,12 @@ public class BgGraphBuilder {
         timeFormat.setTimeZone(TimeZone.getDefault());
         long start_hour = today.getTime().getTime();
         long timeNow = System.currentTimeMillis();
+
+        long endTime = getPredictionEndTime();
+
         for (int l = 0; l <= 24; l++) {
-            if ((start_hour + (60000 * 60 * (l))) < timeNow) {
-                if ((start_hour + (60000 * 60 * (l + 1))) >= timeNow) {
+            if ((start_hour + (60000 * 60 * (l))) < endTime) {
+                if ((start_hour + (60000 * 60 * (l + 1))) >= endTime) {
                     endHour = start_hour + (60000 * 60 * (l));
                     l = 25;
                 }
@@ -395,6 +423,17 @@ public class BgGraphBuilder {
         xAxis.setTextColor(gridColour);
 
         return xAxis;
+    }
+
+    public long getPredictionEndTime() {
+        long maxPredictionDate = System.currentTimeMillis();
+        for (BgWatchData prediction :
+                predictionsList) {
+            if (maxPredictionDate < prediction.timestamp) {
+                maxPredictionDate = prediction.timestamp;
+            }
+        }
+        return (long) Math.min(maxPredictionDate, System.currentTimeMillis() + MAX_PREDICTION__TIME_RATIO *timespan*1000*60*60);
     }
 
     public float fuzz(long value) {

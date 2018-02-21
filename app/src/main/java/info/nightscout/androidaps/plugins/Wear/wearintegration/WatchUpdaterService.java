@@ -356,6 +356,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         ArrayList<DataMap> basals = new ArrayList<>();
         ArrayList<DataMap> temps = new ArrayList<>();
         ArrayList<DataMap> boluses = new ArrayList<>();
+        ArrayList<DataMap> predictions = new ArrayList<>();
+
 
 
 
@@ -461,10 +463,24 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
 
         }
+
+        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+        if(finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null){
+            List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
+
+            if (!predArray.isEmpty()) {
+                for (BgReading bg : predArray) {
+                    predictions.add(predictionMap(bg.date, bg.value));
+                }
+            }
+        }
+
+
         DataMap dm = new DataMap();
         dm.putDataMapArrayList("basals", basals);
         dm.putDataMapArrayList("temps", temps);
         dm.putDataMapArrayList("boluses", boluses);
+        dm.putDataMapArrayList("predictions", predictions);
 
         new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient).execute(dm);
     }
@@ -493,6 +509,13 @@ public class WatchUpdaterService extends WearableListenerService implements
         dm.putDouble("bolus", bolus);
         dm.putDouble("carbs", carbs);
         dm.putBoolean("isSMB", isSMB);
+        return dm;
+    }
+
+    private DataMap predictionMap(long timestamp, double sgv) {
+        DataMap dm = new DataMap();
+        dm.putLong("timestamp", timestamp);
+        dm.putDouble("sgv", sgv);
         return dm;
     }
 

@@ -76,6 +76,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
+    public ArrayList<BgWatchData> predictionList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
@@ -629,9 +630,9 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (lowResMode) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, null, pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, null, pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, null, pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList,predictionList, tempWatchDataList, basalWatchDataList, null, pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());
