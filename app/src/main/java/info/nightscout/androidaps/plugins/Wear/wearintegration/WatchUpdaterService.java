@@ -465,7 +465,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
 
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if(finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null){
+        if(SP.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null){
             List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
 
             if (!predArray.isEmpty()) {
