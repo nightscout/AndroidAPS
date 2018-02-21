@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
@@ -121,7 +122,7 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        return yValue;
+        return isSMB ? OverviewPlugin.getPlugin().determineLowLine() : yValue;
     }
 
     @Override

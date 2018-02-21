@@ -1015,16 +1015,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
-        double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
-        double highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
-
-        if (lowLineSetting < 1)
-            lowLineSetting = Profile.fromMgdlToUnits(76d, units);
-        if (highLineSetting < 1)
-            highLineSetting = Profile.fromMgdlToUnits(180d, units);
-
-        final double lowLine = lowLineSetting;
-        final double highLine = highLineSetting;
+        final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
+        final double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
