@@ -115,7 +115,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
-        if(metrics.widthPixels < SCREENSIZE_SMALL || metrics.widthPixels < SCREENSIZE_SMALL){
+        if(metrics.widthPixels < SCREENSIZE_SMALL || metrics.heightPixels < SCREENSIZE_SMALL){
             layoutView = inflater.inflate(R.layout.activity_bigchart_small, null);
         } else {
             layoutView = inflater.inflate(R.layout.activity_bigchart, null);
