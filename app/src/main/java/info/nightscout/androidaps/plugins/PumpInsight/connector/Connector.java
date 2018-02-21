@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
+import info.nightscout.utils.SP;
 import sugar.free.sightparser.handling.ServiceConnectionCallback;
 import sugar.free.sightparser.handling.SightServiceConnector;
 import sugar.free.sightparser.handling.StatusCallback;
@@ -493,15 +494,17 @@ public class Connector {
 
     @Subscribe
     public void onStatusEvent(final EventFeatureRunning ev) {
-        switch (ev.getFeature()) {
-            case WIZARD:
-                log("Wizard feature detected, preconnecting to pump");
-                connectToPump(120 * 1000);
-                break;
-            case MAIN:
-                log("Main feature detected, preconnecting to pump");
-                connectToPump(30 * 1000);
-                break;
+        if (SP.getBoolean("insight_preemptive_connect", true)) {
+            switch (ev.getFeature()) {
+                case WIZARD:
+                    log("Wizard feature detected, preconnecting to pump");
+                    connectToPump(120 * 1000);
+                    break;
+                case MAIN:
+                    log("Main feature detected, preconnecting to pump");
+                    connectToPump(30 * 1000);
+                    break;
+            }
         }
     }
 }

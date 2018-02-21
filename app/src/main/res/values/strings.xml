@@ -904,5 +904,8 @@
     <string name="insight_keepalive_format_string">%ds expires %s</string>
     <string name="insight_keep_alive_status">Keep-alive status</string>
     <string name="statistics">Statistics</string>
+    <string name="connect_preemptively">Connect preemptively</string>
+    <string name="automatically_connect_when">Automatically connect when AndroidAPS screens are opened, before any pump command is requested, to reduce connection delay</string>
+    <string name="not_recommended_due_to_battery_drain">Not recommended due to battery drain</string>
 </resources>
 
