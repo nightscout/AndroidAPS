@@ -47,6 +47,7 @@ public class BgGraphBuilder {
     public int gridColour;
     public int basalCenterColor;
     public int basalBackgroundColor;
+    private int bolusColor;
     public boolean singleLine = false;
 
     private long endHour;
@@ -57,7 +58,7 @@ public class BgGraphBuilder {
 
 
     //used for low resolution screen.
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
         end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -76,9 +77,10 @@ public class BgGraphBuilder {
         this.gridColour = gridColour;
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
+        this.bolusColor = bolusColor;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
         end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -96,6 +98,7 @@ public class BgGraphBuilder {
         this.gridColour = gridColour;
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
+        this.bolusColor = bolusColor;
     }
 
     public LineChartData lineData() {
@@ -158,7 +161,9 @@ public class BgGraphBuilder {
         }
 
         lines.add(basalLine((float) minChart, factor, highlight));
-        lines.add(bolusLine((float) minChart, factor));
+        lines.add(bolusLine((float) minChart));
+        lines.add(smbLine((float) minChart));
+
 
         return lines;
     }
@@ -185,26 +190,38 @@ public class BgGraphBuilder {
 
     }
 
-    private Line bolusLine(float offset, double factor) {
+    private Line bolusLine(float offset) {
 
         List<PointValue> pointValues = new ArrayList<PointValue>();
 
         for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time) {
-                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset+2));
+            if(bwd.date > start_time && !bwd.isSMB) {
+                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
             }
         }
+        Line line = new Line(pointValues);
+        line.setColor(bolusColor);
+        line.setHasLines(false);
+        line.setPointRadius(pointSize);
+        line.setHasPoints(true);
+        return line;
+    }
 
+    private Line smbLine(float offset) {
 
+        List<PointValue> pointValues = new ArrayList<PointValue>();
+
+        for (BolusWatchData bwd: bolusWatchDataList) {
+            if(bwd.date > start_time && bwd.isSMB) {
+                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
+            }
+        }
         Line line = new Line(pointValues);
         line.setColor(basalCenterColor);
         line.setHasLines(false);
         line.setPointRadius(pointSize);
         line.setHasPoints(true);
-
         return line;
-
-
     }
 
 
