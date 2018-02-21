@@ -61,6 +61,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
+        <activity android:name=".HistoryBrowseActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"

@@ -37,7 +37,7 @@ public class MsgInitConnStatusTime_k extends MessageBase {
             MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginBase.PUMP, false);
             MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentEnabled(PluginBase.PUMP, true);
             MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginBase.PUMP, true);
-            DanaRPump.getInstance().lastConnection = new Date(0); // mark not initialized
+            DanaRPump.getInstance().lastConnection = 0; // mark not initialized
 
             //If profile coming from pump, switch it as well
             if (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PROFILE)) {

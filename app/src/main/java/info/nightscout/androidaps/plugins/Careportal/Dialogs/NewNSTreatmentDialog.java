@@ -38,6 +38,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -407,12 +409,23 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         else layout.setVisibility(View.GONE);
     }
 
+    private void updateBGforDateTime() {
+        long millis = eventTime.getTime() - (150 * 1000L); // 2,5 * 60 * 1000
+        List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(millis, true);
+        if ((data.size() > 0) &&
+            (data.get(0).date > millis - 7 * 60 * 1000L) &&
+            (data.get(0).date < millis + 7 * 60 * 1000L)) {
+            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
+        }
+    }
+
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         eventTime.setYear(year - 1900);
         eventTime.setMonth(monthOfYear);
         eventTime.setDate(dayOfMonth);
         dateButton.setText(DateUtil.dateString(eventTime));
+        updateBGforDateTime();
     }
 
     @Override
@@ -421,6 +434,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         eventTime.setMinutes(minute);
         eventTime.setSeconds(second);
         timeButton.setText(DateUtil.timeString(eventTime));
+        updateBGforDateTime();
     }
 
 

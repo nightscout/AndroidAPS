@@ -11,6 +11,7 @@ import info.nightscout.androidaps.queue.Callback;
 public abstract class Command {
     public enum CommandType {
         BOLUS,
+        SMB_BOLUS,
         TEMPBASAL,
         EXTENDEDBOLUS,
         BASALPROFILE,

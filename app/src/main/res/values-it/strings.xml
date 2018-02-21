@@ -66,8 +66,6 @@
     <string name="careportal_temporarytargetcancel">Cancellare Target Temporanea</string>
     <string name="changeyourinput">Cambia il tuo imput</string>
     <string name="child">Ragazzi</string>
-    <string name="circadian_percentage_profile">Percentuale del profilo circadiano</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="closedloop">Chiusura Loop</string>
     <string name="comment">Commenti</string>
     <string name="configbuilder">Configurazione Strutturale</string>

@@ -137,11 +137,11 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                     } else {
-                        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                        ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+                        if (activeExtendedBolus != null) {
                             extendedBolus.setVisibility(View.GONE);
                             extendedBolusCancel.setVisibility(View.VISIBLE);
-                            ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
-                            extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
+                            extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + activeExtendedBolus.toString());
                         } else {
                             extendedBolus.setVisibility(View.VISIBLE);
                             extendedBolusCancel.setVisibility(View.GONE);
@@ -153,10 +153,10 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         tempBasal.setVisibility(View.GONE);
                         tempBasalCancel.setVisibility(View.GONE);
                     } else {
-                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                        final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+                        if (activeTemp != null) {
                             tempBasal.setVisibility(View.GONE);
                             tempBasalCancel.setVisibility(View.VISIBLE);
-                            final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
                             tempBasalCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + activeTemp.toStringShort());
                         } else {
                             tempBasal.setVisibility(View.VISIBLE);

@@ -57,11 +57,15 @@ public class AutosensData {
     public double cob = 0;
     public double bgi = 0d;
     public double delta = 0d;
+    public double avgDelta = 0d;
+    public double avgDeviation = 0d;
 
     public double autosensRatio = 1d;
+    public double slopeFromMaxDeviation = 0;
+    public double slopeFromMinDeviation = 999;
 
     public String log(long time) {
-        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " Bgi=" + bgi + " Deviation=" + deviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio;
+        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation =" + slopeFromMinDeviation ;
     }
 
     public int minOld() {
