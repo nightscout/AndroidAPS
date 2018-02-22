@@ -32,8 +32,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
+
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
@@ -106,6 +105,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.NotificationSto
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -342,7 +342,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
             log.debug("Runtime Exception", e);
         }
 
@@ -698,7 +698,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                 scheduleUpdateGUI("onClickAcceptTemp");
                             }
                         });
-                        Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
                     }
                 });
                 builder.setNegativeButton(getContext().getString(R.string.cancel), null);
@@ -814,7 +814,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     }
                                 });
-                                Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                             }
                         }
                     }

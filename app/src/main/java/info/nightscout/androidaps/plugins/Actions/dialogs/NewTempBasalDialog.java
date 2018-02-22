@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Actions.dialogs;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -28,6 +26,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 
@@ -162,7 +161,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                             } else {
                                 ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, callback);
                             }
-                            Answers.getInstance().logCustom(new CustomEvent("TempBasal"));
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("TempBasal"));
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);

@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -22,6 +20,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
+import info.nightscout.utils.FabricPrivacy;
 
 public class LoopFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
@@ -53,7 +52,7 @@ public class LoopFragment extends SubscriberFragment implements View.OnClickList
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -71,7 +70,7 @@ public class LoopFragment extends SubscriberFragment implements View.OnClickList
                     }
                 });
                 thread.start();
-                Answers.getInstance().logCustom(new CustomEvent("Loop_Run"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run"));
                 break;
         }
 

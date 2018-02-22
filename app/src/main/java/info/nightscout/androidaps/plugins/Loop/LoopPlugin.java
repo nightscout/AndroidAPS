@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -37,6 +36,7 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
@@ -332,7 +332,7 @@ public class LoopPlugin implements PluginBase {
                     MainApp.getConfigBuilder().applyAPSRequest(resultAfterConstraints, new Callback() {
                         @Override
                         public void run() {
-                            Answers.getInstance().logCustom(new CustomEvent("APSRequest"));
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
                             if (result.enacted || result.success) {
                                 lastRun.setByPump = result;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
