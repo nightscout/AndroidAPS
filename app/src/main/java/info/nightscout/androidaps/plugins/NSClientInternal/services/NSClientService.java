@@ -118,7 +118,7 @@ public class NSClientService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mWakeLock.acquire(60000);
+        mWakeLock.acquire();
     }
 
     @Override
@@ -207,8 +207,6 @@ public class NSClientService extends Service {
         } else if (!nsEnabled) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disabled"));
             MainApp.bus().post(new EventNSClientStatus("Disabled"));
-            destroy();
-            stopSelf();
         } else if (!nsURL.equals("")) {
             try {
                 MainApp.bus().post(new EventNSClientStatus("Connecting ..."));
@@ -456,7 +454,7 @@ public class NSClientService extends Service {
                     PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
                     PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                             "onDataUpdate");
-                    wakeLock.acquire(30000);
+                    wakeLock.acquire();
                     try {
 
                         JSONObject data = (JSONObject) args[0];
