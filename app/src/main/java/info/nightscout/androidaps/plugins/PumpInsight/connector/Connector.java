@@ -229,7 +229,6 @@ public class Connector {
         }
     }
 
-
     private static synchronized void delayedDisconnectionThread() {
         if (keepAliveActive()) {
             if (!disconnect_thread_running) {
@@ -239,7 +238,7 @@ public class Connector {
                     public void run() {
                         final PowerManager.WakeLock wl = Helpers.getWakeLock("insight-disconnection-timer", 600000);
                         try {
-                            while (keepAliveActive()) {
+                            while (disconnect_thread_running && keepAliveActive()) {
                                 if (Helpers.ratelimit("insight-expiry-notice", 5)) {
                                     log("Staying connected thread expires: " + Helpers.dateTimeText(stayConnectedTill));
                                 }
@@ -249,8 +248,13 @@ public class Connector {
                                     //
                                 }
                             }
-                            log("Sending the real delayed disconnect");
-                            get().getServiceConnector().disconnect();
+
+                            if (disconnect_thread_running) {
+                                log("Sending the real delayed disconnect");
+                                get().getServiceConnector().disconnect();
+                            } else {
+                                log("Disconnect thread already terminating");
+                            }
                         } finally {
                             Helpers.releaseWakeLock(wl);
                             disconnect_thread_running = false;
@@ -265,6 +269,39 @@ public class Connector {
 
     private static long percentage(long t, long total) {
         return (long) (Helpers.roundDouble(((double) t * 100) / total, 0));
+    }
+
+    public synchronized void shutdown() {
+        if (instance != null) {
+            log("Attempting to shut down connector");
+            try {
+                disconnect_thread_running = false;
+                try {
+                    instance.serviceConnector.setConnectionCallback(null);
+                } catch (Exception e) {
+                    //
+                }
+                try {
+                    instance.serviceConnector.removeStatusCallback(statusCallback);
+                } catch (Exception e) {
+                    //
+                }
+                try {
+                    instance.serviceConnector.disconnect();
+                } catch (Exception e) {
+                    log("Exception disconnecting: " + e);
+                }
+                try {
+                    instance.serviceConnector.disconnectFromService();
+                } catch (Exception e) {
+                    log("Excpetion disconnecting service: " + e);
+                }
+                instance.serviceConnector = null;
+                instance = null;
+            } catch (Exception e) {
+                log("Exception shutting down: " + e);
+            }
+        }
     }
 
     @SuppressWarnings("AccessStaticViaInstance")
@@ -494,17 +531,24 @@ public class Connector {
 
     @Subscribe
     public void onStatusEvent(final EventFeatureRunning ev) {
-        if (SP.getBoolean("insight_preemptive_connect", true)) {
-            switch (ev.getFeature()) {
-                case WIZARD:
-                    log("Wizard feature detected, preconnecting to pump");
-                    connectToPump(120 * 1000);
-                    break;
-                case MAIN:
-                    log("Main feature detected, preconnecting to pump");
-                    connectToPump(30 * 1000);
-                    break;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected()) {
+                    if (SP.getBoolean("insight_preemptive_connect", true)) {
+                        switch (ev.getFeature()) {
+                            case WIZARD:
+                                log("Wizard feature detected, preconnecting to pump");
+                                connectToPump(120 * 1000);
+                                break;
+                            case MAIN:
+                                log("Main feature detected, preconnecting to pump");
+                                connectToPump(30 * 1000);
+                                break;
+                        }
+                    }
+                }
             }
-        }
+        }).start();
     }
 }
