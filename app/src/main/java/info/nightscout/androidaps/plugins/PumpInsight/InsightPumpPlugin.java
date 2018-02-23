@@ -92,6 +92,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
     private Connector connector;
+    private volatile boolean connector_enabled = false;
     private final TaskRunner.ResultCallback statusResultHandler = new TaskRunner.ResultCallback() {
 
         @Override
@@ -120,7 +121,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     };
 
     private InsightPumpPlugin() {
-        log("InsightPumpPlugin");
+        log("InsightPumpPlugin instantiated");
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions?)
 
@@ -144,12 +145,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.basalMinimumRate = 0.02d;
 
         pumpDescription.isRefillingCapable = true;
-        //pumpDescription.storesCarbInfo = false; // uncomment when PumpDescription updated to include this
+        //pumpDescription.storesCarbInfo = false;
 
-        this.connector = Connector.get();
-        this.connector.init();
-
-        log("back from init");
     }
 
 
@@ -179,6 +176,31 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     private static void pushCallbackEvent(EventInsightPumpCallback e) {
         MainApp.bus().post(e);
+    }
+
+    private void enableConnector() {
+        if (!connector_enabled) {
+            synchronized (this) {
+                if (!connector_enabled) {
+                    log("Instantiating connector");
+                    connector_enabled = true;
+                    this.connector = Connector.get();
+                    this.connector.init();
+                }
+            }
+        }
+    }
+
+    private void disableConnector() {
+        if (connector_enabled) {
+            synchronized (this) {
+                if (connector_enabled) {
+                    log("Shutting down connector");
+                    Connector.get().shutdown();
+                    connector_enabled = false;
+                }
+            }
+        }
     }
 
     @Override
@@ -231,7 +253,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == PUMP) this.fragmentEnabled = fragmentEnabled;
+        if (type == PUMP) {
+            if (fragmentEnabled) {
+                enableConnector();
+            } else {
+                disableConnector();
+            }
+            this.fragmentEnabled = fragmentEnabled;
+        }
     }
 
     @Override
@@ -471,21 +500,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         if (percent_amount > 250) percent_amount = 250;
 
-        // TODO this is experimental and not enabled due to preference option
-        // ignore TBR changes if the setting is enabled and they are not 0% but are +- 30% of where we are now or we've been running is TBR < 15 minutes
-        if ((percent_amount != 0)
-                && (SP.getBoolean("insight_dont_change_active_tbr", false)
-                && MainApp.getConfigBuilder().isTempBasalInProgress())) {
-            final TemporaryBasal temporaryBasalFromHistory = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-            if ((temporaryBasalFromHistory != null) && (temporaryBasalFromHistory.isInProgress())) {
-                // only change if it is +- 30% from where we are now or we have done more than 15 minutes already
-                if ((Math.abs(temporaryBasalFromHistory.percentRate - percent_amount) <= 30)
-                        || (temporaryBasalFromHistory.getRealDuration() < 15)) {
-                    log("Refusing to change TBR due to Insight plugin setting: " + percent_amount + " vs " + temporaryBasalFromHistory.percentRate + " running for: " + temporaryBasalFromHistory.getRealDuration());
-                    return new PumpEnactResult().enacted(false).success(true);
-                }
-            }
-        }
+      
 
         final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
