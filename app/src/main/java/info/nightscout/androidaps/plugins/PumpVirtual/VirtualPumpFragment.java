@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -22,6 +22,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
+import info.nightscout.utils.FabricPrivacy;
 
 public class VirtualPumpFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpFragment.class);
@@ -63,7 +64,7 @@ public class VirtualPumpFragment extends SubscriberFragment {
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;

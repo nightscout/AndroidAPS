@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.TimeListEdit;
@@ -140,7 +140,7 @@ public class LocalProfileFragment extends SubscriberFragment {
             return layout;
         } catch (Exception e) {
             log.error("Unhandled exception: ", e);
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;

@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -34,6 +33,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.androidaps.data.Intervals;
 
@@ -155,7 +155,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
                                     UploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(extendedBolus);
-                                Answers.getInstance().logCustom(new CustomEvent("RemoveExtendedBolus"));
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveExtendedBolus"));
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

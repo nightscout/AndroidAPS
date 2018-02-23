@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 
 
 public class NSProfileFragment extends SubscriberFragment implements AdapterView.OnItemSelectedListener {
@@ -56,7 +56,7 @@ public class NSProfileFragment extends SubscriberFragment implements AdapterView
             updateGUI();
             return layout;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;

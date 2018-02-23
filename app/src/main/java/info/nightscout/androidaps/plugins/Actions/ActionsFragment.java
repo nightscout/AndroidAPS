@@ -9,8 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
+
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SingleClickButton;
 
 /**
@@ -83,7 +83,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -203,13 +203,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             case R.id.actions_extendedbolus_cancel:
                 if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
                     ConfigBuilderPlugin.getCommandQueue().cancelExtended(null);
-                    Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
                 if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                     ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
-                    Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;
             case R.id.actions_settempbasal:
