@@ -500,21 +500,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         if (percent_amount > 250) percent_amount = 250;
 
-        // TODO this is experimental and not enabled due to preference option
-        // ignore TBR changes if the setting is enabled and they are not 0% but are +- 30% of where we are now or we've been running is TBR < 15 minutes
-        if ((percent_amount != 0)
-                && (SP.getBoolean("insight_dont_change_active_tbr", false)
-                && MainApp.getConfigBuilder().isTempBasalInProgress())) {
-            final TemporaryBasal temporaryBasalFromHistory = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-            if ((temporaryBasalFromHistory != null) && (temporaryBasalFromHistory.isInProgress())) {
-                // only change if it is +- 30% from where we are now or we have done more than 15 minutes already
-                if ((Math.abs(temporaryBasalFromHistory.percentRate - percent_amount) <= 30)
-                        || (temporaryBasalFromHistory.getPlannedRemainingMinutes() > 15)) {
-                    log("Refusing to change TBR due to Insight plugin setting: " + percent_amount + " vs " + temporaryBasalFromHistory.percentRate + " running for: " + temporaryBasalFromHistory.getRealDuration());
-                    return new PumpEnactResult().enacted(false).success(true);
-                }
-            }
-        }
+      
 
         final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
