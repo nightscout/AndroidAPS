@@ -412,6 +412,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 bwd.bolus = bolus.getDouble("bolus");
                 bwd.carbs = bolus.getDouble("carbs");
                 bwd.isSMB = bolus.getBoolean("isSMB");
+                bwd.isValid = bolus.getBoolean("isValid");
                 bolusWatchDataList.add(bwd);
             }
         }

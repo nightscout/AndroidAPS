@@ -9,4 +9,5 @@ public class BolusWatchData {
     public double bolus;
     public double carbs;
     public boolean isSMB;
+    public boolean isValid;
 }

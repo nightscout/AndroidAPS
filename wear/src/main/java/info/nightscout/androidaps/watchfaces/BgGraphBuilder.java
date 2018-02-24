@@ -206,14 +206,14 @@ public class BgGraphBuilder {
         List<PointValue> pointValues = new ArrayList<PointValue>();
 
         for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && !bwd.isSMB) {
+            if(bwd.date > start_time && !bwd.isSMB && !bwd.isValid && bwd.bolus > 0) {
                 pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
             }
         }
         Line line = new Line(pointValues);
         line.setColor(bolusColor);
         line.setHasLines(false);
-        line.setPointRadius(pointSize);
+        line.setPointRadius(pointSize*2);
         line.setHasPoints(true);
         return line;
     }
@@ -223,7 +223,7 @@ public class BgGraphBuilder {
         List<PointValue> pointValues = new ArrayList<PointValue>();
 
         for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && bwd.isSMB) {
+            if(bwd.date > start_time && bwd.isSMB && !bwd.isValid && bwd.bolus > 0) {
                 pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
             }
         }

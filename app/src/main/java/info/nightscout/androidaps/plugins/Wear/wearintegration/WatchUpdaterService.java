@@ -459,7 +459,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
         for (Treatment treatment:treatments) {
             if(treatment.date > startTimeWindow){
-                boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB));
+                boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
             }
 
         }
@@ -503,12 +503,13 @@ public class WatchUpdaterService extends WearableListenerService implements
         return dm;
     }
 
-    private DataMap treatmentMap(long date, double bolus, double carbs, boolean isSMB) {
+    private DataMap treatmentMap(long date, double bolus, double carbs, boolean isSMB, boolean isValid) {
         DataMap dm = new DataMap();
         dm.putLong("date", date);
         dm.putDouble("bolus", bolus);
         dm.putDouble("carbs", carbs);
         dm.putBoolean("isSMB", isSMB);
+        dm.putBoolean("isValid", isValid);
         return dm;
     }
 
