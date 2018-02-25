@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -632,8 +633,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     CalibrationDialog calibrationDialog = new CalibrationDialog();
                     calibrationDialog.show(manager, "CalibrationDialog");
                 } else if (g5) {
-                    Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
-                    startActivity(i);
+                    try {
+                        Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
+                        startActivity(i);
+                    } catch (ActivityNotFoundException e) {
+                        ToastUtils.showToastInUiThread(getActivity(), MainApp.gs(R.string.g5appnotdetected));
+                    }
                 }
                 break;
             case R.id.overview_treatmentbutton:
