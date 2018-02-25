@@ -97,6 +97,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         pumpDescription.basalMinimumRate = 0.01d;
 
         pumpDescription.isRefillingCapable = false;
+
+        pumpDescription.storesCarbInfo = false;
     }
 
     @Override
