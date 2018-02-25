@@ -606,11 +606,40 @@
                     android:layout_height="fill_parent"
                     android:layout_marginRight="-4dp"
                     android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_bolus"
+                    android:drawableTop="@drawable/icon_insulin_carbs"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/overview_treatment_label"
                     android:textColor="@color/colorTreatmentButton"
+                    android:textSize="10sp" />
+
+                <info.nightscout.utils.SingleClickButton
+                    android:id="@+id/overview_insulinbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_bolus"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/overview_insulin_label"
+                    android:textColor="@color/colorInsulinButton"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.utils.SingleClickButton
+                    android:id="@+id/overview_carbsbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_cp_bolus_carbs"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/overview_carbs_label"
+                    android:textColor="@color/colorCarbsButton"
                     android:textSize="10sp" />
 
                 <info.nightscout.utils.SingleClickButton
@@ -643,35 +672,6 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-
-                <info.nightscout.utils.SingleClickButton
-                    android:id="@+id/overview_insulinbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_bolus"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_insulin_label"
-                    android:textColor="@color/colorInsulinButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <info.nightscout.utils.SingleClickButton
-                    android:id="@+id/overview_carbsbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_cp_bolus_carbs"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_carbs_label"
-                    android:textColor="@color/colorCarbsButton"
-                    android:textSize="10sp" />
 
             </LinearLayout>
 
