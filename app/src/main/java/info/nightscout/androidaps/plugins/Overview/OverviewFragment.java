@@ -34,7 +34,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
@@ -106,21 +105,20 @@ import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SingleClickButton;
 import info.nightscout.utils.ToastUtils;
-
-import static java.util.Objects.requireNonNull;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
@@ -263,9 +261,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
             iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
 
-            treatmentButton = requireNonNull(view.findViewById(R.id.overview_treatmentbutton));
+            treatmentButton = (SingleClickButton) view.findViewById(R.id.overview_treatmentbutton);
             treatmentButton.setOnClickListener(this);
-            wizardButton = requireNonNull(view.findViewById(R.id.overview_wizardbutton));
+            wizardButton = (SingleClickButton) view.findViewById(R.id.overview_wizardbutton);
             wizardButton.setOnClickListener(this);
             insulinButton = (SingleClickButton) view.findViewById(R.id.overview_insulinbutton);
             if (insulinButton != null)
@@ -276,7 +274,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             acceptTempButton = (SingleClickButton) view.findViewById(R.id.overview_accepttempbutton);
             if (acceptTempButton != null)
                 acceptTempButton.setOnClickListener(this);
-            quickWizardButton = requireNonNull(view.findViewById(R.id.overview_quickwizardbutton));
+            quickWizardButton = (SingleClickButton) view.findViewById(R.id.overview_quickwizardbutton);
             quickWizardButton.setOnClickListener(this);
             quickWizardButton.setOnLongClickListener(this);
             calibrationButton = (SingleClickButton) view.findViewById(R.id.overview_calibrationbutton);
@@ -644,8 +642,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 wizardDialog.show(manager, "WizardDialog");
                 break;
             case R.id.overview_calibrationbutton:
-                CalibrationDialog calibrationDialog = new CalibrationDialog();
-                calibrationDialog.show(manager, "CalibrationDialog");
+                boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+                boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+                if (xdrip) {
+                    CalibrationDialog calibrationDialog = new CalibrationDialog();
+                    calibrationDialog.show(manager, "CalibrationDialog");
+                } else if (g5) {
+                    try {
+                        Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
+                        startActivity(i);
+                    } catch (ActivityNotFoundException e) {
+                        ToastUtils.showToastInUiThread(getActivity(), MainApp.gs(R.string.g5appnotdetected));
+                    }
+                }
                 break;
             case R.id.overview_cgmbutton:
                 openXdrip();
@@ -1155,9 +1164,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Calibration & CGM buttons ****
         boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
         boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
-            if (xDripIsBgSource && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {
+            if ((xDripIsBgSource || g5IsBgSource) && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {
                 calibrationButton.setVisibility(View.VISIBLE);
             } else {
                 calibrationButton.setVisibility(View.GONE);
