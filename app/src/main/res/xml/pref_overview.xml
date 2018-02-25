@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/overview">
         <PreferenceScreen android:title="@string/overview_buttons_selection">
             <SwitchPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="@string/key_show_treatment_button"
                 android:title="Treatments" />
             <SwitchPreference
@@ -13,7 +13,7 @@
                 android:title="@string/overview_calculator_label"/>
 
             <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_show_insulin_button"
                 android:title="Insulin" />
             <com.andreabaccega.widget.ValidatingEditTextPreference
@@ -57,7 +57,7 @@
                 android:key="@string/key_insulin_button_increment_3"/>
 
             <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_show_carbs_button"
                 android:title="Carbs" />
             <com.andreabaccega.widget.ValidatingEditTextPreference

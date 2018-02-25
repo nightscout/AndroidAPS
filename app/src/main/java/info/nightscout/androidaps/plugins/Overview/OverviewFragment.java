@@ -1287,7 +1287,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Various treatment buttons ****
         if (carbsButton != null) {
-            if (SP.getBoolean(R.string.key_show_carbs_button, false)
+            if (SP.getBoolean(R.string.key_show_carbs_button, true)
             && !ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
                     (pump.isInitialized() && !pump.isSuspended())) {
                 carbsButton.setVisibility(View.VISIBLE);
@@ -1305,14 +1305,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
             }
             if (wizardButton != null) {
-                if (SP.getBoolean(R.string.key_show_wizard_button, false)) {
+                if (SP.getBoolean(R.string.key_show_wizard_button, true)) {
                     wizardButton.setVisibility(View.VISIBLE);
                 } else {
                     wizardButton.setVisibility(View.GONE);
                 }
             }
             if (insulinButton != null) {
-                if (SP.getBoolean(R.string.key_show_insulin_button, false)) {
+                if (SP.getBoolean(R.string.key_show_insulin_button, true)) {
                     insulinButton.setVisibility(View.VISIBLE);
                 } else {
                     insulinButton.setVisibility(View.GONE);
