@@ -122,7 +122,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newinsulin_amount);
 
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.0"), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
 
         dateButton = (TextView) view.findViewById(R.id.newinsulin_eventdate);
         timeButton = (TextView) view.findViewById(R.id.newinsulin_eventtime);
