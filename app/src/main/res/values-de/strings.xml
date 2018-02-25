@@ -75,7 +75,7 @@
     <string name="openapsma_inputparameters_label">Eingabeparameter</string>
     <string name="openapsma_iobdata_label">IOB-Daten</string>
     <string name="openloop">Open Loop</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
     <string name="overview_tempbasal_button">TBR</string>
     <string name="rate">Rate</string>

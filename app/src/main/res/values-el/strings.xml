@@ -113,7 +113,7 @@
     <string name="overview_newtempbasal_basalpercent">Αξία Βασικού[%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = τρέχον)</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ.Ρυθμ:</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
     <string name="constraintapllied">Εφαρμοσμένοι Περιορισμοί!</string>
     <string name="confirmation">Αποδοχή</string>

@@ -111,7 +111,7 @@
     <string name="overview_newtempbasal_basalpercent">기초주입 값 [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시기초주입 적용:</string>
-    <string name="overview_bolus_label">식사주입</string>
+    <string name="overview_treatment_label">식사주입</string>
     <string name="overview_calculator_label">계산기</string>
     <string name="constraintapllied">제한!</string>
     <string name="confirmation">확인</string>

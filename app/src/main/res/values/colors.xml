@@ -41,6 +41,8 @@
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>
+    <color name="colorInsulinButton">#67dfe8</color>
+    <color name="colorCarbsButton">#ffae01</color>
     <color name="colorCalibrationButton">#e93057</color>
     <color name="colorCalculatorButton">#67e86a</color>
     <color name="colorQuickWizardButton">#ffae01</color>

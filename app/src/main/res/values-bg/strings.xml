@@ -111,7 +111,7 @@
     <string name="overview_newtempbasal_basalpercent">Стойност на базал [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = текущ)</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
-    <string name="overview_bolus_label">Болус</string>
+    <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
     <string name="constraintapllied">Приложено ограничение!</string>
     <string name="confirmation">Потвърждение</string>

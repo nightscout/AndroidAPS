@@ -117,7 +117,7 @@
     <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="confirmation">Confirmation</string>
@@ -936,6 +936,27 @@
     <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
     <string name="let_temp_basal_run">Let current temp basal run</string>
     <string name="mute">Mute</string>
+    <string name="overview_insulin_label">Insulin</string>
+    <string name="overview_carbs_label">Carbs</string>
+    <string name="overview_buttons_selection">Buttons</string>
+    <string name="key_show_calibration_button">show_calibration_button</string>
+    <string name="key_show_cgm_button">show_cgm_button</string>
+    <string name="key_show_carbs_button">show_carbs_button</string>
+    <string name="key_show_wizard_button">show_wizard_button</string>
+    <string name="key_show_insulin_button">show_insulin_button</string>
+    <string name="key_show_treatment_button">show_treatment_button</string>
+    <string name="show_calibration_button_summary">Sends a calibration to xDrip+</string>
+    <string name="show_cgm_button_summary">Opens xDrip+, back buttons returns to AAPS</string>
+    <string name="key_insulin_button_increment_1">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2">insulin_button_increment_2</string>
+    <string name="key_insulin_button_increment_3">insulin_button_increment_3</string>
+    <string name="key_carbs_button_increment_1">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2">carbs_button_increment_2</string>
+    <string name="key_carbs_button_increment_3">carbs_button_increment_3</string>
+    <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
+    <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
+    <string name="erro_starting_xdrip">Could not launch xDrip.  Make sure only it is installed.</string>
+    <string name="overview_cgm">CGM</string>
     <string name="nav_historybrowser">History browser</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>

@@ -366,7 +366,7 @@
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="othersettings_title">другое</string>
     <string name="overview">начало</string>
-    <string name="overview_bolus_label">болюс</string>
+    <string name="overview_treatment_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2fU е инс</string>
     <string name="overview_bolusprogress_stop">стоп</string>
