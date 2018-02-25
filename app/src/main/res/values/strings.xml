@@ -945,7 +945,7 @@
     <string name="key_show_wizard_button">show_wizard_button</string>
     <string name="key_show_insulin_button">show_insulin_button</string>
     <string name="key_show_treatment_button">show_treatment_button</string>
-    <string name="show_calibration_button_summary">Sends a calibration to xDrip+</string>
+    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open G5 calibration dialog</string>
     <string name="show_cgm_button_summary">Opens xDrip+, back buttons returns to AAPS</string>
     <string name="key_insulin_button_increment_1">insulin_button_increment_1</string>
     <string name="key_insulin_button_increment_2">insulin_button_increment_2</string>
@@ -955,7 +955,7 @@
     <string name="key_carbs_button_increment_3">carbs_button_increment_3</string>
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
-    <string name="erro_starting_xdrip">Could not launch xDrip.  Make sure only it is installed.</string>
+    <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
     <string name="overview_cgm">CGM</string>
     <string name="nav_historybrowser">History browser</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>

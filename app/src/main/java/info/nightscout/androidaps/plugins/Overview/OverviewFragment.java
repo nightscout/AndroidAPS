@@ -629,6 +629,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
+        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        String units = MainApp.getConfigBuilder().getProfileUnits();
+
         FragmentManager manager = getFragmentManager();
         switch (v.getId()) {
             case R.id.overview_accepttempbutton:
@@ -642,8 +646,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 wizardDialog.show(manager, "WizardDialog");
                 break;
             case R.id.overview_calibrationbutton:
-                boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
-                boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
                 if (xdrip) {
                     CalibrationDialog calibrationDialog = new CalibrationDialog();
                     calibrationDialog.show(manager, "CalibrationDialog");
@@ -657,7 +659,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
                 break;
             case R.id.overview_cgmbutton:
-                openXdrip();
+                if (xdrip)
+                    openCgmApp("com.eveningoutpost.dexdrip");
+                else if (g5 && units.equals(Constants.MGDL))
+                    openCgmApp("com.dexcom.cgm.region5.mgdl");
+                else if (g5 && units.equals(Constants.MMOL))
+                    openCgmApp("com.dexcom.cgm.region5.mmol");
                 break;
             case R.id.overview_treatmentbutton:
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
@@ -695,10 +702,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     }
 
-    public boolean openXdrip() {
+    public boolean openCgmApp(String packageName) {
         PackageManager packageManager = getContext().getPackageManager();
         try {
-            Intent intent = packageManager.getLaunchIntentForPackage("com.eveningoutpost.dexdrip");
+            Intent intent = packageManager.getLaunchIntentForPackage(packageName);
             if (intent == null) {
                 throw new ActivityNotFoundException();
             }
@@ -707,7 +714,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } catch (ActivityNotFoundException e) {
             new AlertDialog.Builder(getContext())
-                    .setMessage(R.string.erro_starting_xdrip)
+                    .setMessage(R.string.error_starting_cgm)
                     .setPositiveButton("OK", null)
                     .show();
             return false;
@@ -1174,7 +1181,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
         if (cgmButton != null) {
-            if (xDripIsBgSource && bgAvailable && SP.getBoolean(R.string.key_show_cgm_button, false)) {
+            if (xDripIsBgSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
+                cgmButton.setVisibility(View.VISIBLE);
+            } else if (g5IsBgSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
                 cgmButton.setVisibility(View.VISIBLE);
             } else {
                 cgmButton.setVisibility(View.GONE);
