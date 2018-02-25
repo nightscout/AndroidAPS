@@ -92,7 +92,7 @@ public class OverviewPlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return false;
+        return true;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class OverviewPlugin implements PluginBase {
 
     @Override
     public int getPreferencesId() {
-        return -1;
+        return R.xml.pref_overview;
     }
 
     @Override
