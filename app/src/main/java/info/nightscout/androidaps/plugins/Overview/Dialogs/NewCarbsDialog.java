@@ -70,7 +70,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private static final double FAV1_DEFAULT = 5;
     private static final double FAV2_DEFAULT = 10;
     private static final double FAV3_DEFAULT = 20;
-    final double tempTargetValue = 140d;
     private CheckBox suspendLoopCheckbox;
     private CheckBox startActivityTTCheckbox;
 
