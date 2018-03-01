@@ -249,14 +249,14 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
             if(currentProfile.equals(null))
                 return;
-            if(currentProfile.getUnits().equals("mmol")) {
-                tt = prefTT > 0  ? prefTT*18 : 80d;
+            if(currentProfile.getUnits().equals(Constants.MMOL)) {
+                tt = prefTT > 0  ? Profile.toMgdl(prefTT, Constants.MGDL) : 80d;
             } else
             tt = prefTT > 0  ? prefTT : 80d;
             final double finalTT = tt;
             if (startESMCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals("mmol")){
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + tt/18 + "mmol for " + ((int) ttDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MMOL) + "mmol for " + ((int) ttDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>";
             }
