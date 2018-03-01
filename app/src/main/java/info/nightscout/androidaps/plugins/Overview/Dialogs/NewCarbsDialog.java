@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -71,8 +72,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private static final double FAV2_DEFAULT = 10;
     private static final double FAV3_DEFAULT = 20;
     private CheckBox suspendLoopCheckbox;
-    private CheckBox startActivityTTCheckbox;
-    private CheckBox ESMCheckbox;
+    private RadioButton startActivityTTCheckbox;
+    private RadioButton ESMCheckbox;
 
     private Integer maxCarbs;
 
@@ -212,6 +213,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         + SP.getDouble(MainApp.gs(R.string.key_carbs_button_increment_3), FAV3_DEFAULT));
                 validateInputs();
                 break;
+
         }
     }
 
@@ -246,7 +248,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             double tt = 140d;
             double esTT = 90d;
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
-            if(currentProfile.equals(null))
+            if(currentProfile == null)
                 return;
             if(currentProfile.getUnits().equals(Constants.MMOL)) {
                 esTT = eatingSoonTT > 0  ? eatingSoonTT*Constants.MMOLL_TO_MGDL : 90d;
@@ -257,12 +259,15 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
 
 
             if (startActivityTTCheckbox.isChecked() ||(startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked()) ) {
+                ESMCheckbox.setChecked(true);
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt,Constants.MGDL) + " mmol/l for " + ((int) ttDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + " mg/dl for " + ((int) ttDuration) + " min </font>";
 
-            }else if (ESMCheckbox.isChecked()) {
+            }
+            if (ESMCheckbox.isChecked()) {
+                startActivityTTCheckbox.setChecked(true);
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esDuration) + " min </font>";
                 } else

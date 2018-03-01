@@ -247,12 +247,12 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             double prefTT = SP.getDouble(R.string.key_eatingsoon_target, 80d);
             double tt = prefTT > 0 ? prefTT : 80d;
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
-            if(currentProfile.equals(null))
+            if(currentProfile == null)
                 return;
-            if(currentProfile.getUnits().equals(Constants.MMOL)) {
+            if(currentProfile.getUnits().equals(Constants.MMOL))
                 tt = prefTT > 0  ? Profile.toMgdl(prefTT, Constants.MGDL) : 80d;
-            } else
-            tt = prefTT > 0  ? prefTT : 80d;
+            else
+                tt = prefTT > 0  ? prefTT : 80d;
             final double finalTT = tt;
             if (startESMCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals("mmol")){
