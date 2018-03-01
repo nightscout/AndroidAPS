@@ -246,8 +246,19 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             double ttDuration = prefTTDuration > 0 ? prefTTDuration : 45d;
             double prefTT = SP.getDouble(R.string.key_eatingsoon_target, 80d);
             double tt = prefTT > 0 ? prefTT : 80d;
+            Profile currentProfile = MainApp.getConfigBuilder().getProfile();
+            if(currentProfile.equals(null))
+                return;
+            if(currentProfile.getUnits().equals("mmol")) {
+                tt = prefTT > 0  ? prefTT*18 : 80d;
+            } else
+            tt = prefTT > 0  ? prefTT : 80d;
+            final double finalTT = tt;
             if (startESMCheckbox.isChecked()) {
-                confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>";
+                if(currentProfile.getUnits().equals("mmol")){
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + tt/18 + "mmol for " + ((int) ttDuration) + " min </font>";
+                } else
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>";
             }
 
             if (!initialEventTime.equals(eventTime)) {
@@ -277,8 +288,8 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                         tempTarget.durationInMinutes = (int) ttDuration;
                         tempTarget.reason = "Eating soon";
                         tempTarget.source = Source.USER;
-                        tempTarget.low = (int) tt;
-                        tempTarget.high = (int) tt;
+                        tempTarget.low = (int) finalTT;
+                        tempTarget.high = (int) finalTT;
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     }
 
