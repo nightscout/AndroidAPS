@@ -40,6 +40,13 @@
                 android:text="Start activity TT"/>
 
             <CheckBox
+                android:id="@+id/carbs_eating_soon_tt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:text="Set Eating soon TT"/>
+
+            <CheckBox
                 android:id="@+id/newcarbs_suspend_loop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
