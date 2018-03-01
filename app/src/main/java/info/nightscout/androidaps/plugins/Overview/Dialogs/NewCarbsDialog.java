@@ -248,23 +248,23 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
             if(currentProfile.equals(null))
                 return;
-            if(currentProfile.getUnits().equals("mmol")) {
-                esTT = eatingSoonTT > 0  ? eatingSoonTT*18 : 90d;
-                tt = prefTT > 0  ? prefTT*18 : 140d;
+            if(currentProfile.getUnits().equals(Constants.MMOL)) {
+                esTT = eatingSoonTT > 0  ? eatingSoonTT*Constants.MMOLL_TO_MGDL : 90d;
+                tt = prefTT > 0  ? prefTT*Constants.MMOLL_TO_MGDL : 140d;
             } else
                 esTT = eatingSoonTT > 0  ? eatingSoonTT : 90d;
                 tt = prefTT > 0  ? prefTT : 140d;
 
 
             if (startActivityTTCheckbox.isChecked() ||(startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked()) ) {
-                if(currentProfile.getUnits().equals("mmol")) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + tt/18 + " mmol/l for " + ((int) ttDuration) + " min </font>";
+                if(currentProfile.getUnits().equals(Constants.MMOL)) {
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt,Constants.MGDL) + " mmol/l for " + ((int) ttDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + " mg/dl for " + ((int) ttDuration) + " min </font>";
 
             }else if (ESMCheckbox.isChecked()) {
-                if(currentProfile.getUnits().equals("mmol")) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + esTT/18 + " mmol/l for " + ((int) esDuration) + " min </font>";
+                if(currentProfile.getUnits().equals(Constants.MMOL)) {
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esDuration) + " min </font>";
 
