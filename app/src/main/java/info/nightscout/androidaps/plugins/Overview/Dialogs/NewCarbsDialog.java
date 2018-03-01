@@ -72,6 +72,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private static final double FAV3_DEFAULT = 20;
     private CheckBox suspendLoopCheckbox;
     private CheckBox startActivityTTCheckbox;
+    private CheckBox ESMCheckbox;
 
     private Integer maxCarbs;
 
@@ -127,6 +128,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
 
         startActivityTTCheckbox = view.findViewById(R.id.newcarbs_activity_tt);
+        ESMCheckbox = view.findViewById(R.id.carbs_eating_soon_tt);
 
         dateButton = view.findViewById(R.id.newcarbs_eventdate);
         timeButton = view.findViewById(R.id.newcarb_eventtime);
@@ -235,26 +237,40 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             }
 
             double prefTTDuration = SP.getDouble(R.string.key_activity_duration, 90d);
+            double eatingSoonTTDuration = SP.getDouble(R.string.key_eatingsoon_duration, 45d);
+            double eatingSoonTT = SP.getDouble(R.string.key_eatingsoon_target, 90d);
             double ttDuration = prefTTDuration > 0 ? prefTTDuration : 90d;
+            final double esDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : 45d;
             double prefTT = SP.getDouble(R.string.key_activity_target, 140d);
+
             double tt = 140d;
+            double esTT = 90d;
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
             if(currentProfile.equals(null))
                 return;
             if(currentProfile.getUnits().equals("mmol")) {
+                esTT = eatingSoonTT > 0  ? eatingSoonTT*18 : 90d;
                 tt = prefTT > 0  ? prefTT*18 : 140d;
             } else
+                esTT = eatingSoonTT > 0  ? eatingSoonTT : 90d;
                 tt = prefTT > 0  ? prefTT : 140d;
 
-            final double finalTT = tt;
-            if (startActivityTTCheckbox.isChecked()) {
+
+            if (startActivityTTCheckbox.isChecked() ||(startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked()) ) {
                 if(currentProfile.getUnits().equals("mmol")) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + finalTT + " mmol/l for " + ((int) ttDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + tt/18 + " mmol/l for " + ((int) ttDuration) + " min </font>";
                 } else
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) finalTT) + " mg/dl for " + ((int) ttDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + " mg/dl for " + ((int) ttDuration) + " min </font>";
+
+            }else if (ESMCheckbox.isChecked()) {
+                if(currentProfile.getUnits().equals("mmol")) {
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + esTT/18 + " mmol/l for " + ((int) esDuration) + " min </font>";
+                } else
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esDuration) + " min </font>";
 
             }
-
+            final double finalTT = tt;
+            final double finalEsTT = esTT;
             if (StringUtils.isNoneEmpty(food)) {
                 confirmMessage += "<br/>" + "Food: " + food;
             }
@@ -293,7 +309,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         });
                     }
 
-                    if (startActivityTTCheckbox.isChecked()) {
+                    if (startActivityTTCheckbox.isChecked() || (startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked())) {
                         TempTarget tempTarget = new TempTarget();
                         tempTarget.date = System.currentTimeMillis();
                         tempTarget.durationInMinutes = (int) ttDuration;
@@ -301,6 +317,15 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         tempTarget.source = Source.USER;
                         tempTarget.low = (double) finalTT;
                         tempTarget.high = (double) finalTT;
+                        MainApp.getDbHelper().createOrUpdate(tempTarget);
+                    } else if (ESMCheckbox.isChecked()) {
+                        TempTarget tempTarget = new TempTarget();
+                        tempTarget.date = System.currentTimeMillis();
+                        tempTarget.durationInMinutes = (int) esDuration;
+                        tempTarget.reason = "Eating soon";
+                        tempTarget.source = Source.USER;
+                        tempTarget.low = (double) finalEsTT;
+                        tempTarget.high = (double) finalEsTT;
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     }
 
