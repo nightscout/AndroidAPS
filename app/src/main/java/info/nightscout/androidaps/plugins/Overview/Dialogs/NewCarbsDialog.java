@@ -278,75 +278,80 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             if (!initialEventTime.equals(eventTime)) {
                 confirmMessage += "<br/> Time: " + DateUtil.dateAndTimeString(eventTime);
             }
+            if(confirmMessage.length() > 0) {
 
-            final int finalCarbsAfterConstraints = carbsAfterConstraints;
+                final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
-            final Context context = getContext();
-            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final Context context = getContext();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-            builder.setTitle(this.getContext().getString(R.string.confirmation));
-            if (confirmMessage.startsWith("<br/>"))
-                confirmMessage = confirmMessage.substring("<br/>".length());
-            builder.setMessage(Html.fromHtml(confirmMessage));
-            builder.setPositiveButton(getString(R.string.ok), (dialog, id) -> {
-                synchronized (builder) {
-                    if (accepted) {
-                        log.debug("guarding: already accepted");
-                        return;
-                    }
-                    accepted = true;
+                builder.setTitle(this.getContext().getString(R.string.confirmation));
+                if (confirmMessage.startsWith("<br/>"))
+                    confirmMessage = confirmMessage.substring("<br/>".length());
 
-                    if (suspendLoopCheckbox.isChecked()) {
-                        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                        activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
-                        ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
-                            @Override
-                            public void run() {
-                                if (!result.success) {
-                                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                builder.setMessage(Html.fromHtml(confirmMessage));
+                builder.setPositiveButton(getString(R.string.ok), (dialog, id) -> {
+                    synchronized (builder) {
+                        if (accepted) {
+                            log.debug("guarding: already accepted");
+                            return;
+                        }
+                        accepted = true;
+
+                        if (suspendLoopCheckbox.isChecked()) {
+                            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                            activeloop.suspendTo(System.currentTimeMillis() + 30L * 60 * 1000);
+                            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                                @Override
+                                public void run() {
+                                    if (!result.success) {
+                                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                    }
                                 }
-                            }
-                        });
-                    }
+                            });
+                        }
 
-                    if (startActivityTTCheckbox.isChecked() || (startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked())) {
-                        TempTarget tempTarget = new TempTarget();
-                        tempTarget.date = System.currentTimeMillis();
-                        tempTarget.durationInMinutes = (int) ttDuration;
-                        tempTarget.reason = "Activity";
-                        tempTarget.source = Source.USER;
-                        tempTarget.low = (double) finalTT;
-                        tempTarget.high = (double) finalTT;
-                        MainApp.getDbHelper().createOrUpdate(tempTarget);
-                    } else if (ESMCheckbox.isChecked()) {
-                        TempTarget tempTarget = new TempTarget();
-                        tempTarget.date = System.currentTimeMillis();
-                        tempTarget.durationInMinutes = (int) esDuration;
-                        tempTarget.reason = "Eating soon";
-                        tempTarget.source = Source.USER;
-                        tempTarget.low = (double) finalEsTT;
-                        tempTarget.high = (double) finalEsTT;
-                        MainApp.getDbHelper().createOrUpdate(tempTarget);
-                    }
+                        if (startActivityTTCheckbox.isChecked() || (startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked())) {
+                            TempTarget tempTarget = new TempTarget();
+                            tempTarget.date = System.currentTimeMillis();
+                            tempTarget.durationInMinutes = (int) ttDuration;
+                            tempTarget.reason = "Activity";
+                            tempTarget.source = Source.USER;
+                            tempTarget.low = (double) finalTT;
+                            tempTarget.high = (double) finalTT;
+                            MainApp.getDbHelper().createOrUpdate(tempTarget);
+                        } else if (ESMCheckbox.isChecked()) {
+                            TempTarget tempTarget = new TempTarget();
+                            tempTarget.date = System.currentTimeMillis();
+                            tempTarget.durationInMinutes = (int) esDuration;
+                            tempTarget.reason = "Eating soon";
+                            tempTarget.source = Source.USER;
+                            tempTarget.low = (double) finalEsTT;
+                            tempTarget.high = (double) finalEsTT;
+                            MainApp.getDbHelper().createOrUpdate(tempTarget);
+                        }
 
-                    if (finalCarbsAfterConstraints > 0 || food != null) {
-                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                        detailedBolusInfo.date = eventTime.getTime();
-                        detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
-                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                        if (finalCarbsAfterConstraints > 0 || food != null) {
+                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                            detailedBolusInfo.date = eventTime.getTime();
+                            detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
+                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
 //                        detailedBolusInfo.food = food;
-                        detailedBolusInfo.context = context;
-                        detailedBolusInfo.source = Source.USER;
-                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                            detailedBolusInfo.context = context;
+                            detailedBolusInfo.source = Source.USER;
+                            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                        }
                     }
-                }
-            });
-            builder.setNegativeButton(getString(R.string.cancel), null);
-            builder.show();
-            dismiss();
+                });
+                builder.setNegativeButton(getString(R.string.cancel), null);
+                builder.show();
+                dismiss();
+            } else
+                dismiss();
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
+
     }
 
     @Override
