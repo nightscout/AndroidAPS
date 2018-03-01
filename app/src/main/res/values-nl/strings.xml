@@ -230,7 +230,6 @@
     <string name="icmissing">KH ratio ontbreekt in profieel. Standaard waarde toegepast</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="initializing">Initialisering</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="danar_history_bolus">Bulossen</string>
     <string name="danar_history_carbohydrates">Koolhydraten</string>
     <string name="danar_history_errors">Storing</string>
@@ -735,8 +734,7 @@
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
 	<string name="combo_no_pump_connection">Geen verbinding</string><string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
-	<string name="combo_last_bolus">%.1f E (%s, %s)</string>
-	<string name="combo_pump_action_initializing">Initialiseren</string>
+    <string name="combo_pump_action_initializing">Initialiseren</string>
 	<string name="combo_pump_state_disconnected">Verbinding verbroken</string>
 	<string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
 	<string name="combo_warning">Waarschuwing</string>

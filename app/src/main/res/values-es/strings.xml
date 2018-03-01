@@ -436,22 +436,14 @@
     <string name="advancedsettings_title">Ajustes avancados</string>
     <string name="danar_model" formatted="false">Modelo: %02X Protocolo: %02X Codigo: %02X</string>
     <string name="profile">Perfiles</string>
-    <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">"Valor por defecte: 3 Esto es valor de seguridad establecido pos OpenAPS. Limita tu base al máximo de x3 de tu base máxima. No necesitas cambiar esto, pero debes tener en cuenta, que esto se esta discutiento sobre „3 x max diario; 4x actual“ pro razones de seguridad. "</string>
-    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">"Ajuste pro defecto: 4 Esto es la otra mitad de los ajustes de seguridad de OpenAPS y la otra mitad de \"3x max diario, 4x actual\". Esto significa, que tu base no puede ser mas alta que el numero que multiplica tu base. Esto es para evitar que las personas se encuentren en situaciones peligrosas por aumentar mucho la base sin entender el algoritmo del sistema. El ajuste por defecto es x4. La mayoría de las personas nunca tendra que cambiar estos ajustes, si no debe modificar otros ajustes en la terapia. "</string>
-    <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">"Ajuste por defecto: 1.2\nEsto es un multilicador para autosens (y pronto autotune) para poner un 20% limite máximo a la cota de autosens ratio, la que determina cuantos ajustes autosens puede hacer a la base, a cuanto puede ajustar ISF y a cuanto puede bajar el objective de glucosa.  "</string>
-    <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">Ajuste pro defecto: 0.7\nEl otro lade de limitaciones de seguridad de autosens, limitando a cuanto puede bajar la base y a cuanto puede subir ISF y BG objectivos.</string>
-    <string name="openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets_summary">Ajuste pro defcto: true\nEsto se usa para permitir autosens a ajustar objectivos BG en addicion a ISF y bases.</string>
-    <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Ajuste pro defecto: 2 \nDormir bolo es iniciado después de proveder un bolo para comida, así el loop no interactuará con low temps cuando acabas de comer. El ajuste pro defecto es 2; quiere decir con el DIA de 3 h el bolo será dormido por fases por 1.5 h (3DIA/2).</string>
-    <string name="openapsama_min_5m_carbimpact" translatable="false">5_min_carb_impact</string>
     <string name="openapsama_min_5m_carbimpact_summary">"Ajustes pro defecto: 3.0\nEsto es un ajuste pro defecto para la absorcion de carbohidratos pro 5 minutos. Por defecto se espera 3mg/dl/5min. Esto afecta la velocidad de reduccion de COB y cuanta absorcion se usa para calcular el BG futuro previsto, si la glucosa diminua mas de lo previsto o aumenta mas de lo previsto. "</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">"Atención!\nNormalment no tienes que editar los valores a continuacion. Por favor PINCHA AQUI y LEE el texto y PROCURA ENTENDER antes de cambiar alguno de los valores. "</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="smscommunicator_invalidphonennumber">numero de telefonp incorrecto</string>
     <string name="copy_to_clipboard">Copiar al Clipboard</string>
     <string name="copied_to_clipboard">Copiado al clipboard</string>
@@ -627,8 +619,6 @@
     <string name="valuesnotstored">Valores no guardados!</string>
     <string name="wear_overviewnotifications">Resumen avisos</string>
     <string name="wear_overviewnotifications_summary">Mandar resumen de avisos como avisos de confirmacion por reloj.</string>
-    <string name="combopump" translatable="false">Accu-Chek Combo</string>
-    <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="ns_localbroadcasts">Activar mensajes a otras aplicaciones (como xDrip).</string>
     <string name="ns_localbroadcasts_title">Activar mensajes locales.</string>
     <string name="careportal_activity_label">ACTIVITY Y FEEDBACK</string>
@@ -739,7 +729,6 @@
     <string name="combo_pump_activity_label">Actividad</string>
     <string name="combo_no_pump_connection" formatted="false">Ninguna coneccnion por %d min</string>
     <string name="combo_tbr_remaining" formatted="false">%d%% (%d min restan)</string>
-    <string name="combo_last_bolus" formatted="false">%.1f U (%s, %s)</string>
     <string name="combo_pump_action_initializing">Iniciando</string>
     <string name="combo_pump_state_disconnected">Desconectado</string>
     <string name="combo_pump_state_suspended_due_to_error">Apagado por error</string>
