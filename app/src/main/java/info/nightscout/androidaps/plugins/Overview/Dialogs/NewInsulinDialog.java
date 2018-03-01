@@ -256,7 +256,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             final double finalTT = tt;
             if (startESMCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals("mmol")){
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MMOL) + "mmol for " + ((int) ttDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MGDL) + " mmol for " + ((int) ttDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>";
             }
