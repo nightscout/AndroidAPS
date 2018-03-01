@@ -743,8 +743,6 @@
     <string name="combo_pump_state_running">En cours d\'exécution</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
-    <string name="key_use_smb">utiliser-smb</string>
-    <string name="key_use_uam">utiliser-uam</string>
     <string name="enableuam">Activer UAM</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>

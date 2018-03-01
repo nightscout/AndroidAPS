@@ -684,8 +684,8 @@
     <string name="valuesnotstored">Values not stored!</string>
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
-    <string name="combopump" translatable="false">Accu-Chek Combo</string>
-    <string name="combopump_shortname" translatable="false">COMBO</string>
+    <string name="combopump">Accu-Chek Combo</string>
+    <string name="combopump_shortname">COMBO</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
@@ -696,8 +696,8 @@
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
-    <string name="key_use_smb">use_smb</string>
-    <string name="key_use_uam">use_uam</string>
+    <string name="key_use_smb" translatable="false">use_smb</string>
+    <string name="key_use_uam" translatable="false">use_uam</string>
     <string name="enableuam">Enable UAM</string>
     <string name="enablesmb">Enable SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
@@ -796,7 +796,7 @@
     <string name="customapp">Customized APK for download</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
-    <string name="smbmaxminutes">45 60 75 90 105 120</string>
+    <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
@@ -940,20 +940,20 @@
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_carbs_label">Carbs</string>
     <string name="overview_buttons_selection">Buttons</string>
-    <string name="key_show_calibration_button">show_calibration_button</string>
-    <string name="key_show_cgm_button">show_cgm_button</string>
-    <string name="key_show_carbs_button">show_carbs_button</string>
-    <string name="key_show_wizard_button">show_wizard_button</string>
-    <string name="key_show_insulin_button">show_insulin_button</string>
-    <string name="key_show_treatment_button">show_treatment_button</string>
+    <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
+    <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
+    <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
+    <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
+    <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
+    <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open G5 calibration dialog</string>
     <string name="show_cgm_button_summary">Opens xDrip+, back buttons returns to AAPS</string>
-    <string name="key_insulin_button_increment_1">insulin_button_increment_1</string>
-    <string name="key_insulin_button_increment_2">insulin_button_increment_2</string>
-    <string name="key_insulin_button_increment_3">insulin_button_increment_3</string>
-    <string name="key_carbs_button_increment_1">carbs_button_increment_1</string>
-    <string name="key_carbs_button_increment_2">carbs_button_increment_2</string>
-    <string name="key_carbs_button_increment_3">carbs_button_increment_3</string>
+    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
+    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
+    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
@@ -961,7 +961,7 @@
     <string name="nav_historybrowser">History browser</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
-    <string name="key_ns_create_announcements_from_errors">ns_create_announcements_from_errors</string>
+    <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
     <string name="dexcomG5_shortname" translatable="false">G5</string>

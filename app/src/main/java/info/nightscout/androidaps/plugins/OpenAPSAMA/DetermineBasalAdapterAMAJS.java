@@ -206,7 +206,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("carb_ratio", profile.getIc());
         mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
         mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
-        mProfile.put("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
+        mProfile.put("current_basal_safety_multiplier", SP.getDouble("openapsama_current_basal_safety_multiplier", 4d));
         mProfile.put("skip_neutral_temps", true);
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
