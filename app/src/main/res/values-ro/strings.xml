@@ -547,6 +547,7 @@
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
     <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
+    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
     <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
     <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>

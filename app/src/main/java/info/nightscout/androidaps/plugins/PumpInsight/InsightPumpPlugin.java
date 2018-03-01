@@ -138,6 +138,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 15; // 15 minutes up to 24 hours
+        pumpDescription.tempDurationStep15mAllowed = true;
+        pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
         pumpDescription.isSetBasalProfileCapable = false; // leave this for now

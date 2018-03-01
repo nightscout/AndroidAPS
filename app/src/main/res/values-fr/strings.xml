@@ -508,6 +508,7 @@
     <string name="suspendloopfor2h">Suspendre Loop pour 2h</string>
     <string name="suspendloopfor3h">Suspendre Loop pour 3h</string>
     <string name="suspendloopfor10h">Suspendre Loop pour 10h</string>
+    <string name="disconnectpumpfor15m">Déconnecter la pompe 15min</string>
     <string name="disconnectpumpfor30m">Déconnecter la pompe 30min</string>
     <string name="disconnectpumpfor1h">Déconnecter la pompe 1h</string>
     <string name="disconnectpumpfor2h">Déconnecter la pompe 2h</string>

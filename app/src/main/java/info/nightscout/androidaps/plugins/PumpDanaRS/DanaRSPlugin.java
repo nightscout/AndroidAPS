@@ -181,6 +181,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 60;
+        pumpDescription.tempDurationStep15mAllowed = true;
+        pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
@@ -367,7 +369,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection > 0  && pump.maxBasal > 0;
+        return pump.lastConnection > 0 && pump.maxBasal > 0;
     }
 
     @Override
@@ -618,8 +620,13 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
                 log.debug("setTempBasalPercent: Correct value already set");
             return result;
         }
-        int durationInHours = Math.max(durationInMinutes / 60, 1);
-        boolean connectionOK = danaRSService.tempBasal(percent, durationInHours);
+        boolean connectionOK;
+        if (durationInMinutes == 15 || durationInMinutes == 30) {
+            connectionOK = danaRSService.tempBasalShortDuration(percent, durationInMinutes);
+        } else {
+            int durationInHours = Math.max(durationInMinutes / 60, 1);
+            connectionOK = danaRSService.tempBasal(percent, durationInHours);
+        }
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;

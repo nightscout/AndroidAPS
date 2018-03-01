@@ -49,6 +49,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
@@ -813,5 +814,41 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             log.error("Unhandled exception", e);
         }
         return null;
+    }
+
+    public void disconnectPump(int durationInMinutes) {
+        getActiveLoop().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
+        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        if (getActivePump().getPumpDescription().isExtendedBolusCapable && isInHistoryExtendedBoluslInProgress()) {
+            getCommandQueue().cancelExtended(new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.extendedbolusdeliveryerror));
+                    }
+                }
+            });
+        }
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
+    }
+
+    public void suspendLoop(int durationInMinutes) {
+        getActiveLoop().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
+        getCommandQueue().cancelTempBasal(true, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
     }
 }

@@ -318,6 +318,25 @@ public class DanaRSService extends Service {
         return true;
     }
 
+    public boolean tempBasalShortDuration(Integer percent, int durationInMinutes) {
+        if (durationInMinutes != 15 && durationInMinutes != 30) {
+            log.error("Wrong duration param");
+            return false;
+        }
+
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
+            SystemClock.sleep(500);
+        }
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.settingtempbasal)));
+        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(percent, durationInMinutes == 15, durationInMinutes == 30));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        loadEvents();
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        return true;
+    }
+
     public boolean tempBasalStop() {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));

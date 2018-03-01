@@ -383,7 +383,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor3h));
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor10h));
-                    if (pumpDescription.tempDurationStep <= 30)
+                    if (pumpDescription.tempDurationStep15mAllowed)
+                        menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor15m));
+                    if (pumpDescription.tempDurationStep30mAllowed)
                         menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor1h));
                     menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor2h));
@@ -438,7 +440,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -446,7 +448,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
-            NSUpload.uploadOpenAPSOffline(60); // upload 60 min, we don;t know real duration
+            NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, true);
@@ -458,7 +460,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -469,148 +471,40 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 60L * 60 * 1000);
+            MainApp.getConfigBuilder().suspendLoop(60);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            MainApp.getConfigBuilder().suspendLoop(120);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            MainApp.getConfigBuilder().suspendLoop(180);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            NSUpload.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
-            activeloop.suspendTo(System.currentTimeMillis() + 10 * 60L * 60 * 1000);
+            MainApp.getConfigBuilder().suspendLoop(600);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            NSUpload.uploadOpenAPSOffline(600);
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor15m))) {
+            MainApp.getConfigBuilder().disconnectPump(15);
+            updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            activeloop.disconnectTo(System.currentTimeMillis() + 30L * 60 * 1000);
+            MainApp.getConfigBuilder().disconnectPump(30);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 30, true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
-                    @Override
-                    public void run() {
-                        if (!result.success) {
-                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
-                        }
-                    }
-                });
-            }
-            NSUpload.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            activeloop.disconnectTo(System.currentTimeMillis() + 1 * 60L * 60 * 1000);
+            MainApp.getConfigBuilder().disconnectPump(60);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 60, true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
-                    @Override
-                    public void run() {
-                        if (!result.success) {
-                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
-                        }
-                    }
-                });
-            }
-            NSUpload.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            activeloop.disconnectTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+            MainApp.getConfigBuilder().disconnectPump(120);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 2 * 60, true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
-                    @Override
-                    public void run() {
-                        if (!result.success) {
-                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
-                        }
-                    }
-                });
-            }
-            NSUpload.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            activeloop.disconnectTo(System.currentTimeMillis() + 3 * 60L * 60 * 1000);
+            MainApp.getConfigBuilder().disconnectPump(180);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 3 * 60, true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            if (MainApp.getConfigBuilder().getActivePump().getPumpDescription().isExtendedBolusCapable && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                ConfigBuilderPlugin.getCommandQueue().cancelExtended( new Callback() {
-                    @Override
-                    public void run() {
-                        if (!result.success) {
-                            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.extendedbolusdeliveryerror));
-                        }
-                    }
-                });
-            }
-            NSUpload.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
             NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
@@ -1288,7 +1182,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // **** Various treatment buttons ****
         if (carbsButton != null) {
             if (SP.getBoolean(R.string.key_show_carbs_button, true)
-            && !ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    && !ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
                     (pump.isInitialized() && !pump.isSuspended())) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {
@@ -1297,7 +1191,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         if (pump.isInitialized() && !pump.isSuspended()) {
-            if (treatmentButton != null){
+            if (treatmentButton != null) {
                 if (SP.getBoolean(R.string.key_show_treatment_button, false)) {
                     treatmentButton.setVisibility(View.VISIBLE);
                 } else {

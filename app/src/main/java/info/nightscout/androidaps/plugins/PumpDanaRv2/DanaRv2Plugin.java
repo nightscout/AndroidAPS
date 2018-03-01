@@ -63,6 +63,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 60;
+        pumpDescription.tempDurationStep15mAllowed = true;
+        pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
@@ -275,7 +277,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -289,8 +291,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                 log.debug("setTempBasalPercent: Correct value already set");
             return result;
         }
-        int durationInHours = Math.max(durationInMinutes / 60, 1);
-        boolean connectionOK = sExecutionService.tempBasal(percent, durationInHours);
+        boolean connectionOK;
+        if (durationInMinutes == 15 || durationInMinutes == 30) {
+            connectionOK = sExecutionService.tempBasalShortDuration(percent, durationInMinutes);
+        } else {
+            int durationInHours = Math.max(durationInMinutes / 60, 1);
+            connectionOK = sExecutionService.tempBasal(percent, durationInHours);
+        }
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
@@ -336,7 +343,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;

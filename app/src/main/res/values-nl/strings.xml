@@ -250,6 +250,7 @@
     <string name="disconnectpumpfor10h">Verbreek verbinding 10u met pomp</string>
     <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
     <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
+    <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
     <string name="dismiss">NEGEER</string>

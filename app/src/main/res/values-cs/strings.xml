@@ -494,6 +494,7 @@
     <string name="disconnectpumpfor10h">Odpojit pumpu na 10 h</string>
     <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
     <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
+    <string name="disconnectpumpfor15m">Odpojit pumpu na 15 min</string>
     <string name="disconnectpumpfor30m">Odpojit pumpu na 30 min</string>
     <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
     <string name="enableloop">Povolit smyčku</string>

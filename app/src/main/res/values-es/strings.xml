@@ -525,6 +525,7 @@
     <string name="suspendloopfor2h">Desactivar loop por 2h</string>
     <string name="suspendloopfor3h">Desactivar loop por 3h</string>
     <string name="suspendloopfor10h">Desactivar loop por 10 h</string>
+    <string name="disconnectpumpfor15m">Desconectar bomba por 15 min</string>
     <string name="disconnectpumpfor30m">Desconectar bomba por 30 min</string>
     <string name="disconnectpumpfor1h">Desconectar bomba por 1 h</string>
     <string name="disconnectpumpfor2h">Desconectar bomba por 2 h</string>

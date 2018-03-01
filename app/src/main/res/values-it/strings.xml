@@ -145,6 +145,7 @@
     <string name="disconnectpumpfor10h">Sconnetti Micro per 10H</string>
     <string name="disconnectpumpfor1h">Sconnetti Micro per 1 H</string>
     <string name="disconnectpumpfor2h">Sconnetti Micro per 2 H</string>
+    <string name="disconnectpumpfor15m">Sconnetti Micro per 15min</string>
     <string name="disconnectpumpfor30m">Sconnetti Micro per 30min</string>
     <string name="disconnectpumpfor3h">Sconnetti Micro per 3 H</string>
     <string name="dismiss">Respingere</string>

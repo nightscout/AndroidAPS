@@ -513,6 +513,7 @@
     <string name="suspendloopfor2h">Изключи Loop за 2ч</string>
     <string name="suspendloopfor3h">Изключи Loop за 3ч</string>
     <string name="suspendloopfor10h">Изключи Loop за 10 ч</string>
+    <string name="disconnectpumpfor15m">Изключи помпата за 15 мин.</string>
     <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
     <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
     <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>

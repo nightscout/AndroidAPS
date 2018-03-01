@@ -165,6 +165,7 @@
     <string name="disconnecting">Frånkopplar</string>
     <string name="disconnectpumpfor10h">Frånkoppla pump i 10 h</string>
     <string name="disconnectpumpfor2h">Frånkoppla pump i 2 h</string>
+    <string name="disconnectpumpfor15m">Frånkoppla pump i 15 min</string>
     <string name="disconnectpumpfor30m">Frånkoppla pump i 30 min</string>
     <string name="disconnectpumpfor3h">Frånkoppla pump i 3 h</string>
     <string name="dismiss">TA BORT</string>

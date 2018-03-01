@@ -522,6 +522,7 @@
     <string name="suspendloopfor2h">2시간동안 Loop 일시중지</string>
     <string name="suspendloopfor3h">3시간동안 Loop 일시중지</string>
     <string name="suspendloopfor10h">10시간동안 Loop 일시중지</string>
+    <string name="disconnectpumpfor15m">15분동안 펌프 일시중지</string>
     <string name="disconnectpumpfor30m">30분동안 펌프 일시중지</string>
     <string name="disconnectpumpfor1h">1시간동안 펌프 일시중지</string>
     <string name="disconnectpumpfor2h">2시간동안 펌프 일시중지</string>

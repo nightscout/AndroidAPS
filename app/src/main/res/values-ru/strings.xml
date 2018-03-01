@@ -179,6 +179,7 @@
     <string name="disconnectpumpfor10h">отсоединить помпу на 10 час</string>
     <string name="disconnectpumpfor1h">отсоединить помпу на 1 час</string>
     <string name="disconnectpumpfor2h">отсоединить помпу на 2 часа</string>
+    <string name="disconnectpumpfor15m">отсоединить помпу на 15 мин</string>
     <string name="disconnectpumpfor30m">отсоединить помпу на 30 мин</string>
     <string name="disconnectpumpfor3h">отсоединить помпу на 3 часа</string>
     <string name="dismiss">отклонить</string>
