@@ -6,6 +6,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -82,6 +84,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private static Logger log = LoggerFactory.getLogger(WatchUpdaterService.class);
 
+    private Handler handler;
 
     @Override
     public void onCreate() {
@@ -90,6 +93,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         setSettings();
         if (wear_integration) {
             googleApiConnect();
+        }
+        if (handler == null) {
+            HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName() + "Handler");
+            handlerThread.start();
+            handler = new Handler(handlerThread.getLooper());
         }
     }
 
@@ -123,34 +131,33 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = null;
-        if (intent != null) {
-            action = intent.getAction();
-        }
+        String action = intent != null ? intent.getAction() : null;
 
         if (wear_integration) {
-            if (googleApiClient.isConnected()) {
-                if (ACTION_RESEND.equals(action)) {
-                    resendData();
-                } else if (ACTION_OPEN_SETTINGS.equals(action)) {
-                    sendNotification();
-                } else if (ACTION_SEND_STATUS.equals(action)) {
-                    sendStatus();
-                } else if (ACTION_SEND_BASALS.equals(action)) {
-                    sendBasals();
-                } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)) {
-                    sendBolusProgress(intent.getIntExtra("progresspercent", 0), intent.hasExtra("progressstatus") ? intent.getStringExtra("progressstatus") : "");
-                } else if (ACTION_SEND_ACTIONCONFIRMATIONREQUEST.equals(action)) {
-                    String title = intent.getStringExtra("title");
-                    String message = intent.getStringExtra("message");
-                    String actionstring = intent.getStringExtra("actionstring");
-                    sendActionConfirmationRequest(title, message, actionstring);
+            handler.post(() -> {
+                if (googleApiClient.isConnected()) {
+                    if (ACTION_RESEND.equals(action)) {
+                        resendData();
+                    } else if (ACTION_OPEN_SETTINGS.equals(action)) {
+                        sendNotification();
+                    } else if (ACTION_SEND_STATUS.equals(action)) {
+                        sendStatus();
+                    } else if (ACTION_SEND_BASALS.equals(action)) {
+                        sendBasals();
+                    } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)) {
+                        sendBolusProgress(intent.getIntExtra("progresspercent", 0), intent.hasExtra("progressstatus") ? intent.getStringExtra("progressstatus") : "");
+                    } else if (ACTION_SEND_ACTIONCONFIRMATIONREQUEST.equals(action)) {
+                        String title = intent.getStringExtra("title");
+                        String message = intent.getStringExtra("message");
+                        String actionstring = intent.getStringExtra("actionstring");
+                        sendActionConfirmationRequest(title, message, actionstring);
+                    } else {
+                        sendData();
+                    }
                 } else {
-                    sendData();
+                    googleApiClient.connect();
                 }
-            } else {
-                googleApiClient.connect();
-            }
+            });
         }
 
         return START_STICKY;
