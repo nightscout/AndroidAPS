@@ -72,8 +72,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private static final double FAV2_DEFAULT = 10;
     private static final double FAV3_DEFAULT = 20;
     private CheckBox suspendLoopCheckbox;
-    private RadioButton startActivityTTCheckbox;
-    private RadioButton ESMCheckbox;
+    private CheckBox startActivityTTCheckbox;
+    private CheckBox ESMCheckbox;
 
     private Integer maxCarbs;
 
@@ -258,16 +258,14 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                 tt = prefTT > 0  ? prefTT : 140d;
 
 
-            if (startActivityTTCheckbox.isChecked() ||(startActivityTTCheckbox.isChecked() && ESMCheckbox.isChecked()) ) {
-                ESMCheckbox.setChecked(true);
+            if (startActivityTTCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt,Constants.MGDL) + " mmol/l for " + ((int) ttDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + " mg/dl for " + ((int) ttDuration) + " min </font>";
 
             }
-            if (ESMCheckbox.isChecked()) {
-                startActivityTTCheckbox.setChecked(true);
+            if (ESMCheckbox.isChecked() && !startActivityTTCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esDuration) + " min </font>";
                 } else
