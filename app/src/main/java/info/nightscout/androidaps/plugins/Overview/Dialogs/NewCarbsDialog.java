@@ -36,6 +36,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
@@ -69,7 +70,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private static final double FAV1_DEFAULT = 5;
     private static final double FAV2_DEFAULT = 10;
     private static final double FAV3_DEFAULT = 20;
-
+    final double tempTargetValue = 140d;
     private CheckBox suspendLoopCheckbox;
     private CheckBox startActivityTTCheckbox;
 
@@ -237,9 +238,22 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             double prefTTDuration = SP.getDouble(R.string.key_activity_duration, 90d);
             double ttDuration = prefTTDuration > 0 ? prefTTDuration : 90d;
             double prefTT = SP.getDouble(R.string.key_activity_target, 140d);
-            double tt = prefTT > 0 ? prefTT : 140d;
+            double tt = 140d;
+            Profile currentProfile = MainApp.getConfigBuilder().getProfile();
+            if(currentProfile.equals(null))
+                return;
+            if(currentProfile.getUnits().equals("mmol")) {
+                tt = prefTT > 0  ? prefTT*18 : 140d;
+            } else
+                tt = prefTT > 0  ? prefTT : 140d;
+
+            final double finalTT = tt;
             if (startActivityTTCheckbox.isChecked()) {
-                confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>";
+                if(currentProfile.getUnits().equals("mmol")) {
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + finalTT + " mmol/l for " + ((int) ttDuration) + " min </font>";
+                } else
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) finalTT) + " mg/dl for " + ((int) ttDuration) + " min </font>";
+
             }
 
             if (StringUtils.isNoneEmpty(food)) {
@@ -286,8 +300,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         tempTarget.durationInMinutes = (int) ttDuration;
                         tempTarget.reason = "Activity";
                         tempTarget.source = Source.USER;
-                        tempTarget.low = (int) tt;
-                        tempTarget.high = (int) tt;
+                        tempTarget.low = (double) finalTT;
+                        tempTarget.high = (double) finalTT;
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     }
 
