@@ -211,7 +211,8 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
-        mProfile.put("min_5m_carbimpact", SP.getInt("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
+        //TODO: align with max-absorption model in AMA sensitivity
+        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
 
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
