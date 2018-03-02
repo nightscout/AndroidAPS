@@ -141,6 +141,10 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         dateButton.setOnClickListener(this);
         timeButton.setOnClickListener(this);
 
+        //To be able to select only one TT at a time
+        ESMCheckbox.setOnClickListener(this);
+        startActivityTTCheckbox.setOnClickListener(this);
+
 // TODO prefilling carbs, maybe
 // TODO maybe update suggested carbs to target TT when checked
 //        APSResult lastAPSResult = ConfigBuilderPlugin.getActiveAPS().getLastAPSResult();
@@ -212,6 +216,12 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                 editCarbs.setValue(editCarbs.getValue()
                         + SP.getDouble(MainApp.gs(R.string.key_carbs_button_increment_3), FAV3_DEFAULT));
                 validateInputs();
+                break;
+            case R.id.newcarbs_activity_tt:
+                ESMCheckbox.setChecked(false);
+                break;
+            case R.id.carbs_eating_soon_tt:
+                startActivityTTCheckbox.setChecked(false);
                 break;
 
         }
