@@ -248,41 +248,41 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                 confirmMessage += "<br/>" + "Loop: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + "Suspend for 30 min</font>";
             }
 
-            double prefTTDuration = SP.getDouble(R.string.key_activity_duration, 90d);
+            double activityTTDurationSettings = SP.getDouble(R.string.key_activity_duration, 90d);
             double eatingSoonTTDuration = SP.getDouble(R.string.key_eatingsoon_duration, 45d);
             double eatingSoonTT = SP.getDouble(R.string.key_eatingsoon_target, 90d);
-            double ttDuration = prefTTDuration > 0 ? prefTTDuration : 90d;
-            final double esDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : 45d;
+            double activityTTDuration = activityTTDurationSettings > 0 ? activityTTDurationSettings : 90d;
+            final double esTTDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : 45d;
             double prefTT = SP.getDouble(R.string.key_activity_target, 140d);
 
-            double tt = 140d;
+            double activityTT = 140d;
             double esTT = 90d;
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
             if(currentProfile == null)
                 return;
             if(currentProfile.getUnits().equals(Constants.MMOL)) {
                 esTT = eatingSoonTT > 0  ? Profile.toMgdl(eatingSoonTT,Constants.MGDL) : 90d;
-                tt = prefTT > 0  ? Profile.toMgdl(prefTT,Constants.MGDL) : 140d;
+                activityTT = prefTT > 0  ? Profile.toMgdl(prefTT,Constants.MGDL) : 140d;
             } else {
                 esTT = eatingSoonTT > 0 ? eatingSoonTT : 90d;
-                tt = prefTT > 0 ? prefTT : 140d;
+                activityTT = prefTT > 0 ? prefTT : 140d;
             }
 
             if (startActivityTTCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt,Constants.MGDL) + " mmol/l for " + ((int) ttDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(activityTT,Constants.MGDL) + " mmol/l for " + ((int) activityTTDuration) + " min </font>";
                 } else
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + " mg/dl for " + ((int) ttDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) activityTT) + " mg/dl for " + ((int) activityTTDuration) + " min </font>";
 
             }
             if (startEsTTCheckbox.isChecked() && !startActivityTTCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esTTDuration) + " min </font>";
                 } else
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esTTDuration) + " min </font>";
 
             }
-            final double finalTT = tt;
+            final double finalTT = activityTT;
             final double finalEsTT = esTT;
             if (StringUtils.isNoneEmpty(food)) {
                 confirmMessage += "<br/>" + "Food: " + food;
@@ -327,7 +327,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         if (startActivityTTCheckbox.isChecked() || (startActivityTTCheckbox.isChecked() && startEsTTCheckbox.isChecked())) {
                             TempTarget tempTarget = new TempTarget();
                             tempTarget.date = System.currentTimeMillis();
-                            tempTarget.durationInMinutes = (int) ttDuration;
+                            tempTarget.durationInMinutes = (int) activityTTDuration;
                             tempTarget.reason = "Activity";
                             tempTarget.source = Source.USER;
                             tempTarget.low = (double) finalTT;
@@ -336,7 +336,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         } else if (startEsTTCheckbox.isChecked()) {
                             TempTarget tempTarget = new TempTarget();
                             tempTarget.date = System.currentTimeMillis();
-                            tempTarget.durationInMinutes = (int) esDuration;
+                            tempTarget.durationInMinutes = (int) esTTDuration;
                             tempTarget.reason = "Eating soon";
                             tempTarget.source = Source.USER;
                             tempTarget.low = (double) finalEsTT;
