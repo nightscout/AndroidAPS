@@ -261,8 +261,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             if(currentProfile == null)
                 return;
             if(currentProfile.getUnits().equals(Constants.MMOL)) {
-                esTT = eatingSoonTT > 0  ? Profile.toMgdl(eatingSoonTT,Constants.MGDL) : 90d;
-                activityTT = prefTT > 0  ? Profile.toMgdl(prefTT,Constants.MGDL) : 140d;
+                esTT = eatingSoonTT > 0  ? Profile.toMgdl(eatingSoonTT,Constants.MMOL) : 90d;
+                activityTT = prefTT > 0  ? Profile.toMgdl(prefTT,Constants.MMOL) : 140d;
             } else {
                 esTT = eatingSoonTT > 0 ? eatingSoonTT : 90d;
                 activityTT = prefTT > 0 ? prefTT : 140d;

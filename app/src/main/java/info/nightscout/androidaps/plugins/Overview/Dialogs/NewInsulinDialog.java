@@ -250,7 +250,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             if(currentProfile == null)
                 return;
             if(currentProfile.getUnits().equals(Constants.MMOL))
-                tt = prefTT > 0  ? Profile.toMgdl(prefTT, Constants.MGDL) : 80d;
+                tt = prefTT > 0  ? Profile.toMgdl(prefTT, Constants.MMOL) : 80d;
             else
                 tt = prefTT > 0  ? prefTT : 80d;
             final double finalTT = tt;
