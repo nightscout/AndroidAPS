@@ -94,6 +94,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private String batteryString = "--";
     private String sgvString = "--";
     private String externalStatusString = "no status";
+    private String cobString = "-g";
+
     private TextView statusView;
     private long chartTapTime = 0l;
     private long sgvTapTime = 0l;
@@ -352,6 +354,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 DataMap dataMap = DataMap.fromBundle(bundle);
                 wakeLock.acquire(50);
                 externalStatusString = dataMap.getString("externalStatusString");
+                cobString = dataMap.getString("cob");
+
 
                 showAgeAndStatus();
 
@@ -444,7 +448,12 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         }
 
         if(showStatus){
-            statusView.setText(externalStatusString);
+            String status = externalStatusString;
+            if (sharedPrefs.getBoolean("show_cob", true)) {
+                status = externalStatusString + " " + cobString;
+            }
+
+            statusView.setText(status);
             statusView.setVisibility(View.VISIBLE);
         } else {
             statusView.setVisibility(View.GONE);
