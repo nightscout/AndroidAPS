@@ -272,9 +272,9 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             }
             if (startEsTTCheckbox.isChecked() && !startActivityTTCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esTTDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esTTDuration) + " min </font>";
                 } else
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esTTDuration) + " min </font>";
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esTTDuration) + " min </font>";
 
             }
             final double finalTT = activityTT;
