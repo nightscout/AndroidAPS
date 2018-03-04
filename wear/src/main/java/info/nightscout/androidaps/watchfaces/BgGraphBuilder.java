@@ -63,7 +63,7 @@ public class BgGraphBuilder {
 
     //used for low resolution screen.
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList,  List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
-        start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
+        this.start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
         this.context = context;
@@ -83,11 +83,12 @@ public class BgGraphBuilder {
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusColor = bolusColor;
         this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
+        this.predictionEndTime = getPredictionEndTime();
+        this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
     }
 
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusColor, int timespan) {
-        end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
-        start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
+        this.start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
         this.context = context;
