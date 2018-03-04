@@ -51,6 +51,8 @@ public class BgGraphBuilder {
     public int basalCenterColor;
     public int basalBackgroundColor;
     private int bolusInvalidColor;
+    private int carbsColor;
+
     public boolean singleLine = false;
 
     private List<PointValue> inRangeValues = new ArrayList<PointValue>();
@@ -60,7 +62,7 @@ public class BgGraphBuilder {
 
 
     //used for low resolution screen.
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
         this.start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
@@ -80,12 +82,13 @@ public class BgGraphBuilder {
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusInvalidColor = bolusInvalidColor;
+        this.carbsColor = carbsColor;
         this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         this.predictionEndTime = getPredictionEndTime();
         this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<BgWatchData> predictionsList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, ArrayList<BolusWatchData> bolusWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
         this.start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.predictionsList = predictionsList;
@@ -104,6 +107,7 @@ public class BgGraphBuilder {
         this.basalCenterColor = basalCenterColor;
         this.basalBackgroundColor = basalBackgroundColor;
         this.bolusInvalidColor = bolusInvalidColor;
+        this.carbsColor = carbsColor;
         this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         this.predictionEndTime = getPredictionEndTime();
         this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
@@ -172,6 +176,7 @@ public class BgGraphBuilder {
         lines.add(basalLine((float) minChart, factor, highlight));
         lines.add(bolusLine((float) minChart));
         lines.add(bolusInvalidLine((float) minChart));
+        lines.add(carbsLine((float) minChart));
         lines.add(smbLine((float) minChart));
         lines.add(predictionLine());
 
@@ -248,6 +253,23 @@ public class BgGraphBuilder {
         line.setColor(bolusInvalidColor);
         line.setHasLines(false);
         line.setPointRadius(pointSize);
+        line.setHasPoints(true);
+        return line;
+    }
+
+    private Line carbsLine(float offset) {
+
+        List<PointValue> pointValues = new ArrayList<PointValue>();
+
+        for (BolusWatchData bwd: bolusWatchDataList) {
+            if(bwd.date > start_time && bwd.date <= end_time && !bwd.isSMB && bwd.isValid && bwd.carbs > 0) {
+                pointValues.add(new PointValue(fuzz(bwd.date), (float) offset+2));
+            }
+        }
+        Line line = new Line(pointValues);
+        line.setColor(Color.GREEN);
+        line.setHasLines(false);
+        line.setPointRadius(pointSize*2);
         line.setHasPoints(true);
         return line;
     }
