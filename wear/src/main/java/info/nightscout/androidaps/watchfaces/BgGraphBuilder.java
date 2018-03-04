@@ -456,7 +456,7 @@ public class BgGraphBuilder {
                 xAxisValues.add(new AxisValue(fuzz(hourTick)).setLabel(timeFormat.format(hourTick)));
             } else {
                 //don't print hour label if too close to now to avoid overlaps
-                xAxisValues.add(new AxisValue(fuzz(hourTick)));
+                xAxisValues.add(new AxisValue(fuzz(hourTick)).setLabel(""));
             }
 
             //increment by one hour
