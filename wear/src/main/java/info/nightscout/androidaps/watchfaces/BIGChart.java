@@ -94,7 +94,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private String batteryString = "--";
     private String sgvString = "--";
     private String externalStatusString = "no status";
-    private String cobString = "-g";
+    private String cobString = "";
 
     private TextView statusView;
     private long chartTapTime = 0l;
