@@ -240,7 +240,7 @@ public class BgGraphBuilder {
         List<PointValue> pointValues = new ArrayList<PointValue>();
 
         for (BolusWatchData bwd: bolusWatchDataList) {
-            if(bwd.date > start_time && bwd.date <= end_time && !(bwd.isValid && bwd.bolus > 0)) {
+            if(bwd.date > start_time && bwd.date <= end_time && !(bwd.isValid && (bwd.bolus > 0 || bwd.carbs > 0))) {
                 pointValues.add(new PointValue(fuzz(bwd.date), (float) offset-2));
             }
         }
