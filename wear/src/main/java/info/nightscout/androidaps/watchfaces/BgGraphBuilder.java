@@ -54,7 +54,6 @@ public class BgGraphBuilder {
     private int bolusColor;
     public boolean singleLine = false;
 
-    private long endHour;
     private List<PointValue> inRangeValues = new ArrayList<PointValue>();
     private List<PointValue> highValues = new ArrayList<PointValue>();
     private List<PointValue> lowValues = new ArrayList<PointValue>();
@@ -407,17 +406,17 @@ public class BgGraphBuilder {
 
         //Display current time on the graph
         SimpleDateFormat longTimeFormat = new SimpleDateFormat(is24? "HH:mm" : "h:mm a");
-        xAxisValues.add(new AxisValue(fuzz(timeNow), (longTimeFormat.format(timeNow)).toCharArray()));
+        xAxisValues.add(new AxisValue(fuzz(timeNow)).setLabel((longTimeFormat.format(timeNow))));
 
         long hourTick = start_hour;
 
         // add all full hours within the timeframe
         while (hourTick < end_time){
             if(Math.abs(hourTick - timeNow) > (1000 * 60 * 8 * timespan)){
-                xAxisValues.add(new AxisValue(fuzz(hourTick), (timeFormat.format(hourTick)).toCharArray()));
+                xAxisValues.add(new AxisValue(fuzz(hourTick)).setLabel(timeFormat.format(hourTick)));
             } else {
                 //don't print hour label if too close to now to avoid overlaps
-                xAxisValues.add(new AxisValue(fuzz(hourTick), "".toCharArray()));
+                xAxisValues.add(new AxisValue(fuzz(hourTick)));
             }
 
             //increment by one hour
