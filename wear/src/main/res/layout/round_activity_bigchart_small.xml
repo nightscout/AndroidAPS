@@ -13,48 +13,59 @@
         android:gravity="center_horizontal">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:paddingTop="5dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-5dp"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:textAlignment="center">
 
             <TextView
                 android:id="@+id/delta"
-                android:textSize="30sp"
-                android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center_vertical|center_horizontal|center"
+                android:layout_marginRight="5dp"
                 android:gravity="center_horizontal|bottom"
-                android:layout_marginRight="5dp" />
+                android:text="---"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/sgv"
-                android:textSize="41sp"
-                android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:text="---"
+                android:textColor="#FFFFFF"
+                android:textSize="34sp" />
 
             <TextView
                 android:id="@+id/avgdelta"
-                android:textSize="30sp"
-                android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center_vertical|center_horizontal|center"
+                android:layout_marginLeft="5dp"
                 android:gravity="center_horizontal|bottom"
-                android:layout_marginLeft="5dp" />
+                android:text="---"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/aps_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-5sp"
+            android:text="E xU/h  IOB: x (x+x)"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
 
         <lecho.lib.hellocharts.view.LineChartView
             android:id="@+id/chart"
@@ -64,43 +75,35 @@
             android:layout_weight="1"
             android:gravity="center_horizontal" />
 
-        <TextView
-            android:id="@+id/aps_status"
-            android:textSize="18sp"
-            android:text="E xU/h  IOB: x (x+x)"
-            android:layout_width="wrap_content"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content"/>
-
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="-5sp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:textAlignment="center">
 
             <TextView
                 android:id="@+id/watch_time"
-                android:textSize="35sp"
-                android:text="12:00"
-                android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginRight="6dp"
-                android:layout_gravity="center_horizontal" />
+                android:paddingTop="-5sp"
+                android:text="12:00"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="34sp" />
 
             <TextView
                 android:id="@+id/timestamp"
-                android:textSize="26sp"
-                android:text="-- '"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal|center"
+                android:text="--'"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content" />
+                android:textSize="24sp" />
         </LinearLayout>
 
     </LinearLayout>

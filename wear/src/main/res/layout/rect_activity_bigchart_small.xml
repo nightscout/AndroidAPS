@@ -61,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-5sp"
             android:text="E xU/h  IOB: x (x+x)"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -75,11 +76,12 @@
             android:gravity="center_horizontal" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="-5sp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:textAlignment="center">
 
             <TextView
                 android:id="@+id/watch_time"
@@ -87,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginRight="6dp"
+                android:paddingTop="-5sp"
                 android:text="12:00"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
