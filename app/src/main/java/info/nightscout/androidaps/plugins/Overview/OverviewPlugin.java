@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -26,7 +27,6 @@ public class OverviewPlugin implements PluginBase {
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
 
     public static OverviewPlugin getPlugin() {
-
         if (overviewPlugin == null)
             overviewPlugin = new OverviewPlugin();
         return overviewPlugin;
@@ -92,7 +92,7 @@ public class OverviewPlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return false;
+        return true;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class OverviewPlugin implements PluginBase {
 
     @Override
     public int getPreferencesId() {
-        return -1;
+        return R.xml.pref_overview;
     }
 
     @Override
@@ -126,6 +126,36 @@ public class OverviewPlugin implements PluginBase {
     public void onStatusEvent(final EventDismissNotification n) {
         if (notificationStore.remove(n.id))
             MainApp.bus().post(new EventRefreshOverview("EventDismissNotification"));
+    }
+
+    public double determineHighLine() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            return bgTargetHigh;
+        }
+        return determineHighLine(profile.getUnits());
+    }
+
+    public double determineHighLine(String units) {
+        double highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
+        if (highLineSetting < 1)
+            highLineSetting = Profile.fromMgdlToUnits(180d, units);
+        return highLineSetting;
+    }
+
+    public double determineLowLine() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            return bgTargetLow;
+        }
+        return determineLowLine(profile.getUnits());
+    }
+
+    public double determineLowLine(String units) {
+        double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
+        if (lowLineSetting < 1)
+            lowLineSetting = Profile.fromMgdlToUnits(76d, units);
+        return lowLineSetting;
     }
 
 }

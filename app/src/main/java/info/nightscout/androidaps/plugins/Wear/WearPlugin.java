@@ -258,11 +258,4 @@ public class WearPlugin implements PluginBase {
     public static void unRegisterWatchUpdaterService() {
         watchUS = null;
     }
-
-    public void overviewNotification(int id, String message) {
-        if(SP.getBoolean("wear_overview_notification", false)){
-            ActionStringHandler.expectNotificationAction(message, id);
-        }
-    }
-
 }

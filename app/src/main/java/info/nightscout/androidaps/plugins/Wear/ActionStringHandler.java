@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.Manifest;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -644,16 +645,20 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.carbs = carbs;
         detailedBolusInfo.source = Source.USER;
-        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-            @Override
-            public void run() {
-                if (!result.success) {
-                    sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
-                            "\n" +
-                            result.comment);
+        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
+                                "\n" +
+                                result.comment);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        }
     }
 
     private synchronized static void sendError(String errormessage) {

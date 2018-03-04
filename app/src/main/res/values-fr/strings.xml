@@ -108,7 +108,7 @@
     <string name="overview_newtempbasal_basalpercent">Valeur Basal [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Acceptez nouveau basal temp</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Calculateur de Bolus</string>
     <string name="constraintapllied">Restriction appliquée!</string>
     <string name="confirmation">Confirmation</string>
@@ -742,8 +742,6 @@
     <string name="combo_pump_state_running">En cours d\'exécution</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
-    <string name="key_use_smb">utiliser-smb</string>
-    <string name="key_use_uam">utiliser-uam</string>
     <string name="enableuam">Activer UAM</string>
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>

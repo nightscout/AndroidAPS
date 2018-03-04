@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.ClipboardManager;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 
 import java.io.BufferedReader;
 import java.io.IOException;

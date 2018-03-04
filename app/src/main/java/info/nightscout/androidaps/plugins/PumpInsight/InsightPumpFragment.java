@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.crashlytics.android.Crashlytics;
+
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.ui.StatusItemViewAdapter;
+import info.nightscout.utils.FabricPrivacy;
 
 
 public class InsightPumpFragment extends SubscriberFragment {
@@ -64,7 +65,7 @@ public class InsightPumpFragment extends SubscriberFragment {
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;

@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Food;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SpinnerHelper;
 
@@ -130,7 +130,7 @@ public class FoodFragment extends SubscriberFragment {
             filterData();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;

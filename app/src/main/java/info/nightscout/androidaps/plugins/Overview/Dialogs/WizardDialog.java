@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -50,6 +49,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -57,9 +57,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -132,6 +131,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.WIZARD));
     }
 
     @Override
@@ -382,7 +382,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                     } else {
                                         MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                                     }
-                                    Answers.getInstance().logCustom(new CustomEvent("Wizard"));
+                                    FabricPrivacy.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }
                             }
                         }

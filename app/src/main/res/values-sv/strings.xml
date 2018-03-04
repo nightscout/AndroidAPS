@@ -470,7 +470,7 @@
     <string name="overview_bolusprogress_stop">Stopp</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Kommer tillföra %.2fU</string>
     <string name="overview_bolusprogress_delivered">Tillförd</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview">Översikt</string>
     <string name="othersettings_title">Andra</string>
     <string name="openloop_newsuggestion">Ny behandlingsrekommendation tillgänglig</string>
@@ -560,7 +560,6 @@
     <string name="mdi">MDI</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="overview_newtempbasal_basaltype_label">Basal typ</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>

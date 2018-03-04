@@ -3,9 +3,11 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -32,8 +34,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
@@ -95,6 +95,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastA
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewCarbsDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity;
@@ -103,12 +105,14 @@ import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
@@ -163,10 +167,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayoutManager llm;
 
     LinearLayout acceptTempLayout;
+    SingleClickButton acceptTempButton;
+
     SingleClickButton treatmentButton;
     SingleClickButton wizardButton;
     SingleClickButton calibrationButton;
-    SingleClickButton acceptTempButton;
+    SingleClickButton insulinButton;
+    SingleClickButton carbsButton;
+    SingleClickButton cgmButton;
     SingleClickButton quickWizardButton;
 
     CheckBox lockScreen;
@@ -257,6 +265,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             treatmentButton.setOnClickListener(this);
             wizardButton = (SingleClickButton) view.findViewById(R.id.overview_wizardbutton);
             wizardButton.setOnClickListener(this);
+            insulinButton = (SingleClickButton) view.findViewById(R.id.overview_insulinbutton);
+            if (insulinButton != null)
+                insulinButton.setOnClickListener(this);
+            carbsButton = (SingleClickButton) view.findViewById(R.id.overview_carbsbutton);
+            if (carbsButton != null)
+                carbsButton.setOnClickListener(this);
             acceptTempButton = (SingleClickButton) view.findViewById(R.id.overview_accepttempbutton);
             if (acceptTempButton != null)
                 acceptTempButton.setOnClickListener(this);
@@ -266,6 +280,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             calibrationButton = (SingleClickButton) view.findViewById(R.id.overview_calibrationbutton);
             if (calibrationButton != null)
                 calibrationButton.setOnClickListener(this);
+            cgmButton = (SingleClickButton) view.findViewById(R.id.overview_cgmbutton);
+            if (cgmButton != null)
+                cgmButton.setOnClickListener(this);
 
             acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
@@ -342,7 +359,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
             log.debug("Runtime Exception", e);
         }
 
@@ -612,6 +629,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
+        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        String units = MainApp.getConfigBuilder().getProfileUnits();
+
         FragmentManager manager = getFragmentManager();
         switch (v.getId()) {
             case R.id.overview_accepttempbutton:
@@ -625,12 +646,35 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 wizardDialog.show(manager, "WizardDialog");
                 break;
             case R.id.overview_calibrationbutton:
-                CalibrationDialog calibrationDialog = new CalibrationDialog();
-                calibrationDialog.show(manager, "CalibrationDialog");
+                if (xdrip) {
+                    CalibrationDialog calibrationDialog = new CalibrationDialog();
+                    calibrationDialog.show(manager, "CalibrationDialog");
+                } else if (g5) {
+                    try {
+                        Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
+                        startActivity(i);
+                    } catch (ActivityNotFoundException e) {
+                        ToastUtils.showToastInUiThread(getActivity(), MainApp.gs(R.string.g5appnotdetected));
+                    }
+                }
+                break;
+            case R.id.overview_cgmbutton:
+                if (xdrip)
+                    openCgmApp("com.eveningoutpost.dexdrip");
+                else if (g5 && units.equals(Constants.MGDL))
+                    openCgmApp("com.dexcom.cgm.region5.mgdl");
+                else if (g5 && units.equals(Constants.MMOL))
+                    openCgmApp("com.dexcom.cgm.region5.mmol");
                 break;
             case R.id.overview_treatmentbutton:
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
+                break;
+            case R.id.overview_insulinbutton:
+                new NewInsulinDialog().show(manager, "InsulinDialog");
+                break;
+            case R.id.overview_carbsbutton:
+                new NewCarbsDialog().show(manager, "CarbsDialog");
                 break;
             case R.id.overview_pumpstatus:
                 if (ConfigBuilderPlugin.getActivePump().isSuspended() || !ConfigBuilderPlugin.getActivePump().isInitialized())
@@ -656,6 +700,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 break;
         }
 
+    }
+
+    public boolean openCgmApp(String packageName) {
+        PackageManager packageManager = getContext().getPackageManager();
+        try {
+            Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+            if (intent == null) {
+                throw new ActivityNotFoundException();
+            }
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            getContext().startActivity(intent);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.error_starting_cgm)
+                    .setPositiveButton("OK", null)
+                    .show();
+            return false;
+        }
     }
 
     @Override
@@ -698,7 +761,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                 scheduleUpdateGUI("onClickAcceptTemp");
                             }
                         });
-                        Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
                     }
                 });
                 builder.setNegativeButton(getContext().getString(R.string.cancel), null);
@@ -814,7 +877,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                         }
                                     }
                                 });
-                                Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                             }
                         }
                     }
@@ -1015,16 +1078,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
-        double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
-        double highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
-
-        if (lowLineSetting < 1)
-            lowLineSetting = Profile.fromMgdlToUnits(76d, units);
-        if (highLineSetting < 1)
-            highLineSetting = Profile.fromMgdlToUnits(180d, units);
-
-        final double lowLine = lowLineSetting;
-        final double highLine = highLineSetting;
+        final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
+        final double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -1114,12 +1169,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
-        // **** Calibration button ****
+        // **** Calibration & CGM buttons ****
+        boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
-            if (MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
+            if ((xDripIsBgSource || g5IsBgSource) && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {
                 calibrationButton.setVisibility(View.VISIBLE);
             } else {
                 calibrationButton.setVisibility(View.GONE);
+            }
+        }
+        if (cgmButton != null) {
+            if (xDripIsBgSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
+                cgmButton.setVisibility(View.VISIBLE);
+            } else if (g5IsBgSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
+                cgmButton.setVisibility(View.VISIBLE);
+            } else {
+                cgmButton.setVisibility(View.GONE);
             }
         }
 
@@ -1218,15 +1285,40 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else
             quickWizardButton.setVisibility(View.GONE);
 
-        // Bolus and calc button
-        if (pump.isInitialized() && !pump.isSuspended()) {
-            wizardButton.setVisibility(View.VISIBLE);
-            treatmentButton.setVisibility(View.VISIBLE);
-        } else {
-            wizardButton.setVisibility(View.GONE);
-            treatmentButton.setVisibility(View.GONE);
+        // **** Various treatment buttons ****
+        if (carbsButton != null) {
+            if (SP.getBoolean(R.string.key_show_carbs_button, true)
+            && !ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    (pump.isInitialized() && !pump.isSuspended())) {
+                carbsButton.setVisibility(View.VISIBLE);
+            } else {
+                carbsButton.setVisibility(View.GONE);
+            }
         }
 
+        if (pump.isInitialized() && !pump.isSuspended()) {
+            if (treatmentButton != null){
+                if (SP.getBoolean(R.string.key_show_treatment_button, false)) {
+                    treatmentButton.setVisibility(View.VISIBLE);
+                } else {
+                    treatmentButton.setVisibility(View.GONE);
+                }
+            }
+            if (wizardButton != null) {
+                if (SP.getBoolean(R.string.key_show_wizard_button, true)) {
+                    wizardButton.setVisibility(View.VISIBLE);
+                } else {
+                    wizardButton.setVisibility(View.GONE);
+                }
+            }
+            if (insulinButton != null) {
+                if (SP.getBoolean(R.string.key_show_insulin_button, true)) {
+                    insulinButton.setVisibility(View.VISIBLE);
+                } else {
+                    insulinButton.setVisibility(View.GONE);
+                }
+            }
+        }
 
         // **** BG value ****
         if (lastBG == null) { //left this here as it seems you want to exit at this point if it is null...

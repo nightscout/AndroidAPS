@@ -263,7 +263,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
         if (activePump == null)
             activePump = VirtualPumpPlugin.getPlugin(); // for NSClient build
-        this.setFragmentVisiblities(((PluginBase)activePump).getName(), pluginsInCategory, PluginBase.PUMP);
+        this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginBase.PUMP);
 
         // PluginBase.LOOP
         activeLoop = this.determineActivePlugin(PluginBase.LOOP);
@@ -299,7 +299,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * disables the visibility for all fragments of Plugins in the given pluginsInCategory
      * with the given PluginType which are not equally named to the Plugin implementing the
      * given Plugin Interface.
-     *
+     * <p>
      * TODO we are casting an interface to PluginBase, which seems to be rather odd, since
      * TODO the interface is not implementing PluginBase (this is just avoiding errors through
      * TODO conventions.
@@ -314,7 +314,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         T activePlugin = (T) getTheOneEnabledInArray(pluginsInCategory, pluginType);
 
         if (activePlugin != null) {
-            this.setFragmentVisiblities(((PluginBase)activePlugin).getName(),
+            this.setFragmentVisiblities(((PluginBase) activePlugin).getName(),
                     pluginsInCategory, pluginType);
         }
 
@@ -743,14 +743,17 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     }
 
     public String getProfileName(long time, boolean customized) {
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
-        if (profileSwitch != null) {
-            if (profileSwitch.profileJson != null) {
-                return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
-            } else {
-                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                if (profile != null)
-                    return profileSwitch.profileName;
+        boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
+        if (!ignoreProfileSwitchEvents) {
+            ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+            if (profileSwitch != null) {
+                if (profileSwitch.profileJson != null) {
+                    return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
+                } else {
+                    Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null)
+                        return profileSwitch.profileName;
+                }
             }
         }
         // Unable to determine profile, failover to default

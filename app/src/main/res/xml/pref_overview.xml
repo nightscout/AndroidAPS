@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/overview">
+        <PreferenceScreen android:title="@string/overview_buttons_selection">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_show_treatment_button"
+                android:title="Treatments" />
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_show_wizard_button"
+                android:title="@string/overview_calculator_label"/>
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_show_insulin_button"
+                android:title="Insulin" />
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:dependency="@string/key_show_insulin_button"
+                validate:testType="floatNumericRange"
+                validate:floatminNumber="0.1"
+                validate:floatmaxNumber="5.0"
+                android:defaultValue="0.5"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:title="First insulin increment"
+                android:dialogMessage="@string/insulin_increment_button_message"
+                android:key="@string/key_insulin_button_increment_1" />
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:dependency="@string/key_show_insulin_button"
+                validate:testType="floatNumericRange"
+                validate:floatminNumber="0.1"
+                validate:floatmaxNumber="5.0"
+                android:defaultValue="1.0"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:title="Second insulin increment"
+                android:dialogMessage="@string/insulin_increment_button_message"
+                android:key="@string/key_insulin_button_increment_2" />
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:dependency="@string/key_show_insulin_button"
+                validate:testType="floatNumericRange"
+                validate:floatminNumber="0.1"
+                validate:floatmaxNumber="5.0"
+                android:defaultValue="2.0"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:title="Third insulin increment"
+                android:dialogMessage="@string/insulin_increment_button_message"
+                android:key="@string/key_insulin_button_increment_3"/>
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_show_carbs_button"
+                android:title="Carbs" />
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:dependency="@string/key_show_carbs_button"
+                validate:testType="numeric"
+                validate:minNumber="1"
+                validate:maxNumber="50"
+                android:defaultValue="5"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:title="First carbs increment"
+                android:dialogMessage="@string/carb_increment_button_message"
+                android:key="@string/key_carbs_button_increment_1" />
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:dependency="@string/key_show_carbs_button"
+                validate:testType="numeric"
+                validate:minNumber="1"
+                validate:maxNumber="50"
+                android:defaultValue="10"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:title="Second carbs increment"
+                android:dialogMessage="@string/carb_increment_button_message"
+                android:key="@string/key_carbs_button_increment_2" />
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:dependency="@string/key_show_carbs_button"
+                validate:testType="numeric"
+                validate:minNumber="1"
+                validate:maxNumber="50"
+                android:defaultValue="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:title="Third carbs increment"
+                android:dialogMessage="@string/carb_increment_button_message"
+                android:key="@string/key_carbs_button_increment_3" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_show_cgm_button"
+                android:title="CGM"
+                android:summary="@string/show_cgm_button_summary"/>
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_show_calibration_button"
+                android:title="@string/overview_calibration"
+                android:summary="@string/show_calibration_button_summary"/>
+
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>

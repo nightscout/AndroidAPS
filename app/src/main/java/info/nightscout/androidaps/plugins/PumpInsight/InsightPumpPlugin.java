@@ -70,6 +70,7 @@ import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.round
  *
  */
 
+@SuppressWarnings("AccessStaticViaInstance")
 public class InsightPumpPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
 
     private static final long BUSY_WAIT_TIME = 20000;
@@ -91,6 +92,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
     private Connector connector;
+    private volatile boolean connector_enabled = false;
     private final TaskRunner.ResultCallback statusResultHandler = new TaskRunner.ResultCallback() {
 
         @Override
@@ -119,7 +121,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     };
 
     private InsightPumpPlugin() {
-        log("InsightPumpPlugin");
+        log("InsightPumpPlugin instantiated");
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions?)
 
@@ -143,12 +145,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.basalMinimumRate = 0.02d;
 
         pumpDescription.isRefillingCapable = true;
-        //pumpDescription.storesCarbInfo = false; // uncomment when PumpDescription updated to include this
+        //pumpDescription.storesCarbInfo = false;
 
-        this.connector = Connector.get();
-        this.connector.init();
-
-        log("back from init");
     }
 
 
@@ -178,6 +176,31 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     private static void pushCallbackEvent(EventInsightPumpCallback e) {
         MainApp.bus().post(e);
+    }
+
+    private void enableConnector() {
+        if (!connector_enabled) {
+            synchronized (this) {
+                if (!connector_enabled) {
+                    log("Instantiating connector");
+                    connector_enabled = true;
+                    this.connector = Connector.get();
+                    this.connector.init();
+                }
+            }
+        }
+    }
+
+    private void disableConnector() {
+        if (connector_enabled) {
+            synchronized (this) {
+                if (connector_enabled) {
+                    log("Shutting down connector");
+                    Connector.get().shutdown();
+                    connector_enabled = false;
+                }
+            }
+        }
     }
 
     @Override
@@ -230,7 +253,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == PUMP) this.fragmentEnabled = fragmentEnabled;
+        if (type == PUMP) {
+            if (fragmentEnabled) {
+                enableConnector();
+            } else {
+                disableConnector();
+            }
+            this.fragmentEnabled = fragmentEnabled;
+        }
     }
 
     @Override
@@ -285,7 +315,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             if (!connector.isPumpConnected()) {
                 if (Helpers.ratelimit("insight-connect-timer", 40)) {
                     log("Actually requesting a connect");
-                    connector.getServiceConnector().connect();
+                    connector.connectToPump();
                 }
             } else {
                 log("Already connected");
@@ -306,7 +336,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         try {
             if (!SP.getBoolean("insight_always_connected", false)) {
                 log("Requesting disconnect");
-                connector.getServiceConnector().disconnect();
+                connector.disconnectFromPump();
             } else {
                 log("Not disconnecting due to preference");
             }
@@ -322,7 +352,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             if (isConnecting()) {
                 if (!SP.getBoolean("insight_always_connected", false)) {
                     log("Requesting disconnect");
-                    connector.getServiceConnector().disconnect();
+                    connector.disconnectFromPump();
                 } else {
                     log("Not disconnecting due to preference");
                 }
@@ -470,6 +500,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         if (percent_amount > 250) percent_amount = 250;
 
+      
+
         final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
 
@@ -616,7 +648,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         final UUID cmd;
 
         if (fauxTBRcancel) {
-            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" +  " 1m");
+            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" + " 1m");
         } else {
             cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
         }
@@ -893,6 +925,16 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             l.add(new StatusItem(gs(R.string.insight_last_completed_action), LiveHistory.getStatus()));
         }
 
+        final String keep_alive_status = Connector.getKeepAliveString();
+        if (keep_alive_status != null) {
+            l.add(new StatusItem(gs(R.string.insight_keep_alive_status), keep_alive_status));
+        }
+
+        final List<StatusItem> status_statistics = connector.getStatusStatistics();
+        if (status_statistics.size() > 0) {
+            l.addAll(status_statistics);
+        }
+
         if (Helpers.ratelimit("insight-status-ui-refresh", 10)) {
             connector.tryToGetPumpStatusAgain();
         }
@@ -910,7 +952,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
                 public void run() {
                     updateGui();
                 }
-            }, 500);
+            }, 1000);
         }
     }
 
