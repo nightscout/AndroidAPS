@@ -113,7 +113,7 @@
     <string name="overview_newtempbasal_basalpercent">Αξία Βασικού[%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = τρέχον)</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ.Ρυθμ:</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
     <string name="constraintapllied">Εφαρμοσμένοι Περιορισμοί!</string>
     <string name="confirmation">Αποδοχή</string>
@@ -307,8 +307,8 @@
     <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
     <string name="smscommunicator_loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
+    <string name="valuelimitedto" formatted="false">%.2f limited to %.2f</string>
+    <string name="valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
     <string name="smscommunicator_remotebasalnotallowed">"Δεν επιτρέπεται η απομακρυσμένη ρύθμιση βασικού ρυθμού "</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Για έναρξη βασικού %.2fU/h SMS με κωσικό %s</string>
@@ -354,7 +354,6 @@
     <string name="edit_base_isf">Ρύθμιση Βασικού-ISF:</string>
     <string name="edit_base_ic">Ρύθμιση Βασικού-IC:</string>
     <string name="base_profile_label">Βασικό Προφίλ:</string>
-    <string name="circadian_percentage_profile">Ποσοστό προφίλ κυκλώματος</string>
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
     <string name="prefs_range_summary">Υψηλό και Χαμηλό σημείο για την γραφική στην Επισκόπηση και Smartwatch</string>
     <string name="low_mark">ΧΑΜΗΛΟ σημείο</string>
@@ -417,7 +416,6 @@
     <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
@@ -512,6 +510,7 @@
     <string name="suspendloopfor2h">Κύκλωμα σε παύση για 2h</string>
     <string name="suspendloopfor3h">Κύκλωμα σε παύση για 3h</string>
     <string name="suspendloopfor10h">Κύκλωμα σε παύση για 10h</string>
+    <string name="disconnectpumpfor15m">Αποσύνδεση αντλίας για 15 λεπτά</string>
     <string name="disconnectpumpfor30m">Αποσύνδεση αντλίας για 30 λεπτά</string>
     <string name="disconnectpumpfor1h">Αποσύνδεση αντλίας για 1h</string>
     <string name="disconnectpumpfor2h">Αποσύνδεση αντλίας για 2h</string>
@@ -611,9 +610,8 @@
     <string name="sensitivityweightedaverage">Σταθμισμένος μέσος όρος ευαισθησίας</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Ακύρωση</string>
-    <string name="cpp_sync_setting_missing">Χρειάζεται να ενεργοποιηθεί για να στείλει τιμές στην αντλία!</string>
-    <string name="cpp_notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ</string>
-    <string name="cpp_valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
+    <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ</string>
+    <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
     <string name="wear_overviewnotifications">Επισκόπηση ειδοποιήσεων</string>
     <string name="wear_overviewnotifications_summary">Αποστολή ειδοποιήσεων ως ειδήσεων για τα ρολόγια</string>
     <string name="ns_localbroadcasts">Ενεργοποιήστε την αποστολή σε άλλες εφαρμογές (όπως xDrip)</string>

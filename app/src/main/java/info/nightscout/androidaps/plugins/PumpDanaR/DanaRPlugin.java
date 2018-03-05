@@ -134,6 +134,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
+            t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
             PumpEnactResult result = new PumpEnactResult();
@@ -315,8 +316,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
-            PumpEnactResult cancelEx = cancelExtendedBolus();
-            return cancelEx;
+            return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

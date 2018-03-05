@@ -75,7 +75,7 @@
     <string name="openapsma_inputparameters_label">Eingabeparameter</string>
     <string name="openapsma_iobdata_label">IOB-Daten</string>
     <string name="openloop">Open Loop</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
     <string name="overview_tempbasal_button">TBR</string>
     <string name="rate">Rate</string>
@@ -311,7 +311,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="careportal_shortname">CP</string>
     <string name="error_only_numeric_digits_allowed">Bitte verwende nur Ziffern.</string>
     <string name="error_field_must_not_be_empty">Pflichtfeld</string>
@@ -394,9 +393,8 @@
     <string name="careportal_pumpbatterychange">Pumpenbatterie-Wechsel</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="configbuilder_insulin">Insulin</string>
-    <string name="cpp_notloadedplugins">Es sind nicht alle Profile geladen!</string>
-    <string name="cpp_sync_setting_missing">muss aktiviert werden, um Werte an die Pumpe zu senden!</string>
-    <string name="cpp_valuesnotstored">Werte nicht gespeichert!</string>
+    <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
+    <string name="valuesnotstored">Werte nicht gespeichert!</string>
     <string name="danar_enableextendedbolus">Aktiviere verlängerten Bolus in der Pumpe</string>
     <string name="danar_stats">DanaR Stats</string>
     <string name="danar_stats_amount_days"># Tage</string>
@@ -415,6 +413,7 @@
     <string name="disconnectpumpfor10h">Trenne Pumpe für 10 h</string>
     <string name="disconnectpumpfor1h">Trenne Pumpe für 1 h</string>
     <string name="disconnectpumpfor2h">Trenne Pumpe für 2 h</string>
+    <string name="disconnectpumpfor15m">Trenne Pumpe für 15 Min.</string>
     <string name="disconnectpumpfor30m">Trenne Pumpe für 30 Min.</string>
     <string name="disconnectpumpfor3h">Trenne Pumpe für 3 h</string>
     <string name="do_not_track_profile_switch">Ignoriere Profilwechsel</string>
@@ -481,7 +480,7 @@
     <string name="openaps_short">OAPS</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="openapsma_scriptdebugdata_label">Skript Debug</string>
-    <string name="openapsma_valueoutofrange">Wert %s ist außerhalb des festen Limits</string>
+    <string name="valueoutofrange">Wert %s ist außerhalb des festen Limits</string>
     <string name="overview_calibration">Kalibrierung</string>
     <string name="overview_calibration_bg_label">Kalibrierung</string>
     <string name="overview_editquickwizard_buttontext">Button-Text:</string>
@@ -579,7 +578,7 @@
     <string name="smscommunicator_unknowncommand">Unbekannter Befehl oder falsche Antwort</string>
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
     <string name="unlock_settings">Einstellungen freischalten</string>
-    <string formatted="false" name="openapsma_valuelimitedto">%.2f limitiert auf %.2f</string>
+    <string formatted="false" name="valuelimitedto">%.2f limitiert auf %.2f</string>
     <string name="danar_sbolus">S-Bolus</string>
     <string formatted="false" name="danar_model">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="configbuilder_sensitivity">Empfindlichkeitserkennung</string>
@@ -620,7 +619,6 @@
     <string name="careportal_newnstreatment_percentage_label">Prozentsatz</string>
     <string name="careportal_newnstreatment_timeshift_label">Zeitverschiebung</string>
     <string name="careportal_pbage_label_short">BAT</string>
-    <string name="circadian_percentage_profile">CircadianPercentage-Profil</string>
     <string name="connectiontimedout">Zeitüberschreitung der Verbindung</string>
     <string name="danar_history_prime">Füllen</string>
     <string name="danar_debolus">DE-Bolus</string>
@@ -723,7 +721,6 @@
     <string name="combo_pump_action_bolusing">Bolus (%.1f IE) wird abgegeben</string>
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu. Andernfalls wird AndroidAPS nicht protokolliert (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)</string>
     <string name="pump_tempbasal_label">TBR</string>
-    <string name="combo_last_bolus">%.1f IE (%s, %s)</string>
     <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in der letzten Minute angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
     <string name="combo_activity_reading_pump_history">Historie wird gelesen</string>
     <string name="combo_activity_setting_basal_profile">Basalratenprofil wird aktualisiert</string>

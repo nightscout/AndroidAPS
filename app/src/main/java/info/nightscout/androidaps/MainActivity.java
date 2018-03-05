@@ -35,9 +35,9 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(ev.recreate) {
+                if (ev.recreate) {
                     recreate();
-                }else {
+                } else {
                     try { // activity may be destroyed
                         setUpTabs(true);
                     } catch (IllegalStateException e) {
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Added in 1.57 at 21.01.2018
         Integer unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
         SP.remove(R.string.key_pump_unreachable_threshold);
-        if(unreachable_threshold < 30) unreachable_threshold = 30;
+        if (unreachable_threshold < 30) unreachable_threshold = 30;
         SP.putString(R.string.key_pump_unreachable_threshold, unreachable_threshold.toString());
     }
 
@@ -222,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         askForSMSPermissions();
         askForLocationPermissions();
+        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
     }
 
     @Override
@@ -358,6 +359,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }, null);
                                 break;
+                            case R.id.nav_historybrowser:
+                                startActivity(new Intent(v.getContext(), HistoryBrowseActivity.class));
+                                break;
                             case R.id.nav_resetdb:
                                 new AlertDialog.Builder(v.getContext())
                                         .setTitle(R.string.nav_resetdb)
@@ -386,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             case R.id.nav_about:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                                 builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
-                                if (Config.NSCLIENT|| Config.G5UPLOADER)
+                                if (Config.NSCLIENT || Config.G5UPLOADER)
                                     builder.setIcon(R.mipmap.yellowowl);
                                 else
                                     builder.setIcon(R.mipmap.blueowl);

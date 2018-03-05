@@ -63,9 +63,9 @@
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
                     android:title="@string/openapsama_current_basal_safety_multiplier"
-                    validate:maxNumber="10"
-                    validate:minNumber="1"
-                    validate:testType="numericRange" />
+                    validate:floatmaxNumber="10"
+                    validate:floatminNumber="1"
+                    validate:testType="floatNumericRange" />
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     android:defaultValue="1.2"
                     android:dialogMessage="@string/openapsama_autosens_max_summary"
@@ -120,6 +120,15 @@
                     android:key="@string/key_btwatchdog"
                     android:title="@string/btwatchdog_title"
                     android:summary="@string/btwatchdog_summary"/>
+            </PreferenceCategory>
+
+            <PreferenceCategory
+                android:title="@string/data_choices">
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="enable_fabric"
+                    android:title="@string/fabric_upload"
+                    android:summary="@string/allow_automated_crash_reporting"/>
             </PreferenceCategory>
 
         </PreferenceScreen>

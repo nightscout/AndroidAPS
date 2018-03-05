@@ -22,12 +22,14 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
@@ -36,6 +38,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.ScaledDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.Round;
 
 /**
@@ -50,9 +53,12 @@ public class GraphData {
     private String units;
     private List<Series> series = new ArrayList<>();
 
-    public GraphData(GraphView graph) {
+    private IobCobCalculatorPlugin iobCobCalculatorPlugin;
+
+    public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
         units = MainApp.getConfigBuilder().getProfileUnits();
         this.graph = graph;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {
@@ -126,7 +132,7 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            BasalData basalData = IobCobCalculatorPlugin.getBasalData(time);
+            BasalData basalData = IobCobCalculatorPlugin.getPlugin().getBasalData(time);
             double baseBasalValue = basalData.basal;
             double absoluteLineValue = baseBasalValue;
             double tempBasalValue = 0;
@@ -215,6 +221,54 @@ public class GraphData {
         addSeries(absoluteBasalsLineSeries);
     }
 
+    public void addTargetLine(long fromTime, long toTime) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            return;
+        }
+
+        LineGraphSeries<DataPoint> targetsSeries;
+
+        Scale targetsScale = new Scale();
+        targetsScale.setMultiplier(1);
+
+        List<DataPoint> targetsSeriesArray = new ArrayList<>();
+        double lastTarget = 0;
+
+        if (LoopPlugin.lastRun != null && LoopPlugin.lastRun.constraintsProcessed != null) {
+            APSResult apsResult = LoopPlugin.lastRun.constraintsProcessed;
+            long latestPredictionsTime = apsResult.getLatestPredictionsTime();
+            if (latestPredictionsTime > toTime) {
+                toTime = latestPredictionsTime;
+            }
+        }
+
+        for (long time = fromTime; time < toTime; time += 60 * 1000L) {
+            TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
+            double value;
+            if (tt == null) {
+                value = (profile.getTargetLow(time) + profile.getTargetHigh(time))  / 2;
+            } else {
+                value = (tt.low + tt.high) / 2;
+            }
+            if (lastTarget > 0 && lastTarget != value) {
+                targetsSeriesArray.add(new DataPoint(time, lastTarget));
+            }
+            lastTarget = value;
+
+            targetsSeriesArray.add(new DataPoint(time, value));
+        }
+
+        DataPoint[] targets = new DataPoint[targetsSeriesArray.size()];
+        targets = targetsSeriesArray.toArray(targets);
+        targetsSeries = new LineGraphSeries<>(targets);
+        targetsSeries.setDrawBackground(false);
+        targetsSeries.setColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
+        targetsSeries.setThickness(2);
+
+        addSeries(targetsSeries);
+    }
+
     public void addTreatments(long fromTime, long endTime) {
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
@@ -284,7 +338,7 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            double iob = IobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time).iob;
+            double iob = IobCobCalculatorPlugin.getPlugin().calculateFromTreatmentsAndTempsSynchronized(time).iob;
             if (Math.abs(lastIob - iob) > 0.02) {
                 if (Math.abs(lastIob - iob) > 0.2)
                     iobArray.add(new ScaledDataPoint(time, lastIob, iobScale));
@@ -319,7 +373,7 @@ public class GraphData {
         Scale cobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 int cob = (int) autosensData.cob;
                 if (cob != lastCob) {
@@ -366,7 +420,7 @@ public class GraphData {
         Scale devScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 int color = Color.BLACK; // "="
                 if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
@@ -404,7 +458,7 @@ public class GraphData {
         Scale ratioScale = new Scale(-1d);
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio, ratioScale));
                 maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
@@ -438,7 +492,7 @@ public class GraphData {
         Scale dsMinScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 dsMaxArray.add(new ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale));
                 dsMinArray.add(new ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale));

@@ -159,9 +159,8 @@
     <string name="copied_to_clipboard">Gekopieerd naar klembord</string>
     <string name="copy_to_clipboard">Kopieren naar klembord</string>
     <string name="correctionbous">Correctie</string>
-    <string name="cpp_notloadedplugins">Niet alle profielen zijn geladen!</string>
-    <string name="cpp_sync_setting_missing">Moet geactiveerd worden om waardes naat de pomp te verzenden!</string>
-    <string name="cpp_valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
+    <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="cs_lang">Čeština</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">Basaal uur</string>
@@ -231,7 +230,6 @@
     <string name="icmissing">KH ratio ontbreekt in profieel. Standaard waarde toegepast</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="initializing">Initialisering</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="danar_history_bolus">Bulossen</string>
     <string name="danar_history_carbohydrates">Koolhydraten</string>
     <string name="danar_history_errors">Storing</string>
@@ -251,6 +249,7 @@
     <string name="disconnectpumpfor10h">Verbreek verbinding 10u met pomp</string>
     <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
     <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
+    <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
     <string name="dismiss">NEGEER</string>
@@ -308,7 +307,6 @@
     <string name="danar_invalidinput">Verkeerde ingave</string>
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="basal_rate">Basaal:</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_tbb">Totaal basaal</string>
@@ -411,7 +409,7 @@
     <string name="othersettings_title">Andere</string>
     <string name="openapsma_nopump">Geen pomp beschikbaar</string>
     <string name="overview">Overzicht</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_bolusprogress_delivered">Toegediend</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Er worden %.2fE toegediend</string>
     <string name="overview_bolusprogress_stop">Stop</string>
@@ -451,7 +449,7 @@
     <string name="openapsma_noprofile">Geen profiel beschikbaar</string>
     <string name="openapsma_maxiob_title">Maximaal basaal IOB OpenAPS kan toedienen [E]</string>
     <string name="openapsma_profile_label">Profiel</string>
-    <string name="openapsma_valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
+    <string name="valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
     <string name="pump_basebasalrate_label">Basis basale dosis</string>
     <string name="openapsma_lastrun_label">Laatse berekening</string>
     <string name="openapsma_lastenact_label">Laatste uitvoering</string>
@@ -521,7 +519,6 @@
     <string name="basal_step">Basaal stap</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
     <string name="carbsconstraintapplied">KH limiet ingesteld</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfiel</string>
     <string name="danar_sbolus">S Bolus</string>
     <string name="danar_stats">DanaR Statistiek</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
@@ -627,7 +624,7 @@
     <string name="danar_model" formatted="false">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="danar_history_connectingfor">Verbonden gedurende %d s</string>
     <string name="danar_totaluploaded">Totaal %d gegevens geupload</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
+    <string name="valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
     <string name="smscommunicator_suspendreplywithcode" formatted="false">Om de loop te onderbreken voor %d minuten antwoord met de code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Tijdelijk basaal %.2fE/u voor %d minuten succesvol gestart</string>
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
@@ -738,8 +735,7 @@
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
 	<string name="combo_no_pump_connection">Geen verbinding</string><string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
-	<string name="combo_last_bolus">%.1f E (%s, %s)</string>
-	<string name="combo_pump_action_initializing">Initialiseren</string>
+    <string name="combo_pump_action_initializing">Initialiseren</string>
 	<string name="combo_pump_state_disconnected">Verbinding verbroken</string>
 	<string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
 	<string name="combo_warning">Waarschuwing</string>

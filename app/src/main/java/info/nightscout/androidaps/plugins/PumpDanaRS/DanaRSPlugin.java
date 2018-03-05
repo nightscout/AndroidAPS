@@ -181,6 +181,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 60;
+        pumpDescription.tempDurationStep15mAllowed = true;
+        pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
@@ -367,7 +369,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection > 0  && pump.maxBasal > 0;
+        return pump.lastConnection > 0 && pump.maxBasal > 0;
     }
 
     @Override
@@ -477,9 +479,10 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
+            t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, System.currentTimeMillis() + carbTime * 60 * 1000 + 30000, t); // +30s to make the record different
+                connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, System.currentTimeMillis() + carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -617,8 +620,13 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
                 log.debug("setTempBasalPercent: Correct value already set");
             return result;
         }
-        int durationInHours = Math.max(durationInMinutes / 60, 1);
-        boolean connectionOK = danaRSService.tempBasal(percent, durationInHours);
+        boolean connectionOK;
+        if (durationInMinutes == 15 || durationInMinutes == 30) {
+            connectionOK = danaRSService.tempBasalShortDuration(percent, durationInMinutes);
+        } else {
+            int durationInHours = Math.max(durationInMinutes / 60, 1);
+            connectionOK = danaRSService.tempBasal(percent, durationInHours);
+        }
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
@@ -820,11 +828,13 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull() + "\n";
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString() + "\n";
+        ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (activeExtendedBolus != null) {
+            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";

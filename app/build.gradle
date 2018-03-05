@@ -158,6 +158,14 @@ android {
             buildConfigField "boolean", "PUMPCONTROL", "false"
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 allprojects {
@@ -179,6 +187,7 @@ dependencies {
     compile("com.crashlytics.sdk.android:answers:1.3.12@aar") {
         transitive = true;
     }
+    compile 'MilosKozak:danars-support-lib:master@zip'
 
     compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
     compile "com.android.support:support-v4:${supportLibraryVersion}"
@@ -188,6 +197,7 @@ dependencies {
     compile "com.android.support:design:${supportLibraryVersion}"
     compile "com.android.support:percent:${supportLibraryVersion}"
     compile "com.wdullaer:materialdatetimepicker:2.3.0"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.squareup:otto:1.3.7"
     compile "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
     compile "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
@@ -214,6 +224,8 @@ dependencies {
 
     compile "net.danlew:android.joda:2.9.9.1"
 
+    compile 'org.mozilla:rhino:1.7.7.2'
+
     api "com.jakewharton:butterknife:8.8.1"
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
@@ -231,3 +243,27 @@ dependencies {
     androidTestCompile "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
 }
+
+task unzip(type: Copy) {
+    def zipPath = configurations.compile.find {it.name.startsWith("danars") }
+    def zipFile = file(zipPath)
+    def outputDir = file("${buildDir}/unpacked/dist")
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
+task copyLibs(dependsOn: unzip, type: Copy) {
+    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
+    def target = file("src/main/jniLibs/")
+
+    from src
+    into target
+}
+
+task full_clean(type: Delete) {
+    delete file("src/main/jniLibs")
+}
+
+clean.dependsOn full_clean
+preBuild.dependsOn copyLibs

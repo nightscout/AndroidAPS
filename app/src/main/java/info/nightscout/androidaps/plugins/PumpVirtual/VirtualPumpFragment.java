@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -18,8 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
+import info.nightscout.utils.FabricPrivacy;
 
 public class VirtualPumpFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpFragment.class);
@@ -61,7 +64,7 @@ public class VirtualPumpFragment extends SubscriberFragment {
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -81,13 +84,15 @@ public class VirtualPumpFragment extends SubscriberFragment {
                 public void run() {
                     VirtualPumpPlugin virtualPump = VirtualPumpPlugin.getPlugin();
                     basaBasalRateView.setText(virtualPump.getBaseBasalRate() + "U");
-                    if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                    TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+                    if (activeTemp != null) {
+                        tempBasalView.setText(activeTemp.toStringFull());
                     } else {
                         tempBasalView.setText("");
                     }
-                    if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString());
+                    ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+                    if (activeExtendedBolus != null) {
+                        extendedBolusView.setText(activeExtendedBolus.toString());
                     } else {
                         extendedBolusView.setText("");
                     }

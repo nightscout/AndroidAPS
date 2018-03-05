@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.services.AbstractDanaRExecut
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 28.01.2018.
@@ -293,7 +294,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
             result.isTempCancel = false;
             result.duration = pump.extendedBolusRemainingMinutes;
             result.absolute = pump.extendedBolusAbsoluteRate;
-            result.bolusDelivered = pump.extendedBolusAmount;
+            if (! SP.getBoolean("danar_useextended", false)) result.bolusDelivered = pump.extendedBolusAmount;
             result.isPercent = false;
             if (Config.logPumpActions)
                 log.debug("setExtendedBolus: OK");
@@ -538,11 +539,13 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull() + "\n";
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString() + "\n";
+        ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (activeExtendedBolus != null) {
+            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";

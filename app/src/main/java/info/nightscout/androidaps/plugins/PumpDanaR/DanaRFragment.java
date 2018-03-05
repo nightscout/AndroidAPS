@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
+
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -29,6 +29,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -41,6 +42,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SetWarnColor;
 
 public class DanaRFragment extends SubscriberFragment {
@@ -100,7 +102,7 @@ public class DanaRFragment extends SubscriberFragment {
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -216,8 +218,9 @@ public class DanaRFragment extends SubscriberFragment {
                             tempBasalView.setText("");
                         }
                     }
-                    if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString());
+                    ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+                    if (activeExtendedBolus != null) {
+                        extendedBolusView.setText(activeExtendedBolus.toString());
                     } else {
                         extendedBolusView.setText("");
                     }

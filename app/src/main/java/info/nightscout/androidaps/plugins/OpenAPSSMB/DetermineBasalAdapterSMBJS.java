@@ -230,7 +230,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("carb_ratio", profile.getIc());
         mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
         mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
-        mProfile.put("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
+        mProfile.put("current_basal_safety_multiplier", SP.getDouble("openapsama_current_basal_safety_multiplier", 4d));
 
         mProfile.put("high_temptarget_raises_sensitivity", SMBDefaults.high_temptarget_raises_sensitivity);
         mProfile.put("low_temptarget_lowers_sensitivity", SMBDefaults.low_temptarget_lowers_sensitivity);
@@ -241,7 +241,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
-        mProfile.put("min_5m_carbimpact", SP.getInt("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));;
+        //TODO: align with max-absorption model in AMA sensitivity
+        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));;
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);

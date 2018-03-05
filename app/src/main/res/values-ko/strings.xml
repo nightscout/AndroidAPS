@@ -111,7 +111,7 @@
     <string name="overview_newtempbasal_basalpercent">기초주입 값 [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시기초주입 적용:</string>
-    <string name="overview_bolus_label">식사주입</string>
+    <string name="overview_treatment_label">식사주입</string>
     <string name="overview_calculator_label">계산기</string>
     <string name="constraintapllied">제한!</string>
     <string name="confirmation">확인</string>
@@ -312,8 +312,8 @@
     <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f, %.2f으로 제한됨</string>
-    <string name="openapsma_valueoutofrange" formatted="false">%s값이 하드리밋(Hard Limit)를 벗어났습니다</string>
+    <string name="valuelimitedto" formatted="false">%.2f, %.2f으로 제한됨</string>
+    <string name="valueoutofrange" formatted="false">%s값이 하드리밋(Hard Limit)를 벗어났습니다</string>
     <string name="smscommunicator_remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 실행하려면 %s 를 입력하고 답장하세요</string>
@@ -359,7 +359,6 @@
     <string name="edit_base_isf">Edit Base-ISF:</string>
     <string name="edit_base_ic">Edit Base-IC:</string>
     <string name="base_profile_label">Base Profile:</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
     <string name="prefs_range_title">차트 표시 범위</string>
     <string name="prefs_range_summary">개요/스마트워치 차트 표시용 고/저혈당 선</string>
     <string name="low_mark">저혈당 선</string>
@@ -422,7 +421,6 @@
     <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
@@ -447,7 +445,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">기본값: 2\n식사주입 후 Bolus snooze가 수행되게 되고, 따라서 식사주입 직후엔 loop가 low temp에 대응하지 않게 됩니다. 기본값이 2일때 예제는 다음과 같습니다; DIA가 3시간일 경우  bolus snooz는 점차적으로 1.5시간에 걸쳐 단계적으로 사라지게 됩니다.(3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">기본값: 3\n이것은 5분당 기본 탄수화물 흡수량에 대한 설정입니다. 예상되는 기본값은 3mg/dl/5min입니다. 이는 혈당이 예상보다 빨리 떨어지거나 오를때, 얼마나 빨리 COB가 감쇠하는지와 혈당예측을 위한 계산시 탄수화물 흡수량이 얼마나 될것으로 예상되는지에 영향을 미치게 됩니다.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
     <string name="error_only_numeric_digits_range_allowed" formatted="false">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
     <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
@@ -524,6 +521,7 @@
     <string name="suspendloopfor2h">2시간동안 Loop 일시중지</string>
     <string name="suspendloopfor3h">3시간동안 Loop 일시중지</string>
     <string name="suspendloopfor10h">10시간동안 Loop 일시중지</string>
+    <string name="disconnectpumpfor15m">15분동안 펌프 일시중지</string>
     <string name="disconnectpumpfor30m">30분동안 펌프 일시중지</string>
     <string name="disconnectpumpfor1h">1시간동안 펌프 일시중지</string>
     <string name="disconnectpumpfor2h">2시간동안 펌프 일시중지</string>
@@ -623,9 +621,8 @@
     <string name="sensitivityweightedaverage">민감도 가중평균</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Cancel</string>
-    <string name="cpp_sync_setting_missing">needs to be activated to send values to the pump!</string>
-    <string name="cpp_notloadedplugins">Not all profiles loaded!</string>
-    <string name="cpp_valuesnotstored">Values not stored!</string>
+    <string name="notloadedplugins">Not all profiles loaded!</string>
+    <string name="valuesnotstored">Values not stored!</string>
     <string name="wear_overviewnotifications">개요 알림</string>
     <string name="wear_overviewnotifications_summary">개요 알림을 웨어확인메세지로 전달합니다.</string>
     <string name="ns_localbroadcasts">(xDrip 같은) 다른 앱으로의 브로드캐스트를 활성화합니다.</string>

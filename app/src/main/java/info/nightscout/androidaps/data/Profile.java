@@ -2,7 +2,7 @@ package info.nightscout.androidaps.data;
 
 import android.support.v4.util.LongSparseArray;
 
-import com.crashlytics.android.Crashlytics;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.ToastUtils;
 
 public class Profile {
@@ -57,7 +58,7 @@ public class Profile {
             if (units != null)
                 this.units = units;
             else {
-                Crashlytics.log("Profile failover failed too");
+                FabricPrivacy.log("Profile failover failed too");
                 this.units = Constants.MGDL;
             }
         }
@@ -413,6 +414,8 @@ public class Profile {
     }
 
     public String getBasalList() {
+        if (basal_v == null)
+            basal_v = convertToSparseArray(basal);
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U");
     }
 

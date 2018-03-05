@@ -209,7 +209,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             loadEvents();
 
-            mDanaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
@@ -249,6 +248,26 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent));
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
+        loadEvents();
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        return true;
+    }
+
+    public boolean tempBasalShortDuration(int percent, int durationInMinutes) {
+        if (durationInMinutes != 15 && durationInMinutes != 30) {
+            log.error("Wrong duration param");
+            return false;
+        }
+
+        if (!isConnected()) return false;
+        if (mDanaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            SystemClock.sleep(500);
+        }
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.settingtempbasal)));
+        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent,  durationInMinutes == 15, durationInMinutes == 30));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
         loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
@@ -413,6 +432,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - 45 * 60 * 1000L; //always load last 45 min;
         else
             lastHistoryFetched = 0;
+        mDanaRPump.lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
     }
 

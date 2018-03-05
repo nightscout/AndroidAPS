@@ -49,6 +49,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
@@ -244,96 +245,90 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         ArrayList<PluginBase> pluginsInCategory;
 
         // PluginBase.APS
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
-        activeAPS = (APSInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.APS);
-        if (activeAPS != null) {
-            if (Config.logConfigBuilder)
-                log.debug("Selected APS interface: " + ((PluginBase) activeAPS).getName());
-            for (PluginBase p : pluginsInCategory) {
-                if (!p.getName().equals(((PluginBase) activeAPS).getName())) {
-                    p.setFragmentVisible(PluginBase.APS, false);
-                }
-            }
-        }
+        activeAPS = this.determineActivePlugin(APSInterface.class, PluginBase.APS);
 
         // PluginBase.INSULIN
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
-        activeInsulin = (InsulinInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.INSULIN);
-        if (Config.logConfigBuilder)
-            log.debug("Selected insulin interface: " + ((PluginBase) activeInsulin).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeInsulin).getName())) {
-                p.setFragmentVisible(PluginBase.INSULIN, false);
-            }
-        }
+        activeInsulin = this.determineActivePlugin(InsulinInterface.class, PluginBase.INSULIN);
 
         // PluginBase.SENSITIVITY
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
-        activeSensitivity = (SensitivityInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.SENSITIVITY);
-        if (Config.logConfigBuilder)
-            log.debug("Selected sensitivity interface: " + ((PluginBase) activeSensitivity).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeSensitivity).getName())) {
-                p.setFragmentVisible(PluginBase.SENSITIVITY, false);
-            }
-        }
+        activeSensitivity = this.determineActivePlugin(SensitivityInterface.class, PluginBase.SENSITIVITY);
 
         // PluginBase.PROFILE
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
-        activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PROFILE);
-        if (Config.logConfigBuilder)
-            log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeProfile).getName())) {
-                p.setFragmentVisible(PluginBase.PROFILE, false);
-            }
-        }
+        activeProfile = this.determineActivePlugin(ProfileInterface.class, PluginBase.PROFILE);
 
         // PluginBase.BGSOURCE
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
-        activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.BGSOURCE);
-        if (Config.logConfigBuilder)
-            log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeBgSource).getName())) {
-                p.setFragmentVisible(PluginBase.BGSOURCE, false);
-            }
-        }
+        activeBgSource = this.determineActivePlugin(BgSourceInterface.class, PluginBase.BGSOURCE);
 
         // PluginBase.PUMP
         pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.PUMP);
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
         if (activePump == null)
             activePump = VirtualPumpPlugin.getPlugin(); // for NSClient build
-        if (Config.logConfigBuilder)
-            log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activePump).getName())) {
-                p.setFragmentVisible(PluginBase.PUMP, false);
-            }
-        }
+        this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginBase.PUMP);
 
         // PluginBase.LOOP
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.LOOP);
-        activeLoop = (LoopPlugin) getTheOneEnabledInArray(pluginsInCategory, PluginBase.LOOP);
-        if (activeLoop != null) {
-            if (Config.logConfigBuilder)
-                log.debug("Selected loop interface: " + activeLoop.getName());
-            for (PluginBase p : pluginsInCategory) {
-                if (!p.getName().equals(activeLoop.getName())) {
-                    p.setFragmentVisible(PluginBase.LOOP, false);
-                }
-            }
-        }
+        activeLoop = this.determineActivePlugin(PluginBase.LOOP);
 
         // PluginBase.TREATMENT
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.TREATMENT);
-        activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TREATMENT);
+        activeTreatments = this.determineActivePlugin(PluginBase.TREATMENT);
+    }
+
+    /**
+     * disables the visibility for all fragments of Plugins with the given PluginType
+     * which are not equally named to the Plugin implementing the given Plugin Interface.
+     *
+     * @param pluginInterface
+     * @param pluginType
+     * @param <T>
+     * @return
+     */
+    private <T> T determineActivePlugin(Class<T> pluginInterface, int pluginType) {
+        ArrayList<PluginBase> pluginsInCategory;
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(pluginInterface);
+
+        return this.determineActivePlugin(pluginsInCategory, pluginType);
+    }
+
+    private <T> T determineActivePlugin(int pluginType) {
+        ArrayList<PluginBase> pluginsInCategory;
+        pluginsInCategory = MainApp.getSpecificPluginsList(pluginType);
+
+        return this.determineActivePlugin(pluginsInCategory, pluginType);
+    }
+
+    /**
+     * disables the visibility for all fragments of Plugins in the given pluginsInCategory
+     * with the given PluginType which are not equally named to the Plugin implementing the
+     * given Plugin Interface.
+     * <p>
+     * TODO we are casting an interface to PluginBase, which seems to be rather odd, since
+     * TODO the interface is not implementing PluginBase (this is just avoiding errors through
+     * TODO conventions.
+     *
+     * @param pluginsInCategory
+     * @param pluginType
+     * @param <T>
+     * @return
+     */
+    private <T> T determineActivePlugin(ArrayList<PluginBase> pluginsInCategory,
+                                        int pluginType) {
+        T activePlugin = (T) getTheOneEnabledInArray(pluginsInCategory, pluginType);
+
+        if (activePlugin != null) {
+            this.setFragmentVisiblities(((PluginBase) activePlugin).getName(),
+                    pluginsInCategory, pluginType);
+        }
+
+        return activePlugin;
+    }
+
+    private void setFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
+                                        int pluginType) {
         if (Config.logConfigBuilder)
-            log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
+            log.debug("Selected interface: " + activePluginName);
         for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeTreatments).getName())) {
-                p.setFragmentVisible(PluginBase.TREATMENT, false);
+            if (!p.getName().equals(activePluginName)) {
+                p.setFragmentVisible(pluginType, false);
             }
         }
     }
@@ -749,14 +744,17 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     }
 
     public String getProfileName(long time, boolean customized) {
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
-        if (profileSwitch != null) {
-            if (profileSwitch.profileJson != null) {
-                return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
-            } else {
-                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                if (profile != null)
-                    return profileSwitch.profileName;
+        boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
+        if (!ignoreProfileSwitchEvents) {
+            ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+            if (profileSwitch != null) {
+                if (profileSwitch.profileJson != null) {
+                    return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
+                } else {
+                    Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null)
+                        return profileSwitch.profileName;
+                }
             }
         }
         // Unable to determine profile, failover to default
@@ -816,5 +814,41 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             log.error("Unhandled exception", e);
         }
         return null;
+    }
+
+    public void disconnectPump(int durationInMinutes) {
+        getActiveLoop().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
+        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        if (getActivePump().getPumpDescription().isExtendedBolusCapable && isInHistoryExtendedBoluslInProgress()) {
+            getCommandQueue().cancelExtended(new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.extendedbolusdeliveryerror));
+                    }
+                }
+            });
+        }
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
+    }
+
+    public void suspendLoop(int durationInMinutes) {
+        getActiveLoop().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
+        getCommandQueue().cancelTempBasal(true, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
     }
 }
