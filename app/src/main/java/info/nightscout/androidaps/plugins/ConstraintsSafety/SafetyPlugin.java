@@ -102,6 +102,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
      **/
     @Override
     public boolean isClosedModeEnabled() {
+        if (MainApp.devBranch && !MainApp.engineeringMode) return false;
         String mode = SP.getString("aps_mode", "open");
         return mode.equals("closed") && BuildConfig.CLOSEDLOOP;
     }

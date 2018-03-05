@@ -20,6 +20,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.Services.Intents;
@@ -95,6 +96,9 @@ public class MainApp extends Application {
     private static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
     private LocalBroadcastManager lbm;
 
+    public static boolean devBranch;
+    public static boolean engineeringMode;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -139,7 +143,7 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
-            // if (Config.DANAR) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
+            if (Config.DANAR && engineeringMode) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
@@ -195,6 +199,8 @@ public class MainApp extends Application {
             }
         }).start();
 
+        engineeringMode = new File(System.getProperty("EXT_FILES_DIR"),"engineering_mode").canRead();
+        devBranch = BuildConfig.VERSION.contains("dev");
     }
 
     private void registerLocalBroadcastReceiver() {
