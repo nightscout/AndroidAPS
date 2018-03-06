@@ -192,7 +192,7 @@ public class StatuslinePlugin implements PluginBase {
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
 
         if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {
