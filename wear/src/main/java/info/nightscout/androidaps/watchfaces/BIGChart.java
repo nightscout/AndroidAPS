@@ -67,6 +67,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public int basalBackgroundColor = Color.BLUE;
     public int basalCenterColor = Color.BLUE;
     public int bolusColor = Color.MAGENTA;
+    public int carbsColor = Color.GREEN;
     public int pointSize = 2;
     public boolean lowResMode = false;
     public boolean layoutSet = false;
@@ -677,9 +678,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (lowResMode) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, carbsColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, bolusColor, carbsColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

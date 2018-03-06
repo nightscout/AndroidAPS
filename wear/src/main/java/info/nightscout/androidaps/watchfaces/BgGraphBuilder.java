@@ -267,7 +267,7 @@ public class BgGraphBuilder {
             }
         }
         Line line = new Line(pointValues);
-        line.setColor(Color.GREEN);
+        line.setColor(carbsColor);
         line.setHasLines(false);
         line.setPointRadius(pointSize*2);
         line.setHasPoints(true);
