@@ -204,7 +204,7 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        if(!ev.isSMB()||SP.getBoolean("wear_notifySMB", false)) {
+        if(!ev.isSMB()||SP.getBoolean("wear_notifySMB", true)) {
             Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
             intent.putExtra("progresspercent", ev.percent);
             intent.putExtra("progressstatus", ev.status);
