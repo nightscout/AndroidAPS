@@ -325,13 +325,13 @@ public class TemporaryBasal implements Interval {
                 if(profile != null) {
                     double basal = profile.getBasal();
                     if(basal != 0){
-                        return Math.round(rate*100d/basal) + "% ";
+                        return Math.round(rate*100d/basal) + "%";
                     }
                 }
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h ";
+            return DecimalFormatter.to2Decimal(rate) + "U/h";
         } else { // percent
-            return percentRate + "% ";
+            return percentRate + "%";
         }
     }
 
