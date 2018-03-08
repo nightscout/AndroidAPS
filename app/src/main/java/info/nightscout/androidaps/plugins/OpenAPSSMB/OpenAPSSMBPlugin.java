@@ -181,7 +181,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
-        double targetBg = (minBg + maxBg) / 2;
+        double targetBg = Profile.toMgdl(profile.getTarget(), units);
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
