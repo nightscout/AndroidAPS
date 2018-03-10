@@ -38,6 +38,14 @@ public class Constants {
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
 
+    // Temp targets
+    public static final int defaultActivityTTDuration = 90; // min
+    public static final double defaultActivityTTmgdl = 90d;
+    public static final double defaultActivityTTmmol = 5d;
+    public static final int defaultEatingSoonTTDuration = 45; // min
+    public static final double defaultEatingSoonTTmgdl = 140d;
+    public static final double defaultEatingSoonTTmmol = 8d;
+
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;
 
