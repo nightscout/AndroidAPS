@@ -969,5 +969,6 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your G5 app to supported version</string>
+    <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled</string>
 </resources>
 

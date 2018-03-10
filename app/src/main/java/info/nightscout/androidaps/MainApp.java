@@ -47,6 +47,8 @@ import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
@@ -201,6 +203,11 @@ public class MainApp extends Application {
 
         engineeringMode = new File(System.getProperty("EXT_FILES_DIR"),"engineering_mode").canRead();
         devBranch = BuildConfig.VERSION.contains("dev");
+
+        if (devBranch && !engineeringMode) {
+            Notification n = new Notification(Notification.TOAST_ALARM, gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
+            bus().post(new EventNewNotification(n));
+        }
     }
 
     private void registerLocalBroadcastReceiver() {
