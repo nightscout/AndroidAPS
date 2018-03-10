@@ -41,9 +41,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.DetermineBasalResultSMB;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NumberPicker;
@@ -257,22 +255,22 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             double activityTT = 140d;
             double esTT = 90d;
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
-            if(currentProfile == null)
+            if (currentProfile == null)
                 return;
 
-            esTT = eatingSoonTT > 0  ? Profile.toMgdl(eatingSoonTT,currentProfile.getUnits()) : 90d;
-            activityTT = prefTT > 0  ? Profile.toMgdl(prefTT,currentProfile.getUnits()) : 140d;
+            esTT = eatingSoonTT > 0 ? Profile.toMgdl(eatingSoonTT, currentProfile.getUnits()) : 90d;
+            activityTT = prefTT > 0 ? Profile.toMgdl(prefTT, currentProfile.getUnits()) : 140d;
 
             if (startActivityTTCheckbox.isChecked()) {
-                if(currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(activityTT,Constants.MGDL) + " mmol/l for " + ((int) activityTTDuration) + " min </font>";
+                if (currentProfile.getUnits().equals(Constants.MMOL)) {
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(activityTT, Constants.MGDL) + " mmol/l for " + ((int) activityTTDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) activityTT) + " mg/dl for " + ((int) activityTTDuration) + " min </font>";
 
             }
             if (startEsTTCheckbox.isChecked() && !startActivityTTCheckbox.isChecked()) {
-                if(currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(esTT,Constants.MGDL) + " mmol/l for " + ((int) esTTDuration) + " min </font>";
+                if (currentProfile.getUnits().equals(Constants.MMOL)) {
+                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(esTT, Constants.MGDL) + " mmol/l for " + ((int) esTTDuration) + " min </font>";
                 } else
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) esTT) + " mg/dl for " + ((int) esTTDuration) + " min </font>";
 
@@ -286,7 +284,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             if (!initialEventTime.equals(eventTime)) {
                 confirmMessage += "<br/> Time: " + DateUtil.dateAndTimeString(eventTime);
             }
-            if(confirmMessage.length() > 0) {
+            if (confirmMessage.length() > 0) {
 
                 final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
