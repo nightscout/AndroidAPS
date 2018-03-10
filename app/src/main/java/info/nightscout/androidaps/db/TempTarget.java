@@ -41,6 +41,10 @@ public class TempTarget implements Interval {
     @DatabaseField
     public int durationInMinutes;
 
+    public double target() {
+        return (low + high) / 2;
+    }
+
     public boolean isEqual(TempTarget other) {
         if (date != other.date) {
             return false;
