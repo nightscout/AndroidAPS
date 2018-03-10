@@ -442,6 +442,14 @@ public class Profile {
         return ret;
     }
 
+    public double getTarget(){
+        return  getTarget(secondsFromMidnight(System.currentTimeMillis()));
+    }
+
+    private double getTarget(Integer time) {
+        return (getTargetLow(time) + getTargetHigh(time))/2;
+    }
+
     public Double getTargetLow() {
         return getTargetLow(secondsFromMidnight(System.currentTimeMillis()));
     }

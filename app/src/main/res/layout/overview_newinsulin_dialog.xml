@@ -34,14 +34,14 @@
 
             <CheckBox
                 android:id="@+id/newinsulin_start_eating_soon_tt"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:text="Start eating soon TT" />
 
             <CheckBox
                 android:id="@+id/newinsulin_record_only"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Don't bolus, record only" />
 

@@ -176,7 +176,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
-        double targetBg = (minBg + maxBg) / 2;
+        double targetBg = Profile.toMgdl(profile.getTarget(), units);
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
@@ -202,7 +202,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             isTempTarget = true;
             minBg = HardLimits.verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
             maxBg = HardLimits.verifyHardLimits(tempTarget.high, "maxBg", HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
-            targetBg = HardLimits.verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
+            targetBg = HardLimits.verifyHardLimits(tempTarget.target(), "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
         }
 
 

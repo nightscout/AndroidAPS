@@ -247,6 +247,10 @@ public class MainApp extends Application {
         return sResources.getString(id, args);
     }
 
+    public static int gc(int id) {
+        return sResources.getColor(id);
+    }
+
     public static MainApp instance() {
         return sInstance;
     }

@@ -965,9 +965,15 @@
     <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
     <string name="dexcomG5_shortname" translatable="false">G5</string>
+    <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
+    <string name="wear_predictions_title">Predictions</string>
     <string name="data_choices">Data Choices</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your G5 app to supported version</string>
+    <string name="suspendloopfor30min">Suspend for 30 min</string>
+    <string name="start_activity_tt">Start Activity TT</string>
+    <string name="start_eating_soon_tt">Start Eating soon TT</string>
+    <string name="temptargetshort">TT</string>
 </resources>
 
