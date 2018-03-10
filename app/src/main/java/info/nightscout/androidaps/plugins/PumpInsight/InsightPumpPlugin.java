@@ -717,7 +717,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         updateGui();
 
-        connector.requestHistorySync(1000);
+        connector.requestHistorySync(30000);
         connector.tryToGetPumpStatusAgain();
 
         return pumpEnactResult;
