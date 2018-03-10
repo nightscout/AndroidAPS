@@ -28,20 +28,20 @@ public class SetTBRTaskRunner extends TaskRunner {
                 if (amount == 100) finish(amount);
                 else {
                     SetTBRMessage setTBRMessage = new SetTBRMessage();
-                    setTBRMessage.setDuration((short) duration);
-                    setTBRMessage.setAmount((short) amount);
+                    setTBRMessage.setDuration(duration);
+                    setTBRMessage.setAmount(amount);
                     return setTBRMessage;
                 }
             } else {
                 if (amount == 100) {
                     ChangeTBRMessage changeTBRMessage = new ChangeTBRMessage();
-                    changeTBRMessage.setDuration((short) 1);
-                    changeTBRMessage.setAmount((short) 90);
+                    changeTBRMessage.setDuration(1);
+                    changeTBRMessage.setAmount(90);
                     return changeTBRMessage;
                 } else {
                     ChangeTBRMessage changeTBRMessage = new ChangeTBRMessage();
-                    changeTBRMessage.setDuration((short) duration);
-                    changeTBRMessage.setAmount((short) amount);
+                    changeTBRMessage.setDuration(duration);
+                    changeTBRMessage.setAmount(amount);
                     return changeTBRMessage;
                 }
             }
