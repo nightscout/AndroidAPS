@@ -38,6 +38,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.data.BolusWatchData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.TempWatchData;
@@ -76,7 +77,9 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
+    public ArrayList<BolusWatchData> bolusWatchDataList = new ArrayList<>();
     public ArrayList<BgWatchData> predictionList = new ArrayList<>();
+
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
@@ -630,9 +633,9 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (lowResMode) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, null, pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, predictionList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList,predictionList, tempWatchDataList, basalWatchDataList, null, pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList,predictionList, tempWatchDataList, basalWatchDataList, bolusWatchDataList, pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());
@@ -664,6 +667,29 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 bwd.endTime = basal.getLong("endtime");
                 bwd.amount = basal.getDouble("amount");
                 basalWatchDataList.add(bwd);
+            }
+        }
+        ArrayList<DataMap> boluses = dataMap.getDataMapArrayList("boluses");
+        if (boluses != null) {
+            bolusWatchDataList = new ArrayList<>();
+            for (DataMap bolus : boluses) {
+                BolusWatchData bwd = new BolusWatchData();
+                bwd.date = bolus.getLong("date");
+                bwd.bolus = bolus.getDouble("bolus");
+                bwd.carbs = bolus.getDouble("carbs");
+                bwd.isSMB = bolus.getBoolean("isSMB");
+                bwd.isValid = bolus.getBoolean("isValid");
+                bolusWatchDataList.add(bwd);
+            }
+        }
+        ArrayList<DataMap> predictions = dataMap.getDataMapArrayList("predictions");
+        if (boluses != null) {
+            predictionList = new ArrayList<>();
+            for (DataMap prediction : predictions) {
+                BgWatchData bwd = new BgWatchData();
+                bwd.timestamp = prediction.getLong("timestamp");
+                bwd.sgv = prediction.getDouble("sgv");
+                predictionList.add(bwd);
             }
         }
     }
