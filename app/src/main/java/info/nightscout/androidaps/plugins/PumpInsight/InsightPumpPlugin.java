@@ -416,13 +416,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             Profile.BasalValue basalValue = profile.getBasalValues()[i];
             Profile.BasalValue nextValue = null;
             if (profile.getBasalValues().length > i + 1) nextValue = profile.getBasalValues()[i + 1];
-            profileBlocks.add(new BRProfileBlock.ProfileBlock((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60), basalValue.value));
+            profileBlocks.add(new BRProfileBlock.ProfileBlock((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60), Helpers.roundDouble(basalValue.value, 2)));
             log("setNewBasalProfile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
         }
         final UUID uuid = aSyncTaskRunner(new WriteBasalProfileTaskRunner(connector.getServiceConnector(), profileBlocks), "Write basal profile");
         final Mstatus ms = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
         if (ms.success()) {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
             MainApp.bus().post(new EventNewNotification(notification));
@@ -439,12 +438,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        if (!isInitialized() || profileBlocks == null) {
-            return true;
-        }
-        if (profile.getBasalValues().length != profileBlocks.size()) {
-            return false;
-        }
+        if (!isInitialized() || profileBlocks == null) return true;
+        if (profile.getBasalValues().length != profileBlocks.size()) return false;
         for (int i = 0; i < profileBlocks.size(); i++) {
             BRProfileBlock.ProfileBlock profileBlock = profileBlocks.get(i);
             Profile.BasalValue basalValue = profile.getBasalValues()[i];
@@ -452,13 +447,9 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             if (profile.getBasalValues().length > i + 1) nextValue = profile.getBasalValues()[i + 1];
             log("isThisProfileSet - Comparing block: Pump: " + profileBlock.getAmount() + " for " + profileBlock.getDuration()
                     + " Profile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
-            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) {
-                return false;
-            }
+            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) return false;
             //Allow a little imprecision due to rounding errors
-            if (Math.abs(profileBlock.getAmount() - basalValue.value) > 0.02D) {
-                return false;
-            }
+            if (Math.abs(profileBlock.getAmount() - Helpers.roundDouble(basalValue.value, 2)) >= 0.01D) return false;
         }
         return true;
     }
