@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.PumpInsight;
 
 import android.os.Handler;
+import android.util.Log;
+
+import com.j256.ormlite.stmt.query.In;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -405,15 +408,15 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             MainApp.bus().post(new EventNewNotification(notification));
             result.comment = MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet);
             return result;
-        } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
+        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BRProfileBlock.ProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
             Profile.BasalValue basalValue = profile.getBasalValues()[i];
             Profile.BasalValue nextValue = null;
             if (profile.getBasalValues().length > i + 1) nextValue = profile.getBasalValues()[i + 1];
             profileBlocks.add(new BRProfileBlock.ProfileBlock((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60), basalValue.value));
+            log("setNewBasalProfile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
         }
         final UUID uuid = aSyncTaskRunner(new WriteBasalProfileTaskRunner(connector.getServiceConnector(), profileBlocks), "Write basal profile");
         final Mstatus ms = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
@@ -435,17 +438,26 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        if (!isInitialized() || profileBlocks == null) return true;
-        if (profile.getBasalValues().length != profileBlocks.size()) return false;
+        if (!isInitialized() || profileBlocks == null) {
+            return true;
+        }
+        if (profile.getBasalValues().length != profileBlocks.size()) {
+            return false;
+        }
         for (int i = 0; i < profileBlocks.size(); i++) {
             BRProfileBlock.ProfileBlock profileBlock = profileBlocks.get(i);
             Profile.BasalValue basalValue = profile.getBasalValues()[i];
             Profile.BasalValue nextValue = null;
             if (profile.getBasalValues().length > i + 1) nextValue = profile.getBasalValues()[i + 1];
-            if (profileBlock == null || basalValue == null) return false;
-            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) return false;
+            log("isThisProfileSet - Comparing block: Pump: " + profileBlock.getAmount() + " for " + profileBlock.getDuration()
+                    + " Profile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
+            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) {
+                return false;
+            }
             //Allow a little imprecision due to rounding errors
-            if (Math.abs(profileBlock.getAmount() - basalValue.value) > 0.2D) return false;
+            if (Math.abs(profileBlock.getAmount() - basalValue.value) > 0.02D) {
+                return false;
+            }
         }
         return true;
     }
