@@ -217,7 +217,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             return;
         if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", HardLimits.MINISF, HardLimits.MAXISF))
             return;
-        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, HardLimits.maxBasal()))
+        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.05, HardLimits.maxBasal()))
             return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal()))
             return;
