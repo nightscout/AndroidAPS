@@ -184,7 +184,7 @@ public class StatuslinePlugin implements PluginBase {
 
         TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
-            status += activeTemp.toStringShort();
+            status += activeTemp.toStringShort() + " ";
         }
 
         //IOB

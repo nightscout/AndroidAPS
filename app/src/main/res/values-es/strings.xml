@@ -389,7 +389,6 @@
     <string name="smscommunicator_calibrationreplywithcode" formatted="false">Para enviar calibracion %.2f responder con código %s</string>
     <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
-    <string name="pump_errors_history">Errores</string>
     <string name="objectives_7_objective">habilitar funciones adicionales para uso durante el día como SMB</string>
     <string name="valuelimitedto" formatted="false">%.2f limitado a %.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">no permitido el mando remoto</string>

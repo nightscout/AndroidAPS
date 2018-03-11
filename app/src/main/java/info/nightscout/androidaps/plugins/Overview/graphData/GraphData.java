@@ -249,7 +249,7 @@ public class GraphData {
             if (tt == null) {
                 value = (profile.getTargetLow(time) + profile.getTargetHigh(time))  / 2;
             } else {
-                value = (tt.low + tt.high) / 2;
+                value = tt.target();
             }
             if (lastTarget > 0 && lastTarget != value) {
                 targetsSeriesArray.add(new DataPoint(time, lastTarget));

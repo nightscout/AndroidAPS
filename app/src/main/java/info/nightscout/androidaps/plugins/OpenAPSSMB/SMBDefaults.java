@@ -40,7 +40,7 @@ public class SMBDefaults {
     public final static boolean skip_neutral_temps = true; // ***** default false in oref1 ***** if true, don't set neutral temps
     // unsuspend_if_no_temp:false // if true, pump will un-suspend after a zero temp finishes
     // bolussnooze_dia_divisor:2 // bolus snooze decays after 1/2 of DIA
-    public final static int min_5m_carbimpact = 8; // mg/dL per 5m (8 mg/dL/5m corresponds to 24g/hr at a CSF of 4 mg/dL/g (x/5*60/4))
+    public final static double min_5m_carbimpact = 8d; // mg/dL per 5m (8 mg/dL/5m corresponds to 24g/hr at a CSF of 4 mg/dL/g (x/5*60/4))
     public final static int remainingCarbsCap = 90; // max carbs we'll assume will absorb over 4h if we don't yet see carb absorption
     // WARNING: use SMB with caution: it can and will automatically bolus up to max_iob worth of extra insulin
     // enableUAM:true // enable detection of unannounced meal carb absorption

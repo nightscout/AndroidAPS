@@ -241,7 +241,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
-        mProfile.put("min_5m_carbimpact", SP.getInt("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));;
+        //TODO: align with max-absorption model in AMA sensitivity
+        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));;
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);

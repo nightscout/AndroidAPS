@@ -481,7 +481,7 @@ public class ActionStringHandler {
 
         ret += "DEFAULT RANGE: ";
         ret += profile.getTargetLow() + " - " + profile.getTargetHigh();
-        ret += " target: " + (profile.getTargetLow() + profile.getTargetHigh()) / 2;
+        ret += " target: " + profile.getTarget();
         return ret;
     }
 

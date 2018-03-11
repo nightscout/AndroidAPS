@@ -71,8 +71,8 @@ class HistoryIntentAdapter {
         final long pump_serial_number = Long.parseLong(intent.getStringExtra(HistoryBroadcast.EXTRA_PUMP_SERIAL_NUMBER));
         final Date event_time = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
         final Date start_time = getDateExtra(intent, HistoryBroadcast.EXTRA_START_TIME);
-        final float immediate_amount = intent.getFloatExtra(HistoryBroadcast.EXTRA_IMMEDIATE_AMOUNT, -1);
-        final float extended_insulin = intent.getFloatExtra(HistoryBroadcast.EXTRA_EXTENDED_AMOUNT, -1);
+        final double immediate_amount = intent.getDoubleExtra(HistoryBroadcast.EXTRA_IMMEDIATE_AMOUNT, -1);
+        final double extended_insulin = intent.getDoubleExtra(HistoryBroadcast.EXTRA_EXTENDED_AMOUNT, -1);
         final int extended_minutes = intent.getIntExtra(HistoryBroadcast.EXTRA_DURATION, -1);
 
         final long record_unique_id = getRecordUniqueID(pump_serial_number, bolus_id > -1 ? bolus_id : pump_record_id);

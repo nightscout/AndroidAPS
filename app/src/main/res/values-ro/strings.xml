@@ -50,11 +50,7 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Fă acum</string>
     <string name="vitualpump_label">POMPĂ VIRTUALĂ</string>
-    <string name="virtualpump_basebasalrate_label">Rata bazală normală</string>
-    <string name="virtualpump_tempbasal_label">Bazală temporară</string>
     <string name="virtualpump_extendedbolus_label">Bolus extins</string>
-    <string name="virtualpump_battery_label">Baterie</string>
-    <string name="virtualpump_reservoir_label">Rezervor</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Eroare SQL</string>
     <string name="openapsma_lastrun_label">Ultima acțiune</string>
@@ -64,13 +60,11 @@
     <string name="openapsma_iobdata_label">Date IOB</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Date despre masă</string>
-    <string name="openapsma_result_label">Rezultat</string>
     <string name="openapsma_noglucosedata">Nu există date despre glicemie</string>
     <string name="openapsma_noprofile">Niciun profil disponibil</string>
     <string name="openapsma_nopump">Nicio pompă disponibilă</string>
     <string name="nochangerequested">Nu este solicitată nicio schimbare</string>
     <string name="openapsma_request_label">Solicită</string>
-    <string name="openapsma_minbg_label">Ținta de jos</string>
     <string name="rate">Rată</string>
     <string name="duration">Durată</string>
     <string name="reason">Motiv</string>
@@ -85,7 +79,6 @@
     <string name="overview">Privire ansamblu</string>
     <string name="profileviewer">Profil NS</string>
     <string name="simpleprofile">Profil simplu</string>
-    <string name="tempbasals">Bazale temporare</string>
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>
     <string name="careportal">Careportal</string>
@@ -369,7 +362,6 @@
     <string name="percentagefactor_hint">Procentul factorului cu care profilul bazal va fi mărit.</string>
         Time in hours by which the profile will be shifted round robin.</string>
     <string name="timeshift_hint">Timpul în ore în care profilul va fi rotunjit prin metoda round-robin</string>
-    <string name="send_to_pump">TRIMITE CĂTRE POMPĂ</string>
     <string name="units">Unități:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -379,8 +371,6 @@
     <string name="edit_base_isf">Editează ISF normal:</string>
     <string name="edit_base_ic">Editează IC normal:</string>
     <string name="base_profile_label">Profilul de bază:</string>
-    <string name="androidaps_tempbasalendnote">Sfârșit bazală temporară</string>
-    <string name="androidaps_tempbasalstartnote">Început bazală temporară</string>
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
     <string name="prefs_range_summary">Valoarea maximă și minimă pentru graficele din vizualizare și pentru smartwatch</string>
     <string name="low_mark">Pragul HIPO</string>
@@ -393,7 +383,6 @@
     <string name="pumpshutdown">Pompa se oprește</string>
     <string name="batterydischarged">Bateria pompei este descărcată</string>
     <string name="danarkoreanpump">DanaR Korean</string>
-    <string name="wrongpumpdriverselected">Driver de pompă selectat greșit</string>
     <string name="basal_rate">Rată bazală:</string>
     <string name="profile_set_failed">Setarea profilului bazalei a eșuat</string>
     <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
@@ -417,8 +406,6 @@
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Folosește opțiunea autosens AMA</string>
-    <string name="temptargetrange">Țintă temporară</string>
-    <string name="temptargetrange_refreshfromnightscout">Reîncarcă țintele temporare din NS</string>
     <string name="eatingsoon">Masă în curând</string>
     <string name="activity">Activitate</string>
     <string name="removerecord">Șterge înregistrarea:</string>
@@ -573,7 +560,6 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="virtualpump_lastconnection_label">Ultima conectare</string>
     <string name="danar_bluetooth_status">Status bluetooth</string>
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
