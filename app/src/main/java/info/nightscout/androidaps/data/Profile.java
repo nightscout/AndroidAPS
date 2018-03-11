@@ -218,16 +218,18 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            for (int index = 0; index < basal_v.size(); index++) {
-                long secondsFromMidnight = basal_v.keyAt(index);
-                if (secondsFromMidnight % 3600 != 0) {
-                    Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
-                    MainApp.bus().post(new EventNewNotification(notification));
+            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            if (!pump.getPumpDescription().is30minBasalRatesCapable) {
+                for (int index = 0; index < basal_v.size(); index++) {
+                    long secondsFromMidnight = basal_v.keyAt(index);
+                    if (secondsFromMidnight % 3600 != 0) {
+                        Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
+                        MainApp.bus().post(new EventNewNotification(notification));
+                    }
                 }
             }
 
             // Check for minimal basal value
-            PumpInterface pump = ConfigBuilderPlugin.getActivePump();
             if (pump != null) {
                 PumpDescription description = pump.getPumpDescription();
                 for (int i = 0; i < basal_v.size(); i++) {

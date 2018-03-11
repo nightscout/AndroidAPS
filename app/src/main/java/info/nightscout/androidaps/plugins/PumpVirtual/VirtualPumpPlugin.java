@@ -101,6 +101,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         pumpDescription.isRefillingCapable = false;
 
         pumpDescription.storesCarbInfo = false;
+        pumpDescription.is30minBasalRatesCapable = true;
     }
 
     @Override

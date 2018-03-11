@@ -155,6 +155,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         pumpDescription.isRefillingCapable = true;
         //pumpDescription.storesCarbInfo = false;
+        pumpDescription.is30minBasalRatesCapable = true;
 
     }
 
