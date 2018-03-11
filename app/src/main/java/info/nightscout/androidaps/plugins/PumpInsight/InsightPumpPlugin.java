@@ -497,7 +497,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         if (result.success) {
             log("Success!");
 
+            Treatment t = new Treatment();
+            t.isSMB = detailedBolusInfo.isSMB;
             final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            bolusingEvent.t = t;            
             bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
             bolusingEvent.percent = 100;
             MainApp.bus().post(bolusingEvent);
