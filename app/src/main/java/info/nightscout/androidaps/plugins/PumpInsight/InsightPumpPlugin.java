@@ -156,13 +156,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
-        pumpDescription.isSetBasalProfileCapable = true; // leave this for now
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.is30minBasalRatesCapable = true;
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.02d;
 
         pumpDescription.isRefillingCapable = true;
-        pumpDescription.storesCarbInfo = false;
 
+        pumpDescription.storesCarbInfo = false;
     }
 
 

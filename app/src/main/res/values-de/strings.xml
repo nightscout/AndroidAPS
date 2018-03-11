@@ -375,7 +375,7 @@
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
     <string name="temptarget">Temporäres Ziel</string>
     <string name="timeshift_hint">Zeit in Stunden, um die das Profil verschoben wird.</string>
-    <string name="treatments_wizard_bgtrend_label">15-Min.-Trend</string>
+    <string name="treatments_wizard_bgtrend_label">15\'-Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="unsupportednsversion">Nicht unterstütze Nightscout-Version</string>
     <string name="uploader">Uploader</string>
