@@ -396,6 +396,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     builder.setIcon(R.mipmap.blueowl);
                                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                                 message += MainApp.sResources.getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                                if (MainApp.engineeringMode)
+                                    message += MainApp.gs(R.string.engineering_mode_enabled);
                                 builder.setMessage(message);
                                 builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                 AlertDialog alertDialog = builder.create();
