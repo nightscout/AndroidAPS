@@ -53,7 +53,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     /**
      * This method is a simple re-implementation of the database create and up/downgrade functionality
      * in SQLiteOpenHelper#getDatabaseLocked method.
-     *
+     * <p>
      * It is implemented to be able to late initialize separate plugins of the application.
      */
     protected void dbInitialize() {
@@ -145,10 +145,10 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     /**
      * A place to centrally register events to be posted, if any data changed.
      * This should be implemented in an abstract service-class.
-     *
+     * <p>
      * We do need to make sure, that ICallback is extended to be able to handle multiple
      * events, or handle a list of events.
-     *
+     * <p>
      * on some methods the earliestDataChange event is handled separatly, in that it is checked if it is
      * set to null by another event already (eg. scheduleExtendedBolusChange).
      *
@@ -227,8 +227,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
     public void createFoodFromJsonIfNotExists(JSONArray array) {
         try {
-            for(int n = 0; n < array.length(); n++)
-            {
+            for (int n = 0; n < array.length(); n++) {
                 JSONObject json = array.getJSONObject(n);
                 Food food = Food.createFromJson(json);
                 this.createFoodFromJsonIfNotExists(food);
@@ -252,9 +251,8 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     public void deleteNS(JSONArray array) {
-        try   {
-            for(int n = 0; n < array.length(); n++)
-            {
+        try {
+            for (int n = 0; n < array.length(); n++) {
                 JSONObject json = array.getJSONObject(n);
                 this.deleteNS(json);
             }
@@ -265,7 +263,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
     /**
      * deletes an entry by its NS Id.
-     *
+     * <p>
      * Basically a convenience method for findByNSId and delete.
      *
      * @param _id
@@ -280,7 +278,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
     /**
      * deletes the food and sends the foodChange Event
-     *
+     * <p>
      * should be moved ot a Service
      *
      * @param food
@@ -314,10 +312,10 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                 } else {
                     return false;
                 }
+            } else {
+                this.createOrUpdate(food);
+                return true;
             }
-        } else {
-            this.createOrUpdate(food);
-            return true;
         }
 
         return false;

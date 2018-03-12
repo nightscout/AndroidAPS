@@ -779,4 +779,6 @@
     <string name="combo_read_full_history_confirmation">Opravdu chcete přečíst historii z pumpy a nést důsledky z toho vyplývající?</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
+    <string name="subcategory">Podkategorie</string>
+    <string name="category">Kategorie</string>
 </resources>

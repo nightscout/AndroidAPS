@@ -128,4 +128,22 @@ public class Food {
         units = other.units;
         gi = other.gi;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("_id=" + _id + ";");
+        sb.append("isValid=" + isValid + ";");
+        sb.append("name=" + name + ";");
+        sb.append("category=" + category + ";");
+        sb.append("subcategory=" + subcategory + ";");
+        sb.append("portion=" + portion + ";");
+        sb.append("carbs=" + carbs + ";");
+        sb.append("protein=" + protein + ";");
+        sb.append("energy=" + energy + ";");
+        sb.append("units=" + units + ";");
+        sb.append("gi=" + gi + ";");
+
+        return sb.toString();
+    }
 }
