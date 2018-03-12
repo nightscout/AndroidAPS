@@ -26,10 +26,12 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -54,9 +56,11 @@ import sugar.free.sightparser.applayer.descriptors.PumpStatus;
 import sugar.free.sightparser.applayer.descriptors.configuration_blocks.BRProfileBlock;
 import sugar.free.sightparser.applayer.messages.AppLayerMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.BolusMessage;
+import sugar.free.sightparser.applayer.messages.remote_control.CancelBolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.ExtendedBolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.StandardBolusMessage;
+import sugar.free.sightparser.applayer.messages.status.ActiveBolusesMessage;
 import sugar.free.sightparser.handling.SingleMessageTaskRunner;
 import sugar.free.sightparser.handling.TaskRunner;
 import sugar.free.sightparser.handling.taskrunners.StatusTaskRunner;
@@ -152,14 +156,14 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
-        pumpDescription.isSetBasalProfileCapable = true; // leave this for now
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.is30minBasalRatesCapable = true;
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.02d;
 
         pumpDescription.isRefillingCapable = true;
-        //pumpDescription.storesCarbInfo = false;
-        pumpDescription.is30minBasalRatesCapable = true;
 
+        pumpDescription.storesCarbInfo = false;
     }
 
 
@@ -479,6 +483,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         result.percent = 100;
 
+        int bolusId = 0;
+
         // is there an insulin component to the treatment?
         if (detailedBolusInfo.insulin > 0) {
             final UUID cmd = deliverBolus(detailedBolusInfo.insulin); // actually request delivery
@@ -490,6 +496,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             result.success = ms.success();
             if (ms.success()) {
                 detailedBolusInfo.pumpId = getRecordUniqueID(ms.getResponseID());
+                bolusId = ms.getResponseID();
             }
         } else {
             result.success = true; // always true with carb only treatments
@@ -498,9 +505,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         if (result.success) {
             log("Success!");
 
+            Treatment t = new Treatment();
+            t.isSMB = detailedBolusInfo.isSMB;
             final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
-            bolusingEvent.percent = 100;
+            bolusingEvent.t = t;            
+            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), 0F);
+            bolusingEvent.bolusId = bolusId;
+            bolusingEvent.percent = 0;
             MainApp.bus().post(bolusingEvent);
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
         } else {
@@ -515,12 +526,39 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         lastDataTime = new Date();
         connector.requestHistorySync(30000);
+
+        if (result.success) while (true) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
+            final UUID uuid = aSyncSingleCommand(new ActiveBolusesMessage(), "Active boluses");
+            Mstatus mstatus = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
+            if (mstatus.success()) {
+                final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                ActiveBolusesMessage activeBolusesMessage = (ActiveBolusesMessage) mstatus.getResponseObject();
+                ActiveBolus activeBolus = null;
+                if (activeBolusesMessage.getBolus1() != null && activeBolusesMessage.getBolus1().getBolusID() == bolusingEvent.bolusId) activeBolus = activeBolusesMessage.getBolus1();
+                else if (activeBolusesMessage.getBolus2() != null && activeBolusesMessage.getBolus2().getBolusID() == bolusingEvent.bolusId) activeBolus = activeBolusesMessage.getBolus2();
+                else if (activeBolusesMessage.getBolus3() != null && activeBolusesMessage.getBolus3().getBolusID() == bolusingEvent.bolusId) activeBolus = activeBolusesMessage.getBolus3();
+                if (activeBolus == null) break;
+                else {
+                    bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount()));
+                    bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount());
+                    MainApp.bus().post(bolusingEvent);
+                }
+            } else break;
+        }
         return result;
     }
 
     @Override
     public void stopBolusDelivering() {
-        final UUID cmd = aSyncTaskRunner(new CancelBolusTaskRunner(connector.getServiceConnector(), ActiveBolusType.STANDARD), "Cancel standard bolus");
+        CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
+        cancelBolusMessage.setBolusId(EventOverviewBolusProgress.getInstance().bolusId);
+        final UUID cmd = aSyncSingleCommand(cancelBolusMessage, "Cancel standard bolus");
 
         if (cmd == null) {
             return;

@@ -148,7 +148,7 @@ public class Connector {
 
     public synchronized static void connectToPump(long keep_alive) {
         log("Attempting to connect to pump.");
-        if (keep_alive > 0) {
+        if (keep_alive > 0 && Helpers.tsl() + keep_alive > stayConnectedTill) {
             stayConnectedTime = keep_alive;
             stayConnectedTill = Helpers.tsl() + keep_alive;
             log("Staying connected till: " + Helpers.dateTimeText(stayConnectedTill));
