@@ -63,6 +63,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -351,7 +352,7 @@ public class NSClientService extends Service {
             }
             if (Config.detailedLog)
                 try {
-                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", data.has("message") ? data.getString("message") : "received"));
+                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
                 } catch (Exception e) {
                     FabricPrivacy.logException(e);
                 }
@@ -577,9 +578,7 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonFood);
 
-                                    String action = null;
-                                    if (jsonFood.has("action"))
-                                        action = jsonFood.getString("action");
+                                    String action = JsonHelper.safeGetString(jsonFood, "action");
 
                                     if (action == null) {
                                         addedFoods.put(jsonFood);

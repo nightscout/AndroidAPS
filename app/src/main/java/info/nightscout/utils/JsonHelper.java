@@ -27,6 +27,16 @@ public class JsonHelper {
         return result;
     }
 
+    public static String safeGetString(JSONObject json, String fieldName, String defaultValue) throws JSONException {
+        String result = defaultValue;
+
+        if (json.has(fieldName)) {
+            result = json.getString(fieldName);
+        }
+
+        return result;
+    }
+
     public static double safeGetDouble(JSONObject json, String fieldName) throws JSONException {
         double result = 0d;
 

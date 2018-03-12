@@ -19,6 +19,8 @@ public class JsonHelperTest {
         JSONObject object = new JSONObject(jsonString);
         assertEquals(null, JsonHelper.safeGetString(object, "notexisting"));
         assertEquals("5", JsonHelper.safeGetString(object, "s"));
+        assertEquals("default", JsonHelper.safeGetString(object, "notexisting", "default"));
+        assertEquals("5", JsonHelper.safeGetString(object, "s", "default"));
 
         assertEquals(0.0d, JsonHelper.safeGetDouble(object, "notexisting"), 0.0d);
         assertEquals(3.0d, JsonHelper.safeGetDouble(object, "d"), 0.000001d);
