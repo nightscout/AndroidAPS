@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
@@ -35,7 +36,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -55,6 +55,14 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PercentageSplitter;
 
+/**
+ * This Helper contains all resource to provide a central DB management functionality. Only methods handling
+ * data-structure (and not the DB content) should be contained in here (meaning DDL and not SQL).
+ *
+ * This class can safely be called from Services, but should not call Services to avoid circular dependencies.
+ * One major issue with this (right now) are the scheduled events, which are put into the service. Therefor all
+ * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
+ */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
 
@@ -68,7 +76,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
-    public static final String DATABASE_FOODS = "Foods";
 
     private static final int DATABASE_VERSION = 8;
 
@@ -95,7 +102,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
 
-    public FoodHelper foodHelper = new FoodHelper(this);
+    private int oldVersion = 0;
+    private int newVersion = 0;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -116,7 +124,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            TableUtils.createTableIfNotExists(connectionSource, Food.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -126,6 +133,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
+            this.oldVersion = oldVersion;
+            this.newVersion = newVersion;
+
             if (oldVersion == 7 && newVersion == 8) {
                 log.debug("Upgrading database from v7 to v8");
                 TableUtils.dropTable(connectionSource, Treatment.class, true);
@@ -141,13 +151,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
                 TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
                 TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
-                TableUtils.dropTable(connectionSource, Food.class, true);
                 onCreate(database, connectionSource);
             }
         } catch (SQLException e) {
             log.error("Can't drop databases", e);
             throw new RuntimeException(e);
         }
+    }
+
+    public int getOldVersion() {
+        return oldVersion;
+    }
+
+    public int getNewVersion() {
+        return newVersion;
     }
 
     /**
@@ -219,7 +236,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            foodHelper.resetFood();
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -232,7 +248,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
         scheduleProfileSwitchChange();
-        foodHelper.scheduleFoodChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -307,6 +322,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         scheduleProfileSwitchChange();
     }
+
 
     // ------------------ getDao -------------------------------------------
 

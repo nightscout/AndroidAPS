@@ -1,21 +1,26 @@
-package info.nightscout.androidaps.db;
+package info.nightscout.androidaps.plugins.Food;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+import info.nightscout.utils.JsonHelper;
+
 /**
  * Created by mike on 20.09.2017.
  */
 
-
-@DatabaseTable(tableName = DatabaseHelper.DATABASE_FOODS)
+@DatabaseTable(tableName = Food.TABLE_FOODS)
 public class Food {
     private static Logger log = LoggerFactory.getLogger(Food.class);
+
+    public static final String TABLE_FOODS = "Foods";
 
     @DatabaseField(id = true)
     public long key;
@@ -64,6 +69,25 @@ public class Food {
         key = System.currentTimeMillis();
     }
 
+    public static Food createFromJson(JSONObject json) throws JSONException {
+        Food food = new Food();
+        if ("food".equals(JsonHelper.safeGetString(json, "type"))) {
+            food._id = JsonHelper.safeGetString(json, "_id");
+            food.category = JsonHelper.safeGetString(json, "category");
+            food.subcategory = JsonHelper.safeGetString(json, "subcategory");
+            food.name = JsonHelper.safeGetString(json, "name");
+            food.units = JsonHelper.safeGetString(json, "unit");
+            food.portion = JsonHelper.safeGetDouble(json, "portion");
+            food.carbs = JsonHelper.safeGetInt(json, "carbs");
+            food.gi = JsonHelper.safeGetInt(json, "gi");
+            food.energy = JsonHelper.safeGetInt(json, "energy");
+            food.protein = JsonHelper.safeGetInt(json, "protein");
+            food.fat = JsonHelper.safeGetInt(json, "fat");
+        }
+
+        return food;
+    }
+
     public boolean isEqual(Food other) {
         if (portion != other.portion)
             return false;
@@ -103,5 +127,23 @@ public class Food {
         energy = other.energy;
         units = other.units;
         gi = other.gi;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("_id=" + _id + ";");
+        sb.append("isValid=" + isValid + ";");
+        sb.append("name=" + name + ";");
+        sb.append("category=" + category + ";");
+        sb.append("subcategory=" + subcategory + ";");
+        sb.append("portion=" + portion + ";");
+        sb.append("carbs=" + carbs + ";");
+        sb.append("protein=" + protein + ";");
+        sb.append("energy=" + energy + ";");
+        sb.append("units=" + units + ";");
+        sb.append("gi=" + gi + ";");
+
+        return sb.toString();
     }
 }

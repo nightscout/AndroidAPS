@@ -869,4 +869,6 @@
     <string name="temptargetshort">DoCíl</string>
     <string name="insight_min">min</string>
     <string name="don_t_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
+    <string name="subcategory">Podkategorie</string>
+    <string name="category">Kategorie</string>
 </resources>
