@@ -145,7 +145,6 @@ public class IobCobThread extends Thread {
                     double deviation = delta - bgi;
                     double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
 
-                    double currentDeviation;
                     double slopeFromMaxDeviation  = 0;
                     double slopeFromMinDeviation  = 999;
                     double maxDeviation = 0;
@@ -156,19 +155,18 @@ public class IobCobThread extends Thread {
                         long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
                         AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
                         if (hourAgoData != null) {
-                            currentDeviation = hourAgoData.avgDeviation;
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
 
                             for (int past = 1; past < 12; past++) {
                                 AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
-                                double deviationSlope = (ad.avgDeviation - currentDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
+                                double deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
                                 if (ad.avgDeviation > maxDeviation) {
                                     slopeFromMaxDeviation = Math.min(0, deviationSlope);
                                     maxDeviation = ad.avgDeviation;
                                 }
-                                if (avgDeviation < minDeviation) {
+                                if (ad.avgDeviation < minDeviation) {
                                     slopeFromMinDeviation = Math.max(0, deviationSlope);
-                                    minDeviation = avgDeviation;
+                                    minDeviation = ad.avgDeviation;
                                 }
 
                                 //if (Config.logAutosensData)
