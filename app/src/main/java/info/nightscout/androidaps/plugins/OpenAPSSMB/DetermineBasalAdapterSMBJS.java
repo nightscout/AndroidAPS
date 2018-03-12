@@ -220,7 +220,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile = new JSONObject();
 
         mProfile.put("max_iob", maxIob);
-        mProfile.put("dia", profile.getDia());
+        //mProfile.put("dia", profile.getDia());
         mProfile.put("type", "current");
         mProfile.put("max_daily_basal", profile.getMaxDailyBasal());
         mProfile.put("max_basal", maxBasal);
