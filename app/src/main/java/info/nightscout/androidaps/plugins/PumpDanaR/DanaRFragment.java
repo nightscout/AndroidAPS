@@ -229,7 +229,7 @@ public class DanaRFragment extends SubscriberFragment {
                     batteryView.setText("{fa-battery-" + (pump.batteryRemaining / 25) + "}");
                     SetWarnColor.setColorInverse(batteryView, pump.batteryRemaining, 51d, 26d);
                     iobView.setText(pump.iob + " U");
-                    if (pump.isNewPump) {
+                    if (pump.model != 0 || pump.protocol != 0 || pump.productCode != 0) {
                         firmwareView.setText(String.format(MainApp.sResources.getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
                     } else {
                         firmwareView.setText("OLD");
