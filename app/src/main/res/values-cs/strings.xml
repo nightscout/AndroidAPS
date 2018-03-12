@@ -871,4 +871,5 @@
     <string name="don_t_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
     <string name="subcategory">Podkategorie</string>
     <string name="category">Kategorie</string>
+    <string name="bolusrecordedonly">Bolus bude pouze zaznamenán</string>
 </resources>

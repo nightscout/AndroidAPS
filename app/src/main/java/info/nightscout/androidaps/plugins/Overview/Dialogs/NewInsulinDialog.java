@@ -103,7 +103,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         Double insulin = SafeParse.stringToDouble(editInsulin.getText());
         if (insulin > maxInsulin) {
             editInsulin.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.bolusconstraintapplied));
         }
     }
 
@@ -234,14 +234,14 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
             String confirmMessage = "";
             if (insulin > 0) {
-                confirmMessage += getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>";
+                confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>";
                 if (recordOnlyCheckbox.isChecked()) {
-                    confirmMessage += "<br/><font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + "Bolus will be recorded only</font>";
+                    confirmMessage += "<br/><font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
                 }
             }
 
             if (!insulinAfterConstraints.equals(insulin))
-                confirmMessage += "<br/><font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + getString(R.string.bolusconstraintapplied) + "</font>";
+                confirmMessage += "<br/><font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
             double prefTTDuration = SP.getDouble(R.string.key_eatingsoon_duration, 45d);
             double ttDuration = prefTTDuration > 0 ? prefTTDuration : 45d;
             double prefTT = SP.getDouble(R.string.key_eatingsoon_target, 80d);
@@ -270,11 +270,11 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             final Context context = getContext();
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-            builder.setTitle(this.getContext().getString(R.string.confirmation));
+            builder.setTitle(MainApp.gs(R.string.confirmation));
             if (confirmMessage.startsWith("<br/>"))
                 confirmMessage = confirmMessage.substring("<br/>".length());
             builder.setMessage(Html.fromHtml(confirmMessage));
-            builder.setPositiveButton(getString(R.string.ok), (dialog, id) -> {
+            builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                 synchronized (builder) {
                     if (accepted) {
                         log.debug("guarding: already accepted");
@@ -317,7 +317,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                     i.putExtra("soundid", R.raw.boluserror);
                                     i.putExtra("status", result.comment);
-                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     MainApp.instance().startActivity(i);
                                 }
@@ -327,7 +327,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                     }
                 }
             });
-            builder.setNegativeButton(getString(R.string.cancel), null);
+            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
             dismiss();
         } catch (Exception e) {

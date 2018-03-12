@@ -978,5 +978,6 @@
     <string name="don_t_bolus_record_only">Don\'t bolus, record only</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
+    <string name="bolusrecordedonly">Bolus will be recorded only</string>
 </resources>
 
