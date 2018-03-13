@@ -408,6 +408,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
+            this.profileBlocks = profileBlocks;
         } else {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
