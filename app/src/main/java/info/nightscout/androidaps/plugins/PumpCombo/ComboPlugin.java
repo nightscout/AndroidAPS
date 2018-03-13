@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -50,6 +51,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.WarningOrError
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
@@ -1414,6 +1416,30 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
+    }
+
+    @Override
+    public PumpEnactResult loadTDDs() {
+
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
+        if (result.success) {
+            List<Tdd> tdds = pump.tddHistory;
+            if (tdds != null) {
+                // TODAY (not yet finished): i == 0
+                for (int i = 1; i < tdds.size(); i++) {
+                    Tdd last = tdds.get(i-1);
+                    Tdd curr = tdds.get(i);
+                    double timeDifference = last.timestamp-curr.timestamp;
+                    //Only load coherent data
+                    if(timeDifference > 25*60*60*1000 + 10*1000 || timeDifference < 23*60*60*1000 - 10*1000 ) break;
+                    if (tdds.get(i).total != 0) {
+                        MainApp.getDbHelper().createOrUpdateTDD(new TDD(curr.timestamp, 0d, 0d, curr.total));
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     // Constraints interface
