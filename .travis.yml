@@ -1,7 +1,6 @@
 language: android
 jdk: oraclejdk8
 env:
-  - testCoverageEnabled=true
   matrix:
     - ANDROID_TARGET=android-23 ANDROID_ABI=x86
 android:
@@ -19,7 +18,7 @@ before_install:
 
 script:
   # Unit Test
-  - ./gradlew test jacocoTestReport
+  - ./gradlew -Pcoverage test jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
