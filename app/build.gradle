@@ -82,7 +82,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled System.getenv("testCoverageEnabled") ? System.getenv("testCoverageEnabled").toBoolean() : false
         }
     }
     productFlavors {
