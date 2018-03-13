@@ -10,8 +10,10 @@ import info.nightscout.androidaps.db.BgReading;
 public class EventNewBG extends EventLoop {
     @Nullable
     public final BgReading bgReading;
+    public final boolean isNew;
 
-    public EventNewBG(BgReading bgReading) {
+    public EventNewBG(BgReading bgReading, boolean isNew) {
         this.bgReading = bgReading;
+        this.isNew = isNew;
     }
 }

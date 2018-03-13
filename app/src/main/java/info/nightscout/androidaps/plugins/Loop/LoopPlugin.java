@@ -159,8 +159,8 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (ev.cause instanceof EventNewBG) {
-            invoke(ev.getClass().getSimpleName() + "(" + ev.cause.getClass().getSimpleName() + ")", true);
+        if (ev.cause instanceof EventNewBG && ((EventNewBG) ev.cause).isNew) {
+            invoke("New BG", true);
         }
     }
 

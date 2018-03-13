@@ -241,7 +241,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         VirtualPumpPlugin.setFakingStatus(true);
-        scheduleBgChange(null); // trigger refresh
+        scheduleBgChange(null, false); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleTreatmentChange(null);
         scheduleExtendedBolusChange();
@@ -374,7 +374,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
-                scheduleBgChange(bgReading);
+                scheduleBgChange(bgReading, true);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
@@ -382,7 +382,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange(bgReading);
+                scheduleBgChange(bgReading, false);
                 return false;
             }
         } catch (SQLException e) {
@@ -400,11 +400,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private static void scheduleBgChange(@Nullable final BgReading bgReading) {
+    private static void scheduleBgChange(@Nullable final BgReading bgReading, boolean isNew) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG(bgReading));
+                MainApp.bus().post(new EventNewBG(bgReading, isNew));
                 scheduledBgPost = null;
             }
         }
