@@ -115,6 +115,13 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public PumpEnactResult loadTDDs() {
+        //no result, could read DB in the future?
+        PumpEnactResult result = new PumpEnactResult();
+        return result;
+    }
+
+    @Override
     public boolean isInitialized() {
         return true;
     }

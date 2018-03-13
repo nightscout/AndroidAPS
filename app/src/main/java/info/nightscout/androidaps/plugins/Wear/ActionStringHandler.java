@@ -24,6 +24,7 @@ import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -270,23 +271,10 @@ public class ActionStringHandler {
 
         } else if ("tddstats".equals(act[0])) {
             Object activePump = MainApp.getConfigBuilder().getActivePump();
-            PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
-            PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-            PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-            PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-
-
-            if ((dana == null || dana != activePump) &&
-                    (danaV2 == null || danaV2 != activePump) &&
-                    (danaKorean == null || danaKorean != activePump) &&
-                    (danaRS == null || danaRS != activePump)
-                    ) {
-                sendError("Pump does not support TDDs!");
-                return;
-            } else {
+            if (activePump!= null) {
                 // check if DB up to date
-                List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
-                List<DanaRHistoryRecord> historyList = getTDDList(dummies);
+                List<TDD> dummies = new LinkedList<TDD>();
+                List<TDD> historyList = getTDDList(dummies);
 
                 if (isOldData(historyList)) {
                     rTitle = "TDD";
@@ -300,13 +288,13 @@ public class ActionStringHandler {
                     } else {
                         rMessage += "trying to fetch data from pump.";
 
-                        ConfigBuilderPlugin.getCommandQueue().loadHistory(RecordTypes.RECORD_TYPE_DAILY, new Callback() {
+                        ConfigBuilderPlugin.getCommandQueue().loadTDDs(new Callback() {
                             @Override
                             public void run() {
-                                List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
-                                List<DanaRHistoryRecord> historyList = getTDDList(dummies);
+                                List<TDD> dummies = new LinkedList<TDD>();
+                                List<TDD> historyList = getTDDList(dummies);
                                 if (isOldData(historyList)) {
-                                    sendStatusmessage("TDD", "TDD: Still old data! Cannot load from pump.");
+                                    sendStatusmessage("TDD", "TDD: Still old data! Cannot load from pump.\n" + generateTDDMessage(historyList, dummies));
                                 } else {
                                     sendStatusmessage("TDD", generateTDDMessage(historyList, dummies));
                                 }
@@ -330,7 +318,7 @@ public class ActionStringHandler {
         lastConfirmActionString = rAction;
     }
 
-    private static String generateTDDMessage(List<DanaRHistoryRecord> historyList, List<DanaRHistoryRecord> dummies) {
+    private static String generateTDDMessage(List<TDD> historyList, List<TDD> dummies) {
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
 
@@ -350,8 +338,8 @@ public class ActionStringHandler {
         double weighted07 = 0d;
 
         Collections.reverse(historyList);
-        for (DanaRHistoryRecord record : historyList) {
-            double tdd = record.recordDailyBolus + record.recordDailyBasal;
+        for (TDD record : historyList) {
+            double tdd = record.getTotal();
             if (i == 0) {
                 weighted03 = tdd;
                 weighted05 = tdd;
@@ -379,47 +367,47 @@ public class ActionStringHandler {
 
         //add TDDs:
         Collections.reverse(historyList);
-        for (DanaRHistoryRecord record : historyList) {
-            double tdd = record.recordDailyBolus + record.recordDailyBasal;
-            message += df.format(new Date(record.recordDate)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (dummies.contains(record) ? "x" : "") + "\n";
+        for (TDD record : historyList) {
+            double tdd = record.getTotal();
+            message += df.format(new Date(record.date)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (dummies.contains(record) ? "x" : "") + "\n";
         }
         return message;
     }
 
-    public static boolean isOldData(List<DanaRHistoryRecord> historyList) {
+    public static boolean isOldData(List<TDD> historyList) {
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).recordDate)).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24)))));
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24)))));
     }
 
     @NonNull
-    public static List<DanaRHistoryRecord> getTDDList(List<DanaRHistoryRecord> returnDummies) {
-        List<DanaRHistoryRecord> historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(RecordTypes.RECORD_TYPE_DAILY);
+    public static List<TDD> getTDDList(List<TDD> returnDummies) {
+        List<TDD> historyList = MainApp.getDbHelper().getTDDs();
 
         //only use newest 10
         historyList = historyList.subList(0, Math.min(10, historyList.size()));
 
-        //fill single gaps
-        List<DanaRHistoryRecord> dummies = (returnDummies != null) ? returnDummies : (new LinkedList());
+        //fill single gaps - only needed for Dana*R data
+        List<TDD> dummies = (returnDummies != null) ? returnDummies : (new LinkedList());
         DateFormat df = new SimpleDateFormat("dd.MM.");
         for (int i = 0; i < historyList.size() - 1; i++) {
-            DanaRHistoryRecord elem1 = historyList.get(i);
-            DanaRHistoryRecord elem2 = historyList.get(i + 1);
+            TDD elem1 = historyList.get(i);
+            TDD elem2 = historyList.get(i + 1);
 
-            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25 * 60 * 60 * 1000)))) {
-                DanaRHistoryRecord dummy = new DanaRHistoryRecord();
-                dummy.recordDate = elem1.recordDate - 24 * 60 * 60 * 1000;
-                dummy.recordDailyBasal = elem1.recordDailyBasal / 2;
-                dummy.recordDailyBolus = elem1.recordDailyBolus / 2;
+            if (!df.format(new Date(elem1.date)).equals(df.format(new Date(elem2.date + 25 * 60 * 60 * 1000)))) {
+                TDD dummy = new TDD();
+                dummy.date = elem1.date - 24 * 60 * 60 * 1000;
+                dummy.date = elem1.date / 2;
+                dummy.date = elem1.date / 2;
                 dummies.add(dummy);
-                elem1.recordDailyBasal /= 2;
-                elem1.recordDailyBolus /= 2;
+                elem1.date /= 2;
+                elem1.date /= 2;
             }
         }
         historyList.addAll(dummies);
-        Collections.sort(historyList, new Comparator<DanaRHistoryRecord>() {
+        Collections.sort(historyList, new Comparator<TDD>() {
             @Override
-            public int compare(DanaRHistoryRecord lhs, DanaRHistoryRecord rhs) {
-                return (int) (rhs.recordDate - lhs.recordDate);
+            public int compare(TDD lhs, TDD rhs) {
+                return (int) (rhs.date - lhs.date);
             }
         });
         return historyList;

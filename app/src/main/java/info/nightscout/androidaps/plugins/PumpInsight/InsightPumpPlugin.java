@@ -269,6 +269,13 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
+    public PumpEnactResult loadTDDs() {
+        //TODO: read TDDs and store to DB
+        PumpEnactResult result = new PumpEnactResult();
+        return result;
+    }
+
+    @Override
     public boolean isInitialized() {
         return initialized;
     }

@@ -54,4 +54,7 @@ public interface PumpInterface {
     String shortStatus(boolean veryShort);
 
     boolean isFakingTempsByExtendedBoluses();
+
+    PumpEnactResult loadTDDs();
+
 }

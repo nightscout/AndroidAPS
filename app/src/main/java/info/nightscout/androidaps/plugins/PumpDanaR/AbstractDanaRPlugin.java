@@ -30,6 +30,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.AbstractDanaRExecutionService;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -434,6 +435,11 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     /**
      * Constraint interface
      */
+
+    @Override
+    public PumpEnactResult loadTDDs() {
+        return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+    }
 
     @Override
     public boolean isLoopEnabled() {
