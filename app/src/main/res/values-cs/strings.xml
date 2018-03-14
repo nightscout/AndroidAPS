@@ -872,4 +872,5 @@
     <string name="subcategory">Podkategorie</string>
     <string name="category">Kategorie</string>
     <string name="bolusrecordedonly">Bolus bude pouze zaznamenán</string>
+    <string name="ns_autobackfill">Automaticky doplňovat chybějící glykémie z NS</string>
 </resources>

@@ -979,5 +979,7 @@
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
     <string name="bolusrecordedonly">Bolus will be recorded only</string>
+    <string name="ns_autobackfill">Autobackfill missig BGs from NS</string>
+    <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
 </resources>
 

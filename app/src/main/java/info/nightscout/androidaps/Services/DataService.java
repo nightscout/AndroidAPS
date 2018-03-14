@@ -124,8 +124,8 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                // always backfill SGV from NS
-                handleNewDataFromNSClient(intent);
+                if (nsClientEnabled || SP.getBoolean(R.string.ns_autobackfill, true))
+                    handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
