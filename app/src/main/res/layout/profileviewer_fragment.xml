@@ -333,7 +333,11 @@
                     android:textSize="14sp" />
 
             </LinearLayout>
-
+            <info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph
+                android:id="@+id/basal_graph"
+                android:layout_width="match_parent"
+                android:layout_margin="20dp"
+                android:layout_height="100dip" />
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"

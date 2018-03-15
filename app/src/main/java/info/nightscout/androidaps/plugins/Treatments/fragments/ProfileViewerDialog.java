@@ -42,6 +42,7 @@ public class ProfileViewerDialog extends DialogFragment {
     private LinearLayout dateLayout;
     private TextView dateTextView;
     private Button refreshButton;
+    private ProfileGraph basalGraph;
 
     public static ProfileViewerDialog newInstance(long time) {
         ProfileViewerDialog dialog = new ProfileViewerDialog();
@@ -65,6 +66,7 @@ public class ProfileViewerDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.profileviewer_fragment, container, false);
 
+
         noProfile = (TextView) layout.findViewById(R.id.profileview_noprofile);
         units = (TextView) layout.findViewById(R.id.profileview_units);
         dia = (TextView) layout.findViewById(R.id.profileview_dia);
@@ -80,9 +82,19 @@ public class ProfileViewerDialog extends DialogFragment {
         dateLayout = (LinearLayout) layout.findViewById(R.id.profileview_datelayout);
         dateLayout.setVisibility(View.VISIBLE);
         dateTextView = (TextView) layout.findViewById(R.id.profileview_date);
+        basalGraph = (ProfileGraph) layout.findViewById(R.id.basal_graph);
 
         setContent();
         return layout;
+    }
+
+    @Override
+    public void onResume() {
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        super.onResume();
     }
 
     private void setContent() {
@@ -101,6 +113,7 @@ public class ProfileViewerDialog extends DialogFragment {
             isf.setText(profile.getIsfList());
             basal.setText(profile.getBasalList());
             target.setText(profile.getTargetList());
+            basalGraph.show(profile);
         } else {
             noProfile.setVisibility(View.VISIBLE);
         }
