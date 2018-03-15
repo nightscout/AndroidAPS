@@ -135,7 +135,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
 
-
                     if (!pump.getPumpDescription().isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses()) {
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
