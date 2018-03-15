@@ -173,8 +173,9 @@ public class ReadHistoryCommand extends BaseCommand {
         }
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, date.getMonth() - 1, date.getDay(), 0, 0, 0);
-
-        return new Tdd(calendar.getTimeInMillis(), dailyTotal);
+        long time = calendar.getTimeInMillis();
+        time = time - time%1000;
+        return new Tdd(time, dailyTotal);
     }
 
     private void readTbrRecords(long requestedTime) {

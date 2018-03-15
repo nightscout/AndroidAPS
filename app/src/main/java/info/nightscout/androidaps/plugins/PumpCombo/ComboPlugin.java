@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -1420,22 +1422,29 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public PumpEnactResult loadTDDs() {
-
+        
         PumpEnactResult result = new PumpEnactResult();
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
         if (result.success) {
             List<Tdd> tdds = pump.tddHistory;
             if (tdds != null) {
-                // TODAY (not yet finished): i == 0
-                for (int i = 1; i < tdds.size(); i++) {
-                    Tdd last = tdds.get(i-1);
-                    Tdd curr = tdds.get(i);
-                    double timeDifference = last.timestamp-curr.timestamp;
-                    //Only load coherent data
-                    if(timeDifference > 25*60*60*1000 + 10*1000 || timeDifference < 23*60*60*1000 - 10*1000 ) break;
-                    if (tdds.get(i).total != 0) {
-                        MainApp.getDbHelper().createOrUpdateTDD(new TDD(curr.timestamp, 0d, 0d, curr.total));
+                HashMap<Long, TDD> map = new HashMap<>();
+                for (int i = 0; i < tdds.size(); i++) {
+                   Tdd currTdd = tdds.get(i);
+                   if(currTdd.total < 1) continue; //cases where dummy days are introduced (e.g. Battery change with date loss)
+                    if(map.containsKey(currTdd.timestamp)){
+                        //duplicate days on time changes
+                        TDD existing = map.get(currTdd.timestamp);
+                        existing.total += currTdd.total;
+                    } else {
+                        map.put(currTdd.timestamp, new TDD(currTdd.timestamp, 0d, 0d, currTdd.total));
                     }
+                }
+
+                Collection<TDD> uniqueColl = map.values();
+
+                for (TDD currTdd: uniqueColl) {
+                    MainApp.getDbHelper().createOrUpdateTDD(currTdd);
                 }
             }
         }
