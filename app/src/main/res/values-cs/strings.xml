@@ -68,7 +68,8 @@
     <string name="loop">Smyčka</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
-    <string name="loop_setbypump_label">Nastaveno pumpou</string>
+    <string name="loop_tbrsetbypump_label">Bazál nastavený pumpou</string>
+    <string name="loop_smbsetbypump_label">SMB provedené pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
     <string name="objectives_minimalduration">Minimální trvání</string>

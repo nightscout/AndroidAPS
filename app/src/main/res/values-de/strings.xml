@@ -160,7 +160,6 @@
     <string name="constraintapllied">Beschränkungen angewendet!</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht</string>
     <string name="cs_lang">Czech</string>
-    <string name="loop_setbypump_label">Gesetzt durch Pumpe</string>
     <string name="loopdisabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="loop_constraintsprocessed_label">Beschränkungen angewendet</string>
     <string name="loop">Loop</string>

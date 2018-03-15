@@ -98,7 +98,6 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Constrângeri după procesare<string>
-    <string name="loop_setbypump_label">Setat de pompă</string>
     <string name="openapsma_lastenact_label">Ultima acțiune</string>
     <string name="refreshtreatmentsfromnightscout">Doriți reîncărcarea tratamentelor din Nightscout</string>
     <string name="refreshtemptargetsfromnightscout">Doriți reîncărcarea țintelor temporare din Nightscout</string>

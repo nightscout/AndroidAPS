@@ -98,7 +98,6 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">След ограничения</string>
-    <string name="loop_setbypump_label">Зададено на помпата</string>
     <string name="openapsma_lastenact_label">Последно зададено</string>
     <string name="ok">OK</string>
     <string name="cancel">Откажи</string>

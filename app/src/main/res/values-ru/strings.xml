@@ -234,7 +234,6 @@
     <string name="loop">замкнутый цикл</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">после наложенных ограничений</string>
-    <string name="loop_setbypump_label">задано помпой</string>
     <string name="loop_shortname">ЗЦ</string>
     <string name="loopdisabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
     <string name="loopmenu">меню ЗЦ</string>

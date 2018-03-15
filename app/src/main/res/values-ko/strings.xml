@@ -98,7 +98,6 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">제약 적용 후</string>
-    <string name="loop_setbypump_label">펌프 설정</string>
     <string name="openapsma_lastenact_label">최근 주입</string>
     <string name="ok">OK</string>
     <string name="cancel">취소</string>

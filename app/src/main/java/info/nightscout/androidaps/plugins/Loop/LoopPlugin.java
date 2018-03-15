@@ -30,7 +30,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
-import info.nightscout.androidaps.plugins.Loop.events.EventLoopResult;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
@@ -65,7 +64,8 @@ public class LoopPlugin implements PluginBase {
     public class LastRun {
         public APSResult request = null;
         public APSResult constraintsProcessed = null;
-        public PumpEnactResult setByPump = null;
+        public PumpEnactResult tbrSetByPump = null;
+        public PumpEnactResult smbSetByPump = null;
         public String source = null;
         public Date lastAPSRun = null;
         public Date lastEnact = null;
@@ -266,7 +266,7 @@ public class LoopPlugin implements PluginBase {
             if (!isEnabled(PluginBase.LOOP))
                 return;
 
-            if (MainApp.getConfigBuilder().getProfile() == null) {
+            if (!MainApp.getConfigBuilder().isProfileValid("Loop")) {
                 log.debug(MainApp.sResources.getString(R.string.noprofileselected));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noprofileselected)));
                 return;
@@ -304,7 +304,8 @@ public class LoopPlugin implements PluginBase {
             lastRun.constraintsProcessed = resultAfterConstraints;
             lastRun.lastAPSRun = new Date();
             lastRun.source = ((PluginBase) usedAPS).getName();
-            lastRun.setByPump = null;
+            lastRun.tbrSetByPump = null;
+            lastRun.smbSetByPump = null;
 
             NSUpload.uploadDeviceStatus();
 
@@ -320,31 +321,36 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
-            MainApp.bus().post(new EventLoopResult(resultAfterConstraints));
-
             if (constraintsInterface.isClosedModeEnabled()) {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
-                    final PumpEnactResult previousResult = lastRun.setByPump;
                     waiting.queued = true;
-                    lastRun.setByPump = waiting;
+                    lastRun.tbrSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
-                    MainApp.getConfigBuilder().applyAPSRequest(resultAfterConstraints, new Callback() {
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
+                    MainApp.getConfigBuilder().applyTBRRequest(resultAfterConstraints, new Callback() {
                         @Override
                         public void run() {
-                            FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
                             if (result.enacted || result.success) {
-                                lastRun.setByPump = result;
+                                lastRun.tbrSetByPump = result;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
-                            } else {
-                                lastRun.setByPump = previousResult;
+                            }
+                            MainApp.bus().post(new EventLoopUpdateGui());
+                        }
+                    });
+                    MainApp.getConfigBuilder().applySMBRequest(resultAfterConstraints, new Callback() {
+                        @Override
+                        public void run() {
+                            if (result.enacted || result.success) {
+                                lastRun.smbSetByPump = result;
+                                lastRun.lastEnact = lastRun.lastAPSRun;
                             }
                             MainApp.bus().post(new EventLoopUpdateGui());
                         }
                     });
                 } else {
-                    lastRun.setByPump = null;
-                    lastRun.source = null;
+                    lastRun.tbrSetByPump = null;
+                    lastRun.smbSetByPump = null;
                 }
             } else {
                 if (result.isChangeRequested() && allowNotification) {

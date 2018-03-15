@@ -353,7 +353,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     /**
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      */
-    public void applyAPSRequest(APSResult request, Callback callback) {
+    public void applyTBRRequest(APSResult request, Callback callback) {
         PumpInterface pump = getActivePump();
         request.rate = applyBasalConstraints(request.rate);
 
@@ -403,6 +403,29 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
             }
         }
+    }
+
+    public void applySMBRequest(APSResult request, Callback callback) {
+        PumpInterface pump = getActivePump();
+
+        if (!pump.isInitialized()) {
+            log.debug("applySMBRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (pump.isSuspended()) {
+            log.debug("applySMBRequest: " + MainApp.sResources.getString(R.string.pumpsuspended));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpsuspended)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (Config.logCongigBuilderActions)
+            log.debug("applySMBRequest: " + request.toString());
 
         if (request.bolusRequested) {
             long lastBolusTime = getLastBolusTime();
@@ -765,6 +788,14 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return "Default";
     }
 
+    public boolean isProfileValid(String from) {
+        return getProfile() != null && getProfile().isValid(from) &&
+                activeProfile != null &&
+                activeProfile.getProfile() != null &&
+                activeProfile.getProfile().getDefaultProfile() != null &&
+                activeProfile.getProfile().getDefaultProfile().isValid(from);
+    }
+
     @Nullable
     public Profile getProfile() {
         return getProfile(System.currentTimeMillis());
@@ -777,8 +808,10 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
     @Nullable
     public Profile getProfile(long time) {
-        if (activeTreatments == null)
+        if (activeTreatments == null) {
+            log.debug("getProfile activeTreatments == null: returning null");
             return null; //app not initialized
+        }
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
         if (!ignoreProfileSwitchEvents) {
@@ -794,8 +827,10 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             }
         }
         // Unable to determine profile, failover to default
-        if (activeProfile.getProfile() == null)
+        if (activeProfile.getProfile() == null) {
+            log.debug("getProfile activeProfile.getProfile() == null: returning null (activeProfile=" + activeProfile.getClass().getSimpleName() + ")");
             return null; //app not initialized
+        }
         Profile defaultProfile = activeProfile.getProfile().getDefaultProfile();
         if (defaultProfile != null)
             return defaultProfile;
@@ -813,6 +848,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+        log.debug("getProfile at the end: returning null");
         return null;
     }
 

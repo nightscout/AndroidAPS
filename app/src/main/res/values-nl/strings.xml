@@ -218,7 +218,6 @@
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
-    <string name="loop_setbypump_label">Gedefinieerd door de pomp</string>
     <string name="loop_shortname">LOOP</string>
     <string name="it_lang">Italiano</string>
     <string name="nl_lang">Nederlands</string>

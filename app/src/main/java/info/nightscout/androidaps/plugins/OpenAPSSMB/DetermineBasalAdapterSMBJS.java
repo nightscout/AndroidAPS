@@ -246,11 +246,12 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_use_smb, false) && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
-        mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
-        mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_use_smb, false) && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
-        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_use_smb, false) && SP.getBoolean(R.string.key_enableSMB_always, false) && ConfigBuilderPlugin.getActiveBgSource().advancedFilteringSupported());
-        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_use_smb, false) && SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && ConfigBuilderPlugin.getActiveBgSource().advancedFilteringSupported());
+        boolean SMBEnabled = SP.getBoolean(R.string.key_use_smb, false) && MainApp.getConfigBuilder().isClosedModeEnabled();
+        mProfile.put("enableSMB_with_COB", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
+        mProfile.put("enableSMB_with_temptarget", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
+        mProfile.put("allowSMB_with_high_temptarget", SMBEnabled && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
+        mProfile.put("enableSMB_always", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_always, false) && ConfigBuilderPlugin.getActiveBgSource().advancedFilteringSupported());
+        mProfile.put("enableSMB_after_carbs", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && ConfigBuilderPlugin.getActiveBgSource().advancedFilteringSupported());
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 

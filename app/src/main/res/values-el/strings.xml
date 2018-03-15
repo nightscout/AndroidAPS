@@ -100,7 +100,6 @@
     <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Μετά από επεξεργασία περιορισμών</string>
-    <string name="loop_setbypump_label">Ρυθμίστε με αντλία</string>
     <string name="openapsma_lastenact_label">Τελευταία Εφαρμογή</string>
     <string name="ok">ΟΚ</string>
     <string name="cancel">Ακύρωση</string>
