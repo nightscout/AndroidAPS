@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateG
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
 
 public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
     private TextView stateView;
@@ -40,6 +41,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private Button refreshButton;
     private Button alertsButton;
     private Button tddsButton;
+    private TextView bolusCount;
+    private TextView tbrCount;
     private Button fullHistoryButton;
 
     @Override
@@ -55,6 +58,8 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
         baseBasalRate = (TextView) view.findViewById(R.id.combo_base_basal_rate);
         tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
+        bolusCount = (TextView) view.findViewById(R.id.combo_bolus_count);
+        tbrCount = (TextView) view.findViewById(R.id.combo_tbr_count);
 
         refreshButton = (Button) view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(this);
@@ -297,6 +302,10 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
                 }
                 tempBasalText.setText(tbrStr);
+
+                // stats
+                bolusCount.setText(String.valueOf(SP.getLong(ComboPlugin.COMBO_BOLUSES_DELIVERED, 0L)));
+                tbrCount.setText(String.valueOf(SP.getLong(ComboPlugin.COMBO_TBRS_SET, 0L)));
             }
         });
     }

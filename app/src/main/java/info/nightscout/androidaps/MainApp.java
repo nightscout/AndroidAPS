@@ -75,6 +75,7 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
 import io.fabric.sdk.android.Fabric;
 
 

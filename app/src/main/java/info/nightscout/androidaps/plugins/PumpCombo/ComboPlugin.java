@@ -54,12 +54,15 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
     private static final Logger log = LoggerFactory.getLogger(ComboPlugin.class);
+    public static final String COMBO_TBRS_SET = "combo_tbrs_set";
+    public static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
     private static ComboPlugin plugin = null;
     private boolean fragmentEnabled = false;
@@ -662,6 +665,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
 
             // full bolus was delivered successfully
+            incrementBolusCount();
             return new PumpEnactResult()
                     .success(true)
                     .enacted(lastPumpBolus.amount > 0)
@@ -672,6 +676,22 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.bus().post(new EventComboPumpUpdateGUI());
             MainApp.bus().post(new EventRefreshOverview("Bolus"));
             cancelBolus = false;
+        }
+    }
+
+    private void incrementTbrCount() {
+        try {
+            SP.putLong(COMBO_TBRS_SET, SP.getLong(COMBO_TBRS_SET, 0L) + 1);
+        } catch (Exception e) {
+            // ignore
+        }
+    }
+
+    private void incrementBolusCount() {
+        try {
+            SP.putLong(COMBO_BOLUSES_DELIVERED, SP.getLong(COMBO_BOLUSES_DELIVERED, 0L) + 1);
+        } catch (Exception e) {
+            // ignore
         }
     }
 
@@ -803,6 +823,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
 
+        incrementTbrCount();
         return new PumpEnactResult().success(true).enacted(true).isPercent(true)
                 .percent(state.tbrPercent).duration(state.tbrRemainingDuration);
     }
