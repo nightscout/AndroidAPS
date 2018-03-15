@@ -90,7 +90,6 @@ public class ProfileViewerDialog extends DialogFragment {
 
     @Override
     public void onResume() {
-        super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;

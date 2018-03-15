@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -42,6 +43,8 @@ public class ProfileViewDialog extends DialogFragment {
     private  TextView isf;
     private  TextView basal;
     private  TextView target;
+    private ProfileGraph basalGraph;
+
 
     private  Button refreshButton;
 
@@ -70,7 +73,7 @@ public class ProfileViewDialog extends DialogFragment {
                 dismiss();
             }
         });
-
+        basalGraph = (ProfileGraph) layout.findViewById(R.id.basal_graph);
         setContent();
         return layout;
     }
@@ -90,6 +93,7 @@ public class ProfileViewDialog extends DialogFragment {
 //        }
         ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
         if (store != null) {
+            store.getDefaultProfile();
             noProfile.setVisibility(View.GONE);
             Profile profile = store.getDefaultProfile();
             units.setText(profile.getUnits());
@@ -99,6 +103,7 @@ public class ProfileViewDialog extends DialogFragment {
             isf.setText(profile.getIsfList());
             basal.setText(profile.getBasalList());
             target.setText(profile.getTargetList());
+            basalGraph.show(store.getDefaultProfile());
         } else {
             noProfile.setVisibility(View.VISIBLE);
         }
