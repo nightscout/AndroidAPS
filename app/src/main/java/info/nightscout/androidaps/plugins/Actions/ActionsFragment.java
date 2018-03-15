@@ -127,7 +127,10 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         return;
                     }
                     final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-                    if (!pump.getPumpDescription().isSetBasalProfileCapable || !pump.isInitialized() || pump.isSuspended())
+                    final boolean basalprofileEnabled = MainApp.isDevModeOrRelease()
+                            && pump.getPumpDescription().isSetBasalProfileCapable;
+
+                    if (!basalprofileEnabled || !pump.isInitialized() || pump.isSuspended())
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);

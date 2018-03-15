@@ -201,7 +201,9 @@ public class MainApp extends Application {
             }
         }).start();
 
-        engineeringMode = new File(System.getProperty("EXT_FILES_DIR"),"engineering_mode").canRead();
+        File engineeringModeSemaphore = new File(System.getProperty("EXT_FILES_DIR"),"engineering_mode");
+
+        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
         devBranch = BuildConfig.VERSION.contains("dev");
 
         if (devBranch && !engineeringMode) {
@@ -372,6 +374,10 @@ public class MainApp extends Application {
             log.error("pluginsList=null");
         }
         return null;
+    }
+
+    public static boolean isDevModeOrRelease() {
+        return (devBranch && engineeringMode) || !devBranch;
     }
 
     @Override
