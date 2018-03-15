@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +22,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -38,10 +39,10 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.PumpInsight.InsightPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -326,10 +327,26 @@ public class ActionStringHandler {
             return "No profile loaded :(";
         }
 
+        if(historyList.isEmpty()){
+            return "No history data!";
+        }
+
         DateFormat df = new SimpleDateFormat("dd.MM.");
         String message = "";
 
         double refTDD = profile.baseBasalSum() * 2;
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        if(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))){
+            double tdd = historyList.get(0).getTotal();
+            historyList.remove(0);
+            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n";
+            message += "\n";
+        } else if (pump != null && pump instanceof DanaRPlugin) {
+            double tdd = DanaRPump.getInstance().dailyTotalUnits;
+            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n";
+            message += "\n";
+        }
 
         int i = 0;
         double sum = 0d;
@@ -357,16 +374,9 @@ public class ActionStringHandler {
         message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U " + (DecimalFormatter.to0Decimal(100 * weighted05 / refTDD) + "%") + "\n";
         message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U " + (DecimalFormatter.to0Decimal(100 * weighted07 / refTDD) + "%") + "\n";
         message += "\n";
-
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-        if (pump != null && pump instanceof DanaRPlugin) {
-            double tdd = DanaRPump.getInstance().dailyTotalUnits;
-            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n";
-            message += "\n";
-        }
+        Collections.reverse(historyList);
 
         //add TDDs:
-        Collections.reverse(historyList);
         for (TDD record : historyList) {
             double tdd = record.getTotal();
             message += df.format(new Date(record.date)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (dummies.contains(record) ? "x" : "") + "\n";
@@ -375,15 +385,23 @@ public class ActionStringHandler {
     }
 
     public static boolean isOldData(List<TDD> historyList) {
+        Object activePump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
+        PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
+        PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+        PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+        PumpInterface insight = MainApp.getSpecificPlugin(InsightPumpPlugin.class);
+
+        boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
+
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24)))));
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday?1000 * 60 * 60 * 24:0))))));
     }
 
     @NonNull
     public static List<TDD> getTDDList(List<TDD> returnDummies) {
         List<TDD> historyList = MainApp.getDbHelper().getTDDs();
 
-        //only use newest 10
         historyList = historyList.subList(0, Math.min(10, historyList.size()));
 
         //fill single gaps - only needed for Dana*R data
@@ -396,11 +414,13 @@ public class ActionStringHandler {
             if (!df.format(new Date(elem1.date)).equals(df.format(new Date(elem2.date + 25 * 60 * 60 * 1000)))) {
                 TDD dummy = new TDD();
                 dummy.date = elem1.date - 24 * 60 * 60 * 1000;
-                dummy.date = elem1.date / 2;
-                dummy.date = elem1.date / 2;
+                dummy.basal = elem1.basal / 2;
+                dummy.bolus = elem1.bolus / 2;
                 dummies.add(dummy);
-                elem1.date /= 2;
-                elem1.date /= 2;
+                elem1.basal /= 2;
+                elem1.bolus /= 2;
+
+
             }
         }
         historyList.addAll(dummies);
@@ -410,6 +430,7 @@ public class ActionStringHandler {
                 return (int) (rhs.date - lhs.date);
             }
         });
+
         return historyList;
     }
 

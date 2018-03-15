@@ -53,6 +53,7 @@ import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PercentageSplitter;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling
@@ -510,11 +511,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
-    // -------------------  BgReading handling -----------------------
+    // -------------------  TDD handling -----------------------
     public void createOrUpdateTDD(TDD tdd){
         try {
-            getDaoTDD().createOrUpdate(tdd);
+            Dao<TDD, String> dao = getDaoTDD();
+            dao.createOrUpdate(tdd);
         } catch (SQLException e) {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "createOrUpdate-Exception");
             log.error("Unhandled exception", e);
         }
     }
