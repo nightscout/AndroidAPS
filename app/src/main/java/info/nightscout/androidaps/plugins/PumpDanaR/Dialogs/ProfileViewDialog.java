@@ -93,7 +93,6 @@ public class ProfileViewDialog extends DialogFragment {
 //        }
         ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
         if (store != null) {
-            store.getDefaultProfile();
             noProfile.setVisibility(View.GONE);
             Profile profile = store.getDefaultProfile();
             units.setText(profile.getUnits());
