@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.Treatments.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 
 import com.jjoe64.graphview.GraphView;
@@ -11,11 +10,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 
 /**
  * Created by Adrian on 15.04.2018.
