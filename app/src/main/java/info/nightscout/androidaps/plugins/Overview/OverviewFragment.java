@@ -158,7 +158,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView pbage;
 
     TextView showPredictionLabel;
-    CheckBox showPredictionCheckbox;
     TextView showBasalsLabel;
     CheckBox showBasalsCheckbox;
     TextView showIobLabel;
@@ -169,6 +168,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     CheckBox showDeviationsCheckbox;
     TextView showRatiosLabel;
     CheckBox showRatiosCheckbox;
+    CheckBox showPredictionCheckbox;
+
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -353,81 +354,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
             });
 
-            chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
-            chartButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopupMenu popup = new PopupMenu(v.getContext(), v);
-                    //MenuInflater inflater = popup.getMenuInflater();
-
-                    MenuItem item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
-                    CharSequence title = item.getTitle();
-                    SpannableString s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)),0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(true);
-
-
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, "Basals");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(true);
-
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, "Insulin On Board");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(true);
-
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, "Carbs On Board");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(true);
-
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, "Deviations");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(false);
-
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, "Sensitivity");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(true);
-
-
-
-
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            return false;
-                        }
-                    });
-                    chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
-                    popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                        @Override
-                        public void onDismiss(PopupMenu menu) {
-                            chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
-                        }
-                    });
-                    popup.show();
-                }
-            });
+            setupChartMenu(view);
 
             lockScreen = (CheckBox) view.findViewById(R.id.overview_lockscreen);
             if (lockScreen != null) {
@@ -448,6 +375,98 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         return null;
+    }
+
+    private void setupChartMenu(View view) {
+        chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
+        chartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(v.getContext(), v);
+                MenuItem item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
+                CharSequence title = item.getTitle();
+                SpannableString s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)),0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showprediction", false));
+
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, "Basals");
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showbasals", true));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, "Insulin On Board");
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showiob", false));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, "Carbs On Board");
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showcob", false));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, "Deviations");
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showdeviations", false));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, "Sensitivity");
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showratios", false));
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
+                            SP.putBoolean("showprediction", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
+                            SP.putBoolean("showbasals", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
+                            SP.putBoolean("showiob", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
+                            SP.putBoolean("showcob", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
+                            SP.putBoolean("showdeviations", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
+                            SP.putBoolean("showratios", !item.isChecked());
+                        }
+                        scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
+                        return true;
+                    }
+                });
+                chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+                popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                    @Override
+                    public void onDismiss(PopupMenu menu) {
+                        chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+                    }
+                });
+                popup.show();
+            }
+        });
     }
 
 
