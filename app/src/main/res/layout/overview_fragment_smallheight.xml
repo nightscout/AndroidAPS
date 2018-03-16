@@ -239,8 +239,7 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_height="200dp">
 
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/overview_bggraph"
@@ -261,7 +260,7 @@
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/overview_iobgraph"
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp" />
+                    android:layout_height="150dp" />
 
             </LinearLayout>
 
@@ -300,9 +299,7 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_treatment_label"
                     android:textColor="@color/colorTreatmentButton"
-                    android:textSize="10sp"
-                    android:visibility="gone"/>
-                
+                    android:textSize="10sp" />
 
                 <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_insulinbutton"
@@ -331,8 +328,7 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_carbs_label"
                     android:textColor="@color/colorCarbsButton"
-                    android:textSize="10sp"
-                    android:visibility="gone"/>
+                    android:textSize="10sp" />
 
                 <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
@@ -376,8 +372,7 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_cgm"
                     android:textColor="@color/colorCalibrationButton"
-                    android:textSize="10sp"
-                    android:visibility="gone"/>
+                    android:textSize="10sp"/>
 
                 <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
