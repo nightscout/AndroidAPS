@@ -41,6 +41,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.ReadP
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.SetBasalProfileCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.utils.FabricPrivacy;
 
 /**
  * Provides scripting 'runtime' and operations. consider moving operations into a separate
@@ -75,13 +76,13 @@ public class RuffyScripter implements RuffyCommands {
         public void fail(String message) throws RemoteException {
             log.warn("Ruffy warns: " + message);
             if (message.startsWith("no connection possible"))
-                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "no connection possible"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "no connection possible"));
             else if (message.startsWith("Error sending keep alive while rtModeRunning is still true"))
-                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "Error sending keep alive while rtModeRunning is still true"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "Error sending keep alive while rtModeRunning is still true"));
             else if (message.startsWith("Error sending keep alive. rtModeRunning is false, so this is most likely a race condition during disconnect"))
-                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "Error sending keep alive. rtModeRunning is false, so this is most likely a race condition during disconnect"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", "Error sending keep alive. rtModeRunning is false, so this is most likely a race condition during disconnect"));
             else
-                Answers.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", message.substring(0, 98)));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRuffyWarning").putCustomAttribute("message", message.substring(0, 98)));
         }
 
         @Override
@@ -171,7 +172,7 @@ public class RuffyScripter implements RuffyCommands {
         if (!boundSucceeded) {
             log.error("No connection to ruffy. Pump control unavailable.");
         } else {
-            Answers.getInstance().logCustom(new CustomEvent("ComboScripterInit")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboScripterInit")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION));
         }
@@ -224,7 +225,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readQuickInfo(int numberOfBolusRecordsToRetrieve) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboReadQuickInfoCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboReadQuickInfoCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ReadQuickInfoCommand(numberOfBolusRecordsToRetrieve));
@@ -425,7 +426,7 @@ public class RuffyScripter implements RuffyCommands {
             }
         }
         log.debug("Recovery from connection loss " + (connected ? "succeeded" : "failed"));
-        Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromConnectionLoss")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRecoveryFromConnectionLoss")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION)
                 .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
@@ -440,7 +441,7 @@ public class RuffyScripter implements RuffyCommands {
     private PumpState recoverFromCommandFailure() {
         Menu menu = this.currentMenu;
         if (menu == null) {
-            Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
@@ -459,7 +460,7 @@ public class RuffyScripter implements RuffyCommands {
         }
         try {
             PumpState pumpState = readPumpStateInternal();
-            Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
@@ -467,7 +468,7 @@ public class RuffyScripter implements RuffyCommands {
                     .putCustomAttribute("success", "true"));
             return pumpState;
         } catch (Exception e) {
-            Answers.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboRecoveryFromCommandFailure")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("exit", "3")
@@ -495,7 +496,7 @@ public class RuffyScripter implements RuffyCommands {
             long initialUpdateTime = menuLastUpdated;
             while (initialUpdateTime == menuLastUpdated) {
                 if (System.currentTimeMillis() > timeoutExpired) {
-                    Answers.getInstance().logCustom(new CustomEvent("ComboConnectTimeout")
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboConnectTimeout")
                             .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                             .putCustomAttribute("version", BuildConfig.VERSION)
                             .putCustomAttribute("activeCommand", "" + (activeCmd != null ? activeCmd.getClass().getSimpleName() : ""))
@@ -808,7 +809,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new BolusCommand(amount, bolusProgressReporter));
@@ -817,7 +818,7 @@ public class RuffyScripter implements RuffyCommands {
     @Override
     public void cancelBolus() {
         if (activeCmd instanceof BolusCommand) {
-            Answers.getInstance().logCustom(new CustomEvent("ComboBolusCmdCancel")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusCmdCancel")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION));
             ((BolusCommand) activeCmd).requestCancellation();
@@ -828,7 +829,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult setTbr(int percent, int duration) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboSetTbrCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboSetTbrCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new SetTbrCommand(percent, duration));
@@ -836,7 +837,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult cancelTbr() {
-        Answers.getInstance().logCustom(new CustomEvent("ComboCancelTbrCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboCancelTbrCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new CancelTbrCommand());
@@ -844,7 +845,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult confirmAlert(int warningCode) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboConfirmAlertCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboConfirmAlertCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ConfirmAlertCommand(warningCode));
@@ -852,7 +853,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readHistory(PumpHistoryRequest request) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboReadHistoryCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ReadHistoryCommand(request));
@@ -860,7 +861,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult readBasalProfile() {
-        Answers.getInstance().logCustom(new CustomEvent("ComboReadBasalProfileCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboReadBasalProfileCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new ReadBasalProfileCommand());
@@ -868,7 +869,7 @@ public class RuffyScripter implements RuffyCommands {
 
     @Override
     public CommandResult setBasalProfile(BasalProfile basalProfile) {
-        Answers.getInstance().logCustom(new CustomEvent("ComboSetBasalProfileCmd")
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboSetBasalProfileCmd")
                 .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                 .putCustomAttribute("version", BuildConfig.VERSION));
         return runCommand(new SetBasalProfileCommand(basalProfile));

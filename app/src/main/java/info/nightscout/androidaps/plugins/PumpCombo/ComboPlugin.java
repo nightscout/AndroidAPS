@@ -52,6 +52,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHi
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.FabricPrivacy;
 
 /**
  * Created by mike on 05.08.2016.
@@ -585,7 +586,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
             if (waitLoops > 0) {
                 long waitDuration = (System.currentTimeMillis() - waitStartTime) / 1000;
-                Answers.getInstance().logCustom(new CustomEvent("ComboBolusTimestampWait")
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusTimestampWait")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
                         .putCustomAttribute("waitTimeSecs", String.valueOf(waitDuration)));
@@ -690,7 +691,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 }
-                Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
                         .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
@@ -702,7 +703,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (dbi.isSMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
-                Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                         .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                         .putCustomAttribute("version", BuildConfig.VERSION)
                         .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
@@ -1085,7 +1086,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             log.debug("Creating temp basal from pump TBR");
-            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("type", "new TBR on pump"));
@@ -1098,7 +1099,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             log.debug("Ending AAPS-TBR since pump has no TBR active");
-            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("type", "TBR cancelled on pump"));
@@ -1111,7 +1112,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 && (aapsTbr.percentRate != state.tbrPercent ||
                 Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
             log.debug("AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
-            Answers.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("type", "TBR on pump differs from AAPS TBR"));
@@ -1286,7 +1287,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         HashSet<Bolus> bolusSet = new HashSet<>(historyResult.history.bolusHistory);
         if (bolusSet.size() != historyResult.history.bolusHistory.size()) {
             log.debug("Bolus with same amount within the same minute imported. Only one will make it to the DB.");
-            Answers.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("bolus", "")
