@@ -225,15 +225,15 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500;
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            if (activeTemp != null) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
+                if (activeTemp.percentRate == percentRate) {
                     if (!enforceNew) {
                         result.success = true;
                         result.percent = percentRate;
-                        result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
                         result.enacted = false;
-                        result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
+                        result.duration = activeTemp.getPlannedRemainingMinutes();
                         result.isPercent = true;
                         result.isTempCancel = false;
                         if (Config.logPumpActions)
@@ -277,7 +277,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        TemporaryBasal runningTB = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -285,7 +286,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
-            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: Correct value already set");
@@ -305,7 +305,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
-            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: OK");

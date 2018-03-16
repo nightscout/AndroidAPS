@@ -228,7 +228,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -236,7 +237,6 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
-            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: Correct value already set");
@@ -251,7 +251,6 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
-            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: OK");
@@ -365,7 +364,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public JSONObject getJSONStatus() {
+    public JSONObject getJSONStatus(Profile profile, String profilename) {
+        long now = System.currentTimeMillis();
         if (pump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
@@ -383,13 +383,13 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
                 extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
                 extended.put("LastBolusAmount", pump.lastBolusAmount);
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis()));
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -397,7 +397,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+                extended.put("ActiveProfile", profilename);
             } catch (Exception e) {
             }
 

@@ -409,7 +409,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public JSONObject getJSONStatus() {
+    public JSONObject getJSONStatus(Profile profile, String profileName) {
+        long now = System.currentTimeMillis();
         if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
             return null;
         }
@@ -422,28 +423,28 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             status.put("status", "normal");
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+                extended.put("ActiveProfile", profileName);
             } catch (Exception e) {
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis()));
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", DateUtil.toISOString(now));
 
             pump.put("battery", battery);
             pump.put("status", status);
             pump.put("extended", extended);
             pump.put("reservoir", reservoirInUnits);
-            pump.put("clock", DateUtil.toISOString(new Date()));
+            pump.put("clock", DateUtil.toISOString(now));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

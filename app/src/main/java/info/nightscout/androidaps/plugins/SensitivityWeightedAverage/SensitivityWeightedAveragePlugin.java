@@ -124,6 +124,13 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         }
 
 
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            if (Config.logAutosensData)
+                log.debug("No profile available");
+            return new AutosensResult();
+        }
+
         String pastSensitivity = "";
         int index = 0;
         LongSparseArray<Double> data = new LongSparseArray<>();
@@ -180,8 +187,6 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         if (weights == 0) {
             return new AutosensResult();
         }
-
-        Profile profile = MainApp.getConfigBuilder().getProfile();
 
         double sens = profile.getIsf();
 

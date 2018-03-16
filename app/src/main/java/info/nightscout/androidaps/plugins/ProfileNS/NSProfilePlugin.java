@@ -46,7 +46,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
 
-    private static ProfileStore profile = null;
+    private ProfileStore profile = null;
 
     private NSProfilePlugin() {
         MainApp.bus().register(this);
@@ -116,7 +116,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Subscribe
-    public static void storeNewProfile(ProfileStore newProfile) {
+    public void storeNewProfile(ProfileStore newProfile) {
         profile = new ProfileStore(newProfile.getData());
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
@@ -133,7 +133,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         });
     }
 
-    private static void storeNSProfile() {
+    private void storeNSProfile() {
         SP.putString("profile", profile.getData().toString());
         if (Config.logPrefsChange)
             log.debug("Storing profile");

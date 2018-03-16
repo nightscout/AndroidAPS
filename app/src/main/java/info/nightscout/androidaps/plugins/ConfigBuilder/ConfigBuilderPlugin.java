@@ -353,9 +353,11 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     /**
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      */
-    public void applyTBRRequest(APSResult request, Callback callback) {
+    public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
         PumpInterface pump = getActivePump();
         request.rate = applyBasalConstraints(request.rate);
+
+        long now = System.currentTimeMillis();
 
         if (!pump.isInitialized()) {
             log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
@@ -377,8 +379,9 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             log.debug("applyAPSRequest: " + request.toString());
 
         if (request.tempBasalReqested) {
+            TemporaryBasal activeTemp = getTempBasalFromHistory(now);
             if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
-                if (isTempBasalInProgress()) {
+                if (activeTemp != null) {
                     if (Config.logCongigBuilderActions)
                         log.debug("applyAPSRequest: cancelTempBasal()");
                     getCommandQueue().cancelTempBasal(false, callback);
@@ -389,13 +392,13 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                         callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
                     }
                 }
-            } else if (isTempBasalInProgress()
-                    && getTempBasalRemainingMinutesFromHistory() > 5
-                    && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < pump.getPumpDescription().basalStep) {
+            } else if (activeTemp != null
+                    && activeTemp.getPlannedRemainingMinutes() > 5
+                    && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(getTempBasalAbsoluteRateHistory()).duration(getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
+                    callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile)).duration(activeTemp.getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
                 }
             } else {
                 if (Config.logCongigBuilderActions)
@@ -642,16 +645,6 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     @Nullable
     public TemporaryBasal getTempBasalFromHistory(long time) {
         return activeTreatments != null ? activeTreatments.getTempBasalFromHistory(time) : null;
-    }
-
-    @Override
-    public double getTempBasalAbsoluteRateHistory() {
-        return activeTreatments.getTempBasalAbsoluteRateHistory();
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutesFromHistory() {
-        return activeTreatments.getTempBasalRemainingMinutesFromHistory();
     }
 
     @Override

@@ -627,7 +627,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void onClickAcceptTemp() {
-        if (ConfigBuilderPlugin.getActiveLoop() != null) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (ConfigBuilderPlugin.getActiveLoop() != null && profile != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
@@ -638,11 +640,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int id) {
                         hideTempRecommendation();
                         clearNotification();
-                        MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed, new Callback() {
+                        MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
                             @Override
                             public void run() {
                                 if (result.enacted) {
-                                    finalLastRun.setByPump = result;
+                                    finalLastRun.tbrSetByPump = result;
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
@@ -946,7 +948,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
-        if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
+        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);

@@ -188,6 +188,14 @@ public class NSUpload {
     }
 
     public static void uploadDeviceStatus() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        String profileName = MainApp.getConfigBuilder().getProfileName();
+
+        if (profile == null || profileName == null) {
+            log.error("Profile is null. Skipping upload");
+            return;
+        }
+
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
@@ -204,8 +212,8 @@ public class NSUpload {
 
                 if (lastRun.tbrSetByPump != null && lastRun.tbrSetByPump.enacted) { // enacted
                     deviceStatus.enacted = lastRun.request.json();
-                    deviceStatus.enacted.put("rate", lastRun.tbrSetByPump.json().get("rate"));
-                    deviceStatus.enacted.put("duration", lastRun.tbrSetByPump.json().get("duration"));
+                    deviceStatus.enacted.put("rate", lastRun.tbrSetByPump.json(profile).get("rate"));
+                    deviceStatus.enacted.put("duration", lastRun.tbrSetByPump.json(profile).get("duration"));
                     deviceStatus.enacted.put("recieved", true);
                     requested.put("duration", lastRun.request.duration);
                     requested.put("rate", lastRun.request.rate);
@@ -224,7 +232,7 @@ public class NSUpload {
                 log.debug("OpenAPS data too old to upload");
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus();
+            JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus(profile, profileName);
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }

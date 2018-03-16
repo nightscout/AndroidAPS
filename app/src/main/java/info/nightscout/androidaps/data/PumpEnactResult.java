@@ -154,7 +154,7 @@ public class PumpEnactResult extends Object {
     public PumpEnactResult() {
     }
 
-    public JSONObject json() {
+    public JSONObject json(Profile profile) {
         JSONObject result = new JSONObject();
         try {
             if (bolusDelivered > 0) {
@@ -164,7 +164,7 @@ public class PumpEnactResult extends Object {
                 result.put("duration", 0);
             } else if (isPercent) {
                 // Nightscout is expecting absolute value
-                Double abs = Round.roundTo(MainApp.getConfigBuilder().getProfile().getBasal() * percent / 100, 0.01);
+                Double abs = Round.roundTo(profile.getBasal() * percent / 100, 0.01);
                 result.put("rate", abs);
                 result.put("duration", duration);
             } else {

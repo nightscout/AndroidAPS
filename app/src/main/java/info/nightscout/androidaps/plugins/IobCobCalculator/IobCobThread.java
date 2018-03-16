@@ -59,7 +59,7 @@ public class IobCobThread extends Thread {
                 log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
                 return; // app still initializing
             }
-            if (MainApp.getConfigBuilder().getProfile() == null) {
+            if (!MainApp.getConfigBuilder().isProfileValid("IobCobThread")) {
                 log.debug("Aborting calculation thread (No profile): " + from);
                 return; // app still initializing
             }

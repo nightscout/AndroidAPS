@@ -554,15 +554,17 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500;
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            if (activeTemp != null) {
+                if (Config.logPumpActions)
+                    log.debug("setTempBasalAbsolute: currently running: " + activeTemp.toString());
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
+                if (activeTemp.percentRate == percentRate) {
                     if (!enforceNew) {
                         result.success = true;
                         result.percent = percentRate;
-                        result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
                         result.enacted = false;
-                        result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
+                        result.duration = activeTemp.getPlannedRemainingMinutes();
                         result.isPercent = true;
                         result.isTempCancel = false;
                         if (Config.logPumpActions)
@@ -606,7 +608,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -614,7 +617,6 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
-            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: Correct value already set");
@@ -634,7 +636,6 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
-            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: OK");
@@ -760,7 +761,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public JSONObject getJSONStatus() {
+    public JSONObject getJSONStatus(Profile profile, String profileName) {
+        long now = System.currentTimeMillis();
         if (pump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
@@ -778,13 +780,13 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
                 extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
                 extended.put("LastBolusAmount", pump.lastBolusAmount);
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis()));
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -800,7 +802,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             pumpjson.put("status", status);
             pumpjson.put("extended", extended);
             pumpjson.put("reservoir", (int) pump.reservoirRemainingUnits);
-            pumpjson.put("clock", DateUtil.toISOString(new Date()));
+            pumpjson.put("clock", DateUtil.toISOString(now));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

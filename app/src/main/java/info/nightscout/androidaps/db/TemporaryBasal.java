@@ -262,13 +262,13 @@ public class TemporaryBasal implements Interval {
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
-    public double tempBasalConvertedToAbsolute(long time) {
+    public double tempBasalConvertedToAbsolute(long time, Profile profile) {
         if(isFakeExtended){
-            return MainApp.getConfigBuilder().getProfile(time).getBasal(time) + netExtendedRate;
+            return profile.getBasal(time) + netExtendedRate;
         } else if (isAbsolute) {
             return absoluteRate;
         } else {
-             return MainApp.getConfigBuilder().getProfile(time).getBasal(time) * percentRate / 100;
+             return profile.getBasal(time) * percentRate / 100;
         }
     }
 

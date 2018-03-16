@@ -15,6 +15,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -173,8 +174,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        Date now = new Date();
-
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
@@ -231,17 +230,20 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         Profiler.log(log, "MA calculation", start);
 
 
+        long now = System.currentTimeMillis();
+
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
         // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.tempBasalReqested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
-            if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            if (activeTemp != null  && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
                 // going to cancel
-            } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
+            } else if (activeTemp != null && Math.abs(determineBasalResultMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
                 determineBasalResultMA.tempBasalReqested = false;
-            } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
+            } else if (activeTemp == null && Math.abs(determineBasalResultMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
                 determineBasalResultMA.tempBasalReqested = false;
         }
 
@@ -255,7 +257,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         lastDetermineBasalAdapterMAJS = determineBasalAdapterMAJS;
         lastAPSResult = determineBasalResultMA;
-        lastAPSRun = now;
+        lastAPSRun = new Date(now);
         MainApp.bus().post(new EventOpenAPSUpdateGui());
     }
 
