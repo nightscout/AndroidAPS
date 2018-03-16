@@ -53,7 +53,6 @@ import info.nightscout.utils.ToastUtils;
 public class NewCarbsDialog extends DialogFragment implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static Logger log = LoggerFactory.getLogger(NewCarbsDialog.class);
 
-    private EditText foodText;
     private NumberPicker editCarbs;
 
     private TextView dateButton;
@@ -66,9 +65,9 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private Button fav2Button;
     private Button fav3Button;
 
-    private static final double FAV1_DEFAULT = 5;
-    private static final double FAV2_DEFAULT = 10;
-    private static final double FAV3_DEFAULT = 20;
+    private static final int FAV1_DEFAULT = 5;
+    private static final int FAV2_DEFAULT = 10;
+    private static final int FAV3_DEFAULT = 20;
     private CheckBox suspendLoopCheckbox;
     private CheckBox startActivityTTCheckbox;
     private CheckBox startEatingSoonTTCheckbox;
@@ -120,8 +119,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
 
         maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
 
-        foodText = view.findViewById(R.id.newcarb_food);
-
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
 
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
@@ -143,28 +140,27 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         startEatingSoonTTCheckbox.setOnClickListener(this);
         startActivityTTCheckbox.setOnClickListener(this);
 
-// TODO prefilling carbs, maybe
-// TODO maybe update suggested carbs to target TT when checked
-//        APSResult lastAPSResult = ConfigBuilderPlugin.getActiveAPS().getLastAPSResult();
-//        if (lastAPSResult != null && lastAPSResult instanceof DetermineBasalResultSMB && ((DetermineBasalResultSMB) lastAPSResult).carbsReq > 0) {
-//            editCarbs.setValue(((DetermineBasalResultSMB) lastAPSResult).carbsReq);
-//        }
-
         fav1Button = view.findViewById(R.id.newcarbs_plus1);
         fav1Button.setOnClickListener(this);
-        fav1Button.setText("+" + SP.getString(R.string.key_carbs_button_increment_1, String.valueOf(FAV1_DEFAULT)));
+        fav1Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)));
+
         fav2Button = view.findViewById(R.id.newcarbs_plus2);
         fav2Button.setOnClickListener(this);
-        fav2Button.setText("+" + SP.getString(R.string.key_carbs_button_increment_2, String.valueOf(FAV2_DEFAULT)));
+        fav2Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)));
+
         fav3Button = view.findViewById(R.id.newcarbs_plus3);
         fav3Button.setOnClickListener(this);
-        fav3Button.setText("+" + SP.getString(R.string.key_carbs_button_increment_3, String.valueOf(FAV3_DEFAULT)));
+        fav3Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
 
         suspendLoopCheckbox = view.findViewById(R.id.newcarbs_suspend_loop);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
         return view;
+    }
+
+    private String toSignedString(int value) {
+        return value > 0 ? "+" + value : String.valueOf(value);
     }
 
     @Override
@@ -201,18 +197,18 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                 tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
                 break;
             case R.id.newcarbs_plus1:
-                editCarbs.setValue(editCarbs.getValue()
-                        + SP.getDouble(R.string.key_carbs_button_increment_1, FAV1_DEFAULT));
+                editCarbs.setValue(Math.max(0, editCarbs.getValue()
+                        + SP.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)));
                 validateInputs();
                 break;
             case R.id.newcarbs_plus2:
-                editCarbs.setValue(editCarbs.getValue()
-                        + SP.getDouble(R.string.key_carbs_button_increment_2, FAV2_DEFAULT));
+                editCarbs.setValue(Math.max(0, editCarbs.getValue()
+                        + SP.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)));
                 validateInputs();
                 break;
             case R.id.newcarbs_plus3:
-                editCarbs.setValue(editCarbs.getValue()
-                        + SP.getDouble(R.string.key_carbs_button_increment_3, FAV3_DEFAULT));
+                editCarbs.setValue(Math.max(0, editCarbs.getValue()
+                        + SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
                 validateInputs();
                 break;
             case R.id.newcarbs_activity_tt:
@@ -233,7 +229,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         }
         okClicked = true;
         try {
-            final String food = StringUtils.trimToNull(foodText.getText().toString());
             final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
             Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
 
@@ -278,10 +273,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             final double finalEatigSoonTT = eatingSoonTT;
             final int finalActivityTTDuration = activityTTDuration;
             final int finalEatingSoonTTDuration = eatingSoonTTDuration;
-
-            if (StringUtils.isNoneEmpty(food)) {
-                confirmMessage += "<br/>" + "Food: " + food;
-            }
 
             if (!initialEventTime.equals(eventTime)) {
                 confirmMessage += "<br/> Time: " + DateUtil.dateAndTimeString(eventTime);
@@ -339,12 +330,11 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                             MainApp.getDbHelper().createOrUpdate(tempTarget);
                         }
 
-                        if (finalCarbsAfterConstraints > 0 || food != null) {
+                        if (finalCarbsAfterConstraints > 0) {
                             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                             detailedBolusInfo.date = eventTime.getTime();
                             detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
                             detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-//                        detailedBolusInfo.food = food;
                             detailedBolusInfo.context = context;
                             detailedBolusInfo.source = Source.USER;
                             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);

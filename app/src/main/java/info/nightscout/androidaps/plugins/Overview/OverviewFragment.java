@@ -1184,8 +1184,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // **** Various treatment buttons ****
         if (carbsButton != null) {
             if (SP.getBoolean(R.string.key_show_carbs_button, true)
-                    && !ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
-                    (pump.isInitialized() && !pump.isSuspended())) {
+                    && (!ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    (pump.isInitialized() && !pump.isSuspended()))) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {
                 carbsButton.setVisibility(View.GONE);
