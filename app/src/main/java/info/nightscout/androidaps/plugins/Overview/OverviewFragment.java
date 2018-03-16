@@ -16,21 +16,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -144,6 +150,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
+    ImageButton chartButton;
 
     TextView iage;
     TextView cage;
@@ -193,6 +200,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     final Object updateSync = new Object();
 
+    public enum CHARTTYPE {PRE,BAS, IOB, COB, DEV, SEN};
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
@@ -342,6 +350,82 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
                     updateGUI("rangeChange");
                     return false;
+                }
+            });
+
+            chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
+            chartButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(v.getContext(), v);
+                    //MenuInflater inflater = popup.getMenuInflater();
+
+                    MenuItem item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
+                    CharSequence title = item.getTitle();
+                    SpannableString s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)),0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(true);
+
+
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, "Basals");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(true);
+
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, "Insulin On Board");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(true);
+
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, "Carbs On Board");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(true);
+
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, "Deviations");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(false);
+
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, "Sensitivity");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(true);
+
+
+
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            return false;
+                        }
+                    });
+                    chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+                    popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                        @Override
+                        public void onDismiss(PopupMenu menu) {
+                            chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+                        }
+                    });
+                    popup.show();
                 }
             });
 

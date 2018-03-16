@@ -343,15 +343,32 @@
                         android:layout_gravity="center"
                         android:text="@string/ratio_short"
                         android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:visibility="gone"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
+                <RelativeLayout
+                   android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/overview_bggraph"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="match_parent" />
+
+                <ImageButton
+                    android:id="@+id/overview_chartMenuButton"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingTop="5dp"
+                    app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+
+                </RelativeLayout>
+
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/overview_iobgraph"
