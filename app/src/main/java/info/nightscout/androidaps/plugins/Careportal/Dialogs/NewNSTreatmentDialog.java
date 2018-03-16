@@ -23,7 +23,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -38,6 +37,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -45,6 +45,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -54,6 +55,7 @@ import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
@@ -407,12 +409,23 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         else layout.setVisibility(View.GONE);
     }
 
+    private void updateBGforDateTime() {
+        long millis = eventTime.getTime() - (150 * 1000L); // 2,5 * 60 * 1000
+        List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(millis, true);
+        if ((data.size() > 0) &&
+            (data.get(0).date > millis - 7 * 60 * 1000L) &&
+            (data.get(0).date < millis + 7 * 60 * 1000L)) {
+            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
+        }
+    }
+
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         eventTime.setYear(year - 1900);
         eventTime.setMonth(monthOfYear);
         eventTime.setDate(dayOfMonth);
         dateButton.setText(DateUtil.dateString(eventTime));
+        updateBGforDateTime();
     }
 
     @Override
@@ -421,6 +434,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         eventTime.setMinutes(minute);
         eventTime.setSeconds(second);
         timeButton.setText(DateUtil.timeString(eventTime));
+        updateBGforDateTime();
     }
 
 
@@ -685,14 +699,14 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                             log.debug("Creating new TempTarget db record: " + tempTarget.toString());
                             MainApp.getDbHelper().createOrUpdate(tempTarget);
                             NSUpload.uploadCareportalEntryToNS(data);
-                            Answers.getInstance().logCustom(new CustomEvent("TempTarget"));
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("TempTarget"));
                         }
                     } catch (JSONException e) {
                         log.error("Unhandled exception", e);
                     }
                 } else {
                     NSUpload.uploadCareportalEntryToNS(data);
-                    Answers.getInstance().logCustom(new CustomEvent("NSTreatment"));
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("NSTreatment"));
                 }
             }
         });
@@ -727,7 +741,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 MainApp.bus().post(new EventNewBasalProfile());
             }
         });
-        Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
@@ -759,7 +773,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     MainApp.bus().post(new EventNewBasalProfile());
                 }
             });
-            Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
         } else {
             log.error("No profile switch existing");
         }

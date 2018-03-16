@@ -2,7 +2,6 @@
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
-
     <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Refrescar tratamientos desde NS</string>
     <string name="nav_backup">Backup</string>
@@ -12,7 +11,6 @@
     <string name="danar_useextended_title">Usar bolos extendidos para&gt; 200%</string>
     <string name="danar_bt_name_title">DanaR dispositivo Bluetooth</string>
     <string name="ns_sync_use_absolute_title">Usar siempre valor basal absoluto</string>
-
     <string name="objectives_objective_label_string">Objetivo:</string>
     <string name="objectives_gate_label_string">Meta:</string>
     <string name="objectives_button_start">Inicio</string>
@@ -72,7 +70,6 @@
     <string name="glucose">Glucosa</string>
     <string name="delta">Delta</string>
     <string name="avgdelta">Delta Media</string>
-
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objetivos</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -82,8 +79,6 @@
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
-
-
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_treatments">Tratamientos</string>
     <string name="configbuilder_tempbasals">Temp Basales</string>
@@ -93,7 +88,6 @@
     <string name="days">días</string>
     <string name="objectives_minimalduration">Duración mínima</string>
     <string name="configbuilder_constraints">Restricciones</string>
-
     <string name="loop">Lazo</string>
     <string name="configbuilder_loop">Lazo</string>
     <string name="loop_aps_label">APS</string>
@@ -110,7 +104,7 @@
     <string name="overview_newtempbasal_basalpercent">Valor basal [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = actual)</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
-    <string name="overview_bolus_label">Bolo</string>
+    <string name="overview_treatment_label">Bolo</string>
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricción aplicada!</string>
     <string name="confirmation">Confirmación</string>
@@ -124,7 +118,6 @@
     <string name="xdrip">xDrip</string>
     <string name="nsclient">NSClient</string>
     <string name="apsmode_title">Modo APS</string>
-
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
@@ -157,7 +150,6 @@
     <string name="careportal_tempbasalend">Basal Temporal Fin</string>
     <string name="careportal_carbscorrection">Hidratos Carbono Corrección</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-
     <string name="careportal_newnstreatment_eventtype">Tipo de evento</string>
     <string name="careportal_newnstreatment_other">Otro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
@@ -196,7 +188,6 @@
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DESCARTAR</string>
     <string name="language">Idioma</string>
-
     <string name="danarpump">DanaR</string>
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
@@ -273,8 +264,8 @@
     <string name="occlusion">Oclusión</string>
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">Parar pulsado</string>
-    <string name="waitingforpumpclicktorefresh">Esperando bomba. Click to refresh.</string>
-    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Va a entregar %.2fU</string>
+    <string name="waitingforpumpclicktorefresh">Esperando bomba. Pulsar para actualizar.</string>
+    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Se entregará % .2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitoreo, y el análisis de los basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_1_objective">Empezar con bucle abierto</string>
@@ -295,7 +286,7 @@
     <string name="correctionbous">Corr</string>
     <string name="disabledloop">Loop Inactivo</string>
     <string name="mealbolus">Bolo Comida</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Valor %s fuera de limites</string>
+    <string name="valueoutofrange" formatted="false">Valor %s fuera de limites</string>
     <string name="overview_editquickwizard_buttontext">Botón Texto:</string>
     <string name="overview_editquickwizard_carbs">Carbs:</string>
     <string name="overview_editquickwizard_valid">Validar:</string>
@@ -313,7 +304,7 @@
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
     <string formatted="false" name="smscommunicator_tempbasalset">Basal temporal %.2fU/h para %d min iniciada correctamente</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos SMS remotos</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con codigo %s</string>
+    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con código %s</string>
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="es_lang">Español</string>
     <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
@@ -325,25 +316,26 @@
     <string name="smscommunicator_unknowncommand">Comando desconocido o respuesta incorrecta</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
     <string formatted="false" name="smscommunicator_basalreplywithcode">Para iniciar basal %.2fU/h responder con código %s</string>
-    <string name="actions_shortname">"acciones"</string>
-    <string name="virtualpump_shortname">"bomba virtual"</string>
-    <string name="treatments_shortname">"tratamientos"</string>
-    <string name="temptargetrange_shortname">" objectivos temporales"</string>
-    <string name="tempbasals_shortname">"objtemp"</string>
-    <string name="smscommunicator_shortname">"comunicacíon sms"</string>
-    <string name="simpleprofile_shortname">"Profil simple"</string>
-    <string name="profileviewer_shortname">"Profiles"</string>
+    <string name="actions_shortname">"ACC"</string>
+    <string name="wear_shortname">"REL"</string>
+    <string name="virtualpump_shortname">"BombaV"</string>
+    <string name="treatments_shortname">"Trat"</string>
+    <string name="temptargetrange_shortname">"ObjTempAmpl"</string>
+    <string name="tempbasals_shortname">"ObjTemp"</string>
+    <string name="smscommunicator_shortname">"SMS"</string>
+    <string name="simpleprofile_shortname">"PerfSipmple"</string>
+    <string name="profileviewer_shortname">"Perf"</string>
     <string name="overview_shortname">"General"</string>
-    <string name="objectives_shortname">"Objectivos"</string>
-    <string name="oaps_shortname">"OAPS"</string>
-    <string name="loop_shortname">"LOOP"</string>
-    <string name="localprofile_shortname">"LP"</string>
-    <string name="danarpump_shortname">DANA</string>
-    <string name="configbuilder_shortname">"conf"</string>
-    <string name="careportal_shortname">CP</string>
+    <string name="objectives_shortname">"Obj"</string>
+    <string name="oaps_shortname">"Oaps"</string>
+    <string name="loop_shortname">"Lazo"</string>
+    <string name="localprofile_shortname">"PerfLoc"</string>
+    <string name="danarpump_shortname">"Dana"</string>
+    <string name="configbuilder_shortname">"Conf"</string>
+    <string name="careportal_shortname">"CP"</string>
     <string name="activity">Actividad</string>
-    <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardara registros (importantes para trazar y verificar que el algoritmo funciona correctamente)</string>
-    <string name="array_of_elements" formatted="false">Matriz de %d elementos. Valor actual:</string>
+    <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importantes para trazar y verificar que el algoritmo funcione correctamente)</string>
+    <string name="array_of_elements">Matriz de %d elementos. Valor actual:</string>
     <string name="basal_rate">Ratio Basal:</string>
     <string name="basalvaluebelowminimum">Valor basal menor del mínimo. Perfil no fijado.</string>
     <string name="base_profile_label">Perfil Base</string>
@@ -393,14 +385,13 @@
     <string name="sv_lang">Sueco</string>
     <string name="openapsma_maxbasal_title">Max U/h para el perfil base</string>
     <string name="openapsma_maxiob_title">"Max IOB basal OpenAPs puede emitir "</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Para enviar calibracion %.2f responder con codigo %s</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Para enviar calibracion %.2f responder con código %s</string>
     <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
-    <string name="pump_errors_history">Errores</string>
     <string name="objectives_7_objective">habilitar funciones adicionales para uso durante el día como SMB</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limitado a %.\"f</string>
+    <string name="valuelimitedto" formatted="false">%.2f limitado a %.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">no permitido el mando remoto</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con codigo %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con código %s</string>
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillbolus_title">Llenar/Rellenar cantidad de insulina estándar</string>
     <string name="timeshift_hint">Tiempo en horas en el que el perfil será movido</string>
@@ -410,7 +401,6 @@
     <string name="edit_base_basal">Editar Base-Basal:</string>
     <string name="edit_base_isf">Edidat Base-ISF:</string>
     <string name="edit_base_ic">Editar Base-IC:</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
     <string name="wear">Reloj</string>
     <string name="open_settings_on_wear">Abrir ajustes en reloj</string>
     <string name="batterydischarged">Batería de la bomba descargada</string>
@@ -437,8 +427,6 @@
     <string name="danar_stats_olddata_Message">Datos caducados pro favor pincha RELOAD</string>
     <string name="danar_stats_tbb">Basal total</string>
     <string name="danar_stats_tbb2">Basal diaria *2</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
-    <string name="wear_shortname">Reloj</string>
     <string name="short_tabtitles">Tab titulo corto</string>
     <string name="prefs_delta_title">Ajustes Delta</string>
     <string name="always_use_shortavg">Usa siempre delta media corto en vez de delta simple</string>
@@ -446,22 +434,14 @@
     <string name="advancedsettings_title">Ajustes avancados</string>
     <string name="danar_model" formatted="false">Modelo: %02X Protocolo: %02X Codigo: %02X</string>
     <string name="profile">Perfiles</string>
-    <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">"Valor por defecte: 3 Esto es valor de seguridad establecido pos OpenAPS. Limita tu base al máximo de x3 de tu base máxima. No necesitas cambiar esto, pero debes tener en cuenta, que esto se esta discutiento sobre „3 x max diario; 4x actual“ pro razones de seguridad. "</string>
-    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">"Ajuste pro defecto: 4 Esto es la otra mitad de los ajustes de seguridad de OpenAPS y la otra mitad de \"3x max diario, 4x actual\". Esto significa, que tu base no puede ser mas alta que el numero que multiplica tu base. Esto es para evitar que las personas se encuentren en situaciones peligrosas por aumentar mucho la base sin entender el algoritmo del sistema. El ajuste por defecto es x4. La mayoría de las personas nunca tendra que cambiar estos ajustes, si no debe modificar otros ajustes en la terapia. "</string>
-    <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">"Ajuste por defecto: 1.2\nEsto es un multilicador para autosens (y pronto autotune) para poner un 20% limite máximo a la cota de autosens ratio, la que determina cuantos ajustes autosens puede hacer a la base, a cuanto puede ajustar ISF y a cuanto puede bajar el objective de glucosa.  "</string>
-    <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">Ajuste pro defecto: 0.7\nEl otro lade de limitaciones de seguridad de autosens, limitando a cuanto puede bajar la base y a cuanto puede subir ISF y BG objectivos.</string>
-    <string name="openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets_summary">Ajuste pro defcto: true\nEsto se usa para permitir autosens a ajustar objectivos BG en addicion a ISF y bases.</string>
-    <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Ajuste pro defecto: 2 \nDormir bolo es iniciado después de proveder un bolo para comida, así el loop no interactuará con low temps cuando acabas de comer. El ajuste pro defecto es 2; quiere decir con el DIA de 3 h el bolo será dormido por fases por 1.5 h (3DIA/2).</string>
-    <string name="openapsama_min_5m_carbimpact" translatable="false">5_min_carb_impact</string>
     <string name="openapsama_min_5m_carbimpact_summary">"Ajustes pro defecto: 3.0\nEsto es un ajuste pro defecto para la absorcion de carbohidratos pro 5 minutos. Por defecto se espera 3mg/dl/5min. Esto afecta la velocidad de reduccion de COB y cuanta absorcion se usa para calcular el BG futuro previsto, si la glucosa diminua mas de lo previsto o aumenta mas de lo previsto. "</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">"Atención!\nNormalment no tienes que editar los valores a continuacion. Por favor PINCHA AQUI y LEE el texto y PROCURA ENTENDER antes de cambiar alguno de los valores. "</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="smscommunicator_invalidphonennumber">numero de telefonp incorrecto</string>
     <string name="copy_to_clipboard">Copiar al Clipboard</string>
     <string name="copied_to_clipboard">Copiado al clipboard</string>
@@ -535,6 +515,7 @@
     <string name="suspendloopfor2h">Desactivar loop por 2h</string>
     <string name="suspendloopfor3h">Desactivar loop por 3h</string>
     <string name="suspendloopfor10h">Desactivar loop por 10 h</string>
+    <string name="disconnectpumpfor15m">Desconectar bomba por 15 min</string>
     <string name="disconnectpumpfor30m">Desconectar bomba por 30 min</string>
     <string name="disconnectpumpfor1h">Desconectar bomba por 1 h</string>
     <string name="disconnectpumpfor2h">Desconectar bomba por 2 h</string>
@@ -633,13 +614,10 @@
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Cancelar</string>
-    <string name="cpp_sync_setting_missing">necesita ser activado para mandar valores a la bomba!</string>
-    <string name="cpp_notloadedplugins">Faltan perfiles!</string>
-    <string name="cpp_valuesnotstored">Valores no guardados!</string>
+    <string name="notloadedplugins">Faltan perfiles!</string>
+    <string name="valuesnotstored">Valores no guardados!</string>
     <string name="wear_overviewnotifications">Resumen avisos</string>
     <string name="wear_overviewnotifications_summary">Mandar resumen de avisos como avisos de confirmacion por reloj.</string>
-    <string name="combopump" translatable="false">Accu-Chek Combo</string>
-    <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="ns_localbroadcasts">Activar mensajes a otras aplicaciones (como xDrip).</string>
     <string name="ns_localbroadcasts_title">Activar mensajes locales.</string>
     <string name="careportal_activity_label">ACTIVITY Y FEEDBACK</string>

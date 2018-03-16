@@ -18,8 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -33,6 +31,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
 public class NSClientInternalFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -88,7 +87,7 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -99,11 +98,11 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
         switch (view.getId()) {
             case R.id.nsclientinternal_restart:
                 MainApp.bus().post(new EventNSClientRestart());
-                Answers.getInstance().logCustom(new CustomEvent("NSClientRestart"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientRestart"));
                 break;
             case R.id.nsclientinternal_delivernow:
                 NSClientInternalPlugin.getPlugin().resend("GUI");
-                Answers.getInstance().logCustom(new CustomEvent("NSClientDeliverNow"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientDeliverNow"));
                 break;
             case R.id.nsclientinternal_clearlog:
                 NSClientInternalPlugin.getPlugin().clearLog();
@@ -118,7 +117,7 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                     public void onClick(DialogInterface dialog, int id) {
                         UploadQueue.clearQueue();
                         updateGUI();
-                        Answers.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), null);
@@ -126,7 +125,7 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 break;
             case R.id.nsclientinternal_showqueue:
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", NSClientInternalPlugin.getPlugin().queue().textList()));
-                Answers.getInstance().logCustom(new CustomEvent("NSClientShowQueue"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientShowQueue"));
                 break;
         }
     }
@@ -139,7 +138,7 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 NSClientInternalPlugin.getPlugin().paused = isChecked;
                 MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
                 updateGUI();
-                Answers.getInstance().logCustom(new CustomEvent("NSClientPause"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientPause"));
                 break;
             case R.id.nsclientinternal_autoscroll:
                 SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);

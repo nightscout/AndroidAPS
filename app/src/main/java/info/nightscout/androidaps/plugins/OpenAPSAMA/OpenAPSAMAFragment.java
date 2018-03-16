@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -24,6 +22,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JSONFormatter;
 
 public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnClickListener {
@@ -63,7 +62,7 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -74,7 +73,7 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
         switch (view.getId()) {
             case R.id.openapsma_run:
                 OpenAPSAMAPlugin.getPlugin().invoke("OpenAPSAMA button");
-                Answers.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
                 break;
         }
 

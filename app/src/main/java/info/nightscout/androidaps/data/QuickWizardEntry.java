@@ -82,9 +82,9 @@ public class QuickWizardEntry {
         double cob = 0d;
         AutosensData autosensData;
         if (_synchronized)
-            autosensData = IobCobCalculatorPlugin.getLastAutosensDataSynchronized("QuickWizard COB");
+            autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("QuickWizard COB");
         else
-            autosensData = IobCobCalculatorPlugin.getLastAutosensData("QuickWizard COB");
+            autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("QuickWizard COB");
 
         if (autosensData != null && useCOB() == YES) {
             cob = autosensData.cob;

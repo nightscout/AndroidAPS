@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -38,6 +37,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -81,7 +81,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
-            holder.mealOrCorrection.setText(t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
+            holder.mealOrCorrection.setText(t.isSMB ? "SMB" : t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
             holder.ph.setVisibility(t.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(t._id) ? View.VISIBLE : View.GONE);
             holder.invalid.setVisibility(t.isValid ? View.GONE : View.VISIBLE);
@@ -155,7 +155,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                                     MainApp.getDbHelper().delete(treatment);
                                 }
                                 updateGUI();
-                                Answers.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

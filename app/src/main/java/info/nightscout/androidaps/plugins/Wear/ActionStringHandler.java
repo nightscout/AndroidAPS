@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.Manifest;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -44,6 +45,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -149,11 +151,11 @@ public class ActionStringHandler {
                     low *= Constants.MMOLL_TO_MGDL;
                     high *= Constants.MMOLL_TO_MGDL;
                 }
-                if (low < Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
                     sendError("Min-BG out of range!");
                     return;
                 }
-                if (high < Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
                     sendError("Max-BG out of range!");
                     return;
                 }
@@ -479,7 +481,7 @@ public class ActionStringHandler {
 
         ret += "DEFAULT RANGE: ";
         ret += profile.getTargetLow() + " - " + profile.getTargetHigh();
-        ret += " target: " + (profile.getTargetLow() + profile.getTargetHigh()) / 2;
+        ret += " target: " + profile.getTarget();
         return ret;
     }
 
@@ -503,7 +505,7 @@ public class ActionStringHandler {
             return "Last result not available!";
         }
 
-        if (!result.changeRequested) {
+        if (!result.isChangeRequested()) {
             ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
         } else if (result.rate == 0 && result.duration == 0) {
             ret += MainApp.sResources.getString(R.string.canceltemp) + "\n";
@@ -577,18 +579,18 @@ public class ActionStringHandler {
 
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage") + "\n";
+            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Percentage") + "\n";
         }
         if (timeshift < 0 || timeshift > 23) {
-            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
+            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
         }
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null || profile.getBasal() == null) {
-            msg += MainApp.sResources.getString(R.string.cpp_notloadedplugins) + "\n";
+            msg += MainApp.sResources.getString(R.string.notloadedplugins) + "\n";
         }
         if (!"".equals(msg)) {
-            msg += MainApp.sResources.getString(R.string.cpp_valuesnotstored);
+            msg += MainApp.sResources.getString(R.string.valuesnotstored);
             String rTitle = "STATUS";
             String rAction = "statusmessage";
             WearPlugin.getPlugin().requestActionConfirmation(rTitle, msg, rAction);
@@ -643,16 +645,20 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.carbs = carbs;
         detailedBolusInfo.source = Source.USER;
-        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-            @Override
-            public void run() {
-                if (!result.success) {
-                    sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
-                            "\n" +
-                            result.comment);
+        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
+                                "\n" +
+                                result.comment);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        }
     }
 
     private synchronized static void sendError(String errormessage) {

@@ -105,7 +105,7 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
-        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getAutosensDataTable();
+        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
         String age = SP.getString(R.string.key_age, "");
         int defaultHours = 24;
@@ -119,7 +119,7 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
+        AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             log.debug("No autosens data available");
             return new AutosensResult();

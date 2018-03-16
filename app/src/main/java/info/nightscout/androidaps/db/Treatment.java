@@ -12,9 +12,11 @@ import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
@@ -120,7 +122,7 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        return yValue;
+        return isSMB ? OverviewPlugin.getPlugin().determineLowLine() : yValue;
     }
 
     @Override
@@ -139,7 +141,10 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public PointsWithLabelGraphSeries.Shape getShape() {
-        return PointsWithLabelGraphSeries.Shape.BOLUS;
+        if (isSMB)
+            return PointsWithLabelGraphSeries.Shape.SMB;
+        else
+            return PointsWithLabelGraphSeries.Shape.BOLUS;
     }
 
     @Override
@@ -149,10 +154,17 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        if (isValid)
+        if (isSMB)
+            return MainApp.sResources.getColor(R.color.tempbasal);
+        else if (isValid)
             return Color.CYAN;
         else
             return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
+    }
+
+    @Override
+    public int getSecondColor() {
+        return 0;
     }
 
     @Override

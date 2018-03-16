@@ -33,19 +33,16 @@ public class Constants {
     public static final int CPP_MIN_TIMESHIFT = -6;
     public static final int CPP_MAX_TIMESHIFT = 23;
 
-    // Very Hard Limits Ranges
-    // First value is the Lowest and second value is the Highest a Limit can define
-    public static final int[] VERY_HARD_LIMIT_MIN_BG = {72,180};
-    public static final int[] VERY_HARD_LIMIT_MAX_BG = {90,270};
-    public static final int[] VERY_HARD_LIMIT_TARGET_BG = {80,200};
-
-    // Very Hard Limits Ranges for Temp Targets
-    public static final int[] VERY_HARD_LIMIT_TEMP_MIN_BG = {72,180};
-    public static final int[] VERY_HARD_LIMIT_TEMP_MAX_BG = {72,270};
-    public static final int[] VERY_HARD_LIMIT_TEMP_TARGET_BG = {72,200};
-
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
+
+    // Temp targets
+    public static final int defaultActivityTTDuration = 90; // min
+    public static final double defaultActivityTTmgdl = 90d;
+    public static final double defaultActivityTTmmol = 5d;
+    public static final int defaultEatingSoonTTDuration = 45; // min
+    public static final double defaultEatingSoonTTmgdl = 140d;
+    public static final double defaultEatingSoonTTmmol = 8d;
 
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;

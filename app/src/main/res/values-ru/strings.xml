@@ -79,8 +79,6 @@
     <string name="careportal_temporarytargetcancel">отмена времнной цели</string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="child">ребенок</string>
-    <string name="circadian_percentage_profile">суточный процентный профиль</string>
-    <string name="circadian_percentage_profile_shortname">СПП</string>
     <string name="clear_queue">очистка очереди</string>
     <string name="clearlog">очистка лога</string>
     <string name="closedloop">замкнутый цикл</string>
@@ -181,6 +179,7 @@
     <string name="disconnectpumpfor10h">отсоединить помпу на 10 час</string>
     <string name="disconnectpumpfor1h">отсоединить помпу на 1 час</string>
     <string name="disconnectpumpfor2h">отсоединить помпу на 2 часа</string>
+    <string name="disconnectpumpfor15m">отсоединить помпу на 15 мин</string>
     <string name="disconnectpumpfor30m">отсоединить помпу на 30 мин</string>
     <string name="disconnectpumpfor3h">отсоединить помпу на 3 часа</string>
     <string name="dismiss">отклонить</string>
@@ -334,7 +333,6 @@
     <string name="openapsama_autosens_min_summary">по умолчанию:0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">значение по умолчанию :2 bolus snoose активируется после введения болюса на еду чтобы цикл не взаимодействовал с временными низкими СК сразу после еды. так, трехчасовой DIA при величине 2 означает постыпенное затихание bolus snooze после 1.5 часов (3DIA/2)</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_min_5m_carbimpact_summary">значение по умолчанию :3  усвоение углеводов за 5 мин. то есть 3 мг/дл/ 5 мин. Влияет на расчет прогнозируемой гликемии, когда СК падает быстрее или не растет так как ожидается.</string>
@@ -361,13 +359,13 @@
     <string name="result">результат</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">величина %s недопустима</string>
+    <string name="valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
+    <string name="valueoutofrange" formatted="false">величина %s недопустима</string>
     <string name="openloop">открытый цикл</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="othersettings_title">другое</string>
     <string name="overview">начало</string>
-    <string name="overview_bolus_label">болюс</string>
+    <string name="overview_treatment_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2fU е инс</string>
     <string name="overview_bolusprogress_stop">стоп</string>
@@ -580,9 +578,8 @@
     <string name="careportal_sensorage_label">сенсор пропаботал</string>
     <string name="careportal_sensorage_label_short">ВОЗРСенс</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
-    <string name="cpp_notloadedplugins">не все профили загружены!</string>
-    <string name="cpp_sync_setting_missing">требует активации для отправки данных на помпу!</string>
-    <string name="cpp_valuesnotstored">Данные не сохранены!</string>
+    <string name="notloadedplugins">не все профили загружены!</string>
+    <string name="valuesnotstored">Данные не сохранены!</string>
     <string name="danar_visualizeextendedaspercentage_title">Просмотреть расширенный болюс %</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>

@@ -1,9 +1,7 @@
 package info.nightscout.utils;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -25,6 +23,8 @@ import info.nightscout.utils.NSUpload;
  */
 
 public class LocalAlertUtils {
+    private static Logger log = LoggerFactory.getLogger(LocalAlertUtils.class);
+
     public static int missedReadingsThreshold() {
         return SP.getInt(MainApp.sResources.getString(R.string.key_missed_bg_readings_threshold), 30) * 60 * 1000;
     }
@@ -35,10 +35,11 @@ public class LocalAlertUtils {
 
     public static void checkPumpUnreachableAlarm(Date lastConnection, boolean isStatusOutdated) {
         boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
-        boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis();
+        boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis();
 
         if (Config.APS && SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), true)
                 && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !ConfigBuilderPlugin.getActiveLoop().isDisconnected()) {
+            log.debug("Generating pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated);
             Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());

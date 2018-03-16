@@ -17,8 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
+
 import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.PasswordProtection;
 
 
@@ -131,7 +131,7 @@ public class ConfigBuilderFragment extends Fragment {
             }
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -242,7 +242,7 @@ public class ConfigBuilderFragment extends Fragment {
                         MainApp.bus().post(new EventRefreshGui());
                         MainApp.bus().post(new EventConfigBuilderChange());
                         getPlugin().logPluginStatus();
-                        Answers.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
                     }
                 });
 

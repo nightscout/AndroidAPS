@@ -66,8 +66,6 @@
     <string name="careportal_temporarytargetcancel">Cancellare Target Temporanea</string>
     <string name="changeyourinput">Cambia il tuo imput</string>
     <string name="child">Ragazzi</string>
-    <string name="circadian_percentage_profile">Percentuale del profilo circadiano</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="closedloop">Chiusura Loop</string>
     <string name="comment">Commenti</string>
     <string name="configbuilder">Configurazione Strutturale</string>
@@ -147,6 +145,7 @@
     <string name="disconnectpumpfor10h">Sconnetti Micro per 10H</string>
     <string name="disconnectpumpfor1h">Sconnetti Micro per 1 H</string>
     <string name="disconnectpumpfor2h">Sconnetti Micro per 2 H</string>
+    <string name="disconnectpumpfor15m">Sconnetti Micro per 15min</string>
     <string name="disconnectpumpfor30m">Sconnetti Micro per 30min</string>
     <string name="disconnectpumpfor3h">Sconnetti Micro per 3 H</string>
     <string name="dismiss">Respingere</string>
@@ -295,7 +294,7 @@
     <string name="openapsma_run">Avvia ora</string>
     <string name="openloop">Apertura Loop</string>
     <string name="othersettings_title">Altro</string>
-    <string name="overview_bolus_label">Boli</string>
+    <string name="overview_treatment_label">Boli</string>
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_calculator_label">Calcolatore</string>
     <string name="overview_calibration">Calibrazione</string>

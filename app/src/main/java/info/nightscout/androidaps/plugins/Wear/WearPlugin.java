@@ -10,6 +10,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
+import info.nightscout.androidaps.events.EventLoop;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -18,6 +19,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterService;
@@ -169,6 +171,11 @@ public class WearPlugin implements PluginBase {
     }
 
     @Subscribe
+    public void onStatusEvent(final EventOpenAPSUpdateGui ev){
+        sendDataToWatch(true, true, false);
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
         sendDataToWatch(true, true, false);
     }
@@ -197,10 +204,12 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-        intent.putExtra("progresspercent", ev.percent);
-        intent.putExtra("progressstatus", ev.status);
-        ctx.startService(intent);
+        if(!ev.isSMB()||SP.getBoolean("wear_notifySMB", true)) {
+            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+            intent.putExtra("progresspercent", ev.percent);
+            intent.putExtra("progressstatus", ev.status);
+            ctx.startService(intent);
+        }
     }
 
     @Subscribe
@@ -249,11 +258,4 @@ public class WearPlugin implements PluginBase {
     public static void unRegisterWatchUpdaterService() {
         watchUS = null;
     }
-
-    public void overviewNotification(int id, String message) {
-        if(SP.getBoolean("wear_overview_notification", false)){
-            ActionStringHandler.expectNotificationAction(message, id);
-        }
-    }
-
 }

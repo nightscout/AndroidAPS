@@ -6,6 +6,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,11 +21,15 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -35,6 +41,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
@@ -82,6 +89,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private static Logger log = LoggerFactory.getLogger(WatchUpdaterService.class);
 
+    private Handler handler;
 
     @Override
     public void onCreate() {
@@ -90,6 +98,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         setSettings();
         if (wear_integration) {
             googleApiConnect();
+        }
+        if (handler == null) {
+            HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName() + "Handler");
+            handlerThread.start();
+            handler = new Handler(handlerThread.getLooper());
         }
     }
 
@@ -123,34 +136,33 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = null;
-        if (intent != null) {
-            action = intent.getAction();
-        }
+        String action = intent != null ? intent.getAction() : null;
 
         if (wear_integration) {
-            if (googleApiClient.isConnected()) {
-                if (ACTION_RESEND.equals(action)) {
-                    resendData();
-                } else if (ACTION_OPEN_SETTINGS.equals(action)) {
-                    sendNotification();
-                } else if (ACTION_SEND_STATUS.equals(action)) {
-                    sendStatus();
-                } else if (ACTION_SEND_BASALS.equals(action)) {
-                    sendBasals();
-                } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)) {
-                    sendBolusProgress(intent.getIntExtra("progresspercent", 0), intent.hasExtra("progressstatus") ? intent.getStringExtra("progressstatus") : "");
-                } else if (ACTION_SEND_ACTIONCONFIRMATIONREQUEST.equals(action)) {
-                    String title = intent.getStringExtra("title");
-                    String message = intent.getStringExtra("message");
-                    String actionstring = intent.getStringExtra("actionstring");
-                    sendActionConfirmationRequest(title, message, actionstring);
+            handler.post(() -> {
+                if (googleApiClient.isConnected()) {
+                    if (ACTION_RESEND.equals(action)) {
+                        resendData();
+                    } else if (ACTION_OPEN_SETTINGS.equals(action)) {
+                        sendNotification();
+                    } else if (ACTION_SEND_STATUS.equals(action)) {
+                        sendStatus();
+                    } else if (ACTION_SEND_BASALS.equals(action)) {
+                        sendBasals();
+                    } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)) {
+                        sendBolusProgress(intent.getIntExtra("progresspercent", 0), intent.hasExtra("progressstatus") ? intent.getStringExtra("progressstatus") : "");
+                    } else if (ACTION_SEND_ACTIONCONFIRMATIONREQUEST.equals(action)) {
+                        String title = intent.getStringExtra("title");
+                        String message = intent.getStringExtra("message");
+                        String actionstring = intent.getStringExtra("actionstring");
+                        sendActionConfirmationRequest(title, message, actionstring);
+                    } else {
+                        sendData();
+                    }
                 } else {
-                    sendData();
+                    googleApiClient.connect();
                 }
-            } else {
-                googleApiClient.connect();
-            }
+            });
         }
 
         return START_STICKY;
@@ -345,11 +357,15 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
 
         long now = System.currentTimeMillis();
-        long startTimeWindow = now - (long) (60000 * 60 * 5.5);
+        final long startTimeWindow = now - (long) (60000 * 60 * 5.5);
 
 
         ArrayList<DataMap> basals = new ArrayList<>();
         ArrayList<DataMap> temps = new ArrayList<>();
+        ArrayList<DataMap> boluses = new ArrayList<>();
+        ArrayList<DataMap> predictions = new ArrayList<>();
+
+
 
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -447,9 +463,31 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
         }
 
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+        for (Treatment treatment:treatments) {
+            if(treatment.date > startTimeWindow){
+                boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
+            }
+
+        }
+
+        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+        if(SP.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null){
+            List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
+
+            if (!predArray.isEmpty()) {
+                for (BgReading bg : predArray) {
+                    predictions.add(predictionMap(bg.date, bg.value));
+                }
+            }
+        }
+
+
         DataMap dm = new DataMap();
         dm.putDataMapArrayList("basals", basals);
         dm.putDataMapArrayList("temps", temps);
+        dm.putDataMapArrayList("boluses", boluses);
+        dm.putDataMapArrayList("predictions", predictions);
 
         new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient).execute(dm);
     }
@@ -469,6 +507,23 @@ public class WatchUpdaterService extends WearableListenerService implements
         dm.putLong("starttime", startTime);
         dm.putLong("endtime", endTime);
         dm.putDouble("amount", amount);
+        return dm;
+    }
+
+    private DataMap treatmentMap(long date, double bolus, double carbs, boolean isSMB, boolean isValid) {
+        DataMap dm = new DataMap();
+        dm.putLong("date", date);
+        dm.putDouble("bolus", bolus);
+        dm.putDouble("carbs", carbs);
+        dm.putBoolean("isSMB", isSMB);
+        dm.putBoolean("isValid", isValid);
+        return dm;
+    }
+
+    private DataMap predictionMap(long timestamp, double sgv) {
+        DataMap dm = new DataMap();
+        dm.putLong("timestamp", timestamp);
+        dm.putDouble("sgv", sgv);
         return dm;
     }
 
@@ -523,27 +578,31 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void sendStatus() {
 
         if (googleApiClient.isConnected()) {
-
-            TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.updateTotalIOBTreatments();
-            IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
-            treatmentsInterface.updateTotalIOBTempBasals();
-            IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-
-            String iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
-            String iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-            String cobString = generateCOBString();
-            String currentBasal = generateBasalString(treatmentsInterface);
-
-            //bgi
-            String bgiString = "";
             Profile profile = MainApp.getConfigBuilder().getProfile();
+            String status = MainApp.instance().getString(R.string.noprofile);
+            String iobSum, iobDetail, cobString, currentBasal, bgiString;
+            iobSum =  iobDetail = cobString = currentBasal = bgiString = "";
             if(profile!=null) {
+                TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+                treatmentsInterface.updateTotalIOBTreatments();
+                IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
+                treatmentsInterface.updateTotalIOBTempBasals();
+                IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
+
+                iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+                iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+                cobString = generateCOBString();
+                currentBasal = generateBasalString(treatmentsInterface);
+
+                //bgi
+
+
                 double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+
+                status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
             }
 
-            String status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
 
             //batteries
             int phoneBattery = getBatteryLevel(getApplicationContext());
@@ -659,7 +718,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private String generateCOBString() {
 
         String cobStringResult = "--";
-        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("WatcherUpdaterService");
+        AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("WatcherUpdaterService");
         if (autosensData != null) {
             cobStringResult = (int) autosensData.cob + "g";
         }

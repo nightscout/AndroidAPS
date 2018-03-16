@@ -78,6 +78,8 @@ public abstract class AbstractDanaRExecutionService extends Service {
 
     public abstract boolean highTempBasal(int percent); // Rv2 only
 
+    public abstract boolean tempBasalShortDuration(int percent, int durationInMinutes); // Rv2 only
+
     public abstract boolean tempBasal(int percent, int durationInHours);
 
     public abstract boolean tempBasalStop();

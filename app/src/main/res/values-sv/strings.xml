@@ -80,8 +80,6 @@
     <string name="careportal_temporarytargetcancel">Temp Mål BG Slut</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="child">Barn</string>
-    <string name="circadian_percentage_profile">Cirkadisk Profil Procent</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="clear_queue">Ta bort kö</string>
     <string name="clearlog">Rensa inmatningar</string>
     <string name="closedloop">Closed Loop</string>
@@ -167,6 +165,7 @@
     <string name="disconnecting">Frånkopplar</string>
     <string name="disconnectpumpfor10h">Frånkoppla pump i 10 h</string>
     <string name="disconnectpumpfor2h">Frånkoppla pump i 2 h</string>
+    <string name="disconnectpumpfor15m">Frånkoppla pump i 15 min</string>
     <string name="disconnectpumpfor30m">Frånkoppla pump i 30 min</string>
     <string name="disconnectpumpfor3h">Frånkoppla pump i 3 h</string>
     <string name="dismiss">TA BORT</string>
@@ -471,13 +470,13 @@
     <string name="overview_bolusprogress_stop">Stopp</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Kommer tillföra %.2fU</string>
     <string name="overview_bolusprogress_delivered">Tillförd</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview">Översikt</string>
     <string name="othersettings_title">Andra</string>
     <string name="openloop_newsuggestion">Ny behandlingsrekommendation tillgänglig</string>
     <string name="openloop">Open Loop</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Värde %s är utanför gränserna</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f begränsad till %.2f</string>
+    <string name="valueoutofrange" formatted="false">Värde %s är utanför gränserna</string>
+    <string name="valuelimitedto" formatted="false">%.2f begränsad till %.2f</string>
     <string name="openapsma_run">Kör nu</string>
     <string name="openapsma_request_label">Fråga</string>
     <string name="openapsma_profile_label">Profil</string>
@@ -545,8 +544,7 @@
     <string name="careportal_pumpbatterychange">Batteribyte Pump</string>
     <string name="careportal_sensorage_label">Sensor ålder</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
-    <string name="cpp_sync_setting_missing">Måste vara aktiverad för att kunna skicka värden till pumpen</string>
-    <string name="cpp_valuesnotstored">Värden sparas inte</string>
+    <string name="valuesnotstored">Värden sparas inte</string>
     <string name="danar_stats_warning_Message">Möjligen felvärde om man använder bolus för att priming/fyllning!</string>
     <string name="edit_base_ic">Ändra Base-IC:</string>
     <string name="edit_base_isf">Ändra Base-ISF:</string>
@@ -562,7 +560,6 @@
     <string name="mdi">MDI</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="overview_newtempbasal_basaltype_label">Basal typ</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>

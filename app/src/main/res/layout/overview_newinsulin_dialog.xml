@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.NewInsulinDialog">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/overview_insulin_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/colorInsulinButton" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:src="@drawable/icon_bolus" />
+
+            <CheckBox
+                android:id="@+id/newinsulin_start_eating_soon_tt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:text="@string/start_eating_soon_tt" />
+
+            <CheckBox
+                android:id="@+id/newinsulin_record_only"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/don_t_bolus_record_only" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/newinsulin_eventdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:enabled="false"
+                    android:padding="5dp"
+                    android:text="2017/05/05" />
+
+                <TextView
+                    android:id="@+id/newinsulin_eventtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:enabled="false"
+                    android:padding="5dp"
+                    android:text="08:20pm" />
+            </LinearLayout>
+
+            <info.nightscout.utils.NumberPicker
+                android:id="@+id/treatments_newinsulin_amount"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/newinsulin_plus05"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+0.5" />
+
+                <Button
+                    android:id="@+id/newinsulin_plus10"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+1.0" />
+
+                <Button
+                    android:id="@+id/newinsulin_plus20"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+2.0" />
+
+            </LinearLayout>
+
+            <include layout="@layout/mdtp_done_button" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</FrameLayout>

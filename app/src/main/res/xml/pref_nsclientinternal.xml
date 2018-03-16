@@ -24,6 +24,11 @@
 
         <SwitchPreference
             android:defaultValue="true"
+            android:key="@string/key_ns_autobackfill"
+            android:title="@string/ns_autobackfill" />
+
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/key_ns_logappstartedevent"
             android:title="@string/ns_logappstartedevent" />
 

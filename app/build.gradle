@@ -57,7 +57,7 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 1500
-        version "1.58-combo-phantom-fusion"
+        version "1.59-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
@@ -82,7 +82,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled (project.hasProperty('coverage') ? true : false)
         }
     }
     productFlavors {
@@ -187,6 +187,7 @@ dependencies {
     compile("com.crashlytics.sdk.android:answers:1.3.12@aar") {
         transitive = true;
     }
+    compile 'MilosKozak:danars-support-lib:master@zip'
 
     compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
     compile "com.android.support:support-v4:${supportLibraryVersion}"
@@ -196,6 +197,7 @@ dependencies {
     compile "com.android.support:design:${supportLibraryVersion}"
     compile "com.android.support:percent:${supportLibraryVersion}"
     compile "com.wdullaer:materialdatetimepicker:2.3.0"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.squareup:otto:1.3.7"
     compile "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
     compile "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
@@ -208,6 +210,8 @@ dependencies {
     compile "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
     compile "com.google.android.gms:play-services-wearable:7.5.0"
     compile(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
+    compile(name: "sightparser-release", ext: "aar")
+
     compile("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
     }
@@ -220,6 +224,8 @@ dependencies {
 
     compile "net.danlew:android.joda:2.9.9.1"
 
+    compile 'org.mozilla:rhino:1.7.7.2'
+
     api "com.jakewharton:butterknife:8.8.1"
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
@@ -231,8 +237,33 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testCompile "org.powermock:powermock-module-junit4:${powermockVersion}"
     testCompile "joda-time:joda-time:2.9.4.2"
+    testCompile "com.google.truth:truth:0.39"
 
     androidTestCompile "org.mockito:mockito-core:2.7.22"
     androidTestCompile "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
 }
+
+task unzip(type: Copy) {
+    def zipPath = configurations.compile.find {it.name.startsWith("danars") }
+    def zipFile = file(zipPath)
+    def outputDir = file("${buildDir}/unpacked/dist")
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
+task copyLibs(dependsOn: unzip, type: Copy) {
+    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
+    def target = file("src/main/jniLibs/")
+
+    from src
+    into target
+}
+
+task full_clean(type: Delete) {
+    delete file("src/main/jniLibs")
+}
+
+clean.dependsOn full_clean
+preBuild.dependsOn copyLibs

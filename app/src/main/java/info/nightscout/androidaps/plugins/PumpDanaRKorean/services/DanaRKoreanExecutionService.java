@@ -301,6 +301,11 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         return false;
     }
 
+    @Override
+    public boolean tempBasalShortDuration(int percent, int durationInMinutes) {
+        return false;
+    }
+
     public boolean updateBasalsInPump(final Profile profile) {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.updatingbasalrates)));

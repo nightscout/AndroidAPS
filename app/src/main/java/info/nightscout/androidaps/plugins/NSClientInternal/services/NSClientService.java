@@ -9,7 +9,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-import com.crashlytics.android.Crashlytics;
+
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -62,6 +62,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -123,7 +125,7 @@ public class NSClientService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mWakeLock.release();
+        if (mWakeLock.isHeld()) mWakeLock.release();
     }
 
     public class LocalBinder extends Binder {
@@ -345,14 +347,14 @@ public class NSClientService extends Service {
             try {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
-                Crashlytics.log("Wrong Announcement from NS: " + args[0]);
+                FabricPrivacy.log("Wrong Announcement from NS: " + args[0]);
                 return;
             }
             if (Config.detailedLog)
                 try {
-                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", data.has("message") ? data.getString("message") : "received"));
+                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
                 } catch (Exception e) {
-                    Crashlytics.logException(e);
+                    FabricPrivacy.logException(e);
                 }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
             log.debug(data.toString());
@@ -381,7 +383,7 @@ public class NSClientService extends Service {
             try {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
-                Crashlytics.log("Wrong alarm from NS: " + args[0]);
+                FabricPrivacy.log("Wrong alarm from NS: " + args[0]);
                 return;
             }
             BroadcastAlarm.handleAlarm(data, getApplicationContext());
@@ -409,7 +411,7 @@ public class NSClientService extends Service {
             try {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
-                Crashlytics.log("Wrong Urgent alarm from NS: " + args[0]);
+                FabricPrivacy.log("Wrong Urgent alarm from NS: " + args[0]);
                 return;
             }
             if (Config.detailedLog)
@@ -434,7 +436,7 @@ public class NSClientService extends Service {
             try {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
-                Crashlytics.log("Wrong Urgent alarm from NS: " + args[0]);
+                FabricPrivacy.log("Wrong Urgent alarm from NS: " + args[0]);
                 return;
             }
             if (Config.detailedLog)
@@ -572,22 +574,18 @@ public class NSClientService extends Service {
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
                                 for (Integer index = 0; index < foods.length(); index++) {
                                     JSONObject jsonFood = foods.getJSONObject(index);
-                                    NSTreatment treatment = new NSTreatment(jsonFood);
 
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonFood);
-                                    //Find latest date in treatment
-                                    if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
-                                        if (treatment.getMills() > latestDateInReceivedData)
-                                            latestDateInReceivedData = treatment.getMills();
 
-                                    if (treatment.getAction() == null) {
+                                    String action = JsonHelper.safeGetString(jsonFood, "action");
+
+                                    if (action == null) {
                                         addedFoods.put(jsonFood);
-                                    } else if (treatment.getAction().equals("update")) {
+                                    } else if (action.equals("update")) {
                                         updatedFoods.put(jsonFood);
-                                    } else if (treatment.getAction().equals("remove")) {
-                                        if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
-                                            removedFoods.put(jsonFood);
+                                    } else if (action.equals("remove")) {
+                                        removedFoods.put(jsonFood);
                                     }
                                 }
                                 if (removedFoods.length() > 0) {
@@ -598,18 +596,6 @@ public class NSClientService extends Service {
                                 }
                                 if (addedFoods.length() > 0) {
                                     BroadcastFood.handleNewFood(addedFoods, MainApp.instance().getApplicationContext(), isDelta);
-                                }
-                            }
-                            if (data.has("")) {
-                                JSONArray foods = data.getJSONArray("food");
-                                if (foods.length() > 0) {
-                                    MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
-                                    for (Integer index = 0; index < foods.length(); index++) {
-                                        JSONObject jsonFood = foods.getJSONObject(index);
-                                        // remove from upload queue if Ack is failing
-                                        UploadQueue.removeID(jsonFood);
-                                    }
-                                    BroadcastDeviceStatus.handleNewFoods(foods, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
                             if (data.has("mbgs")) {
@@ -665,7 +651,7 @@ public class NSClientService extends Service {
                         }
                         //MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
                     } finally {
-                        wakeLock.release();
+                       if (wakeLock.isHeld()) wakeLock.release();
                     }
                 }
 

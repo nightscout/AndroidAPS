@@ -39,8 +39,7 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
 
     @Override
     public String getNameShort() {
-        // use long name as fallback (no tabs)
-        return getName();
+        return MainApp.gs(R.string.dexcomG5_shortname);
     }
 
     @Override
@@ -81,5 +80,10 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
     @Override
     public int getPreferencesId() {
         return R.xml.pref_dexcomg5;
+    }
+
+    @Override
+    public boolean advancedFilteringSupported() {
+        return true;
     }
 }

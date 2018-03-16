@@ -83,4 +83,8 @@ public class SourceMM640gPlugin implements PluginBase, BgSourceInterface {
     }
 
 
+    @Override
+    public boolean advancedFilteringSupported() {
+        return false;
+    }
 }

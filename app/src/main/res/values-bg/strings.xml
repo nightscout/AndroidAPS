@@ -111,7 +111,7 @@
     <string name="overview_newtempbasal_basalpercent">Стойност на базал [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = текущ)</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
-    <string name="overview_bolus_label">Болус</string>
+    <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
     <string name="constraintapllied">Приложено ограничение!</string>
     <string name="confirmation">Потвърждение</string>
@@ -309,8 +309,8 @@
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничен до %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Стойността %s е извън границите</string>
+    <string name="valuelimitedto" formatted="false">%.2f ограничен до %.2f</string>
+    <string name="valueoutofrange" formatted="false">Стойността %s е извън границите</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
@@ -356,7 +356,6 @@
     <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
     <string name="edit_base_ic">Редактирай Инс./ВХ</string>
     <string name="base_profile_label">Базов профил:</string>
-    <string name="circadian_percentage_profile">Процентен профил</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
     <string name="low_mark">Ниска КЗ под</string>
@@ -419,7 +418,6 @@
     <string name="temptargetrange_shortname">Вцел</string>
     <string name="localprofile_shortname">ЛПр</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">ППр</string>
     <string name="tempbasals_shortname">ВБ</string>
     <string name="overview_shortname">ОСН</string>
     <string name="virtualpump_shortname">ВП</string>
@@ -514,6 +512,7 @@
     <string name="suspendloopfor2h">Изключи Loop за 2ч</string>
     <string name="suspendloopfor3h">Изключи Loop за 3ч</string>
     <string name="suspendloopfor10h">Изключи Loop за 10 ч</string>
+    <string name="disconnectpumpfor15m">Изключи помпата за 15 мин.</string>
     <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
     <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
     <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
@@ -611,9 +610,8 @@
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Откажи</string>
-    <string name="cpp_sync_setting_missing">трябва да е активно за да изпрати стойностите към помпата!</string>
-    <string name="cpp_notloadedplugins">Не всички профили са заредени!</string>
-    <string name="cpp_valuesnotstored">Стойностите не са запазени!</string>
+    <string name="notloadedplugins">Не всички профили са заредени!</string>
+    <string name="valuesnotstored">Стойностите не са запазени!</string>
     <string name="clearlog">Изчисти лога</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">Недостъпно</string>

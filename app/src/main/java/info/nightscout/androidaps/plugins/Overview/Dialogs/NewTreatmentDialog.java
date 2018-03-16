@@ -15,8 +15,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -33,6 +33,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -49,6 +50,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     //one shot guards
     private boolean accepted;
     private boolean okClicked;
+
+    private CheckBox recordOnlyCheckbox;
 
     public NewTreatmentDialog() {
     }
@@ -72,12 +75,12 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         Integer carbs = SafeParse.stringToInt(editCarbs.getText());
         if (carbs > maxCarbs) {
             editCarbs.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
         }
         Double insulin = SafeParse.stringToDouble(editInsulin.getText());
         if (insulin > maxInsulin) {
             editInsulin.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.bolusconstraintapplied));
         }
     }
 
@@ -101,6 +104,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
         editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
 
+        recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newtreatment_record_only);
+
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
         return view;
@@ -121,15 +126,21 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
 
-                    String confirmMessage = getString(R.string.entertreatmentquestion) + "<br/>";
+                    String confirmMessage = MainApp.gs(R.string.entertreatmentquestion) + "<br/>";
 
                     Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
                     Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
 
-                    confirmMessage += getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + insulinAfterConstraints + "U" + "</font>";
-                    confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+                    if (insulin > 0) {
+                        confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>";
+                        if (recordOnlyCheckbox.isChecked()) {
+                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
+                        }
+                    }
+                    if (carbsAfterConstraints > 0)
+                        confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
                     if (insulinAfterConstraints - insulin != 0 || !Objects.equals(carbsAfterConstraints, carbs))
-                        confirmMessage += "<br/>" + getString(R.string.constraintapllied);
+                        confirmMessage += "<br/>" + MainApp.gs(R.string.constraintapllied);
 
 
                     final double finalInsulinAfterConstraints = insulinAfterConstraints;
@@ -138,9 +149,9 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     final Context context = getContext();
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                    builder.setTitle(this.getContext().getString(R.string.confirmation));
+                    builder.setTitle(MainApp.gs(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
-                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             synchronized (builder) {
                                 if (accepted) {
@@ -158,7 +169,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                     detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                                     detailedBolusInfo.context = context;
                                     detailedBolusInfo.source = Source.USER;
-                                    if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+                                    if (!(recordOnlyCheckbox.isChecked() && (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo))) {
                                         ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                             @Override
                                             public void run() {
@@ -166,7 +177,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                                     i.putExtra("soundid", R.raw.boluserror);
                                                     i.putExtra("status", result.comment);
-                                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     MainApp.instance().startActivity(i);
                                                 }
@@ -175,14 +186,12 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                     } else {
                                         MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                                     }
-                                    Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                                    FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
                                 }
                             }
                         }
                     });
-                    builder.setNegativeButton(
-
-                            getString(R.string.cancel), null);
+                    builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                     builder.show();
 
                     dismiss();

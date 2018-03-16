@@ -33,6 +33,7 @@ import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
 import info.nightscout.androidaps.queue.commands.CommandReadStatus;
+import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
@@ -152,29 +153,34 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
-        if (isRunning(Command.CommandType.BOLUS)) {
+        Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
+
+        if (isRunning(type)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
         }
 
         // remove all unfinished boluses
-        removeAll(Command.CommandType.BOLUS);
+        removeAll(type);
 
         // apply constraints
         detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
         detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
 
         // add new command to queue
-        add(new CommandBolus(detailedBolusInfo, callback));
+        if (detailedBolusInfo.isSMB) {
+            add(new CommandSMBBolus(detailedBolusInfo, callback));
+        } else {
+            add(new CommandBolus(detailedBolusInfo, callback));
+            // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
+            // not when the Bolus command is starting. The command closes the dialog upon completion).
+            showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
+            // Notify Wear about upcoming bolus
+            MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+        }
 
         notifyAboutNewCommand();
-
-        // Notify Wear about upcoming bolus
-        MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
-
-        // Bring up bolus progress dialog
-        showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
 
         return true;
     }
