@@ -82,6 +82,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 15;
+        pumpDescription.tempDurationStep15mAllowed = true;
+        pumpDescription.tempDurationStep30mAllowed = true;
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
@@ -92,6 +94,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = false;
+
+        pumpDescription.is30minBasalRatesCapable = false;
     }
 
     @NonNull
