@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
@@ -337,7 +338,23 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                             detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                             detailedBolusInfo.context = context;
                             detailedBolusInfo.source = Source.USER;
-                            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                            if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
+                                        }
+                                    }
+                                });
+                            } else {
+                                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                            }
                         }
                     }
                 });
