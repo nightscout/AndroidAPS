@@ -26,6 +26,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -514,6 +515,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                bolusingEvent.t = new Treatment();
+                bolusingEvent.t.isSMB = detailedBolusInfo.isSMB;
                 bolusingEvent.percent = 100;
                 MainApp.bus().post(bolusingEvent);
 
