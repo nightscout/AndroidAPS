@@ -354,7 +354,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     item.setChecked(SP.getBoolean("showprediction", true));
                 }
 
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, "Basals");
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
                 title = item.getTitle();
                 s = new SpannableString(title);
                 s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
@@ -362,7 +362,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 item.setCheckable(true);
                 item.setChecked(SP.getBoolean("showbasals", true));
 
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, "Insulin On Board");
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
                 title = item.getTitle();
                 s = new SpannableString(title);
                 s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
@@ -370,7 +370,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 item.setCheckable(true);
                 item.setChecked(SP.getBoolean("showiob", true));
 
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, "Carbs On Board");
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
                 title = item.getTitle();
                 s = new SpannableString(title);
                 s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
@@ -378,7 +378,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 item.setCheckable(true);
                 item.setChecked(SP.getBoolean("showcob", true));
 
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, "Deviations");
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
                 title = item.getTitle();
                 s = new SpannableString(title);
                 s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
@@ -386,7 +386,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 item.setCheckable(true);
                 item.setChecked(SP.getBoolean("showdeviations", false));
 
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, "Sensitivity");
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
                 title = item.getTitle();
                 s = new SpannableString(title);
                 s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
