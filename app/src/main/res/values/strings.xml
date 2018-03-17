@@ -410,6 +410,7 @@
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
     <string name="refresheventsfromnightscout">Refresh events from NS</string>
     <string name="eatingsoon">Eating Soon</string>
+    <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
     <string name="danar_stats">DanaR Stats</string>
@@ -743,10 +744,14 @@
     <string name="eatingsoon_target">eatingsoon target</string>
     <string name="activity_duration">activity duration</string>
     <string name="activity_target">activity target</string>
+    <string name="hypo_duration">hypo duration</string>
+    <string name="hypo_target">hypo target</string>
     <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
     <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
     <string name="key_activity_duration" translatable="false">activity_duration</string>
     <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="key_hypo_duration" translatable="false">hypo_duration</string>
+    <string name="key_hypo_target" translatable="false">hypo_target</string>
     <string name="danar_history_prime">Prime</string>
     <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
     <string name="gettingbolusstatus">Getting bolus status</string>
@@ -988,5 +993,6 @@
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
 </resources>
 

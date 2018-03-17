@@ -33,18 +33,26 @@
                 android:padding="5dp"
                 android:src="@drawable/icon_bolus" />
 
-            <CheckBox
-                android:id="@+id/newinsulin_start_eating_soon_tt"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:text="@string/start_eating_soon_tt" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
 
-            <CheckBox
-                android:id="@+id/newinsulin_record_only"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/don_t_bolus_record_only" />
+                <CheckBox
+                    android:id="@+id/newinsulin_start_eating_soon_tt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/start_eating_soon_tt" />
+
+                <CheckBox
+                    android:id="@+id/newinsulin_record_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/don_t_bolus_record_only" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
