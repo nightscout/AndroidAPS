@@ -987,5 +987,8 @@
     <string name="overview_show_cob">Carbs On Board</string>
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
+    <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled</string>
+    <string name="engineering_mode_enabled">Engineering mode enabled</string>
+    <string name="not_eng_mode_or_release">Engineering mode not enabled and not on release branch</string>
 </resources>
 
