@@ -115,6 +115,7 @@ public class CommandQueueTest extends CommandQueue {
         PowerMockito.mockStatic(MainApp.class);
         MainApp mainApp = mock(MainApp.class);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+        when(MainApp.isDevModeOrRelease()).thenReturn(true);
         when(MainApp.instance()).thenReturn(mainApp);
 
         PowerMockito.mockStatic(ToastUtils.class);
