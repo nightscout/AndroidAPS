@@ -366,14 +366,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     // -------------------  BgReading handling -----------------------
 
-    public boolean createIfNotExists(BgReading bgReading, String from, boolean isActiveBgSource) {
+    public boolean createIfNotExists(BgReading bgReading, String from, boolean isFromActiveBgSource) {
         try {
             bgReading.date = roundDateToSec(bgReading.date);
             BgReading old = getDaoBgReadings().queryForId(bgReading.date);
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
-                scheduleBgChange(bgReading, true, isActiveBgSource);
+                scheduleBgChange(bgReading, true, isFromActiveBgSource);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
@@ -381,7 +381,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange(bgReading, false, isActiveBgSource);
+                scheduleBgChange(bgReading, false, isFromActiveBgSource);
                 return false;
             }
         } catch (SQLException e) {
@@ -399,11 +399,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private static void scheduleBgChange(@Nullable final BgReading bgReading, boolean isNew, boolean isActiveBgSource) {
+    private static void scheduleBgChange(@Nullable final BgReading bgReading, boolean isNew, boolean isFromActiveBgSource) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG(bgReading, isNew, isActiveBgSource));
+                MainApp.bus().post(new EventNewBG(bgReading, isNew, isFromActiveBgSource));
                 scheduledBgPost = null;
             }
         }

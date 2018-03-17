@@ -142,7 +142,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Subscribe
     public void onStatusEvent(final EventNewBG e) {
-        if (!e.isActiveBgSource || !e.isNew)
+        if (!e.isFromActiveBgSource || !e.isNew)
             return;
         Activity activity = getActivity();
         if (activity != null)
