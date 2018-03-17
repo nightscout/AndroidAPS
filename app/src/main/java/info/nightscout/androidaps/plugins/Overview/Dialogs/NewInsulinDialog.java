@@ -42,8 +42,6 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.DetermineBasalResultSMB;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NumberPicker;
@@ -145,16 +143,6 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         plus3Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)));
 
         startESMCheckbox = (CheckBox) view.findViewById(R.id.newinsulin_start_eating_soon_tt);
-        startESMCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            final Profile profile = MainApp.getConfigBuilder().getProfile();
-            if (profile != null) {
-                double tt = SP.getDouble(MainApp.gs(R.string.key_eatingsoon_target), 0d);
-                if (tt > 0) {
-                    double ttBgAdd = (profile.getTargetLow() - tt) / profile.getIsf();
-                    editInsulin.setValue(editInsulin.getValue() + (isChecked ? ttBgAdd : -ttBgAdd));
-                }
-            }
-        });
 
         recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newinsulin_record_only);
         recordOnlyCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
