@@ -23,6 +23,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -163,7 +164,9 @@ public class LoopPlugin implements PluginBase {
             return;
 
         EventNewBG bgEv = (EventNewBG) ev.cause;
-        if (bgEv.isNew && bgEv.isFromActiveBgSource) {
+        BgReading bg = bgEv.bgReading;
+        if (bgEv.isNew && bgEv.isFromActiveBgSource
+                && bg != null && bg.date + 9 * 60 * 1000 > System.currentTimeMillis()) {
             invoke("New BG", true);
         }
     }
