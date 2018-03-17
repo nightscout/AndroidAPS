@@ -18,9 +18,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.common.base.Joiner;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -233,13 +235,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
             Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
 
-            String confirmMessage = "";
+            List<String> actions = new LinkedList<>();
             if (carbs > 0)
-                confirmMessage += MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + carbsAfterConstraints + "g" + "</font>";
+                actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + carbsAfterConstraints + "g" + "</font>");
             if (!carbsAfterConstraints.equals(carbs))
-                confirmMessage += "<br/><font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>";
+                actions.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>");
             if (suspendLoopCheckbox.isChecked()) {
-                confirmMessage += "<br/>" + MainApp.gs(R.string.loop) + ": " + "<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.suspendloopfor30min) + "</font>";
+                actions.add(MainApp.gs(R.string.loop) + ": " + "<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.suspendloopfor30min) + "</font>");
             }
 
             final Profile currentProfile = MainApp.getConfigBuilder().getProfile();
@@ -258,16 +260,16 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
 
             if (startActivityTTCheckbox.isChecked()) {
                 if (currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " mmol/l (" + ((int) activityTTDuration) + " min)</font>";
+                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " mmol/l (" + activityTTDuration + " min)</font>");
                 } else
-                    confirmMessage += "<br/>" + MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(activityTT) + " mg/dl (" + ((int) activityTTDuration) + " min)</font>";
+                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(activityTT) + " mg/dl (" + activityTTDuration + " min)</font>");
 
             }
             if (startEatingSoonTTCheckbox.isChecked() && !startActivityTTCheckbox.isChecked()) {
                 if (currentProfile.getUnits().equals(Constants.MMOL)) {
-                    confirmMessage += "<br/>" + MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " mmol/l (" + eatingSoonTTDuration + " min)</font>";
+                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " mmol/l (" + eatingSoonTTDuration + " min)</font>");
                 } else
-                    confirmMessage += "<br/>" + MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(eatingSoonTT) + " mg/dl (" + eatingSoonTTDuration + " min)</font>";
+                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(eatingSoonTT) + " mg/dl (" + eatingSoonTTDuration + " min)</font>");
 
             }
             final double finalActivityTT = activityTT;
@@ -276,9 +278,9 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             final int finalEatingSoonTTDuration = eatingSoonTTDuration;
 
             if (!initialEventTime.equals(eventTime)) {
-                confirmMessage += "<br/> Time: " + DateUtil.dateAndTimeString(eventTime);
+                actions.add("Time: " + DateUtil.dateAndTimeString(eventTime));
             }
-            if (confirmMessage.length() > 0) {
+
 
                 final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
@@ -286,11 +288,10 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 builder.setTitle(MainApp.gs(R.string.confirmation));
-                if (confirmMessage.startsWith("<br/>"))
-                    confirmMessage = confirmMessage.substring("<br/>".length());
-
-                builder.setMessage(Html.fromHtml(confirmMessage));
-                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                builder.setMessage(actions.isEmpty()
+                        ? MainApp.gs(R.string.no_action_selected)
+                        : Html.fromHtml(Joiner.on("<br/>").join(actions)));
+                builder.setPositiveButton(MainApp.gs(R.string.ok), actions.isEmpty() ? null : (dialog, id) -> {
                     synchronized (builder) {
                         if (accepted) {
                             log.debug("guarding: already accepted");
@@ -360,8 +361,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
-                dismiss();
-            } else
                 dismiss();
         } catch (Exception e) {
             log.error("Unhandled exception", e);

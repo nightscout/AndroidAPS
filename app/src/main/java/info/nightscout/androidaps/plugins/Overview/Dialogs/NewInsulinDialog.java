@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.common.base.Joiner;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -32,6 +33,8 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -211,49 +214,50 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
     }
 
     private void submit() {
-        if (okClicked){
+        if (okClicked) {
             log.debug("guarding: ok already clicked");
             dismiss();
             return;
         }
         okClicked = true;
+
         try {
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
 
-            String confirmMessage = "";
+            List<String> actions = new LinkedList<>();
             if (insulin > 0) {
-                confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>";
+                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>");
                 if (recordOnlyCheckbox.isChecked()) {
-                    confirmMessage += "<br/><font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
+                    actions.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>");
                 }
             }
 
             if (!insulinAfterConstraints.equals(insulin))
-                confirmMessage += "<br/><font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
+                actions.add("<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
 
             double prefTTDuration = SP.getDouble(R.string.key_eatingsoon_duration, 45d);
             double ttDuration = prefTTDuration > 0 ? prefTTDuration : 45d;
             double prefTT = SP.getDouble(R.string.key_eatingsoon_target, 80d);
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
-            if(currentProfile == null)
+            if (currentProfile == null)
                 return;
             double tt;
-            if(currentProfile.getUnits().equals(Constants.MMOL))
-                tt = prefTT > 0  ? Profile.toMgdl(prefTT, Constants.MMOL) : 80d;
+            if (currentProfile.getUnits().equals(Constants.MMOL))
+                tt = prefTT > 0 ? Profile.toMgdl(prefTT, Constants.MMOL) : 80d;
             else
-                tt = prefTT > 0  ? prefTT : 80d;
+                tt = prefTT > 0 ? prefTT : 80d;
             final double finalTT = tt;
 
             if (startESMCheckbox.isChecked()) {
-                if(currentProfile.getUnits().equals("mmol")){
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MGDL) + " mmol for " + ((int) ttDuration) + " min </font>";
+                if (currentProfile.getUnits().equals("mmol")) {
+                    actions.add("TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MGDL) + " mmol for " + ((int) ttDuration) + " min </font>");
                 } else
-                    confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>";
+                    actions.add("TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>");
             }
 
             if (!initialEventTime.equals(eventTime)) {
-                confirmMessage += "<br/>Time: " + DateUtil.dateAndTimeString(eventTime);
+                actions.add("Time: " + DateUtil.dateAndTimeString(eventTime));
             }
 
             final double finalInsulinAfterConstraints = insulinAfterConstraints;
@@ -262,10 +266,10 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
             builder.setTitle(MainApp.gs(R.string.confirmation));
-            if (confirmMessage.startsWith("<br/>"))
-                confirmMessage = confirmMessage.substring("<br/>".length());
-            builder.setMessage(Html.fromHtml(confirmMessage));
-            builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+            builder.setMessage(actions.isEmpty()
+                    ? MainApp.gs(R.string.no_action_selected)
+                    : Html.fromHtml(Joiner.on("<br/>").join(actions)));
+            builder.setPositiveButton(MainApp.gs(R.string.ok), actions.isEmpty() ? null : (dialog, id) -> {
                 synchronized (builder) {
                     if (accepted) {
                         log.debug("guarding: already accepted");

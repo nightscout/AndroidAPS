@@ -987,5 +987,6 @@
     <string name="overview_show_cob">Carbs On Board</string>
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
+    <string name="no_action_selected">No action selected, nothing will happen</string>
 </resources>
 
