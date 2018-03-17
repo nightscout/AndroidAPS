@@ -115,12 +115,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * will reset this flag. */
     private volatile boolean cancelBolus;
 
-    /** Used to reject boluses with the same amount requested within two minutes.
-     * Used solely by {@link #deliverBolus(DetailedBolusInfo)}. This is independent of the
-     * pump history and is meant as a safety feature to block multiple requests due to an
-     * application bug. Whether the requested bolus was delivered once is not taken into account. */
-    private Bolus lastRequestedBolus;
-
     /**
      * This is set (in {@link #checkHistory()} whenever a connection to the pump is made and
      * indicates if new history records on the pump have been found. This effectively blocks
@@ -538,18 +532,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             MainApp.bus().post(new EventComboPumpUpdateGUI());
 
-            // Guard against boluses issued multiple times within two minutes.
-            // Two minutes, so that the resulting timestamp and bolus are different with the Combo
-            // history records which only store with minute-precision
-            if (lastRequestedBolus != null
-                    && Math.abs(lastRequestedBolus.amount - detailedBolusInfo.insulin) < 0.01
-                    && lastRequestedBolus.timestamp + 120 * 1000 > System.currentTimeMillis()) {
-                log.error("Bolus request rejected, same bolus requested recently: " + lastRequestedBolus);
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
-            }
-            lastRequestedBolus = new Bolus(System.currentTimeMillis(), detailedBolusInfo.insulin, true);
-
             // check pump is ready and all pump bolus records are known
             CommandResult stateResult = runCommand(null, 2, () -> ruffyScripter.readQuickInfo(1));
             if (!stateResult.success) {
@@ -569,6 +551,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
                     ? stateResult.history.bolusHistory.get(0)
                     : new Bolus(0, 0, false);
+
+            // reject a bolus if one with the exact same size was successfully delivered
+            // within the last 1-2 minutes
+            if (Math.abs(previousBolus.amount - detailedBolusInfo.insulin) < 0.01
+                && previousBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
+                log.debug("Bolu request rejected, same bolus was successfully delivered very recently");
+                return new PumpEnactResult().success(false).enacted(false)
+                        .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
+            }
 
             // if the last bolus was given in the current minute, wait till the pump clock moves
             // to the next minute to ensure timestamps are unique and can be imported
