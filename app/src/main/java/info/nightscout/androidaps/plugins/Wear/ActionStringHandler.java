@@ -332,16 +332,16 @@ public class ActionStringHandler {
 
     private static String generateTDDMessage(List<DanaRHistoryRecord> historyList, List<DanaRHistoryRecord> dummies) {
 
-        ProfileInterface activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (activeProfile == null) {
+        if (profile == null) {
             return "No profile loaded :(";
         }
 
         DateFormat df = new SimpleDateFormat("dd.MM.");
         String message = "";
 
-        double refTDD = activeProfile.getProfile().getDefaultProfile().baseBasalSum() * 2;
+        double refTDD = profile.baseBasalSum() * 2;
 
         int i = 0;
         double sum = 0d;

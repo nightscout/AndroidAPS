@@ -149,14 +149,13 @@ public class StatuslinePlugin implements PluginBase {
 
 
     private void sendStatus() {
-
-
         String status = ""; // sent once on disable
 
-        if (fragmentEnabled) {
-            status = buildStatusString();
-        }
+        Profile profile = MainApp.getConfigBuilder().getProfile();
 
+        if (fragmentEnabled && profile != null) {
+            status = buildStatusString(profile);
+        }
 
         //sendData
         final Bundle bundle = new Bundle();
@@ -168,7 +167,7 @@ public class StatuslinePlugin implements PluginBase {
     }
 
     @NonNull
-    private String buildStatusString() {
+    private String buildStatusString(Profile profile) {
         String status = "";
         LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
 
@@ -200,10 +199,6 @@ public class StatuslinePlugin implements PluginBase {
                     + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-
-        if (profile == null)
-            return status;
 
         if (!mPrefs.getBoolean("xdripstatus_showbgi", false)) {
             return status;

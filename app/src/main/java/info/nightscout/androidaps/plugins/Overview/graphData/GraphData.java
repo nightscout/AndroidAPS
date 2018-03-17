@@ -221,12 +221,7 @@ public class GraphData {
         addSeries(absoluteBasalsLineSeries);
     }
 
-    public void addTargetLine(long fromTime, long toTime) {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) {
-            return;
-        }
-
+    public void addTargetLine(long fromTime, long toTime, Profile profile) {
         LineGraphSeries<DataPoint> targetsSeries;
 
         Scale targetsScale = new Scale();

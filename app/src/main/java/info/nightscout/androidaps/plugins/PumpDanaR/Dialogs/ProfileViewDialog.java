@@ -85,12 +85,6 @@ public class ProfileViewDialog extends DialogFragment {
     }
 
     private void setContent() {
-//        if (profile == null) {
-//            noProfile.setVisibility(View.VISIBLE);
-//            return;
-//        } else {
-//            noProfile.setVisibility(View.GONE);
-//        }
         ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
         if (store != null) {
             noProfile.setVisibility(View.GONE);

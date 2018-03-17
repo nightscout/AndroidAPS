@@ -88,8 +88,13 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes) + " min");
                 if (tempBasal.isAbsolute) {
                     Profile profile = MainApp.getConfigBuilder().getProfile(tempBasal.date);
-                    holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile)) + " U/h");
-                    holder.percent.setText("");
+                    if (profile != null) {
+                        holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile)) + " U/h");
+                        holder.percent.setText("");
+                    } else {
+                        holder.absolute.setText(MainApp.gs(R.string.noprofile));
+                        holder.percent.setText("");
+                    }
                 } else {
                     holder.absolute.setText("");
                     holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");

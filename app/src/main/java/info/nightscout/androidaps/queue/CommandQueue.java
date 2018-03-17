@@ -403,10 +403,11 @@ public class CommandQueue {
 
     public boolean isThisProfileSet(Profile profile) {
         PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
-        if (activePump != null) {
+        Profile current = MainApp.getConfigBuilder().getProfile();
+        if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);
             if (!result) {
-                log.debug("Current profile: " + MainApp.getConfigBuilder().getProfile().getData().toString());
+                log.debug("Current profile: " + current.getData().toString());
                 log.debug("New profile: " + profile.getData().toString());
             }
             return result;
