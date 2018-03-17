@@ -966,7 +966,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
-        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {// app not initialized yet
+        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
@@ -983,12 +983,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) {
-            pumpStatusView.setText(R.string.noprofileset);
-            pumpStatusLayout.setVisibility(View.VISIBLE);
-            loopStatusLayout.setVisibility(View.GONE);
-            return;
-        }
 
         final String units = profile.getUnits();
         final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
