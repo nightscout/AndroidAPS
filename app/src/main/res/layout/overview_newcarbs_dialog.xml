@@ -43,7 +43,6 @@
                 android:id="@+id/carbs_eating_soon_tt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
                 android:text="@string/start_eating_soon_tt" />
 
             <CheckBox
@@ -75,15 +74,6 @@
                     android:padding="5dp"
                     android:text="08:20pm" />
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/newcarb_food"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="180dp"
-                android:inputType="text|textCapWords"
-                android:visibility="gone" />
 
             <info.nightscout.utils.NumberPicker
                 android:id="@+id/newcarb_carbsamount"
