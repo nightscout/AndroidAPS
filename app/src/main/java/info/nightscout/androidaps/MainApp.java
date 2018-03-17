@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 
+import ch.qos.logback.classic.LoggerContext;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
@@ -201,7 +202,9 @@ public class MainApp extends Application {
             }
         }).start();
 
-        File engineeringModeSemaphore = new File(System.getProperty("EXT_FILES_DIR"),"engineering_mode");
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        String extFilesDir = lc.getProperty("EXT_FILES_DIR");
+        File engineeringModeSemaphore = new File(extFilesDir,"engineering_mode");
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
         devBranch = BuildConfig.VERSION.contains("dev");
