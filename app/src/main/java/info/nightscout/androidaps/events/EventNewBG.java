@@ -11,9 +11,11 @@ public class EventNewBG extends EventLoop {
     @Nullable
     public final BgReading bgReading;
     public final boolean isNew;
+    public final boolean isActiveBgSource;
 
-    public EventNewBG(BgReading bgReading, boolean isNew) {
+    public EventNewBG(@Nullable BgReading bgReading, boolean isNew, boolean isActiveBgSource) {
         this.bgReading = bgReading;
         this.isNew = isNew;
+        this.isActiveBgSource = isActiveBgSource;
     }
 }
