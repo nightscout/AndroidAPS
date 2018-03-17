@@ -159,7 +159,11 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (ev.cause instanceof EventNewBG && ((EventNewBG) ev.cause).isNew) {
+        if (!(ev.cause instanceof EventNewBG))
+            return;
+        
+        EventNewBG bgEv = (EventNewBG) ev.cause;
+        if (bgEv.isNew && bgEv.isActiveBgSource) {
             invoke("New BG", true);
         }
     }
