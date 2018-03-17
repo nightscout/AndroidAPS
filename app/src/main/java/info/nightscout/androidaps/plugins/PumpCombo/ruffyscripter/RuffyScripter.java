@@ -56,6 +56,8 @@ public class RuffyScripter implements RuffyCommands {
     @Nullable
     private volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
+    private volatile boolean unparsableMenuEncountered;
+
 
     private String previousCommand = "<none>";
     private volatile Command activeCmd = null;
@@ -125,6 +127,7 @@ public class RuffyScripter implements RuffyCommands {
         @Override
         public void rtDisplayHandleNoMenu() throws RemoteException {
             log.warn("rtDisplayHandleNoMenu callback invoked");
+            unparsableMenuEncountered = true;
         }
     };
 
@@ -321,6 +324,12 @@ public class RuffyScripter implements RuffyCommands {
                         cmdThread.interrupt();
                         activeCmd.getResult().success = false;
                         break;
+                    }
+
+                    if (unparsableMenuEncountered) {
+                        log.error("UnparsableMenuEncountered flagged, aborting command");
+                        cmdThread.interrupt();
+                        activeCmd.getResult().success = false;
                     }
 
                     log.trace("Waiting for running command to complete");
