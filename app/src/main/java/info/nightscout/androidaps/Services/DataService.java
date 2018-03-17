@@ -366,7 +366,7 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
-                NSProfilePlugin.storeNewProfile(profileStore);
+                NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
                 // if there are no profile switches this should lead to profile update
                 if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)

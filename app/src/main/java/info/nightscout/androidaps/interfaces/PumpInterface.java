@@ -44,7 +44,7 @@ public interface PumpInterface {
     PumpEnactResult cancelExtendedBolus();
 
     // Status to be passed to NS
-    JSONObject getJSONStatus();
+    JSONObject getJSONStatus(Profile profile, String profileName);
     String deviceID();
 
     // Pump capabilities

@@ -217,12 +217,14 @@ public class DetermineBasalAdapterAMAJS {
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
-        
+
+        long now = System.currentTimeMillis();
+        TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
-        mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
-        mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
+        mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);
+        mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         // as we have non default temps longer than 30 mintues
         TemporaryBasal tempBasal = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());

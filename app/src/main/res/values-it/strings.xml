@@ -188,7 +188,6 @@
     <string name="long_avgdelta">Delta acg. esteso</string>
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
-    <string name="loop_setbypump_label">Set Micro</string>
     <string name="loop_shortname">Loop</string>
     <string name="loopdisabled">Loop disabilitato da vincolo</string>
     <string name="loopmenu">Loop menu</string>

@@ -389,11 +389,12 @@ public class IobCobCalculatorPlugin implements PluginBase {
         BasalData retval = basalDataTable.get(time);
         if (retval == null) {
             retval = new BasalData();
+            Profile profile = MainApp.getConfigBuilder().getProfile(time);
             TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
-            retval.basal = MainApp.getConfigBuilder().getProfile(time).getBasal(time);
+            retval.basal = profile.getBasal(time);
             if (tb != null) {
                 retval.isTempBasalRunning = true;
-                retval.tempBasalAbsolute = tb.tempBasalConvertedToAbsolute(time);
+                retval.tempBasalAbsolute = tb.tempBasalConvertedToAbsolute(time, profile);
             } else {
                 retval.isTempBasalRunning = false;
                 retval.tempBasalAbsolute = retval.basal;

@@ -627,7 +627,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void onClickAcceptTemp() {
-        if (ConfigBuilderPlugin.getActiveLoop() != null) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (ConfigBuilderPlugin.getActiveLoop() != null && profile != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
@@ -638,11 +640,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int id) {
                         hideTempRecommendation();
                         clearNotification();
-                        MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed, new Callback() {
+                        MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
                             @Override
                             public void run() {
                                 if (result.enacted) {
-                                    finalLastRun.setByPump = result;
+                                    finalLastRun.tbrSetByPump = result;
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
@@ -670,7 +672,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
 
         final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && actualBg != null) {
+        if (quickWizardEntry != null && actualBg != null && profile != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, actualBg, true);
 
@@ -946,7 +948,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
-        if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
+        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
@@ -962,16 +964,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        String units = profile.getUnits();
-
-        if (units == null) {
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
             return;
         }
 
+        final String units = profile.getUnits();
         final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
         final double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
 
@@ -1090,12 +1091,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (activeTemp != null) {
                 basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
-                basalText = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
+                basalText = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             }
             baseBasalView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String fullText = MainApp.sResources.getString(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h\n";
+                    String fullText = MainApp.sResources.getString(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h\n";
                     if (activeTemp != null) {
                         fullText += MainApp.sResources.getString(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                     }
@@ -1108,7 +1109,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 basalText = activeTemp.toStringFull() + " ";
             }
             if (Config.NSCLIENT || Config.G5UPLOADER)
-                basalText += "(" + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h)";
+                basalText += "(" + DecimalFormatter.to2Decimal(profile.getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
@@ -1369,7 +1370,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
 
                 // add target line
-                graphData.addTargetLine(fromTime, toTime);
+                graphData.addTargetLine(fromTime, toTime, profile);
 
                 // **** NOW line ****
                 graphData.addNowLine(now);

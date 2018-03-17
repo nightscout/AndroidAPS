@@ -404,6 +404,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
+            dismiss();
             return;
         }
 

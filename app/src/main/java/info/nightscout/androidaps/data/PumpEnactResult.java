@@ -22,8 +22,8 @@ public class PumpEnactResult {
 
     // Result of basal change
     public Integer duration = -1;      // duration set [minutes]
-    public Double absolute = -1d;      // absolute rate [U/h] , isPercent = false
-    public Integer percent = -1;       // percent of current basal [%] (100% = current basal), isPercent = true
+    public double absolute = -1d;      // absolute rate [U/h] , isPercent = false
+    public int percent = -1;       // percent of current basal [%] (100% = current basal), isPercent = true
     public boolean isPercent = false;  // if true percent is used, otherwise absolute
     public boolean isTempCancel = false; // if true we are caceling temp basal
     // Result of treatment delivery
@@ -47,17 +47,17 @@ public class PumpEnactResult {
         return this;
     }
 
-    public PumpEnactResult duration(Integer duration) {
+    public PumpEnactResult duration(int duration) {
         this.duration = duration;
         return this;
     }
 
-    public PumpEnactResult absolute(Double absolute) {
+    public PumpEnactResult absolute(double absolute) {
         this.absolute = absolute;
         return this;
     }
 
-    public PumpEnactResult percent(Integer percent) {
+    public PumpEnactResult percent(int percent) {
         this.percent = percent;
         return this;
     }
@@ -72,12 +72,12 @@ public class PumpEnactResult {
         return this;
     }
 
-    public PumpEnactResult bolusDelivered(Double bolusDelivered) {
+    public PumpEnactResult bolusDelivered(double bolusDelivered) {
         this.bolusDelivered = bolusDelivered;
         return this;
     }
 
-    public PumpEnactResult carbsDelivered(Double carbsDelivered) {
+    public PumpEnactResult carbsDelivered(double carbsDelivered) {
         this.carbsDelivered = carbsDelivered;
         return this;
     }
@@ -94,7 +94,11 @@ public class PumpEnactResult {
     public String toString() {
         String ret = MainApp.sResources.getString(R.string.success) + ": " + success;
         if (enacted) {
-            if (isTempCancel) {
+            if (bolusDelivered > 0) {
+                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.sResources.getString(R.string.smb_shortname) + ": " + bolusDelivered + "U";
+            } else if (isTempCancel) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
                 ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment + "\n" +
                         MainApp.sResources.getString(R.string.canceltemp);
@@ -120,7 +124,11 @@ public class PumpEnactResult {
         if (queued) {
             ret = MainApp.sResources.getString(R.string.waitingforpumpresult);
         } else if (enacted) {
-            if (isTempCancel) {
+            if (bolusDelivered > 0) {
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.smb_shortname) + "</b>: " + bolusDelivered + "U";
+            } else if (isTempCancel) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
                         "<br>" + MainApp.sResources.getString(R.string.canceltemp);
@@ -147,15 +155,17 @@ public class PumpEnactResult {
     public PumpEnactResult() {
     }
 
-    public JSONObject json() {
+    public JSONObject json(Profile profile) {
         JSONObject result = new JSONObject();
         try {
-            if (isTempCancel) {
+            if (bolusDelivered > 0) {
+                result.put("smb", bolusDelivered);
+            } else if (isTempCancel) {
                 result.put("rate", 0);
                 result.put("duration", 0);
             } else if (isPercent) {
                 // Nightscout is expecting absolute value
-                Double abs = Round.roundTo(MainApp.getConfigBuilder().getProfile().getBasal() * percent / 100, 0.01);
+                Double abs = Round.roundTo(profile.getBasal() * percent / 100, 0.01);
                 result.put("rate", abs);
                 result.put("duration", duration);
             } else {

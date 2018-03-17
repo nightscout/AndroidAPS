@@ -388,13 +388,14 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (tb1 != null) {
             tb_before = beginBasalValue;
-            tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime);
+            Profile profileTB = MainApp.getConfigBuilder().getProfile(runningTime);
+            tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
             tb_start = runningTime;
         }
 
 
         for (; runningTime < now; runningTime += 5 * 60 * 1000) {
-
+            Profile profileTB = MainApp.getConfigBuilder().getProfile(runningTime);
             //basal rate
             endBasalValue = profile.getBasal(runningTime);
             if (endBasalValue != beginBasalValue) {
@@ -422,10 +423,10 @@ public class WatchUpdaterService extends WearableListenerService implements
                 tb1 = tb2;
                 tb_start = runningTime;
                 tb_before = endBasalValue;
-                tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime);
+                tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
 
             } else if (tb1 != null && tb2 != null) {
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime);
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime, profileTB);
                 if (currentAmount != tb_amount) {
                     temps.add(tempDatamap(tb_start, tb_before, runningTime, currentAmount, tb_amount));
                     tb_start = runningTime;
@@ -446,7 +447,8 @@ public class WatchUpdaterService extends WearableListenerService implements
                 temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
             } else {
                 //express currently running temp by painting it a bit into the future
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(now);
+                Profile profileNow = MainApp.getConfigBuilder().getProfile(now);
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(now, profileNow);
                 if (currentAmount != tb_amount) {
                     temps.add(tempDatamap(tb_start, tb_before, now, tb_amount, tb_amount));
                     temps.add(tempDatamap(now, tb_amount, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
@@ -458,7 +460,8 @@ public class WatchUpdaterService extends WearableListenerService implements
             tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime);
+                Profile profileTB = MainApp.getConfigBuilder().getProfile(runningTime);
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime, profileTB);
                 temps.add(tempDatamap(now - 1 * 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
             }
         }

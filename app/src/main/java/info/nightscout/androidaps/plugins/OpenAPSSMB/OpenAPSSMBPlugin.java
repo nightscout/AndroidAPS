@@ -15,6 +15,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -243,6 +244,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
             return;
         }
 
+        long now = System.currentTimeMillis();
 
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
         Profiler.log(log, "SMB calculation", start);
@@ -252,17 +254,16 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
             determineBasalResultSMB.tempBasalReqested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
-            if (MainApp.getConfigBuilder().isTempBasalInProgress() && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            if (activeTemp != null  && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel
-            } else if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1) {
+            } else if (activeTemp != null && Math.abs(determineBasalResultSMB.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
                 determineBasalResultSMB.tempBasalReqested = false;
-            } else if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultSMB.rate - pump.getBaseBasalRate()) < 0.1) {
+            } else if (activeTemp == null && Math.abs(determineBasalResultSMB.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
                 determineBasalResultSMB.tempBasalReqested = false;
-            }
         }
 
         determineBasalResultSMB.iob = iobArray[0];
-        Date now = new Date();
 
         try {
             determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
@@ -272,7 +273,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;
         lastAPSResult = determineBasalResultSMB;
-        lastAPSRun = now;
+        lastAPSRun = new Date(now);
         MainApp.bus().post(new EventOpenAPSUpdateGui());
 
         //deviceStatus.suggested = determineBasalResultAMA.json;

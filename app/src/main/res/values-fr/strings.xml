@@ -95,7 +95,6 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
-    <string name="loop_setbypump_label">"Défini par pompe  "</string>
     <string name="openapsma_lastenact_label">Dérnière mise en marche</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>

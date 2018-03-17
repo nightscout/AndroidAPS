@@ -23,6 +23,7 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.utils.SP;
 
@@ -179,9 +180,12 @@ public class DetermineBasalAdapterMAJS {
             mProfile.put("out_units", "mmol/L");
         }
 
+        long now = System.currentTimeMillis();
+        TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+
         mCurrentTemp = new JSONObject();
-        mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
-        mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
+        mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);
+        mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         mIobData = new JSONObject();
         mIobData.put("iob", iobData.iob); //netIob

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -86,8 +87,14 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes) + " min");
                 if (tempBasal.isAbsolute) {
-                    holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date)) + " U/h");
-                    holder.percent.setText("");
+                    Profile profile = MainApp.getConfigBuilder().getProfile(tempBasal.date);
+                    if (profile != null) {
+                        holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile)) + " U/h");
+                        holder.percent.setText("");
+                    } else {
+                        holder.absolute.setText(MainApp.gs(R.string.noprofile));
+                        holder.percent.setText("");
+                    }
                 } else {
                     holder.absolute.setText("");
                     holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");

@@ -92,7 +92,6 @@
     <string name="configbuilder_loop">Lazo</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Tras procesar limitaciones</string>
-    <string name="loop_setbypump_label">Definido por la bomba</string>
     <string name="openapsma_lastenact_label">Última aceptada</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
