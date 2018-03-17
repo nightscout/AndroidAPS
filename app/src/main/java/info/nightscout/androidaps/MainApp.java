@@ -202,8 +202,7 @@ public class MainApp extends Application {
             }
         }).start();
 
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        String extFilesDir = lc.getProperty("EXT_FILES_DIR");
+        String extFilesDir = this.getLogDirectory();
         File engineeringModeSemaphore = new File(extFilesDir,"engineering_mode");
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
@@ -380,7 +379,12 @@ public class MainApp extends Application {
     }
 
     public static boolean isDevModeOrRelease() {
-        return (devBranch && engineeringMode) || !devBranch;
+        return engineeringMode || !devBranch;
+    }
+
+    private String getLogDirectory() {
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        return lc.getProperty("EXT_FILES_DIR");
     }
 
     @Override
