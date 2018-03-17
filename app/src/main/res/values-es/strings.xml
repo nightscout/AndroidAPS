@@ -565,10 +565,6 @@
     <string name="careportal_insulinage_label">Edad insulina</string>
     <string name="hours">horas</string>
     <string name="overview_newtempbasal_basaltype_label">Tipo base</string>
-    <string name="isfmissing">Falta ISF en perfil. Usando ajuste por defecto.</string>
-    <string name="icmissing">Falta IC en perfil. Usando ajuste por defecto.</string>
-    <string name="basalmissing">Falta base en perfil. Usando ajuste por defecto.</string>
-    <string name="targetmissing">"Falta objectivo en perfil. Usando ajuste por defecto. "</string>
     <string name="invalidprofile">Perfil invalido !!!</string>
     <string name="profileswitch">CambioPerfil</string>
     <string name="careportal_pbage_label">Edad bateria bomba</string>
@@ -586,8 +582,6 @@
     <string name="openapsama_autosens_period">Interval para autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Horas en el pasado para detectar sensividad (tiempo de absorcion de carbohidratos no incluidos)</string>
     <string name="ratio_short">SEN</string>
-    <string name="do_not_track_profile_switch">"Ignora evenos de cambio de perfil "</string>
-    <string name="do_not_track_profile_switch_summary">"Totos los cambios de perfil son ignorados y se usa siempre el perfil actual "</string>
     <string name="pump">Bomba</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Aparato</string>

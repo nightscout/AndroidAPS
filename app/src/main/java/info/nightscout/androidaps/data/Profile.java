@@ -78,53 +78,12 @@ public class Profile {
             if (json.has("timezone"))
                 timeZone = TimeZone.getTimeZone(json.getString("timezone"));
             isf = json.getJSONArray("sens");
-            if (getIsf(0) == null) {
-                int defaultISF = units.equals(Constants.MGDL) ? 400 : 20;
-                isf = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultISF + "\",\"timeAsSeconds\":\"0\"}]");
-                Notification noisf = new Notification(Notification.ISF_MISSING, MainApp.sResources.getString(R.string.isfmissing), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(noisf));
-            } else {
-                MainApp.bus().post(new EventDismissNotification(Notification.ISF_MISSING));
-            }
             ic = json.getJSONArray("carbratio");
-            if (getIc(0) == null) {
-                int defaultIC = 25;
-                ic = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultIC + "\",\"timeAsSeconds\":\"0\"}]");
-                Notification noic = new Notification(Notification.IC_MISSING, MainApp.sResources.getString(R.string.icmissing), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(noic));
-            } else {
-                MainApp.bus().post(new EventDismissNotification(Notification.IC_MISSING));
-            }
             basal = json.getJSONArray("basal");
-            if (getBasal(0) == null) {
-                double defaultBasal = 0.1d;
-                basal = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultBasal + "\",\"timeAsSeconds\":\"0\"}]");
-                Notification nobasal = new Notification(Notification.BASAL_MISSING, MainApp.sResources.getString(R.string.basalmissing), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(nobasal));
-            } else {
-                MainApp.bus().post(new EventDismissNotification(Notification.BASAL_MISSING));
-            }
             targetLow = json.getJSONArray("target_low");
-            if (getTargetLow(0) == null) {
-                double defaultLow = units.equals(Constants.MGDL) ? 120 : 6;
-                targetLow = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultLow + "\",\"timeAsSeconds\":\"0\"}]");
-                Notification notarget = new Notification(Notification.TARGET_MISSING, MainApp.sResources.getString(R.string.targetmissing), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notarget));
-            } else {
-                MainApp.bus().post(new EventDismissNotification(Notification.TARGET_MISSING));
-            }
             targetHigh = json.getJSONArray("target_high");
-            if (getTargetHigh(0) == null) {
-                double defaultHigh = units.equals(Constants.MGDL) ? 160 : 8;
-                targetHigh = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultHigh + "\",\"timeAsSeconds\":\"0\"}]");
-                Notification notarget = new Notification(Notification.TARGET_MISSING, MainApp.sResources.getString(R.string.targetmissing), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notarget));
-            } else {
-                MainApp.bus().post(new EventDismissNotification(Notification.TARGET_MISSING));
-            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.invalidprofile));
             isValid = false;
             isValidated = true;
         }
@@ -164,6 +123,11 @@ public class Profile {
     }
 
     private LongSparseArray<Double> convertToSparseArray(JSONArray array) {
+        if (array == null) {
+            isValid = false;
+            return new LongSparseArray<>();
+        }
+
         double multiplier = getMultiplier(array);
 
         LongSparseArray<Double> sparse = new LongSparseArray<>();
@@ -379,6 +343,8 @@ public class Profile {
     }
 
     public String getIsfList() {
+        if (isf_v == null)
+            isf_v = convertToSparseArray(isf);
         return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + "/U");
     }
 
@@ -397,6 +363,8 @@ public class Profile {
     }
 
     public String getIcList() {
+        if (ic_v == null)
+            ic_v = convertToSparseArray(ic);
         return getValuesList(ic_v, null, new DecimalFormat("0.0"), " g/U");
     }
 
@@ -481,6 +449,10 @@ public class Profile {
     }
 
     public String getTargetList() {
+        if (targetLow_v == null)
+            targetLow_v = convertToSparseArray(targetLow);
+        if (targetHigh_v == null)
+            targetHigh_v = convertToSparseArray(targetHigh);
         return getValuesList(targetLow_v, targetHigh_v, new DecimalFormat("0.0"), getUnits());
     }
 

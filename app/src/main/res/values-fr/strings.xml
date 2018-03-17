@@ -557,10 +557,6 @@
     <string name="careportal_insulinage_label">Durée d\'insuline</string>
     <string name="hours">Heures</string>
     <string name="overview_newtempbasal_basaltype_label">Type du Basal</string>
-    <string name="isfmissing">"Facteur SI manquant dans le profile. Utilisez les valeurs par défaut. "</string>
-    <string name="icmissing">I:G manquant dans le profile. Utilisez les valeurs par défaut.</string>
-    <string name="basalmissing">Basal manquant dans le profile. Utilisez les valeurs par défaut</string>
-    <string name="targetmissing">Cible manquante dans le profile. Utilisez les valeurs par défaut</string>
     <string name="invalidprofile">Profile incorrect!!!</string>
     <string name="profileswitch">Changement de Profil</string>
     <string name="careportal_pbage_label">Durée batterie pompe</string>
@@ -578,8 +574,6 @@
     <string name="openapsama_autosens_period">"l’intervalle pour autosens [h] "</string>
     <string name="openapsama_autosens_period_summary">Le nombre d’heures écoulées pour la détection de sensibilité (le temps d’absorption des glucides est exclu)</string>
     <string name="ratio_short">SEN</string>
-    <string name="do_not_track_profile_switch">Ignorer les événements de changement de profil</string>
-    <string name="do_not_track_profile_switch_summary">Tout les événements de changement de profils sont ignorés et le profil actif reste le seul profil en activité continue</string>
     <string name="pump">Pompe</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Dispositif</string>

@@ -12,6 +12,9 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -30,19 +33,36 @@ public class ProfileViewerDialog extends DialogFragment {
 
     private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
 
-    private TextView noProfile;
-    private TextView units;
-    private TextView dia;
-    private TextView activeProfile;
-    private TextView ic;
-    private TextView isf;
-    private TextView basal;
-    private TextView target;
-    private View dateDelimiter;
-    private LinearLayout dateLayout;
-    private TextView dateTextView;
-    private Button refreshButton;
-    private ProfileGraph basalGraph;
+    @BindView(R.id.profileview_noprofile)
+    TextView noProfile;
+    @BindView(R.id.profileview_invalidprofile)
+    TextView invalidProfile;
+    @BindView(R.id.profileview_units)
+    TextView units;
+    @BindView(R.id.profileview_dia)
+    TextView dia;
+    @BindView(R.id.profileview_activeprofile)
+    TextView activeProfile;
+    @BindView(R.id.profileview_ic)
+    TextView ic;
+    @BindView(R.id.profileview_isf)
+    TextView isf;
+    @BindView(R.id.profileview_basal)
+    TextView basal;
+    @BindView(R.id.profileview_target)
+    TextView target;
+    @BindView(R.id.profileview_datedelimiter)
+    View dateDelimiter;
+    @BindView(R.id.profileview_datelayout)
+    LinearLayout dateLayout;
+    @BindView(R.id.profileview_date)
+    TextView dateTextView;
+    @BindView(R.id.profileview_reload)
+    Button refreshButton;
+    @BindView(R.id.basal_graph)
+    ProfileGraph basalGraph;
+
+    private Unbinder unbinder;
 
     public static ProfileViewerDialog newInstance(long time) {
         ProfileViewerDialog dialog = new ProfileViewerDialog();
@@ -62,30 +82,25 @@ public class ProfileViewerDialog extends DialogFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null)
+            unbinder.unbind();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.profileviewer_fragment, container, false);
+        View view = inflater.inflate(R.layout.profileviewer_fragment, container, false);
 
+        unbinder = ButterKnife.bind(this, view);
 
-        noProfile = (TextView) layout.findViewById(R.id.profileview_noprofile);
-        units = (TextView) layout.findViewById(R.id.profileview_units);
-        dia = (TextView) layout.findViewById(R.id.profileview_dia);
-        activeProfile = (TextView) layout.findViewById(R.id.profileview_activeprofile);
-        ic = (TextView) layout.findViewById(R.id.profileview_ic);
-        isf = (TextView) layout.findViewById(R.id.profileview_isf);
-        basal = (TextView) layout.findViewById(R.id.profileview_basal);
-        target = (TextView) layout.findViewById(R.id.profileview_target);
-        refreshButton = (Button) layout.findViewById(R.id.profileview_reload);
         refreshButton.setVisibility(View.GONE);
-        dateDelimiter = layout.findViewById(R.id.profileview_datedelimiter);
         dateDelimiter.setVisibility(View.VISIBLE);
-        dateLayout = (LinearLayout) layout.findViewById(R.id.profileview_datelayout);
         dateLayout.setVisibility(View.VISIBLE);
-        dateTextView = (TextView) layout.findViewById(R.id.profileview_date);
-        basalGraph = (ProfileGraph) layout.findViewById(R.id.basal_graph);
 
         setContent();
-        return layout;
+        return view;
     }
 
     @Override
@@ -114,6 +129,11 @@ public class ProfileViewerDialog extends DialogFragment {
             basal.setText(profile.getBasalList());
             target.setText(profile.getTargetList());
             basalGraph.show(profile);
+
+            if (profile.isValid("ProfileViewDialog"))
+                invalidProfile.setVisibility(View.GONE);
+            else
+                invalidProfile.setVisibility(View.VISIBLE);
         } else {
             noProfile.setVisibility(View.VISIBLE);
         }
