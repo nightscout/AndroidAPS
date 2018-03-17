@@ -136,11 +136,11 @@ public class MainApp extends Application {
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
-            if (Config.COMBO) pluginsList.add(ComboPlugin.getPlugin());
+            if (Config.HWPUMPS) pluginsList.add(DanaRPlugin.getPlugin());
+            if (Config.HWPUMPS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
+            if (Config.HWPUMPS) pluginsList.add(DanaRv2Plugin.getPlugin());
+            if (Config.HWPUMPS) pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.HWPUMPS) pluginsList.add(ComboPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
             // if (Config.DANAR) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
