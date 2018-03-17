@@ -208,7 +208,7 @@ public class MainApp extends Application {
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
         devBranch = BuildConfig.VERSION.contains("dev");
 
-        if (devBranch && !engineeringMode) {
+        if (!isDevModeOrRelease()) {
             Notification n = new Notification(Notification.TOAST_ALARM, gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
             bus().post(new EventNewNotification(n));
         }
