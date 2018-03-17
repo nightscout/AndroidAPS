@@ -181,7 +181,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 profileSpinner.setSelection(p);
         }
 
-        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
+        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
 
         // temp target
         final ArrayList<CharSequence> reasonList = new ArrayList<CharSequence>();
