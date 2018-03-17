@@ -134,25 +134,28 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         dateButton.setOnClickListener(this);
         timeButton.setOnClickListener(this);
 
-/*
-        // This makes it to easy to just bolus insulinReq, which is almost always too much
-        APSResult lastAPSResult = ConfigBuilderPlugin.getActiveAPS().getLastAPSResult();
-        if (lastAPSResult != null && lastAPSResult instanceof DetermineBasalResultSMB && ((DetermineBasalResultSMB) lastAPSResult).insulinReq > 0) {
-            editInsulin.setValue(((DetermineBasalResultSMB )lastAPSResult).insulinReq);
-        }
-*/
-
         plus1Button = (Button) view.findViewById(R.id.newinsulin_plus05);
         plus1Button.setOnClickListener(this);
-        plus1Button.setText("+" + SP.getString(MainApp.gs(R.string.key_insulin_button_increment_1), String.valueOf(PLUS1_DEFAULT)));
+        plus1Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT)));
         plus2Button = (Button) view.findViewById(R.id.newinsulin_plus10);
         plus2Button.setOnClickListener(this);
-        plus2Button.setText("+" + SP.getString(MainApp.gs(R.string.key_insulin_button_increment_2), String.valueOf(PLUS2_DEFAULT)));
+        plus2Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT)));
         plus3Button = (Button) view.findViewById(R.id.newinsulin_plus20);
         plus3Button.setOnClickListener(this);
-        plus3Button.setText("+" + SP.getString(MainApp.gs(R.string.key_insulin_button_increment_3), String.valueOf(PLUS3_DEFAULT)));
+        plus3Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)));
 
         startESMCheckbox = (CheckBox) view.findViewById(R.id.newinsulin_start_eating_soon_tt);
+        startESMCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            final Profile profile = MainApp.getConfigBuilder().getProfile();
+            if (profile != null) {
+                double tt = SP.getDouble(MainApp.gs(R.string.key_eatingsoon_target), 0d);
+                if (tt > 0) {
+                    double ttBgAdd = (profile.getTargetLow() - tt) / profile.getIsf();
+                    editInsulin.setValue(editInsulin.getValue() + (isChecked ? ttBgAdd : -ttBgAdd));
+                }
+            }
+        });
+
         recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newinsulin_record_only);
         recordOnlyCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (dateButton != null) dateButton.setEnabled(isChecked);
@@ -162,6 +165,10 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
         return view;
+    }
+
+    private String toSignedString(double value) {
+        return value > 0 ? "+" + value : String.valueOf(value);
     }
 
     @Override
@@ -197,25 +204,19 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                 tpd.dismissOnPause(true);
                 tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
                 break;
-            case R.id.newinsulin_start_eating_soon_tt:
-                final Profile profile = MainApp.getConfigBuilder().getProfile();
-                double tt = SP.getDouble(R.string.key_eatingsoon_target, 0d);
-                double ttBgAdd = (tt - profile.getTargetLow()) / profile.getIsf();
-                editInsulin.setValue(editInsulin.getValue() + (startESMCheckbox.isChecked() ? ttBgAdd : -ttBgAdd));
-                break;
             case R.id.newinsulin_plus05:
-                editInsulin.setValue(editInsulin.getValue()
-                        + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT));
+                editInsulin.setValue(Math.max(0, editInsulin.getValue()
+                        + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT)));
                 validateInputs();
                 break;
             case R.id.newinsulin_plus10:
-                editInsulin.setValue(editInsulin.getValue()
-                        + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT));
+                editInsulin.setValue(Math.max(0, editInsulin.getValue()
+                        + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT)));
                 validateInputs();
                 break;
             case R.id.newinsulin_plus20:
-                editInsulin.setValue(editInsulin.getValue()
-                        + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT));
+                editInsulin.setValue(Math.max(0, editInsulin.getValue()
+                        + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)));
                 validateInputs();
                 break;
         }
@@ -242,18 +243,20 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
             if (!insulinAfterConstraints.equals(insulin))
                 confirmMessage += "<br/><font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
+
             double prefTTDuration = SP.getDouble(R.string.key_eatingsoon_duration, 45d);
             double ttDuration = prefTTDuration > 0 ? prefTTDuration : 45d;
             double prefTT = SP.getDouble(R.string.key_eatingsoon_target, 80d);
-            double tt = prefTT > 0 ? prefTT : 80d;
             Profile currentProfile = MainApp.getConfigBuilder().getProfile();
             if(currentProfile == null)
                 return;
+            double tt;
             if(currentProfile.getUnits().equals(Constants.MMOL))
                 tt = prefTT > 0  ? Profile.toMgdl(prefTT, Constants.MMOL) : 80d;
             else
                 tt = prefTT > 0  ? prefTT : 80d;
             final double finalTT = tt;
+
             if (startESMCheckbox.isChecked()) {
                 if(currentProfile.getUnits().equals("mmol")){
                     confirmMessage += "<br/>" + "TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MGDL) + " mmol for " + ((int) ttDuration) + " min </font>";
