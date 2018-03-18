@@ -13,7 +13,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
-public class PumpEnactResult extends Object {
+public class PumpEnactResult {
     private static Logger log = LoggerFactory.getLogger(PumpEnactResult.class);
 
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
@@ -61,6 +61,7 @@ public class PumpEnactResult extends Object {
         this.percent = percent;
         return this;
     }
+
     public PumpEnactResult isPercent(boolean isPercent) {
         this.isPercent = isPercent;
         return this;

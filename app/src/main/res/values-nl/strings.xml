@@ -63,7 +63,6 @@
     <string name="treatmentssafety_maxcarbs_title">Max toegestaane koolhydraten [g]</string>
     <string name="basal">Basaal</string>
     <string name="basal_short">BAS</string>
-    <string name="basalmissing">Basaal ontbreekt in profiel. Standaard actief</string>
     <string name="basalshortlabel">BAS</string>
     <string name="base_profile_label">Basis Profiel</string>
     <string name="batterydischarged">Pomp Batterij Leeg</string>
@@ -221,12 +220,10 @@
     <string name="loop_shortname">LOOP</string>
     <string name="it_lang">Italiano</string>
     <string name="nl_lang">Nederlands</string>
-    <string name="isfmissing">ISF ontbreekt in profiel. Standaard waarden toegepast.</string>
     <string name="glucosetype_finger">Vingerprik</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="high_mark">Hoog grens</string>
     <string name="hours">Uren</string>
-    <string name="icmissing">KH ratio ontbreekt in profieel. Standaard waarde toegepast</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="initializing">Initialisering</string>
     <string name="danar_history_bolus">Bulossen</string>
@@ -252,7 +249,6 @@
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
     <string name="dismiss">NEGEER</string>
-    <string name="do_not_track_profile_switch">Negeer profiel wijzigingen</string>
     <string name="iob">IOB</string>
     <string name="invalidprofile">Ongeldig profiel !!!</string>
     <string name="insulin_shortname">INS</string>
@@ -416,7 +412,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="overview_calibration">Kalibratie</string>
     <string name="danar_stats_olddata_Message">Oude gegevens druk \"VERNIEUW\" a.u.b.</string>
-    <string name="hoursago">u geleden</string>
     <string name="minago">%d min geleden</string>
     <string name="reason">Berekening</string>
     <string name="rate">Dosis</string>
@@ -528,7 +523,6 @@
     <string name="danar_stats_warning_Message">Mogelijks inacuraat bij gebruik van bolussen om infusieset te vullen</string>
     <string name="delta">Verschil</string>
     <string name="dia">DIA:</string>
-    <string name="do_not_track_profile_switch_summary">Alle profiel wijzigingen worden genegeerd, aktief profiel wordt gebruikt</string>
     <string name="edit_base_ic">Basis-IC aanpassen:</string>
     <string name="edit_base_isf">Basis-ISF aanpassen:</string>
     <string name="enacted">Uitgevoerd</string>
@@ -603,7 +597,6 @@
     <string name="smscommunicator_remotecommandnotallowed">Bevelen op astand zijn niet toegestaan</string>
     <string name="smscommunicator_tempbasalcanceled">Tijdelijk basaal afgebroken</string>
     <string name="smscommunicator_tempbasalcancelfailed">Afbreken van tijdelijk basaal mislukt</string>
-    <string name="targetmissing">Streefdoel ontbreekt in profiel. Standaard waarde wordt gebruikt</string>
     <string name="smscommunicator_tempbasalfailed">Start tijdelijk basaal mislukt</string>
     <string name="openapsma_maxiob_summary">Deze waarde wordt de MAx IOB in OpenAPS context genoemt. Dit is standaard 0. Na enkele dagen of weken naargelang uw vertrouwen kan je dit getal wijzigen.</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het overzicht en op Wear</string>
@@ -733,7 +726,8 @@
     <string name="combo_programming_bolus">"Bolus in pomp programmeren "</string>
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
-	<string name="combo_no_pump_connection">Geen verbinding</string><string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
+    <string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
+    <string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
     <string name="combo_pump_action_initializing">Initialiseren</string>
 	<string name="combo_pump_state_disconnected">Verbinding verbroken</string>
 	<string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
@@ -756,14 +750,14 @@
 	<string name="combo_pump_state_suspended_by_user">Gestopt door de gebruiker</string>
 	<string name="combo_pump_state_running">Actief</string>
 	<string name="combo_pump_cartridge_low_warrning">Insuline ampul is bijna leeg</string>
-	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp</string>
+	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp: E%d %s</string>
 	<string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
 	<string name="combo_tdd_minimum">Minimum: %3.1f E</string>
 	<string name="combo_tdd_average">Gemiddelde: %3.1f E</string>
 	<string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
 	<string name="combo_activity_reading_pump_history">Lezen van pomp historiek</string>
 	<string name="combo_read_full_history_confirmation">Ben je zeker dat je alle data van de pomp wil ophalen en de consequenties hiervan wil dragen?</string>
-	<string name="combo_no_alert_data_note">Om de pomp fouthistoriek op te halen, druk lang op de Storingen knop OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden.</string>
+    <string name="combo_no_alert_data_note">Om de pomp fouthistoriek op te halen, druk lang op de Storingen knop.</string>
 	<string name="combo_error_partial_bolus_delivered">Maar %.2f E van de gevraagde %.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
 	<string name="combo_no_tdd_data_note">"Om de TTD van de pomp op te halen, lang duwen op de TDDS knop OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden."</string>
 	<string name="combo_error_bolus_verification_failed">Toedienen en controleren van de bolus in de pomp historiek is mislukt, controleer de pomp en creëer een manuele bolus in het Careportal tabblad</string>
@@ -776,4 +770,29 @@
 	<string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wafe bolussen zijn actief. Loop is naar onderdruk lage waardes enkel overgeschakeld gedurende 6 uur. Alleen gewone bolussen worden onderdsteund in loop modus.</string>
 	<string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="careportal_combobolus">Combinatie-Bolus</string>
+    <string name="pump_basebasalrate">%.2f E/u</string>
+    <string name="hoursago">%.1fu geleden</string>
+    <string name="bolusstopped">Bolus gestopt</string>
+    <string name="bolusstopping">Stoppen van bolus</string>
+    <string name="combo_actvity_reading_basal_profile">Basaal profiel wordt gelezen</string>
+    <string name="basalprofilenotaligned">Basale patroon niet geschikt op complete uren: %s</string>
+    <string name="zerovalueinprofile">Ongeldig profiel: %s</string>
+    <string name="combo_read_full_history_info">Lang duwen op deze knop zal de volledige historiek en basaal profiel uit de pomp ophalen. Dit is normaal gezien niet nodig, daar de pomp historiek permanent wordt gelezen, maar kan nuttig zijn wanneer de pomp dat en tijd grote afwijkingen hadden of de pomp vervangen is.</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Er kon geen verbinding met de pomp gemaakt worden. De Bolus is niet toegediend.</string>
+    <string name="extendedbolusdeliveryerror">Vertraagde bolus toedien storing</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig. Als dezelfde bolus hoeveelheid moet worden toegediend, gelieve 2 minuten te wachten. Gelijke bolussen worden geweigerd om veiligheidsredenen (toegediend of niet).</string>
+    <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegend van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Tijdelijk basaal geweigerd doordat de berekeningen geen rekening hielden met  de recente wijzigingen in de pomp historiek</string>
+    <string name="combo_activity_checking_pump_state">Vernieuwen van pomp status</string>
+    <string name="combo_warning_pump_basal_rate_changed">Het basaal patroon is op de pomp gewijzigd en zal binnenkort geupdate worden.</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Basaal patroon op de pomp is gewijzigd, maar konnen niet worden uitgelezen</string>
+    <string name="combo_activity_checking_for_history_changes">Controle van historiek op wijzigingen</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">"Verschillend bolussen met dezelfde hoeveelheid op hetzelfde tijdstip zijn  geïmporteerd. Er is er maar 1 toegevoegd aan de behandelingen lijst. Controleer op de pomp en voeg eventueel toe via het Careportal menu. Er mogen geen 2 bolussen op hetzelfde tijdstip aanwezig zijn! "</string>
+    <string name="mute">Geluid dempen</string>
+    <string name="combo_check_date">De laatste bolus is ouder dan 24 uren of bevind zich in de toekomst. Controleer de datum en tijd in de pomp aub.</string>
+    <string name="ns_create_announcements_from_errors_title">Creëer een melding bij storingen</string>
+    <string name="ns_create_announcements_from_errors_summary">Creëer een Nightscout melding voor storingen en lokale waarschuwingen (ook zichtbaar inder het Careportal en behandelingen)</string>
+    <string name="combo_suspious_bolus_time">Datum/tijd van de geleverde bolus op de pomp is niet correct, IOB is waarschijnlijk foutief. Controleer aub de datum/tijd op de pomp.</string>
+    <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
 </resources>
+

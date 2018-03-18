@@ -15,6 +15,8 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.receivers.KeepAliveReceiver;
+import info.nightscout.utils.NSUpload;
 
 /**
  * Created by adrian on 17/12/17.
@@ -76,7 +78,7 @@ public class LocalAlertUtils {
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && profile != null && profile.getBasal() != null) {
+        if (pump != null && profile != null) {
             Date lastConnection = pump.lastDataTime();
             long earliestAlarmTime = lastConnection.getTime() + pumpUnreachableThreshold();
             if (SP.getLong("nextPumpDisconnectedAlarm", 0l) < earliestAlarmTime) {

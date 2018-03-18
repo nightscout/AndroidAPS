@@ -219,7 +219,6 @@
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="danar_dailyunits">"Μονάδες ανά ημέρα "</string>
     <string name="pump_lastbolus_label">Τελευταίο Bolus:</string>
-    <string name="hoursago">ώρες πριν</string>
     <string name="danar_invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
@@ -560,10 +559,6 @@
     <string name="careportal_insulinage_label">Χρόνος ζωής Ινσουλίνης</string>
     <string name="hours">ώρες</string>
     <string name="overview_newtempbasal_basaltype_label">Τύπος Βασικού</string>
-    <string name="isfmissing">"Λείπει ο ISF στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
-    <string name="icmissing">"Λείπει ο IC στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
-    <string name="basalmissing">"Λείπει ο Βασικός στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
-    <string name="targetmissing">"Λείπει ο στόχος στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
     <string name="invalidprofile">Μη έγκυρο προφίλ!!!</string>
     <string name="profileswitch">ΜΕταβείτε στο προφίλ</string>
     <string name="careportal_pbage_label">Χρόνος ζωής μπαταρίας αντλίας</string>
@@ -581,8 +576,6 @@
     <string name="openapsama_autosens_period">"Εσωτερικά διαστήματα για autosense [h] "</string>
     <string name="openapsama_autosens_period_summary">Ποσότητα ωρών κατά το παρελθόν για ανίχνευση ευαισθησίας (εξαιρείται ο χρόνος απορρόφησης υδατανθράκων)</string>
     <string name="ratio_short">SEN</string>
-    <string name="do_not_track_profile_switch">Αγνοήστε τα συμβάντα αλλαγής προφίλ</string>
-    <string name="do_not_track_profile_switch_summary">;Ola τα συμβάντα αλλαγής προφίλ αγνοήθηκαν και χρησιμοποιείτε πάντα το ενεργό προφίλ</string>
     <string name="pump">Αντλία</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Συσκευή</string>

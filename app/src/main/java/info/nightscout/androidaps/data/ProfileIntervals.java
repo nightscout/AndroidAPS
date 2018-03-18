@@ -3,10 +3,14 @@ package info.nightscout.androidaps.data;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.utils.DateUtil;
 
 /**
  * Created by mike on 09.05.2017.
@@ -16,6 +20,7 @@ import info.nightscout.androidaps.interfaces.Interval;
 // When no interval match the lastest record without duration is used
 
 public class ProfileIntervals<T extends Interval> {
+    private static Logger log = LoggerFactory.getLogger(ProfileIntervals.class);
 
     private LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
 
@@ -51,6 +56,11 @@ public class ProfileIntervals<T extends Interval> {
     public synchronized Interval getValueToTime(long time) {
         int index = binarySearch(time);
         if (index >= 0) return rawData.valueAt(index);
+        // if we request data older than first record, use oldest instead
+        if (rawData.size() > 0) {
+            log.debug("Requested profile for time: " + DateUtil.dateAndTimeString(time) + ". Providing oldest record: " + rawData.valueAt(0).toString());
+            return rawData.valueAt(0);
+        }
         return null;
     }
 

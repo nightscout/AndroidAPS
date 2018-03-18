@@ -42,6 +42,7 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -200,7 +201,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return activeBgSource;
     }
 
-    public static ProfileInterface getActiveProfileInterface() {
+    public ProfileInterface getActiveProfileInterface() {
         return activeProfile;
     }
 
@@ -738,6 +739,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
+        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         activeTreatments.addToHistoryProfileSwitch(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }
@@ -760,33 +762,21 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     }
 
     public String getProfileName(long time, boolean customized) {
-        boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
-        if (!ignoreProfileSwitchEvents) {
-            ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
-            if (profileSwitch != null) {
-                if (profileSwitch.profileJson != null) {
-                    return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
-                } else {
-                    Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                    if (profile != null)
-                        return profileSwitch.profileName;
-                }
+        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+        if (profileSwitch != null) {
+            if (profileSwitch.profileJson != null) {
+                return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
+            } else {
+                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                if (profile != null)
+                    return profileSwitch.profileName;
             }
         }
-        // Unable to determine profile, failover to default
-        String defaultProfile = activeProfile.getProfile().getDefaultProfileName();
-        if (defaultProfile != null)
-            return defaultProfile;
-        // If default from plugin fails .... create empty
-        return "Default";
+        return MainApp.gs(R.string.noprofileselected);
     }
 
     public boolean isProfileValid(String from) {
-        return getProfile() != null && getProfile().isValid(from) &&
-                activeProfile != null &&
-                activeProfile.getProfile() != null &&
-                activeProfile.getProfile().getDefaultProfile() != null &&
-                activeProfile.getProfile().getDefaultProfile().isValid(from);
+        return getProfile() != null && getProfile().isValid(from);
     }
 
     @Nullable
@@ -806,40 +796,15 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             return null; //app not initialized
         }
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
-        boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
-        if (!ignoreProfileSwitchEvents) {
-            ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
-            if (profileSwitch != null) {
-                if (profileSwitch.profileJson != null) {
-                    return profileSwitch.getProfileObject();
-                } else if (activeProfile.getProfile() != null) {
-                    Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                    if (profile != null)
-                        return profile;
-                }
+        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+        if (profileSwitch != null) {
+            if (profileSwitch.profileJson != null) {
+                return profileSwitch.getProfileObject();
+            } else if (activeProfile.getProfile() != null) {
+                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                if (profile != null)
+                    return profile;
             }
-        }
-        // Unable to determine profile, failover to default
-        if (activeProfile.getProfile() == null) {
-            log.debug("getProfile activeProfile.getProfile() == null: returning null (activeProfile=" + activeProfile.getClass().getSimpleName() + ")");
-            return null; //app not initialized
-        }
-        Profile defaultProfile = activeProfile.getProfile().getDefaultProfile();
-        if (defaultProfile != null)
-            return defaultProfile;
-        // If default from plugin fails .... create empty
-        try {
-            Notification noisf = new Notification(Notification.ISF_MISSING, MainApp.sResources.getString(R.string.isfmissing), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(noisf));
-            Notification noic = new Notification(Notification.IC_MISSING, MainApp.sResources.getString(R.string.icmissing), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(noic));
-            Notification nobasal = new Notification(Notification.BASAL_MISSING, MainApp.sResources.getString(R.string.basalmissing), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(nobasal));
-            Notification notarget = new Notification(Notification.TARGET_MISSING, MainApp.sResources.getString(R.string.targetmissing), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notarget));
-            return new Profile(new JSONObject("{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"20\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"20\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"6\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"8\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}}"), 100, 0);
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
         }
         log.debug("getProfile at the end: returning null");
         return null;

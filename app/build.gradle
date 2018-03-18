@@ -57,7 +57,7 @@ android {
         targetSdkVersion 23
         multiDexEnabled true
         versionCode 1500
-        version "1.59-dev"
+        version "1.60-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
@@ -238,6 +238,7 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4:${powermockVersion}"
     testCompile "joda-time:joda-time:2.9.4.2"
     testCompile "com.google.truth:truth:0.39"
+    testCompile "org.skyscreamer:jsonassert:1.5.0"
 
     androidTestCompile "org.mockito:mockito-core:2.7.22"
     androidTestCompile "com.google.dexmaker:dexmaker:${dexmakerVersion}"

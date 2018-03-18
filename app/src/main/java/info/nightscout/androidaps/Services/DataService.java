@@ -96,7 +96,7 @@ public class DataService extends IntentService {
             dexcomG5Enabled = true;
         }
 
-        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
+        boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -192,7 +192,7 @@ public class DataService extends IntentService {
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
 
-        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
+        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP", xDripEnabled);
     }
 
     private void handleNewDataFromGlimp(Intent intent) {
@@ -206,7 +206,7 @@ public class DataService extends IntentService {
         bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
 
-        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
+        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP", glimpEnabled);
     }
 
     private void handleNewDataFromDexcomG5(Intent intent) {
@@ -229,7 +229,7 @@ public class DataService extends IntentService {
                 bgReading.direction = json.getString("m_trend");
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5", dexcomG5Enabled);
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                     NSUpload.uploadBg(bgReading);
                 }
@@ -268,7 +268,7 @@ public class DataService extends IntentService {
                                 bgReading.date = json_object.getLong("date");
                                 bgReading.raw = json_object.getDouble("sgv");
 
-                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
+                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g", mm640gEnabled);
                                 break;
                             default:
                                 log.debug("Unknown entries type: " + type);
@@ -368,9 +368,6 @@ public class DataService extends IntentService {
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
                 NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
-                // if there are no profile switches this should lead to profile update
-                if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)
-                    MainApp.bus().post(new EventNewBasalProfile());
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
@@ -428,7 +425,7 @@ public class DataService extends IntentService {
                     JSONObject sgvJson = new JSONObject(sgvstring);
                     NSSgv nsSgv = new NSSgv(sgvJson);
                     BgReading bgReading = new BgReading(nsSgv);
-                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS", nsClientEnabled);
                 }
 
                 if (bundles.containsKey("sgvs")) {
@@ -438,7 +435,7 @@ public class DataService extends IntentService {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
-                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS", nsClientEnabled);
                     }
                 }
             } catch (Exception e) {

@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
@@ -241,7 +240,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         VirtualPumpPlugin.setFakingStatus(true);
-        scheduleBgChange(null); // trigger refresh
+        scheduleBgChange(null, false, false); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleTreatmentChange(null);
         scheduleExtendedBolusChange();
@@ -367,14 +366,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     // -------------------  BgReading handling -----------------------
 
-    public boolean createIfNotExists(BgReading bgReading, String from) {
+    public boolean createIfNotExists(BgReading bgReading, String from, boolean isFromActiveBgSource) {
         try {
             bgReading.date = roundDateToSec(bgReading.date);
             BgReading old = getDaoBgReadings().queryForId(bgReading.date);
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
-                scheduleBgChange(bgReading);
+                scheduleBgChange(bgReading, true, isFromActiveBgSource);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
@@ -382,7 +381,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange(bgReading);
+                scheduleBgChange(bgReading, false, isFromActiveBgSource);
                 return false;
             }
         } catch (SQLException e) {
@@ -400,11 +399,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private static void scheduleBgChange(@Nullable final BgReading bgReading) {
+    private static void scheduleBgChange(@Nullable final BgReading bgReading, boolean isNew, boolean isFromActiveBgSource) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG(bgReading));
+                MainApp.bus().post(new EventNewBG(bgReading, isNew, isFromActiveBgSource));
                 scheduledBgPost = null;
             }
         }
@@ -1709,7 +1708,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileStore store = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+                ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
                 Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                 if (profile != null) {
                     profileSwitch.profileJson = profile.getData().toString();

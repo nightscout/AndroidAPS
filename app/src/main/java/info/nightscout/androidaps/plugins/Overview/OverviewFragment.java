@@ -187,7 +187,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     final Object updateSync = new Object();
 
-    public enum CHARTTYPE {PRE,BAS, IOB, COB, DEV, SEN};
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN};
+
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
@@ -344,7 +345,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 SpannableString s;
                 PopupMenu popup = new PopupMenu(v.getContext(), v);
 
-                if(predictionsAvailable) {
+                if (predictionsAvailable) {
                     item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
                     title = item.getTitle();
                     s = new SpannableString(title);
@@ -464,7 +465,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.profile));
             menu.add(MainApp.sResources.getString(R.string.danar_viewprofile));
-            menu.add(MainApp.sResources.getString(R.string.careportal_profileswitch));
+            if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
+                menu.add(MainApp.sResources.getString(R.string.careportal_profileswitch));
+            }
         }
     }
 
@@ -966,7 +969,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
-        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {// app not initialized yet
+        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
@@ -983,12 +986,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) {
-            pumpStatusView.setText(R.string.noprofileset);
-            pumpStatusLayout.setVisibility(View.VISIBLE);
-            loopStatusLayout.setVisibility(View.GONE);
-            return;
-        }
 
         final String units = profile.getUnits();
         final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
@@ -1244,9 +1241,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
         bgView.setPaintFlags(flag);
 
-        Long agoMsec = System.currentTimeMillis() - lastBG.date;
-        int agoMin = (int) (agoMsec / 60d / 1000d);
-        timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
+        timeAgoView.setText(DateUtil.minAgo(lastBG.date));
 
         // iob
         MainApp.getConfigBuilder().updateTotalIOBTreatments();

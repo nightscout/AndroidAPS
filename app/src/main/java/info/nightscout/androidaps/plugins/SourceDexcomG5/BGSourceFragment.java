@@ -59,7 +59,7 @@ public class BGSourceFragment extends SubscriberFragment {
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false));
             recyclerView.setAdapter(adapter);
 
-            profile = ConfigBuilderPlugin.getActiveProfileInterface().getProfile().getDefaultProfile();
+            profile = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getDefaultProfile();
 
             return view;
         } catch (Exception e) {
