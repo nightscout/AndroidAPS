@@ -33,8 +33,8 @@ public class ProfileGraph extends GraphView {
         List<DataPoint> basalArray = new ArrayList<>();
 
         for (int hour = 0; hour < 24; hour++) {
-            basalArray.add(new DataPoint(hour, profile.getBasal(new Integer(hour*60*60))));
-            basalArray.add(new DataPoint(hour+1, profile.getBasal(new Integer(hour*60*60))));
+            basalArray.add(new DataPoint(hour, profile.getBasalTimeFromMidnight(new Integer(hour*60*60))));
+            basalArray.add(new DataPoint(hour+1, profile.getBasalTimeFromMidnight(new Integer(hour*60*60))));
         }
         DataPoint[] basalDataPoints = new DataPoint[basalArray.size()];
         basalDataPoints = basalArray.toArray(basalDataPoints);

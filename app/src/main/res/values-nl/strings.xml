@@ -63,7 +63,6 @@
     <string name="treatmentssafety_maxcarbs_title">Max toegestaane koolhydraten [g]</string>
     <string name="basal">Basaal</string>
     <string name="basal_short">BAS</string>
-    <string name="basalmissing">Basaal ontbreekt in profiel. Standaard actief</string>
     <string name="basalshortlabel">BAS</string>
     <string name="base_profile_label">Basis Profiel</string>
     <string name="batterydischarged">Pomp Batterij Leeg</string>
@@ -221,12 +220,10 @@
     <string name="loop_shortname">LOOP</string>
     <string name="it_lang">Italiano</string>
     <string name="nl_lang">Nederlands</string>
-    <string name="isfmissing">ISF ontbreekt in profiel. Standaard waarden toegepast.</string>
     <string name="glucosetype_finger">Vingerprik</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="high_mark">Hoog grens</string>
     <string name="hours">Uren</string>
-    <string name="icmissing">KH ratio ontbreekt in profieel. Standaard waarde toegepast</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="initializing">Initialisering</string>
     <string name="danar_history_bolus">Bulossen</string>
@@ -252,7 +249,6 @@
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
     <string name="dismiss">NEGEER</string>
-    <string name="do_not_track_profile_switch">Negeer profiel wijzigingen</string>
     <string name="iob">IOB</string>
     <string name="invalidprofile">Ongeldig profiel !!!</string>
     <string name="insulin_shortname">INS</string>
@@ -527,7 +523,6 @@
     <string name="danar_stats_warning_Message">Mogelijks inacuraat bij gebruik van bolussen om infusieset te vullen</string>
     <string name="delta">Verschil</string>
     <string name="dia">DIA:</string>
-    <string name="do_not_track_profile_switch_summary">Alle profiel wijzigingen worden genegeerd, aktief profiel wordt gebruikt</string>
     <string name="edit_base_ic">Basis-IC aanpassen:</string>
     <string name="edit_base_isf">Basis-ISF aanpassen:</string>
     <string name="enacted">Uitgevoerd</string>
@@ -602,7 +597,6 @@
     <string name="smscommunicator_remotecommandnotallowed">Bevelen op astand zijn niet toegestaan</string>
     <string name="smscommunicator_tempbasalcanceled">Tijdelijk basaal afgebroken</string>
     <string name="smscommunicator_tempbasalcancelfailed">Afbreken van tijdelijk basaal mislukt</string>
-    <string name="targetmissing">Streefdoel ontbreekt in profiel. Standaard waarde wordt gebruikt</string>
     <string name="smscommunicator_tempbasalfailed">Start tijdelijk basaal mislukt</string>
     <string name="openapsma_maxiob_summary">Deze waarde wordt de MAx IOB in OpenAPS context genoemt. Dit is standaard 0. Na enkele dagen of weken naargelang uw vertrouwen kan je dit getal wijzigen.</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het overzicht en op Wear</string>

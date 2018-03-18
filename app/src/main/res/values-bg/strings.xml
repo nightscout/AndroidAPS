@@ -561,10 +561,6 @@
     <string name="careportal_insulinage_label">Възраст на инсулина</string>
     <string name="hours">часа</string>
     <string name="overview_newtempbasal_basaltype_label">Тип базал</string>
-    <string name="isfmissing">ISF липсва в профила. По подразбиране.</string>
-    <string name="icmissing">IC липсва в профила. По подразбиране.</string>
-    <string name="basalmissing">Базал липсва в профила. По подразбиране.</string>
-    <string name="targetmissing">Целева КЗ липсва в профила. По подразбиране.</string>
     <string name="invalidprofile">Грешен профил !!!</string>
     <string name="profileswitch">Смяна на профил</string>
     <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
@@ -581,8 +577,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
-    <string name="do_not_track_profile_switch">Игнорирай събитията от тип Смяна на профил</string>
-    <string name="do_not_track_profile_switch_summary">Всички смени на профила се игнорират и винаги се използва текущия профил</string>
     <string name="pump">Помпа</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Устройство</string>

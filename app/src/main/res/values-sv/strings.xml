@@ -19,7 +19,6 @@
     <string name="basal">Basal</string>
     <string name="basal_rate">Basal E/tim</string>
     <string name="basal_step">Basal steg</string>
-    <string name="basalmissing">Basal saknas i profil. Använder grundbasal</string>
     <string name="basalshortlabel">BR</string>
     <string name="basalvaluebelowminimum">Basal understiger min.nivå. Ingen profil satt</string>
     <string name="base_profile_label">Basalprofil</string>
@@ -169,8 +168,6 @@
     <string name="disconnectpumpfor30m">Frånkoppla pump i 30 min</string>
     <string name="disconnectpumpfor3h">Frånkoppla pump i 3 h</string>
     <string name="dismiss">TA BORT</string>
-    <string name="do_not_track_profile_switch">Ignorera profilbyten</string>
-    <string name="do_not_track_profile_switch_summary">Alla profilbyten ignoreras och aktiv profil används alltid</string>
     <string name="dont_show_again">Visa inte detta igen</string>
     <string name="duration">Duration</string>
     <string name="eatingsoon">Äta snart</string>
@@ -357,7 +354,6 @@
     <string name="tempbasaldeliveryerror">Tempbasal ej tillförd</string>
     <string name="tempbasal">Tempbasal</string>
     <string name="teenage">Tonåring</string>
-    <string name="targetmissing">Mål saknas i profil. Använder grundinställning</string>
     <string name="target_range">Mål gränser:</string>
     <string name="suspendloopfor3h">Stäng av loop i 3 h</string>
     <string name="suspendloopfor2h">Stäng av loop i 2 h</string>
@@ -549,7 +545,6 @@
     <string name="edit_base_isf">Ändra Base-ISF:</string>
     <string name="el_lang">Grekiska</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
-    <string name="isfmissing">ISF fattas i profilen. Använder värde från grundinställning.</string>
     <string name="lock_screen">Lås skärm</string>
     <string name="lock_screen_short">Lås</string>
     <string name="mmol">mmol/l</string>

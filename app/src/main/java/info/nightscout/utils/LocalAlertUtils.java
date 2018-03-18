@@ -78,7 +78,7 @@ public class LocalAlertUtils {
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && profile != null && profile.getBasal() != null) {
+        if (pump != null && profile != null) {
             Date lastConnection = pump.lastDataTime();
             long earliestAlarmTime = lastConnection.getTime() + pumpUnreachableThreshold();
             if (SP.getLong("nextPumpDisconnectedAlarm", 0l) < earliestAlarmTime) {

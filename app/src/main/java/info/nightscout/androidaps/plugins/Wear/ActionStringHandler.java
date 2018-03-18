@@ -586,7 +586,7 @@ public class ActionStringHandler {
         }
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (profile == null || profile.getBasal() == null) {
+        if (profile == null) {
             msg += MainApp.sResources.getString(R.string.notloadedplugins) + "\n";
         }
         if (!"".equals(msg)) {

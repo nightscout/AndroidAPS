@@ -52,12 +52,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     private PumpDescription pumpDescription = new PumpDescription();
 
     private static void loadFakingStatus() {
-        fromNSAreCommingFakedExtendedBoluses = SP.getBoolean("fromNSAreCommingFakedExtendedBoluses", false);
+        fromNSAreCommingFakedExtendedBoluses = SP.getBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, false);
     }
 
     public static void setFakingStatus(boolean newStatus) {
         fromNSAreCommingFakedExtendedBoluses = newStatus;
-        SP.putBoolean("fromNSAreCommingFakedExtendedBoluses", fromNSAreCommingFakedExtendedBoluses);
+        SP.putBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, fromNSAreCommingFakedExtendedBoluses);
     }
 
     public static boolean getFakingStatus() {
@@ -73,7 +73,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         return plugin;
     }
 
-    private VirtualPumpPlugin() {
+    public VirtualPumpPlugin() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
@@ -245,7 +245,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     public double getBaseBasalRate() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile != null)
-            return profile.getBasal() != null ? profile.getBasal() : 0d;
+            return profile.getBasal();
         else
             return 0d;
     }

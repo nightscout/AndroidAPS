@@ -1709,7 +1709,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileStore store = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+                ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
                 Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                 if (profile != null) {
                     profileSwitch.profileJson = profile.getData().toString();

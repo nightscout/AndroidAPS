@@ -570,10 +570,6 @@
     <string name="careportal_insulinage_label">인슐린 사용기간</string>
     <string name="hours">시간</string>
     <string name="overview_newtempbasal_basaltype_label">기초주입 종류</string>
-    <string name="isfmissing">프로파일에서 ISF가 누락되었습니다. 가본값을 사용합니다.</string>
-    <string name="icmissing">프로파일에서 IC가 누락되었습니다. 가본값을 사용합니다.</string>
-    <string name="basalmissing">프로파일에서 기초주입량이 누락되었습니다. 가본값을 사용합니다.</string>
-    <string name="targetmissing">프로파일에서 목표범위가 누락되었습니다. 가본값을 사용합니다.</string>
     <string name="invalidprofile">프로파일이 잘못되었습니다 !!!</string>
     <string name="profileswitch">프로파일변경</string>
     <string name="careportal_pbage_label">펌프배터리사용기간</string>
@@ -591,8 +587,6 @@
     <string name="openapsama_autosens_period">autosens 시간 [h]</string>
     <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
     <string name="ratio_short">SEN</string>
-    <string name="do_not_track_profile_switch">프로파일 변경 이벤트 무시하기</string>
-    <string name="do_not_track_profile_switch_summary">모든 프로파일 변경 이벤트는 무시되고, 항상 활성 프로파일이 사용됩니다.</string>
     <string name="pump">Pump</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Device</string>

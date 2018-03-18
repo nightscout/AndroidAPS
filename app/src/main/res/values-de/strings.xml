@@ -353,7 +353,6 @@
     <string name="app_name">AndroidAPS</string>
     <string name="basal_short">BAS</string>
     <string name="basal_step">Basal-Schritt</string>
-    <string name="basalmissing">Basalraten fehlen im Profil. Verwende Standard-Werte.</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="batteryoptimalizationerror">Smartphone untertützt anscheinend das Deaktivieren der Akku-Leistungsoptimierung nicht!</string>
     <string name="bolus_step">Bolus-Schritt</string>
@@ -368,7 +367,6 @@
     <string name="paused">Pausiert</string>
     <string name="patientage">Patientenalter</string>
     <string name="patientage_summary">Bitte wähle das Pateintenalter, um die Sicherheits-Limits festzulegen</string>
-    <string name="targetmissing">BZ-Zielbereich fehlt im Profil. Verwende Standardwerte.</string>
     <string name="teenage">Teenager</string>
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
     <string name="temptarget">Temporäres Ziel</string>
@@ -414,8 +412,6 @@
     <string name="disconnectpumpfor15m">Trenne Pumpe für 15 Min.</string>
     <string name="disconnectpumpfor30m">Trenne Pumpe für 30 Min.</string>
     <string name="disconnectpumpfor3h">Trenne Pumpe für 3 h</string>
-    <string name="do_not_track_profile_switch">Ignoriere Profilwechsel</string>
-    <string name="do_not_track_profile_switch_summary">Alle Profilwechsel werden ignoriert und nur das aktive Profil verwendet</string>
     <string name="dont_show_again">Nicht erneut anzeigen</string>
     <string name="eatingsoon">Bald essen</string>
     <string name="edit_base_basal">Bearbeite Basis-Basal:</string>
@@ -530,9 +526,7 @@
     <string name="danarprofile_dia_summary">Dauer der Insulinwirkung</string>
     <string name="edit_base_ic">Bearbeite Basis-IC:</string>
     <string name="edit_base_isf">Bearbeite Basis-ISF:</string>
-    <string name="icmissing">IC-Angabe fehlt im Profil. Verwende Standard-Wert.</string>
     <string name="insulin_shortname">INS</string>
-    <string name="isfmissing">ISF fehlt im Profil. Verwende Standard-Wert.</string>
     <string name="lock_screen_short">Sperr</string>
     <string name="needwhitelisting">%s benötigt Batterie-Optimierungs-Whitelisting, um korrekt arbeiten zu können</string>
     <string name="nsalarm_staledata">Veraltete Daten</string>
