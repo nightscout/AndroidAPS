@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -18,6 +19,8 @@ import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -31,7 +34,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, VirtualPumpPlugin.class, FabricPrivacy.class})
-public class ProfileTest extends Profile {
+public class ProfileTest {
 
     PumpInterface pump = new VirtualPumpPlugin();
     String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
@@ -50,91 +53,89 @@ public class ProfileTest extends Profile {
 
 
         // Test valid profile
-        init(new JSONObject(validProfile), 100, 0);
-        Assert.assertEquals(true, isValid("Test"));
-        Assert.assertEquals(true, log().contains("NS units: mmol"));
-        JSONAssert.assertEquals(validProfile, getData(), false);
-        Assert.assertEquals(3.0d, getDia(), 0.01d);
-        Assert.assertEquals(TimeZone.getTimeZone("UTC"), getTimeZone());
-        Assert.assertEquals("00:30", format_HH_MM(30 * 60));
+        Profile p = new Profile(new JSONObject(validProfile), 100, 0);
+        Assert.assertEquals(true, p.isValid("Test"));
+        Assert.assertEquals(true, p.log().contains("NS units: mmol"));
+        JSONAssert.assertEquals(validProfile, p.getData(), false);
+        Assert.assertEquals(3.0d, p.getDia(), 0.01d);
+        Assert.assertEquals(TimeZone.getTimeZone("UTC"), p.getTimeZone());
+        Assert.assertEquals("00:30", p.format_HH_MM(30 * 60));
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, 1);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        Assert.assertEquals(100d, getIsf(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(100d, p.getIsf(c.getTimeInMillis()), 0.01d);
         c.set(Calendar.HOUR_OF_DAY, 2);
-        Assert.assertEquals(110d, getIsf(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(110d, getIsfTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    100,0 mmol/U\n" + "02:00    110,0 mmol/U", getIsfList().replace(".", ","));
-        Assert.assertEquals(30d, getIc(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(30d, getIcTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    30,0 g/U", getIcList().replace(".", ","));
-        Assert.assertEquals(0.1d, getBasal(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(0.1d, getBasalTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    0,10 U/h", getBasalList().replace(".", ","));
-        Assert.assertEquals(0.1d, getBasalValues()[0].value);
-        Assert.assertEquals(0.1d, getMaxDailyBasal());
-        Assert.assertEquals(2.4d, percentageBasalSum(), 0.01d);
-        Assert.assertEquals(2.4d, baseBasalSum(), 0.01d);
-        Assert.assertEquals(4.5d, getTarget(2 * 60 * 60), 0.01d);
-        Assert.assertEquals(4d, getTargetLow(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(4d, getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals(5d, getTargetHigh(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(5d, getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    4,0 - 5,0 mmol", getTargetList().replace(".", ","));
-        Assert.assertEquals(100, getPercentage());
-        Assert.assertEquals(0, getTimeshift());
+        Assert.assertEquals(110d, p.getIsf(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(110d, p.getIsfTimeFromMidnight(2 * 60 * 60), 0.01d);
+        Assert.assertEquals("00:00    100,0 mmol/U\n" + "02:00    110,0 mmol/U", p.getIsfList().replace(".", ","));
+        Assert.assertEquals(30d, p.getIc(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(30d, p.getIcTimeFromMidnight(2 * 60 * 60), 0.01d);
+        Assert.assertEquals("00:00    30,0 g/U", p.getIcList().replace(".", ","));
+        Assert.assertEquals(0.1d, p.getBasal(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(0.1d, p.getBasalTimeFromMidnight(2 * 60 * 60), 0.01d);
+        Assert.assertEquals("00:00    0,10 U/h", p.getBasalList().replace(".", ","));
+        Assert.assertEquals(0.1d, p.getBasalValues()[0].value);
+        Assert.assertEquals(0.1d, p.getMaxDailyBasal());
+        Assert.assertEquals(2.4d, p.percentageBasalSum(), 0.01d);
+        Assert.assertEquals(2.4d, p.baseBasalSum(), 0.01d);
+        Assert.assertEquals(4.5d, p.getTarget(2 * 60 * 60), 0.01d);
+        Assert.assertEquals(4d, p.getTargetLow(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(4d, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01d);
+        Assert.assertEquals(5d, p.getTargetHigh(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(5d, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01d);
+        Assert.assertEquals("00:00    4,0 - 5,0 mmol", p.getTargetList().replace(".", ","));
+        Assert.assertEquals(100, p.getPercentage());
+        Assert.assertEquals(0, p.getTimeshift());
 
-        Assert.assertEquals(0.1d, toMgdl(0.1d, Constants.MGDL));
-        Assert.assertEquals(18d, toMgdl(1d, Constants.MMOL));
-        Assert.assertEquals(1d, toMmol(18d, Constants.MGDL));
-        Assert.assertEquals(18d, toMmol(18d, Constants.MMOL));
-        Assert.assertEquals(18d, fromMgdlToUnits(18d, Constants.MGDL));
-        Assert.assertEquals(1d, fromMgdlToUnits(18d, Constants.MMOL));
-        Assert.assertEquals(18d, toUnits(18d, 1d, Constants.MGDL));
-        Assert.assertEquals(1d, toUnits(18d, 1d, Constants.MMOL));
-        Assert.assertEquals("18", toUnitsString(18d, 1d, Constants.MGDL));
-        Assert.assertEquals("1,0", toUnitsString(18d, 1d, Constants.MMOL).replace(".", ","));
-        Assert.assertEquals("5 - 6", toTargetRangeString(5d, 6d, Constants.MGDL, Constants.MGDL));
+        Assert.assertEquals(0.1d, p.toMgdl(0.1d, Constants.MGDL));
+        Assert.assertEquals(18d, p.toMgdl(1d, Constants.MMOL));
+        Assert.assertEquals(1d, p.toMmol(18d, Constants.MGDL));
+        Assert.assertEquals(18d, p.toMmol(18d, Constants.MMOL));
+        Assert.assertEquals(18d, p.fromMgdlToUnits(18d, Constants.MGDL));
+        Assert.assertEquals(1d, p.fromMgdlToUnits(18d, Constants.MMOL));
+        Assert.assertEquals(18d, p.toUnits(18d, 1d, Constants.MGDL));
+        Assert.assertEquals(1d, p.toUnits(18d, 1d, Constants.MMOL));
+        Assert.assertEquals("18", p.toUnitsString(18d, 1d, Constants.MGDL));
+        Assert.assertEquals("1,0", p.toUnitsString(18d, 1d, Constants.MMOL).replace(".", ","));
+        Assert.assertEquals("5 - 6", p.toTargetRangeString(5d, 6d, Constants.MGDL, Constants.MGDL));
 
         //Test basal profile below limit
-        Assert.assertEquals(false, notificationBelowLimitSent);
-        init(new JSONObject(belowLimitValidProfile), 100, 0);
-        isValid("Test");
+        p = new Profile(new JSONObject(belowLimitValidProfile), 100, 0);
+        p.isValid("Test");
         Assert.assertEquals(true, notificationBelowLimitSent);
 
-
         // Test profile w/o units
-        init(new JSONObject(noUnitsValidProfile), 100, 0);
-        Assert.assertEquals(null, getUnits());
-        Profile nup = new Profile(new JSONObject(noUnitsValidProfile), Constants.MMOL);
-        Assert.assertEquals(Constants.MMOL, nup.getUnits());
+        p = new Profile(new JSONObject(noUnitsValidProfile), 100, 0);
+        Assert.assertEquals(null, p.getUnits());
+        p = new Profile(new JSONObject(noUnitsValidProfile), Constants.MMOL);
+        Assert.assertEquals(Constants.MMOL, p.getUnits());
         // failover to MGDL
-        nup = new Profile(new JSONObject(noUnitsValidProfile), null);
-        Assert.assertEquals(Constants.MGDL, nup.getUnits());
+        p = new Profile(new JSONObject(noUnitsValidProfile), null);
+        Assert.assertEquals(Constants.MGDL, p.getUnits());
 
         //Test profile not starting at midnight
-        init(new JSONObject(notStartingAtZeroValidProfile), 100, 0);
-        Assert.assertEquals(30.0d, getIc(0), 0.01d);
+        p = new Profile(new JSONObject(notStartingAtZeroValidProfile), 100, 0);
+        Assert.assertEquals(30.0d, p.getIc(0), 0.01d);
 
         // Test wrong profile
-        init(new JSONObject(wrongProfile), 100, 0);
-        Assert.assertEquals(false, isValid("Test"));
+        p = new Profile(new JSONObject(wrongProfile), 100, 0);
+        Assert.assertEquals(false, p.isValid("Test"));
 
         // Test percentage functionality
-        init(new JSONObject(validProfile), 50, 0);
-        Assert.assertEquals(0.05d, getBasal(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(1.2d, percentageBasalSum(), 0.01d);
-        Assert.assertEquals(60d, getIc(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(220d, getIsf(c.getTimeInMillis()), 0.01d);
+        p = new Profile(new JSONObject(validProfile), 50, 0);
+        Assert.assertEquals(0.05d, p.getBasal(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(1.2d, p.percentageBasalSum(), 0.01d);
+        Assert.assertEquals(60d, p.getIc(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(220d, p.getIsf(c.getTimeInMillis()), 0.01d);
 
         // Test timeshift functionality
-        init(new JSONObject(validProfile), 100, 1);
+        p = new Profile(new JSONObject(validProfile), 100, 1);
         Assert.assertEquals(
                 "00:00    110,0 mmol/U\n" +
                         "01:00    100,0 mmol/U\n" +
-                        "03:00    110,0 mmol/U", getIsfList().replace(".", ","));
+                        "03:00    110,0 mmol/U", p.getIsfList().replace(".", ","));
     }
 
     private void prepareMock() throws Exception {
@@ -146,16 +147,20 @@ public class ProfileTest extends Profile {
         when(MainApp.instance()).thenReturn(mainApp);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
         when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("AnyString");
 
         PowerMockito.mockStatic(FabricPrivacy.class);
 //        PowerMockito.doNothing().when(FabricPrivacy.log(""));
 
-        Bus bus = new Bus(ThreadEnforcer.ANY);
+        MockedBus bus = new MockedBus();
         when(MainApp.bus()).thenReturn(bus);
     }
 
-    @Override
-    protected void sendBelowMinimumNotification(String from) {
-        notificationBelowLimitSent = true;
+    class MockedBus extends Bus {
+        @Override
+        public void post(Object event) {
+            notificationBelowLimitSent = true;
+        }
     }
+
 }
