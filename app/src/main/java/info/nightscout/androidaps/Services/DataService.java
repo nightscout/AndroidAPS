@@ -368,9 +368,6 @@ public class DataService extends IntentService {
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
                 NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
-                // if there are no profile switches this should lead to profile update
-                if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)
-                    MainApp.bus().post(new EventNewBasalProfile());
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
