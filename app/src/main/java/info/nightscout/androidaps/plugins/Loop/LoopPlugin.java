@@ -164,9 +164,7 @@ public class LoopPlugin implements PluginBase {
             return;
 
         EventNewBG bgEv = (EventNewBG) ev.cause;
-        BgReading bg = bgEv.bgReading;
-        if (bgEv.isNew && bgEv.isFromActiveBgSource
-                && bg != null && bg.date + 9 * 60 * 1000 > System.currentTimeMillis()) {
+        if (bgEv.isNew && bgEv.isFromActiveBgSource && bgEv.isCurrent()) {
             invoke("New BG", true);
         }
     }
