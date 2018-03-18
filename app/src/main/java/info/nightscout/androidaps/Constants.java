@@ -1,7 +1,5 @@
 package info.nightscout.androidaps;
 
-import com.j256.ormlite.stmt.query.In;
-
 /**
  * Created by mike on 07.06.2016.
  */

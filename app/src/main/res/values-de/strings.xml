@@ -221,7 +221,6 @@
     <string name="end_user_license_agreement_i_understand">Ich verstehe und stimme zu</string>
     <string name="end_user_license_agreement_text">DAS PROGRAMM DARF NICHT FÜR MEDIZINISCHE ENTSCHEIDUNGEN BENUTZT WERDEN. ES GIBT IN DIESEM PROJEKT KEINE GEWÄHRLEISTUNG ODER GARANTIERTE UNTERSTÜTZUNG IN IRGENDEINER ART. WENN DU DICH ENTSCHEIDEST ES ZU NUTZEN, HÄNGT DIE QUALITÄT UND LEISTUNGSFÄHIGKEIT DIESES PROJEKTES VON DIR SELBST AB. ES WIRD \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT. SOLLTE SICH DAS PROGRAMM ALS FEHLERHAFT ERWEISEN, ÜBERNEHMEN SIE DIE KOSTEN ALLER NOTWENDIGEN KRANKHEITSKOSTEN, SERVICELEISTUNGEN, REPARATUREN ODER KORREKTUREN.</string>
     <string name="failedupdatebasalprofile">Fehler beim Aktualisieren der Basalrate</string>
-    <string name="hoursago">"h her "</string>
     <string name="smscommunicator">SMS-Kommunikator</string>
     <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
     <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
@@ -714,7 +713,7 @@
     <string name="combo_pump_action_bolusing">Bolus (%.1f IE) wird abgegeben</string>
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu. Andernfalls wird AndroidAPS nicht protokolliert (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)</string>
     <string name="pump_tempbasal_label">TBR</string>
-    <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in der letzten Minute angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
+    <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in den letzten zwei Minuten angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
     <string name="combo_activity_reading_pump_history">Historie wird gelesen</string>
     <string name="combo_activity_setting_basal_profile">Basalratenprofil wird aktualisiert</string>
     <string name="combo_error_bolus_recovery_progress">Verbindung wird wieder hergestellt</string>
@@ -723,7 +722,7 @@
     <string name="combo_error_partial_bolus_delivered">Wegen eines Fehlers wurden nur %.2f IE von den angeforderten %.2f IE abgegeben. Bitte prüfe den abgegebenen Bolus auf der Pumpe.</string>
     <string name="combo_history">Historie</string>
     <string name="combo_pump_action_refreshing">Status wird aktualisiert</string>
-    <string name="combo_pump_action_initializing">Die Pumpe wird initialisiert</string>
+    <string name="combo_pump_state_initializing">Die Pumpe wird initialisiert</string>
     <string name="combo_pump_connected_now">Jetzt</string>
     <string name="combo_pump_never_connected">Nie</string>
     <string name="combo_pump_tbr_cancelled_warrning">Der Alarm \"TBR ABBRUCH\" wurde bestätigt</string>
@@ -741,7 +740,7 @@
     <string name="combo_is_in_error_state">Die Pumpe zeigt einen Fehler an E%d: %s</string>
     <string name="combo_force_disabled_notification">Unsichere Verwendung: In der Pumpe ist nicht das erste Basalratenprofil gewählt. Der Loop wird deaktiviert bis dies korrigiert ist.</string>
     <string name="combo_low_suspend_forced_notification">Unsichere Verwendung: Ein erweiterter oder Multiwave-Bolus ist aktiv. Der Loop wird für die nächsten 6 Stunden kein zusätzliches Insulin abgeben.</string>
-    <string name="combo_no_alert_data_note">Um die Fehlerhistorie der Pumpe zu lesen, drücke lange auf ALARME.\nWARNUNG: Es gibt einen bekannten Fehler in der Pumpe, der dazu führt, dass die Pumpe nach dieser Aktion erst wieder Verbindungen annimmt, wenn auf der Pumpe selbst eine Taste gedrückt wird. Aus diesem Grund sollte diese Aktion nicht durchgeführt werden.</string>
+    <string name="combo_no_alert_data_note">Um die Fehlerhistorie der Pumpe zu lesen, drücke lange auf ALARME.</string>
     <string name="combo_notification_check_time_date">Bitte aktualisiere die Uhrzeit der Pumpe</string>
     <string name="combo_no_tdd_data_note">Um die TDD-Statistik der Pumpe zu lesen, drücken Sie den TDDS Knopf lange.\nWARNUNG: Es gibt einen bekannten Fehler in der Pumpe der dazu führt, dass die Pumpe nach dieser Aktion erst wieder Verbindungen annimmt, wenn auf der Pumpe selbst ein Konpf gedrückt wird. Aus diesem Grund sollte diese Aktion nicht durchgeführt werden.</string>
     <string name="combo_read_full_history_warning">Dies wird den gesamten Speicher und den Status der Pumpe auslesen sowie alle Einträge in „Meine Daten“ und die Basalrate. Boli und TBR werden unter Behandlungen gespeichert, sofern sie nicht bereits vorhanden sind. Dies kann zu doppelten Einträgen führen, wenn die Uhrzeit der Pumpe abweicht. Das Auslesen des Speichers ist normaler Weise für das Loopen unnötig und nur für besondere Umstände vorgesehen. Wenn Du es dennoch tun willst, drücke noch einmal länger den Button. ACHTUNG: Dies kann einen Fehler auslösen, der dazu führt, dass die Pumpe keine Verbindungsversuche mehr akzeptiert. Erst die Betätigung einer Taste an der Pumpe beendet diesen Zustand. Nach Möglichkeit sollte daher das Auslesen vermieden werden.</string>
@@ -765,4 +764,25 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standarwert: 2\nBolus snooze (\"Bolus-Schlummer\") bremst den Loop nach einem Mahleiten-Bolus, damit dieser nicht mit niedrigen TBR reagiert, wenn Du gerade gegessen hast. Beispiel: Der Standardwert 2 bewirkt, dass bei einem 3 Stunden DIA der Bolus snooze während 1.5 Stunden nach dem Bolus linear ausläuft (3 h Dia / 2 = 1.5 h Bolus snooze).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3mg/dl/5min. Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung! Normalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
+    <string name="combo_actvity_reading_basal_profile">Basalratenprofil wird gelesen</string>
+    <string name="pump_basebasalrate">%.2f IE/h</string>
+    <string name="combo_read_full_history_info">Drücke den Button lange, um die gesamte Historie und das Basal-Profil der Pumpe auszulesen. Dies ist eigentlich unnötig, weil die Historie regelmäßig gelesen wird. Hilfreich kann dies jedoch sein, wenn Datum und Zeit grundlegend verändert wurden oder die Pumpe ausgetauscht wurde.</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Keine Verbindung zur Pumpe: Es wurde kein Bolus abgegeben.</string>
+    <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verlängerten Bolus</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Nach der Berechnung des Bolus hat sich die Pumpenhistorie geändert. Daher wurde kein Bolus abgegeben. Bitte prüfe, ob überhaupt noch ein Bolus benötigt wird. Wenn die gleiche Bolusmenge erforderlich ist, warte zwei Minuten ab, denn es werden aus Sicherheitsgründen keine gleich großen Boli abgegeben, wenn sie innerhalb von zwei Minuten angefordert wurden (unabhängig davon, ob sie verabreicht wurden oder nicht).</string>
+    <string name="combo_error_updating_treatment_record">Der Bolus wurde erfolgreich abgegeben, aber nicht als Behandlungseintrag gespeichert. Dies kann passieren, wenn zwei kleine, gleich große Boli innerhalb von zwei Minuten verabreicht werden. Bitte überprüfe die Pumpenhistorie und Behandlungseinträge. Verwende das Careportal, um fehlende Einträge hinzuzufügen. Stelle sicher, dass keine Einträge für genau dieselbe Minute und dieselbe Menge hinzugefügt werden.</string>
+    <string name="combo_activity_checking_pump_state">Status wird aktualisiert</string>
+    <string name="combo_warning_pump_basal_rate_changed">Die Basalrate in der Pumpe hat sich geändert und wird aktualisiert</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Das Einlesen der geänderten Basalrate in der Pumpe schlug fehl.</string>
+    <string name="combo_activity_checking_for_history_changes">Änderungen der Historie werden gesucht</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Der Import mehrerer Boli der gleichen Menge, abgegeben in der gleichen Minute, ist gescheitert: Nur ein Datensatz konnte den Behandlungen hinzugefügt werden. Bitte überprüfe die Pumpe und verwende das Careportal, um fehlende Einträge hinzuzufügen. Stelle sicher, dass keine Einträge für genau dieselbe Minute mit derselben  Menge hinzugefügt werden.</string>
+    <string name="mute">Alarm stoppen</string>
+    <string name="bolusstopped">Bolus gestoppt</string>
+    <string name="bolusstopping">Bolus wird gestoppt</string>
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %s</string>
+    <string name="zerovalueinprofile">Ungültiges Profil: %s</string>
+    <string name="hoursago">vor %.1f h</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
+    <string name="combo_check_date">Der letzte Bolus liegt mehr als 24 Stunden zurück oder liegt in der Zukunft. Prüfe bitte das Datum auf der Pumpe.</string>
+    <string name="combo_suspious_bolus_time">Zeit/Datum des abgegebenen Boluses auf der Pumpe erscheint falsch, IOB ist wahrscheinlich nicht korrekt. Bitte prüfe Zeit/Datum der Pumpe.</string>
 </resources>

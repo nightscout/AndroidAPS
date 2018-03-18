@@ -6,10 +6,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 
 /**
  * Created by mike on 29.05.2017.
@@ -30,6 +28,24 @@ public class DetailedBolusInfo {
     public long pumpId = 0;                // id of record if comming from pump history (not a newly created treatment)
     public boolean isSMB = false;          // is a Super-MicroBolus
     public long deliverAt = 0;             // SMB should be delivered within 1 min from this time
+
+    public DetailedBolusInfo copy() {
+        DetailedBolusInfo copy = new DetailedBolusInfo();
+        copy.date = this.date;
+        copy.eventType = this.eventType;
+        copy.insulin = this.insulin;
+        copy.carbs = this.carbs;
+        copy.source = this.source;
+        copy.isValid = this.isValid;
+        copy.glucose = this.glucose;
+        copy.glucoseType = this.glucoseType;
+        copy.carbTime = this.carbTime;
+        copy.boluscalc = this.boluscalc;
+        copy.context = this.context;
+        copy.pumpId = this.pumpId;
+        copy.isSMB = this.isSMB;
+        return copy;
+    }
 
     @Override
     public String toString() {

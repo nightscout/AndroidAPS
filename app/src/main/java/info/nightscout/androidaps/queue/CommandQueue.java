@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -81,7 +82,7 @@ public class CommandQueue {
         return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
     }
 
-    public boolean isRunning(Command.CommandType type) {
+    private boolean isRunning(Command.CommandType type) {
         if (performing != null && performing.commandType == type)
             return true;
         return false;
@@ -293,6 +294,21 @@ public class CommandQueue {
             return false;
         }
 
+        // Check that there is a valid profileSwitch NOW
+        if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
+            // wait for DatabaseHelper.scheduleProfiSwitch() to do the profile switch // TODO clean this crap up
+            SystemClock.sleep(5000);
+            if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
+                Notification noProfileSwitchNotif = new Notification(Notification.PROFILE_SWITCH_MISSING, MainApp.gs(R.string.profileswitch_ismissing), Notification.NORMAL);
+                MainApp.bus().post(new EventNewNotification(noProfileSwitchNotif));
+                if (callback != null) {
+                    PumpEnactResult result = new PumpEnactResult().success(false).enacted(false).comment("Refuse to send profile to pump! No ProfileSwitch!");
+                    callback.result(result).run();
+                }
+                return false;
+            }
+        }
+
         if (!MainApp.isEngineeringModeOrRelease()) {
             Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
@@ -305,8 +321,8 @@ public class CommandQueue {
         Profile.BasalValue[] basalValues = profile.getBasalValues();
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
-        for (int index = 0; index < basalValues.length; index++) {
-            if (basalValues[index].value < pump.getPumpDescription().basalMinimumRate) {
+        for (Profile.BasalValue basalValue : basalValues) {
+            if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
