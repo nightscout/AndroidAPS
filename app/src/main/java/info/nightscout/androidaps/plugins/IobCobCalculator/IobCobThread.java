@@ -110,11 +110,6 @@ public class IobCobThread extends Thread {
                         return; // profile not set yet
                     }
 
-                    if (profile.getIsf(bgTime) == null) {
-                        log.debug("Aborting calculation thread (no ISF): " + from);
-                        return; // profile not set yet
-                    }
-
                     if (Config.logAutosensData)
                         log.debug("Processing calculation thread: " + from + " (" + i + "/" + bucketed_data.size() + ")");
 

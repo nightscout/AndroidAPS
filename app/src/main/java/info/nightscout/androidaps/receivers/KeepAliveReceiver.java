@@ -52,7 +52,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     private void checkPump() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && profile != null && profile.getBasal() != null) {
+        if (pump != null && profile != null) {
             Date lastConnection = pump.lastDataTime();
             boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
