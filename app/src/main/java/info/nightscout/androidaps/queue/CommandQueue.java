@@ -293,6 +293,14 @@ public class CommandQueue {
             return false;
         }
 
+        if (!MainApp.isEngineeringModeOrRelease()) {
+            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.not_eng_mode_or_release))).run();
+            return false;
+        }
+
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();

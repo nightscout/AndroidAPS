@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.queue;
 
 import android.content.Context;
-import android.text.Html;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
@@ -115,6 +114,7 @@ public class CommandQueueTest extends CommandQueue {
         PowerMockito.mockStatic(MainApp.class);
         MainApp mainApp = mock(MainApp.class);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+        when(MainApp.isEngineeringModeOrRelease()).thenReturn(true);
         when(MainApp.instance()).thenReturn(mainApp);
 
         PowerMockito.mockStatic(ToastUtils.class);
