@@ -182,7 +182,8 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        sendDataToWatch(true, true, true);
+        if (ev.isFromActiveBgSource)
+            sendDataToWatch(true, true, true);
     }
 
     @Subscribe

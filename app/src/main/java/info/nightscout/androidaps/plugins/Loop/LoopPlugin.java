@@ -23,6 +23,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -159,8 +160,12 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (ev.cause instanceof EventNewBG) {
-            invoke(ev.getClass().getSimpleName() + "(" + ev.cause.getClass().getSimpleName() + ")", true);
+        if (!(ev.cause instanceof EventNewBG))
+            return;
+
+        EventNewBG bgEv = (EventNewBG) ev.cause;
+        if (bgEv.isNew && bgEv.isFromActiveBgSource && bgEv.isCurrent()) {
+            invoke("New BG", true);
         }
     }
 

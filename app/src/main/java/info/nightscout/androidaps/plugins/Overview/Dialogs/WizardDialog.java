@@ -142,14 +142,16 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Subscribe
     public void onStatusEvent(final EventNewBG e) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    calculateInsulin();
-                }
-            });
+        if (e.isFromActiveBgSource && e.isNew && e.isCurrent()) {
+            Activity activity = getActivity();
+            if (activity != null)
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        calculateInsulin();
+                    }
+                });
+        }
     }
 
     @Subscribe

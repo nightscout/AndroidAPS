@@ -235,7 +235,8 @@ public class StatuslinePlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        sendStatus();
+        if (ev.isFromActiveBgSource && ev.isNew && ev.isCurrent())
+            sendStatus();
     }
 
     @Subscribe
