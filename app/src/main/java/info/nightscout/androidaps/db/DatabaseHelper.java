@@ -1584,14 +1584,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<ProfileSwitch> profileSwitches;
             QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
             queryBuilder.orderBy("date", ascending);
-            queryBuilder.limit(20L);
+            queryBuilder.limit(100L);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<ProfileSwitch>();
+        return new ArrayList<>();
     }
 
     public boolean createOrUpdate(ProfileSwitch profileSwitch) {
