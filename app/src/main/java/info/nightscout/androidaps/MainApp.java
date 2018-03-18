@@ -125,6 +125,12 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
+        String extFilesDir = this.getLogDirectory();
+        File engineeringModeSemaphore = new File(extFilesDir,"engineering_mode");
+
+        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
+        devBranch = BuildConfig.VERSION.contains("dev");
+
         sBus = Config.logEvents ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         registerLocalBroadcastReceiver();
@@ -147,9 +153,9 @@ public class MainApp extends Application {
             if (Config.HWPUMPS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRSPlugin.getPlugin());
-            if (Config.HWPUMPS) pluginsList.add(ComboPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
-            if (Config.DANAR && engineeringMode) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
+            if (Config.HWPUMPS && engineeringMode) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
+            if (Config.HWPUMPS && engineeringMode) pluginsList.add(ComboPlugin.getPlugin()); // <-- Enable Combo plugin here
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
@@ -204,12 +210,6 @@ public class MainApp extends Application {
                 startKeepAliveService();
             }
         }).start();
-
-        String extFilesDir = this.getLogDirectory();
-        File engineeringModeSemaphore = new File(extFilesDir,"engineering_mode");
-
-        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
-        devBranch = BuildConfig.VERSION.contains("dev");
 
         if (!isEngineeringModeOrRelease()) {
             Notification n = new Notification(Notification.TOAST_ALARM, gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
