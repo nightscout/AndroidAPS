@@ -177,18 +177,19 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     String getStateSummary() {
         PumpState ps = pump.state;
-        if (!pump.initialized) {
-            return MainApp.gs(R.string.combo_pump_state_initializing);
-        } else if (!validBasalRateProfileSelectedOnPump) {
-            return MainApp.gs(R.string.loopdisabled);
-        } else if (ps.activeAlert != null) {
+        if (ps.activeAlert != null) {
             return ps.activeAlert.errorCode != null
                     ? "E" + ps.activeAlert.errorCode + ": " + ps.activeAlert.message
                     : "W" + ps.activeAlert.warningCode + ": " + ps.activeAlert.message;
-        } else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY))
+        } else if (ps.suspended && (ps.batteryState == PumpState.EMPTY || ps.insulinState == PumpState.EMPTY)) {
             return MainApp.gs(R.string.combo_pump_state_suspended_due_to_error);
-        else if (ps.suspended)
+        } else if (ps.suspended) {
             return MainApp.gs(R.string.combo_pump_state_suspended_by_user);
+        } else if (!pump.initialized) {
+            return MainApp.gs(R.string.combo_pump_state_initializing);
+        } else if (!validBasalRateProfileSelectedOnPump) {
+            return MainApp.gs(R.string.loopdisabled);
+        }
         return MainApp.gs(R.string.combo_pump_state_running);
     }
 
@@ -949,7 +950,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * an error condition. Returns null otherwise.
      */
     private CommandResult runOnConnectChecks() {
-        // connect, get status and check if an alarm is active
         CommandResult preCheckResult = ruffyScripter.readPumpState();
         if (!preCheckResult.success) {
             return preCheckResult;
@@ -977,13 +977,28 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             }
         }
 
-        checkForUnsafeUsage(preCheckResult);
-        checkAndResolveTbrMismatch(preCheckResult.state);
-        checkPumpTime(preCheckResult.state);
-        checkBasalRate(preCheckResult.state);
-        CommandResult historyCheckError = checkHistory();
-        if (historyCheckError != null) {
-            return historyCheckError;
+        if (!preCheckResult.state.suspended) {
+            checkForUnsafeUsage(preCheckResult);
+            checkAndResolveTbrMismatch(preCheckResult.state);
+            checkPumpTime(preCheckResult.state);
+            checkBasalRate(preCheckResult.state);
+            CommandResult historyCheckError = checkHistory();
+            if (historyCheckError != null) {
+                return historyCheckError;
+            }
+        } else {
+            long now = System.currentTimeMillis();
+            TemporaryBasal aapsTbr = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            if (aapsTbr == null || aapsTbr.percentRate != 0) {
+                log.debug("Creating 15m zero temp since pump is suspended");
+                TemporaryBasal newTempBasal = new TemporaryBasal();
+                newTempBasal.date = now;
+                newTempBasal.percentRate = 0;
+                newTempBasal.isAbsolute = false;
+                newTempBasal.durationInMinutes = 15;
+                newTempBasal.source = Source.USER;
+                MainApp.getConfigBuilder().addToHistoryTempBasal(newTempBasal);
+            }
         }
 
         return null;
