@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
@@ -58,6 +59,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     GraphView iobGraph;
     @BindView(R.id.historybrowse_seekBar)
     SeekBar seekBar;
+    @BindView(R.id.historybrowse_noprofile)
+    TextView noProfile;
 
     private int rangeToDisplay = 24; // for graph
     private long start;
@@ -182,6 +185,14 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     void updateGUI(String from) {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (profile == null) {
+            noProfile.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            noProfile.setVisibility(View.GONE);
+        }
+
         final String units = profile.getUnits();
 
         double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));

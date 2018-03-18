@@ -114,6 +114,12 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         long now = System.currentTimeMillis();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (profile == null) {
+            log.debug("No profile");
+            return new AutosensResult();
+        }
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
             log.debug("No autosens data available");
@@ -158,8 +164,6 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
 
         Double[] deviations = new Double[deviationsArray.size()];
         deviations = deviationsArray.toArray(deviations);
-
-        Profile profile = MainApp.getConfigBuilder().getProfile();
 
         double sens = profile.getIsf();
 

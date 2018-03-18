@@ -20,8 +20,10 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import ch.qos.logback.classic.LoggerContext;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
@@ -46,6 +48,8 @@ import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
@@ -97,6 +101,9 @@ public class MainApp extends Application {
     private static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
     private LocalBroadcastManager lbm;
 
+    public static boolean devBranch;
+    public static boolean engineeringMode;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -142,7 +149,7 @@ public class MainApp extends Application {
             if (Config.HWPUMPS) pluginsList.add(DanaRSPlugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(ComboPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
-            // if (Config.DANAR) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
+            if (Config.DANAR && engineeringMode) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
@@ -198,6 +205,16 @@ public class MainApp extends Application {
             }
         }).start();
 
+        String extFilesDir = this.getLogDirectory();
+        File engineeringModeSemaphore = new File(extFilesDir,"engineering_mode");
+
+        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
+        devBranch = BuildConfig.VERSION.contains("dev");
+
+        if (!isEngineeringModeOrRelease()) {
+            Notification n = new Notification(Notification.TOAST_ALARM, gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
+            bus().post(new EventNewNotification(n));
+        }
     }
 
     private void registerLocalBroadcastReceiver() {
@@ -362,6 +379,15 @@ public class MainApp extends Application {
             log.error("pluginsList=null");
         }
         return null;
+    }
+
+    public static boolean isEngineeringModeOrRelease() {
+        return engineeringMode || !devBranch;
+    }
+
+    private String getLogDirectory() {
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        return lc.getProperty("EXT_FILES_DIR");
     }
 
     @Override

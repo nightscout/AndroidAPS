@@ -444,15 +444,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void calculateInsulin() {
-        ProfileStore profile = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
-        if (profileSpinner == null || profileSpinner.getSelectedItem() == null)
+        ProfileStore profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+        if (profileSpinner == null || profileSpinner.getSelectedItem() == null || profileStore == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
         Profile specificProfile;
         if (selectedAlternativeProfile.equals(MainApp.sResources.getString(R.string.active)))
             specificProfile = MainApp.getConfigBuilder().getProfile();
         else
-            specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
+            specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);
 
         // Entered values
         Double c_bg = SafeParse.stringToDouble(editBg.getText());

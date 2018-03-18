@@ -228,7 +228,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
-                    android:text="23 g" />
+                    android:text="" />
 
             </LinearLayout>
 

@@ -142,16 +142,18 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     private static void initializeTreatmentData() {
-        // Treatments
-        double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
+        double dia = Constants.defaultDIA;
+        if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
+            dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
         treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
     }
 
     private static void initializeTempBasalData() {
-        // Treatments
-        double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
+         double dia = Constants.defaultDIA;
+        if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
+            dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
         tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(fromMills, false));
@@ -159,8 +161,9 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     private static void initializeExtendedBolusData() {
-        // Treatments
-        double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
+        double dia = Constants.defaultDIA;
+        if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
+            dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
         extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(fromMills, false));

@@ -389,8 +389,10 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (tb1 != null) {
             tb_before = beginBasalValue;
             Profile profileTB = MainApp.getConfigBuilder().getProfile(runningTime);
-            tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
-            tb_start = runningTime;
+            if (profileTB != null) {
+                tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
+                tb_start = runningTime;
+            }
         }
 
 

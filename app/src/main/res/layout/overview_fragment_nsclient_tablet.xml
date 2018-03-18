@@ -366,7 +366,7 @@
                                     android:gravity="start"
                                     android:orientation="horizontal"
                                     android:paddingLeft="5dp"
-                                    android:text="23 g"
+                                    android:text=""
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp" />
 
