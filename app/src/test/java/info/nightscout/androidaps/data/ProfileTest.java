@@ -66,13 +66,13 @@ public class ProfileTest extends Profile {
         c.set(Calendar.HOUR_OF_DAY, 2);
         Assert.assertEquals(110d, getIsf(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(110d, getIsfTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    100,0 mmol/U\n" + "02:00    110,0 mmol/U", getIsfList());
+        Assert.assertEquals("00:00    100,0 mmol/U\n" + "02:00    110,0 mmol/U", getIsfList().replace(".", ","));
         Assert.assertEquals(30d, getIc(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(30d, getIcTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    30,0 g/U", getIcList());
+        Assert.assertEquals("00:00    30,0 g/U", getIcList().replace(".", ","));
         Assert.assertEquals(0.1d, getBasal(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(0.1d, getBasalTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    0,10 U/h", getBasalList());
+        Assert.assertEquals("00:00    0,10 U/h", getBasalList().replace(".", ","));
         Assert.assertEquals(0.1d, getBasalValues()[0].value);
         Assert.assertEquals(0.1d, getMaxDailyBasal());
         Assert.assertEquals(2.4d, percentageBasalSum(), 0.01d);
@@ -82,7 +82,7 @@ public class ProfileTest extends Profile {
         Assert.assertEquals(4d, getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01d);
         Assert.assertEquals(5d, getTargetHigh(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(5d, getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals("00:00    4,0 - 5,0 mmol", getTargetList());
+        Assert.assertEquals("00:00    4,0 - 5,0 mmol", getTargetList().replace(".", ","));
         Assert.assertEquals(100, getPercentage());
         Assert.assertEquals(0, getTimeshift());
 
@@ -95,7 +95,7 @@ public class ProfileTest extends Profile {
         Assert.assertEquals(18d, toUnits(18d, 1d, Constants.MGDL));
         Assert.assertEquals(1d, toUnits(18d, 1d, Constants.MMOL));
         Assert.assertEquals("18", toUnitsString(18d, 1d, Constants.MGDL));
-        Assert.assertEquals("1,0", toUnitsString(18d, 1d, Constants.MMOL));
+        Assert.assertEquals("1,0", toUnitsString(18d, 1d, Constants.MMOL).replace(".", ","));
         Assert.assertEquals("5 - 6", toTargetRangeString(5d, 6d, Constants.MGDL, Constants.MGDL));
 
         //Test basal profile below limit
@@ -134,7 +134,7 @@ public class ProfileTest extends Profile {
         Assert.assertEquals(
                 "00:00    110,0 mmol/U\n" +
                         "01:00    100,0 mmol/U\n" +
-                        "03:00    110,0 mmol/U", getIsfList());
+                        "03:00    110,0 mmol/U", getIsfList().replace(".", ","));
     }
 
     private void prepareMock() throws Exception {
