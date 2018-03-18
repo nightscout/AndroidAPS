@@ -293,7 +293,7 @@ public class CommandQueue {
             return false;
         }
 
-        if (!MainApp.isDevModeOrRelease()) {
+        if (!MainApp.isEngineeringModeOrRelease()) {
             Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             if (callback != null)
