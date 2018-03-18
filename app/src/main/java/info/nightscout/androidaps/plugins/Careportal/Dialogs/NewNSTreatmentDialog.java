@@ -59,6 +59,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
+import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.Translator;
@@ -73,7 +74,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     Profile profile;
     ProfileStore profileStore;
-    String units;
+    String units = Constants.MGDL;
 
     TextView eventTypeText;
     LinearLayout layoutPercent;
@@ -168,19 +169,24 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
         // profile
         profile = MainApp.getConfigBuilder().getProfile();
-        profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
-        ArrayList<CharSequence> profileList;
-        units = profile != null ? profile.getUnits() : Constants.MGDL;
-        profileList = profileStore.getProfileList();
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
-                R.layout.spinner_centered, profileList);
-        profileSpinner.setAdapter(adapter);
-        // set selected to actual profile
-        for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName(false)))
-                profileSpinner.setSelection(p);
+        profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        if (profileStore == null) {
+            if (options.eventType == R.id.careportal_profileswitch) {
+                log.error("Profile switch called but plugin doesn't contain valid profile");
+            }
+        } else {
+            ArrayList<CharSequence> profileList;
+            units = profile != null ? profile.getUnits() : Constants.MGDL;
+            profileList = profileStore.getProfileList();
+            ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(),
+                    R.layout.spinner_centered, profileList);
+            profileSpinner.setAdapter(adapter);
+            // set selected to actual profile
+            for (int p = 0; p < profileList.size(); p++) {
+                if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName(false)))
+                    profileSpinner.setSelection(p);
+            }
         }
-
         final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
 
         // temp target
@@ -720,7 +726,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.source = Source.USER;
         profileSwitch.profileName = profileName;
         profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
-        profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
+        profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
         profileSwitch.durationInMinutes = duration;
         profileSwitch.isCPP = percentage != 100 || timeshift != 0;
         profileSwitch.timeshift = timeshift;
@@ -752,7 +758,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = MainApp.getConfigBuilder().getProfileName(System.currentTimeMillis(), false);
             profileSwitch.profileJson = MainApp.getConfigBuilder().getProfile().getData().toString();
-            profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
+            profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeshift != 0;
             profileSwitch.timeshift = timeshift;

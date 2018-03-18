@@ -555,14 +555,10 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="dev">ODCH</string>
     <string name="device">Zařízení</string>
-    <string name="do_not_track_profile_switch">Ignorovat přepnutí profilu</string>
-    <string name="do_not_track_profile_switch_summary">Všechny záznamy přepnutí profilu jsou ignorovány a vždy je použit aktivní profil</string>
     <string name="extendedbolus">ProdlouženýBolus</string>
     <string name="hours">hodin</string>
-    <string name="icmissing">I:S chybí. Je použita výchozí hodnota.</string>
     <string name="invalidprofile">Chybný profil !!!</string>
     <string name="iob">IOB</string>
-    <string name="isfmissing">Senzitivita chybí. Je použita výchozí hodnota.</string>
     <string name="lock_screen">Zámek obrazovky</string>
     <string name="lock_screen_short">Zámek</string>
     <string name="mdtp_cancel">Zrušit</string>
@@ -592,7 +588,6 @@
     <string name="xdripstatus_settings">Status z xDripu (hodinky)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="targetmissing">Chybí cílový rozsah. Použity výchozí hodnoty.</string>
     <string name="tempbasal">DočasnýBazál</string>
     <string name="temptarget">DočasnýCíl</string>
     <string name="wear_overviewnotifications">Oznámení na hodinkách</string>
@@ -609,7 +604,6 @@
     <string name="openaps_short">OAPS</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="careportal_activity_label">AKTIVITA &amp; ZPĚTNÁ VAZBA</string>
-    <string name="basalmissing">Chybějící bazál v profilu. Použita výchozí hodnota</string>
     <string name="basal_step">Krok bazálu</string>
     <string name="basal_short">BAZ</string>
     <string name="unsupportednsversion">Nepodporovaná verze Nightscoutu</string>

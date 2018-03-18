@@ -172,7 +172,7 @@ public class DetermineBasalAdapterMAJS {
         mProfile.put("max_bg", maxBg);
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
-        mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
+        mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
 
         mProfile.put("current_basal", basalRate);
 

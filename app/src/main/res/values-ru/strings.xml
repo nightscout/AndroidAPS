@@ -562,7 +562,6 @@
     <string name="absorptionsettings_title">Настройки усваиваемости</string>
     <string name="activate_profile">АКТИВИРОВАТЬ ПРОФИЛЬ</string>
     <string name="basal_short">БАЗ</string>
-    <string name="basalmissing">Базал отсутствует в профиле. Применяются данные по умолчанию</string>
     <string name="careportal_activity_label">АКТИВНОСТЬ</string>
     <string name="careportal_canulaage_label">канюля проработала</string>
     <string name="careportal_canulaage_label_short">ВозрКан</string>
@@ -585,17 +584,13 @@
     <string name="date">дата</string>
     <string name="device">устройство</string>
     <string name="dia_too_short" formatted="false">pначение длительности работы инс %s слишком мало - применено %s</string>
-    <string name="do_not_track_profile_switch">не отслеживать смены профиля</string>
-    <string name="do_not_track_profile_switch_summary">все смены профиля игнорируются; используется только активный профиль</string>
     <string name="extendedbolus">расширенный болюс</string>
     <string name="free_peak_oref">Акуу-Зуфл Щкуа</string>
     <string name="hours">час</string>
-    <string name="icmissing">соотношение инс-углев отсутствует в профиле. применено соотн. по умолчанию</string>
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
-    <string name="isfmissing">фактор чувствительности к инс. отутствует в профиле. Применен фактор по умолчанию</string>
     <string name="lock_screen">блокировка экрана</string>
     <string name="lock_screen_short">блок</string>
     <string name="mdtp_cancel">отмена</string>
@@ -630,7 +625,6 @@
     <string name="sensitivityoref0">Чувствительность Oref0</string>
     <string name="sensitivityweightedaverage">средневзвешенная чувствительность</string>
     <string name="sv_lang">Шведский</string>
-    <string name="targetmissing">Целевое значение отсутствует в профиле. Применено значение по умолчанию</string>
     <string name="tempbasal">ВремБазал</string>
     <string name="temptarget">ВремЦель</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>

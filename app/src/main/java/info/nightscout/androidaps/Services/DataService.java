@@ -96,7 +96,7 @@ public class DataService extends IntentService {
             dexcomG5Enabled = true;
         }
 
-        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
+        boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -368,9 +368,6 @@ public class DataService extends IntentService {
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
                 NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
-                // if there are no profile switches this should lead to profile update
-                if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)
-                    MainApp.bus().post(new EventNewBasalProfile());
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {

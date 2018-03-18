@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class})
 public class CommandQueueTest extends CommandQueue {
 
     String profileJson = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
