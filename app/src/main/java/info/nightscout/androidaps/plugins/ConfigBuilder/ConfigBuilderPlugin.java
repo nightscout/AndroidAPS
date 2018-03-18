@@ -355,10 +355,12 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
+        if (!request.tempBasalReqested) {
+            return;
+        }
+
         PumpInterface pump = getActivePump();
         request.rate = applyBasalConstraints(request.rate);
-
-        long now = System.currentTimeMillis();
 
         if (!pump.isInitialized()) {
             log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
@@ -379,37 +381,50 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
 
-        if (request.tempBasalReqested) {
-            TemporaryBasal activeTemp = getTempBasalFromHistory(now);
-            if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
-                if (activeTemp != null) {
-                    if (Config.logCongigBuilderActions)
-                        log.debug("applyAPSRequest: cancelTempBasal()");
-                    getCommandQueue().cancelTempBasal(false, callback);
-                } else {
-                    if (Config.logCongigBuilderActions)
-                        log.debug("applyAPSRequest: Basal set correctly");
-                    if (callback != null) {
-                        callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
-                    }
-                }
-            } else if (activeTemp != null
-                    && activeTemp.getPlannedRemainingMinutes() > 5
-                    && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+        long now = System.currentTimeMillis();
+        TemporaryBasal activeTemp = getTempBasalFromHistory(now);
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+            if (activeTemp != null) {
                 if (Config.logCongigBuilderActions)
-                    log.debug("applyAPSRequest: Temp basal set correctly");
-                if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile)).duration(activeTemp.getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
-                }
+                    log.debug("applyAPSRequest: cancelTempBasal()");
+                getCommandQueue().cancelTempBasal(false, callback);
             } else {
                 if (Config.logCongigBuilderActions)
-                    log.debug("applyAPSRequest: setTempBasalAbsolute()");
-                getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
+                    log.debug("applyAPSRequest: Basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
+                }
             }
+        } else if (activeTemp != null
+                && activeTemp.getPlannedRemainingMinutes() > 5
+                && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: Temp basal set correctly");
+            if (callback != null) {
+                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile)).duration(activeTemp.getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
+            }
+        } else {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: setTempBasalAbsolute()");
+            getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
         }
     }
 
     public void applySMBRequest(APSResult request, Callback callback) {
+        if (!request.bolusRequested) {
+            return;
+        }
+
+        long lastBolusTime = getLastBolusTime();
+        if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+            log.debug("SMB requested but still in 3 min interval");
+            if (callback != null) {
+                callback.result(new PumpEnactResult()
+                        .comment(MainApp.gs(R.string.smb_frequency_exceeded))
+                        .enacted(false).success(false)).run();
+            }
+        }
+
         PumpInterface pump = getActivePump();
 
         if (!pump.isInitialized()) {
@@ -431,20 +446,16 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         if (Config.logCongigBuilderActions)
             log.debug("applySMBRequest: " + request.toString());
 
-        if (request.bolusRequested) {
-            long lastBolusTime = getLastBolusTime();
-            if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
-                log.debug("SMB requsted but still in 3 min interval");
-            } else {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                detailedBolusInfo.insulin = request.smb;
-                detailedBolusInfo.isSMB = true;
-                detailedBolusInfo.source = Source.USER;
-                detailedBolusInfo.deliverAt = request.deliverAt;
-                getCommandQueue().bolus(detailedBolusInfo, callback);
-            }
-        }
+        // deliver SMB
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+        detailedBolusInfo.insulin = request.smb;
+        detailedBolusInfo.isSMB = true;
+        detailedBolusInfo.source = Source.USER;
+        detailedBolusInfo.deliverAt = request.deliverAt;
+        if (Config.logCongigBuilderActions)
+            log.debug("applyAPSRequest: bolus()");
+        getCommandQueue().bolus(detailedBolusInfo, callback);
     }
 
     /**
