@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.data;
 
 import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
 
 import junit.framework.Assert;
 
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -20,7 +18,6 @@ import java.util.TimeZone;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -39,21 +36,23 @@ public class ProfileTest {
     PumpInterface pump = new VirtualPumpPlugin();
     String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
     String belowLimitValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.001\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
+    String notAllignedBasalValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:30\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
     String notStartingAtZeroValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:30\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
     String noUnitsValidProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\"}";
     String wrongProfile = "{\"dia\":\"3\",\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
 
     //String profileStore = "{\"defaultProfile\":\"Default\",\"store\":{\"Default\":" + validProfile + "}}";
 
-    boolean notificationBelowLimitSent = false;
+    boolean notificationSent = false;
 
     @Test
     public void doTests() throws Exception {
         prepareMock();
 
+        Profile p = new Profile();
 
         // Test valid profile
-        Profile p = new Profile(new JSONObject(validProfile), 100, 0);
+        p = new Profile(new JSONObject(validProfile), 100, 0);
         Assert.assertEquals(true, p.isValid("Test"));
         Assert.assertEquals(true, p.log().contains("NS units: mmol"));
         JSONAssert.assertEquals(validProfile, p.getData(), false);
@@ -100,11 +99,12 @@ public class ProfileTest {
         Assert.assertEquals("18", p.toUnitsString(18d, 1d, Constants.MGDL));
         Assert.assertEquals("1,0", p.toUnitsString(18d, 1d, Constants.MMOL).replace(".", ","));
         Assert.assertEquals("5 - 6", p.toTargetRangeString(5d, 6d, Constants.MGDL, Constants.MGDL));
+        Assert.assertEquals("4", p.toTargetRangeString(4d, 4d, Constants.MGDL, Constants.MGDL));
 
         //Test basal profile below limit
         p = new Profile(new JSONObject(belowLimitValidProfile), 100, 0);
         p.isValid("Test");
-        Assert.assertEquals(true, notificationBelowLimitSent);
+        Assert.assertEquals(true, notificationSent);
 
         // Test profile w/o units
         p = new Profile(new JSONObject(noUnitsValidProfile), 100, 0);
@@ -136,6 +136,13 @@ public class ProfileTest {
                 "00:00    110,0 mmol/U\n" +
                         "01:00    100,0 mmol/U\n" +
                         "03:00    110,0 mmol/U", p.getIsfList().replace(".", ","));
+
+        // Test hour alignment
+        MainApp.getConfigBuilder().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
+        notificationSent = false;
+        p = new Profile(new JSONObject(notAllignedBasalValidProfile), 100, 0);
+        p.isValid("Test");
+        Assert.assertEquals(true, notificationSent);
     }
 
     private void prepareMock() throws Exception {
@@ -148,6 +155,7 @@ public class ProfileTest {
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
         when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
         when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("AnyString");
+        when(MainApp.gs(R.string.basalprofilenotaligned)).thenReturn("AnyString");
 
         PowerMockito.mockStatic(FabricPrivacy.class);
 //        PowerMockito.doNothing().when(FabricPrivacy.log(""));
@@ -159,7 +167,7 @@ public class ProfileTest {
     class MockedBus extends Bus {
         @Override
         public void post(Object event) {
-            notificationBelowLimitSent = true;
+            notificationSent = true;
         }
     }
 
