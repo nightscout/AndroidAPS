@@ -187,9 +187,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     final Object updateSync = new Object();
 
-    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN}
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN};
 
-    ;
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
