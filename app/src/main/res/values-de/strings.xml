@@ -52,16 +52,12 @@
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="configbuilder_tempbasals">TBR</string>
     <string name="delta">Delta</string>
     <string name="duration">Dauer</string>
     <string name="en_lang">English</string>
     <string name="loop_aps_label">APS</string>
     <string name="glucose">Glukose</string>
-    <string name="nav_backup">Backup</string>
     <string name="nav_preferences">Einstellungen</string>
-    <string name="nsclient">Nightscout-Client</string>
-    <string name="nsprofileview_activeprofile_label">Aktives Profil</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -81,7 +77,6 @@
     <string name="rate">Rate</string>
     <string name="reason">Grund</string>
     <string name="safety">Sicherheit</string>
-    <string name="send">SENDE</string>
     <string name="treatments_activity_string">Aktivität:</string>
     <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
@@ -90,16 +85,12 @@
     <string name="treatments_iobtotal_label_string">Gesamt-IOB:</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
     <string name="treatments_wizard_unit_label">IE</string>
-    <string name="up">Auf</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
     <string name="pump_reservoir_label">Reservoir</string>
     <string name="xdrip">xDrip</string>
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
-    <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_extendedbolus_label">Verlängerter Bolus</string>
-    <string name="visible">Sichtbar</string>
     <string name="pump_basebasalrate_label">Basis-Basalrate</string>
-    <string name="treatments_wizard_total_label">GESAMT</string>
     <string name="unsupportedclientver">Nicht unterstützte Version des Nightscout-Clients</string>
     <string name="treatments_wizard_bg_label">BZ</string>
     <string name="treatments_wizard_bolusiob_label">Bolus-IOB</string>
@@ -124,8 +115,6 @@
     <string name="result">Ergebnis</string>
     <string name="openapsma_request_label">Anfrage</string>
     <string name="openapsma_run">Ausführen</string>
-    <string name="openapsma_nopump">Keine Pumpe verfügbar</string>
-    <string name="openapsma_noprofile">Kein Profil verfügbar</string>
     <string name="openapsma_noglucosedata">Keine BZ-Werte verfügbar</string>
     <string name="openapsma_mealdata_label">Mahlzeiten-Daten</string>
     <string name="openapsma_lastrun_label">Letzte Ausführung</string>
@@ -141,8 +130,6 @@
     <string name="noprofile">Bisher noch kein Profil von Nightscout geladen</string>
     <string name="nochangerequested">Keine Anpassung benötigt</string>
     <string name="noapsselected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
-    <string name="nav_test_alert">Test Alarm</string>
-    <string name="avgdelta">Durschn. Delta</string>
     <string name="bolusconstraintapplied">Bolus-Beschränkung angewendet</string>
     <string name="careportal_announcement">Ankündigung</string>
     <string name="careportal_bgcheck">BZ-Test</string>
@@ -170,7 +157,6 @@
     <string name="nav_refreshtreatments">Erneure Behandlungen von NS</string>
     <string name="nav_exit">Exit</string>
     <string name="missing">Fehlend</string>
-    <string name="enabled">Aktiviert</string>
     <string name="entertreatmentquestion">Eingabe neuer Behandlung:</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="filenotfound">Datei nicht gefunden</string>
@@ -230,7 +216,6 @@
     <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
-    <string name="waitingforpumpclicktorefresh">Warte auf Pumpe. Klicke zum Aktualisieren.</string>
     <string name="correctionbous">Korr</string>
     <string name="bolusdelivering">Abgabe %.2f IE</string>
     <string name="bolusdelivered">%.2f IE Bolus erfolgreich abgegeben</string>
@@ -275,7 +260,6 @@
     <string name="uploading">Hochladen</string>
     <string name="es_lang">Spanish</string>
     <string name="basal_rate">Basalrate:</string>
-    <string name="base_profile_label">Basis-Profil:</string>
     <string name="batterydischarged">Pumpenbatterie entladen</string>
     <string name="danar_historyreload">Neu laden</string>
     <string name="high_mark">Hoch-Markierung</string>
@@ -297,8 +281,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="virtualpump_shortname">VP</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="temptargetrange_shortname">TT</string>
-    <string name="tempbasals_shortname">TB</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="simpleprofile_shortname">SP</string>
     <string name="profileviewer_shortname">PROF</string>
@@ -319,7 +301,6 @@
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
     <string name="always_use_shortavg_summary">Sinnvoll, wenn die Daten von einer ungefilterten Quelle Signalrauschen haben.</string>
     <string name="approachingdailylimit">Tagesinsulin-Limit wird erreicht</string>
-    <string name="basalshortlabel">BR</string>
     <string name="calibrationsent">Kalibrierung an xDrip+ gesendet</string>
     <string name="child">Kind</string>
     <string name="clear_queue">Warteschlange leeren</string>
@@ -370,7 +351,6 @@
     <string name="teenage">Teenager</string>
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
     <string name="temptarget">Temporäres Ziel</string>
-    <string name="timeshift_hint">Zeit in Stunden, um die das Profil verschoben wird.</string>
     <string name="treatments_wizard_bgtrend_label">15\'-Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="unsupportednsversion">Nicht unterstütze Nightscout-Version</string>
@@ -401,20 +381,15 @@
     <string name="danarkoreanpump">DanaR Korean</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="deliver_now">Jetzt abgeben</string>
-    <string name="dev">DEV</string>
-    <string name="device">Gerät</string>
     <string name="dia">DIA:</string>
     <string name="disableloop">Deaktiviere Loop</string>
     <string name="disconnecting">Verbindung wird getrennt</string>
-    <string name="disconnectpumpfor10h">Trenne Pumpe für 10 h</string>
     <string name="disconnectpumpfor1h">Trenne Pumpe für 1 h</string>
     <string name="disconnectpumpfor2h">Trenne Pumpe für 2 h</string>
     <string name="disconnectpumpfor15m">Trenne Pumpe für 15 Min.</string>
     <string name="disconnectpumpfor30m">Trenne Pumpe für 30 Min.</string>
     <string name="disconnectpumpfor3h">Trenne Pumpe für 3 h</string>
-    <string name="dont_show_again">Nicht erneut anzeigen</string>
     <string name="eatingsoon">Bald essen</string>
-    <string name="edit_base_basal">Bearbeite Basis-Basal:</string>
     <string name="el_lang">Greek</string>
     <string name="enableloop">Aktiviere Loop</string>
     <string name="enablesuperbolus">Aktiviere SuperBolus im Wizard</string>
@@ -430,7 +405,6 @@
     <string name="iob">IOB</string>
     <string name="localprofile">Lokales Profil</string>
     <string name="lock_screen">Sperrbildschirm</string>
-    <string name="loopmenu">Loop Menü</string>
     <string name="loopsuperbolusfor">Superbolus (%d Min.)</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="loopsuspendedfor">Pausiert (%d Min.)</string>
@@ -451,12 +425,9 @@
     <string name="ns_noupload_summary">Alle an Nightscout gesendeten Daten werden verworfen. AAPS ist verbunden, aber Nightscout-Daten werden nicht geändert</string>
     <string name="nsalarm_high">Hoch</string>
     <string name="nsalarm_low">Niedrig</string>
-    <string name="nsalarm_summary">Gesetzt zu %f</string>
     <string name="nsalarm_urgenthigh">Sehr hoch</string>
     <string name="nsalarm_urgentlow">Sehr niedrig</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Gerätenamen eingeben</string>
-    <string name="nsclientinternal_devicename_title">Gerätename</string>
     <string name="nsclientinternal_secret_dialogmessage">Nightscout API-Key eingeben (min. 12 Zeichen)</string>
     <string name="nsclientinternal_secret_dialogtitle">Nightscout API-Key</string>
     <string name="nsclientinternal_secret_title">Nightscout API-Key</string>
@@ -489,7 +460,6 @@
     <string name="pumpNotInitializedProfileNotSet">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
     <string name="pumpshutdown">Pumpe stoppen</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
-    <string name="pumpsuspendedclicktorefresh">Pumpe pausiert. Klicke zum Aktualisieren des Status</string>
     <string name="queue">Warteschlange:</string>
     <string name="quickwizard">QuickWizard</string>
     <string name="refresheventsfromnightscout">Aktualisiere Einträge von Nightscout</string>
@@ -519,23 +489,18 @@
     <string name="suspendloopfor3h">Pausiere Loop für 3 h</string>
     <string name="sv_lang">Schwedish</string>
     <string name="updatingbasalrates">Basalraten werden aktualisiert</string>
-    <string name="wear_overviewnotifications">Übersicht Benachrichtigungen</string>
     <string name="careportal_sensorage_label">Sensoralter</string>
     <string name="danar_switchtouhmode">Wechsle Modus von IE/d zu IE/h in der Pumpe</string>
     <string name="danar_totaluploaded">Insgesamt %d Einträge erfolgreich hochgeladen</string>
     <string name="danarprofile_dia_summary">Dauer der Insulinwirkung</string>
-    <string name="edit_base_ic">Bearbeite Basis-IC:</string>
-    <string name="edit_base_isf">Bearbeite Basis-ISF:</string>
     <string name="insulin_shortname">INS</string>
     <string name="lock_screen_short">Sperr</string>
     <string name="needwhitelisting">%s benötigt Batterie-Optimierungs-Whitelisting, um korrekt arbeiten zu können</string>
     <string name="nsalarm_staledata">Veraltete Daten</string>
     <string name="nsalarm_staledatavalue_label">Veraltete Daten seit [Min.]</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Wird für das \"Eingegeben durch\"-Feld verwendet</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
     <string name="openapsma_maxbasal_title">Max IE/h, die als TBR gesetzt werden können</string>
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
-    <string name="percentagefactor_hint">Prozentualer Faktor, mit dem das Basis-Profil multipiziert wird.</string>
     <string name="pleaseallowpermission">Bitte Rechte gewähren</string>
     <string name="prefs_range_summary">Hoch- und Niedrig-Werte für die Übersicht- und die Smartwatch-Anzeige</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
@@ -580,7 +545,6 @@
     <string formatted="false" name="smscommunicator_basalreplywithcode">Um eine BR mit %.2f IE/h zu starten, antworte mit dem Code %s</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="wear_overviewnotifications_summary">Zeige die Übersichtsbenachrichtigungen auch auf der Uhr an.</string>
     <string name="short_avgdelta">Kurzes durchschnittl. Delta</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="openapsama_autosens_adjusttargets_summary">Vorgabe: erlaubt. Erlaubt Autosense den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
@@ -640,7 +604,6 @@
     <string name="overview_newtempbasal_basaltype_label">Basaltyp</string>
     <string name="pairingtimedout">Zeitüberschreitung beim Pairing</string>
     <string name="pairpump">Verbinde neue Pumpe</string>
-    <string name="prefs_delta_title">Delta-Einstellungen</string>
     <string name="remaininsulinalert">Restinsulin</string>
     <string name="reuse">erneut verwenden</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
@@ -649,9 +612,7 @@
     <string name="wearcontrol_summary">Setze temporäre Ziele und Behandlungen mit der Uhr</string>
     <string name="wearcontrol_title">Steuerung durch die Uhr</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="ratio_short">SEN</string>
     <string name="pairingok">Pairing OK</string>
-    <string name="predictionshortlabel">PRE</string>
     <string name="nsclientinternal_title">Nightscout-Client</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="localalertsettings_title">Lokale Alarme</string>
@@ -702,7 +663,6 @@
     <string name="combo_tbr_remaining">%d%% (%d Min. verbleibend)</string>
     <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %d Min.</string>
     <string name="combo_pump_state_label">Status</string>
-    <string name="combo_pump_state_disconnected">Keine Verbindung zur Pumpe</string>
     <string name="combo_pump_state_suspended_by_user">Gestoppt (Benutzer)</string>
     <string name="combo_pump_state_suspended_due_to_error">Gestoppt (Fehler)</string>
     <string name="combo_pump_state_running">In Betrieb</string>
@@ -724,7 +684,6 @@
     <string name="combo_pump_action_refreshing">Status wird aktualisiert</string>
     <string name="combo_pump_state_initializing">Die Pumpe wird initialisiert</string>
     <string name="combo_pump_connected_now">Jetzt</string>
-    <string name="combo_pump_never_connected">Nie</string>
     <string name="combo_pump_tbr_cancelled_warrning">Der Alarm \"TBR ABBRUCH\" wurde bestätigt</string>
     <string name="combo_warning">Warnung</string>
     <string name="combo_reservoir_empty">Leer</string>
@@ -743,8 +702,6 @@
     <string name="combo_no_alert_data_note">Um die Fehlerhistorie der Pumpe zu lesen, drücke lange auf ALARME.</string>
     <string name="combo_notification_check_time_date">Bitte aktualisiere die Uhrzeit der Pumpe</string>
     <string name="combo_no_tdd_data_note">Um die TDD-Statistik der Pumpe zu lesen, drücken Sie den TDDS Knopf lange.\nWARNUNG: Es gibt einen bekannten Fehler in der Pumpe der dazu führt, dass die Pumpe nach dieser Aktion erst wieder Verbindungen annimmt, wenn auf der Pumpe selbst ein Konpf gedrückt wird. Aus diesem Grund sollte diese Aktion nicht durchgeführt werden.</string>
-    <string name="combo_read_full_history_warning">Dies wird den gesamten Speicher und den Status der Pumpe auslesen sowie alle Einträge in „Meine Daten“ und die Basalrate. Boli und TBR werden unter Behandlungen gespeichert, sofern sie nicht bereits vorhanden sind. Dies kann zu doppelten Einträgen führen, wenn die Uhrzeit der Pumpe abweicht. Das Auslesen des Speichers ist normaler Weise für das Loopen unnötig und nur für besondere Umstände vorgesehen. Wenn Du es dennoch tun willst, drücke noch einmal länger den Button. ACHTUNG: Dies kann einen Fehler auslösen, der dazu führt, dass die Pumpe keine Verbindungsversuche mehr akzeptiert. Erst die Betätigung einer Taste an der Pumpe beendet diesen Zustand. Nach Möglichkeit sollte daher das Auslesen vermieden werden.</string>
-    <string name="combo_read_full_history_confirmation">Möchtest Du wirklich den gesamten Speicher der Pumpe auslesen und die möglichen Konsequenzen des Vorgangs tragen?</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nicht mehr genug Insulin im Reservoir für den Bolus</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>

@@ -19,7 +19,6 @@
     <color name="basebasal">#C83F51B5</color>
     <color name="tempbasal">#C803A9F4</color>
     <color name="graphgrid">#757575</color>
-    <color name="updating">#50ffffff</color>
     <color name="colorLightGray">#d8d8d8</color>
 
     <color name="defaultbackground">#424242</color>
@@ -46,18 +45,12 @@
     <color name="colorCalibrationButton">#e93057</color>
     <color name="colorCalculatorButton">#67e86a</color>
     <color name="colorQuickWizardButton">#ffae01</color>
-    <color name="colorCancelTempButton">#d08cff</color>
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
-    <color name="colorTempTargetButton">#d43429</color>
 
     <color name="colorInProgress">#c45026</color>
     <color name="colorActive">#1b5e20</color>
-    <color name="colorNotEnded">#190084</color>
-
-    <color name="colorPumpLabel">#779ECB</color>
-    <color name="cardItemLabel">#FF478EFF</color>
 
     <color name="loopenabled">#47c8ff</color>
     <color name="loopdisabled">#FFDD7792</color>

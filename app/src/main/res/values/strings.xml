@@ -5,8 +5,6 @@
 
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
-    <string name="nav_backup">Backup</string>
-    <string name="nav_test_alert">Test alarm</string>
     <string name="nav_resetdb">Reset Databases</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
@@ -21,7 +19,6 @@
     <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
     <string name="nsprofileview_dia_label">DIA</string>
-    <string name="nsprofileview_activeprofile_label">Active profile</string>
     <string name="nsprofileview_ic_label">IC</string>
     <string name="nsprofileview_isf_label">ISF</string>
     <string name="nsprofileview_basal_label">Basal</string>
@@ -47,7 +44,6 @@
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="treatments_wizard_unit_label">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
-    <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
     <string name="pump_basebasalrate_label">Base basal rate</string>
@@ -56,7 +52,6 @@
     <string name="pump_battery_label">Battery</string>
     <string name="pump_reservoir_label">Reservoir</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="openapsma_lastrun_label">Last run</string>
     <string name="openapsma_inputparameters_label">Input parameters</string>
     <string name="openapsma_glucosestatus_label">Glucose status</string>
@@ -66,8 +61,6 @@
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="result">Result</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
-    <string name="openapsma_noprofile">No profile available</string>
-    <string name="openapsma_nopump">No pump available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
     <string name="rate">Rate</string>
@@ -76,7 +69,6 @@
     <string name="glucose">Glucose</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
-    <string name="avgdelta">Avg. delta</string>
 
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objectives</string>
@@ -92,7 +84,6 @@
 
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_treatments">Treatments</string>
-    <string name="configbuilder_tempbasals">Temp Basals</string>
     <string name="configbuilder_profile">Profile</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
@@ -131,7 +122,6 @@
     <string name="setextendedbolusquestion">Set new extended bolus:</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="xdrip">xDrip</string>
-    <string name="nsclient">NSClient</string>
     <string name="apsmode_title">APS Mode</string>
 
     <string name="closedloop">Closed Loop</string>
@@ -192,11 +182,7 @@
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="send">SEND</string>
     <string name="missing">Missing</string>
-    <string name="enabled">Enabled</string>
-    <string name="visible">Visible</string>
-    <string name="up">Up</string>
     <string name="exported">Preferences exported</string>
     <string name="export_to">Export settings to</string>
     <string name="import_from">Import settings from</string>
@@ -305,7 +291,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
-    <string name="waitingforpumpclicktorefresh">Waiting for pump. Click to refresh.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Going to deliver %.2fU</string>
     <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
     <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
@@ -364,17 +349,11 @@
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
-    <string name="percentagefactor_hint">Percentage factor by which the base profile will be multiplied.</string>
-    <string name="timeshift_hint">Time in hours by which the profile will be shifted round robin.</string>
     <string name="units">Units:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
     <string name="target_range">Target range:</string>
-    <string name="edit_base_basal">Edit Base-Basal:</string>
-    <string name="edit_base_isf">Edit Base-ISF:</string>
-    <string name="edit_base_ic">Edit Base-IC:</string>
-    <string name="base_profile_label">Base Profile:</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
@@ -435,10 +414,8 @@
     <string name="loop_shortname">LOOP</string>
     <string name="simpleprofile_shortname">SP</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="profileviewer_shortname">NSPROFILE</string>
@@ -448,7 +425,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Shorten tab titles</string>
-    <string name="prefs_delta_title">Delta Settings</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
@@ -486,8 +462,6 @@
     <string name="smscommunicator_remotecalibrationnotallowed">Remote calibration not allowed</string>
     <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
-    <string name="dont_show_again">Don\'t show again</string>
-    <string name="pumpsuspendedclicktorefresh">Pump suspended. Click to refresh state</string>
     <string name="pumpsuspended">Pump suspended</string>
     <string name="gettingpumpstatus">Getting pump status</string>
     <string name="settingtempbasal">Setting temp basal</string>
@@ -514,9 +488,6 @@
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
-    <string name="nsclientinternal_devicename_title">Device name</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Enter device name</string>
-    <string name="nsclientinternal_devicename_dialogmessage">It will be used for enteredBy field</string>
     <string name="deliver_now">Deliver now</string>
     <string name="clear_queue">Clear queue</string>
     <string name="show_queue">Show queue</string>
@@ -560,7 +531,6 @@
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor" formatted="false">Suspended (%d m)</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
-    <string name="loopmenu">Loop menu</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
@@ -570,7 +540,6 @@
     <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
     <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
     <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
-    <string name="disconnectpumpfor10h">Disconnect pump for 10 h</string>
     <string name="resume">Resume</string>
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
@@ -594,14 +563,11 @@
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
-    <string name="predictionshortlabel">PRE</string>
-    <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Last connection</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
-    <string name="dev">DEV</string>
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">xDrip Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -638,7 +604,6 @@
     <string name="nsalarm_high">High</string>
     <string name="nsalarm_low">Low</string>
     <string name="nsalarm_urgentlow">Urgent low</string>
-    <string name="nsalarm_summary" formatted="false">Currently set to %f</string>
     <string name="nsalarm_staledata">Stale data</string>
     <string name="nsalarm_urgentstaledata">Urgent stale data</string>
     <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
@@ -647,10 +612,8 @@
     <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
     <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
-    <string name="ratio_short">SEN</string>
     <string name="pump">Pump</string>
     <string name="openaps">OpenAPS</string>
-    <string name="device">Device</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="sensitivity_shortname">SENS</string>
@@ -678,8 +641,6 @@
     <string name="mdtp_cancel">Cancel</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
-    <string name="wear_overviewnotifications">Overview Notifications</string>
-    <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
     <string name="combopump">Accu-Chek Combo</string>
     <string name="combopump_shortname">COMBO</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
@@ -727,11 +688,8 @@
     <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
     <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
     <string name="serialnumber">Serial number</string>
-    <string name="key_wizard_include_bg" translatable="false">wizard_include_bg</string>
     <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
     <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
-    <string name="key_wizard_include_bolus_iob" translatable="false">wizard_include_bolus_iob</string>
-    <string name="key_wizard_include_basal_iob" translatable="false">wizard_include_basal_iob</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
     <string name="careportal_newnstreatment_timeshift_label">Time shift</string>
     <string name="default_temptargets">Default Temp-Targets</string>
@@ -793,12 +751,10 @@
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5 upload settings</string>
-    <string name="customapp">Customized APK for download</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
-    <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
@@ -833,7 +789,6 @@
     <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
     <string name="combo_last_bolus" translatable="false">%.1f %s (%s)</string>
     <string name="combo_pump_state_initializing">Initializing</string>
-    <string name="combo_pump_state_disconnected">Disconnected</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
     <string name="combo_pump_state_running">Running</string>
@@ -841,7 +796,6 @@
     <string name="combo_pump_action_setting_tbr">Setting TBR (%d%% / %d min)</string>
     <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Refreshing</string>
-    <string name="combo_pump_never_connected">Never</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
     <string name="combo_force_disabled_notification">Unsafe usage: the pump uses a different basal rate profile than the first. The loop has been disabled. Select the first profile on the pump and refresh.</string>
@@ -866,8 +820,6 @@
     <string name="combo_history">History</string>
     <string name="combo_warning">Warning</string>
     <string name="combo_read_full_history_info">Long press this button to force a full read of history and basal profile from the pump. This is generally not needed, since the pump\'s history is read continuously, but can be useful if the pump\'s date and time changed significantly or the pump was replaced.</string>
-    <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in My Data and the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.  WARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
-    <string name="combo_read_full_history_confirmation">Are you really sure you want to read all pump data and take the consequences of this action?</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
     <string name="combo_error_no_connection_no_bolus_delivered">The pump could not be reached. No bolus was given</string>
     <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
@@ -973,7 +925,6 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your G5 app to supported version</string>
-    <string name="suspendloopfor30min">Suspend for 30 min</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
