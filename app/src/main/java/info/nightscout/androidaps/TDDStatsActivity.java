@@ -336,6 +336,8 @@ public class TDDStatsActivity extends Activity {
                 double weighted05 = 0d;
                 double weighted07 = 0d;
 
+
+                //TDD table
                 for (TDD record : historyList) {
                     double tdd = record.getTotal();
 
@@ -386,8 +388,20 @@ public class TDDStatsActivity extends Activity {
                             TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
-                    sum = sum + tdd;
                     i++;
+                }
+
+                i = 0;
+
+                //cumulative TDDs
+                for (TDD record : historyList) {
+                    if(!historyList.isEmpty() && df.format(new Date(record.date)).equals(df.format(new Date()))) {
+                        //Today should not be included
+                        continue;
+                    }
+                    i++;
+
+                    sum = sum + record.getTotal();
 
                     // Create the cumtable row
                     TableRow ctr = new TableRow(TDDStatsActivity.this);
@@ -430,7 +444,7 @@ public class TDDStatsActivity extends Activity {
                     tl.setBackgroundColor(Color.TRANSPARENT);
                 }
 
-                if(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
+                if(!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
                     //Today should not be included
                     historyList.remove(0);
                 }
