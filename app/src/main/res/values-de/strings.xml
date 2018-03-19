@@ -742,4 +742,6 @@
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
     <string name="combo_check_date">Der letzte Bolus liegt mehr als 24 Stunden zurück oder liegt in der Zukunft. Prüfe bitte das Datum auf der Pumpe.</string>
     <string name="combo_suspious_bolus_time">Zeit/Datum des abgegebenen Boluses auf der Pumpe erscheint falsch, IOB ist wahrscheinlich nicht korrekt. Bitte prüfe Zeit/Datum der Pumpe.</string>
+    <string name="combo_tbr_count">Anzahl TBRs</string>
+    <string name="combo_bolus_count">Anzahl Boluse</string>
 </resources>
