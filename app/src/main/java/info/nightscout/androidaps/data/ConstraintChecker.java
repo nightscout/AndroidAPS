@@ -3,9 +3,9 @@ package info.nightscout.androidaps.data;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.utils.SP;
 
 /**

@@ -424,7 +424,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
         pump.basalProfile = readBasalResult.basalProfile;
-        validBasalRateProfileSelectedOnPump = true;
+        setValidBasalRateProfileSelectedOnPump(true);
 
         pump.initialized = true;
         MainApp.bus().post(new EventInitializationChanged());
@@ -925,7 +925,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (commandResult.success) {
                 pump.lastSuccessfulCmdTime = System.currentTimeMillis();
                 if (validBasalRateProfileSelectedOnPump && commandResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
-                    validBasalRateProfileSelectedOnPump = false;
+                    setValidBasalRateProfileSelectedOnPump(false);
                     Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                             MainApp.gs(R.string.combo_force_disabled_notification),
                             Notification.URGENT);
@@ -943,6 +943,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         return commandResult;
+    }
+
+    public void setValidBasalRateProfileSelectedOnPump(boolean value) {
+        validBasalRateProfileSelectedOnPump = value;
     }
 
     /**

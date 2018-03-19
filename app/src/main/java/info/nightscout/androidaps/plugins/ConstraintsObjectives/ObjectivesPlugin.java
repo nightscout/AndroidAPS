@@ -15,9 +15,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -67,7 +67,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.objectives_shortname);
+        String name = MainApp.gs(R.string.objectives_shortname);
         if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
@@ -115,7 +115,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         return -1;
     }
 
-    class Objective {
+    public class Objective {
         Integer num;
         String objective;
         String gate;
@@ -130,6 +130,10 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
             this.started = started;
             this.durationInDays = durationInDays;
             this.accomplished = accomplished;
+        }
+
+        public void setStarted(Date started) {
+            this.started = started;
         }
     }
 
@@ -169,27 +173,27 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                     apsEnabled = true;
 
                 return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
-                        MainApp.sResources.getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + "\n" + MainApp.sResources.getString(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
-                                + (isVirtualPump ? "\n" + MainApp.sResources.getString(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
-                                + "\n" + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
-                                + "\n" + MainApp.sResources.getString(R.string.hasbgdata) + ": " + yesOrNo(hasBGData)
-                                + "\n" + MainApp.sResources.getString(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP))
-                                + "\n" + MainApp.sResources.getString(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
+                        MainApp.gs(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
+                                + "\n" + MainApp.gs(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
+                                + (isVirtualPump ? "\n" + MainApp.gs(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
+                                + "\n" + MainApp.gs(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
+                                + "\n" + MainApp.gs(R.string.hasbgdata) + ": " + yesOrNo(hasBGData)
+                                + "\n" + MainApp.gs(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP))
+                                + "\n" + MainApp.gs(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
                 );
             case 1:
                 return new RequirementResult(manualEnacts >= manualEnactsNeeded,
-                        MainApp.sResources.getString(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
+                        MainApp.gs(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
             case 2:
                 return new RequirementResult(true, "");
             case 3:
                 Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
                 SafetyPlugin.getPlugin().isClosedLoopAllowed(closedLoopEnabled);
-                return new RequirementResult(closedLoopEnabled.get(), MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.get()));
+                return new RequirementResult(closedLoopEnabled.get(), MainApp.gs(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.get()));
             case 4:
                 double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(1000d);
                 boolean maxIobSet = maxIOB > 0;
-                return new RequirementResult(maxIobSet, MainApp.sResources.getString(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
+                return new RequirementResult(maxIobSet, MainApp.gs(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
             default:
                 return new RequirementResult(true, "");
         }
@@ -203,49 +207,49 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
         objectives = new ArrayList<>();
         objectives.add(new Objective(0,
-                MainApp.sResources.getString(R.string.objectives_0_objective),
-                MainApp.sResources.getString(R.string.objectives_0_gate),
+                MainApp.gs(R.string.objectives_0_objective),
+                MainApp.gs(R.string.objectives_0_gate),
                 new Date(0),
                 0, // 0 day
                 new Date(0)));
         objectives.add(new Objective(1,
-                MainApp.sResources.getString(R.string.objectives_1_objective),
-                MainApp.sResources.getString(R.string.objectives_1_gate),
+                MainApp.gs(R.string.objectives_1_objective),
+                MainApp.gs(R.string.objectives_1_gate),
                 new Date(0),
                 7, // 7 days
                 new Date(0)));
         objectives.add(new Objective(2,
-                MainApp.sResources.getString(R.string.objectives_2_objective),
-                MainApp.sResources.getString(R.string.objectives_2_gate),
+                MainApp.gs(R.string.objectives_2_objective),
+                MainApp.gs(R.string.objectives_2_gate),
                 new Date(0),
                 0, // 0 days
                 new Date(0)));
         objectives.add(new Objective(3,
-                MainApp.sResources.getString(R.string.objectives_3_objective),
-                MainApp.sResources.getString(R.string.objectives_3_gate),
+                MainApp.gs(R.string.objectives_3_objective),
+                MainApp.gs(R.string.objectives_3_gate),
                 new Date(0),
                 5, // 5 days
                 new Date(0)));
         objectives.add(new Objective(4,
-                MainApp.sResources.getString(R.string.objectives_4_objective),
-                MainApp.sResources.getString(R.string.objectives_4_gate),
+                MainApp.gs(R.string.objectives_4_objective),
+                MainApp.gs(R.string.objectives_4_gate),
                 new Date(0),
                 1,
                 new Date(0)));
         objectives.add(new Objective(5,
-                MainApp.sResources.getString(R.string.objectives_5_objective),
-                MainApp.sResources.getString(R.string.objectives_5_gate),
+                MainApp.gs(R.string.objectives_5_objective),
+                MainApp.gs(R.string.objectives_5_gate),
                 new Date(0),
                 7,
                 new Date(0)));
         objectives.add(new Objective(6,
-                MainApp.sResources.getString(R.string.objectives_6_objective),
+                MainApp.gs(R.string.objectives_6_objective),
                 "",
                 new Date(0),
                 28,
                 new Date(0)));
         objectives.add(new Objective(7,
-                MainApp.sResources.getString(R.string.objectives_7_objective),
+                MainApp.gs(R.string.objectives_7_objective),
                 "",
                 new Date(0),
                 28,
