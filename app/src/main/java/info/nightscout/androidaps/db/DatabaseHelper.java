@@ -987,7 +987,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             getDaoDanaRHistory().createOrUpdate(record);
 
             //If it is a TDD, store it for stats also.
-            if(record.recordCode == RecordTypes.RECORD_TYPE_BOLUS){
+            if(record.recordCode == RecordTypes.RECORD_TYPE_DAILY){
                 createOrUpdateTDD(new TDD(record.recordDate, record.recordDailyBolus, record.recordDailyBasal, 0));
             }
 
