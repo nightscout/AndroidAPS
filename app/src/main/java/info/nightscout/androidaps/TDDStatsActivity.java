@@ -435,7 +435,7 @@ public class TDDStatsActivity extends Activity {
                     tl.setBackgroundColor(Color.TRANSPARENT);
                 }
 
-                if(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
+                if(!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
                     //Today should not be included
                     historyList.remove(0);
                 }
