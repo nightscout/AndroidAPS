@@ -395,6 +395,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             }
         } else if (activeTemp != null
                 && activeTemp.getPlannedRemainingMinutes() > 5
+                && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
                 && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: Temp basal set correctly");
