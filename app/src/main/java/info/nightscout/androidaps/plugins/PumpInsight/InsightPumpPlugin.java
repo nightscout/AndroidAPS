@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpInsight;
 
-import android.os.Handler;
-import android.util.Log;
-
-import com.j256.ormlite.stmt.query.In;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,11 +22,11 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -1085,8 +1080,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     // Constraints
 
     @Override
-    public boolean isLoopEnabled() {
-        return true;
+    public void limitRunningLoop(BooleanConstraint value){
     }
 
     @Override

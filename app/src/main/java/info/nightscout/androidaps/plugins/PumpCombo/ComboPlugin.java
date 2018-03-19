@@ -4,7 +4,6 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.json.JSONObject;
@@ -29,6 +28,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -1407,8 +1407,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Override
-    public boolean isLoopEnabled() {
-        return validBasalRateProfileSelectedOnPump;
+    public void limitRunningLoop(BooleanConstraint value) {
+        if (!validBasalRateProfileSelectedOnPump)
+            value.set(false, MainApp.gs(R.string.novalidbasalrate));
     }
 
     @Override

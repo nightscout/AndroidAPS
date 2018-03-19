@@ -11,6 +11,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -93,8 +94,9 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isLoopEnabled() {
-        return ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+    public void limitRunningLoop(BooleanConstraint value) {
+        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
+            value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable));
     }
 
     /**

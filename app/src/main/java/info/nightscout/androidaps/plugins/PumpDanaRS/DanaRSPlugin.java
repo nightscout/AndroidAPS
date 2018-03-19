@@ -30,6 +30,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -274,8 +275,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     // Constraints interface
 
     @Override
-    public boolean isLoopEnabled() {
-        return true;
+    public void limitRunningLoop(BooleanConstraint value) {
     }
 
     @Override

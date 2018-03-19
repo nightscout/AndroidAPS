@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.interfaces;
 
-import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 
 /**
  * Created by mike on 15.06.2016.
  */
 public interface ConstraintsInterface {
 
-    boolean isLoopEnabled();
+    void limitRunningLoop(BooleanConstraint value);
 
     boolean isClosedModeEnabled();
 

@@ -23,11 +23,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -260,10 +259,13 @@ public class LoopPlugin implements PluginBase {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
-            ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-            if (!constraintsInterface.isLoopEnabled()) {
-                log.debug(MainApp.sResources.getString(R.string.loopdisabled));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopdisabled)));
+            BooleanConstraint loopEnabled = new BooleanConstraint(true);
+            MainApp.getConfigBuilder().limitRunningLoop(loopEnabled);
+
+            if (!loopEnabled.get()) {
+                String message = MainApp.sResources.getString(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
+                log.debug(message);
+                MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
             }
             final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
@@ -297,8 +299,8 @@ public class LoopPlugin implements PluginBase {
 
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
-            resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
-            resultAfterConstraints.smb = constraintsInterface.applyBolusConstraints(resultAfterConstraints.smb);
+            resultAfterConstraints.rate = MainApp.getConfigBuilder().applyBasalConstraints(resultAfterConstraints.rate);
+            resultAfterConstraints.smb = MainApp.getConfigBuilder().applyBolusConstraints(resultAfterConstraints.smb);
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
@@ -329,7 +331,7 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
-            if (constraintsInterface.isClosedModeEnabled()) {
+            if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;

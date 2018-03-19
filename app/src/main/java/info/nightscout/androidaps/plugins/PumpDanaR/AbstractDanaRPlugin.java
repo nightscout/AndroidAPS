@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -436,8 +437,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
      */
 
     @Override
-    public boolean isLoopEnabled() {
-        return true;
+    public void limitRunningLoop(BooleanConstraint value) {
     }
 
     @Override

@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -294,8 +294,9 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
      * Constraints interface
      **/
     @Override
-    public boolean isLoopEnabled() {
-        return objectives.get(0).started.getTime() > 0;
+    public void limitRunningLoop(BooleanConstraint value) {
+        if (objectives.get(0).started.getTime() == 0)
+            value.set(false, MainApp.gs(R.string.objective1notstarted));
     }
 
     @Override
