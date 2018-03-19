@@ -33,6 +33,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isAutosensModeEnabled(new Constraint<>(true));
     }
 
+     public Constraint<Boolean> isAMAModeEnabled() {
+        return isAMAModeEnabled(new Constraint<>(true));
+    }
+
     @Override
     public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
 
@@ -70,16 +74,15 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        boolean result = SP.getBoolean("openapsama_useautosens", false);
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAMAModeEnabled();
+            constrain.isAMAModeEnabled(value);
         }
-        return result;
+        return value;
     }
 
     @Override

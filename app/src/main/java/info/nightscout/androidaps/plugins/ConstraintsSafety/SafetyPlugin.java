@@ -119,8 +119,11 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        boolean enabled = SP.getBoolean("openapsama_useautosens", false);
+        if (!enabled)
+            value.set(false, MainApp.gs(R.string.amadisabledinpreferences));
+        return value;
     }
 
     @Override

@@ -1443,8 +1443,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

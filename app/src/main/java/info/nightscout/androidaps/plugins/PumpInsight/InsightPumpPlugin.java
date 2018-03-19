@@ -1095,8 +1095,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

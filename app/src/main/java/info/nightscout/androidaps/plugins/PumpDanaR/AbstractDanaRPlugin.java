@@ -449,8 +449,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

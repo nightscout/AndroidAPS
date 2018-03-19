@@ -117,6 +117,25 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals(Boolean.FALSE, c.get());
     }
 
+    // isAMAModeEnabled tests
+    @Test
+    public void notEnabledAMAInPreferencesDisablesAMA() throws Exception {
+        when(SP.getBoolean("openapsama_useautosens", false)).thenReturn(false);
+
+        Constraint<Boolean> c = constraintChecker.isAMAModeEnabled();
+        Assert.assertEquals(true, c.getReasons().contains("AMA disabled in preferences"));
+        Assert.assertEquals(Boolean.FALSE, c.get());
+    }
+
+    @Test
+    public void notStartedObjective7ShouldLimitAMAMode() throws Exception {
+        objectivesPlugin.objectives.get(6).setStarted(new Date(0));
+
+        Constraint<Boolean> c = constraintChecker.isAMAModeEnabled();
+        Assert.assertEquals(true, c.getReasons().contains("Objective 7 not started"));
+        Assert.assertEquals(Boolean.FALSE, c.get());
+    }
+
     @Before
     public void prepareMock() throws Exception {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
@@ -137,6 +156,7 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences");
         when(MainApp.gs(R.string.objectivenotstarted)).thenReturn("Objective %d not started");
         when(MainApp.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump");
+        when(MainApp.gs(R.string.amadisabledinpreferences)).thenReturn("AMA disabled in preferences");
 
         safetyPlugin = SafetyPlugin.getPlugin();
         objectivesPlugin = ObjectivesPlugin.getPlugin();

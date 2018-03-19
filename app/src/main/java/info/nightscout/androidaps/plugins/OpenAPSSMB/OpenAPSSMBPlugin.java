@@ -225,7 +225,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal())) return;
 
         startPart = new Date();
-        if (MainApp.getConstraintChecker().isAMAModeEnabled()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled().get()) {
             lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();

@@ -250,7 +250,7 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.put("boluses", mealData.boluses);
         mMealData.put("mealCOB", mealData.mealCOB);
 
-        if (MainApp.getConstraintChecker().isAMAModeEnabled()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled().get()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {

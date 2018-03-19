@@ -320,8 +320,10 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return objectives.get(6).started.getTime() > 0;
+    public Constraint<Boolean>  isAMAModeEnabled(Constraint<Boolean> value) {
+        if (objectives.get(6).started.getTime() == 0)
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 7));
+        return value;
     }
 
     @Override

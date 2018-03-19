@@ -303,7 +303,7 @@ public class DetermineBasalAdapterSMBJS {
         mMealData.put("lastCarbTime", mealData.lastCarbTime);
 
 
-        if (MainApp.getConstraintChecker().isAMAModeEnabled()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled().get()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {

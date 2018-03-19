@@ -289,8 +289,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

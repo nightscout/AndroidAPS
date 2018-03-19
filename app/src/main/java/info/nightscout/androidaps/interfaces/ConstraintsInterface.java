@@ -11,7 +11,7 @@ public interface ConstraintsInterface {
 
     Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value);
 
-    boolean isAMAModeEnabled();
+    Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value);
 
     boolean isSMBModeEnabled();
 
