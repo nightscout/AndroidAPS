@@ -88,7 +88,7 @@
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Constrângeri după procesare
+    <string name="loop_constraintsprocessed_label">Constrângeri după procesare</string>
     <string name="disabledloop">Buclă inactivă</string>
     <string name="disableloop">Dezactivează bucla</string>
     <string name="enableloop">Activează bucla</string>
