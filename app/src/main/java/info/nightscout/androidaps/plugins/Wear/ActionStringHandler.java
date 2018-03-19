@@ -435,7 +435,7 @@ public class ActionStringHandler {
         // decide if enabled/disabled closed/open; what Plugin as APS?
         final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
         if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-            if (MainApp.getConstraintChecker().limitClosedLoop(new Constraint<>(true)).get()) {
+            if (MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
                 ret += "CLOSED LOOP\n";
             } else {
                 ret += "OPEN LOOP\n";

@@ -96,14 +96,14 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
      * Constraints interface
      **/
     @Override
-    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
         if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
             value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable));
         return value;
     }
 
     @Override
-    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
         if (!MainApp.isEngineeringModeOrRelease())
             value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch));
 

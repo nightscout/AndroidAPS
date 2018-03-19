@@ -274,12 +274,12 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     // Constraints interface
 
     @Override
-    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
         return value;
     }
 
     @Override
-    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
         return value;
     }
 

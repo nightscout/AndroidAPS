@@ -20,26 +20,35 @@ public class ConstraintChecker implements ConstraintsInterface {
         this.mainApp = mainApp;
     }
 
+
+    public Constraint<Boolean> isLoopInvokationAllowed() {
+        return isLoopInvokationAllowed(new Constraint<>(true));
+    }
+
+    public Constraint<Boolean> isClosedLoopAllowed() {
+        return isClosedLoopAllowed(new Constraint<>(true));
+    }
+
     @Override
-    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            constraint.limitRunningLoop(value);
+            constraint.isLoopInvokationAllowed(value);
         }
         return value;
     }
 
     @Override
-    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            constraint.limitClosedLoop(value);
+            constraint.isClosedLoopAllowed(value);
         }
         return value;
     }

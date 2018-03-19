@@ -1017,8 +1017,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
-        Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-        MainApp.getConstraintChecker().limitClosedLoop(closedLoopEnabled);
+        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;

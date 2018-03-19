@@ -216,8 +216,7 @@ public class DetermineBasalAdapterSMBJS {
 
         String units = profile.getUnits();
 
-        Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-        MainApp.getConstraintChecker().limitClosedLoop(closedLoopEnabled);
+        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
 
         mProfile = new JSONObject();
 

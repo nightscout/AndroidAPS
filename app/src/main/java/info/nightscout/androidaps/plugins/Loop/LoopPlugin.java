@@ -259,8 +259,7 @@ public class LoopPlugin implements PluginBase {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
-            Constraint<Boolean> loopEnabled = new Constraint<>(true);
-            MainApp.getConstraintChecker().limitRunningLoop(loopEnabled);
+            Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
 
             if (!loopEnabled.get()) {
                 String message = MainApp.sResources.getString(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
@@ -331,8 +330,7 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
-            Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-            MainApp.getConstraintChecker().limitClosedLoop(closedLoopEnabled);
+            Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
 
             if (closedLoopEnabled.get()) {
                 if (result.isChangeRequested()) {

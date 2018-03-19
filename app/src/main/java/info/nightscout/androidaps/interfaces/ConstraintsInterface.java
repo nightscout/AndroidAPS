@@ -5,9 +5,9 @@ package info.nightscout.androidaps.interfaces;
  */
 public interface ConstraintsInterface {
 
-    Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value);
+    Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value);
 
-    Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value);
+    Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value);
 
     boolean isAutosensModeEnabled();
 

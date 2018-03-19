@@ -254,7 +254,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultSMB.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().limitClosedLoop(new Constraint<>(true)).get()) {
+        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel

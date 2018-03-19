@@ -249,7 +249,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultAMA.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().limitClosedLoop(new Constraint<>(true)).get()) {
+        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
             long now = System.currentTimeMillis();
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {
