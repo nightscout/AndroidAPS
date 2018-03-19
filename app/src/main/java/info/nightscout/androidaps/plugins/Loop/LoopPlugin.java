@@ -28,7 +28,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
@@ -260,7 +260,7 @@ public class LoopPlugin implements PluginBase {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
             Constraint<Boolean> loopEnabled = new Constraint<>(true);
-            MainApp.getConfigBuilder().limitRunningLoop(loopEnabled);
+            MainApp.getConstraintChecker().limitRunningLoop(loopEnabled);
 
             if (!loopEnabled.get()) {
                 String message = MainApp.sResources.getString(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
@@ -299,8 +299,8 @@ public class LoopPlugin implements PluginBase {
 
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
-            resultAfterConstraints.rate = MainApp.getConfigBuilder().applyBasalConstraints(resultAfterConstraints.rate);
-            resultAfterConstraints.smb = MainApp.getConfigBuilder().applyBolusConstraints(resultAfterConstraints.smb);
+            resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rate);
+            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smb);
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
@@ -332,7 +332,7 @@ public class LoopPlugin implements PluginBase {
             }
 
             Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-            MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+            MainApp.getConstraintChecker().limitClosedLoop(closedLoopEnabled);
 
             if (closedLoopEnabled.get()) {
                 if (result.isChangeRequested()) {

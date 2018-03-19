@@ -87,7 +87,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -724,8 +724,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
                 String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(wizard.calculatedTotalInsulin);
-                Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(quickWizardEntry.carbs());
+                Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(wizard.calculatedTotalInsulin);
+                Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(quickWizardEntry.carbs());
 
                 confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                 confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -1018,7 +1018,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+        MainApp.getConstraintChecker().limitClosedLoop(closedLoopEnabled);
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;

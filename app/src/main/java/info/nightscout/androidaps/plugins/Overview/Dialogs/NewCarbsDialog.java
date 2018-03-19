@@ -120,7 +120,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
 
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
 
@@ -303,7 +303,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         okClicked = true;
         try {
             final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
-            Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbs);
 
             List<String> actions = new LinkedList<>();
             if (carbs > 0)

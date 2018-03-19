@@ -119,7 +119,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
 
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newinsulin_amount);
 
@@ -223,7 +223,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
         try {
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
-            Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {

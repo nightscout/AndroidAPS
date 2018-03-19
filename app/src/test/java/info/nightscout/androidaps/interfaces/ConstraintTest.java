@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces.contraints;
+package info.nightscout.androidaps.interfaces;
 
 import junit.framework.Assert;
 
@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
+import info.nightscout.androidaps.interfaces.Constraint;
 
 /**
  * Created by mike on 19.03.2018.

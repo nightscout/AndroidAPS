@@ -31,14 +31,12 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -47,13 +45,12 @@ import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, TreatmentsInterface {
+public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
     private static BgSourceInterface activeBgSource;
@@ -354,7 +351,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
         PumpInterface pump = getActivePump();
-        request.rate = applyBasalConstraints(request.rate);
+        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rate);
 
         long now = System.currentTimeMillis();
 
@@ -443,132 +440,6 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 getCommandQueue().bolus(detailedBolusInfo, callback);
             }
         }
-    }
-
-    /**
-     * Constraints interface
-     **/
-    @Override
-    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            constraint.limitRunningLoop(value);
-        }
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            constraint.limitClosedLoop(value);
-        }
-        return value;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAutosensModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        boolean result = SP.getBoolean("openapsama_useautosens", false);
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAMAModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isSMBModeEnabled() {
-        boolean result = true; // TODO update for SMB // SP.getBoolean("openapsama_useautosens", false);
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isSMBModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        Double rateAfterConstrain = absoluteRate;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(absoluteRate), rateAfterConstrain);
-        }
-        return rateAfterConstrain;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        Integer rateAfterConstrain = percentRate;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(percentRate), rateAfterConstrain);
-        }
-        return rateAfterConstrain;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        Double insulinAfterConstrain = insulin;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulin), insulinAfterConstrain);
-        }
-        return insulinAfterConstrain;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        Integer carbsAfterConstrain = carbs;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbs), carbsAfterConstrain);
-        }
-        return carbsAfterConstrain;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        Double maxIobAfterConstrain = maxIob;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIob), maxIobAfterConstrain);
-        }
-        return maxIobAfterConstrain;
     }
 
     //  ****** Treatments interface *****

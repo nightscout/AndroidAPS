@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.utils.HardLimits;
@@ -21,7 +20,7 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         // HARDCODED LIMITS
         if (halfhours < 1) halfhours = 1;
         if (halfhours > 16) halfhours = 16;
-        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
+        amount = MainApp.getConstraintChecker().applyBolusConstraints(amount);
         if (amount < 0d) amount = 0d;
         if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
 

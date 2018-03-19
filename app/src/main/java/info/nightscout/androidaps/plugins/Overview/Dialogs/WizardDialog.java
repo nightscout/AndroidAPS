@@ -58,10 +58,10 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -238,8 +238,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         superbolusCheckbox.setVisibility(SP.getBoolean(R.string.key_usesuperbolus, false) ? View.VISIBLE : View.GONE);
 
-        Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
-        Double maxCorrection = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        Integer maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        Double maxCorrection = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
@@ -303,8 +303,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
                     String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                    Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
-                    Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
+                    Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(calculatedTotalInsulin);
+                    Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(calculatedCarbs);
 
                     confirmMessage += "<br/>" + getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
                     confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -460,13 +460,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double c_bg = SafeParse.stringToDouble(editBg.getText());
         Integer c_carbs = SafeParse.stringToInt(editCarbs.getText());
         Double c_correction = SafeParse.stringToDouble(editCorr.getText());
-        Double corrAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(c_correction);
+        Double corrAfterConstraint = MainApp.getConstraintChecker().applyBolusConstraints(c_correction);
         if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
             editCorr.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
             return;
         }
-        Integer carbsAfterConstraint = MainApp.getConfigBuilder().applyCarbsConstraints(c_carbs);
+        Integer carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(c_carbs);
         if (c_carbs - carbsAfterConstraint != 0) {
             editCarbs.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));

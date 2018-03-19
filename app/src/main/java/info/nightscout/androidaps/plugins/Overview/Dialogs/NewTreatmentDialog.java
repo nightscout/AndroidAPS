@@ -95,8 +95,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
-        maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
 
         editCarbs = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_carbsamount);
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
@@ -128,8 +128,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion) + "<br/>";
 
-                    Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
-                    Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
+                    Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+                    Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbs);
 
                     if (insulin > 0) {
                         confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>";

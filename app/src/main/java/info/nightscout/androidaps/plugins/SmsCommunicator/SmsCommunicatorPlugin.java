@@ -32,8 +32,8 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
@@ -418,7 +418,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             }
                         } else {
                             tempBasal = SafeParse.stringToDouble(splited[1]);
-                            tempBasal = MainApp.getConfigBuilder().applyBasalConstraints(tempBasal);
+                            tempBasal = MainApp.getConstraintChecker().applyBasalConstraints(tempBasal);
                             if (remoteCommandsAllowed) {
                                 passCode = generatePasscode();
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_basalreplywithcode), tempBasal, passCode);
@@ -443,7 +443,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
-                        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
+                        amount = MainApp.getConstraintChecker().applyBolusConstraints(amount);
                         if (amount > 0d && remoteCommandsAllowed) {
                             passCode = generatePasscode();
                             reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusreplywithcode), amount, passCode);

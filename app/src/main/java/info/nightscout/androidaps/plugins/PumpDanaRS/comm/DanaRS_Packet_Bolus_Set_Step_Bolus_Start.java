@@ -1,11 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import com.cozmo.danar.util.BleCommandUtil;
 import info.nightscout.utils.HardLimits;
 
 public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
@@ -26,7 +27,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
 		this();
 
 		// HARDCODED LIMIT
-		amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
+		amount = MainApp.getConstraintChecker().applyBolusConstraints(amount);
 		if (amount < 0) amount = 0d;
 		if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
 

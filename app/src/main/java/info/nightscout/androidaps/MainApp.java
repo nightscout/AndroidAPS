@@ -25,10 +25,11 @@ import java.util.ArrayList;
 
 import ch.qos.logback.classic.LoggerContext;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
@@ -93,6 +94,7 @@ public class MainApp extends Application {
 
     private static DatabaseHelper sDatabaseHelper = null;
     private static ConfigBuilderPlugin sConfigBuilder = null;
+    private static ConstraintChecker sConstraintsChecker = null;
 
     private static ArrayList<PluginBase> pluginsList = null;
 
@@ -109,6 +111,7 @@ public class MainApp extends Application {
         super.onCreate();
         sInstance = this;
         sResources = getResources();
+        sConstraintsChecker = new ConstraintChecker(this);
 
         try {
             if (FabricPrivacy.fabricEnabled()) {
@@ -198,7 +201,7 @@ public class MainApp extends Application {
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
         else if (Config.PUMPCONTROL)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConfigBuilder().limitClosedLoop(new Constraint<>(true)).get())
+        else if (MainApp.getConstraintChecker().limitClosedLoop(new Constraint<>(true)).get())
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
         else
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
@@ -292,6 +295,10 @@ public class MainApp extends Application {
 
     public static ConfigBuilderPlugin getConfigBuilder() {
         return sConfigBuilder;
+    }
+
+    public static ConstraintChecker getConstraintChecker() {
+        return sConstraintsChecker;
     }
 
     public static ArrayList<PluginBase> getPluginsList() {

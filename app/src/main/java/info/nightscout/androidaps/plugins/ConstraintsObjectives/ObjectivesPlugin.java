@@ -17,7 +17,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -187,7 +187,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 SafetyPlugin.getPlugin().limitClosedLoop(closedLoopEnabled);
                 return new RequirementResult(closedLoopEnabled.get(), MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.get()));
             case 4:
-                double maxIOB = MainApp.getConfigBuilder().applyMaxIOBConstraints(1000d);
+                double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(1000d);
                 boolean maxIobSet = maxIOB > 0;
                 return new RequirementResult(maxIobSet, MainApp.sResources.getString(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
             default:

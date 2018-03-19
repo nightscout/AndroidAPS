@@ -27,7 +27,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -217,7 +217,7 @@ public class DetermineBasalAdapterSMBJS {
         String units = profile.getUnits();
 
         Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+        MainApp.getConstraintChecker().limitClosedLoop(closedLoopEnabled);
 
         mProfile = new JSONObject();
 
@@ -304,7 +304,7 @@ public class DetermineBasalAdapterSMBJS {
         mMealData.put("lastCarbTime", mealData.lastCarbTime);
 
 
-        if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {

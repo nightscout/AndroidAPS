@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.interfaces;
 
-import info.nightscout.androidaps.interfaces.constrains.Constraint;
-
 /**
  * Created by mike on 15.06.2016.
  */

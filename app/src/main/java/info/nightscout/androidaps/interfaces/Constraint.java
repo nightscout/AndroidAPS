@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces.constrains;
+package info.nightscout.androidaps.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -43,7 +43,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
         View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
 
-        Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        Double maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
         editInsulin = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_insulin);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
@@ -70,7 +70,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
                     String confirmMessage = getString(R.string.setextendedbolusquestion);
 
-                    Double insulinAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+                    Double insulinAfterConstraint = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                     if (insulinAfterConstraint - insulin != 0d)

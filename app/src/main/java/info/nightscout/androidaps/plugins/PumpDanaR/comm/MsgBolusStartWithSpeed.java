@@ -18,7 +18,7 @@ public class MsgBolusStartWithSpeed extends MessageBase {
         this();
 
         // HARDCODED LIMIT
-        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
+        amount = MainApp.getConstraintChecker().applyBolusConstraints(amount);
         if (amount < 0) amount = 0d;
         if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
 
