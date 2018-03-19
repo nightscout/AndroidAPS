@@ -100,16 +100,19 @@ public class PumpEnactResult {
                 ret += "\n" + MainApp.sResources.getString(R.string.smb_shortname) + ": " + bolusDelivered + "U";
             } else if (isTempCancel) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
-                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment + "\n" +
-                        MainApp.sResources.getString(R.string.canceltemp);
+                if (!comment.isEmpty())
+                    ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+                ret += MainApp.sResources.getString(R.string.canceltemp);
             } else if (isPercent) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
-                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+                if (!comment.isEmpty())
+                    ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
                 ret += "\n" + MainApp.sResources.getString(R.string.duration) + ": " + duration + " min";
                 ret += "\n" + MainApp.sResources.getString(R.string.percent) + ": " + percent + "%";
             } else {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
-                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+                if (!comment.isEmpty())
+                    ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
                 ret += "\n" + MainApp.sResources.getString(R.string.duration) + ": " + duration + " min";
                 ret += "\n" + MainApp.sResources.getString(R.string.absolute) + ": " + absolute + " U/h";
             }
@@ -126,7 +129,8 @@ public class PumpEnactResult {
         } else if (enacted) {
             if (bolusDelivered > 0) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+                if (!comment.isEmpty())
+                    ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.smb_shortname) + "</b>: " + bolusDelivered + "U";
             } else if (isTempCancel) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
@@ -134,17 +138,16 @@ public class PumpEnactResult {
                         "<br>" + MainApp.sResources.getString(R.string.canceltemp);
             } else if (isPercent && percent != -1) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+                if (!comment.isEmpty())
+                    ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.percent) + "</b>: " + percent + "%";
             } else if (absolute != -1) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+                if (!comment.isEmpty())
+                    ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
-            }
-            if (bolusDelivered > 0) {
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.bolus) + "</b>: " + DecimalFormatter.to2Decimal(bolusDelivered) + " U";
             }
         } else {
             ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;

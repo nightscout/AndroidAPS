@@ -246,7 +246,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         Profiler.log(log, "AMA calculation", start);
         // Fix bug determine basal
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
-            determineBasalResultAMA.tempBasalReqested = false;
+            determineBasalResultAMA.tempBasalRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             long now = System.currentTimeMillis();
@@ -254,9 +254,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             if (activeTemp != null  && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {
                 // going to cancel
             } else if (activeTemp != null && Math.abs(determineBasalResultAMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
-                determineBasalResultAMA.tempBasalReqested = false;
+                determineBasalResultAMA.tempBasalRequested = false;
             } else if (activeTemp == null && Math.abs(determineBasalResultAMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultAMA.tempBasalReqested = false;
+                determineBasalResultAMA.tempBasalRequested = false;
         }
 
         determineBasalResultAMA.iob = iobArray[0];

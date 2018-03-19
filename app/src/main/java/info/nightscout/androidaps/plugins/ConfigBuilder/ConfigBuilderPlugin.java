@@ -4,8 +4,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +41,6 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -355,7 +352,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
-        if (!request.tempBasalReqested) {
+        if (!request.tempBasalRequested) {
             return;
         }
 
