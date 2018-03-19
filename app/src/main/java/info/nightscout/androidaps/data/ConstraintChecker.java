@@ -29,6 +29,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isClosedLoopAllowed(new Constraint<>(true));
     }
 
+     public Constraint<Boolean> isAutosensModeEnabled() {
+        return isAutosensModeEnabled(new Constraint<>(true));
+    }
+
     @Override
     public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
 
@@ -54,16 +58,15 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        boolean result = true;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAutosensModeEnabled();
+            constraint.isAutosensModeEnabled(value);
         }
-        return result;
+        return value;
     }
 
     @Override

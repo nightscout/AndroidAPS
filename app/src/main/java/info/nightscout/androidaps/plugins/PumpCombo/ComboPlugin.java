@@ -1438,8 +1438,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

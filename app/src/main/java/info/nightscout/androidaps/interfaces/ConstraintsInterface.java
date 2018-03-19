@@ -9,7 +9,7 @@ public interface ConstraintsInterface {
 
     Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value);
 
-    boolean isAutosensModeEnabled();
+    Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value);
 
     boolean isAMAModeEnabled();
 

@@ -41,7 +41,6 @@ public class ConstraintsCheckerTest {
     ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
     MainApp mainApp = mock(MainApp.class);
     MockedBus bus = new MockedBus();
-    //PumpDescription pumpDescription = new PumpDescription();
 
     SafetyPlugin safetyPlugin;
     ObjectivesPlugin objectivesPlugin;
@@ -105,6 +104,16 @@ public class ConstraintsCheckerTest {
 
         Constraint<Boolean> c = constraintChecker.isClosedLoopAllowed();
         Assert.assertEquals(true, c.getReasons().contains("Objective 4 not started"));
+        Assert.assertEquals(Boolean.FALSE, c.get());
+    }
+
+    // isAutosensModeEnabled tests
+    @Test
+    public void notStartedObjective6ShouldLimitAutosensMode() throws Exception {
+        objectivesPlugin.objectives.get(5).setStarted(new Date(0));
+
+        Constraint<Boolean> c = constraintChecker.isAutosensModeEnabled();
+        Assert.assertEquals(true, c.getReasons().contains("Objective 6 not started"));
         Assert.assertEquals(Boolean.FALSE, c.get());
     }
 

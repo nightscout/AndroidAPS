@@ -1090,8 +1090,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

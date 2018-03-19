@@ -313,8 +313,10 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return objectives.get(5).started.getTime() > 0;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        if (objectives.get(5).started.getTime() == 0)
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 6));
+        return value;
     }
 
     @Override

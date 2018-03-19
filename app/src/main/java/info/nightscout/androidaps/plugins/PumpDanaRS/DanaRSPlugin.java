@@ -284,8 +284,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

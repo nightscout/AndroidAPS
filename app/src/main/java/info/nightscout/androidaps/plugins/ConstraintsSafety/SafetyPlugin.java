@@ -114,8 +114,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

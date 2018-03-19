@@ -444,8 +444,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override
