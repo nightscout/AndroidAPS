@@ -454,8 +454,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return true;
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @SuppressWarnings("PointlessBooleanExpression")

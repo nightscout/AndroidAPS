@@ -37,6 +37,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isAMAModeEnabled(new Constraint<>(true));
     }
 
+     public Constraint<Boolean> isSMBModeEnabled() {
+        return isSMBModeEnabled(new Constraint<>(true));
+    }
+
     @Override
     public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
 
@@ -86,16 +90,15 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        boolean result = true; // TODO update for SMB // SP.getBoolean("openapsama_useautosens", false);
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isSMBModeEnabled();
+            constraint.isSMBModeEnabled(value);
         }
-        return result;
+        return value;
     }
 
     @Override

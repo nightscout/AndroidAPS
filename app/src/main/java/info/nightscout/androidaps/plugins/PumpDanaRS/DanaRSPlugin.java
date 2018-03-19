@@ -294,8 +294,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return true;
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

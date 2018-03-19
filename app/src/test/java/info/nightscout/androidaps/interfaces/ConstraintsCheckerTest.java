@@ -136,6 +136,25 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals(Boolean.FALSE, c.get());
     }
 
+    // isSMBModeEnabled tests
+    @Test
+    public void notEnabledSMBInPreferencesDisablesSMB() throws Exception {
+        when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
+
+        Constraint<Boolean> c = constraintChecker.isSMBModeEnabled();
+        Assert.assertEquals(true, c.getReasons().contains("SMB disabled in preferences"));
+        Assert.assertEquals(Boolean.FALSE, c.get());
+    }
+
+    @Test
+    public void notStartedObjective8ShouldLimitSMBMode() throws Exception {
+        objectivesPlugin.objectives.get(7).setStarted(new Date(0));
+
+        Constraint<Boolean> c = constraintChecker.isSMBModeEnabled();
+        Assert.assertEquals(true, c.getReasons().contains("Objective 8 not started"));
+        Assert.assertEquals(Boolean.FALSE, c.get());
+    }
+
     @Before
     public void prepareMock() throws Exception {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
@@ -157,6 +176,7 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.objectivenotstarted)).thenReturn("Objective %d not started");
         when(MainApp.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump");
         when(MainApp.gs(R.string.amadisabledinpreferences)).thenReturn("AMA disabled in preferences");
+        when(MainApp.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences");
 
         safetyPlugin = SafetyPlugin.getPlugin();
         objectivesPlugin = ObjectivesPlugin.getPlugin();

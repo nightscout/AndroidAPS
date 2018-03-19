@@ -1100,8 +1100,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return true;
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

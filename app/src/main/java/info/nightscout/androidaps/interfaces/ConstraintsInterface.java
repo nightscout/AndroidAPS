@@ -13,7 +13,7 @@ public interface ConstraintsInterface {
 
     Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value);
 
-    boolean isSMBModeEnabled();
+    Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value);
 
     Double applyBasalConstraints(Double absoluteRate);
 

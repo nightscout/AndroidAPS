@@ -216,8 +216,6 @@ public class DetermineBasalAdapterSMBJS {
 
         String units = profile.getUnits();
 
-        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
-
         mProfile = new JSONObject();
 
         mProfile.put("max_iob", maxIob);
@@ -247,7 +245,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        boolean SMBEnabled = SP.getBoolean(R.string.key_use_smb, false) && closedLoopEnabled.get();
+        boolean SMBEnabled = MainApp.getConstraintChecker().isSMBModeEnabled().get() && MainApp.getConstraintChecker().isClosedLoopAllowed().get();
         mProfile.put("enableSMB_with_COB", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", SMBEnabled && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));

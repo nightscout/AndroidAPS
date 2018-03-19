@@ -327,8 +327,10 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return objectives.get(7).started.getTime() > 0;
+    public Constraint<Boolean>  isSMBModeEnabled(Constraint<Boolean> value) {
+        if (objectives.get(7).started.getTime() == 0)
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 8));
+        return value;
     }
 
     @Override

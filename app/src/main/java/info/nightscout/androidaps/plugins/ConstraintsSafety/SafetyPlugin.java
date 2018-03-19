@@ -127,8 +127,11 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return true;
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        boolean enabled = SP.getBoolean(R.string.key_use_smb, false);
+        if (!enabled)
+            value.set(false, MainApp.gs(R.string.smbdisabledinpreferences));
+        return value;
     }
 
     @Override

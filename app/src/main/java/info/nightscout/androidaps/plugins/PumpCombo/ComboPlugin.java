@@ -1448,8 +1448,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return true;
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override

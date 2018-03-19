@@ -967,5 +967,6 @@
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="amadisabledinpreferences">AMA disabled in preferences</string>
+    <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
 </resources>
 
