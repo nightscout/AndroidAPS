@@ -201,7 +201,7 @@ public class MainApp extends Application {
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
         else if (Config.PUMPCONTROL)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConstraintChecker().limitClosedLoop(new Constraint<>(true)).get())
+        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().get())
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
         else
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));

@@ -238,7 +238,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().limitClosedLoop(new Constraint<>(true)).get()) {
+        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
                 // going to cancel

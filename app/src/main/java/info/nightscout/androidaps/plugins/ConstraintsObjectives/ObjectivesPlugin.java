@@ -184,7 +184,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 return new RequirementResult(true, "");
             case 3:
                 Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
-                SafetyPlugin.getPlugin().limitClosedLoop(closedLoopEnabled);
+                SafetyPlugin.getPlugin().isClosedLoopAllowed(closedLoopEnabled);
                 return new RequirementResult(closedLoopEnabled.get(), MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.get()));
             case 4:
                 double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(1000d);
@@ -295,14 +295,14 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
      * Constraints interface
      **/
     @Override
-    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
         if (objectives.get(0).started.getTime() == 0)
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1));
         return value;
     }
 
     @Override
-    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
+    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
         if (objectives.get(3).started.getTime() == 0)
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4));
         return value;
