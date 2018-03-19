@@ -333,7 +333,10 @@ public class LoopPlugin implements PluginBase {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
-                    lastRun.tbrSetByPump = waiting;
+                    if (resultAfterConstraints.tempBasalRequested)
+                        lastRun.tbrSetByPump = waiting;
+                    if (resultAfterConstraints.bolusRequested)
+                        lastRun.smbSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
                     MainApp.getConfigBuilder().applyTBRRequest(resultAfterConstraints, profile, new Callback() {
