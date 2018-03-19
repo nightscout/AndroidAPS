@@ -16,6 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -105,8 +106,7 @@ public class CommandQueueTest extends CommandQueue {
 
     private void prepareMock(Double insulin, Integer carbs) throws Exception {
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
-        when(configBuilderPlugin.applyBolusConstraints(insulin)).thenReturn(insulin);
-        when(configBuilderPlugin.applyCarbsConstraints(carbs)).thenReturn(carbs);
+        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
 
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         PumpInterface pump = MDIPlugin.getPlugin();
@@ -115,8 +115,11 @@ public class CommandQueueTest extends CommandQueue {
         PowerMockito.mockStatic(MainApp.class);
         MainApp mainApp = mock(MainApp.class);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+        when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         when(MainApp.isEngineeringModeOrRelease()).thenReturn(true);
         when(MainApp.instance()).thenReturn(mainApp);
+        when(MainApp.getConstraintChecker().applyBolusConstraints(insulin)).thenReturn(insulin);
+        when(MainApp.getConstraintChecker().applyCarbsConstraints(carbs)).thenReturn(carbs);
 
         PowerMockito.mockStatic(ToastUtils.class);
         Context context = mock(Context.class);
