@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistor
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
@@ -984,6 +985,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createOrUpdate(DanaRHistoryRecord record) {
         try {
             getDaoDanaRHistory().createOrUpdate(record);
+
+            //If it is a TDD, store it for stats also.
+            if(record.recordCode == RecordTypes.RECORD_TYPE_BOLUS){
+                createOrUpdateTDD(new TDD(record.recordDate, record.recordDailyBolus, record.recordDailyBasal, 0));
+            }
+
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
