@@ -347,7 +347,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private BasalProfile convertProfileToComboProfile(Profile profile) {
         BasalProfile basalProfile = new BasalProfile();
         for (int i = 0; i < 24; i++) {
-            double rate = profile.getBasal(Integer.valueOf(i * 60 * 60));
+            double rate = profile.getBasalTimeFromMidnight(i * 60 * 60);
 
             /*The Combo pump does hava a different granularity for basal rate:
             * 0.01 - if below 1U/h
