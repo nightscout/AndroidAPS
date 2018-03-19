@@ -39,10 +39,13 @@ public class Constants {
     // Temp targets
     public static final int defaultActivityTTDuration = 90; // min
     public static final double defaultActivityTTmgdl = 90d;
-    public static final double defaultActivityTTmmol = 5d;
+    public static final double defaultActivityTTmmol = 8d;
     public static final int defaultEatingSoonTTDuration = 45; // min
     public static final double defaultEatingSoonTTmgdl = 140d;
-    public static final double defaultEatingSoonTTmmol = 8d;
+    public static final double defaultEatingSoonTTmmol = 5d;
+    public static final int defaultHypoTTDuration = 30; // min
+    public static final double defaultHypoTTmgdl = 120d;
+    public static final double defaultHypoTTmmol = 6.5d;
 
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;
