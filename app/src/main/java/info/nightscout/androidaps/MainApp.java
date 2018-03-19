@@ -28,6 +28,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
@@ -191,13 +192,16 @@ public class MainApp extends Application {
             MainApp.getConfigBuilder().initialize();
         }
         NSUpload.uploadAppStart();
+        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+
         if (Config.NSCLIENT)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
         else if (Config.G5UPLOADER)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
         else if (Config.PUMPCONTROL)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConfigBuilder().isClosedModeEnabled())
+        else if (closedLoopEnabled.get())
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
         else
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));

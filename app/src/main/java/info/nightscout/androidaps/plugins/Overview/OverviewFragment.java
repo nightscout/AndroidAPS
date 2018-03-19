@@ -87,6 +87,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -1016,6 +1017,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
+        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
@@ -1036,7 +1040,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-                if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+                if (closedLoopEnabled.get()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
                     apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
@@ -1066,7 +1070,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Temp button ****
         if (acceptTempLayout != null) {
-            boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+            boolean showAcceptButton = !closedLoopEnabled.get(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested

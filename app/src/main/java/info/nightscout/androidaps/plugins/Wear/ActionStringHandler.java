@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Wear;
 
-import android.Manifest;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -27,8 +26,8 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -436,7 +435,9 @@ public class ActionStringHandler {
         // decide if enabled/disabled closed/open; what Plugin as APS?
         final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
         if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-            if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+            BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+            MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+            if (closedLoopEnabled.get()) {
                 ret += "CLOSED LOOP\n";
             } else {
                 ret += "OPEN LOOP\n";

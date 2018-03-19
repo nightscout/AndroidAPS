@@ -441,8 +441,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return true;
+    public void limitClosedLoop(BooleanConstraint value) {
     }
 
     @Override

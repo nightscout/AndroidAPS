@@ -453,23 +453,21 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
 
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            constrain.limitRunningLoop(value);
+            constraint.limitRunningLoop(value);
         }
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        boolean result = true;
+    public void limitClosedLoop(BooleanConstraint value) {
 
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isClosedModeEnabled();
+            constraint.limitClosedLoop(value);
         }
-        return result;
     }
 
     @Override

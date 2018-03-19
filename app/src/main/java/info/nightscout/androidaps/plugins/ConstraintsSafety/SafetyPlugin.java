@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -103,10 +102,13 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
      * Constraints interface
      **/
     @Override
-    public boolean isClosedModeEnabled() {
-        if (!MainApp.isEngineeringModeOrRelease()) return false;
+    public void limitClosedLoop(BooleanConstraint value) {
+        if (!MainApp.isEngineeringModeOrRelease())
+            value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch));
+
         String mode = SP.getString("aps_mode", "open");
-        return mode.equals("closed") && BuildConfig.CLOSEDLOOP;
+        if (!mode.equals("closed"))
+            value.set(false, MainApp.gs(R.string.closedmodedisabledinpreferences));
     }
 
     @Override

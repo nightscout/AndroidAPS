@@ -26,9 +26,9 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
@@ -152,7 +152,7 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        if (ev.treatment == null || !ev.treatment.isSMB){
+        if (ev.treatment == null || !ev.treatment.isSMB) {
             invoke("EventTreatmentChange", true);
         }
     }
@@ -331,7 +331,10 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
-            if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+            BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+            MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+
+            if (closedLoopEnabled.get()) {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;

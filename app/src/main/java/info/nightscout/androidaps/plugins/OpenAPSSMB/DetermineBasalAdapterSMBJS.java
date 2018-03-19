@@ -27,12 +27,11 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
@@ -217,6 +216,9 @@ public class DetermineBasalAdapterSMBJS {
 
         String units = profile.getUnits();
 
+        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+
         mProfile = new JSONObject();
 
         mProfile.put("max_iob", maxIob);
@@ -246,7 +248,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        boolean SMBEnabled = SP.getBoolean(R.string.key_use_smb, false) && MainApp.getConfigBuilder().isClosedModeEnabled();
+        boolean SMBEnabled = SP.getBoolean(R.string.key_use_smb, false) && closedLoopEnabled.get();
         mProfile.put("enableSMB_with_COB", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", SMBEnabled && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));

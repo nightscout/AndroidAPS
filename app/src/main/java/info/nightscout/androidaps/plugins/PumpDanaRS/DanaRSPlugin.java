@@ -279,8 +279,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return true;
+    public void limitClosedLoop(BooleanConstraint value) {
     }
 
     @Override

@@ -9,7 +9,7 @@ public interface ConstraintsInterface {
 
     void limitRunningLoop(BooleanConstraint value);
 
-    boolean isClosedModeEnabled();
+    void limitClosedLoop(BooleanConstraint value);
 
     boolean isAutosensModeEnabled();
 

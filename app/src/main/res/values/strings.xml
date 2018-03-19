@@ -962,8 +962,9 @@
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="combo_bolus_count">Bolus count</string>
     <string name="combo_tbr_count">TBR count</string>
-    <string name="objective1notstarted">Objective 1 not started</string>
+    <string name="objectivenotstarted" formatted="false">Objective %d not started</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
+    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
 </resources>
 

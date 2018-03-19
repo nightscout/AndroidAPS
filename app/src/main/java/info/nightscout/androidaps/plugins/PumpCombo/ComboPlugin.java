@@ -1428,8 +1428,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return true;
+    public void limitClosedLoop(BooleanConstraint value) {
     }
 
     @Override

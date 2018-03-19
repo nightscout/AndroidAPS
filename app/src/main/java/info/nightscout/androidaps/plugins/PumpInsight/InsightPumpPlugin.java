@@ -1084,8 +1084,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return true;
+    public void limitClosedLoop(BooleanConstraint value) {
     }
 
     @Override

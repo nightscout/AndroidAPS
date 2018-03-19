@@ -19,6 +19,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -253,7 +254,9 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultSMB.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
+        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
+        if (!closedLoopEnabled.get()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel
