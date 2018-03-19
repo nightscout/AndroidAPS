@@ -6,8 +6,6 @@
 
     <string name="nav_preferences">Preferințe</string>
     <string name="nav_refreshtreatments">Încarcă tratamentele din NS</string>
-    <string name="nav_backup">Backup</string>
-    <string name="nav_test_alert">Testează alarma</string>
     <string name="nav_resetdb">Resetează bazele de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
@@ -22,7 +20,6 @@
     <string name="objectives_button_verify">Verifică</string>
     <string name="nsprofileview_units_label">Unități</string>
     <string name="nsprofileview_dia_label">DIA</string>
-    <string name="nsprofileview_activeprofile_label">Profil activ</string>
     <string name="nsprofileview_ic_label">IC</string>
     <string name="nsprofileview_isf_label">ISF</string>
     <string name="nsprofileview_basal_label">Bazală</string>
@@ -47,12 +44,10 @@
     <string name="treatments_wizard_correction_label">Corecție</string>
     <string name="treatments_wizard_unit_label">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
-    <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Fă acum</string>
     <string name="vitualpump_label">POMPĂ VIRTUALĂ</string>
     <string name="virtualpump_extendedbolus_label">Bolus extins</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_sqlerror">Eroare SQL</string>
     <string name="openapsma_lastrun_label">Ultima acțiune</string>
     <string name="openapsma_inputparameters_label">Parametri de intrare</string>
     <string name="openapsma_glucosestatus_label">Stare glicemie</string>
@@ -61,8 +56,6 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Date despre masă</string>
     <string name="openapsma_noglucosedata">Nu există date despre glicemie</string>
-    <string name="openapsma_noprofile">Niciun profil disponibil</string>
-    <string name="openapsma_nopump">Nicio pompă disponibilă</string>
     <string name="nochangerequested">Nu este solicitată nicio schimbare</string>
     <string name="openapsma_request_label">Solicită</string>
     <string name="rate">Rată</string>
@@ -71,7 +64,6 @@
     <string name="glucose">Glicemie</string>
     <string name="delta">Diferență</string>
     <string name="sms_delta">Diferență:</string>
-    <string name="avgdelta">Diferență medie</string>
 
     <string name="configbuilder">Constructor de configurație</string>
     <string name="objectives">Obiective</string>
@@ -86,7 +78,6 @@
 
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_treatments">Tratamente</string>
-    <string name="configbuilder_tempbasals">Bazale temporare</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
@@ -97,40 +88,7 @@
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Constrângeri după procesare<string>
-    <string name="openapsma_lastenact_label">Ultima acțiune</string>
-    <string name="refreshtreatmentsfromnightscout">Doriți reîncărcarea tratamentelor din Nightscout</string>
-    <string name="refreshtemptargetsfromnightscout">Doriți reîncărcarea țintelor temporare din Nightscout</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Renunță</string>
-    <string name="noapsselected">NICIUN ALGORITM SELECTAT SAU REZULTAT GENERAT</string>
-    <string name="safety">Siguranță</string>
-    <string name="openapsma_disabled">Modulul este dezactivat</string>
-    <string name="constraints_violation">Constrângere încălcată</string>
-    <string name="treatmentdeliveryerror">Eroare injectare bolus</string>
-    <string name="tempbasaldeliveryerror">Eroare acțiune bazală temporară</string>
-    <string name="overview_newtempbasal_basal_label">Basal value</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = curentă)</string>
-    <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
-    <string name="overview_bolus_label">Bolus</string>
-    <string name="overview_calculator_label">Calculator</string>
-    <string name="constraintapllied">Constrângere aplicată!</string>
-    <string name="confirmation">Confirmare</string>
-    <string name="entertreatmentquestion">Introduceți noul tratament:</string>
-    <string name="bolus">Bolus</string>
-    <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazală</string>
-    <string name="sms_basal">Bazală:</string>
-    <string name="carbs">Carbohidrați</string>
-    <string name="changeyourinput">Schimbați textul!</string>
-    <string name="setextendedbolusquestion">Stabiliți un nou bolus extins:</string>
-    <string name="configbuilder_bgsource">Sursa glicemiei</string>
-    <string name="xdrip">xDrip</string>
-    <string name="nsclient">NSClient</string>
-    <string name="apsmode_title">Mod APS</string>
-
-    <string name="closedloop">Buclă închisă</string>
-    <string name="openloop">Buclă deschisă</string></string>
+    <string name="loop_constraintsprocessed_label">Constrângeri după procesare
     <string name="disabledloop">Buclă inactivă</string>
     <string name="disableloop">Dezactivează bucla</string>
     <string name="enableloop">Activează bucla</string>
@@ -177,7 +135,6 @@
     <string name="careportal_newnstreatment_duration_label">Durată</string>
     <string name="careportal_newnstreatment_percent_label">Procent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolut</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Note</string>
     <string name="careportal_newnstreatment_eventtime_label">Ora evenimentului</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
@@ -186,13 +143,8 @@
     <string name="noprofile">Nu am încărcat încă un profil din NS</string>
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
-    <string name="configbuilder_nsclientversion_label">Versiune NSClient:</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
-    <string name="send">TRIMITE</string>
     <string name="missing">Lipsă</string>
-    <string name="enabled">Activ</string>
-    <string name="visible">Vizibil</string>
-    <string name="up">Sus</string>
     <string name="exported">Am exportat preferințele</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Import setările din</string>
@@ -205,8 +157,6 @@
     <string name="el_lang">Greek</string>
     <string name="it_lang">Italian</string>
     <string name="ru_lang">Russian</string>
-    <string name="openapsma_low_summary">Valoarea minimă acceptată a glicemiei (țintă jos).</string>
-    <string name="openapsma_high_summary">Valoarea maximă acceptată a glicemiei (țintă sus).</string>
     <string name="openapsma_maxbasal_title">Maximul de unițăți de insulină pe oră (U/h) poate fi setat la</string>
     <string name="openapsma_maxbasal_summary">Această valoare este denumită bazală maximă în contextul OpenAPS</string>
     <string name="openapsma_maxiob_title">Maximul de bazală IOB pe care o poate da OpenAPS[U]</string>
@@ -219,7 +169,6 @@
     <string name="connecting">Se conectează</string>
     <string name="connected">Conectat</string>
     <string name="disconnected">Deconectat</string>
-    <string name="syncprofiletopump_title">Sincronizează profilul către pompă</string>
     <string name="danar_pump_settings">Setări pompă DanaR</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Licență utilizator final</string>
@@ -231,7 +180,6 @@
     <string name="connectionerror">Eroare de corecție a pompei</string>
     <string name="danar_iob_label">IOB din pompă</string>
     <string name="danar_dailyunits">Unități zilnice</string>
-    <string name="danar_lastbolus">Ultimul bolus:</string>
     <string name="hoursago">ore</string>
     <string name="danar_invalidinput">Date de intrare incorecte</string>
     <string name="danar_valuenotsetproperly">Valoare setată incorect</string>
@@ -298,7 +246,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP APĂSAT</string>
     <string name="waitingforpump">Se așteaptă pompa</string>
-    <string name="waitingforpumpclicktorefresh">Se așteaptă pompa. Apasă pentru reîncărcare.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Se vor livra %.2fU</string>
     <string name="objectives_0_objective">Se stabilesc vizualizările și monitorizarea și se analizează bazalele și valorile ratelor</string>
     <string name="objectives_0_gate">Verificați că vedeți glicemia în Nightscout și că datele despre insulină date de pompă sunt înregistrate în site</string>
@@ -314,14 +261,11 @@
     <string name="objectives_5_gate">O săptămână de folosire cu succes a sistemului cu buclă închisă cu introducerea normală de carbohidrați</string>
     <string name="objectives_6_objective">Folosirea instrumentelor adiționale pentru timpul zilei, cum ar fi asistența avansată pentru mese</string>
     <string name="youareonallowedlimit">Ați atins limita permisă</string>
-    <string name="openapsma_target_bg">Valoare țintă pentru calcule</string>
     <string name="noprofileselected">Niciun profil selectat</string>
     <string name="smscommunicator_loophasbeendisabled">Bucla a fost dezactivată</string>
     <string name="smscommunicator_loophasbeenenabled">Bucla a fost activată</string>
     <string name="smscommunicator_loopisdisabled">Bucla este dezactivată</string>
     <string name="smscommunicator_loopisenabled">Bucla este activată</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limitat la %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Valoarea %s este în afara limitelor</string>
     <string name="smscommunicator_remotebasalnotallowed">Setarea de la distanță a bazalei nu este permisă</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Pentru pornirea bazalei de %.2fU/h trimiteți codul %s</string>
@@ -347,7 +291,6 @@
     <string name="actions">Acțiuni</string>
     <string name="androidaps_start">AndroidAPS a pornit</string>
     <string name="ns_upload_only">Doar încărcare în NS (sincronizare dezactivată)</string>
-    <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
     <string name="ns_upload_only_summary">Doar încărcare în NS. Nu are efect asupra SGV decât în cazul selectării unei surse locale, precum xDrip. Nu acționează asupra Profilelor cât timp se folosesc profilele din Nightscout.</string>
     <string name="pumpNotInitialized">Pompa nu este inițializată!</string>
     <string name="pumpNotInitializedProfileNotSet">Pompa nu este inițializată, profilul nu este setat!</string>
@@ -358,18 +301,11 @@
     <string name="fillbolus_title">Pregătire/umplere cu cantitățile standard de insulină.</string>
     <string name="button2">Buton 2</string>
     <string name="button3">Buton 3</string>
-    <string name="percentagefactor_hint">Procentul factorului cu care profilul bazal va fi mărit.</string>
-        Time in hours by which the profile will be shifted round robin.</string>
-    <string name="timeshift_hint">Timpul în ore în care profilul va fi rotunjit prin metoda round-robin</string>
     <string name="units">Unități:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
     <string name="target_range">Intervalul țintă:</string>
-    <string name="edit_base_basal">Editează bazala normală:</string>
-    <string name="edit_base_isf">Editează ISF normal:</string>
-    <string name="edit_base_ic">Editează IC normal:</string>
-    <string name="base_profile_label">Profilul de bază:</string>
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
     <string name="prefs_range_summary">Valoarea maximă și minimă pentru graficele din vizualizare și pentru smartwatch</string>
     <string name="low_mark">Pragul HIPO</string>
@@ -428,10 +364,8 @@
     <string name="loop_shortname">BUCL</string>
     <string name="simpleprofile_shortname">SP</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">ACASĂ</string>
     <string name="virtualpump_shortname">POMPĂV</string>
     <string name="profileviewer_shortname">PROFILNS</string>
@@ -441,7 +375,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Scurtează titlurile taburilor</string>
-    <string name="prefs_delta_title">Setări diferențe</string>
     <string name="always_use_shortavg">Folosește întotdeauna media scurtă a diferenței în locul diferenței simple</string>
     <string name="always_use_shortavg_summary">Folositor când datele vin de la surse nefiltrate, ca atunci când xDrip are măsurători zgomotoase.</string>
     <string name="advancedsettings_title">Setări avansate</string>
@@ -471,8 +404,6 @@
     <string name="smscommunicator_remotecalibrationnotallowed">Calibrarea la distanță nu este permisă</string>
     <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip nu recepționează calibrări</string>
-    <string name="dont_show_again">Nu mai afișa din nou</string>
-    <string name="pumpsuspendedclicktorefresh">Livrarea de insulină este suspendată. Apăsați pentru verificarea statusului</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
     <string name="gettingpumpstatus">Se primește starea pompei</string>
     <string name="settingtempbasal">Se setează bazala temporară</string>
@@ -499,9 +430,6 @@
     <string name="nsclientinternal_secret_title">Cheia API NS</string>
     <string name="nsclientinternal_secret_dialogtitle">Cheia API NS</string>
     <string name="nsclientinternal_secret_dialogmessage">Introduceți cheia API NS (min 12 caractere)</string>
-    <string name="nsclientinternal_devicename_title">Numele dispozitivului</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Introduceți numele dispozitivului</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Se va folosi pentru câmpul introdusDe</string>
     <string name="deliver_now">Livrează acum</string>
     <string name="clear_queue">Curăță coada de așteptare</string>
     <string name="show_queue">Arată coada de așteptare</string>
@@ -527,7 +455,6 @@
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="loopsuspendedfor" formatted="false">Suspendată (%d m)</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
-    <string name="loopmenu">Meniul pentru buclă</string>
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
@@ -537,7 +464,6 @@
     <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
     <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
     <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
-    <string name="disconnectpumpfor10h">Deconectează pompa pentru 10h</string>
     <string name="resume">Restabilește</string>
     <string name="smscommunicator_wrongduration">Durată greșită</string>
     <string name="smscommunicator_loopsuspended">Buclă suspendată</string>
@@ -556,13 +482,10 @@
     <string name="enablesuperbolus_summary">Activează funcționalitatea de superbolus în asistentul de buclă. Nu activați până nu înțelegeți ce face cu adevărat. DACĂ ESTE FOLOSIT ÎN NECUNOȘTINȚĂ DE CAUZĂ POATE DUCE LA SUPRADOZĂ DE INSULINĂ!</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
-    <string name="predictionshortlabel">PRE</string>
-    <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_bluetooth_status">Status bluetooth</string>
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
-    <string name="dev">DEV</string>
     <string name="xdripstatus_settings">Status xDrip (ceas)</string>
     <string name="xdripstatus">Linie de status xDrip (ceas)</string>
     <string name="xdripstatus_shortname">xds</string>
