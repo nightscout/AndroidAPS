@@ -139,7 +139,7 @@
     <string name="treatments_wizard_bolusiob_label">Bolusové IOB</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální povolené sacharidy [g]</string>
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>

@@ -389,7 +389,8 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
+                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                            .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
                 }
             }
         } else if (activeTemp != null
@@ -398,7 +399,9 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: Temp basal set correctly");
             if (callback != null) {
-                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile)).duration(activeTemp.getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
+                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                        .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
+                        .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
             }
         } else {
             if (Config.logCongigBuilderActions)

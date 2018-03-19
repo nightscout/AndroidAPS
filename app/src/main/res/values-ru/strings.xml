@@ -482,7 +482,7 @@
     <string name="treatments_wizard_carbs_label">углеводы</string>
     <string name="treatments_wizard_cob_label">активн углеводы</string>
     <string name="treatments_wizard_correction_label">коррекция</string>
-    <string name="treatments_wizard_unit_label">ед</string>
+    <string name="insulin_unit_shortname">ед</string>
     <string name="treatmentssafety_maxbolus_title">макс разрешенный болюс</string>
     <string name="treatmentssafety_maxcarbs_title">макс разрешенные углеводы (г)</string>
     <string name="treatmentssafety_title">безопасность назначений</string>

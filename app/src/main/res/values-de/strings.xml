@@ -84,7 +84,7 @@
     <string name="treatments_iobactivitytotal_label_string">Aktives Gesamt-IOB:</string>
     <string name="treatments_iobtotal_label_string">Gesamt-IOB:</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
-    <string name="treatments_wizard_unit_label">IE</string>
+    <string name="insulin_unit_shortname">IE</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
     <string name="pump_reservoir_label">Reservoir</string>
     <string name="xdrip">xDrip</string>

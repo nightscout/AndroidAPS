@@ -40,7 +40,7 @@
     <string name="treatments_wizard_bg_label">КЗ</string>
     <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
-    <string name="treatments_wizard_unit_label">Ед</string>
+    <string name="insulin_unit_shortname">Ед</string>
     <string name="treatments_wizard_bolusiob_label">IOB от болуси</string>
     <string name="openapsma_run">Старт сега</string>
     <string name="pump_basebasalrate_label">Базова базална стойност</string>

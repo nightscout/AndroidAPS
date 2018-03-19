@@ -97,7 +97,8 @@ public class PumpEnactResult {
             if (bolusDelivered > 0) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
                 ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.sResources.getString(R.string.smb_shortname) + ": " + bolusDelivered + "U";
+                ret += "\n" + MainApp.sResources.getString(R.string.smb_shortname)
+                        + ": " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
@@ -131,7 +132,7 @@ public class PumpEnactResult {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
                     ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.smb_shortname) + "</b>: " + bolusDelivered + "U";
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
