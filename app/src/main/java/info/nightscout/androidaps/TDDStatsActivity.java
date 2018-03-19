@@ -386,9 +386,14 @@ public class TDDStatsActivity extends Activity {
                             TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
-                    sum = sum + tdd;
+
                     i++;
 
+                    if(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
+                        break;
+                    }
+
+                    sum = sum + tdd;
                     // Create the cumtable row
                     TableRow ctr = new TableRow(TDDStatsActivity.this);
                     if (i % 2 == 0) ctr.setBackgroundColor(Color.DKGRAY);
