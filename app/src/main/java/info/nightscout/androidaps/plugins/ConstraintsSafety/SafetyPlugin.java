@@ -10,9 +10,9 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Round;
@@ -92,23 +92,25 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         return R.xml.pref_safety;
     }
 
-    @Override
-    public void limitRunningLoop(BooleanConstraint value) {
-        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
-            value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable));
-    }
-
     /**
      * Constraints interface
      **/
     @Override
-    public void limitClosedLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
+        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
+            value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable));
+        return value;
+    }
+
+    @Override
+    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
         if (!MainApp.isEngineeringModeOrRelease())
             value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch));
 
         String mode = SP.getString("aps_mode", "open");
         if (!mode.equals("closed"))
             value.set(false, MainApp.gs(R.string.closedmodedisabledinpreferences));
+        return value;
     }
 
     @Override

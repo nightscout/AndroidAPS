@@ -27,7 +27,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -216,7 +216,7 @@ public class DetermineBasalAdapterSMBJS {
 
         String units = profile.getUnits();
 
-        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+        Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
         MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
 
         mProfile = new JSONObject();

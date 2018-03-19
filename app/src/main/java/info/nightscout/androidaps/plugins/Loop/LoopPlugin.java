@@ -28,7 +28,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
@@ -259,7 +259,7 @@ public class LoopPlugin implements PluginBase {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
-            BooleanConstraint loopEnabled = new BooleanConstraint(true);
+            Constraint<Boolean> loopEnabled = new Constraint<>(true);
             MainApp.getConfigBuilder().limitRunningLoop(loopEnabled);
 
             if (!loopEnabled.get()) {
@@ -331,7 +331,7 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
-            BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+            Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
             MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
 
             if (closedLoopEnabled.get()) {

@@ -7,8 +7,28 @@ import java.util.List;
  * Created by mike on 19.03.2018.
  */
 
-public class Constraint {
+public class Constraint<T> {
+    T value;
     List<String> reasons = new ArrayList<>();
+
+    public Constraint(T value) {
+        this.value = value;
+    }
+
+    public T get() {
+        return value;
+    }
+
+    public Constraint<T> set(T value) {
+        this.value = value;
+        return this;
+    }
+
+    public Constraint<T> set(T value, String reason) {
+        this.value = value;
+        reason(reason);
+        return this;
+    }
 
     public Constraint reason(String reason) {
         reasons.add(reason);

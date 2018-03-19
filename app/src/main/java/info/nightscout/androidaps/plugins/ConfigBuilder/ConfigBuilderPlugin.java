@@ -31,7 +31,6 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -39,6 +38,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -449,7 +449,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * Constraints interface
      **/
     @Override
-    public void limitRunningLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
@@ -457,10 +457,11 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             constraint.limitRunningLoop(value);
         }
+        return value;
     }
 
     @Override
-    public void limitClosedLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
@@ -468,6 +469,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             constraint.limitClosedLoop(value);
         }
+        return value;
     }
 
     @Override

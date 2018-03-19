@@ -19,7 +19,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -249,12 +249,10 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultAMA.tempBasalReqested = false;
         // limit requests on openloop mode
-        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
-        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
-        if (!closedLoopEnabled.get()) {
+        if (!MainApp.getConfigBuilder().limitClosedLoop(new Constraint<>(true)).get()) {
             long now = System.currentTimeMillis();
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
-            if (activeTemp != null  && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {
+            if (activeTemp != null && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {
                 // going to cancel
             } else if (activeTemp != null && Math.abs(determineBasalResultAMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
                 determineBasalResultAMA.tempBasalReqested = false;

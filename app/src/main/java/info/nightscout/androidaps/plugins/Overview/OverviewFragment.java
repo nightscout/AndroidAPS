@@ -87,7 +87,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -1017,7 +1017,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
-        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+        Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
         MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
 
         // open loop mode

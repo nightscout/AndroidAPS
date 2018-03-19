@@ -17,7 +17,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -183,7 +183,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
             case 2:
                 return new RequirementResult(true, "");
             case 3:
-                BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
+                Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
                 SafetyPlugin.getPlugin().limitClosedLoop(closedLoopEnabled);
                 return new RequirementResult(closedLoopEnabled.get(), MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.get()));
             case 4:
@@ -295,15 +295,17 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
      * Constraints interface
      **/
     @Override
-    public void limitRunningLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
         if (objectives.get(0).started.getTime() == 0)
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1));
+        return value;
     }
 
     @Override
-    public void limitClosedLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
         if (objectives.get(3).started.getTime() == 0)
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4));
+        return value;
     }
 
     @Override

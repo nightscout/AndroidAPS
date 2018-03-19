@@ -19,7 +19,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -238,9 +238,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.tempBasalReqested = false;
         // limit requests on openloop mode
-        BooleanConstraint closedLoopEnabled = new BooleanConstraint(true);
-        MainApp.getConfigBuilder().limitClosedLoop(closedLoopEnabled);
-        if (!closedLoopEnabled.get()) {
+        if (!MainApp.getConfigBuilder().limitClosedLoop(new Constraint<>(true)).get()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
                 // going to cancel

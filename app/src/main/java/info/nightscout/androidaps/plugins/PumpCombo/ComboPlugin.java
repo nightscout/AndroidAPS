@@ -28,11 +28,11 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.interfaces.constrains.BooleanConstraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.constrains.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -1422,13 +1422,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Override
-    public void limitRunningLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitRunningLoop(Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
             value.set(false, MainApp.gs(R.string.novalidbasalrate));
+        return value;
     }
 
     @Override
-    public void limitClosedLoop(BooleanConstraint value) {
+    public Constraint<Boolean> limitClosedLoop(Constraint<Boolean> value) {
+        return value;
     }
 
     @Override
