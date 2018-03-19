@@ -424,6 +424,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                         .comment(MainApp.gs(R.string.smb_frequency_exceeded))
                         .enacted(false).success(false)).run();
             }
+            return;
         }
 
         PumpInterface pump = getActivePump();
