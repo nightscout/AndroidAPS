@@ -30,13 +30,13 @@ public class ConstraintTest {
 
         Constraint<Double> d = new Constraint<>(10d);
         d.set(5d, "Set 5d");
-        Assert.assertEquals(5d, b.value());
-        Assert.assertEquals("Set 5d", b.getReasons());
+        Assert.assertEquals(5d, d.value());
+        Assert.assertEquals("Set 5d", d.getReasons());
         d.setIfSmaller(6d, "Set 6d");
-        Assert.assertEquals(5d, b.value());
-        Assert.assertEquals("Set 5d", b.getReasons());
+        Assert.assertEquals(5d, d.value());
+        Assert.assertEquals("Set 5d\nSet 6d", d.getReasons());
         d.setIfSmaller(4d, "Set 4d");
-        Assert.assertEquals(4d, b.value());
-        Assert.assertEquals("Set 5d\nSet 4d", b.getReasons());
+        Assert.assertEquals(4d, d.value());
+        Assert.assertEquals("Set 5d\nSet 6d\nSet 4d", d.getReasons());
     }
 }

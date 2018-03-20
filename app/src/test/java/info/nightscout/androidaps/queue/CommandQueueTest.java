@@ -20,12 +20,14 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.ToastUtils;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -125,6 +127,8 @@ public class CommandQueueTest extends CommandQueue {
         when(MainApp.instance()).thenReturn(mainApp);
         when(MainApp.getConstraintChecker().applyBolusConstraints(insulin)).thenReturn(insulin);
         when(MainApp.getConstraintChecker().applyCarbsConstraints(carbs)).thenReturn(carbs);
+        Constraint<Double> rateConstraint = new Constraint<>(0d);
+        when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(rateConstraint);
 
         PowerMockito.mockStatic(ToastUtils.class);
         Context context = mock(Context.class);
