@@ -27,7 +27,6 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -228,8 +227,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
         mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
-        mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
-        mProfile.put("current_basal_safety_multiplier", SP.getDouble("openapsama_current_basal_safety_multiplier", 4d));
+        mProfile.put("max_daily_safety_multiplier", SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
+        mProfile.put("current_basal_safety_multiplier", SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
 
         mProfile.put("high_temptarget_raises_sensitivity", SMBDefaults.high_temptarget_raises_sensitivity);
         mProfile.put("low_temptarget_lowers_sensitivity", SMBDefaults.low_temptarget_lowers_sensitivity);
@@ -245,7 +244,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        boolean SMBEnabled = MainApp.getConstraintChecker().isSMBModeEnabled().get() && MainApp.getConstraintChecker().isClosedLoopAllowed().get();
+        boolean SMBEnabled = MainApp.getConstraintChecker().isSMBModeEnabled().value() && MainApp.getConstraintChecker().isClosedLoopAllowed().value();
         mProfile.put("enableSMB_with_COB", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", SMBEnabled && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
@@ -301,7 +300,7 @@ public class DetermineBasalAdapterSMBJS {
         mMealData.put("lastCarbTime", mealData.lastCarbTime);
 
 
-        if (MainApp.getConstraintChecker().isAMAModeEnabled().get()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled().value()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {

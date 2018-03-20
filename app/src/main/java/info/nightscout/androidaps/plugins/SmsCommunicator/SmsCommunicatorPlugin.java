@@ -29,6 +29,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -418,18 +419,24 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             }
                         } else {
                             tempBasal = SafeParse.stringToDouble(splited[1]);
-                            tempBasal = MainApp.getConstraintChecker().applyBasalConstraints(tempBasal);
-                            if (remoteCommandsAllowed) {
-                                passCode = generatePasscode();
-                                reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_basalreplywithcode), tempBasal, passCode);
-                                receivedSms.processed = true;
-                                resetWaitingMessages();
-                                sendSMS(tempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
-                                tempBasalWaitingForConfirmation.tempBasal = tempBasal;
-                                FabricPrivacy.getInstance().logCustom(new CustomEvent("SMS_Basal"));
-                            } else {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_remotebasalnotallowed);
+                            Profile profile = MainApp.getConfigBuilder().getProfile();
+                            if (profile == null) {
+                                reply = MainApp.sResources.getString(R.string.noprofile);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                            } else {
+                                tempBasal = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(tempBasal), profile).value();
+                                if (remoteCommandsAllowed) {
+                                    passCode = generatePasscode();
+                                    reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_basalreplywithcode), tempBasal, passCode);
+                                    receivedSms.processed = true;
+                                    resetWaitingMessages();
+                                    sendSMS(tempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
+                                    tempBasalWaitingForConfirmation.tempBasal = tempBasal;
+                                    FabricPrivacy.getInstance().logCustom(new CustomEvent("SMS_Basal"));
+                                } else {
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_remotebasalnotallowed);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
                             }
                         }
                     }
@@ -503,20 +510,22 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     } else if (tempBasalWaitingForConfirmation != null && !tempBasalWaitingForConfirmation.processed &&
                             tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - tempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         tempBasalWaitingForConfirmation.processed = true;
-                        ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true, new Callback() {
-                            @Override
-                            public void run() {
-                                if (result.success) {
-                                    String reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
-                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
-                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                                } else {
-                                    String reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalfailed);
-                                    reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
-                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        Profile profile = MainApp.getConfigBuilder().getProfile();
+                        if (profile != null)
+                            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true, profile, new Callback() {
+                                @Override
+                                public void run() {
+                                    if (result.success) {
+                                        String reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
+                                        reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                    } else {
+                                        String reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalfailed);
+                                        reply += "\n" + ConfigBuilderPlugin.getActivePump().shortStatus(true);
+                                        sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                    }
                                 }
-                            }
-                        });
+                            });
                     } else if (cancelTempBasalWaitingForConfirmation != null && !cancelTempBasalWaitingForConfirmation.processed &&
                             cancelTempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - cancelTempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         cancelTempBasalWaitingForConfirmation.processed = true;

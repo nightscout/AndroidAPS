@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
+import info.nightscout.androidaps.data.Profile;
+
 /**
  * Created by mike on 15.06.2016.
  */
@@ -15,9 +17,9 @@ public interface ConstraintsInterface {
 
     Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value);
 
-    Double applyBasalConstraints(Double absoluteRate);
+    Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile);
 
-    Integer applyBasalConstraints(Integer percentRate);
+    Integer applyBasalPercentConstraints(Integer percentRate);
 
     Double applyBolusConstraints(Double insulin);
 

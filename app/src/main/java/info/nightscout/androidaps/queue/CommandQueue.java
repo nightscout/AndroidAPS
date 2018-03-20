@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
@@ -186,7 +187,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -196,10 +197,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBasalConstraints(absoluteRate);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -217,7 +218,7 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalConstraints(percent);
+        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalPercentConstraints(percent);
 
         // add new command to queue
         add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));

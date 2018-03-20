@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.interfaces.Constraint;
-
 /**
  * Created by mike on 19.03.2018.
  */
@@ -17,19 +15,28 @@ public class ConstraintTest {
 
     @Test
     public void doTests() throws Exception {
-        Constraint<Boolean> c;
+        Constraint<Boolean> b = new Constraint<>(true);
+        Assert.assertEquals(Boolean.TRUE, b.value());
+        Assert.assertEquals("", b.getReasons());
+        b.set(false);
+        Assert.assertEquals(Boolean.FALSE, b.value());
+        Assert.assertEquals("", b.getReasons());
+        b.set(true, "Set true");
+        Assert.assertEquals(Boolean.TRUE, b.value());
+        Assert.assertEquals("Set true", b.getReasons());
+        b.set(false, "Set false");
+        Assert.assertEquals(Boolean.FALSE, b.value());
+        Assert.assertEquals("Set true\nSet false", b.getReasons());
 
-        c = new Constraint<Boolean>(true);
-        Assert.assertEquals(Boolean.TRUE, c.get());
-        Assert.assertEquals("", c.getReasons());
-        c.set(false);
-        Assert.assertEquals(Boolean.FALSE, c.get());
-        Assert.assertEquals("", c.getReasons());
-        c.set(true, "Set true");
-        Assert.assertEquals(Boolean.TRUE, c.get());
-        Assert.assertEquals("Set true", c.getReasons());
-        c.set(false, "Set false");
-        Assert.assertEquals(Boolean.FALSE, c.get());
-        Assert.assertEquals("Set true\nSet false", c.getReasons());
+        Constraint<Double> d = new Constraint<>(10d);
+        d.set(5d, "Set 5d");
+        Assert.assertEquals(5d, b.value());
+        Assert.assertEquals("Set 5d", b.getReasons());
+        d.setIfSmaller(6d, "Set 6d");
+        Assert.assertEquals(5d, b.value());
+        Assert.assertEquals("Set 5d", b.getReasons());
+        d.setIfSmaller(4d, "Set 4d");
+        Assert.assertEquals(4d, b.value());
+        Assert.assertEquals("Set 5d\nSet 4d", b.getReasons());
     }
 }

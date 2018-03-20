@@ -135,40 +135,28 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        Double origAbsoluteRate = absoluteRate;
-        Double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) return absoluteRate;
-        if (absoluteRate < 0) absoluteRate = 0d;
+        absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.basalmustbepositivevalue)));
 
-        Double maxBasalMult = SP.getDouble("openapsama_current_basal_safety_multiplier", 4d);
-        Integer maxBasalFromDaily = SP.getInt("openapsama_max_daily_safety_multiplier", 3);
+        double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+        absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxbasalinpreferences)));
+
         // Check percentRate but absolute rate too, because we know real current basal in pump
-        Double origRate = absoluteRate;
-        if (absoluteRate > maxBasal) {
-            absoluteRate = maxBasal;
-            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                log.debug("Limiting rate " + origRate + " by maxBasal preference to " + absoluteRate + "U/h");
-        }
-        if (absoluteRate > maxBasalMult * profile.getBasal()) {
-            absoluteRate = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
-            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                log.debug("Limiting rate " + origRate + " by maxBasalMult to " + absoluteRate + "U/h");
-        }
-        if (absoluteRate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
-            absoluteRate = profile.getMaxDailyBasal() * maxBasalFromDaily;
-            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + absoluteRate + "U/h");
-        }
+        Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
+        double maxFromBasalMult = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
+        absoluteRate.setIfSmaller(maxFromBasalMult, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromBasalMult, MainApp.gs(R.string.maxbasalmultiplier)));
+
+        Double maxBasalFromDaily = SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
+        double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
+        absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)));
         return absoluteRate;
     }
 
     @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
+    public Integer applyBasalPercentConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
-        Double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
+        Double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) return percentRate;
@@ -181,8 +169,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Double maxBasalMult = SP.getDouble("openapsama_current_basal_safety_multiplier", 4d);
-        Integer maxBasalFromDaily = SP.getInt("openapsama_max_daily_safety_multiplier", 3);
+        Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
+        Integer maxBasalFromDaily = SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3);
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {

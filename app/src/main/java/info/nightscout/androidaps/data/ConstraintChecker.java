@@ -6,7 +6,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 19.03.2018.
@@ -102,25 +101,24 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        Double rateAfterConstrain = absoluteRate;
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(absoluteRate), rateAfterConstrain);
+            constraint.applyBasalConstraints(absoluteRate, profile);
         }
-        return rateAfterConstrain;
+        return absoluteRate;
     }
 
     @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
+    public Integer applyBasalPercentConstraints(Integer percentRate) {
         Integer rateAfterConstrain = percentRate;
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(percentRate), rateAfterConstrain);
+            rateAfterConstrain = Math.min(constrain.applyBasalPercentConstraints(percentRate), rateAfterConstrain);
         }
         return rateAfterConstrain;
     }

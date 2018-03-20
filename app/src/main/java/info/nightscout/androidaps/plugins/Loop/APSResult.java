@@ -17,6 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -38,6 +39,9 @@ public class APSResult {
     public boolean hasPredictions = false;
     public double smb = 0d; // super micro bolus in units
     public long deliverAt = 0;
+
+    public Constraint<Double> rateConstraint;
+    public Constraint<Double> smbConstraint;
 
     @Override
     public String toString() {
@@ -76,8 +80,8 @@ public class APSResult {
                 ret = MainApp.sResources.getString(R.string.let_temp_basal_run) + "<br>";
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                      "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
-                      "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
+                        "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
 
             // smb
             if (smb != 0)
@@ -101,6 +105,12 @@ public class APSResult {
         newResult.tempBasalReqested = tempBasalReqested;
         newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
+        newResult.json = json;
+        newResult.hasPredictions = hasPredictions;
+        newResult.smb = smb;
+        newResult.deliverAt = deliverAt;
+        newResult.rateConstraint = rateConstraint;
+        newResult.smbConstraint = smbConstraint;
         return newResult;
     }
 

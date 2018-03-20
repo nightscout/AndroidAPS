@@ -19,7 +19,6 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -179,8 +178,8 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
-        double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
+        double maxIob = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = Profile.toMgdl(profile.getTarget(), units);
@@ -225,7 +224,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal())) return;
 
         startPart = new Date();
-        if (MainApp.getConstraintChecker().isAMAModeEnabled().get()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled().value()) {
             lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
@@ -254,7 +253,7 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultSMB.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
+        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel

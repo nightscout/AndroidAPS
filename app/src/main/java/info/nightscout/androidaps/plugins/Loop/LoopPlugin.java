@@ -261,7 +261,7 @@ public class LoopPlugin implements PluginBase {
                 log.debug("invoke from " + initiator);
             Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
 
-            if (!loopEnabled.get()) {
+            if (!loopEnabled.value()) {
                 String message = MainApp.sResources.getString(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
                 log.debug(message);
                 MainApp.bus().post(new EventLoopSetLastRunGui(message));
@@ -298,7 +298,8 @@ public class LoopPlugin implements PluginBase {
 
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
-            resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rate);
+            resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
+            resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
             resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smb);
 
             // safety check for multiple SMBs
@@ -332,7 +333,7 @@ public class LoopPlugin implements PluginBase {
 
             Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
 
-            if (closedLoopEnabled.get()) {
+            if (closedLoopEnabled.value()) {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;

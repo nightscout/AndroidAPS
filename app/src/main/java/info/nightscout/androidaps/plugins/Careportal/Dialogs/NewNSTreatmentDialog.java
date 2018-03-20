@@ -51,6 +51,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
@@ -302,7 +303,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Integer maxPercent = MainApp.getConstraintChecker().applyBasalConstraints(Constants.basalPercentOnlyForCheckLimit);
+        Integer maxPercent = MainApp.getConstraintChecker().applyBasalPercentConstraints(Constants.basalPercentOnlyForCheckLimit);
         editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
         editPercent.setParams(0d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true, percentTextWatcher);
 
@@ -324,7 +325,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Double maxAbsolute = MainApp.getConstraintChecker().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
+        Double maxAbsolute = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(Constants.REALLYHIGHBASALRATE), profile).value();
         editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
 

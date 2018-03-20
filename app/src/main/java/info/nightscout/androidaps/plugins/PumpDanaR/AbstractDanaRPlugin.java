@@ -216,7 +216,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
-        percent = MainApp.getConstraintChecker().applyBasalConstraints(percent);
+        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(percent);
         if (percent < 0) {
             result.isTempCancel = false;
             result.enacted = false;
@@ -458,23 +458,16 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         return value;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        double origAbsoluteRate = absoluteRate;
-        if (pump != null) {
-            if (absoluteRate > pump.maxBasal) {
-                absoluteRate = pump.maxBasal;
-                if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                    log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
-            }
-        }
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
+        if (pump != null)
+            absoluteRate.setIfSmaller(pump.maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), pump.maxBasal, MainApp.gs(R.string.pumplimit)));
         return absoluteRate;
     }
 
     @SuppressWarnings("PointlessBooleanExpression")
     @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
+    public Integer applyBasalPercentConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
         if (percentRate < 0) percentRate = 0;
         if (percentRate > getPumpDescription().maxTempPercent)

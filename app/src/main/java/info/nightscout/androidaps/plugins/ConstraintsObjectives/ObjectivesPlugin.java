@@ -13,6 +13,7 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -189,7 +190,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
             case 3:
                 Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
                 SafetyPlugin.getPlugin().isClosedLoopAllowed(closedLoopEnabled);
-                return new RequirementResult(closedLoopEnabled.get(), MainApp.gs(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.get()));
+                return new RequirementResult(closedLoopEnabled.value(), MainApp.gs(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.value()));
             case 4:
                 double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(1000d);
                 boolean maxIobSet = maxIOB > 0;
@@ -345,12 +346,12 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
         return absoluteRate;
     }
 
     @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
+    public Integer applyBasalPercentConstraints(Integer percentRate) {
         return percentRate;
     }
 

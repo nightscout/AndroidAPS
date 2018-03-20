@@ -7,6 +7,7 @@ import com.squareup.otto.ThreadEnforcer;
 
 import junit.framework.Assert;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +37,11 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class})
 public class CommandQueueTest extends CommandQueue {
 
-    String profileJson = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
+    String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
+    Profile profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+
+    public CommandQueueTest() throws JSONException {
+    }
 
     @Test
     public void doTests() throws Exception {
@@ -62,7 +67,7 @@ public class CommandQueueTest extends CommandQueue {
         Assert.assertEquals(0, size());
 
         // add tempbasal
-        tempBasalAbsolute(0, 30, true, null);
+        tempBasalAbsolute(0, 30, true, profile, null);
         Assert.assertEquals(1, size());
 
         // add tempbasal percent. it should replace previous TEMPBASAL
@@ -83,7 +88,7 @@ public class CommandQueueTest extends CommandQueue {
 
         // add setProfile (command is not queued before unless a ProfileSwitch exists)
         // TODO test with profile switch set
-        setProfile(new Profile(new JSONObject(profileJson), Constants.MGDL), null);
+        setProfile(profile, null);
         Assert.assertEquals(2, size());
 
         // add loadHistory
@@ -95,7 +100,7 @@ public class CommandQueueTest extends CommandQueue {
         Assert.assertEquals(4, size());
 
         clear();
-        tempBasalAbsolute(0, 30, true, null);
+        tempBasalAbsolute(0, 30, true, profile, null);
         pickup();
         Assert.assertEquals(0, size());
         Assert.assertNotNull(performing);

@@ -355,7 +355,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             Mstatus mstatus = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
             if (mstatus.success()) {
                 log("GOT STATUS RESULT!!! PARTY WOOHOO!!!");
-                statusResult = (StatusTaskRunner.Result) mstatus.getResponseObject();
+                setStatusResult((StatusTaskRunner.Result) mstatus.getResponseObject());
                 statusResultTime = Helpers.tsl();
                 processStatusResult();
                 updateGui();
@@ -373,6 +373,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         } else {
             log("not connected.. not requesting status");
         }
+    }
+
+    public void setStatusResult(StatusTaskRunner.Result result) {
+        this.statusResult = result;
     }
 
     @Override
@@ -543,7 +547,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     // Temporary Basals
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         absoluteRate = Helpers.roundDouble(absoluteRate, 3);
         log("Set TBR absolute: " + absoluteRate);
         final double base_basal = getBaseBasalRate();
@@ -1105,12 +1109,15 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        return Math.min(absoluteRate, statusResult != null ? statusResult.maximumBasalAmount : 0);
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
+        if (statusResult != null) {
+            absoluteRate.setIfSmaller(statusResult.maximumBasalAmount, String.format(MainApp.gs(R.string.limitingbasalratio), statusResult.maximumBasalAmount, MainApp.gs(R.string.pumplimit)));
+        }
+        return absoluteRate;
     }
 
     @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
+    public Integer applyBasalPercentConstraints(Integer percentRate) {
         return Math.min(percentRate, pumpDescription.maxTempPercent);
     }
 

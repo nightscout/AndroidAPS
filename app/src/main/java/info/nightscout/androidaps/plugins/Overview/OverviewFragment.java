@@ -1039,7 +1039,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-                if (closedLoopEnabled.get()) {
+                if (closedLoopEnabled.value()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
                     apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
@@ -1069,7 +1069,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Temp button ****
         if (acceptTempLayout != null) {
-            boolean showAcceptButton = !closedLoopEnabled.get(); // Open mode needed
+            boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested

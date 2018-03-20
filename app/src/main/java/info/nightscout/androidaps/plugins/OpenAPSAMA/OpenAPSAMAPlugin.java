@@ -19,7 +19,6 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -174,8 +173,8 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
-        double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
+        double maxIob = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = Profile.toMgdl(profile.getTarget(), units);
@@ -223,7 +222,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             return;
 
         startPart = new Date();
-        if (MainApp.getConstraintChecker().isAMAModeEnabled().get()) {
+        if (MainApp.getConstraintChecker().isAMAModeEnabled().value()) {
             lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
@@ -249,7 +248,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultAMA.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
+        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
             long now = System.currentTimeMillis();
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {

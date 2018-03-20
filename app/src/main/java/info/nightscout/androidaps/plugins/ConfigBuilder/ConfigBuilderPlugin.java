@@ -31,6 +31,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -351,7 +352,9 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
         PumpInterface pump = getActivePump();
-        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rate);
+
+        request.rateConstraint = new Constraint<>(request.rate);
+        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
 
         long now = System.currentTimeMillis();
 
@@ -399,7 +402,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
             } else {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: setTempBasalAbsolute()");
-                getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
+                getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
             }
         }
     }

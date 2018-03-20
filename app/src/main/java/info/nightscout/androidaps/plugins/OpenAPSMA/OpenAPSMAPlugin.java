@@ -19,7 +19,6 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -30,7 +29,6 @@ import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 
 import static info.nightscout.utils.HardLimits.checkOnlyHardLimits;
 import static info.nightscout.utils.HardLimits.verifyHardLimits;
@@ -175,8 +173,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
-        double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
+        double maxIob = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = Profile.toMgdl(profile.getTarget(), units);
@@ -238,7 +236,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.tempBasalReqested = false;
         // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().get()) {
+        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
                 // going to cancel
