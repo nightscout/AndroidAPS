@@ -42,7 +42,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
@@ -639,8 +639,8 @@
     <string name="mdtp_cancel">Cancel</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
-    <string name="combopump">Accu-Chek Combo</string>
-    <string name="combopump_shortname">COMBO</string>
+    <string name="combopump" translatable="false">Accu-Chek Combo</string>
+    <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
@@ -887,7 +887,7 @@
     <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
     <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
-    <string name="let_temp_basal_run">Let current temp basal run</string>
+    <string name="let_temp_basal_run">Let temp basal run</string>
     <string name="mute">Mute</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_carbs_label">Carbs</string>
@@ -976,5 +976,7 @@
     <string name="maxbasalmultiplier">max basal multiplier</string>
     <string name="maxdailybasalmultiplier">max daily basal multiplier</string>
     <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
+    <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
+    <string name="basal_set_correctly">Basal set correctly</string>
 </resources>
 

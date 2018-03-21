@@ -347,7 +347,7 @@
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
     <string name="nsclientinternal_secret_dialogmessage">Geen NS API geheim op (min 12 kar.)</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
-    <string name="treatments_wizard_unit_label">E</string>
+    <string name="insulin_unit_shortname">E</string>
     <string name="treatments_wizard_correction_label">Correctie</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_carbs_label">Koolhydraten</string>

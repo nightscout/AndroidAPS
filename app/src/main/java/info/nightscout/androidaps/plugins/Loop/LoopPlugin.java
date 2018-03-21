@@ -159,12 +159,8 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (!(ev.cause instanceof EventNewBG))
-            return;
-
-        EventNewBG bgEv = (EventNewBG) ev.cause;
-        if (bgEv.isNew && bgEv.isFromActiveBgSource && bgEv.isCurrent()) {
-            invoke("New BG", true);
+        if (ev.cause instanceof EventNewBG) {
+            invoke(ev.getClass().getSimpleName() + "(" + ev.cause.getClass().getSimpleName() + ")", true);
         }
     }
 
@@ -337,7 +333,10 @@ public class LoopPlugin implements PluginBase {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
-                    lastRun.tbrSetByPump = waiting;
+                    if (resultAfterConstraints.tempBasalRequested)
+                        lastRun.tbrSetByPump = waiting;
+                    if (resultAfterConstraints.bolusRequested)
+                        lastRun.smbSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
                     MainApp.getConfigBuilder().applyTBRRequest(resultAfterConstraints, profile, new Callback() {
