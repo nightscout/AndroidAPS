@@ -47,6 +47,11 @@ def generateGitBuild = { ->
     return stringBuilder.toString()
 }
 
+tasks.matching {it instanceof Test}.all {
+    testLogging.events = ["failed", "skipped"]
+    testLogging.exceptionFormat = "full"
+}
+
 android {
     compileSdkVersion 27
     buildToolsVersion "${supportLibraryVersion}"
