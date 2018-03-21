@@ -251,16 +251,16 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         // TODO still needed with oref1?
         // Fix bug determine basal
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
-            determineBasalResultSMB.tempBasalReqested = false;
+            determineBasalResultSMB.tempBasalRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
             if (activeTemp != null  && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel
             } else if (activeTemp != null && Math.abs(determineBasalResultSMB.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
-                determineBasalResultSMB.tempBasalReqested = false;
+                determineBasalResultSMB.tempBasalRequested = false;
             } else if (activeTemp == null && Math.abs(determineBasalResultSMB.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultSMB.tempBasalReqested = false;
+                determineBasalResultSMB.tempBasalRequested = false;
         }
 
         determineBasalResultSMB.iob = iobArray[0];

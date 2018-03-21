@@ -31,7 +31,7 @@ public class APSResult {
     public String reason;
     public double rate;
     public int duration;
-    public boolean tempBasalReqested = false;
+    public boolean tempBasalRequested = false;
     public boolean bolusRequested = false;
     public IobTotal iob;
     public JSONObject json = new JSONObject();
@@ -98,7 +98,7 @@ public class APSResult {
         newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tempBasalReqested = tempBasalReqested;
+        newResult.tempBasalRequested = tempBasalRequested;
         newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
         return newResult;
@@ -216,6 +216,6 @@ public class APSResult {
     }
 
     public boolean isChangeRequested() {
-        return tempBasalReqested || bolusRequested;
+        return tempBasalRequested || bolusRequested;
     }
 }

@@ -22,7 +22,7 @@ public class DetermineBasalResultAMA extends APSResult {
         json = j;
         if (result.containsKey("error")) {
             reason = result.get("error").toString();
-            tempBasalReqested = false;
+            tempBasalRequested = false;
             rate = -1;
             duration = -1;
         } else {
@@ -32,17 +32,17 @@ public class DetermineBasalResultAMA extends APSResult {
             if (result.containsKey("rate")) {
                 rate = (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
-                tempBasalReqested = true;
+                tempBasalRequested = true;
             } else {
                 rate = -1;
-                tempBasalReqested = false;
+                tempBasalRequested = false;
             }
             if (result.containsKey("duration")) {
                 duration = ((Double) result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;
-                tempBasalReqested = false;
+                tempBasalRequested = false;
             }
         }
         bolusRequested = false;
@@ -58,7 +58,7 @@ public class DetermineBasalResultAMA extends APSResult {
         newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tempBasalReqested = tempBasalReqested;
+        newResult.tempBasalRequested = tempBasalRequested;
         newResult.rate = rate;
         newResult.duration = duration;
 

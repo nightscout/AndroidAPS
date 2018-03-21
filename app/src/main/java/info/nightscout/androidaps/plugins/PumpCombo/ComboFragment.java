@@ -233,7 +233,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 // reservoir
                 int reservoirLevel = plugin.getPump().reservoirLevel;
                 if (reservoirLevel != -1) {
-                    reservoirView.setText(reservoirLevel + " " + MainApp.sResources.getString(R.string.treatments_wizard_unit_label));
+                    reservoirView.setText(reservoirLevel + " " + MainApp.sResources.getString(R.string.insulin_unit_shortname));
                 } else if (ps.insulinState == PumpState.LOW) {
                     reservoirView.setText(MainApp.gs(R.string.combo_reservoir_low));
                 } else if (ps.insulinState == PumpState.EMPTY) {
@@ -275,7 +275,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 if (bolus != null) {
                     long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                     double bolusMinAgo = agoMsc / 60d / 1000d;
-                    String unit = MainApp.gs(R.string.treatments_wizard_unit_label);
+                    String unit = MainApp.gs(R.string.insulin_unit_shortname);
                     String ago;
                     if ((agoMsc < 60 * 1000)) {
                         ago = MainApp.gs(R.string.combo_pump_connected_now);

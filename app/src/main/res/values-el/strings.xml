@@ -42,7 +42,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Υδατάνθρακες</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
