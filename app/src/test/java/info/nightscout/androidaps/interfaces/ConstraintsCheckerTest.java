@@ -17,6 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -199,23 +200,24 @@ public class ConstraintsCheckerTest {
         Constraint<Double> d = new Constraint<>(-0.5d);
         constraintChecker.applyBasalConstraints(d, profile);
         Assert.assertEquals(0d, d.value());
-        Assert.assertEquals("Limiting basal rate to 0,00 U/h because of basal must be positive value", d.getReasons());
+        Assert.assertEquals("Limiting basal rate to 0.00 U/h because of basal must be positive value", d.getReasons());
 
         // Apply all limits
         d = new Constraint<>(Constants.REALLYHIGHBASALRATE);
         constraintChecker.applyBasalConstraints(d, profile);
         Assert.assertEquals(0.8d, d.value());
-        Assert.assertEquals("Limiting basal rate to 1,00 U/h because of max basal settings in preferences\n" +
-                "Limiting basal rate to 4,00 U/h because of max basal multiplier\n" +
-                "Limiting basal rate to 3,00 U/h because of max daily basal multiplier\n" +
-                "Limiting basal rate to 0,80 U/h because of pump limit\n" +
-                "Limiting basal rate to 0,80 U/h because of pump limit\n" +
-                "Limiting basal rate to 1,10 U/h because of pump limit", d.getReasons());
+        Assert.assertEquals("Limiting basal rate to 1.00 U/h because of max basal settings in preferences\n" +
+                "Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
+                "Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
+                "Limiting basal rate to 0.80 U/h because of pump limit\n" +
+                "Limiting basal rate to 0.80 U/h because of pump limit\n" +
+                "Limiting basal rate to 1.10 U/h because of pump limit", d.getReasons());
 
     }
 
     @Before
     public void prepareMock() throws Exception {
+        Locale.setDefault(new Locale("en", "US"));
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
 
         PowerMockito.mockStatic(MainApp.class);
