@@ -6,7 +6,7 @@
 
         <EditTextPreference
             android:title="@string/treatmentssafety_maxbolus_title"
-            android:key="treatmentssafety_maxbolus"
+            android:key="@string/key_treatmentssafety_maxbolus"
             android:defaultValue="3"
             android:inputType="numberDecimal">
         </EditTextPreference>

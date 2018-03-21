@@ -244,7 +244,7 @@ public class ConstraintsCheckerTest {
                 "SafetyPlugin: Limiting percent rate to 0% because of pump limit\n" +
                 "DanaRPlugin: Limiting percent rate to 0% because of basal must be positive value\n" +
                 "DanaRSPlugin: Limiting percent rate to 0% because of basal must be positive value\n" +
-                "InsightPumpPlugin: Limiting percent rate to 0% because of basal must be positive value", i.getReasons()); // InsightPlugin
+                "InsightPumpPlugin: Limiting percent rate to 0% because of basal must be positive value", i.getReasons());
 
         // Apply all limits
         i = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
@@ -258,6 +258,43 @@ public class ConstraintsCheckerTest {
                 "DanaRPlugin: Limiting percent rate to 200% because of pump limit\n" +
                 "DanaRSPlugin: Limiting percent rate to 200% because of pump limit\n" +
                 "InsightPumpPlugin: Limiting percent rate to 250% because of pump limit", i.getReasons());
+
+    }
+
+    // applyBolusConstraints tests
+    @Test
+    public void bolusAmountShouldBeLimited() throws Exception {
+        // DanaR, RS
+        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRSPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        DanaRPump.getInstance().maxBolus = 6d;
+
+        // Insight
+        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+        result.maximumBolusAmount = 7d;
+        insightPlugin.setStatusResult(result);
+
+
+        // No limit by default
+        when(SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d)).thenReturn(3d);
+        when(SP.getString(R.string.key_age, "")).thenReturn("child");
+
+        // Negative basal not allowed
+        Constraint<Double> d = new Constraint<>(-22d);
+        constraintChecker.applyBolusConstraints(d);
+        Assert.assertEquals(0d, d.value());
+        Assert.assertEquals("SafetyPlugin: Limiting bolus to 0.0 U because of bolus must be positive value", d.getReasons());
+
+        // Apply all limits
+        d = new Constraint<>(Constants.REALLYHIGHBOLUS);
+        constraintChecker.applyBolusConstraints(d);
+        Assert.assertEquals(3d, d.value());
+        Assert.assertEquals("SafetyPlugin: Limiting bolus to 3.0 U because of max value in preferences\n" +
+                "SafetyPlugin: Limiting bolus to 5.0 U because of hard limit\n" +
+                "DanaRPlugin: Limiting bolus to 6.0 U because of pump limit\n" +
+                "DanaRSPlugin: Limiting bolus to 6.0 U because of pump limit\n" +
+                "InsightPumpPlugin: Limiting bolus to 7.0 U because of pump limit", d.getReasons());
 
     }
 
@@ -295,6 +332,11 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier");
         when(MainApp.gs(R.string.limitingpercentrate)).thenReturn("Limiting percent rate to %d%% because of %s");
         when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
+        when(MainApp.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s");
+        when(MainApp.gs(R.string.bolusmustbepositivevalue)).thenReturn("bolus must be positive value");
+        when(MainApp.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences");
+        when(MainApp.gs(R.string.hardlimit)).thenReturn("hard limit");
+        when(MainApp.gs(R.string.key_child)).thenReturn("child");
 
         PowerMockito.mockStatic(SP.class);
         // RS constructor

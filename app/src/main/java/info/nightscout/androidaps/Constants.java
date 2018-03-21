@@ -14,7 +14,7 @@ public class Constants {
 
     public static final Double REALLYHIGHBASALRATE = 1111111d;
     public static final Integer REALLYHIGHPERCENTBASALRATE = 1111111;
-    public static final double bolusOnlyForCheckLimit = 10101010d;
+    public static final double REALLYHIGHBOLUS = 1111111d;
     public static final Integer carbsOnlyForCheckLimit = 10101010;
 
     public static final Integer notificationID = 556677;

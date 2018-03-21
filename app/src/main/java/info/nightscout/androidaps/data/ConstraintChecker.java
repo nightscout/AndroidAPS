@@ -123,15 +123,14 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Double applyBolusConstraints(Double insulin) {
-        Double insulinAfterConstrain = insulin;
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulin), insulinAfterConstrain);
+            constrain.applyBolusConstraints(insulin);
         }
-        return insulinAfterConstrain;
+        return insulin;
     }
 
     @Override

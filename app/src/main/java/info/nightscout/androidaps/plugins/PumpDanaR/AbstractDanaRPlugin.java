@@ -263,7 +263,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        insulin = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+        insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
@@ -474,15 +474,9 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public Double applyBolusConstraints(Double insulin) {
-        double origInsulin = insulin;
-        if (pump != null) {
-            if (insulin > pump.maxBolus) {
-                insulin = pump.maxBolus;
-                if (Config.logConstraintsChanges && origInsulin != Constants.bolusOnlyForCheckLimit)
-                    log.debug("Limiting bolus " + origInsulin + "U by pump constraint to " + insulin + "U");
-            }
-        }
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+        if (pump != null)
+            insulin.setIfSmaller(pump.maxBolus, String.format(MainApp.gs(R.string.limitingbolus), pump.maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
     }
 

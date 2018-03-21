@@ -25,6 +25,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
@@ -92,7 +93,7 @@ public class ActionStringHandler {
             } else {
                 return;
             }
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(amount);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
             rMessage += MainApp.instance().getString(R.string.primefill) + ": " + insulinAfterConstraints + "U";
             if (insulinAfterConstraints - amount != 0)
                 rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
@@ -103,7 +104,7 @@ public class ActionStringHandler {
             ////////////////////////////////////////////// PRIME/FILL
             double amount = SafeParse.stringToDouble(act[1]);
 
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(amount);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
             rMessage += MainApp.instance().getString(R.string.primefill) + ": " + insulinAfterConstraints + "U";
             if (insulinAfterConstraints - amount != 0)
                 rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
@@ -114,7 +115,7 @@ public class ActionStringHandler {
             ////////////////////////////////////////////// BOLUS
             double insulin = SafeParse.stringToDouble(act[1]);
             int carbs = SafeParse.stringToInt(act[2]);
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbs);
             rMessage += MainApp.instance().getString(R.string.bolus) + ": " + insulinAfterConstraints + "U\n";
             rMessage += MainApp.instance().getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -207,7 +208,7 @@ public class ActionStringHandler {
             BolusWizard bolusWizard = new BolusWizard();
             bolusWizard.doCalc(profile, null, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
 
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
                 sendError("Insulin contraint violation!" +
                         "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!");
@@ -534,7 +535,7 @@ public class ActionStringHandler {
 
         if ("fill".equals(act[0])) {
             Double amount = SafeParse.stringToDouble(act[1]);
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(amount);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
             if (amount - insulinAfterConstraints != 0) {
                 ToastUtils.showToastInUiThread(MainApp.instance(), "aborting: previously applied constraint changed");
                 sendError("aborting: previously applied constraint changed");

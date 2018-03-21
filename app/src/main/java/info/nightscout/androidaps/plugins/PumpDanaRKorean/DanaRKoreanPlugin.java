@@ -133,7 +133,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;

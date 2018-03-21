@@ -1130,8 +1130,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public Double applyBolusConstraints(Double insulin) {
-        return Math.min(insulin, statusResult != null ? statusResult.maximumBolusAmount : 0);
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+        if (statusResult != null)
+            insulin.setIfSmaller(statusResult.maximumBolusAmount, String.format(MainApp.gs(R.string.limitingbolus), statusResult.maximumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
+        return insulin;
     }
 
     @Override

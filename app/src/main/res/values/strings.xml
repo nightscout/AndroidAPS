@@ -972,6 +972,7 @@
     <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
     <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
     <string name="basalmustbepositivevalue">basal must be positive value</string>
+    <string name="bolusmustbepositivevalue">bolus must be positive value</string>
     <string name="maxbasalinpreferences">max basal settings in preferences</string>
     <string name="maxbasalmultiplier">max basal multiplier</string>
     <string name="maxdailybasalmultiplier">max daily basal multiplier</string>
@@ -979,5 +980,9 @@
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
     <string name="limitingpercentrate" formatted="false">Limiting percent rate to %d%% because of %s</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="limitingbolus">Limiting bolus to %.1f U because of %s</string>
+    <string name="maxvalueinpreferences">max value in preferences</string>
+    <string name="hardlimit">hard limit</string>
 </resources>
 

@@ -276,7 +276,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editCarbs = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbsinput);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
 
-        Double maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        Double maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
         editInsulin = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_insulininput);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
 

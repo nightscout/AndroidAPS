@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.utils.HardLimits;
 
 public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
@@ -27,9 +28,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
 		this();
 
 		// HARDCODED LIMIT
-		amount = MainApp.getConstraintChecker().applyBolusConstraints(amount);
-		if (amount < 0) amount = 0d;
-		if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
+		amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
 
 		this.amount = amount;
 		this.speed = speed;

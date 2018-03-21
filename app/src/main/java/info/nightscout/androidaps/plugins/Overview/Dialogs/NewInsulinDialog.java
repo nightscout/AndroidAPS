@@ -44,6 +44,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
@@ -119,7 +120,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
 
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newinsulin_amount);
 
@@ -223,7 +224,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
         try {
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {

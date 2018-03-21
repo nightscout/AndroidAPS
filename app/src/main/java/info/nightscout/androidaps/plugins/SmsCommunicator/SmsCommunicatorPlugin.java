@@ -450,7 +450,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
-                        amount = MainApp.getConstraintChecker().applyBolusConstraints(amount);
+                        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
                         if (amount > 0d && remoteCommandsAllowed) {
                             passCode = generatePasscode();
                             reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusreplywithcode), amount, passCode);

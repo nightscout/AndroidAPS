@@ -173,16 +173,13 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Double applyBolusConstraints(Double insulin) {
-        try {
-            Double maxBolus = SP.getDouble("treatmentssafety_maxbolus", 3d);
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbolus), 0d, MainApp.gs(R.string.bolusmustbepositivevalue)), this);
 
-            if (insulin < 0) insulin = 0d;
-            if (insulin > maxBolus) insulin = maxBolus;
-        } catch (Exception e) {
-            insulin = 0d;
-        }
-        if (insulin > HardLimits.maxBolus()) insulin = HardLimits.maxBolus();
+        Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
+        insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
+
+        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
         return insulin;
     }
 

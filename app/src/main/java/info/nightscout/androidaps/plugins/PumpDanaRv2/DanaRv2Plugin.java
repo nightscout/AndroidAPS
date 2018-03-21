@@ -122,7 +122,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     // Pump interface
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             // v2 stores end time for bolus, we need to adjust time
             // default delivery speed is 12 sec/U

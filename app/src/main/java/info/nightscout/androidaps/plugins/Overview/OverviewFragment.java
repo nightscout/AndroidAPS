@@ -727,7 +727,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
                 String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(wizard.calculatedTotalInsulin);
+                Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(wizard.calculatedTotalInsulin)).value();
                 Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(quickWizardEntry.carbs());
 
                 confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";

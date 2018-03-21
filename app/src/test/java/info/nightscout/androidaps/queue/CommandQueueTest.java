@@ -125,7 +125,8 @@ public class CommandQueueTest extends CommandQueue {
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         when(MainApp.isEngineeringModeOrRelease()).thenReturn(true);
         when(MainApp.instance()).thenReturn(mainApp);
-        when(MainApp.getConstraintChecker().applyBolusConstraints(insulin)).thenReturn(insulin);
+        Constraint<Double> bolusConstraint = new Constraint<>(0d);
+        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(bolusConstraint);
         when(MainApp.getConstraintChecker().applyCarbsConstraints(carbs)).thenReturn(carbs);
         Constraint<Double> rateConstraint = new Constraint<>(0d);
         when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(rateConstraint);

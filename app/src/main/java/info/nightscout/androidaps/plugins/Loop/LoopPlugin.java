@@ -296,7 +296,8 @@ public class LoopPlugin implements PluginBase {
             final APSResult resultAfterConstraints = result.clone();
             resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
             resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
-            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smb);
+            resultAfterConstraints.smbConstraint = new Constraint<>(resultAfterConstraints.smb);
+            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();

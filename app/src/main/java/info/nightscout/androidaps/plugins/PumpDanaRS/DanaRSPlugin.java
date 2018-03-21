@@ -314,15 +314,9 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
 
     @Override
-    public Double applyBolusConstraints(Double insulin) {
-        double origInsulin = insulin;
-        if (pump != null) {
-            if (insulin > pump.maxBolus) {
-                insulin = pump.maxBolus;
-                if (Config.logConstraintsChanges && origInsulin != Constants.bolusOnlyForCheckLimit)
-                    log.debug("Limiting bolus " + origInsulin + "U by pump constraint to " + insulin + "U");
-            }
-        }
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+        if (pump != null)
+            insulin.setIfSmaller(pump.maxBolus, String.format(MainApp.gs(R.string.limitingbolus), pump.maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
     }
 
@@ -441,7 +435,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
             int speed = 12;
@@ -660,7 +654,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public synchronized PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        insulin = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+        insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);

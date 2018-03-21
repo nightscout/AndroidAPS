@@ -31,6 +31,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.FabricPrivacy;
@@ -96,7 +97,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
-        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
 
         editCarbs = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_carbsamount);
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
@@ -128,7 +129,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion) + "<br/>";
 
-                    Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+                    Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
                     Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbs);
 
                     if (insulin > 0) {

@@ -166,7 +166,7 @@ public class CommandQueue {
         removeAll(type);
 
         // apply constraints
-        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints((int) detailedBolusInfo.carbs);
 
         // add new command to queue
@@ -236,7 +236,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(insulin);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);

@@ -21,7 +21,7 @@ public interface ConstraintsInterface {
 
     Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile);
 
-    Double applyBolusConstraints(Double insulin);
+    Constraint<Double>  applyBolusConstraints(Constraint<Double>  insulin);
 
     Integer applyCarbsConstraints(Integer carbs);
 

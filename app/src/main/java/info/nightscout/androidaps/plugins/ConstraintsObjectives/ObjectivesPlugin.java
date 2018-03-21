@@ -356,7 +356,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Double applyBolusConstraints(Double insulin) {
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
         return insulin;
     }
 
