@@ -37,34 +37,34 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
-    public Constraint<T> set(T value, String reason) {
+    public Constraint<T> set(T value, String reason, Object from) {
         this.value = value;
-        reason(reason);
+        reason(reason, from);
         return this;
     }
 
-    public Constraint<T> setIfSmaller(T value, String reason) {
+    public Constraint<T> setIfSmaller(T value, String reason, Object from) {
         if (value.compareTo(this.value) < 0) {
             this.value = value;
         }
         if (value.compareTo(this.originalValue) < 0) {
-            reason(reason);
+            reason(reason, from);
         }
         return this;
     }
 
-   public Constraint<T> setIfGreater(T value, String reason) {
+   public Constraint<T> setIfGreater(T value, String reason, Object from) {
         if (value.compareTo(this.value) > 0) {
             this.value = value;
         }
         if (value.compareTo(this.originalValue) > 0) {
-            reason(reason);
+            reason(reason, from);
         }
         return this;
     }
 
-    public Constraint reason(String reason) {
-        reasons.add(reason);
+    public Constraint reason(String reason, Object from) {
+        reasons.add(from.getClass().getSimpleName() + ": " + reason);
         return this;
     }
 
@@ -79,4 +79,13 @@ public class Constraint<T extends Comparable> {
         return sb.toString();
     }
 
+    public List<String> getReasonList() {
+        return reasons;
+    }
+
+    public void copyReasons(Constraint<?> another) {
+        for (String s: another.getReasonList()) {
+            reasons.add(s);
+        }
+    }
 }

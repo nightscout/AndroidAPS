@@ -3,16 +3,12 @@ package info.nightscout.androidaps.plugins.ConstraintsSafety;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.HardLimits;
@@ -99,18 +95,18 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
         if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
-            value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable));
+            value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
         if (!MainApp.isEngineeringModeOrRelease())
-            value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch));
+            value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
 
         String mode = SP.getString("aps_mode", "open");
         if (!mode.equals("closed"))
-            value.set(false, MainApp.gs(R.string.closedmodedisabledinpreferences));
+            value.set(false, MainApp.gs(R.string.closedmodedisabledinpreferences), this);
         return value;
     }
 
@@ -123,7 +119,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
         boolean enabled = SP.getBoolean("openapsama_useautosens", false);
         if (!enabled)
-            value.set(false, MainApp.gs(R.string.amadisabledinpreferences));
+            value.set(false, MainApp.gs(R.string.amadisabledinpreferences), this);
         return value;
     }
 
@@ -131,26 +127,26 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
         boolean enabled = SP.getBoolean(R.string.key_use_smb, false);
         if (!enabled)
-            value.set(false, MainApp.gs(R.string.smbdisabledinpreferences));
+            value.set(false, MainApp.gs(R.string.smbdisabledinpreferences), this);
         return value;
     }
 
     @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
 
-        absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.basalmustbepositivevalue)));
+        absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.basalmustbepositivevalue)), this);
 
         double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
-        absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxbasalinpreferences)));
+        absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxbasalinpreferences)), this);
 
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
         double maxFromBasalMult = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
-        absoluteRate.setIfSmaller(maxFromBasalMult, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromBasalMult, MainApp.gs(R.string.maxbasalmultiplier)));
+        absoluteRate.setIfSmaller(maxFromBasalMult, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromBasalMult, MainApp.gs(R.string.maxbasalmultiplier)), this);
 
         Double maxBasalFromDaily = SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
         double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
-        absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)));
+        absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)), this);
         return absoluteRate;
     }
 
@@ -160,18 +156,18 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         Double currentBasal = profile.getBasal();
         Double absoluteRate = currentBasal * ((double) percentRate.originalValue() / 100);
 
-        percentRate.reason("Percent rate " + percentRate.originalValue() + "% recalculated to " + DecimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + DecimalFormatter.to2Decimal(currentBasal) + " U/h");
+        percentRate.reason("Percent rate " + percentRate.originalValue() + "% recalculated to " + DecimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + DecimalFormatter.to2Decimal(currentBasal) + " U/h", this);
 
         Constraint<Double> absoluteConstraint = new Constraint<>(absoluteRate);
         applyBasalConstraints(absoluteConstraint, profile);
-
+        percentRate.copyReasons(absoluteConstraint);
 
         Integer percentRateAfterConst = Double.valueOf(absoluteConstraint.value() / currentBasal * 100).intValue();
         if (percentRateAfterConst < 100)
             percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, 10d).intValue();
         else percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, 10d).intValue();
 
-        percentRate.set(percentRateAfterConst, String.format(MainApp.gs(R.string.limitingpercentrate), percentRateAfterConst, MainApp.gs(R.string.pumplimit)));
+        percentRate.set(percentRateAfterConst, String.format(MainApp.gs(R.string.limitingpercentrate), percentRateAfterConst, MainApp.gs(R.string.pumplimit)), this);
 
         return percentRate;
     }

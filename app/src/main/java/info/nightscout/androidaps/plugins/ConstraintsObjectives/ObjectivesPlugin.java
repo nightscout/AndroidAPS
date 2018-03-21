@@ -302,35 +302,35 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
         if (objectives.get(0).started.getTime() == 0)
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1));
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
         if (objectives.get(3).started.getTime() == 0)
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4));
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
         if (objectives.get(5).started.getTime() == 0)
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 6));
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 6), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean>  isAMAModeEnabled(Constraint<Boolean> value) {
         if (objectives.get(6).started.getTime() == 0)
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 7));
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 7), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean>  isSMBModeEnabled(Constraint<Boolean> value) {
         if (objectives.get(7).started.getTime() == 0)
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 8));
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 8), this);
         return value;
     }
 

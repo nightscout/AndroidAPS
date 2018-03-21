@@ -200,18 +200,18 @@ public class ConstraintsCheckerTest {
         Constraint<Double> d = new Constraint<>(-0.5d);
         constraintChecker.applyBasalConstraints(d, profile);
         Assert.assertEquals(0d, d.value());
-        Assert.assertEquals("Limiting basal rate to 0.00 U/h because of basal must be positive value", d.getReasons());
+        Assert.assertEquals("SafetyPlugin: Limiting basal rate to 0.00 U/h because of basal must be positive value", d.getReasons());
 
         // Apply all limits
         d = new Constraint<>(Constants.REALLYHIGHBASALRATE);
         constraintChecker.applyBasalConstraints(d, profile);
         Assert.assertEquals(0.8d, d.value());
-        Assert.assertEquals("Limiting basal rate to 1.00 U/h because of max basal settings in preferences\n" +
-                "Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
-                "Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
-                "Limiting basal rate to 0.80 U/h because of pump limit\n" +
-                "Limiting basal rate to 0.80 U/h because of pump limit\n" +
-                "Limiting basal rate to 1.10 U/h because of pump limit", d.getReasons());
+        Assert.assertEquals("SafetyPlugin: Limiting basal rate to 1.00 U/h because of max basal settings in preferences\n" +
+                "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
+                "SafetyPlugin: Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
+                "DanaRPlugin: Limiting basal rate to 0.80 U/h because of pump limit\n" +
+                "DanaRSPlugin: Limiting basal rate to 0.80 U/h because of pump limit\n" +
+                "InsightPumpPlugin: Limiting basal rate to 1.10 U/h because of pump limit", d.getReasons());
 
     }
 
@@ -239,21 +239,25 @@ public class ConstraintsCheckerTest {
         Constraint<Integer> i = new Constraint<>(-22);
         constraintChecker.applyBasalPercentConstraints(i, profile);
         Assert.assertEquals((Integer)0, i.value());
-        Assert.assertEquals("Percent rate -22% recalculated to -0.22 U/h with current basal 1.00 U/h\n" + // SafetyPlugin
-                "Limiting percent rate to 0% because of pump limit\n" + // SafetyPlugin
-                "Limiting percent rate to 0% because of basal must be positive value\n" + // DanaRPlugin
-                "Limiting percent rate to 0% because of basal must be positive value\n" + // DanaRSPlugin
-                "Limiting percent rate to 0% because of basal must be positive value", i.getReasons()); // InsightPlugin
+        Assert.assertEquals("SafetyPlugin: Percent rate -22% recalculated to -0.22 U/h with current basal 1.00 U/h\n" +
+                "SafetyPlugin: Limiting basal rate to 0.00 U/h because of basal must be positive value\n" +
+                "SafetyPlugin: Limiting percent rate to 0% because of pump limit\n" +
+                "DanaRPlugin: Limiting percent rate to 0% because of basal must be positive value\n" +
+                "DanaRSPlugin: Limiting percent rate to 0% because of basal must be positive value\n" +
+                "InsightPumpPlugin: Limiting percent rate to 0% because of basal must be positive value", i.getReasons()); // InsightPlugin
 
         // Apply all limits
         i = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
         constraintChecker.applyBasalPercentConstraints(i, profile);
         Assert.assertEquals((Integer)100, i.value());
-        Assert.assertEquals("Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h\n" + // SafetyPlugin
-                "Limiting percent rate to 100% because of pump limit\n" +
-                "Limiting percent rate to 200% because of pump limit\n" +
-                "Limiting percent rate to 200% because of pump limit\n" +
-                "Limiting percent rate to 250% because of pump limit", i.getReasons());
+        Assert.assertEquals("SafetyPlugin: Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h\n" +
+                "SafetyPlugin: Limiting basal rate to 1.00 U/h because of max basal settings in preferences\n" +
+                "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
+                "SafetyPlugin: Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
+                "SafetyPlugin: Limiting percent rate to 100% because of pump limit\n" +
+                "DanaRPlugin: Limiting percent rate to 200% because of pump limit\n" +
+                "DanaRSPlugin: Limiting percent rate to 200% because of pump limit\n" +
+                "InsightPumpPlugin: Limiting percent rate to 250% because of pump limit", i.getReasons());
 
     }
 

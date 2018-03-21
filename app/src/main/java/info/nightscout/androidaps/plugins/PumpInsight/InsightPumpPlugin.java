@@ -1116,15 +1116,15 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
         if (statusResult != null) {
-            absoluteRate.setIfSmaller(statusResult.maximumBasalAmount, String.format(MainApp.gs(R.string.limitingbasalratio), statusResult.maximumBasalAmount, MainApp.gs(R.string.pumplimit)));
+            absoluteRate.setIfSmaller(statusResult.maximumBasalAmount, String.format(MainApp.gs(R.string.limitingbasalratio), statusResult.maximumBasalAmount, MainApp.gs(R.string.pumplimit)), this);
         }
         return absoluteRate;
     }
 
     @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
-        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.basalmustbepositivevalue)));
-        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)));
+        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.basalmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)), this);
 
         return percentRate;
     }

@@ -21,23 +21,23 @@ public class ConstraintTest {
         b.set(false);
         Assert.assertEquals(Boolean.FALSE, b.value());
         Assert.assertEquals("", b.getReasons());
-        b.set(true, "Set true");
+        b.set(true, "Set true", this);
         Assert.assertEquals(Boolean.TRUE, b.value());
-        Assert.assertEquals("Set true", b.getReasons());
-        b.set(false, "Set false");
+        Assert.assertEquals("ConstraintTest: Set true", b.getReasons());
+        b.set(false, "Set false", this);
         Assert.assertEquals(Boolean.FALSE, b.value());
-        Assert.assertEquals("Set true\nSet false", b.getReasons());
+        Assert.assertEquals("ConstraintTest: Set true\nConstraintTest: Set false", b.getReasons());
 
         Constraint<Double> d = new Constraint<>(10d);
-        d.set(5d, "Set 5d");
+        d.set(5d, "Set 5d", this);
         Assert.assertEquals(5d, d.value());
-        Assert.assertEquals("Set 5d", d.getReasons());
-        d.setIfSmaller(6d, "Set 6d");
+        Assert.assertEquals("ConstraintTest: Set 5d", d.getReasons());
+        d.setIfSmaller(6d, "Set 6d", this);
         Assert.assertEquals(5d, d.value());
-        Assert.assertEquals("Set 5d\nSet 6d", d.getReasons());
-        d.setIfSmaller(4d, "Set 4d");
+        Assert.assertEquals("ConstraintTest: Set 5d\nConstraintTest: Set 6d", d.getReasons());
+        d.setIfSmaller(4d, "Set 4d", this);
         Assert.assertEquals(4d, d.value());
-        Assert.assertEquals("Set 5d\nSet 6d\nSet 4d", d.getReasons());
+        Assert.assertEquals("ConstraintTest: Set 5d\nConstraintTest: Set 6d\nConstraintTest: Set 4d", d.getReasons());
         Assert.assertEquals(10d, d.originalValue());
     }
 }
