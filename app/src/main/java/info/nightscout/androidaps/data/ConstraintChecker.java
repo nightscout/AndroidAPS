@@ -112,15 +112,14 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Integer applyBasalPercentConstraints(Integer percentRate) {
-        Integer rateAfterConstrain = percentRate;
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalPercentConstraints(percentRate), rateAfterConstrain);
+            constrain.applyBasalPercentConstraints(percentRate, profile);
         }
-        return rateAfterConstrain;
+        return percentRate;
     }
 
     @Override

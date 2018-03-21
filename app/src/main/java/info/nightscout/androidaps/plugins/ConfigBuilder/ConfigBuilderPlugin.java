@@ -696,9 +696,9 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
         return null;
     }
 
-    public void disconnectPump(int durationInMinutes) {
+    public void disconnectPump(int durationInMinutes, Profile profile) {
         getActiveLoop().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
-        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, new Callback() {
+        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {

@@ -440,7 +440,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (v == apsModeView) {
             final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
-            if (activeloop == null)
+            if (activeloop == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
             if (activeloop.isEnabled(PluginBase.LOOP)) {
@@ -474,6 +474,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null)
+            return true;
         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, false);
@@ -527,23 +530,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor15m))) {
-            MainApp.getConfigBuilder().disconnectPump(15);
+            MainApp.getConfigBuilder().disconnectPump(15, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            MainApp.getConfigBuilder().disconnectPump(30);
+            MainApp.getConfigBuilder().disconnectPump(30, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            MainApp.getConfigBuilder().disconnectPump(60);
+            MainApp.getConfigBuilder().disconnectPump(60, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            MainApp.getConfigBuilder().disconnectPump(120);
+            MainApp.getConfigBuilder().disconnectPump(120, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            MainApp.getConfigBuilder().disconnectPump(180);
+            MainApp.getConfigBuilder().disconnectPump(180, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
@@ -761,7 +764,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                         activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                         MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                     }
-                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
+                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                         @Override
                                         public void run() {
                                             if (!result.success) {

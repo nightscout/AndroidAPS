@@ -215,6 +215,48 @@ public class ConstraintsCheckerTest {
 
     }
 
+    // applyBasalConstraints tests
+    @Test
+    public void percentBasalRateShouldBeLimited() throws Exception {
+        // DanaR, RS
+        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRSPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        DanaRPump.getInstance().maxBasal = 0.8d;
+
+        // Insight
+        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+        result.maximumBasalAmount = 1.1d;
+        insightPlugin.setStatusResult(result);
+
+
+        // No limit by default
+        when(SP.getDouble(R.string.key_openapsma_max_basal, 1d)).thenReturn(1d);
+        when(SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d)).thenReturn(4d);
+        when(SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d)).thenReturn(3d);
+
+        // Negative basal not allowed
+        Constraint<Integer> i = new Constraint<>(-22);
+        constraintChecker.applyBasalPercentConstraints(i, profile);
+        Assert.assertEquals((Integer)0, i.value());
+        Assert.assertEquals("Percent rate -22% recalculated to -0.22 U/h with current basal 1.00 U/h\n" + // SafetyPlugin
+                "Limiting percent rate to 0% because of pump limit\n" + // SafetyPlugin
+                "Limiting percent rate to 0% because of basal must be positive value\n" + // DanaRPlugin
+                "Limiting percent rate to 0% because of basal must be positive value\n" + // DanaRSPlugin
+                "Limiting percent rate to 0% because of basal must be positive value", i.getReasons()); // InsightPlugin
+
+        // Apply all limits
+        i = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
+        constraintChecker.applyBasalPercentConstraints(i, profile);
+        Assert.assertEquals((Integer)100, i.value());
+        Assert.assertEquals("Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h\n" + // SafetyPlugin
+                "Limiting percent rate to 100% because of pump limit\n" +
+                "Limiting percent rate to 200% because of pump limit\n" +
+                "Limiting percent rate to 200% because of pump limit\n" +
+                "Limiting percent rate to 250% because of pump limit", i.getReasons());
+
+    }
+
     @Before
     public void prepareMock() throws Exception {
         Locale.setDefault(new Locale("en", "US"));
@@ -247,6 +289,8 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.maxbasalinpreferences)).thenReturn("max basal settings in preferences");
         when(MainApp.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier");
         when(MainApp.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier");
+        when(MainApp.gs(R.string.limitingpercentrate)).thenReturn("Limiting percent rate to %d%% because of %s");
+        when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
 
         PowerMockito.mockStatic(SP.class);
         // RS constructor

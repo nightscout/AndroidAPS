@@ -73,7 +73,7 @@ public class CommandQueueTest extends CommandQueue {
         Assert.assertEquals(1, size());
 
         // add tempbasal percent. it should replace previous TEMPBASAL
-        tempBasalPercent(0, 30, true, null);
+        tempBasalPercent(0, 30, true, profile, null);
         Assert.assertEquals(1, size());
 
         // add extended bolus
@@ -129,6 +129,8 @@ public class CommandQueueTest extends CommandQueue {
         when(MainApp.getConstraintChecker().applyCarbsConstraints(carbs)).thenReturn(carbs);
         Constraint<Double> rateConstraint = new Constraint<>(0d);
         when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(rateConstraint);
+        Constraint<Integer> percentageConstraint = new Constraint<>(0);
+        when(MainApp.getConstraintChecker().applyBasalPercentConstraints(any(), any())).thenReturn(percentageConstraint);
 
         PowerMockito.mockStatic(ToastUtils.class);
         Context context = mock(Context.class);

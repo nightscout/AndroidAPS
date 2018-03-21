@@ -14,6 +14,7 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -154,49 +155,25 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Integer applyBasalPercentConstraints(Integer percentRate) {
-        Integer origPercentRate = percentRate;
-        Double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) return percentRate;
         Double currentBasal = profile.getBasal();
+        Double absoluteRate = currentBasal * ((double) percentRate.originalValue() / 100);
 
-        Double absoluteRate = currentBasal * ((double) percentRate / 100);
+        percentRate.reason("Percent rate " + percentRate.originalValue() + "% recalculated to " + DecimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + DecimalFormatter.to2Decimal(currentBasal) + " U/h");
 
-        if (Config.logConstraintsChanges)
-            log.debug("Percent rate " + percentRate + "% recalculated to " + absoluteRate + "U/h with current basal " + currentBasal + "U/h");
+        Constraint<Double> absoluteConstraint = new Constraint<>(absoluteRate);
+        applyBasalConstraints(absoluteConstraint, profile);
 
-        if (absoluteRate < 0) absoluteRate = 0d;
 
-        Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
-        Integer maxBasalFromDaily = SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3);
-        // Check percentRate but absolute rate too, because we know real current basal in pump
-        Double origRate = absoluteRate;
-        if (absoluteRate > maxBasal) {
-            absoluteRate = maxBasal;
-            if (Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-                log.debug("Limiting rate " + origRate + " by maxBasal preference to " + absoluteRate + "U/h");
-        }
-        if (absoluteRate > maxBasalMult * profile.getBasal()) {
-            absoluteRate = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
-            if (Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-                log.debug("Limiting rate " + origRate + " by maxBasalMult to " + absoluteRate + "U/h");
-        }
-        if (absoluteRate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
-            absoluteRate = profile.getMaxDailyBasal() * maxBasalFromDaily;
-            if (Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-                log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + absoluteRate + "U/h");
-        }
-
-        Integer percentRateAfterConst = new Double(absoluteRate / currentBasal * 100).intValue();
+        Integer percentRateAfterConst = Double.valueOf(absoluteConstraint.value() / currentBasal * 100).intValue();
         if (percentRateAfterConst < 100)
             percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, 10d).intValue();
         else percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, 10d).intValue();
 
-        if (Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-            log.debug("Recalculated percent rate " + percentRate + "% to " + percentRateAfterConst + "%");
-        return percentRateAfterConst;
+        percentRate.set(percentRateAfterConst, String.format(MainApp.gs(R.string.limitingpercentrate), percentRateAfterConst, MainApp.gs(R.string.pumplimit)));
+
+        return percentRate;
     }
 
     @Override

@@ -208,7 +208,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public boolean tempBasalPercent(Integer percent, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -218,10 +218,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalPercentConstraints(percent);
+        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 

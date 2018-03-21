@@ -978,5 +978,6 @@
     <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
+    <string name="limitingpercentrate" formatted="false">Limiting percent rate to %d%% because of %s</string>
 </resources>
 

@@ -296,7 +296,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     return;
                 }
                 okClicked = true;
-                if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
+                final Profile profile = MainApp.getConfigBuilder().getProfile();
+
+                if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
                     String confirmMessage = getString(R.string.entertreatmentquestion);
@@ -341,7 +343,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
-                                        ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
+                                        ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {

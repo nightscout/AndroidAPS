@@ -303,7 +303,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Integer maxPercent = MainApp.getConstraintChecker().applyBasalPercentConstraints(Constants.basalPercentOnlyForCheckLimit);
+        Integer maxPercent = 200;
+        if (profile != null)
+            maxPercent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE), profile).value();
         editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
         editPercent.setParams(0d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true, percentTextWatcher);
 

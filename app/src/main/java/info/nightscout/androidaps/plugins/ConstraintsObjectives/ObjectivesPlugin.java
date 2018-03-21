@@ -351,7 +351,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Integer applyBasalPercentConstraints(Integer percentRate) {
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
         return percentRate;
     }
 

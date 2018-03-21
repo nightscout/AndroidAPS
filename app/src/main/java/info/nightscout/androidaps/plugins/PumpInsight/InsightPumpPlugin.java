@@ -22,11 +22,11 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -65,13 +65,12 @@ import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache
 
 /**
  * Created by jamorham on 23/01/2018.
- *
+ * <p>
  * Connects to SightRemote app service using SightParser library
- *
+ * <p>
  * SightRemote and SightParser created by Tebbe Ubben
- *
+ * <p>
  * Original proof of concept SightProxy by jamorham
- *
  */
 
 @SuppressWarnings("AccessStaticViaInstance")
@@ -394,7 +393,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         for (int i = 0; i < profile.getBasalValues().length; i++) {
             Profile.BasalValue basalValue = profile.getBasalValues()[i];
             Profile.BasalValue nextValue = null;
-            if (profile.getBasalValues().length > i + 1) nextValue = profile.getBasalValues()[i + 1];
+            if (profile.getBasalValues().length > i + 1)
+                nextValue = profile.getBasalValues()[i + 1];
             profileBlocks.add(new BRProfileBlock.ProfileBlock((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60), Helpers.roundDouble(basalValue.value, 2)));
             log("setNewBasalProfile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
         }
@@ -424,12 +424,15 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             BRProfileBlock.ProfileBlock profileBlock = profileBlocks.get(i);
             Profile.BasalValue basalValue = profile.getBasalValues()[i];
             Profile.BasalValue nextValue = null;
-            if (profile.getBasalValues().length > i + 1) nextValue = profile.getBasalValues()[i + 1];
+            if (profile.getBasalValues().length > i + 1)
+                nextValue = profile.getBasalValues()[i + 1];
             log("isThisProfileSet - Comparing block: Pump: " + profileBlock.getAmount() + " for " + profileBlock.getDuration()
                     + " Profile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
-            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) return false;
+            if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
+                return false;
             //Allow a little imprecision due to rounding errors
-            if (Math.abs(profileBlock.getAmount() - Helpers.roundDouble(basalValue.value, 2)) >= 0.01D) return false;
+            if (Math.abs(profileBlock.getAmount() - Helpers.roundDouble(basalValue.value, 2)) >= 0.01D)
+                return false;
         }
         return true;
     }
@@ -484,7 +487,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;
             final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.t = t;            
+            bolusingEvent.t = t;
             bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), 0F);
             bolusingEvent.bolusId = bolusId;
             bolusingEvent.percent = 0;
@@ -516,9 +519,12 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 ActiveBolusesMessage activeBolusesMessage = (ActiveBolusesMessage) mstatus.getResponseObject();
                 ActiveBolus activeBolus = null;
-                if (activeBolusesMessage.getBolus1() != null && activeBolusesMessage.getBolus1().getBolusID() == bolusingEvent.bolusId) activeBolus = activeBolusesMessage.getBolus1();
-                else if (activeBolusesMessage.getBolus2() != null && activeBolusesMessage.getBolus2().getBolusID() == bolusingEvent.bolusId) activeBolus = activeBolusesMessage.getBolus2();
-                else if (activeBolusesMessage.getBolus3() != null && activeBolusesMessage.getBolus3().getBolusID() == bolusingEvent.bolusId) activeBolus = activeBolusesMessage.getBolus3();
+                if (activeBolusesMessage.getBolus1() != null && activeBolusesMessage.getBolus1().getBolusID() == bolusingEvent.bolusId)
+                    activeBolus = activeBolusesMessage.getBolus1();
+                else if (activeBolusesMessage.getBolus2() != null && activeBolusesMessage.getBolus2().getBolusID() == bolusingEvent.bolusId)
+                    activeBolus = activeBolusesMessage.getBolus2();
+                else if (activeBolusesMessage.getBolus3() != null && activeBolusesMessage.getBolus3().getBolusID() == bolusingEvent.bolusId)
+                    activeBolus = activeBolusesMessage.getBolus3();
                 if (activeBolus == null) break;
                 else {
                     bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount()));
@@ -566,7 +572,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
         if (percent_amount > 250) percent_amount = 250;
 
-      
 
         final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
         final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
@@ -611,7 +616,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         log("Set TBR %");
 
         percent = (int) Math.round(((double) percent) / 10d) * 10;
@@ -1117,8 +1122,11 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public Integer applyBasalPercentConstraints(Integer percentRate) {
-        return Math.min(percentRate, pumpDescription.maxTempPercent);
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
+        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.basalmustbepositivevalue)));
+        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)));
+
+        return percentRate;
     }
 
     @Override

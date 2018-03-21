@@ -764,7 +764,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      *                 is or isn't running at the moment
      */
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, boolean forceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, Profile profile, boolean forceNew) {
         return setTempBasalPercent(percent, durationInMinutes);
     }
 
@@ -1458,7 +1458,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public Integer applyBasalPercentConstraints(Integer percentRate) {
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
         return percentRate;
     }
 

@@ -38,5 +38,6 @@ public class ConstraintTest {
         d.setIfSmaller(4d, "Set 4d");
         Assert.assertEquals(4d, d.value());
         Assert.assertEquals("Set 5d\nSet 6d\nSet 4d", d.getReasons());
+        Assert.assertEquals(10d, d.originalValue());
     }
 }

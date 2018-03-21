@@ -125,7 +125,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     String confirmMessage = getString(R.string.setbasalquestion);
                     if (setAsPercent) {
                         int basalPercentInput = SafeParse.stringToInt(basalPercent.getText());
-                        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(basalPercentInput);
+                        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(basalPercentInput), profile).value();
                         confirmMessage += "\n" + percent + "% ";
                         confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (percent != basalPercentInput)
@@ -162,7 +162,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                 }
                             };
                             if (setAsPercent) {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, callback);
+                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, profile, callback);
                             } else {
                                 ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, profile, callback);
                             }

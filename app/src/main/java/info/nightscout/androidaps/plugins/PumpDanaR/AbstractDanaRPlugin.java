@@ -214,9 +214,9 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
-        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(percent);
+        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel = false;
             result.enacted = false;
@@ -228,7 +228,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         long now = System.currentTimeMillis();
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -291,7 +291,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
             result.isTempCancel = false;
             result.duration = pump.extendedBolusRemainingMinutes;
             result.absolute = pump.extendedBolusAbsoluteRate;
-            if (! SP.getBoolean("danar_useextended", false)) result.bolusDelivered = pump.extendedBolusAmount;
+            if (!SP.getBoolean("danar_useextended", false))
+                result.bolusDelivered = pump.extendedBolusAmount;
             result.isPercent = false;
             if (Config.logPumpActions)
                 log.debug("setExtendedBolus: OK");
@@ -465,19 +466,14 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         return absoluteRate;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
-    public Integer applyBasalPercentConstraints(Integer percentRate) {
-        Integer origPercentRate = percentRate;
-        if (percentRate < 0) percentRate = 0;
-        if (percentRate > getPumpDescription().maxTempPercent)
-            percentRate = getPumpDescription().maxTempPercent;
-        if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-            log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
+        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.basalmustbepositivevalue)));
+        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)));
+
         return percentRate;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBolusConstraints(Double insulin) {
         double origInsulin = insulin;
