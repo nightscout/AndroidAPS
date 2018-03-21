@@ -531,8 +531,6 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Subscribe
     public void onEventNewBG(EventNewBG ev) {
-        if (!ev.isFromActiveBgSource)
-            return;
         if (this != getPlugin()) {
             log.debug("Ignoring event for non default instance");
             return;

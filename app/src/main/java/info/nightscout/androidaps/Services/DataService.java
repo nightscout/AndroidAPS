@@ -192,7 +192,7 @@ public class DataService extends IntentService {
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
 
-        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP", xDripEnabled);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
     }
 
     private void handleNewDataFromGlimp(Intent intent) {
@@ -206,7 +206,7 @@ public class DataService extends IntentService {
         bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
 
-        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP", glimpEnabled);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
     }
 
     private void handleNewDataFromDexcomG5(Intent intent) {
@@ -229,7 +229,7 @@ public class DataService extends IntentService {
                 bgReading.direction = json.getString("m_trend");
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5", dexcomG5Enabled);
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                     NSUpload.uploadBg(bgReading);
                 }
@@ -268,7 +268,7 @@ public class DataService extends IntentService {
                                 bgReading.date = json_object.getLong("date");
                                 bgReading.raw = json_object.getDouble("sgv");
 
-                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g", mm640gEnabled);
+                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
                                 break;
                             default:
                                 log.debug("Unknown entries type: " + type);
@@ -425,7 +425,7 @@ public class DataService extends IntentService {
                     JSONObject sgvJson = new JSONObject(sgvstring);
                     NSSgv nsSgv = new NSSgv(sgvJson);
                     BgReading bgReading = new BgReading(nsSgv);
-                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS", nsClientEnabled);
+                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
                 }
 
                 if (bundles.containsKey("sgvs")) {
@@ -435,7 +435,7 @@ public class DataService extends IntentService {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
-                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS", nsClientEnabled);
+                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
                     }
                 }
             } catch (Exception e) {
