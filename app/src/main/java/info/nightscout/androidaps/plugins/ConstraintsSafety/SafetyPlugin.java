@@ -134,10 +134,10 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
 
-        absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.basalmustbepositivevalue)), this);
+        absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
 
         double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
-        absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxbasalinpreferences)), this);
+        absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
@@ -174,7 +174,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbolus), 0d, MainApp.gs(R.string.bolusmustbepositivevalue)), this);
+        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
 
         Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
         insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
@@ -184,15 +184,12 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        try {
-            Integer maxCarbs = SP.getInt("treatmentssafety_maxcarbs", 48);
+    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
+        carbs.setIfGreater(0, String.format(MainApp.gs(R.string.limitingcarbs), 0, MainApp.gs(R.string.itmustbepositivevalue)), this);
 
-            if (carbs < 0) carbs = 0;
-            if (carbs > maxCarbs) carbs = maxCarbs;
-        } catch (Exception e) {
-            carbs = 0;
-        }
+        Integer maxCarbs = SP.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
+        carbs.setIfSmaller(maxCarbs, String.format(MainApp.gs(R.string.limitingcarbs), maxCarbs, MainApp.gs(R.string.maxvalueinpreferences)), this);
+
         return carbs;
     }
 

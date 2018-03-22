@@ -467,7 +467,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
 
     @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
-        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.basalmustbepositivevalue)), this);
+        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.itmustbepositivevalue)), this);
         percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)), this);
 
         return percentRate;
@@ -481,7 +481,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
+    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
         return carbs;
     }
 

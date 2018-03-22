@@ -23,7 +23,7 @@ public interface ConstraintsInterface {
 
     Constraint<Double>  applyBolusConstraints(Constraint<Double>  insulin);
 
-    Integer applyCarbsConstraints(Integer carbs);
+    Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs);
 
     Double applyMaxIOBConstraints(Double maxIob);
 

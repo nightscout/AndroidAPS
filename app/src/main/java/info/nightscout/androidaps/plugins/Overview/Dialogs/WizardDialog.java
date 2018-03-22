@@ -237,7 +237,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         superbolusCheckbox.setVisibility(SP.getBoolean(R.string.key_usesuperbolus, false) ? View.VISIBLE : View.GONE);
 
-        Integer maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        Integer maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS)).value();
         Double maxCorrection = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
@@ -305,7 +305,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     String confirmMessage = getString(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(calculatedTotalInsulin)).value();
-                    Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(calculatedCarbs);
+                    Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(calculatedCarbs)).value();
 
                     confirmMessage += "<br/>" + getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
                     confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -467,7 +467,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
             return;
         }
-        Integer carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(c_carbs);
+        Integer carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(c_carbs)).value();
         if (c_carbs - carbsAfterConstraint != 0) {
             editCarbs.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));

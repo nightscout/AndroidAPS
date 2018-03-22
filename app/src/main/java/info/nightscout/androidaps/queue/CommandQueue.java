@@ -167,7 +167,7 @@ public class CommandQueue {
 
         // apply constraints
         detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
-        detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+        detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>((int) detailedBolusInfo.carbs)).value();
 
         // add new command to queue
         if (detailedBolusInfo.isSMB) {

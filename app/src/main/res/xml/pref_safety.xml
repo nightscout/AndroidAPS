@@ -12,7 +12,7 @@
         </EditTextPreference>
         <EditTextPreference
             android:title="@string/treatmentssafety_maxcarbs_title"
-            android:key="treatmentssafety_maxcarbs"
+            android:key="@string/key_treatmentssafety_maxcarbs"
             android:defaultValue="48"
             android:inputType="numberDecimal">
         </EditTextPreference>

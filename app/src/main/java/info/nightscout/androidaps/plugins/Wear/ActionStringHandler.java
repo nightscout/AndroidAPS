@@ -116,7 +116,7 @@ public class ActionStringHandler {
             double insulin = SafeParse.stringToDouble(act[1]);
             int carbs = SafeParse.stringToInt(act[2]);
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbs);
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
             rMessage += MainApp.instance().getString(R.string.bolus) + ": " + insulinAfterConstraints + "U\n";
             rMessage += MainApp.instance().getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
@@ -180,7 +180,7 @@ public class ActionStringHandler {
         } else if ("wizard".equals(act[0])) {
             ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbsBeforeConstraints);
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbsBeforeConstraints)).value();
 
             if (carbsAfterConstraints - carbsBeforeConstraints != 0) {
                 sendError("Carb constraint violation!");

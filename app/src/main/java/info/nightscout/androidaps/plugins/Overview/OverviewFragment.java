@@ -728,7 +728,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 String confirmMessage = getString(R.string.entertreatmentquestion);
 
                 Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(wizard.calculatedTotalInsulin)).value();
-                Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(quickWizardEntry.carbs());
+                Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
                 confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                 confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";

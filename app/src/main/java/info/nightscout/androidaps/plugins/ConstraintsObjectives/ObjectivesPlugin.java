@@ -361,7 +361,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
+    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
         return carbs;
     }
 

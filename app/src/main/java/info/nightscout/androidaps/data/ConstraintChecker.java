@@ -134,15 +134,14 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        Integer carbsAfterConstrain = carbs;
+    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbs), carbsAfterConstrain);
+            constrain.applyCarbsConstraints(carbs);
         }
-        return carbsAfterConstrain;
+        return carbs;
     }
 
     @Override

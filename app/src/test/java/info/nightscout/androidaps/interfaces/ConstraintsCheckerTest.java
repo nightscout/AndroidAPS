@@ -200,13 +200,13 @@ public class ConstraintsCheckerTest {
         Constraint<Double> d = new Constraint<>(-0.5d);
         constraintChecker.applyBasalConstraints(d, profile);
         Assert.assertEquals(0d, d.value());
-        Assert.assertEquals("SafetyPlugin: Limiting basal rate to 0.00 U/h because of basal must be positive value", d.getReasons());
+        Assert.assertEquals("SafetyPlugin: Limiting basal rate to 0.00 U/h because of it must be positive value", d.getReasons());
 
         // Apply all limits
         d = new Constraint<>(Constants.REALLYHIGHBASALRATE);
         constraintChecker.applyBasalConstraints(d, profile);
         Assert.assertEquals(0.8d, d.value());
-        Assert.assertEquals("SafetyPlugin: Limiting basal rate to 1.00 U/h because of max basal settings in preferences\n" +
+        Assert.assertEquals("SafetyPlugin: Limiting basal rate to 1.00 U/h because of max value in preferences\n" +
                 "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
                 "SafetyPlugin: Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
                 "DanaRPlugin: Limiting basal rate to 0.80 U/h because of pump limit\n" +
@@ -240,18 +240,18 @@ public class ConstraintsCheckerTest {
         constraintChecker.applyBasalPercentConstraints(i, profile);
         Assert.assertEquals((Integer)0, i.value());
         Assert.assertEquals("SafetyPlugin: Percent rate -22% recalculated to -0.22 U/h with current basal 1.00 U/h\n" +
-                "SafetyPlugin: Limiting basal rate to 0.00 U/h because of basal must be positive value\n" +
+                "SafetyPlugin: Limiting basal rate to 0.00 U/h because of it must be positive value\n" +
                 "SafetyPlugin: Limiting percent rate to 0% because of pump limit\n" +
-                "DanaRPlugin: Limiting percent rate to 0% because of basal must be positive value\n" +
-                "DanaRSPlugin: Limiting percent rate to 0% because of basal must be positive value\n" +
-                "InsightPumpPlugin: Limiting percent rate to 0% because of basal must be positive value", i.getReasons());
+                "DanaRPlugin: Limiting percent rate to 0% because of it must be positive value\n" +
+                "DanaRSPlugin: Limiting percent rate to 0% because of it must be positive value\n" +
+                "InsightPumpPlugin: Limiting percent rate to 0% because of it must be positive value", i.getReasons());
 
         // Apply all limits
         i = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
         constraintChecker.applyBasalPercentConstraints(i, profile);
         Assert.assertEquals((Integer)100, i.value());
         Assert.assertEquals("SafetyPlugin: Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h\n" +
-                "SafetyPlugin: Limiting basal rate to 1.00 U/h because of max basal settings in preferences\n" +
+                "SafetyPlugin: Limiting basal rate to 1.00 U/h because of max value in preferences\n" +
                 "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
                 "SafetyPlugin: Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
                 "SafetyPlugin: Limiting percent rate to 100% because of pump limit\n" +
@@ -284,7 +284,7 @@ public class ConstraintsCheckerTest {
         Constraint<Double> d = new Constraint<>(-22d);
         constraintChecker.applyBolusConstraints(d);
         Assert.assertEquals(0d, d.value());
-        Assert.assertEquals("SafetyPlugin: Limiting bolus to 0.0 U because of bolus must be positive value", d.getReasons());
+        Assert.assertEquals("SafetyPlugin: Limiting bolus to 0.0 U because of it must be positive value", d.getReasons());
 
         // Apply all limits
         d = new Constraint<>(Constants.REALLYHIGHBOLUS);
@@ -296,6 +296,25 @@ public class ConstraintsCheckerTest {
                 "DanaRSPlugin: Limiting bolus to 6.0 U because of pump limit\n" +
                 "InsightPumpPlugin: Limiting bolus to 7.0 U because of pump limit", d.getReasons());
 
+    }
+
+    // applyCarbsConstraints tests
+    @Test
+    public void carbsAmountShouldBeLimited() throws Exception {
+        // No limit by default
+        when(SP.getInt(R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48);
+
+        // Negative basal not allowed
+        Constraint<Integer> i = new Constraint<>(-22);
+        constraintChecker.applyCarbsConstraints(i);
+        Assert.assertEquals((Integer) 0, i.value());
+        Assert.assertEquals("SafetyPlugin: Limiting carbs to 0 g because of it must be positive value", i.getReasons());
+
+        // Apply all limits
+        i = new Constraint<>(Constants.REALLYHIGHCARBS);
+        constraintChecker.applyCarbsConstraints(i);
+        Assert.assertEquals((Integer) 48, i.value());
+        Assert.assertEquals("SafetyPlugin: Limiting carbs to 48 g because of max value in preferences", i.getReasons());
     }
 
     @Before
@@ -326,17 +345,16 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences");
         when(MainApp.gs(R.string.limitingbasalratio)).thenReturn("Limiting basal rate to %.2f U/h because of %s");
         when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
-        when(MainApp.gs(R.string.basalmustbepositivevalue)).thenReturn("basal must be positive value");
-        when(MainApp.gs(R.string.maxbasalinpreferences)).thenReturn("max basal settings in preferences");
+        when(MainApp.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value");
+        when(MainApp.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences");
         when(MainApp.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier");
         when(MainApp.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier");
         when(MainApp.gs(R.string.limitingpercentrate)).thenReturn("Limiting percent rate to %d%% because of %s");
         when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
         when(MainApp.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s");
-        when(MainApp.gs(R.string.bolusmustbepositivevalue)).thenReturn("bolus must be positive value");
-        when(MainApp.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences");
         when(MainApp.gs(R.string.hardlimit)).thenReturn("hard limit");
         when(MainApp.gs(R.string.key_child)).thenReturn("child");
+        when(MainApp.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s");
 
         PowerMockito.mockStatic(SP.class);
         // RS constructor

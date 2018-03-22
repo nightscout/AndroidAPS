@@ -43,6 +43,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
@@ -120,7 +121,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS)).value();
 
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
 
@@ -303,7 +304,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         okClicked = true;
         try {
             final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(carbs);
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
             List<String> actions = new LinkedList<>();
             if (carbs > 0)

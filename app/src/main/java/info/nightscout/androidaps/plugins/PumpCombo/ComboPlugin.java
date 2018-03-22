@@ -1468,7 +1468,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
+    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
         return carbs;
     }
 
