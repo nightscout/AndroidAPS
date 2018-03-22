@@ -1089,31 +1089,6 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     // Constraints
 
     @Override
-    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
         if (statusResult != null) {
             absoluteRate.setIfSmaller(statusResult.maximumBasalAmount, String.format(MainApp.gs(R.string.limitingbasalratio), statusResult.maximumBasalAmount, MainApp.gs(R.string.pumplimit)), this);
@@ -1135,11 +1110,5 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
             insulin.setIfSmaller(statusResult.maximumBolusAmount, String.format(MainApp.gs(R.string.limitingbolus), statusResult.maximumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
     }
-
-    @Override
-    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
-        return carbs;
-    }
-
 
 }

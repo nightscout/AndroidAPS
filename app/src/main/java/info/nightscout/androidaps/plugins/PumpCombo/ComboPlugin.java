@@ -1433,46 +1433,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
-        return absoluteRate;
-    }
-
-    @Override
-    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
-        return percentRate;
-    }
-
-    @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        return insulin;
-    }
-
-    @Override
-    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
-        return carbs;
-    }
-
-    @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
             maxIob.setIfSmaller(0d, String.format(MainApp.gs(R.string.limitingmaxiob), 0d, MainApp.gs(R.string.unsafeusage)), this);

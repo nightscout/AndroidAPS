@@ -273,31 +273,6 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     // Constraints interface
 
     @Override
-    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
-        return value;
-    }
-
-    @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
         if (pump != null)
             absoluteRate.setIfSmaller(pump.maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), pump.maxBasal, MainApp.gs(R.string.pumplimit)), this);
@@ -318,11 +293,6 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         if (pump != null)
             insulin.setIfSmaller(pump.maxBolus, String.format(MainApp.gs(R.string.limitingbolus), pump.maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
-    }
-
-    @Override
-    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
-        return carbs;
     }
 
     // Profile interface

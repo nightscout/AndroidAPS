@@ -7,23 +7,41 @@ import info.nightscout.androidaps.data.Profile;
  */
 public interface ConstraintsInterface {
 
-    Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value);
+    default Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+        return value;
+    }
 
-    Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value);
+    default Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
+        return value;
+    }
 
-    Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value);
+    default Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        return value;
+    }
 
-    Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value);
+    default Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        return value;
+    }
 
-    Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value);
+    default Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        return value;
+    }
 
-    Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile);
+    default Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
+        return absoluteRate;
+    }
 
-    Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile);
+    default Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
+        return percentRate;
+    }
 
-    Constraint<Double>  applyBolusConstraints(Constraint<Double>  insulin);
+    default Constraint<Double>  applyBolusConstraints(Constraint<Double>  insulin) {
+        return insulin;
+    }
 
-    Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs);
+    default Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
+        return carbs;
+    }
 
     default Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         return maxIob;
