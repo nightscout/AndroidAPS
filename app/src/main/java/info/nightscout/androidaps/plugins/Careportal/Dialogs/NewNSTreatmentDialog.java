@@ -272,11 +272,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         });
 
-        Integer maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS)).value();
+        Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
         editCarbs = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbsinput);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
 
-        Double maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
+        Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         editInsulin = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_insulininput);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
 
@@ -305,7 +305,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
         Integer maxPercent = 200;
         if (profile != null)
-            maxPercent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE), profile).value();
+            maxPercent = MainApp.getConstraintChecker().getMaxBasalPercentAllowed(profile).value();
         editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
         editPercent.setParams(0d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true, percentTextWatcher);
 
@@ -327,7 +327,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Double maxAbsolute = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(Constants.REALLYHIGHBASALRATE), profile).value();
+        Double maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
         editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
 

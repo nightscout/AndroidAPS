@@ -96,8 +96,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS)).value();
-        maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
+        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
+        maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
         editCarbs = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_carbsamount);
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);

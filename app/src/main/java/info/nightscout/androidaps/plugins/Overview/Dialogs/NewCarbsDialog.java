@@ -121,7 +121,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS)).value();
+        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
 
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
 

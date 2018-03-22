@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -61,7 +60,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        Double maxInsulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
+        Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
         editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, new DecimalFormat("0.00"), false);

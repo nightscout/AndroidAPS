@@ -201,7 +201,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 SafetyPlugin.getPlugin().isClosedLoopAllowed(closedLoopEnabled);
                 return new RequirementResult(closedLoopEnabled.value(), MainApp.gs(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.value()));
             case 4:
-                double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(new Constraint<>(Constants.REALLYHIGHIOB)).value();
+                double maxIOB = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
                 boolean maxIobSet = maxIOB > 0;
                 return new RequirementResult(maxIobSet, MainApp.gs(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
             default:

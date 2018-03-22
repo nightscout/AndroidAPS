@@ -237,8 +237,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         superbolusCheckbox.setVisibility(SP.getBoolean(R.string.key_usesuperbolus, false) ? View.VISIBLE : View.GONE);
 
-        Integer maxCarbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS)).value();
-        Double maxCorrection = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS)).value();
+        Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
+        Double maxCorrection = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);

@@ -13,9 +13,9 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  */
 
 public class ConstraintChecker implements ConstraintsInterface {
-    
+
     private MainApp mainApp;
-    
+
     public ConstraintChecker(MainApp mainApp) {
         this.mainApp = mainApp;
     }
@@ -29,20 +29,36 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isClosedLoopAllowed(new Constraint<>(true));
     }
 
-     public Constraint<Boolean> isAutosensModeEnabled() {
+    public Constraint<Boolean> isAutosensModeEnabled() {
         return isAutosensModeEnabled(new Constraint<>(true));
     }
 
-     public Constraint<Boolean> isAMAModeEnabled() {
+    public Constraint<Boolean> isAMAModeEnabled() {
         return isAMAModeEnabled(new Constraint<>(true));
     }
 
-     public Constraint<Boolean> isSMBModeEnabled() {
+    public Constraint<Boolean> isSMBModeEnabled() {
         return isSMBModeEnabled(new Constraint<>(true));
     }
 
-     public Constraint<Double> getMaxBasalAllowed(Profile profile) {
+    public Constraint<Double> getMaxBasalAllowed(Profile profile) {
         return applyBasalConstraints(new Constraint<>(Constants.REALLYHIGHBASALRATE), profile);
+    }
+
+    public Constraint<Integer> getMaxBasalPercentAllowed(Profile profile) {
+        return applyBasalPercentConstraints(new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE), profile);
+    }
+
+    public Constraint<Double> getMaxBolusAllowed() {
+        return applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS));
+    }
+
+    public Constraint<Integer> getMaxCarbsAllowed() {
+        return applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS));
+    }
+
+    public Constraint<Double> getMaxIOBAllowed() {
+        return applyMaxIOBConstraints(new Constraint<>(Constants.REALLYHIGHIOB));
     }
 
     @Override

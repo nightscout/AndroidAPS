@@ -209,8 +209,7 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals("SafetyPlugin: Limiting basal rate to 0.00 U/h because of it must be positive value", d.getReasons());
 
         // Apply all limits
-        d = new Constraint<>(Constants.REALLYHIGHBASALRATE);
-        constraintChecker.applyBasalConstraints(d, profile);
+        d = constraintChecker.getMaxBasalAllowed(profile);
         Assert.assertEquals(0.8d, d.value());
         Assert.assertEquals("SafetyPlugin: Limiting basal rate to 1.00 U/h because of max value in preferences\n" +
                 "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
@@ -255,8 +254,7 @@ public class ConstraintsCheckerTest {
                 "InsightPumpPlugin: Limiting percent rate to 0% because of it must be positive value", i.getReasons());
 
         // Apply all limits
-        i = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
-        constraintChecker.applyBasalPercentConstraints(i, profile);
+        i = constraintChecker.getMaxBasalPercentAllowed(profile);
         Assert.assertEquals((Integer)100, i.value());
         Assert.assertEquals("SafetyPlugin: Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h\n" +
                 "SafetyPlugin: Limiting basal rate to 1.00 U/h because of max value in preferences\n" +
@@ -296,8 +294,7 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals("SafetyPlugin: Limiting bolus to 0.0 U because of it must be positive value", d.getReasons());
 
         // Apply all limits
-        d = new Constraint<>(Constants.REALLYHIGHBOLUS);
-        constraintChecker.applyBolusConstraints(d);
+        d = constraintChecker.getMaxBolusAllowed();
         Assert.assertEquals(3d, d.value());
         Assert.assertEquals("SafetyPlugin: Limiting bolus to 3.0 U because of max value in preferences\n" +
                 "SafetyPlugin: Limiting bolus to 5.0 U because of hard limit\n" +
@@ -320,8 +317,7 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals("SafetyPlugin: Limiting carbs to 0 g because of it must be positive value", i.getReasons());
 
         // Apply all limits
-        i = new Constraint<>(Constants.REALLYHIGHCARBS);
-        constraintChecker.applyCarbsConstraints(i);
+        i = constraintChecker.getMaxCarbsAllowed();
         Assert.assertEquals((Integer) 48, i.value());
         Assert.assertEquals("SafetyPlugin: Limiting carbs to 48 g because of max value in preferences", i.getReasons());
     }
@@ -349,8 +345,7 @@ public class ConstraintsCheckerTest {
         OpenAPSSMBPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
 
         // Apply all limits
-        Constraint<Double> d = new Constraint<>(Constants.REALLYHIGHIOB);
-        constraintChecker.applyMaxIOBConstraints(d);
+        Constraint<Double> d = constraintChecker.getMaxIOBAllowed();
         Assert.assertEquals(1.5d, d.value());
         Assert.assertEquals("SafetyPlugin: Limiting IOB to 1.5 U because of max value in preferences\n" +
                 "SafetyPlugin: Limiting IOB to 7.0 U because of hard limit\n" +

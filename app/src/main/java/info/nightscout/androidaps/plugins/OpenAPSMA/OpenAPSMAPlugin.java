@@ -194,7 +194,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         MealData mealData = MainApp.getConfigBuilder().getMealData();
 
-        double  maxIob = MainApp.getConstraintChecker().applyMaxIOBConstraints(new Constraint<>(Constants.REALLYHIGHIOB)).value();
+        double  maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
         Profiler.log(log, "MA data gathering", start);
 
         minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
