@@ -342,25 +342,4 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         return maxIob;
     }
 
-    @Override
-    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
-        return absoluteRate;
-    }
-
-    @Override
-    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
-        return percentRate;
-    }
-
-    @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        return insulin;
-    }
-
-    @Override
-    public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
-        return carbs;
-    }
-
-
 }

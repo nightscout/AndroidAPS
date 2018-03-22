@@ -965,7 +965,7 @@
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
-    <string name="amadisabledinpreferences">AMA disabled in preferences</string>
+    <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
     <string name="limitingbasalratio">Limiting basal rate to %.2f U/h because of %s</string>
     <string name="pumplimit">pump limit</string>
@@ -988,5 +988,6 @@
     <string name="hardlimit">hard limit</string>
     <string name="key_treatmentssafety_maxcarbs">treatmentssafety_maxcarbs</string>
     <string name="unsafeusage">unsafe usage</string>
+    <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
 </resources>
 

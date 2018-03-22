@@ -141,13 +141,15 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
-    // isAMAModeEnabled tests
+    // isAutosensModeEnabled tests
     @Test
-    public void notEnabledAMAInPreferencesDisablesAMA() throws Exception {
-        when(SP.getBoolean("openapsama_useautosens", false)).thenReturn(false);
+    public void notEnabledAutosensInPreferencesDisablesAutosens() throws Exception {
+        objectivesPlugin.objectives.get(5).setStarted(new Date(0));
+        when(SP.getBoolean(R.string.key_openapsama_useautosens, false)).thenReturn(false);
 
-        Constraint<Boolean> c = constraintChecker.isAMAModeEnabled();
-        Assert.assertEquals(true, c.getReasons().contains("AMA disabled in preferences"));
+        Constraint<Boolean> c = constraintChecker.isAutosensModeEnabled();
+        Assert.assertEquals(true, c.getReasons().contains("Autosens disabled in preferences"));
+        Assert.assertEquals(true, c.getReasons().contains("Objective 6 not started"));
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
@@ -377,7 +379,7 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences");
         when(MainApp.gs(R.string.objectivenotstarted)).thenReturn("Objective %d not started");
         when(MainApp.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump");
-        when(MainApp.gs(R.string.amadisabledinpreferences)).thenReturn("AMA disabled in preferences");
+        when(MainApp.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences");
         when(MainApp.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences");
         when(MainApp.gs(R.string.limitingbasalratio)).thenReturn("Limiting basal rate to %.2f U/h because of %s");
         when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
