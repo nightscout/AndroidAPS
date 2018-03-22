@@ -325,11 +325,6 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         return carbs;
     }
 
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        return maxIob;
-    }
-
     // Profile interface
 
     @Nullable

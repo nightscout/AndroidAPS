@@ -145,15 +145,14 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        Double maxIobAfterConstrain = maxIob;
+    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIob), maxIobAfterConstrain);
+            constrain.applyMaxIOBConstraints(maxIob);
         }
-        return maxIobAfterConstrain;
+        return maxIob;
     }
 
 

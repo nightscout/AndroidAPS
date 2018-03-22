@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
@@ -17,6 +18,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -74,13 +76,13 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump() != null && ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
         return type == APS && fragmentEnabled && pumpCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
+        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump() != null && ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
         return type == APS && fragmentVisible && pumpCapable;
     }
 
@@ -173,7 +175,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxIob = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
         double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
@@ -192,7 +193,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         MealData mealData = MainApp.getConfigBuilder().getMealData();
 
-        maxIob = MainApp.getConstraintChecker().applyMaxIOBConstraints(maxIob);
+        double  maxIob = MainApp.getConstraintChecker().applyMaxIOBConstraints(new Constraint<>(Constants.REALLYHIGHIOB)).value();
         Profiler.log(log, "MA data gathering", start);
 
         minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
@@ -206,7 +207,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             targetBg = verifyHardLimits(tempTarget.target(), "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
         }
 
-        maxIob = verifyHardLimits(maxIob, "maxIob", 0, HardLimits.maxIobAMA());
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, HardLimits.maxBasal());
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", HardLimits.MINDIA, HardLimits.MAXDIA))

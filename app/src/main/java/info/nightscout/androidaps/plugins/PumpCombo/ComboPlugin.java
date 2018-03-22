@@ -1473,7 +1473,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        return lowSuspendOnlyLoopEnforcedUntil < System.currentTimeMillis() ? maxIob : 0;
+    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+        if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
+            maxIob.setIfSmaller(0d, String.format(MainApp.gs(R.string.limitingmaxiob), 0d, MainApp.gs(R.string.unsafeusage)), this);
+        return maxIob;
     }
 }

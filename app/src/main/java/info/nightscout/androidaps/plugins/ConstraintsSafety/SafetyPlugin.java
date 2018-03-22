@@ -10,6 +10,9 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Round;
@@ -194,7 +197,16 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
+    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+        double maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        maxIob.setIfSmaller(maxIobPref, String.format(MainApp.gs(R.string.limitingiob), maxIobPref, MainApp.gs(R.string.maxvalueinpreferences)), this);
+
+        if (OpenAPSMAPlugin.getPlugin().isEnabled(PluginBase.APS))
+            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
+        if (OpenAPSAMAPlugin.getPlugin().isEnabled(PluginBase.APS))
+            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginBase.APS))
+            maxIob.setIfSmaller(HardLimits.maxIobSMB(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobSMB(), MainApp.gs(R.string.hardlimit)), this);
         return maxIob;
     }
 

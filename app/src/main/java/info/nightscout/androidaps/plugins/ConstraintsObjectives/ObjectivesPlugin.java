@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -192,7 +193,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 SafetyPlugin.getPlugin().isClosedLoopAllowed(closedLoopEnabled);
                 return new RequirementResult(closedLoopEnabled.value(), MainApp.gs(R.string.closedmodeenabled) + ": " + yesOrNo(closedLoopEnabled.value()));
             case 4:
-                double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(1000d);
+                double maxIOB = MainApp.getConstraintChecker().applyMaxIOBConstraints(new Constraint<>(Constants.REALLYHIGHIOB)).value();
                 boolean maxIobSet = maxIOB > 0;
                 return new RequirementResult(maxIobSet, MainApp.gs(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
             default:
@@ -335,14 +336,10 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        if (objectives.get(3).started.getTime() > 0 && objectives.get(3).accomplished.getTime() == 0) {
-            if (Config.logConstraintsChanges)
-                log.debug("Limiting maxIOB " + maxIob + " to " + 0 + "U");
-            return 0d;
-        } else {
-            return maxIob;
-        }
+    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+        if (objectives.get(3).started.getTime() > 0&& objectives.get(3).accomplished.getTime() == 0)
+            maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), 4), this);
+        return maxIob;
     }
 
     @Override

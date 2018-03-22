@@ -485,11 +485,6 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         return carbs;
     }
 
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        return maxIob;
-    }
-
     @Nullable
     @Override
     public ProfileStore getProfile() {

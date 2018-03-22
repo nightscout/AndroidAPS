@@ -25,6 +25,8 @@ public interface ConstraintsInterface {
 
     Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs);
 
-    Double applyMaxIOBConstraints(Double maxIob);
+    default Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+        return maxIob;
+    };
 
 }

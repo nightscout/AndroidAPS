@@ -1141,10 +1141,5 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         return carbs;
     }
 
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        return maxIob;
-    }
-
 
 }

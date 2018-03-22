@@ -27,6 +27,9 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -44,7 +47,7 @@ import static org.mockito.Mockito.when;
  * Created by mike on 18.03.2018.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, FabricPrivacy.class, SP.class, Context.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, FabricPrivacy.class, SP.class, Context.class, OpenAPSMAPlugin.class, OpenAPSAMAPlugin.class, OpenAPSSMBPlugin.class})
 public class ConstraintsCheckerTest {
 
     PumpInterface pump = new VirtualPumpPlugin();
@@ -280,7 +283,7 @@ public class ConstraintsCheckerTest {
         when(SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d)).thenReturn(3d);
         when(SP.getString(R.string.key_age, "")).thenReturn("child");
 
-        // Negative basal not allowed
+        // Negative bolus not allowed
         Constraint<Double> d = new Constraint<>(-22d);
         constraintChecker.applyBolusConstraints(d);
         Assert.assertEquals(0d, d.value());
@@ -304,7 +307,7 @@ public class ConstraintsCheckerTest {
         // No limit by default
         when(SP.getInt(R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48);
 
-        // Negative basal not allowed
+        // Negative carbs not allowed
         Constraint<Integer> i = new Constraint<>(-22);
         constraintChecker.applyCarbsConstraints(i);
         Assert.assertEquals((Integer) 0, i.value());
@@ -315,6 +318,39 @@ public class ConstraintsCheckerTest {
         constraintChecker.applyCarbsConstraints(i);
         Assert.assertEquals((Integer) 48, i.value());
         Assert.assertEquals("SafetyPlugin: Limiting carbs to 48 g because of max value in preferences", i.getReasons());
+    }
+
+    // applyMaxIOBConstraints tests
+    @Test
+    public void iobShouldBeLimited() throws Exception {
+        // DanaR, RS
+        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRSPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        DanaRPump.getInstance().maxBolus = 6d;
+
+        // Insight
+        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+        result.maximumBolusAmount = 7d;
+        insightPlugin.setStatusResult(result);
+
+
+        // No limit by default
+        when(SP.getDouble(R.string.key_openapsma_max_iob, 1.5d)).thenReturn(1.5d);
+        when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
+        OpenAPSMAPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
+        OpenAPSAMAPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
+        OpenAPSSMBPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
+
+        // Apply all limits
+        Constraint<Double> d = new Constraint<>(Constants.REALLYHIGHIOB);
+        constraintChecker.applyMaxIOBConstraints(d);
+        Assert.assertEquals(1.5d, d.value());
+        Assert.assertEquals("SafetyPlugin: Limiting IOB to 1.5 U because of max value in preferences\n" +
+                "SafetyPlugin: Limiting IOB to 7.0 U because of hard limit\n" +
+                "SafetyPlugin: Limiting IOB to 7.0 U because of hard limit\n" +
+                "SafetyPlugin: Limiting IOB to 12.0 U because of hard limit", d.getReasons());
+
     }
 
     @Before
@@ -355,6 +391,12 @@ public class ConstraintsCheckerTest {
         when(MainApp.gs(R.string.hardlimit)).thenReturn("hard limit");
         when(MainApp.gs(R.string.key_child)).thenReturn("child");
         when(MainApp.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s");
+        when(MainApp.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %.1f U because of %s");
+
+        PowerMockito.mockStatic(SP.class);
+        //PowerMockito.mock(OpenAPSMAPlugin.class);
+        //PowerMockito.mock(OpenAPSAMAPlugin.class);
+        //PowerMockito.mock(OpenAPSSMBPlugin.class);
 
         PowerMockito.mockStatic(SP.class);
         // RS constructor

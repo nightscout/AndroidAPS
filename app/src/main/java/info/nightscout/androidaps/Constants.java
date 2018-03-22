@@ -16,6 +16,7 @@ public class Constants {
     public static final Integer REALLYHIGHPERCENTBASALRATE = 1111111;
     public static final double REALLYHIGHBOLUS = 1111111d;
     public static final Integer REALLYHIGHCARBS = 1111111;
+    public static final double REALLYHIGHIOB = 1111111d;
 
     public static final Integer notificationID = 556677;
 

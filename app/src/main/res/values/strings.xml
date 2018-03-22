@@ -961,6 +961,7 @@
     <string name="combo_bolus_count">Bolus count</string>
     <string name="combo_tbr_count">TBR count</string>
     <string name="objectivenotstarted" formatted="false">Objective %d not started</string>
+    <string name="objectivenotfinished" formatted="false">Objective %d not finished</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
@@ -979,10 +980,13 @@
     <string name="basal_set_correctly">Basal set correctly</string>
     <string name="limitingpercentrate" formatted="false">Limiting percent rate to %d%% because of %s</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
-    <string name="limitingbolus">Limiting bolus to %.1f U because of %s</string>
-    <string name="limitingcarbs">Limiting carbs to %d g because of %s</string>
+    <string name="limitingbolus" formatted="false">Limiting bolus to %.1f U because of %s</string>
+    <string name="limitingmaxiob" formatted="false">Limiting max IOB to %.1f U because of %s</string>
+    <string name="limitingcarbs" formatted="false">Limiting carbs to %d g because of %s</string>
+    <string name="limitingiob" formatted="false">Limiting IOB to %.1f U because of %s</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="key_treatmentssafety_maxcarbs">treatmentssafety_maxcarbs</string>
+    <string name="unsafeusage">unsafe usage</string>
 </resources>
 
