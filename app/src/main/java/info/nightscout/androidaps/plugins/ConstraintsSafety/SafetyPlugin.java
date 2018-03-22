@@ -145,6 +145,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         Double maxBasalFromDaily = SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
         double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
         absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)), this);
+
+        absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(MainApp.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), MainApp.gs(R.string.hardlimit)), this);
         return absoluteRate;
     }
 

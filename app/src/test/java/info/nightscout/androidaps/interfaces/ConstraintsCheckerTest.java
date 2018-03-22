@@ -200,6 +200,7 @@ public class ConstraintsCheckerTest {
         when(SP.getDouble(R.string.key_openapsma_max_basal, 1d)).thenReturn(1d);
         when(SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d)).thenReturn(4d);
         when(SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d)).thenReturn(3d);
+        when(SP.getString(R.string.key_age, "")).thenReturn("child");
 
         // Negative basal not allowed
         Constraint<Double> d = new Constraint<>(-0.5d);
@@ -214,6 +215,7 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals("SafetyPlugin: Limiting basal rate to 1.00 U/h because of max value in preferences\n" +
                 "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
                 "SafetyPlugin: Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
+                "SafetyPlugin: Limiting basal rate to 2.00 U/h because of hard limit\n" +
                 "DanaRPlugin: Limiting basal rate to 0.80 U/h because of pump limit\n" +
                 "DanaRSPlugin: Limiting basal rate to 0.80 U/h because of pump limit\n" +
                 "InsightPumpPlugin: Limiting basal rate to 1.10 U/h because of pump limit", d.getReasons());
@@ -239,6 +241,7 @@ public class ConstraintsCheckerTest {
         when(SP.getDouble(R.string.key_openapsma_max_basal, 1d)).thenReturn(1d);
         when(SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d)).thenReturn(4d);
         when(SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d)).thenReturn(3d);
+        when(SP.getString(R.string.key_age, "")).thenReturn("child");
 
         // Negative basal not allowed
         Constraint<Integer> i = new Constraint<>(-22);
@@ -259,6 +262,7 @@ public class ConstraintsCheckerTest {
                 "SafetyPlugin: Limiting basal rate to 1.00 U/h because of max value in preferences\n" +
                 "SafetyPlugin: Limiting basal rate to 4.00 U/h because of max basal multiplier\n" +
                 "SafetyPlugin: Limiting basal rate to 3.00 U/h because of max daily basal multiplier\n" +
+                "SafetyPlugin: Limiting basal rate to 2.00 U/h because of hard limit\n" +
                 "SafetyPlugin: Limiting percent rate to 100% because of pump limit\n" +
                 "DanaRPlugin: Limiting percent rate to 200% because of pump limit\n" +
                 "DanaRSPlugin: Limiting percent rate to 200% because of pump limit\n" +

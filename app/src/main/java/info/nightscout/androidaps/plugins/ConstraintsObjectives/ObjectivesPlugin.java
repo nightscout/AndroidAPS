@@ -137,6 +137,14 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         public void setStarted(Date started) {
             this.started = started;
         }
+
+        boolean isStarted() {
+            return started.getTime() > 0;
+        }
+
+        boolean isFinished() {
+            return accomplished.getTime() != 0;
+        }
     }
 
     // Objective 0
@@ -302,42 +310,42 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
      **/
     @Override
     public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
-        if (objectives.get(0).started.getTime() == 0)
+        if (!objectives.get(0).isStarted())
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        if (objectives.get(3).started.getTime() == 0)
+        if (!objectives.get(3).isStarted())
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
-        if (objectives.get(5).started.getTime() == 0)
+        if (!objectives.get(5).isStarted())
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 6), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean>  isAMAModeEnabled(Constraint<Boolean> value) {
-        if (objectives.get(6).started.getTime() == 0)
+        if (!objectives.get(6).isStarted())
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 7), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean>  isSMBModeEnabled(Constraint<Boolean> value) {
-        if (objectives.get(7).started.getTime() == 0)
+        if (!objectives.get(7).isStarted())
             value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 8), this);
         return value;
     }
 
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
-        if (objectives.get(3).started.getTime() > 0&& objectives.get(3).accomplished.getTime() == 0)
+        if (objectives.get(3).isStarted() && !objectives.get(3).isFinished())
             maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), 4), this);
         return maxIob;
     }

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data;
 
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -38,6 +39,10 @@ public class ConstraintChecker implements ConstraintsInterface {
 
      public Constraint<Boolean> isSMBModeEnabled() {
         return isSMBModeEnabled(new Constraint<>(true));
+    }
+
+     public Constraint<Double> getMaxBasalAllowed(Profile profile) {
+        return applyBasalConstraints(new Constraint<>(Constants.REALLYHIGHBASALRATE), profile);
     }
 
     @Override

@@ -175,7 +175,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+        double maxBasal = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = Profile.toMgdl(profile.getTarget(), units);
@@ -206,8 +207,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             maxBg = verifyHardLimits(tempTarget.high, "maxBg", HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
             targetBg = verifyHardLimits(tempTarget.target(), "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
         }
-
-        maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, HardLimits.maxBasal());
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", HardLimits.MINDIA, HardLimits.MAXDIA))
             return;
