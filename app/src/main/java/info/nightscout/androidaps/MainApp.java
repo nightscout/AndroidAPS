@@ -43,7 +43,7 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
@@ -186,7 +186,7 @@ public class MainApp extends Application {
             pluginsList.add(WearPlugin.initPlugin(this));
             pluginsList.add(StatuslinePlugin.initPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
-            pluginsList.add(NSClientInternalPlugin.getPlugin());
+            pluginsList.add(NSClientPlugin.getPlugin());
 
             pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
 

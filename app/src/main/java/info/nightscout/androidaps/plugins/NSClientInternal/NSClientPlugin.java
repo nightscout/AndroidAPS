@@ -31,25 +31,25 @@ import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientServ
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
-public class NSClientInternalPlugin implements PluginBase {
-    private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
+public class NSClientPlugin implements PluginBase {
+    private static Logger log = LoggerFactory.getLogger(NSClientPlugin.class);
 
-    static NSClientInternalPlugin nsClientInternalPlugin;
+    static NSClientPlugin nsClientPlugin;
 
-    static public NSClientInternalPlugin getPlugin() {
-        if (nsClientInternalPlugin == null) {
-            nsClientInternalPlugin = new NSClientInternalPlugin();
+    static public NSClientPlugin getPlugin() {
+        if (nsClientPlugin == null) {
+            nsClientPlugin = new NSClientPlugin();
         }
-        return nsClientInternalPlugin;
+        return nsClientPlugin;
     }
 
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
 
-    static public Handler handler;
+    public Handler handler;
 
-    private final static List<EventNSClientNewLog> listLog = new ArrayList<>();
-    static Spanned textLog = Html.fromHtml("");
+    private final List<EventNSClientNewLog> listLog = new ArrayList<>();
+    Spanned textLog = Html.fromHtml("");
 
     public boolean paused = false;
     boolean autoscroll = true;
@@ -58,13 +58,13 @@ public class NSClientInternalPlugin implements PluginBase {
 
     public NSClientService nsClientService = null;
 
-    NSClientInternalPlugin() {
+    NSClientPlugin() {
         MainApp.bus().register(this);
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
 
         if (handler == null) {
-            HandlerThread handlerThread = new HandlerThread(NSClientInternalPlugin.class.getSimpleName() + "Handler");
+            HandlerThread handlerThread = new HandlerThread(NSClientPlugin.class.getSimpleName() + "Handler");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
@@ -81,7 +81,7 @@ public class NSClientInternalPlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return NSClientInternalFragment.class.getName();
+        return NSClientFragment.class.getName();
     }
 
     @Override
@@ -201,7 +201,7 @@ public class NSClientInternalPlugin implements PluginBase {
         });
     }
 
-    static synchronized void updateLog() {
+    synchronized void updateLog() {
         try {
             StringBuilder newTextLog = new StringBuilder();
             synchronized (listLog) {

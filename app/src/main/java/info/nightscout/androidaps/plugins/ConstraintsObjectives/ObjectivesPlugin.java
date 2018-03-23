@@ -11,10 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -23,7 +21,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.SP;
 
@@ -182,9 +180,9 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS))
                     apsEnabled = true;
 
-                return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
+                return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
                         MainApp.gs(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + "\n" + MainApp.gs(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
+                                + "\n" + MainApp.gs(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientPlugin.getPlugin().hasWritePermission())
                                 + (isVirtualPump ? "\n" + MainApp.gs(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
                                 + "\n" + MainApp.gs(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
                                 + "\n" + MainApp.gs(R.string.hasbgdata) + ": " + yesOrNo(hasBGData)

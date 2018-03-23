@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
@@ -173,7 +173,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginBase.INSULIN);
 
-                addPreferencesFromResourceIfEnabled(NSClientInternalPlugin.getPlugin(), PluginBase.GENERAL);
+                addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginBase.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginBase.GENERAL);
 
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
