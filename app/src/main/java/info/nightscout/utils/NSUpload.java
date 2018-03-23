@@ -16,8 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -384,39 +386,32 @@ public class NSUpload {
     }
 
     public static void uploadOpenAPSOffline(double durationInMinutes) {
-        try {
-            Context context = MainApp.instance().getApplicationContext();
-            JSONObject data = new JSONObject();
-            data.put("eventType", "OpenAPS Offline");
-            data.put("duration", durationInMinutes);
-            data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
-            Bundle bundle = new Bundle();
-            bundle.putString("action", "dbAdd");
-            bundle.putString("collection", "treatments");
-            bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("duration", durationInMinutes);
+        uploadEvent(CareportalEvent.OPENAPSOFFLINE, map);
     }
 
     public static void uploadError(String error) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("notes", error);
+        map.put("isAnnouncement", true);
+        uploadEvent(CareportalEvent.ANNOUNCEMENT, map);
+    }
+
+    public static void uploadEvent(String event) {
+        uploadEvent(event, null);
+    }
+
+    public static void uploadEvent(String event, Map<String, Object> map) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
         bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
+        JSONObject data = map != null ? new JSONObject(map) : new JSONObject();
         try {
-            data.put("eventType", "Announcement");
+            data.put("eventType", event);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
-            data.put("notes", error);
-            data.put("isAnnouncement", true);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
