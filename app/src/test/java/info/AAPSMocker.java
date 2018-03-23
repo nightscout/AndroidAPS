@@ -54,6 +54,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s");
         when(MainApp.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %.1f U because of %s");
         when(MainApp.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable");
+        when(MainApp.gs(R.string.loop)).thenReturn("Loop");
+        when(MainApp.gs(R.string.loop_shortname)).thenReturn("LOOP");
     }
 
     public static MainApp mockMainApp() {

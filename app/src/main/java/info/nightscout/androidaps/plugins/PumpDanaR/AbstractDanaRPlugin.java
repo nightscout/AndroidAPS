@@ -10,7 +10,6 @@ import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -106,16 +105,16 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
             mPluginProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
             mPluginPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
         if (type == PluginBase.PUMP && !fragmentEnabled && mPluginProfileEnabled) {
-            setFragmentEnabled(PluginBase.PROFILE, false);
+            setPluginEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setPluginEnabled(PluginBase.PROFILE, true);
             NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }

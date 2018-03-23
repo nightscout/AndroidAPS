@@ -27,14 +27,14 @@ public class ComboPluginTest {
 
     @Test
     public void invalidBasalRateOnComboPumpShouldLimitLoopInvokation() throws Exception {
-        comboPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        comboPlugin.setPluginEnabled(PluginBase.PUMP, true);
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = comboPlugin.isLoopInvokationAllowed(c);
         Assert.assertEquals("Combo: No valid basal rate read from pump", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
-        comboPlugin.setFragmentEnabled(PluginBase.PUMP, false);
+        comboPlugin.setPluginEnabled(PluginBase.PUMP, false);
     }
 
     @Test

@@ -177,7 +177,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == GENERAL) this.fragmentEnabled = fragmentEnabled;
     }
 
@@ -286,7 +286,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             case "STOP":
                                 LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
-                                    loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
+                                    loopPlugin.setPluginEnabled(PluginBase.LOOP, false);
                                     ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                                         @Override
                                         public void run() {
@@ -304,7 +304,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             case "START":
                                 loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && !loopPlugin.isEnabled(PluginBase.LOOP)) {
-                                    loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
+                                    loopPlugin.setPluginEnabled(PluginBase.LOOP, true);
                                     reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_START"));

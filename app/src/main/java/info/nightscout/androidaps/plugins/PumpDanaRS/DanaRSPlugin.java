@@ -18,7 +18,6 @@ import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -114,16 +113,16 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
             this.fragmentProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
             this.fragmentPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
         if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
-            setFragmentEnabled(PluginBase.PROFILE, false);
+            setPluginEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
+            MainApp.getSpecificPlugin(NSProfilePlugin.class).setPluginEnabled(PluginBase.PROFILE, true);
             MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
         }
     }

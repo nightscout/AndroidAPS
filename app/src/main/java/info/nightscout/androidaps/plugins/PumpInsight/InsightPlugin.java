@@ -231,7 +231,7 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == PUMP) {
             if (fragmentEnabled) {
                 enableConnector();

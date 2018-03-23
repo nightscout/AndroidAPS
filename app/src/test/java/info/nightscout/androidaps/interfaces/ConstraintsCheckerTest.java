@@ -63,7 +63,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isLoopInvokationAllowedTest() throws Exception {
-        comboPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        comboPlugin.setPluginEnabled(PluginBase.PUMP, true);
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
         Constraint<Boolean> c = constraintChecker.isLoopInvokationAllowed();
@@ -125,12 +125,12 @@ public class ConstraintsCheckerTest {
     @Test
     public void basalRateShouldBeLimited() throws Exception {
         // DanaR, RS
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
-        danaRSPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRSPlugin.setPluginEnabled(PluginBase.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         // Insight
-        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBasalAmount = 1.1d;
         insightPlugin.setStatusResult(result);
@@ -152,12 +152,12 @@ public class ConstraintsCheckerTest {
     @Test
     public void percentBasalRateShouldBeLimited() throws Exception {
         // DanaR, RS
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
-        danaRSPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRSPlugin.setPluginEnabled(PluginBase.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         // Insight
-        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBasalAmount = 1.1d;
         insightPlugin.setStatusResult(result);
@@ -180,12 +180,12 @@ public class ConstraintsCheckerTest {
     @Test
     public void bolusAmountShouldBeLimited() throws Exception {
         // DanaR, RS
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
-        danaRSPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRSPlugin.setPluginEnabled(PluginBase.PUMP, true);
         DanaRPump.getInstance().maxBolus = 6d;
 
         // Insight
-        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBolusAmount = 7d;
         insightPlugin.setStatusResult(result);
@@ -221,9 +221,9 @@ public class ConstraintsCheckerTest {
         // No limit by default
         when(SP.getDouble(R.string.key_openapsma_max_iob, 1.5d)).thenReturn(1.5d);
         when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
-        OpenAPSMAPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
-        OpenAPSAMAPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
-        OpenAPSSMBPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
+        OpenAPSMAPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
+        OpenAPSAMAPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
+        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
 
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxIOBAllowed();

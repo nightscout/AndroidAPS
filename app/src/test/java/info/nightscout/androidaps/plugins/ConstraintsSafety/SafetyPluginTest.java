@@ -185,9 +185,9 @@ public class SafetyPluginTest {
     public void iobShouldBeLimited() throws Exception {
         when(SP.getDouble(R.string.key_openapsma_max_iob, 1.5d)).thenReturn(1.5d);
         when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
-        OpenAPSMAPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
-        OpenAPSAMAPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
-        OpenAPSSMBPlugin.getPlugin().setFragmentEnabled(PluginBase.APS, true);
+        OpenAPSMAPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
+        OpenAPSAMAPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
+        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
 
         // Apply all limits
         Constraint<Double> d = new Constraint<>(Constants.REALLYHIGHIOB);

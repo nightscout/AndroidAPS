@@ -31,7 +31,7 @@ public class InsightPluginTest {
 
     @Test
     public void basalRateShouldBeLimited() throws Exception {
-        insightPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBasalAmount = 1.1d;
         insightPlugin.setStatusResult(result);

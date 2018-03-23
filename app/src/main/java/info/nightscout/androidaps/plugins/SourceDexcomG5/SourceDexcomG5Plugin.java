@@ -68,7 +68,7 @@ public class SourceDexcomG5Plugin implements PluginBase, BgSourceInterface {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == BGSOURCE) this.fragmentEnabled = fragmentEnabled;
     }
 

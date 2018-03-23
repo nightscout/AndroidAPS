@@ -479,7 +479,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
-            activeloop.setFragmentEnabled(PluginBase.LOOP, false);
+            activeloop.setPluginEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");
@@ -494,7 +494,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
-            activeloop.setFragmentEnabled(PluginBase.LOOP, true);
+            activeloop.setPluginEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");

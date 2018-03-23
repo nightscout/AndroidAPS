@@ -128,7 +128,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         // Always enabled
     }
 
@@ -178,7 +178,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
                     String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
                     String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
                     if (SP.contains(settingEnabled))
-                        p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
+                        p.setPluginEnabled(type, SP.getBoolean(settingEnabled, true));
                     if (SP.contains(settingVisible))
                         p.setFragmentVisible(type, SP.getBoolean(settingVisible, true) && SP.getBoolean(settingEnabled, true));
                 } catch (Exception e) {
@@ -338,7 +338,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
                 found = p;
             } else if (p.isEnabled(type)) {
                 // set others disabled
-                p.setFragmentEnabled(type, false);
+                p.setPluginEnabled(type, false);
             }
         }
         // If none enabled, enable first one

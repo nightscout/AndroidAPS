@@ -46,7 +46,7 @@ import info.nightscout.utils.SP;
 public class LoopPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
 
-    private static LoopPlugin loopPlugin;
+    protected static LoopPlugin loopPlugin;
 
     public static LoopPlugin getPlugin() {
         if (loopPlugin == null) {
@@ -55,7 +55,7 @@ public class LoopPlugin implements PluginBase {
         return loopPlugin;
     }
 
-    private boolean fragmentEnabled = false;
+    private boolean pluginEnabled = false;
     private boolean fragmentVisible = false;
 
     private long loopSuspendedTill = 0L; // end of manual loop suspend
@@ -94,12 +94,12 @@ public class LoopPlugin implements PluginBase {
 
     @Override
     public String getName() {
-        return MainApp.instance().getString(R.string.loop);
+        return MainApp.instance().gs(R.string.loop);
     }
 
     @Override
     public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.loop_shortname);
+        String name = MainApp.gs(R.string.loop_shortname);
         if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
@@ -111,7 +111,7 @@ public class LoopPlugin implements PluginBase {
     @Override
     public boolean isEnabled(int type) {
         boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-        return type == LOOP && fragmentEnabled && pumpCapable;
+        return type == LOOP && pluginEnabled && pumpCapable;
     }
 
     @Override
@@ -136,8 +136,8 @@ public class LoopPlugin implements PluginBase {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == LOOP) this.fragmentEnabled = fragmentEnabled;
+    public void setPluginEnabled(int type, boolean pluginEnabled) {
+        if (type == LOOP) this.pluginEnabled = pluginEnabled;
     }
 
     @Override

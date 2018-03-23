@@ -36,8 +36,8 @@ public class DanaRPluginTest {
 
     @Test
     public void basalRateShouldBeLimited() throws Exception {
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         Constraint<Double> c = new Constraint<>(Constants.REALLYHIGHBASALRATE);
@@ -49,8 +49,8 @@ public class DanaRPluginTest {
 
     @Test
     public void percentBasalRateShouldBeLimited() throws Exception {
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
-        danaRPlugin.setFragmentEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         Constraint<Integer> c = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
