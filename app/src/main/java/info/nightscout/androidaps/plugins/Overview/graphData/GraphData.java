@@ -245,6 +245,7 @@ public class GraphData {
                 value = (profile.getTargetLow(time) + profile.getTargetHigh(time))  / 2;
             } else {
                 value = tt.target();
+                value = Profile.fromMgdlToUnits(value, profile.getUnits());
             }
             if (lastTarget > 0 && lastTarget != value) {
                 targetsSeriesArray.add(new DataPoint(time, lastTarget));
