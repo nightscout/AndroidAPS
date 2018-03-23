@@ -81,7 +81,7 @@
     <string name="configbuilder_general">Général</string>
     <string name="days">Jours</string>
     <string name="objectives_minimalduration">Durée minimale</string>
-    <string name="configbuilder_constraints">Restrictions</string>
+    <string name="constraints">Restrictions</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>

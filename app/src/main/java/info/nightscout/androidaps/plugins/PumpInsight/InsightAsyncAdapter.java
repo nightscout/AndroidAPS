@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightCallback;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.getWakeLock;
 import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.msSince;
@@ -22,11 +22,11 @@ import static info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers.tsl;
  *
  */
 
-public class InsightPumpAsyncAdapter {
+public class InsightAsyncAdapter {
 
-    private final ConcurrentHashMap<UUID, EventInsightPumpCallback> commandResults = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, EventInsightCallback> commandResults = new ConcurrentHashMap<>();
 
-    InsightPumpAsyncAdapter() {
+    InsightAsyncAdapter() {
         MainApp.bus().register(this);
     }
 
@@ -36,7 +36,7 @@ public class InsightPumpAsyncAdapter {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventInsightPumpCallback ev) {
+    public void onStatusEvent(final EventInsightCallback ev) {
         log("Received callback event: " + ev.toString());
         commandResults.put(ev.request_uuid, ev);
     }

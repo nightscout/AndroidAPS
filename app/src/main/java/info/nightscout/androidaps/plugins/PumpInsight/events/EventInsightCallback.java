@@ -7,7 +7,7 @@ import info.nightscout.androidaps.events.Event;
 /**
  * Created by jamorham on 23/01/2018.
  */
-public class EventInsightPumpCallback extends Event {
+public class EventInsightCallback extends Event {
 
     public UUID request_uuid;
     public boolean success = false;
@@ -15,7 +15,7 @@ public class EventInsightPumpCallback extends Event {
     public int response_id = -1;
     public Object response_object = null;
 
-    public EventInsightPumpCallback() {
+    public EventInsightCallback() {
         request_uuid = UUID.randomUUID();
     }
 

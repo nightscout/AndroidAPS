@@ -84,7 +84,7 @@
     <string name="configbuilder_general">일반</string>
     <string name="days">일</string>
     <string name="objectives_minimalduration">최소기간</string>
-    <string name="configbuilder_constraints">제한</string>
+    <string name="constraints">제한</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>

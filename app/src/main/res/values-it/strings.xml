@@ -71,7 +71,7 @@
     <string name="configbuilder">Configurazione Strutturale</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">Origine glicemia</string>
-    <string name="configbuilder_constraints">Costrizione</string>
+    <string name="constraints">Costrizione</string>
     <string name="configbuilder_general">Generale</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_loop">Loop</string>

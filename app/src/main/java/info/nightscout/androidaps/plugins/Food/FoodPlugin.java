@@ -73,7 +73,7 @@ public class FoodPlugin implements PluginBase {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == GENERAL) this.fragmentEnabled = fragmentEnabled;
     }
 

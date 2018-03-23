@@ -71,7 +71,7 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == INSULIN) this.fragmentEnabled = fragmentEnabled;
     }
 

@@ -14,14 +14,15 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.utils.Round;
@@ -132,8 +133,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;
@@ -163,7 +163,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
@@ -172,8 +172,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
         PumpEnactResult result = new PumpEnactResult();
 
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        absoluteRate = configBuilderPlugin.applyBasalConstraints(absoluteRate);
+        absoluteRate = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         final boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate();
@@ -251,7 +250,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            return setTempBasalPercent(percentRate, durationInMinutes, false);
+            return setTempBasalPercent(percentRate, durationInMinutes, profile,false);
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress
@@ -270,7 +269,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             Integer durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
-            extendedRateToSet = configBuilderPlugin.applyBasalConstraints(extendedRateToSet);
+            extendedRateToSet = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
             extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 

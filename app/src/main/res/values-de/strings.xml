@@ -141,7 +141,7 @@
     <string name="careportal_newnstreatment_enteredby_title">Eingegeben durch</string>
     <string name="careportal_newnstreatment_other">Anderes</string>
     <string name="careportal_newnstreatment_split_label">Split</string>
-    <string name="configbuilder_constraints">Beschränkungen</string>
+    <string name="constraints">Beschränkungen</string>
     <string name="configbuilder_general">Generell</string>
     <string name="configbuilder_treatments">Behandlungen</string>
     <string name="constraintapllied">Beschränkungen angewendet!</string>
