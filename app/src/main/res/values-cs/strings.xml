@@ -734,7 +734,7 @@
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
     <string name="enableuam_summary">Detekce neoznámených jídel</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="insightpump">Pumpa Insight</string>
+    <string name="insightpump">Insight</string>
     <string name="status_no_colon">Stav</string>
     <string name="changed">Změněno</string>
     <string name="pump_stopped_uppercase">PUMPA ZASTAVENA</string>

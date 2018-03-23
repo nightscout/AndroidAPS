@@ -17,6 +17,7 @@ public class Constraint<T extends Comparable> {
     T originalValue;
 
     List<String> reasons = new ArrayList<>();
+    List<String> mostLimiting = new ArrayList<>();
 
     public Constraint(T value) {
         this.value = value;
@@ -39,16 +40,19 @@ public class Constraint<T extends Comparable> {
 
     public Constraint<T> set(T value, String reason, Object from) {
         this.value = value;
-        reason(reason, from);
+        addReason(reason, from);
+        addMostLimingReason(reason, from);
         return this;
     }
 
     public Constraint<T> setIfSmaller(T value, String reason, Object from) {
         if (value.compareTo(this.value) < 0) {
             this.value = value;
+            mostLimiting.clear();
+            addMostLimingReason(reason, from);
         }
         if (value.compareTo(this.originalValue) < 0) {
-            reason(reason, from);
+            addReason(reason, from);
         }
         return this;
     }
@@ -56,15 +60,22 @@ public class Constraint<T extends Comparable> {
    public Constraint<T> setIfGreater(T value, String reason, Object from) {
         if (value.compareTo(this.value) > 0) {
             this.value = value;
+            mostLimiting.clear();
+            addMostLimingReason(reason, from);
         }
         if (value.compareTo(this.originalValue) > 0) {
-            reason(reason, from);
+            addReason(reason, from);
         }
         return this;
     }
 
-    public Constraint reason(String reason, Object from) {
+    public Constraint addReason(String reason, Object from) {
         reasons.add(from.getClass().getSimpleName().replace("Plugin", "") + ": " + reason);
+        return this;
+    }
+
+   public Constraint addMostLimingReason(String reason, Object from) {
+        mostLimiting.add(from.getClass().getSimpleName().replace("Plugin", "") + ": " + reason);
         return this;
     }
 
@@ -81,6 +92,21 @@ public class Constraint<T extends Comparable> {
 
     public List<String> getReasonList() {
         return reasons;
+    }
+
+    public String getMostLimitedReasons() {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for (String r : mostLimiting) {
+            if (count++ != 0) sb.append("\n");
+            sb.append(r);
+        }
+        log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        return sb.toString();
+    }
+
+    public List<String> getMostLimitedReasonList() {
+        return mostLimiting;
     }
 
     public void copyReasons(Constraint<?> another) {
