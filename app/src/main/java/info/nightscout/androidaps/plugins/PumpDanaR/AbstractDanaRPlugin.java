@@ -7,11 +7,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.util.Date;
-import java.util.Objects;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -19,13 +17,13 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -107,16 +105,16 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
             mPluginProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
             mPluginPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
         if (type == PluginBase.PUMP && !fragmentEnabled && mPluginProfileEnabled) {
-            setFragmentEnabled(PluginBase.PROFILE, false);
+            setPluginEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setPluginEnabled(PluginBase.PROFILE, true);
             NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
@@ -214,10 +212,9 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        percent = configBuilderPlugin.applyBasalConstraints(percent);
+        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel = false;
             result.enacted = false;
@@ -229,7 +226,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         long now = System.currentTimeMillis();
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -265,8 +262,7 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        insulin = configBuilderPlugin.applyBolusConstraints(insulin);
+        insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
@@ -293,7 +289,8 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
             result.isTempCancel = false;
             result.duration = pump.extendedBolusRemainingMinutes;
             result.absolute = pump.extendedBolusAbsoluteRate;
-            if (! SP.getBoolean("danar_useextended", false)) result.bolusDelivered = pump.extendedBolusAmount;
+            if (!SP.getBoolean("danar_useextended", false))
+                result.bolusDelivered = pump.extendedBolusAmount;
             result.isPercent = false;
             if (Config.logPumpActions)
                 log.debug("setExtendedBolus: OK");
@@ -436,78 +433,25 @@ public abstract class AbstractDanaRPlugin implements PluginBase, PumpInterface, 
      */
 
     @Override
-    public boolean isLoopEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isClosedModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isSMBModeEnabled() {
-        return true;
-    }
-
-    @SuppressWarnings("PointlessBooleanExpression")
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        double origAbsoluteRate = absoluteRate;
-        if (pump != null) {
-            if (absoluteRate > pump.maxBasal) {
-                absoluteRate = pump.maxBasal;
-                if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                    log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
-            }
-        }
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
+        if (pump != null)
+            absoluteRate.setIfSmaller(pump.maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), pump.maxBasal, MainApp.gs(R.string.pumplimit)), this);
         return absoluteRate;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        Integer origPercentRate = percentRate;
-        if (percentRate < 0) percentRate = 0;
-        if (percentRate > getPumpDescription().maxTempPercent)
-            percentRate = getPumpDescription().maxTempPercent;
-        if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-            log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
+        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)), this);
+
         return percentRate;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
-    public Double applyBolusConstraints(Double insulin) {
-        double origInsulin = insulin;
-        if (pump != null) {
-            if (insulin > pump.maxBolus) {
-                insulin = pump.maxBolus;
-                if (Config.logConstraintsChanges && origInsulin != Constants.bolusOnlyForCheckLimit)
-                    log.debug("Limiting bolus " + origInsulin + "U by pump constraint to " + insulin + "U");
-            }
-        }
+    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+        if (pump != null)
+            insulin.setIfSmaller(pump.maxBolus, String.format(MainApp.gs(R.string.limitingbolus), pump.maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        return carbs;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        return maxIob;
     }
 
     @Nullable

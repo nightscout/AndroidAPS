@@ -47,6 +47,11 @@ def generateGitBuild = { ->
     return stringBuilder.toString()
 }
 
+tasks.matching {it instanceof Test}.all {
+    testLogging.events = ["failed", "skipped"]
+    testLogging.exceptionFormat = "full"
+}
+
 android {
     compileSdkVersion 27
     buildToolsVersion "${supportLibraryVersion}"
@@ -97,21 +102,6 @@ android {
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "CLOSEDLOOP", "true"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
-        }
-        openloop {
-            dimension "standard"
-            resValue "string", "app_name", "AndroidAPS"
-            versionName version
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/blueowl"
-            ]
-            buildConfigField "boolean", "APS", "true"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "false"
             buildConfigField "boolean", "PUMPCONTROL", "false"
         }
@@ -125,7 +115,6 @@ android {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "false"
             buildConfigField "boolean", "PUMPCONTROL", "true"
         }
@@ -139,7 +128,6 @@ android {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "NSCLIENTOLNY", "true"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "false"
             buildConfigField "boolean", "PUMPCONTROL", "false"
         }
@@ -153,7 +141,6 @@ android {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "boolean", "G5UPLOADER", "true"
             buildConfigField "boolean", "PUMPCONTROL", "false"
         }

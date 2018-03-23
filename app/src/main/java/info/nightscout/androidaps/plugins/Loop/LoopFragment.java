@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
@@ -40,6 +41,8 @@ public class LoopFragment extends SubscriberFragment {
     TextView requestView;
     @BindView(R.id.loop_constraintsprocessed)
     TextView constraintsProcessedView;
+    @BindView(R.id.loop_constraints)
+    TextView constraintsView;
     @BindView(R.id.loop_tbrsetbypump)
     TextView tbrSetByPumpView;
     @BindView(R.id.loop_smbsetbypump)
@@ -85,14 +88,26 @@ public class LoopFragment extends SubscriberFragment {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {
-                if (LoopPlugin.lastRun != null) {
-                    requestView.setText(LoopPlugin.lastRun.request != null ? LoopPlugin.lastRun.request.toSpanned() : "");
-                    constraintsProcessedView.setText(LoopPlugin.lastRun.constraintsProcessed != null ? LoopPlugin.lastRun.constraintsProcessed.toSpanned() : "");
-                    sourceView.setText(LoopPlugin.lastRun.source != null ? LoopPlugin.lastRun.source : "");
-                    lastRunView.setText(LoopPlugin.lastRun.lastAPSRun != null && LoopPlugin.lastRun.lastAPSRun.getTime() != 0 ? LoopPlugin.lastRun.lastAPSRun.toLocaleString() : "");
-                    lastEnactView.setText(LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.toLocaleString() : "");
-                    tbrSetByPumpView.setText(LoopPlugin.lastRun.tbrSetByPump != null ? LoopPlugin.lastRun.tbrSetByPump.toSpanned() : "");
-                    smbSetByPumpView.setText(LoopPlugin.lastRun.smbSetByPump != null ? LoopPlugin.lastRun.smbSetByPump.toSpanned() : "");
+                LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
+                if (lastRun != null) {
+                    requestView.setText(lastRun.request != null ? lastRun.request.toSpanned() : "");
+                    constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toSpanned() : "");
+                    sourceView.setText(lastRun.source != null ? lastRun.source : "");
+                    lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
+                    lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
+                    tbrSetByPumpView.setText(lastRun.tbrSetByPump != null ? lastRun.tbrSetByPump.toSpanned() : "");
+                    smbSetByPumpView.setText(lastRun.smbSetByPump != null ? lastRun.smbSetByPump.toSpanned() : "");
+
+                    String constraints = "";
+                    if (lastRun.constraintsProcessed != null) {
+                        Constraint<Double> allConstraints = new Constraint<>(0d);
+                        if (lastRun.constraintsProcessed.rateConstraint != null)
+                            allConstraints.copyReasons(lastRun.constraintsProcessed.rateConstraint);
+                        if (lastRun.constraintsProcessed.smbConstraint != null)
+                            allConstraints.copyReasons(lastRun.constraintsProcessed.smbConstraint);
+                        constraints = allConstraints.getMostLimitedReasons();
+                    }
+                    constraintsView.setText(constraints);
                 }
             });
     }

@@ -94,7 +94,7 @@ public class PersistentNotificationPlugin implements PluginBase {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
             enableDisableNotification(fragmentEnabled);

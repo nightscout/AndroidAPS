@@ -84,7 +84,7 @@
     <string name="configbuilder_general">Общи</string>
     <string name="days">дни</string>
     <string name="objectives_minimalduration">Минимална продължителност</string>
-    <string name="configbuilder_constraints">Ограничения</string>
+    <string name="constraints">Ограничения</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>

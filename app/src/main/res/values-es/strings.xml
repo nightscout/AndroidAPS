@@ -78,7 +78,7 @@
     <string name="configbuilder_general">General</string>
     <string name="days">días</string>
     <string name="objectives_minimalduration">Duración mínima</string>
-    <string name="configbuilder_constraints">Restricciones</string>
+    <string name="constraints">Restricciones</string>
     <string name="loop">Lazo</string>
     <string name="configbuilder_loop">Lazo</string>
     <string name="loop_aps_label">APS</string>

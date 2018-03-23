@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.utils.HardLimits;
 
 public class MsgBolusStartWithSpeed extends MessageBase {
@@ -18,9 +19,7 @@ public class MsgBolusStartWithSpeed extends MessageBase {
         this();
 
         // HARDCODED LIMIT
-        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
-        if (amount < 0) amount = 0d;
-        if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
+        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
 
         AddParamInt((int) (amount * 100));
         AddParamByte((byte) speed);

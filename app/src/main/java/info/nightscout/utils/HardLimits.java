@@ -49,13 +49,13 @@ public class HardLimits {
         String sp_age = SP.getString(R.string.key_age, "");
         int age;
 
-        if (sp_age.equals(MainApp.sResources.getString(R.string.key_child)))
+        if (sp_age.equals(MainApp.gs(R.string.key_child)))
             age = CHILD;
-        else if (sp_age.equals(MainApp.sResources.getString(R.string.key_teenage)))
+        else if (sp_age.equals(MainApp.gs(R.string.key_teenage)))
             age = TEENAGE;
-        else if (sp_age.equals(MainApp.sResources.getString(R.string.key_adult)))
+        else if (sp_age.equals(MainApp.gs(R.string.key_adult)))
             age = ADULT;
-        else if (sp_age.equals(MainApp.sResources.getString(R.string.key_resistantadult)))
+        else if (sp_age.equals(MainApp.gs(R.string.key_resistantadult)))
             age = RESISTANTADULT;
         else age = ADULT;
 
@@ -88,9 +88,9 @@ public class HardLimits {
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit);
             newvalue = Math.min(newvalue, highLimit);
-            String msg = String.format(MainApp.sResources.getString(R.string.valueoutofrange), valueName);
+            String msg = String.format(MainApp.gs(R.string.valueoutofrange), valueName);
             msg += ".\n";
-            msg += String.format(MainApp.sResources.getString(R.string.valuelimitedto), value, newvalue);
+            msg += String.format(MainApp.gs(R.string.valuelimitedto), value, newvalue);
             log.error(msg);
             NSUpload.uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);

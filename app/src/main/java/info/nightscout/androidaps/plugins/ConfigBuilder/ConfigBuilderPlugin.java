@@ -31,7 +31,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -46,13 +46,12 @@ import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, TreatmentsInterface {
+public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
     private static BgSourceInterface activeBgSource;
@@ -129,7 +128,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         // Always enabled
     }
 
@@ -179,7 +178,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                     String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
                     String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
                     if (SP.contains(settingEnabled))
-                        p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
+                        p.setPluginEnabled(type, SP.getBoolean(settingEnabled, true));
                     if (SP.contains(settingVisible))
                         p.setFragmentVisible(type, SP.getBoolean(settingVisible, true) && SP.getBoolean(settingEnabled, true));
                 } catch (Exception e) {
@@ -339,7 +338,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 found = p;
             } else if (p.isEnabled(type)) {
                 // set others disabled
-                p.setFragmentEnabled(type, false);
+                p.setPluginEnabled(type, false);
             }
         }
         // If none enabled, enable first one
@@ -357,7 +356,9 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         }
 
         PumpInterface pump = getActivePump();
-        request.rate = applyBasalConstraints(request.rate);
+
+        request.rateConstraint = new Constraint<>(request.rate);
+        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
 
         if (!pump.isInitialized()) {
             log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
@@ -407,7 +408,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         } else {
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: setTempBasalAbsolute()");
-            getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
+            getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
         }
     }
 
@@ -458,134 +459,6 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: bolus()");
         getCommandQueue().bolus(detailedBolusInfo, callback);
-    }
-
-    /**
-     * Constraints interface
-     **/
-    @Override
-    public boolean isLoopEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isLoopEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isClosedModeEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isClosedModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAutosensModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        boolean result = SP.getBoolean("openapsama_useautosens", false);
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAMAModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isSMBModeEnabled() {
-        boolean result = true; // TODO update for SMB // SP.getBoolean("openapsama_useautosens", false);
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isSMBModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        Double rateAfterConstrain = absoluteRate;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(absoluteRate), rateAfterConstrain);
-        }
-        return rateAfterConstrain;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        Integer rateAfterConstrain = percentRate;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(percentRate), rateAfterConstrain);
-        }
-        return rateAfterConstrain;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        Double insulinAfterConstrain = insulin;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulin), insulinAfterConstrain);
-        }
-        return insulinAfterConstrain;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        Integer carbsAfterConstrain = carbs;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbs), carbsAfterConstrain);
-        }
-        return carbsAfterConstrain;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        Double maxIobAfterConstrain = maxIob;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIob), maxIobAfterConstrain);
-        }
-        return maxIobAfterConstrain;
     }
 
     //  ****** Treatments interface *****
@@ -823,9 +696,9 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return null;
     }
 
-    public void disconnectPump(int durationInMinutes) {
+    public void disconnectPump(int durationInMinutes, Profile profile) {
         getActiveLoop().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
-        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, new Callback() {
+        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {

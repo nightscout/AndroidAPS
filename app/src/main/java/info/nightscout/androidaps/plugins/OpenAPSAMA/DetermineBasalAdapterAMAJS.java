@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -205,8 +206,8 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
         mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
-        mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
-        mProfile.put("current_basal_safety_multiplier", SP.getDouble("openapsama_current_basal_safety_multiplier", 4d));
+        mProfile.put("max_daily_safety_multiplier", SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
+        mProfile.put("current_basal_safety_multiplier", SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
         mProfile.put("skip_neutral_temps", true);
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
@@ -250,7 +251,7 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.put("boluses", mealData.boluses);
         mMealData.put("mealCOB", mealData.mealCOB);
 
-        if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
+        if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {

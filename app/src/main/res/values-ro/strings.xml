@@ -83,7 +83,7 @@
     <string name="configbuilder_general">General</string>
     <string name="days">zile</string>
     <string name="objectives_minimalduration">Durată minimă</string>
-    <string name="configbuilder_constraints">Constrângeri</string>
+    <string name="constraints">Constrângeri</string>
 
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>

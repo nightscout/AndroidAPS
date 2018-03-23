@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.PumpDanaRv2.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -45,17 +43,17 @@ public class MsgCheckValue_v2 extends MessageBase {
             MainApp.bus().post(new EventNewNotification(notification));
             MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to Korean DanaR");
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentEnabled(PluginBase.PUMP, true);
+            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setPluginEnabled(PluginBase.PUMP, true);
             MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginBase.PUMP, true);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentEnabled(PluginBase.PUMP, false);
+            MainApp.getSpecificPlugin(DanaRPlugin.class).setPluginEnabled(PluginBase.PUMP, false);
             MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginBase.PUMP, false);
 
             DanaRPump.reset(); // mark not initialized
 
             //If profile coming from pump, switch it as well
             if(MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PROFILE)){
-                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentEnabled(PluginBase.PROFILE, false);
-                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setFragmentEnabled(PluginBase.PROFILE, true);
+                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginBase.PROFILE, false);
+                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setPluginEnabled(PluginBase.PROFILE, true);
             }
 
             MainApp.getConfigBuilder().storeSettings();
@@ -70,15 +68,15 @@ public class MsgCheckValue_v2 extends MessageBase {
             MainApp.bus().post(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to non APS DanaR");
-            (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentEnabled(PluginBase.PUMP, false);
+            (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setPluginEnabled(PluginBase.PUMP, false);
             (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentVisible(PluginBase.PUMP, false);
-            (MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentEnabled(PluginBase.PUMP, true);
+            (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginBase.PUMP, true);
             (MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentVisible(PluginBase.PUMP, true);
 
             //If profile coming from pump, switch it as well
             if(MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginBase.PROFILE)){
-                (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentEnabled(PluginBase.PROFILE, false);
-                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentEnabled(PluginBase.PROFILE, true);
+                (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setPluginEnabled(PluginBase.PROFILE, false);
+                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginBase.PROFILE, true);
             }
 
             MainApp.getConfigBuilder().storeSettings();

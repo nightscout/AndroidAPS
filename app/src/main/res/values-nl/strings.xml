@@ -129,7 +129,7 @@
     <string name="configbuilder">Configurator</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BG bron</string>
-    <string name="configbuilder_constraints">Beperkingen</string>
+    <string name="constraints">Beperkingen</string>
     <string name="configbuilder_general">Algemeen</string>
     <string name="configbuilder_insulin">Insuline curve</string>
     <string name="clear_queue">Ledig wachtrij</string>

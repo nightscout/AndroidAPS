@@ -235,7 +235,7 @@ public class ConfigBuilderFragment extends Fragment {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
-                        plugin.setFragmentEnabled(type, cb.isChecked());
+                        plugin.setPluginEnabled(type, cb.isChecked());
                         plugin.setFragmentVisible(type, cb.isChecked());
                         onEnabledCategoryChanged(plugin, type);
                         configBuilderPlugin.storeSettings();
@@ -316,7 +316,7 @@ public class ConfigBuilderFragment extends Fragment {
             if (type == PluginBase.INSULIN || type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.PROFILE || type == PluginBase.SENSITIVITY)
                 if (pluginList.size() < 2) {
                     holder.checkboxEnabled.setEnabled(false);
-                    plugin.setFragmentEnabled(type, true);
+                    plugin.setPluginEnabled(type, true);
                     getPlugin().storeSettings();
                 }
 
@@ -390,21 +390,21 @@ public class ConfigBuilderFragment extends Fragment {
                     if (p.getName().equals(changedPlugin.getName())) {
                         // this is new selected
                     } else {
-                        p.setFragmentEnabled(type, false);
+                        p.setPluginEnabled(type, false);
                         p.setFragmentVisible(type, false);
                     }
                 }
             } else { // enable first plugin in list
                 if (type == PluginBase.PUMP)
-                    MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setFragmentEnabled(type, true);
+                    MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setPluginEnabled(type, true);
                 else if (type == PluginBase.INSULIN)
-                    MainApp.getSpecificPlugin(InsulinFastactingPlugin.class).setFragmentEnabled(type, true);
+                    MainApp.getSpecificPlugin(InsulinFastactingPlugin.class).setPluginEnabled(type, true);
                 else if (type == PluginBase.SENSITIVITY)
-                    MainApp.getSpecificPlugin(SensitivityOref0Plugin.class).setFragmentEnabled(type, true);
+                    MainApp.getSpecificPlugin(SensitivityOref0Plugin.class).setPluginEnabled(type, true);
                 else if (type == PluginBase.PROFILE)
-                    MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(type, true);
+                    MainApp.getSpecificPlugin(NSProfilePlugin.class).setPluginEnabled(type, true);
                 else
-                    pluginsInCategory.get(0).setFragmentEnabled(type, true);
+                    pluginsInCategory.get(0).setPluginEnabled(type, true);
             }
             setViews();
         }
