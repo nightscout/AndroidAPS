@@ -25,9 +25,9 @@ import info.nightscout.utils.ToastUtils;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class})
-public class PumpInsightTest {
+public class InsightPluginTest {
 
-    InsightPumpPlugin insightPlugin;
+    InsightPlugin insightPlugin;
 
     @Test
     public void basalRateShouldBeLimited() throws Exception {
@@ -39,8 +39,8 @@ public class PumpInsightTest {
         Constraint<Double> c = new Constraint<>(Constants.REALLYHIGHBASALRATE);
         insightPlugin.applyBasalConstraints(c, AAPSMocker.getValidProfile());
         Assert.assertEquals(1.1d, c.value());
-        Assert.assertEquals("InsightPump: Limiting basal rate to 1.10 U/h because of pump limit", c.getReasons());
-        Assert.assertEquals("InsightPump: Limiting basal rate to 1.10 U/h because of pump limit", c.getMostLimitedReasons());
+        Assert.assertEquals("Insight: Limiting basal rate to 1.10 U/h because of pump limit", c.getReasons());
+        Assert.assertEquals("Insight: Limiting basal rate to 1.10 U/h because of pump limit", c.getMostLimitedReasons());
     }
 
     @Before
@@ -50,7 +50,7 @@ public class PumpInsightTest {
         AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
 
-        insightPlugin = InsightPumpPlugin.getPlugin();
+        insightPlugin = InsightPlugin.getPlugin();
     }
 
 }

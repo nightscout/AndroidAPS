@@ -36,8 +36,8 @@ import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.SetTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.WriteBasalProfileTaskRunner;
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightCallback;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
@@ -74,16 +74,16 @@ import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache
  */
 
 @SuppressWarnings("AccessStaticViaInstance")
-public class InsightPumpPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
+public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
 
     private static final long BUSY_WAIT_TIME = 20000;
     static Integer batteryPercent = 0;
     static Integer reservoirInUnits = 0;
     static boolean initialized = false;
     private static volatile boolean update_pending = false;
-    private static Logger log = LoggerFactory.getLogger(InsightPumpPlugin.class);
-    private static volatile InsightPumpPlugin plugin;
-    private final InsightPumpAsyncAdapter async = new InsightPumpAsyncAdapter();
+    private static Logger log = LoggerFactory.getLogger(InsightPlugin.class);
+    private static volatile InsightPlugin plugin;
+    private final InsightAsyncAdapter async = new InsightAsyncAdapter();
     private StatusTaskRunner.Result statusResult;
     private long statusResultTime = -1;
     private Date lastDataTime = new Date(0);
@@ -96,8 +96,8 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     private volatile boolean connector_enabled = false;
     private List<BRProfileBlock.ProfileBlock> profileBlocks;
 
-    private InsightPumpPlugin() {
-        log("InsightPumpPlugin instantiated");
+    private InsightPlugin() {
+        log("InsightPlugin instantiated");
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions?)
 
@@ -129,7 +129,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     }
 
 
-    public static InsightPumpPlugin getPlugin() {
+    public static InsightPlugin getPlugin() {
         if (plugin == null) {
             createInstance();
         }
@@ -139,7 +139,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
     private static synchronized void createInstance() {
         if (plugin == null) {
             log("creating instance");
-            plugin = new InsightPumpPlugin();
+            plugin = new InsightPlugin();
         }
     }
 
@@ -150,10 +150,10 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     private static void updateGui() {
         update_pending = false;
-        MainApp.bus().post(new EventInsightPumpUpdateGui());
+        MainApp.bus().post(new EventInsightUpdateGui());
     }
 
-    private static void pushCallbackEvent(EventInsightPumpCallback e) {
+    private static void pushCallbackEvent(EventInsightCallback e) {
         MainApp.bus().post(e);
     }
 
@@ -184,7 +184,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public String getFragmentClass() {
-        return InsightPumpFragment.class.getName();
+        return InsightFragment.class.getName();
     }
 
     @Override
@@ -289,7 +289,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public void connect(String reason) {
-        log("InsightPumpPlugin::connect()");
+        log("InsightPlugin::connect()");
         try {
             if (!connector.isPumpConnected()) {
                 if (Helpers.ratelimit("insight-connect-timer", 40)) {
@@ -311,7 +311,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public void disconnect(String reason) {
-        log("InsightPumpPlugin::disconnect()");
+        log("InsightPlugin::disconnect()");
         try {
             if (!SP.getBoolean("insight_always_connected", false)) {
                 log("Requesting disconnect");
@@ -326,7 +326,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public void stopConnecting() {
-        log("InsightPumpPlugin::stopConnecting()");
+        log("InsightPlugin::stopConnecting()");
         try {
             if (isConnecting()) {
                 if (!SP.getBoolean("insight_always_connected", false)) {
@@ -1011,7 +1011,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         // if (!isConnected()) return false;
         //if (isBusy()) return false;
         log("asyncSinglecommand called: " + name);
-        final EventInsightPumpCallback event = new EventInsightPumpCallback();
+        final EventInsightCallback event = new EventInsightCallback();
         new Thread() {
             @Override
             public void run() {
@@ -1050,7 +1050,7 @@ public class InsightPumpPlugin implements PluginBase, PumpInterface, Constraints
         // if (!isConnected()) return false;
         //if (isBusy()) return false;
         log("asyncTaskRunner called: " + name);
-        final EventInsightPumpCallback event = new EventInsightPumpCallback();
+        final EventInsightCallback event = new EventInsightCallback();
         new Thread() {
             @Override
             public void run() {

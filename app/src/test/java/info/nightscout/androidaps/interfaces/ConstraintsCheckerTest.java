@@ -31,7 +31,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPumpPlugin;
+import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.FabricPrivacy;
@@ -54,7 +54,7 @@ public class ConstraintsCheckerTest {
     ComboPlugin comboPlugin;
     DanaRPlugin danaRPlugin;
     DanaRSPlugin danaRSPlugin;
-    InsightPumpPlugin insightPlugin;
+    InsightPlugin insightPlugin;
 
     boolean notificationSent = false;
 
@@ -258,7 +258,7 @@ public class ConstraintsCheckerTest {
         comboPlugin = ComboPlugin.getPlugin();
         danaRPlugin = DanaRPlugin.getPlugin();
         danaRSPlugin = DanaRSPlugin.getPlugin();
-        insightPlugin = InsightPumpPlugin.getPlugin();
+        insightPlugin = InsightPlugin.getPlugin();
         ArrayList<PluginBase> constraintsPluginsList = new ArrayList<>();
         constraintsPluginsList.add(safetyPlugin);
         constraintsPluginsList.add(objectivesPlugin);
