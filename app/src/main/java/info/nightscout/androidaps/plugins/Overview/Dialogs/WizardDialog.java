@@ -243,7 +243,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
         double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
-        editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, new DecimalFormat("0.00"), false, textWatcher);
+        editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
 
@@ -260,19 +260,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void saveCheckedStates() {
-        //SP.putBoolean(getString(R.string.key_wizard_include_bg), bgCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
-        //SP.putBoolean(getString(R.string.key_wizard_include_bolus_iob), bolusIobCheckbox.isChecked());
-        //SP.putBoolean(getString(R.string.key_wizard_include_basal_iob), basalIobCheckbox.isChecked());
     }
 
     private void loadCheckedStates() {
-        //bgCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bg), true));
         bgtrendCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_trend_bg), false));
         cobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_cob), false));
-        //bolusIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bolus_iob), true));
-        //basalIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_basal_iob), true));
     }
 
     @Override
@@ -534,7 +528,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         }
 
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
-            String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
+            String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.toPumpSupportedBolus(calculatedTotalInsulin) + "U") : "";
             String carbsText = calculatedCarbs > 0d ? (DecimalFormatter.to0Decimal(calculatedCarbs) + "g") : "";
             total.setText(MainApp.gs(R.string.result) + ": " + insulinText + " " + carbsText);
             okButton.setVisibility(View.VISIBLE);

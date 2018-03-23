@@ -128,7 +128,7 @@ public class Treatment implements DataPointWithLabelInterface {
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.to2Decimal(insulin) + "U";
+        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin) + "U";
         if (carbs > 0)
             label += "~" + DecimalFormatter.to0Decimal(carbs) + "g";
         return label;

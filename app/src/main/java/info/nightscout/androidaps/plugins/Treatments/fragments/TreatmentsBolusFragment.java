@@ -76,7 +76,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 return;
             Treatment t = treatments.get(position);
             holder.date.setText(DateUtil.dateAndTimeString(t.date));
-            holder.insulin.setText(DecimalFormatter.to2Decimal(t.insulin) + " U");
+            holder.insulin.setText(DecimalFormatter.toPumpSupportedBolus(t.insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(t.carbs) + " g");
             Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
