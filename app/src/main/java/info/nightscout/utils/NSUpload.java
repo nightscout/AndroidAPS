@@ -44,6 +44,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 public class NSUpload {
     private static Logger log = LoggerFactory.getLogger(NSUpload.class);
 
+    private static long lastUsedSecond = 0L;
+
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
             Context context = MainApp.instance().getApplicationContext();
@@ -53,7 +55,7 @@ public class NSUpload {
             data.put("absolute", temporaryBasal.absoluteRate);
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
-            data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
+            data.put("created_at", getNextAvailableSecond(temporaryBasal.date));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
@@ -91,7 +93,7 @@ public class NSUpload {
                 data.put("percent", temporaryBasal.percentRate - 100);
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
-                data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
+                data.put("created_at", getNextAvailableSecond(temporaryBasal.date));
                 data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
@@ -113,7 +115,7 @@ public class NSUpload {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
-            data.put("created_at", DateUtil.toISOString(time));
+            data.put("created_at", getNextAvailableSecond(time));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
@@ -145,7 +147,7 @@ public class NSUpload {
             data.put("relative", extendedBolus.insulin);
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
-            data.put("created_at", DateUtil.toISOString(extendedBolus.date));
+            data.put("created_at", getNextAvailableSecond(extendedBolus.date));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
@@ -171,7 +173,7 @@ public class NSUpload {
             data.put("splitExt", 100);
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
-            data.put("created_at", DateUtil.toISOString(time));
+            data.put("created_at", getNextAvailableSecond(time));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
@@ -189,6 +191,13 @@ public class NSUpload {
         }
     }
 
+    private static String getNextAvailableSecond(long time) {
+        long second = time - time % 1000;
+        if (second == lastUsedSecond) second += 1000;
+        lastUsedSecond = second;
+        return DateUtil.toISOString(second);
+    }
+
     public static void uploadDeviceStatus() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         String profileName = MainApp.getConfigBuilder().getProfileName();
@@ -204,11 +213,11 @@ public class NSUpload {
             if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;
-                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
+                apsResult.json().put("timestamp", getNextAvailableSecond(lastRun.lastAPSRun.getTime()));
                 deviceStatus.suggested = apsResult.json();
 
                 deviceStatus.iob = lastRun.request.iob.json();
-                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                deviceStatus.iob.put("time", getNextAvailableSecond(lastRun.lastAPSRun.getTime()));
 
                 JSONObject requested = new JSONObject();
 
@@ -242,7 +251,7 @@ public class NSUpload {
             int batteryLevel = BatteryLevel.getBatteryLevel();
             deviceStatus.uploaderBattery = batteryLevel;
 
-            deviceStatus.created_at = DateUtil.toISOString(new Date());
+            deviceStatus.created_at = getNextAvailableSecond(System.currentTimeMillis());
             Context context = MainApp.instance().getApplicationContext();
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
@@ -264,7 +273,7 @@ public class NSUpload {
             data.put("eventType", detailedBolusInfo.eventType);
             if (detailedBolusInfo.insulin != 0d) data.put("insulin", detailedBolusInfo.insulin);
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
-            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
+            data.put("created_at", getNextAvailableSecond(detailedBolusInfo.date));
             data.put("date", detailedBolusInfo.date);
             data.put("isSMB", detailedBolusInfo.isSMB);
             if (detailedBolusInfo.pumpId != 0)
@@ -296,7 +305,7 @@ public class NSUpload {
                 data.put("timeshift", profileSwitch.timeshift);
                 data.put("percentage", profileSwitch.percentage);
             }
-            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+            data.put("created_at", getNextAvailableSecond(profileSwitch.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
@@ -317,7 +326,7 @@ public class NSUpload {
                 data.put("timeshift", profileSwitch.timeshift);
                 data.put("percentage", profileSwitch.percentage);
             }
-            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+            data.put("created_at", getNextAvailableSecond(profileSwitch.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             if (profileSwitch._id != null) {
                 Context context = MainApp.instance().getApplicationContext();
@@ -348,7 +357,7 @@ public class NSUpload {
                 if (data.has("notes")) prebolus.put("notes", data.get("notes"));
                 long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
                 Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L + 1000L);
-                prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
+                prebolus.put("created_at", getNextAvailableSecond(preBolusDate.getTime()));
                 uploadCareportalEntryToNS(prebolus);
             }
             Context context = MainApp.instance().getApplicationContext();
@@ -410,7 +419,7 @@ public class NSUpload {
         JSONObject data = map != null ? new JSONObject(map) : new JSONObject();
         try {
             data.put("eventType", event);
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("created_at", getNextAvailableSecond(System.currentTimeMillis()));
             data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -432,7 +441,7 @@ public class NSUpload {
         try {
             data.put("device", "AndroidAPS-DexcomG5");
             data.put("date", reading.date);
-            data.put("dateString", DateUtil.toISOString(reading.date));
+            data.put("dateString", getNextAvailableSecond(reading.date));
             data.put("sgv", reading.value);
             data.put("direction", reading.direction);
             data.put("type", "sgv");
@@ -456,7 +465,7 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             try {
                 data.put("eventType", "Note");
-                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("created_at", getNextAvailableSecond(System.currentTimeMillis()));
                 data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
