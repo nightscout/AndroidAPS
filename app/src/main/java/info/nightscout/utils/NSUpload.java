@@ -63,11 +63,7 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
+            broadcastCareportalEvent(context, data, bundle);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -99,11 +95,7 @@ public class NSUpload {
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
                 bundle.putString("data", data.toString());
-                Intent intent = new Intent(Intents.ACTION_DATABASE);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                context.sendBroadcast(intent);
-                DbLogger.dbAdd(intent, data.toString());
+                broadcastCareportalEvent(context, data, bundle);
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -125,11 +117,7 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
+            broadcastCareportalEvent(context, data, bundle);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -153,11 +141,7 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
+            broadcastCareportalEvent(context, data, bundle);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -181,14 +165,18 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
+            broadcastCareportalEvent(context, data, bundle);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+    }
+
+    private static void broadcastCareportalEvent(Context context, JSONObject data, Bundle bundle) {
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
     }
 
     private static String getNextAvailableSecond(long time) {
@@ -257,11 +245,7 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "devicestatus");
             bundle.putString("data", deviceStatus.mongoRecord().toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, deviceStatus.mongoRecord().toString());
+            broadcastCareportalEvent(context, deviceStatus.mongoRecord(), bundle);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -335,11 +319,7 @@ public class NSUpload {
                 bundle.putString("collection", "treatments");
                 bundle.putString("data", data.toString());
                 bundle.putString("_id", profileSwitch._id);
-                Intent intent = new Intent(Intents.ACTION_DATABASE);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                context.sendBroadcast(intent);
-                DbLogger.dbAdd(intent, data.toString());
+                broadcastCareportalEvent(context, data, bundle);
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -365,11 +345,7 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
+            broadcastCareportalEvent(context, data, bundle);
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
@@ -425,11 +401,7 @@ public class NSUpload {
             log.error("Unhandled exception", e);
         }
         bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString());
+        broadcastCareportalEvent(context, data, bundle);
     }
 
     public static void uploadBg(BgReading reading) {
@@ -449,11 +421,7 @@ public class NSUpload {
             log.error("Unhandled exception", e);
         }
         bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString());
+        broadcastCareportalEvent(context, data, bundle);
     }
 
     public static void uploadAppStart() {
@@ -471,11 +439,7 @@ public class NSUpload {
                 log.error("Unhandled exception", e);
             }
             bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString());
+            broadcastCareportalEvent(context, data, bundle);
         }
     }
 
