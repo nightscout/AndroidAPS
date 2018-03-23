@@ -86,7 +86,7 @@
     <string name="configbuilder_general">Γενικά</string>
     <string name="days">ημέρες</string>
     <string name="objectives_minimalduration">Ελάχ.Διάρκεια</string>
-    <string name="configbuilder_constraints">Περιορισμοί</string>
+    <string name="constraints">Περιορισμοί</string>
     <string name="loop">Κύκλωμα</string>
     <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="loop_aps_label">APS</string>

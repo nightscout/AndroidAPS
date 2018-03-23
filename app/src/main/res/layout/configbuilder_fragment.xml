@@ -184,7 +184,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/mdtp_circle_color"
                     android:paddingLeft="5dp"
-                    android:text="@string/configbuilder_constraints"
+                    android:text="@string/constraints"
                     android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@android:color/black"

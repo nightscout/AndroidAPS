@@ -89,7 +89,7 @@
     <string name="configbuilder_general">General</string>
     <string name="days">days</string>
     <string name="objectives_minimalduration">Minimal duration</string>
-    <string name="configbuilder_constraints">Constraints</string>
+    <string name="constraints">Constraints</string>
 
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
@@ -967,7 +967,7 @@
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
-    <string name="limitingbasalratio">Limiting basal rate to %.2f U/h because of %s</string>
+    <string name="limitingbasalratio">Limiting max basal rate to %.2f U/h because of %s</string>
     <string name="pumplimit">pump limit</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
     <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
@@ -978,7 +978,7 @@
     <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
-    <string name="limitingpercentrate" formatted="false">Limiting percent rate to %d%% because of %s</string>
+    <string name="limitingpercentrate" formatted="false">Limiting max percent rate to %d%% because of %s</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="limitingbolus" formatted="false">Limiting bolus to %.1f U because of %s</string>
     <string name="limitingmaxiob" formatted="false">Limiting max IOB to %.1f U because of %s</string>

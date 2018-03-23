@@ -40,6 +40,8 @@ public class APSResult {
     public double smb = 0d; // super micro bolus in units
     public long deliverAt = 0;
 
+    public Constraint<Double> inputConstraints;
+
     public Constraint<Double> rateConstraint;
     public Constraint<Double> smbConstraint;
 

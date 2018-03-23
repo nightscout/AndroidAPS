@@ -84,7 +84,7 @@
     <string name="configbuilder">конфигуратор</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">источник СК</string>
-    <string name="configbuilder_constraints">ограничения</string>
+    <string name="constraints">ограничения</string>
     <string name="configbuilder_general">общее</string>
     <string name="configbuilder_insulin">инсулин</string>
     <string name="configbuilder_loop">замкнутый цикл</string>

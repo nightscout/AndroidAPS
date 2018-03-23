@@ -64,7 +64,7 @@ public class Constraint<T extends Comparable> {
     }
 
     public Constraint reason(String reason, Object from) {
-        reasons.add(from.getClass().getSimpleName() + ": " + reason);
+        reasons.add(from.getClass().getSimpleName().replace("Plugin", "") + ": " + reason);
         return this;
     }
 

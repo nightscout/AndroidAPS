@@ -180,7 +180,11 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxBasal = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+        Constraint<Double> inputConstraints = new Constraint<>(0d); // fake. only for collecting all results
+
+        Constraint<Double> maxBasalConstraint = MainApp.getConstraintChecker().getMaxBasalAllowed(profile);
+        inputConstraints.copyReasons(maxBasalConstraint);
+        double maxBasal = maxBasalConstraint.value();
         double minBg = Profile.toMgdl(profile.getTargetLow(), units);
         double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = Profile.toMgdl(profile.getTarget(), units);
@@ -268,6 +272,8 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+
+        determineBasalResultSMB.inputConstraints = inputConstraints;
 
         lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;
         lastAPSResult = determineBasalResultSMB;

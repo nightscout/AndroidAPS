@@ -84,7 +84,7 @@
     <string name="configbuilder">Konfigurationsverktyg</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BG Källa</string>
-    <string name="configbuilder_constraints">Begränsningar</string>
+    <string name="constraints">Begränsningar</string>
     <string name="configbuilder_general">Generell</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_loop">Loop</string>
