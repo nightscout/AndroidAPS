@@ -442,7 +442,7 @@
     <string name="nosuccess">neúspěšně - zkontrolujte mobil</string>
     <string name="notavailable">Nedostupný</string>
     <string name="nowritepermission">NSClient nedostal oprávnění k zápisu. Špatné API secret?</string>
-    <string name="nsclientinternal">NSClient interní</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Posouvat</string>
     <string name="nsclientinternal_secret_dialogmessage">Vložte API secret (min 12. znaků)</string>
     <string name="nsclientinternal_shortname">NSCl</string>

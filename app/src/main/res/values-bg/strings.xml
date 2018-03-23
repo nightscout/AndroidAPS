@@ -448,7 +448,7 @@
     <string name="settings_password">Парола за настройки</string>
     <string name="unlock_settings">Отключи настройките</string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
-    <string name="nsclientinternal">вътрешен NSClient</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Автопревъртане</string>

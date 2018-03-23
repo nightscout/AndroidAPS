@@ -48,7 +48,7 @@ public class NSClientInternalPlugin implements PluginBase {
 
     static public Handler handler;
 
-    private static List<EventNSClientNewLog> listLog = new ArrayList<>();
+    private final static List<EventNSClientNewLog> listLog = new ArrayList<>();
     static Spanned textLog = Html.fromHtml("");
 
     public boolean paused = false;
@@ -177,7 +177,9 @@ public class NSClientInternalPlugin implements PluginBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                listLog = new ArrayList<>();
+                synchronized (listLog) {
+                    listLog.clear();
+                }
                 MainApp.bus().post(new EventNSClientUpdateGUI());
             }
         });
@@ -187,10 +189,12 @@ public class NSClientInternalPlugin implements PluginBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                listLog.add(ev);
-                // remove the first line if log is too large
-                if (listLog.size() >= Constants.MAX_LOG_LINES) {
-                    listLog.remove(0);
+                synchronized (listLog) {
+                    listLog.add(ev);
+                    // remove the first line if log is too large
+                    if (listLog.size() >= Constants.MAX_LOG_LINES) {
+                        listLog.remove(0);
+                    }
                 }
                 MainApp.bus().post(new EventNSClientUpdateGUI());
             }
@@ -200,9 +204,10 @@ public class NSClientInternalPlugin implements PluginBase {
     static synchronized void updateLog() {
         try {
             StringBuilder newTextLog = new StringBuilder();
-            List<EventNSClientNewLog> temporaryList = new ArrayList<>(listLog);
-            for (EventNSClientNewLog log : temporaryList) {
-                newTextLog.append(log.toPreparedHtml());
+            synchronized (listLog) {
+                for (EventNSClientNewLog log : listLog) {
+                    newTextLog.append(log.toPreparedHtml());
+                }
             }
             textLog = Html.fromHtml(newTextLog.toString());
         } catch (OutOfMemoryError e) {

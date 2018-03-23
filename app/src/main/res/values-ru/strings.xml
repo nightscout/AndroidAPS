@@ -261,7 +261,7 @@
     <string name="ns_sync_use_absolute_title">только абсолютные величины для базала</string>
     <string name="ns_upload_only">только передача в NS (синхронизация отсутствует)</string>
     <string name="ns_upload_only_summary">только передача в NS. работает в SGV только если выбран местный источник вроде xdrip. не работает в профилях при действующем профиле NS</string>
-    <string name="nsclientinternal">внутренний клиент NS</string>
+    <string name="nsclientinternal">клиент NS</string>
     <string name="nsclientinternal_autoscroll">автоскроллинг</string>
     <string name="nsclientinternal_secret_dialogmessage">введите API secret для NS (мин 12 знаков)</string>
     <string name="nsclientinternal_secret_dialogtitle">API secret для NS</string>
