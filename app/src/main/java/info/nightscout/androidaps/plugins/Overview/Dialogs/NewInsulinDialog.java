@@ -162,7 +162,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
     private String toSignedString(double value) {
         String formatted = DecimalFormatter.toPumpSupportedBolus(value);
-        return value < 0 ? "-" + formatted : formatted;
+        return value > 0 ? "+" + formatted : formatted;
     }
 
     @Override

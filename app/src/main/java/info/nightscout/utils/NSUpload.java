@@ -179,7 +179,7 @@ public class NSUpload {
         DbLogger.dbAdd(intent, data.toString());
     }
 
-    private static String getNextAvailableSecond(long time) {
+    private static synchronized String getNextAvailableSecond(long time) {
         long second = time - time % 1000;
         if (second == lastUsedSecond) second += 1000;
         lastUsedSecond = second;
