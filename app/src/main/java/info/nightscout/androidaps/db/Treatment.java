@@ -149,7 +149,7 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public float getSize() {
-        return 10;
+        return 2;
     }
 
     @Override

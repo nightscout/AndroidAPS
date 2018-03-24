@@ -389,6 +389,8 @@ public class MainApp extends Application {
     }
 
     public static boolean isEngineeringModeOrRelease() {
+        if (!BuildConfig.APS)
+            return true;
         return engineeringMode || !devBranch;
     }
 
