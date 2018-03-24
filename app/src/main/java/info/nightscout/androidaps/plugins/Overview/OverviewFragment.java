@@ -288,13 +288,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             llm = new LinearLayoutManager(view.getContext());
             notificationsView.setLayoutManager(llm);
 
+            float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
+            int axisWidth = (int) Math.round(scaledDensity * scaledDensity * scaledDensity * 6);
+
             bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             bgGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             iobGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
-            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
+            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
             iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
             rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
