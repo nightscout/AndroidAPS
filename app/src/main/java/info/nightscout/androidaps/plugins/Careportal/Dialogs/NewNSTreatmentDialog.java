@@ -58,6 +58,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
@@ -327,7 +328,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Double maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+        Double maxAbsolute = HardLimits.maxBasal();
+        if (profile != null)
+            maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
         editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
 
@@ -421,8 +424,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         long millis = eventTime.getTime() - (150 * 1000L); // 2,5 * 60 * 1000
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(millis, true);
         if ((data.size() > 0) &&
-            (data.get(0).date > millis - 7 * 60 * 1000L) &&
-            (data.get(0).date < millis + 7 * 60 * 1000L)) {
+                (data.get(0).date > millis - 7 * 60 * 1000L) &&
+                (data.get(0).date < millis + 7 * 60 * 1000L)) {
             editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
         }
     }
