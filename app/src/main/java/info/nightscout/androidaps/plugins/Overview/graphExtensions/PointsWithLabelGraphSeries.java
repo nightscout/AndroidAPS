@@ -48,11 +48,11 @@ import java.util.Iterator;
  */
 public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> extends BaseSeries<E> {
     // Default spSize
-    int spSize = 12;
+    int spSize = 14;
     // Convert the sp to pixels
     Context context = MainApp.instance().getApplicationContext();
     float scaledTextSize = spSize * context.getResources().getDisplayMetrics().scaledDensity;
-    float scaledPxSize = context.getResources().getDisplayMetrics().scaledDensity * 2.8f;
+    float scaledPxSize = context.getResources().getDisplayMetrics().scaledDensity * 3f;
 
     /**
      * choose a predefined shape to render for
