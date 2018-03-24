@@ -289,7 +289,7 @@ public class NSUpload {
                 data.put("timeshift", profileSwitch.timeshift);
                 data.put("percentage", profileSwitch.percentage);
             }
-            data.put("created_at", getNextAvailableSecond(profileSwitch.date));
+            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
@@ -337,7 +337,7 @@ public class NSUpload {
                 if (data.has("notes")) prebolus.put("notes", data.get("notes"));
                 long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
                 Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L + 1000L);
-                prebolus.put("created_at", DateUtil.toISOString(preBolusDate.getTime()));
+                prebolus.put("created_at", getNextAvailableSecond(preBolusDate.getTime()));
                 uploadCareportalEntryToNS(prebolus);
             }
             Context context = MainApp.instance().getApplicationContext();
