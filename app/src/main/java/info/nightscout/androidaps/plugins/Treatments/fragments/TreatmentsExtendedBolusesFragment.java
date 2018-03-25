@@ -80,7 +80,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
                     holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date) + " - " + DateUtil.timeString(extendedBolus.end()));
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(extendedBolus.durationInMinutes) + " min");
-                holder.insulin.setText(DecimalFormatter.to2Decimal(extendedBolus.insulin) + " U");
+                holder.insulin.setText(DecimalFormatter.toPumpSupportedBolus(extendedBolus.insulin) + " U");
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(extendedBolus.getRealDuration()) + " min");
                 IobTotal iob = extendedBolus.iobCalc(System.currentTimeMillis());
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.iob) + " U");

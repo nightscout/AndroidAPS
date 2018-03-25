@@ -62,7 +62,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n");
+                ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb) + " U\n");
 
             // reason
             ret += MainApp.sResources.getString(R.string.reason) + ": " + reason;
@@ -87,7 +87,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>");
+                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb) + " U<br>");
 
             // reason
             ret += "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
