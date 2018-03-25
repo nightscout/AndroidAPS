@@ -66,7 +66,7 @@ public class ProfileIntervals<T extends Interval> {
         if (index >= 0) return rawData.valueAt(index);
         // if we request data older than first record, use oldest instead
         if (rawData.size() > 0) {
-            log.debug("Requested profile for time: " + DateUtil.dateAndTimeString(time) + ". Providing oldest record: " + rawData.valueAt(0).toString());
+            //log.debug("Requested profile for time: " + DateUtil.dateAndTimeString(time) + ". Providing oldest record: " + rawData.valueAt(0).toString());
             return rawData.valueAt(0);
         }
         return null;

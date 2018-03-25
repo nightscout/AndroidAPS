@@ -13,6 +13,7 @@ import java.util.Locale;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
@@ -56,6 +57,9 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable");
         when(MainApp.gs(R.string.loop)).thenReturn("Loop");
         when(MainApp.gs(R.string.loop_shortname)).thenReturn("LOOP");
+        when(MainApp.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering");
+        when(MainApp.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode");
+        when(MainApp.gs(R.string.Glimp)).thenReturn("Glimp");
     }
 
     public static MainApp mockMainApp() {
@@ -69,6 +73,11 @@ public class AAPSMocker {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+    }
+
+    public static void mockConstraintsChecker() {
+        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
+        when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
     }
 
     public static void mockBus() {

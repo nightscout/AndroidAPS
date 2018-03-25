@@ -4,7 +4,7 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
@@ -35,6 +37,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -43,33 +46,46 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.PasswordProtection;
 
 
-public class ConfigBuilderFragment extends Fragment {
+public class ConfigBuilderFragment extends SubscriberFragment {
 
-    static ConfigBuilderPlugin configBuilderPlugin = new ConfigBuilderPlugin();
-
-    static public ConfigBuilderPlugin getPlugin() {
-        return configBuilderPlugin;
-    }
-
+    @BindView(R.id.configbuilder_insulinlistview)
     ListView insulinListView;
+    @BindView(R.id.configbuilder_sensitivitylistview)
     ListView sensitivityListView;
+    @BindView(R.id.configbuilder_bgsourcelistview)
     ListView bgsourceListView;
+    @BindView(R.id.configbuilder_bgsourcelabel)
     TextView bgsourceLabel;
+    @BindView(R.id.configbuilder_pumplistview)
     ListView pumpListView;
+    @BindView(R.id.configbuilder_pumplabel)
     TextView pumpLabel;
+    @BindView(R.id.configbuilder_looplistview)
     ListView loopListView;
+    @BindView(R.id.configbuilder_looplabel)
     TextView loopLabel;
+    @BindView(R.id.configbuilder_treatmentslistview)
     ListView treatmentsListView;
+    @BindView(R.id.configbuilder_treatmentslabel)
     TextView treatmentsLabel;
+    @BindView(R.id.configbuilder_profilelistview)
     ListView profileListView;
+    @BindView(R.id.configbuilder_profilelabel)
     TextView profileLabel;
+    @BindView(R.id.configbuilder_apslistview)
     ListView apsListView;
+    @BindView(R.id.configbuilder_apslabel)
     TextView apsLabel;
+    @BindView(R.id.configbuilder_constraintslistview)
     ListView constraintsListView;
+    @BindView(R.id.configbuilder_constraintslabel)
     TextView constraintsLabel;
+    @BindView(R.id.configbuilder_generallistview)
     ListView generalListView;
 
+    @BindView(R.id.configbuilder_mainlayout)
     LinearLayout mainLayout;
+    @BindView(R.id.configbuilder_unlock)
     Button unlock;
 
     PluginCustomAdapter insulinDataAdapter = null;
@@ -84,51 +100,17 @@ public class ConfigBuilderFragment extends Fragment {
     PluginCustomAdapter generalDataAdapter = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
 
-            insulinListView = (ListView) view.findViewById(R.id.configbuilder_insulinlistview);
-            sensitivityListView = (ListView) view.findViewById(R.id.configbuilder_sensitivitylistview);
-            bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
-            bgsourceLabel = (TextView) view.findViewById(R.id.configbuilder_bgsourcelabel);
-            pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
-            pumpLabel = (TextView) view.findViewById(R.id.configbuilder_pumplabel);
-            loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
-            loopLabel = (TextView) view.findViewById(R.id.configbuilder_looplabel);
-            treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
-            treatmentsLabel = (TextView) view.findViewById(R.id.configbuilder_treatmentslabel);
-            profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
-            profileLabel = (TextView) view.findViewById(R.id.configbuilder_profilelabel);
-            apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
-            apsLabel = (TextView) view.findViewById(R.id.configbuilder_apslabel);
-            constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
-            constraintsLabel = (TextView) view.findViewById(R.id.configbuilder_constraintslabel);
-            generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
+            unbinder = ButterKnife.bind(this, view);
 
-            mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
-            unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
-
-            setViews();
-
-            if (PasswordProtection.isLocked("settings_password")) {
+            if (PasswordProtection.isLocked("settings_password"))
                 mainLayout.setVisibility(View.GONE);
-                unlock.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
-                            @Override
-                            public void run() {
-                                mainLayout.setVisibility(View.VISIBLE);
-                                unlock.setVisibility(View.GONE);
-                            }
-                        }, null);
-                    }
-                });
-            } else {
+            else
                 unlock.setVisibility(View.GONE);
-            }
             return view;
         } catch (Exception e) {
             FabricPrivacy.logException(e);
@@ -137,7 +119,18 @@ public class ConfigBuilderFragment extends Fragment {
         return null;
     }
 
-    void setViews() {
+    @OnClick(R.id.configbuilder_unlock)
+    public void onClickUnlock() {
+        PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", () -> {
+            mainLayout.setVisibility(View.VISIBLE);
+            unlock.setVisibility(View.GONE);
+        }, null);
+    }
+
+
+    @Override
+    protected void updateGUI() {
+
         insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginBase.INSULIN), PluginBase.INSULIN);
         insulinListView.setAdapter(insulinDataAdapter);
         setListViewHeightBasedOnChildren(insulinListView);
@@ -182,7 +175,6 @@ public class ConfigBuilderFragment extends Fragment {
         generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.GENERAL), PluginBase.GENERAL);
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
-
     }
 
     /*
@@ -194,8 +186,8 @@ public class ConfigBuilderFragment extends Fragment {
         private ArrayList<PluginBase> pluginList;
         final private int type;
 
-        public PluginCustomAdapter(Context context, int textViewResourceId,
-                                   ArrayList<PluginBase> pluginList, int type) {
+        PluginCustomAdapter(Context context, int textViewResourceId,
+                            ArrayList<PluginBase> pluginList, int type) {
             super(context, textViewResourceId, pluginList);
             this.pluginList = new ArrayList<>();
             this.pluginList.addAll(pluginList);
@@ -209,10 +201,11 @@ public class ConfigBuilderFragment extends Fragment {
             ImageView settings;
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View view, ViewGroup parent) {
+        public View getView(int position, View view, @NonNull ViewGroup parent) {
 
-            PluginViewHolder holder = null;
+            PluginViewHolder holder;
             PluginBase plugin = pluginList.get(position);
 
             if (view == null) {
@@ -231,60 +224,45 @@ public class ConfigBuilderFragment extends Fragment {
 
                 view.setTag(holder);
 
-                holder.checkboxEnabled.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v;
-                        PluginBase plugin = (PluginBase) cb.getTag();
-                        plugin.setPluginEnabled(type, cb.isChecked());
-                        plugin.setFragmentVisible(type, cb.isChecked());
-                        onEnabledCategoryChanged(plugin, type);
-                        configBuilderPlugin.storeSettings();
-                        MainApp.bus().post(new EventRefreshGui());
-                        MainApp.bus().post(new EventConfigBuilderChange());
-                        getPlugin().logPluginStatus();
-                        FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
-                    }
+                holder.checkboxEnabled.setOnClickListener(v -> {
+                    CheckBox cb = (CheckBox) v;
+                    PluginBase plugin1 = (PluginBase) cb.getTag();
+                    plugin1.setPluginEnabled(type, cb.isChecked());
+                    plugin1.setFragmentVisible(type, cb.isChecked());
+                    onEnabledCategoryChanged(plugin1, type);
+                    ConfigBuilderPlugin.getPlugin().storeSettings();
+                    MainApp.bus().post(new EventRefreshGui());
+                    MainApp.bus().post(new EventConfigBuilderChange());
+                    ConfigBuilderPlugin.getPlugin().logPluginStatus();
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
                 });
 
-                holder.checkboxVisible.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        CheckBox cb = (CheckBox) v;
-                        PluginBase plugin = (PluginBase) cb.getTag();
-                        plugin.setFragmentVisible(type, cb.isChecked());
-                        configBuilderPlugin.storeSettings();
-                        MainApp.bus().post(new EventRefreshGui());
-                        getPlugin().logPluginStatus();
-                    }
+                holder.checkboxVisible.setOnClickListener(v -> {
+                    CheckBox cb = (CheckBox) v;
+                    PluginBase plugin12 = (PluginBase) cb.getTag();
+                    plugin12.setFragmentVisible(type, cb.isChecked());
+                    ConfigBuilderPlugin.getPlugin().storeSettings();
+                    MainApp.bus().post(new EventRefreshGui());
+                    ConfigBuilderPlugin.getPlugin().logPluginStatus();
                 });
 
-                holder.settings.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        final PluginBase plugin = (PluginBase) v.getTag();
-                        PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(getContext(), PreferencesActivity.class);
-                                i.putExtra("id", plugin.getPreferencesId());
-                                startActivity(i);
-                            }
-                        }, null);
-                    }
+                holder.settings.setOnClickListener(v -> {
+                    final PluginBase plugin13 = (PluginBase) v.getTag();
+                    PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", () -> {
+                        Intent i = new Intent(getContext(), PreferencesActivity.class);
+                        i.putExtra("id", plugin13.getPreferencesId());
+                        startActivity(i);
+                    }, null);
                 });
 
-                holder.name.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        final PluginBase plugin = (PluginBase) v.getTag();
-                        PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(getContext(), PreferencesActivity.class);
-                                i.putExtra("id", plugin.getPreferencesId());
-                                startActivity(i);
-                            }
-                        }, null);
-                        return false;
-                    }
+                holder.name.setOnLongClickListener(v -> {
+                    final PluginBase plugin14 = (PluginBase) v.getTag();
+                    PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", () -> {
+                        Intent i = new Intent(getContext(), PreferencesActivity.class);
+                        i.putExtra("id", plugin14.getPreferencesId());
+                        startActivity(i);
+                    }, null);
+                    return false;
                 });
 
             } else {
@@ -317,7 +295,7 @@ public class ConfigBuilderFragment extends Fragment {
                 if (pluginList.size() < 2) {
                     holder.checkboxEnabled.setEnabled(false);
                     plugin.setPluginEnabled(type, true);
-                    getPlugin().storeSettings();
+                    ConfigBuilderPlugin.getPlugin().storeSettings();
                 }
 
             // Constraints cannot be disabled
@@ -396,17 +374,17 @@ public class ConfigBuilderFragment extends Fragment {
                 }
             } else { // enable first plugin in list
                 if (type == PluginBase.PUMP)
-                    MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setPluginEnabled(type, true);
+                    VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginBase.INSULIN)
-                    MainApp.getSpecificPlugin(InsulinFastactingPlugin.class).setPluginEnabled(type, true);
+                    InsulinFastactingPlugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginBase.SENSITIVITY)
-                    MainApp.getSpecificPlugin(SensitivityOref0Plugin.class).setPluginEnabled(type, true);
+                    SensitivityOref0Plugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginBase.PROFILE)
-                    MainApp.getSpecificPlugin(NSProfilePlugin.class).setPluginEnabled(type, true);
+                    NSProfilePlugin.getPlugin().setPluginEnabled(type, true);
                 else
                     pluginsInCategory.get(0).setPluginEnabled(type, true);
             }
-            setViews();
+            updateGUI();
         }
     }
 

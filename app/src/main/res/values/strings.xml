@@ -991,5 +991,7 @@
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
+    <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
+    <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
 </resources>
 

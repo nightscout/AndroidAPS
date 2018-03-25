@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
@@ -111,9 +112,20 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
+    public void isAdvancedFilteringEnabledTest() throws Exception {
+        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+
+        Constraint<Boolean> c = constraintChecker.isAdvancedFilteringEnabled();
+        Assert.assertEquals(true, c.getReasonList().size() == 1); // Safety
+        Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 1); // Safety
+        Assert.assertEquals(Boolean.FALSE, c.value());
+    }
+
+    @Test
     public void isSMBModeEnabledTest() throws Exception {
         objectivesPlugin.objectives.get(7).setStarted(new Date(0));
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
+        when(MainApp.getConstraintChecker().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
 
         Constraint<Boolean> c = constraintChecker.isSMBModeEnabled();
         Assert.assertEquals(true, c.getReasonList().size() == 2); // Safety & Objectives
@@ -240,6 +252,7 @@ public class ConstraintsCheckerTest {
 
         MainApp mainApp = AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockConstraintsChecker();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockBus();
         AAPSMocker.mockStrings();

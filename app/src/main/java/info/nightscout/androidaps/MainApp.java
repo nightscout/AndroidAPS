@@ -31,7 +31,6 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
@@ -188,7 +187,7 @@ public class MainApp extends Application {
             pluginsList.add(new PersistentNotificationPlugin(this));
             pluginsList.add(NSClientPlugin.getPlugin());
 
-            pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
+            pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());
 
             MainApp.getConfigBuilder().initialize();
         }

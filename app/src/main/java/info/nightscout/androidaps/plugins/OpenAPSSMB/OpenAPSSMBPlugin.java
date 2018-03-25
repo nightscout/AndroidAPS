@@ -231,6 +231,15 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
         } else {
             lastAutosensResult = new AutosensResult();
         }
+
+        Constraint<Boolean> smbAllowed = new Constraint<>(true);
+        MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
+        inputConstraints.copyReasons(smbAllowed);
+
+        Constraint<Boolean> smbAlwaysEnabled = new Constraint<>(true);
+        MainApp.getConstraintChecker().isAdvancedFilteringEnabled(smbAlwaysEnabled);
+        inputConstraints.copyReasons(smbAlwaysEnabled);
+
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "SMB data gathering", start);
 
@@ -239,7 +248,8 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
             determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
-                    true //microBolusAllowed
+                    smbAllowed.value(),
+                    smbAlwaysEnabled.value()
             );
         } catch (JSONException e) {
             log.error(e.getMessage());
