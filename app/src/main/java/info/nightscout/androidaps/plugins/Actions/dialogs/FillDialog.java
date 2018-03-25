@@ -186,8 +186,9 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                     });
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("Fill"));
                 }
-                if (pumpSiteChangeCheckbox.isChecked()) NSUpload.uploadEvent(CareportalEvent.SITECHANGE);
-                if (insulinCartridgeChangeCheckbox.isChecked()) NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE);
+                long now = System.currentTimeMillis();
+                if (pumpSiteChangeCheckbox.isChecked()) NSUpload.uploadEvent(CareportalEvent.SITECHANGE, now);
+                if (insulinCartridgeChangeCheckbox.isChecked()) NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, now + 1000);
             });
             builder.setNegativeButton(getString(R.string.cancel), null);
             builder.show();
