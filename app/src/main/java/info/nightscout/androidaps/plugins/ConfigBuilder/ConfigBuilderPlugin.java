@@ -4,12 +4,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -45,6 +48,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.ToastUtils;
 
@@ -691,6 +695,14 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
                 if (profile != null)
                     return profile;
             }
+        }
+        if (getProfileSwitchesFromHistory().size() > 0) {
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("time", time)
+                    .putCustomAttribute("getProfileSwitchesFromHistory", getProfileSwitchesFromHistory().toString())
+            );
         }
         log.debug("getProfile at the end: returning null");
         return null;

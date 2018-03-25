@@ -125,4 +125,9 @@ public class ProfileIntervals<T extends Interval> {
     public synchronized T getReversed(int index) {
         return rawData.valueAt(size() - 1 - index);
     }
+
+    @Override
+    public String toString() {
+        return rawData.toString();
+    }
 }
