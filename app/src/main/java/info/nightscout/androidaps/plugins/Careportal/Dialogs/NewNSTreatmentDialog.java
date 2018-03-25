@@ -109,6 +109,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     Date eventTime;
 
+    private static Integer seconds = null;
+
     public void setOptions(OptionsToShow options, int event) {
         this.options = options;
         this.event = MainApp.sResources.getString(event);
@@ -116,6 +118,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     public NewNSTreatmentDialog() {
         super();
+
+        if (seconds == null) {
+            seconds = new Double(Math.random() * 59).intValue();
+        }
     }
 
     @Override
@@ -443,7 +449,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
-        eventTime.setSeconds(second);
+        eventTime.setSeconds(this.seconds++); // randomize seconds to prevent creating record of the same time, if user choose time manually
         timeButton.setText(DateUtil.timeString(eventTime));
         updateBGforDateTime();
     }
