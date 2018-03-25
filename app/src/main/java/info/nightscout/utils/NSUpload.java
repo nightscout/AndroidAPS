@@ -16,10 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -44,8 +42,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 public class NSUpload {
     private static Logger log = LoggerFactory.getLogger(NSUpload.class);
 
-    private static long lastUsedSecond = 0L;
-
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
             Context context = MainApp.instance().getApplicationContext();
@@ -55,7 +51,7 @@ public class NSUpload {
             data.put("absolute", temporaryBasal.absoluteRate);
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
-            data.put("created_at", getNextAvailableSecond(temporaryBasal.date));
+            data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
@@ -63,7 +59,11 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            broadcastCareportalEvent(context, data, bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -89,13 +89,17 @@ public class NSUpload {
                 data.put("percent", temporaryBasal.percentRate - 100);
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
-                data.put("created_at", getNextAvailableSecond(temporaryBasal.date));
+                data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
                 data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
                 bundle.putString("data", data.toString());
-                broadcastCareportalEvent(context, data, bundle);
+                Intent intent = new Intent(Intents.ACTION_DATABASE);
+                intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.sendBroadcast(intent);
+                DbLogger.dbAdd(intent, data.toString());
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -107,7 +111,7 @@ public class NSUpload {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
-            data.put("created_at", getNextAvailableSecond(time));
+            data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
@@ -117,7 +121,11 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            broadcastCareportalEvent(context, data, bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -135,13 +143,17 @@ public class NSUpload {
             data.put("relative", extendedBolus.insulin);
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
-            data.put("created_at", getNextAvailableSecond(extendedBolus.date));
+            data.put("created_at", DateUtil.toISOString(extendedBolus.date));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            broadcastCareportalEvent(context, data, bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -157,7 +169,7 @@ public class NSUpload {
             data.put("splitExt", 100);
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
-            data.put("created_at", getNextAvailableSecond(time));
+            data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
@@ -165,25 +177,14 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            broadcastCareportalEvent(context, data, bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
-    }
-
-    private static void broadcastCareportalEvent(Context context, JSONObject data, Bundle bundle) {
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString());
-    }
-
-    private static synchronized String getNextAvailableSecond(long time) {
-        long second = time - time % 1000;
-        if (second == lastUsedSecond) second += 1000;
-        lastUsedSecond = second;
-        return DateUtil.toISOString(second);
     }
 
     public static void uploadDeviceStatus() {
@@ -201,11 +202,11 @@ public class NSUpload {
             if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;
-                apsResult.json().put("timestamp", getNextAvailableSecond(lastRun.lastAPSRun.getTime()));
+                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
                 deviceStatus.suggested = apsResult.json();
 
                 deviceStatus.iob = lastRun.request.iob.json();
-                deviceStatus.iob.put("time", getNextAvailableSecond(lastRun.lastAPSRun.getTime()));
+                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
 
                 JSONObject requested = new JSONObject();
 
@@ -239,13 +240,17 @@ public class NSUpload {
             int batteryLevel = BatteryLevel.getBatteryLevel();
             deviceStatus.uploaderBattery = batteryLevel;
 
-            deviceStatus.created_at = getNextAvailableSecond(System.currentTimeMillis());
+            deviceStatus.created_at = DateUtil.toISOString(new Date());
             Context context = MainApp.instance().getApplicationContext();
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "devicestatus");
             bundle.putString("data", deviceStatus.mongoRecord().toString());
-            broadcastCareportalEvent(context, deviceStatus.mongoRecord(), bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, deviceStatus.mongoRecord().toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -257,7 +262,7 @@ public class NSUpload {
             data.put("eventType", detailedBolusInfo.eventType);
             if (detailedBolusInfo.insulin != 0d) data.put("insulin", detailedBolusInfo.insulin);
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
-            data.put("created_at", getNextAvailableSecond(detailedBolusInfo.date));
+            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
             data.put("date", detailedBolusInfo.date);
             data.put("isSMB", detailedBolusInfo.isSMB);
             if (detailedBolusInfo.pumpId != 0)
@@ -319,7 +324,11 @@ public class NSUpload {
                 bundle.putString("collection", "treatments");
                 bundle.putString("data", data.toString());
                 bundle.putString("_id", profileSwitch._id);
-                broadcastCareportalEvent(context, data, bundle);
+                Intent intent = new Intent(Intents.ACTION_DATABASE);
+                intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.sendBroadcast(intent);
+                DbLogger.dbAdd(intent, data.toString());
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -337,7 +346,7 @@ public class NSUpload {
                 if (data.has("notes")) prebolus.put("notes", data.get("notes"));
                 long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
                 Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L + 1000L);
-                prebolus.put("created_at", getNextAvailableSecond(preBolusDate.getTime()));
+                prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
                 uploadCareportalEntryToNS(prebolus);
             }
             Context context = MainApp.instance().getApplicationContext();
@@ -345,7 +354,11 @@ public class NSUpload {
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
             bundle.putString("data", data.toString());
-            broadcastCareportalEvent(context, data, bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
@@ -371,37 +384,48 @@ public class NSUpload {
     }
 
     public static void uploadOpenAPSOffline(double durationInMinutes) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("duration", durationInMinutes);
-        uploadEvent(CareportalEvent.OPENAPSOFFLINE, map);
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "OpenAPS Offline");
+            data.put("duration", durationInMinutes);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
     }
 
     public static void uploadError(String error) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("notes", error);
-        map.put("isAnnouncement", true);
-        uploadEvent(CareportalEvent.ANNOUNCEMENT, map);
-    }
-
-    public static void uploadEvent(String event) {
-        uploadEvent(event, null);
-    }
-
-    public static void uploadEvent(String event, Map<String, Object> map) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
         bundle.putString("collection", "treatments");
-        JSONObject data = map != null ? new JSONObject(map) : new JSONObject();
+        JSONObject data = new JSONObject();
         try {
-            data.put("eventType", event);
-            data.put("created_at", getNextAvailableSecond(System.currentTimeMillis()));
+            data.put("eventType", "Announcement");
+            data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+            data.put("notes", error);
+            data.put("isAnnouncement", true);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
         bundle.putString("data", data.toString());
-        broadcastCareportalEvent(context, data, bundle);
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
     }
 
     public static void uploadBg(BgReading reading) {
@@ -413,7 +437,7 @@ public class NSUpload {
         try {
             data.put("device", "AndroidAPS-DexcomG5");
             data.put("date", reading.date);
-            data.put("dateString", getNextAvailableSecond(reading.date));
+            data.put("dateString", DateUtil.toISOString(reading.date));
             data.put("sgv", reading.value);
             data.put("direction", reading.direction);
             data.put("type", "sgv");
@@ -421,7 +445,11 @@ public class NSUpload {
             log.error("Unhandled exception", e);
         }
         bundle.putString("data", data.toString());
-        broadcastCareportalEvent(context, data, bundle);
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
     }
 
     public static void uploadAppStart() {
@@ -433,13 +461,17 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             try {
                 data.put("eventType", "Note");
-                data.put("created_at", getNextAvailableSecond(System.currentTimeMillis()));
+                data.put("created_at", DateUtil.toISOString(new Date()));
                 data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
             bundle.putString("data", data.toString());
-            broadcastCareportalEvent(context, data, bundle);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         }
     }
 
