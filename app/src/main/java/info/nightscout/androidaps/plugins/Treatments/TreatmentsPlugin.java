@@ -57,7 +57,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     private IobTotal lastTreatmentCalculation;
     private IobTotal lastTempBasalsCalculation;
 
-    public static List<Treatment> treatments;
+    private final static ArrayList<Treatment> treatments = new ArrayList<>();
     private final static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private final static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private final static Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
@@ -146,8 +146,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
             dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
-
-        treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
+        synchronized (treatments) {
+            treatments.clear();
+            treatments.addAll(MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false));
+        }
     }
 
     private static void initializeTempBasalData() {
@@ -202,22 +204,24 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
         double dia = profile.getDia();
 
-        for (Integer pos = 0; pos < treatments.size(); pos++) {
-            Treatment t = treatments.get(pos);
-            if (!t.isValid) continue;
-            if (t.date > time) continue;
-            Iob tIOB = t.iobCalc(time, dia);
-            total.iob += tIOB.iobContrib;
-            total.activity += tIOB.activityContrib;
-            if (t.date > total.lastBolusTime)
-                total.lastBolusTime = t.date;
-            if (!t.isSMB) {
-                // instead of dividing the DIA that only worked on the bilinear curves,
-                // multiply the time the treatment is seen active.
-                long timeSinceTreatment = time - t.date;
-                long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
-                Iob bIOB = t.iobCalc(snoozeTime, dia);
-                total.bolussnooze += bIOB.iobContrib;
+        synchronized (treatments) {
+            for (Integer pos = 0; pos < treatments.size(); pos++) {
+                Treatment t = treatments.get(pos);
+                if (!t.isValid) continue;
+                if (t.date > time) continue;
+                Iob tIOB = t.iobCalc(time, dia);
+                total.iob += tIOB.iobContrib;
+                total.activity += tIOB.activityContrib;
+                if (t.date > total.lastBolusTime)
+                    total.lastBolusTime = t.date;
+                if (!t.isSMB) {
+                    // instead of dividing the DIA that only worked on the bilinear curves,
+                    // multiply the time the treatment is seen active.
+                    long timeSinceTreatment = time - t.date;
+                    long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                    Iob bIOB = t.iobCalc(snoozeTime, dia);
+                    total.bolussnooze += bIOB.iobContrib;
+                }
             }
         }
 
@@ -248,17 +252,19 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         long now = System.currentTimeMillis();
         long dia_ago = now - (Double.valueOf(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
 
-        for (Treatment treatment : treatments) {
-            if (!treatment.isValid)
-                continue;
-            long t = treatment.date;
-            if (t > dia_ago && t <= now) {
-                if (treatment.carbs >= 1) {
-                    result.carbs += treatment.carbs;
-                    result.lastCarbTime = t;
-                }
-                if (treatment.insulin > 0 && treatment.mealBolus) {
-                    result.boluses += treatment.insulin;
+        synchronized (treatments) {
+            for (Treatment treatment : treatments) {
+                if (!treatment.isValid)
+                    continue;
+                long t = treatment.date;
+                if (t > dia_ago && t <= now) {
+                    if (treatment.carbs >= 1) {
+                        result.carbs += treatment.carbs;
+                        result.lastCarbTime = t;
+                    }
+                    if (treatment.insulin > 0 && treatment.mealBolus) {
+                        result.boluses += treatment.insulin;
+                    }
                 }
             }
         }
@@ -275,29 +281,35 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public List<Treatment> getTreatmentsFromHistory() {
-        return treatments;
+        synchronized (treatments) {
+            return (List<Treatment>) treatments.clone();
+        }
     }
 
     @Override
     public List<Treatment> getTreatments5MinBackFromHistory(long time) {
         List<Treatment> in5minback = new ArrayList<>();
-        for (Integer pos = 0; pos < treatments.size(); pos++) {
-            Treatment t = treatments.get(pos);
-            if (!t.isValid)
-                continue;
-            if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
-                in5minback.add(t);
+        synchronized (treatments) {
+            for (Integer pos = 0; pos < treatments.size(); pos++) {
+                Treatment t = treatments.get(pos);
+                if (!t.isValid)
+                    continue;
+                if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
+                    in5minback.add(t);
+            }
+            return in5minback;
         }
-        return in5minback;
     }
 
     @Override
     public long getLastBolusTime() {
         long now = System.currentTimeMillis();
         long last = 0;
-        for (Treatment t : treatments) {
-            if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now)
-                last = t.date;
+        synchronized (treatments) {
+            for (Treatment t : treatments) {
+                if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now)
+                    last = t.date;
+            }
         }
         log.debug("Last bolus time: " + new Date(last).toLocaleString());
         return last;
@@ -425,14 +437,14 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
         synchronized (extendedBoluses) {
-            return extendedBoluses;
+            return new NonOverlappingIntervals<>(extendedBoluses);
         }
     }
 
     @Override
     public Intervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         synchronized (tempBasals) {
-            return tempBasals;
+            return new NonOverlappingIntervals<>(tempBasals);
         }
     }
 
@@ -514,7 +526,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public Intervals<TempTarget> getTempTargetsFromHistory() {
         synchronized (tempTargets) {
-            return tempTargets;
+            return new NonOverlappingIntervals<>(tempTargets);
         }
     }
 
@@ -534,7 +546,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
         synchronized (profiles) {
-            return profiles;
+            return new ProfileIntervals<>(profiles);
         }
     }
 

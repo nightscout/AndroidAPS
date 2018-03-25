@@ -22,7 +22,15 @@ import info.nightscout.utils.DateUtil;
 public class ProfileIntervals<T extends Interval> {
     private static Logger log = LoggerFactory.getLogger(ProfileIntervals.class);
 
-    private LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
+    private LongSparseArray<T> rawData; // oldest at index 0
+
+    public ProfileIntervals () {
+        rawData = new LongSparseArray<>();
+    }
+
+    public ProfileIntervals (ProfileIntervals<T> other) {
+        rawData = other.rawData.clone();
+    }
 
     public synchronized ProfileIntervals reset() {
         rawData = new LongSparseArray<>();
