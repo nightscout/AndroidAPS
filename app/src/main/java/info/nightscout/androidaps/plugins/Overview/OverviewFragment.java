@@ -288,8 +288,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             llm = new LinearLayoutManager(view.getContext());
             notificationsView.setLayoutManager(llm);
 
-            float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
-            int axisWidth = (int) Math.round(scaledDensity * scaledDensity * scaledDensity * 6);
+            int axisWidth = 50;
+
+            if (dm.densityDpi <= 120)
+                axisWidth = 3;
+            else if (dm.densityDpi <= 160)
+                axisWidth = 10;
+            else if (dm.densityDpi <= 320)
+                axisWidth = 35;
+            else if (dm.densityDpi <= 420)
+                axisWidth = 50;
+            else if (dm.densityDpi <= 560)
+                axisWidth = 70;
+            else
+                axisWidth = 80;
 
             bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             bgGraph.getGridLabelRenderer().reloadStyles();
