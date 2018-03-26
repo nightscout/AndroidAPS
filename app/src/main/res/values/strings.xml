@@ -42,7 +42,7 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
@@ -89,7 +89,7 @@
     <string name="configbuilder_general">General</string>
     <string name="days">days</string>
     <string name="objectives_minimalduration">Minimal duration</string>
-    <string name="configbuilder_constraints">Constraints</string>
+    <string name="constraints">Constraints</string>
 
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
@@ -430,9 +430,7 @@
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
-    <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
-    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
@@ -641,8 +639,8 @@
     <string name="mdtp_cancel">Cancel</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
-    <string name="combopump">Accu-Chek Combo</string>
-    <string name="combopump_shortname">COMBO</string>
+    <string name="combopump" translatable="false">Accu-Chek Combo</string>
+    <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
@@ -889,7 +887,7 @@
     <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
     <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise)</string>
-    <string name="let_temp_basal_run">Let current temp basal run</string>
+    <string name="let_temp_basal_run">Let temp basal run</string>
     <string name="mute">Mute</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="overview_carbs_label">Carbs</string>
@@ -962,5 +960,38 @@
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="combo_bolus_count">Bolus count</string>
     <string name="combo_tbr_count">TBR count</string>
+    <string name="objectivenotstarted" formatted="false">Objective %d not started</string>
+    <string name="objectivenotfinished" formatted="false">Objective %d not finished</string>
+    <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
+    <string name="novalidbasalrate">No valid basal rate read from pump</string>
+    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
+    <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
+    <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
+    <string name="limitingbasalratio">Limiting max basal rate to %.2f U/h because of %s</string>
+    <string name="pumplimit">pump limit</string>
+    <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
+    <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
+    <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
+    <string name="itmustbepositivevalue">it must be positive value</string>
+    <string name="maxbasalmultiplier">max basal multiplier</string>
+    <string name="maxdailybasalmultiplier">max daily basal multiplier</string>
+    <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
+    <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
+    <string name="basal_set_correctly">Basal set correctly</string>
+    <string name="limitingpercentrate" formatted="false">Limiting max percent rate to %d%% because of %s</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="limitingbolus" formatted="false">Limiting bolus to %.1f U because of %s</string>
+    <string name="limitingmaxiob" formatted="false">Limiting max IOB to %.1f U because of %s</string>
+    <string name="limitingcarbs" formatted="false">Limiting carbs to %d g because of %s</string>
+    <string name="limitingiob" formatted="false">Limiting IOB to %.1f U because of %s</string>
+    <string name="maxvalueinpreferences">max value in preferences</string>
+    <string name="hardlimit">hard limit</string>
+    <string name="key_treatmentssafety_maxcarbs">treatmentssafety_maxcarbs</string>
+    <string name="unsafeusage">unsafe usage</string>
+    <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
+    <string name="record_pump_site_change">Record pump site change</string>
+    <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
+    <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
+    <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
 </resources>
 

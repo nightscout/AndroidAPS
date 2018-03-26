@@ -76,7 +76,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 return;
             Treatment t = treatments.get(position);
             holder.date.setText(DateUtil.dateAndTimeString(t.date));
-            holder.insulin.setText(DecimalFormatter.to2Decimal(t.insulin) + " U");
+            holder.insulin.setText(DecimalFormatter.toPumpSupportedBolus(t.insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(t.carbs) + " g");
             Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
@@ -176,7 +176,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.treatments);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory());
         recyclerView.setAdapter(adapter);
 
         iobTotal = (TextView) view.findViewById(R.id.treatments_iobtotal);
@@ -232,7 +232,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.treatments), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
                     if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
                         iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " U");
                         activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " U");

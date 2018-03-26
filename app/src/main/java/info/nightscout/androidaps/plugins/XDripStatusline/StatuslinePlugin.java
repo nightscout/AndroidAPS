@@ -117,7 +117,7 @@ public class StatuslinePlugin implements PluginBase {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == GENERAL) {
             this.fragmentEnabled = fragmentEnabled;
 
@@ -235,8 +235,7 @@ public class StatuslinePlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        if (ev.isFromActiveBgSource && ev.isNew && ev.isCurrent())
-            sendStatus();
+        sendStatus();
     }
 
     @Subscribe

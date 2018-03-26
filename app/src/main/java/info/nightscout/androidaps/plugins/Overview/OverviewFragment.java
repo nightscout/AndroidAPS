@@ -87,6 +87,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -287,13 +288,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             llm = new LinearLayoutManager(view.getContext());
             notificationsView.setLayoutManager(llm);
 
+            float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
+            int axisWidth = (int) Math.round(scaledDensity * scaledDensity * scaledDensity * 6);
+
             bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             bgGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             iobGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
-            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
+            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
             iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
             rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
@@ -439,7 +443,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (v == apsModeView) {
             final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
-            if (activeloop == null)
+            if (activeloop == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
             if (activeloop.isEnabled(PluginBase.LOOP)) {
@@ -473,9 +477,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null)
+            return true;
         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
-            activeloop.setFragmentEnabled(PluginBase.LOOP, false);
+            activeloop.setPluginEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");
@@ -490,7 +497,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
-            activeloop.setFragmentEnabled(PluginBase.LOOP, true);
+            activeloop.setPluginEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();
             updateGUI("suspendmenu");
@@ -526,23 +533,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor15m))) {
-            MainApp.getConfigBuilder().disconnectPump(15);
+            MainApp.getConfigBuilder().disconnectPump(15, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            MainApp.getConfigBuilder().disconnectPump(30);
+            MainApp.getConfigBuilder().disconnectPump(30, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            MainApp.getConfigBuilder().disconnectPump(60);
+            MainApp.getConfigBuilder().disconnectPump(60, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            MainApp.getConfigBuilder().disconnectPump(120);
+            MainApp.getConfigBuilder().disconnectPump(120, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            MainApp.getConfigBuilder().disconnectPump(180);
+            MainApp.getConfigBuilder().disconnectPump(180, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
@@ -723,8 +730,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
                 String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(wizard.calculatedTotalInsulin);
-                Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(quickWizardEntry.carbs());
+                Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(wizard.calculatedTotalInsulin)).value();
+                Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
                 confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                 confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -760,7 +767,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                         activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                         MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                     }
-                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
+                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                         @Override
                                         public void run() {
                                             if (!result.success) {
@@ -1016,6 +1023,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
+        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
+
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
@@ -1036,7 +1045,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-                if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+                if (closedLoopEnabled.value()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
                     apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
@@ -1066,7 +1075,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Temp button ****
         if (acceptTempLayout != null) {
-            boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+            boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
@@ -1160,7 +1169,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setText(extendedBolusText);
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(View.GONE);
+                extendedBolusView.setVisibility(View.INVISIBLE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
@@ -1188,7 +1197,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, lastBG, false);
-            text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
                 quickWizardButton.setVisibility(View.GONE);

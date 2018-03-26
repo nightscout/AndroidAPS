@@ -129,7 +129,7 @@
     <string name="configbuilder">Configurator</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BG bron</string>
-    <string name="configbuilder_constraints">Beperkingen</string>
+    <string name="constraints">Beperkingen</string>
     <string name="configbuilder_general">Algemeen</string>
     <string name="configbuilder_insulin">Insuline curve</string>
     <string name="clear_queue">Ledig wachtrij</string>
@@ -347,7 +347,7 @@
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
     <string name="nsclientinternal_secret_dialogmessage">Geen NS API geheim op (min 12 kar.)</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
-    <string name="treatments_wizard_unit_label">E</string>
+    <string name="insulin_unit_shortname">E</string>
     <string name="treatments_wizard_correction_label">Correctie</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_carbs_label">Koolhydraten</string>

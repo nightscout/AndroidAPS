@@ -44,9 +44,11 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -119,11 +121,11 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newinsulin_amount);
 
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
         dateButton = (TextView) view.findViewById(R.id.newinsulin_eventdate);
         timeButton = (TextView) view.findViewById(R.id.newinsulin_eventtime);
@@ -159,7 +161,8 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
     }
 
     private String toSignedString(double value) {
-        return value > 0 ? "+" + value : String.valueOf(value);
+        String formatted = DecimalFormatter.toPumpSupportedBolus(value);
+        return value > 0 ? "+" + formatted : formatted;
     }
 
     @Override
@@ -223,7 +226,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
         try {
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
-            Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {

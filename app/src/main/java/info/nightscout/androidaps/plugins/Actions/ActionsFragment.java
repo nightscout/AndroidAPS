@@ -126,7 +126,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null) {
+                    if (MainApp.getConfigBuilder().getProfile() == null) {
                         tempTarget.setVisibility(View.GONE);
                         profileSwitch.setVisibility(View.GONE);
                         extendedBolus.setVisibility(View.GONE);

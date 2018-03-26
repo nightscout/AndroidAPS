@@ -13,6 +13,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
@@ -133,9 +134,9 @@ public class ProfileTest {
         // Test timeshift functionality
         p = new Profile(new JSONObject(validProfile), 100, 1);
         Assert.assertEquals(
-                "00:00    110,0 mmol/U\n" +
-                        "01:00    100,0 mmol/U\n" +
-                        "03:00    110,0 mmol/U", p.getIsfList().replace(".", ","));
+                "00:00    110.0 mmol/U\n" +
+                        "01:00    100.0 mmol/U\n" +
+                        "03:00    110.0 mmol/U", p.getIsfList());
 
         // Test hour alignment
         MainApp.getConfigBuilder().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
@@ -146,6 +147,7 @@ public class ProfileTest {
     }
 
     private void prepareMock() throws Exception {
+        Locale.setDefault(new Locale("en", "US"));
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
 

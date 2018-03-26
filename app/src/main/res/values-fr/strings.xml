@@ -42,7 +42,7 @@
     <string name="treatments_wizard_tt_label">CT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IR</string>
     <string name="openapsma_run">"Exécuter maintenant "</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
@@ -81,7 +81,7 @@
     <string name="configbuilder_general">Général</string>
     <string name="days">Jours</string>
     <string name="objectives_minimalduration">Durée minimale</string>
-    <string name="configbuilder_constraints">Restrictions</string>
+    <string name="constraints">Restrictions</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>

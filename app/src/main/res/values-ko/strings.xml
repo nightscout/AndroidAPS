@@ -40,7 +40,7 @@
     <string name="treatments_wizard_bg_label">혈당</string>
     <string name="treatments_wizard_carbs_label">탄수화물</string>
     <string name="treatments_wizard_correction_label">교정</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">식사주입 IOB</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="vitualpump_label">가상 펌프</string>
@@ -84,7 +84,7 @@
     <string name="configbuilder_general">일반</string>
     <string name="days">일</string>
     <string name="objectives_minimalduration">최소기간</string>
-    <string name="configbuilder_constraints">제한</string>
+    <string name="constraints">제한</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>

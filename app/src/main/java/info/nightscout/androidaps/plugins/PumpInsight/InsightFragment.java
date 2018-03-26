@@ -19,14 +19,14 @@ import java.util.List;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.ui.StatusItemViewAdapter;
 import info.nightscout.utils.FabricPrivacy;
 
 
-public class InsightPumpFragment extends SubscriberFragment {
-    private static final Logger log = LoggerFactory.getLogger(InsightPumpFragment.class);
+public class InsightFragment extends SubscriberFragment {
+    private static final Logger log = LoggerFactory.getLogger(InsightFragment.class);
     private static final Handler sLoopHandler = new Handler();
     private static volatile boolean refresh = false;
     private static volatile boolean pending = false;
@@ -88,7 +88,7 @@ public class InsightPumpFragment extends SubscriberFragment {
 
 
     @Subscribe
-    public void onStatusEvent(final EventInsightPumpUpdateGui ev) {
+    public void onStatusEvent(final EventInsightUpdateGui ev) {
         updateGUI();
     }
 
@@ -99,8 +99,8 @@ public class InsightPumpFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final InsightPumpPlugin insightPumpPlugin = InsightPumpPlugin.getPlugin();
-                    final List<StatusItem> l = insightPumpPlugin.getStatusItems(refresh);
+                    final InsightPlugin insightPlugin = InsightPlugin.getPlugin();
+                    final List<StatusItem> l = insightPlugin.getStatusItems(refresh);
 
                     holder.removeAllViews();
 

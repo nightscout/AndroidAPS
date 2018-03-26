@@ -25,12 +25,12 @@ import java.util.ArrayList;
 
 import ch.qos.logback.classic.LoggerContext;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
@@ -42,7 +42,7 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
@@ -59,7 +59,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPumpPlugin;
+import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
@@ -79,7 +79,6 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.SP;
 import io.fabric.sdk.android.Fabric;
 
 
@@ -93,6 +92,7 @@ public class MainApp extends Application {
 
     private static DatabaseHelper sDatabaseHelper = null;
     private static ConfigBuilderPlugin sConfigBuilder = null;
+    private static ConstraintChecker sConstraintsChecker = null;
 
     private static ArrayList<PluginBase> pluginsList = null;
 
@@ -109,6 +109,7 @@ public class MainApp extends Application {
         super.onCreate();
         sInstance = this;
         sResources = getResources();
+        sConstraintsChecker = new ConstraintChecker(this);
 
         try {
             if (FabricPrivacy.fabricEnabled()) {
@@ -154,7 +155,7 @@ public class MainApp extends Application {
             if (Config.HWPUMPS) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRSPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
-            if (Config.HWPUMPS && engineeringMode) pluginsList.add(InsightPumpPlugin.getPlugin()); // <-- Enable Insight plugin here
+            if (Config.HWPUMPS && engineeringMode) pluginsList.add(InsightPlugin.getPlugin()); // <-- Enable Insight plugin here
             if (Config.HWPUMPS && engineeringMode) pluginsList.add(ComboPlugin.getPlugin()); // <-- Enable Combo plugin here
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
@@ -184,20 +185,21 @@ public class MainApp extends Application {
             pluginsList.add(WearPlugin.initPlugin(this));
             pluginsList.add(StatuslinePlugin.initPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
-            pluginsList.add(NSClientInternalPlugin.getPlugin());
+            pluginsList.add(NSClientPlugin.getPlugin());
 
-            pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
+            pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());
 
             MainApp.getConfigBuilder().initialize();
         }
         NSUpload.uploadAppStart();
+
         if (Config.NSCLIENT)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
         else if (Config.G5UPLOADER)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
         else if (Config.PUMPCONTROL)
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConfigBuilder().isClosedModeEnabled())
+        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
         else
             FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
@@ -293,6 +295,10 @@ public class MainApp extends Application {
         return sConfigBuilder;
     }
 
+    public static ConstraintChecker getConstraintChecker() {
+        return sConstraintsChecker;
+    }
+
     public static ArrayList<PluginBase> getPluginsList() {
         return pluginsList;
     }
@@ -382,6 +388,8 @@ public class MainApp extends Application {
     }
 
     public static boolean isEngineeringModeOrRelease() {
+        if (!BuildConfig.APS)
+            return true;
         return engineeringMode || !devBranch;
     }
 

@@ -96,7 +96,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == PROFILE) this.fragmentEnabled = fragmentEnabled;
     }
 

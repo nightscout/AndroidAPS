@@ -36,7 +36,7 @@
     <string name="treatments_wizard_bg_label">Glucosa</string>
     <string name="treatments_wizard_carbs_label">Hidratos Carbono</string>
     <string name="treatments_wizard_correction_label">Corrección</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolo IOB</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
@@ -78,7 +78,7 @@
     <string name="configbuilder_general">General</string>
     <string name="days">días</string>
     <string name="objectives_minimalduration">Duración mínima</string>
-    <string name="configbuilder_constraints">Restricciones</string>
+    <string name="constraints">Restricciones</string>
     <string name="loop">Lazo</string>
     <string name="configbuilder_loop">Lazo</string>
     <string name="loop_aps_label">APS</string>
@@ -204,7 +204,7 @@
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
-    <string formatted="false" name="smscommunicator_bolusreplywithcode">Para entregar bolo %.2fU responder con código% s</string>
+    <string formatted="false" name="smscommunicator_bolusreplywithcode">Para entregar bolo %.2fU responder con código %s</string>
     <string name="smscommunicator_bolusfailed">Bolo falló</string>
     <string formatted="false" name="bolusdelivered">Bolo %.2fU entregado con éxito</string>
     <string formatted="false" name="bolusdelivering">Entregando %.2fU</string>
@@ -249,7 +249,7 @@
     <string name="occlusion">Oclusión</string>
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">Parar pulsado</string>
-    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Se entregará % .2fU</string>
+    <string formatted="false" name="overview_bolusprogress_goingtodeliver">Se entregará %.2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitoreo, y el análisis de los basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_1_objective">Empezar con bucle abierto</string>
@@ -423,7 +423,7 @@
     <string name="nav_show_logcat">mostrar log</string>
     <string name="overview_calibration">Calibracion</string>
     <string name="overview_calibration_bg_label">Calibracion</string>
-    <string name="send_calibration" formatted="false">Mandar calibracion %.lf a xDrip?</string>
+    <string name="send_calibration" formatted="false">Mandar calibracion %.1f a xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ no instalado</string>
     <string name="calibrationsent">Calibracion mandada a xDrip</string>
     <string name="smscommunicator_remotecalibrationnotallowed">Calibracion remota no admitida</string>

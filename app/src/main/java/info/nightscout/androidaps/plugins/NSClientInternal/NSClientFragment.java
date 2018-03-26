@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -34,8 +33,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientU
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
-public class NSClientInternalFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    private static Logger log = LoggerFactory.getLogger(NSClientInternalFragment.class);
+public class NSClientFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    private static Logger log = LoggerFactory.getLogger(NSClientFragment.class);
 
     private TextView logTextView;
     private TextView queueTextView;
@@ -58,10 +57,10 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
 
             logScrollview = (ScrollView) view.findViewById(R.id.nsclientinternal_logscrollview);
             autoscrollCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_autoscroll);
-            autoscrollCheckbox.setChecked(NSClientInternalPlugin.getPlugin().autoscroll);
+            autoscrollCheckbox.setChecked(NSClientPlugin.getPlugin().autoscroll);
             autoscrollCheckbox.setOnCheckedChangeListener(this);
             pausedCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_paused);
-            pausedCheckbox.setChecked(NSClientInternalPlugin.getPlugin().paused);
+            pausedCheckbox.setChecked(NSClientPlugin.getPlugin().paused);
             pausedCheckbox.setOnCheckedChangeListener(this);
             logTextView = (TextView) view.findViewById(R.id.nsclientinternal_log);
             queueTextView = (TextView) view.findViewById(R.id.nsclientinternal_queue);
@@ -101,11 +100,11 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientRestart"));
                 break;
             case R.id.nsclientinternal_delivernow:
-                NSClientInternalPlugin.getPlugin().resend("GUI");
+                NSClientPlugin.getPlugin().resend("GUI");
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientDeliverNow"));
                 break;
             case R.id.nsclientinternal_clearlog:
-                NSClientInternalPlugin.getPlugin().clearLog();
+                NSClientPlugin.getPlugin().clearLog();
                 break;
             case R.id.nsclientinternal_clearqueue:
                 final Context context = getContext();
@@ -124,7 +123,7 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
                 builder.show();
                 break;
             case R.id.nsclientinternal_showqueue:
-                MainApp.bus().post(new EventNSClientNewLog("QUEUE", NSClientInternalPlugin.getPlugin().queue().textList()));
+                MainApp.bus().post(new EventNSClientNewLog("QUEUE", NSClientPlugin.getPlugin().queue().textList()));
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientShowQueue"));
                 break;
         }
@@ -135,14 +134,14 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
                 SP.putBoolean(R.string.key_nsclientinternal_paused, isChecked);
-                NSClientInternalPlugin.getPlugin().paused = isChecked;
+                NSClientPlugin.getPlugin().paused = isChecked;
                 MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
                 updateGUI();
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientPause"));
                 break;
             case R.id.nsclientinternal_autoscroll:
                 SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);
-                NSClientInternalPlugin.getPlugin().autoscroll = isChecked;
+                NSClientPlugin.getPlugin().autoscroll = isChecked;
                 updateGUI();
                 break;
         }
@@ -160,15 +159,15 @@ public class NSClientInternalFragment extends SubscriberFragment implements View
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    NSClientInternalPlugin.updateLog();
-                    logTextView.setText(NSClientInternalPlugin.textLog);
-                    if (NSClientInternalPlugin.getPlugin().autoscroll) {
+                    NSClientPlugin.getPlugin().updateLog();
+                    logTextView.setText(NSClientPlugin.getPlugin().textLog);
+                    if (NSClientPlugin.getPlugin().autoscroll) {
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
-                    urlTextView.setText(NSClientInternalPlugin.getPlugin().url());
+                    urlTextView.setText(NSClientPlugin.getPlugin().url());
                     Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
                     queueTextView.setText(queuetext);
-                    statusTextView.setText(NSClientInternalPlugin.getPlugin().status);
+                    statusTextView.setText(NSClientPlugin.getPlugin().status);
                 }
             });
     }

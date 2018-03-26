@@ -51,15 +51,16 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.Translator;
@@ -108,6 +109,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     Date eventTime;
 
+    private static Integer seconds = null;
+
     public void setOptions(OptionsToShow options, int event) {
         this.options = options;
         this.event = MainApp.sResources.getString(event);
@@ -115,6 +118,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     public NewNSTreatmentDialog() {
         super();
+
+        if (seconds == null) {
+            seconds = new Double(Math.random() * 59).intValue();
+        }
     }
 
     @Override
@@ -272,11 +279,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         });
 
-        Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
         editCarbs = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbsinput);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
 
-        Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         editInsulin = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_insulininput);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
 
@@ -303,7 +310,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Integer maxPercent = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalPercentOnlyForCheckLimit);
+        Integer maxPercent = 200;
+        if (profile != null)
+            maxPercent = MainApp.getConstraintChecker().getMaxBasalPercentAllowed(profile).value();
         editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
         editPercent.setParams(0d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true, percentTextWatcher);
 
@@ -325,7 +334,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Double maxAbsolute = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
+        Double maxAbsolute = HardLimits.maxBasal();
+        if (profile != null)
+            maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
         editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
 
@@ -419,8 +430,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         long millis = eventTime.getTime() - (150 * 1000L); // 2,5 * 60 * 1000
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(millis, true);
         if ((data.size() > 0) &&
-            (data.get(0).date > millis - 7 * 60 * 1000L) &&
-            (data.get(0).date < millis + 7 * 60 * 1000L)) {
+                (data.get(0).date > millis - 7 * 60 * 1000L) &&
+                (data.get(0).date < millis + 7 * 60 * 1000L)) {
             editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
         }
     }
@@ -438,7 +449,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
-        eventTime.setSeconds(second);
+        eventTime.setSeconds(this.seconds++); // randomize seconds to prevent creating record of the same time, if user choose time manually
         timeButton.setText(DateUtil.timeString(eventTime));
         updateBGforDateTime();
     }

@@ -47,7 +47,7 @@
     <string name="configbuilder">Konfigurace</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
-    <string name="configbuilder_constraints">Omezení</string>
+    <string name="constraints">Omezení</string>
     <string name="configbuilder_general">Obecné</string>
     <string name="configbuilder_loop">Smyčka</string>
     <string name="configbuilder_profile">Profil</string>
@@ -139,7 +139,7 @@
     <string name="treatments_wizard_bolusiob_label">Bolusové IOB</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální povolené sacharidy [g]</string>
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
@@ -442,7 +442,7 @@
     <string name="nosuccess">neúspěšně - zkontrolujte mobil</string>
     <string name="notavailable">Nedostupný</string>
     <string name="nowritepermission">NSClient nedostal oprávnění k zápisu. Špatné API secret?</string>
-    <string name="nsclientinternal">NSClient interní</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Posouvat</string>
     <string name="nsclientinternal_secret_dialogmessage">Vložte API secret (min 12. znaků)</string>
     <string name="nsclientinternal_shortname">NSCl</string>
@@ -734,7 +734,7 @@
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
     <string name="enableuam_summary">Detekce neoznámených jídel</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="insightpump">Pumpa Insight</string>
+    <string name="insightpump">Insight</string>
     <string name="status_no_colon">Stav</string>
     <string name="changed">Změněno</string>
     <string name="pump_stopped_uppercase">PUMPA ZASTAVENA</string>

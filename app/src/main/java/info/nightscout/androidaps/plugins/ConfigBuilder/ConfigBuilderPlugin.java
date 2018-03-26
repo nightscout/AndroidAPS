@@ -4,14 +4,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -33,7 +35,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -43,22 +45,29 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, TreatmentsInterface {
+public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
-    private static BgSourceInterface activeBgSource;
+    private static ConfigBuilderPlugin configBuilderPlugin;
+
+    static public ConfigBuilderPlugin getPlugin() {
+        if (configBuilderPlugin == null)
+            configBuilderPlugin = new ConfigBuilderPlugin();
+        return configBuilderPlugin;
+    }
+
+    private BgSourceInterface activeBgSource;
     private static PumpInterface activePump;
     private static ProfileInterface activeProfile;
     private static TreatmentsInterface activeTreatments;
@@ -132,7 +141,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         // Always enabled
     }
 
@@ -182,7 +191,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                     String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
                     String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
                     if (SP.contains(settingEnabled))
-                        p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
+                        p.setPluginEnabled(type, SP.getBoolean(settingEnabled, true));
                     if (SP.contains(settingVisible))
                         p.setFragmentVisible(type, SP.getBoolean(settingVisible, true) && SP.getBoolean(settingEnabled, true));
                 } catch (Exception e) {
@@ -197,7 +206,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         return commandQueue;
     }
 
-    public static BgSourceInterface getActiveBgSource() {
+    public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
@@ -342,7 +351,7 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                 found = p;
             } else if (p.isEnabled(type)) {
                 // set others disabled
-                p.setFragmentEnabled(type, false);
+                p.setPluginEnabled(type, false);
             }
         }
         // If none enabled, enable first one
@@ -355,10 +364,14 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
-        PumpInterface pump = getActivePump();
-        request.rate = applyBasalConstraints(request.rate);
+        if (!request.tempBasalRequested) {
+            return;
+        }
 
-        long now = System.currentTimeMillis();
+        PumpInterface pump = getActivePump();
+
+        request.rateConstraint = new Constraint<>(request.rate);
+        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
 
         if (!pump.isInitialized()) {
             log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
@@ -379,37 +392,55 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
 
-        if (request.tempBasalReqested) {
-            TemporaryBasal activeTemp = getTempBasalFromHistory(now);
-            if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
-                if (activeTemp != null) {
-                    if (Config.logCongigBuilderActions)
-                        log.debug("applyAPSRequest: cancelTempBasal()");
-                    getCommandQueue().cancelTempBasal(false, callback);
-                } else {
-                    if (Config.logCongigBuilderActions)
-                        log.debug("applyAPSRequest: Basal set correctly");
-                    if (callback != null) {
-                        callback.result(new PumpEnactResult().absolute(request.rate).duration(0).enacted(false).success(true).comment("Basal set correctly")).run();
-                    }
-                }
-            } else if (activeTemp != null
-                    && activeTemp.getPlannedRemainingMinutes() > 5
-                    && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+        long now = System.currentTimeMillis();
+        TemporaryBasal activeTemp = getTempBasalFromHistory(now);
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+            if (activeTemp != null) {
                 if (Config.logCongigBuilderActions)
-                    log.debug("applyAPSRequest: Temp basal set correctly");
-                if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile)).duration(activeTemp.getPlannedRemainingMinutes()).enacted(false).success(true).comment("Temp basal set correctly")).run();
-                }
+                    log.debug("applyAPSRequest: cancelTempBasal()");
+                getCommandQueue().cancelTempBasal(false, callback);
             } else {
                 if (Config.logCongigBuilderActions)
-                    log.debug("applyAPSRequest: setTempBasalAbsolute()");
-                getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, callback);
+                    log.debug("applyAPSRequest: Basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                            .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
+                }
             }
+        } else if (activeTemp != null
+                && activeTemp.getPlannedRemainingMinutes() > 5
+                && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
+                && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: Temp basal set correctly");
+            if (callback != null) {
+                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                        .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
+                        .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
+            }
+        } else {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: setTempBasalAbsolute()");
+            getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
         }
     }
 
     public void applySMBRequest(APSResult request, Callback callback) {
+        if (!request.bolusRequested) {
+            return;
+        }
+
+        long lastBolusTime = getLastBolusTime();
+        if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+            log.debug("SMB requested but still in 3 min interval");
+            if (callback != null) {
+                callback.result(new PumpEnactResult()
+                        .comment(MainApp.gs(R.string.smb_frequency_exceeded))
+                        .enacted(false).success(false)).run();
+            }
+            return;
+        }
+
         PumpInterface pump = getActivePump();
 
         if (!pump.isInitialized()) {
@@ -431,148 +462,16 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
         if (Config.logCongigBuilderActions)
             log.debug("applySMBRequest: " + request.toString());
 
-        if (request.bolusRequested) {
-            long lastBolusTime = getLastBolusTime();
-            if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
-                log.debug("SMB requsted but still in 3 min interval");
-            } else {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                detailedBolusInfo.insulin = request.smb;
-                detailedBolusInfo.isSMB = true;
-                detailedBolusInfo.source = Source.USER;
-                detailedBolusInfo.deliverAt = request.deliverAt;
-                getCommandQueue().bolus(detailedBolusInfo, callback);
-            }
-        }
-    }
-
-    /**
-     * Constraints interface
-     **/
-    @Override
-    public boolean isLoopEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isLoopEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isClosedModeEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isClosedModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        boolean result = true;
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAutosensModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        boolean result = SP.getBoolean("openapsama_useautosens", false);
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isAMAModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isSMBModeEnabled() {
-        boolean result = true; // TODO update for SMB // SP.getBoolean("openapsama_useautosens", false);
-
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            result = result && constrain.isSMBModeEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        Double rateAfterConstrain = absoluteRate;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(absoluteRate), rateAfterConstrain);
-        }
-        return rateAfterConstrain;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        Integer rateAfterConstrain = percentRate;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(percentRate), rateAfterConstrain);
-        }
-        return rateAfterConstrain;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        Double insulinAfterConstrain = insulin;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulin), insulinAfterConstrain);
-        }
-        return insulinAfterConstrain;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        Integer carbsAfterConstrain = carbs;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbs), carbsAfterConstrain);
-        }
-        return carbsAfterConstrain;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        Double maxIobAfterConstrain = maxIob;
-        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
-            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIob), maxIobAfterConstrain);
-        }
-        return maxIobAfterConstrain;
+        // deliver SMB
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+        detailedBolusInfo.insulin = request.smb;
+        detailedBolusInfo.isSMB = true;
+        detailedBolusInfo.source = Source.USER;
+        detailedBolusInfo.deliverAt = request.deliverAt;
+        if (Config.logCongigBuilderActions)
+            log.debug("applyAPSRequest: bolus()");
+        getCommandQueue().bolus(detailedBolusInfo, callback);
     }
 
     //  ****** Treatments interface *****
@@ -767,9 +666,12 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
             if (profileSwitch.profileJson != null) {
                 return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
             } else {
-                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                if (profile != null)
-                    return profileSwitch.profileName;
+                ProfileStore profileStore = activeProfile.getProfile();
+                if (profileStore != null) {
+                    Profile profile = profileStore.getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null)
+                        return profileSwitch.profileName;
+                }
             }
         }
         return MainApp.gs(R.string.noprofileselected);
@@ -806,13 +708,21 @@ public class ConfigBuilderPlugin implements PluginBase, ConstraintsInterface, Tr
                     return profile;
             }
         }
+        if (getProfileSwitchesFromHistory().size() > 0) {
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("time", time)
+                    .putCustomAttribute("getProfileSwitchesFromHistory", getProfileSwitchesFromHistory().toString())
+            );
+        }
         log.debug("getProfile at the end: returning null");
         return null;
     }
 
-    public void disconnectPump(int durationInMinutes) {
+    public void disconnectPump(int durationInMinutes, Profile profile) {
         getActiveLoop().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
-        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, new Callback() {
+        getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {

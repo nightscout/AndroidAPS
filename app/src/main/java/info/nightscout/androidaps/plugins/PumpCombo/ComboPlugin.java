@@ -4,7 +4,6 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.json.JSONObject;
@@ -36,6 +35,7 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -225,7 +225,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    public void setPluginEnabled(int type, boolean fragmentEnabled) {
         if (type == PUMP) this.fragmentEnabled = fragmentEnabled;
     }
 
@@ -428,7 +428,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return;
         }
         pump.basalProfile = readBasalResult.basalProfile;
-        validBasalRateProfileSelectedOnPump = true;
+        setValidBasalRateProfileSelectedOnPump(true);
 
         pump.initialized = true;
         MainApp.bus().post(new EventInitializationChanged());
@@ -750,7 +750,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      *              the new value (and thus still has the old duration of e.g. 1 min) expires?)
      */
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean force) {
         log.debug("setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
@@ -768,7 +768,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      *                 is or isn't running at the moment
      */
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, boolean forceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, Profile profile, boolean forceNew) {
         return setTempBasalPercent(percent, durationInMinutes);
     }
 
@@ -929,7 +929,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (commandResult.success) {
                 pump.lastSuccessfulCmdTime = System.currentTimeMillis();
                 if (validBasalRateProfileSelectedOnPump && commandResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
-                    validBasalRateProfileSelectedOnPump = false;
+                    setValidBasalRateProfileSelectedOnPump(false);
                     Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                             MainApp.gs(R.string.combo_force_disabled_notification),
                             Notification.URGENT);
@@ -947,6 +947,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         return commandResult;
+    }
+
+    public void setValidBasalRateProfileSelectedOnPump(boolean value) {
+        validBasalRateProfileSelectedOnPump = value;
     }
 
     /**
@@ -1457,52 +1461,16 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Override
-    public boolean isLoopEnabled() {
-        return validBasalRateProfileSelectedOnPump;
+    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+        if (!validBasalRateProfileSelectedOnPump)
+            value.set(false, MainApp.gs(R.string.novalidbasalrate), this);
+        return value;
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isSMBModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        return absoluteRate;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        return percentRate;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        return insulin;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        return carbs;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        return lowSuspendOnlyLoopEnforcedUntil < System.currentTimeMillis() ? maxIob : 0;
+    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+        if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
+            maxIob.setIfSmaller(0d, String.format(MainApp.gs(R.string.limitingmaxiob), 0d, MainApp.gs(R.string.unsafeusage)), this);
+        return maxIob;
     }
 }

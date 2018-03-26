@@ -101,7 +101,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="0.5"
-                android:drawableTop="@drawable/icon_actions_refill"
+                android:drawableTop="@drawable/icon_cp_pump_canula"
                 android:text="@string/primefill" />
 
             <info.nightscout.utils.SingleClickButton

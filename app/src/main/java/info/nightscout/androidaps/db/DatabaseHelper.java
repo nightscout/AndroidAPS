@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
@@ -246,7 +247,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         VirtualPumpPlugin.setFakingStatus(true);
-        scheduleBgChange(null, false, false); // trigger refresh
+        scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleTreatmentChange(null);
         scheduleExtendedBolusChange();
@@ -384,14 +385,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     // -------------------  BgReading handling -----------------------
 
-    public boolean createIfNotExists(BgReading bgReading, String from, boolean isFromActiveBgSource) {
+    public boolean createIfNotExists(BgReading bgReading, String from) {
         try {
             bgReading.date = roundDateToSec(bgReading.date);
             BgReading old = getDaoBgReadings().queryForId(bgReading.date);
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
-                scheduleBgChange(bgReading, true, isFromActiveBgSource);
+                scheduleBgChange(bgReading);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
@@ -399,7 +400,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange(bgReading, false, isFromActiveBgSource);
+                scheduleBgChange(bgReading);
                 return false;
             }
         } catch (SQLException e) {
@@ -417,11 +418,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private static void scheduleBgChange(@Nullable final BgReading bgReading, boolean isNew, boolean isFromActiveBgSource) {
+    private static void scheduleBgChange(@Nullable final BgReading bgReading) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG(bgReading, isNew, isFromActiveBgSource));
+                MainApp.bus().post(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }

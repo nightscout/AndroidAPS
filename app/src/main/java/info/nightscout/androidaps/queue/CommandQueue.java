@@ -18,13 +18,14 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
@@ -166,8 +167,8 @@ public class CommandQueue {
         removeAll(type);
 
         // apply constraints
-        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>((int) detailedBolusInfo.carbs)).value();
 
         // add new command to queue
         if (detailedBolusInfo.isSMB) {
@@ -187,7 +188,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -197,10 +198,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(absoluteRate);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -208,7 +209,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public boolean tempBasalPercent(Integer percent, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -218,10 +219,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Integer percentAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(percent);
+        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -236,7 +237,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);

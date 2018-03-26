@@ -84,7 +84,7 @@
     <string name="configbuilder">Konfigurationsverktyg</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BG Källa</string>
-    <string name="configbuilder_constraints">Begränsningar</string>
+    <string name="constraints">Begränsningar</string>
     <string name="configbuilder_general">Generell</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_loop">Loop</string>
@@ -303,7 +303,7 @@
     <string name="treatmentssafety_title">Säkerhet vid behandling</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH (g)</string>
     <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [E]</string>
-    <string name="treatments_wizard_unit_label">E</string>
+    <string name="insulin_unit_shortname">E</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_carbs_label">KH</string>

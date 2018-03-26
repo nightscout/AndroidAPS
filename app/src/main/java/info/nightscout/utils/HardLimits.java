@@ -18,7 +18,7 @@ public class HardLimits {
     final static int ADULT = 2;
     final static int RESISTANTADULT = 3;
 
-    final static double[] MAXBOLUS = {5d, 10d, 17d, 21d};
+    final static double[] MAXBOLUS = {5d, 10d, 17d, 25d};
 
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define
@@ -40,7 +40,7 @@ public class HardLimits {
     public static final double MAXISF = 720; // mgdl
 
     public static final double[] MAXIOB_AMA = {3, 5, 7, 12};
-    public static final double[] MAXIOB_SMB = {3, 7, 12, 22};
+    public static final double[] MAXIOB_SMB = {3, 7, 12, 25};
 
     public static final double[] MAXBASAL = {2, 5, 10, 12};
 
@@ -49,13 +49,13 @@ public class HardLimits {
         String sp_age = SP.getString(R.string.key_age, "");
         int age;
 
-        if (sp_age.equals(MainApp.sResources.getString(R.string.key_child)))
+        if (sp_age.equals(MainApp.gs(R.string.key_child)))
             age = CHILD;
-        else if (sp_age.equals(MainApp.sResources.getString(R.string.key_teenage)))
+        else if (sp_age.equals(MainApp.gs(R.string.key_teenage)))
             age = TEENAGE;
-        else if (sp_age.equals(MainApp.sResources.getString(R.string.key_adult)))
+        else if (sp_age.equals(MainApp.gs(R.string.key_adult)))
             age = ADULT;
-        else if (sp_age.equals(MainApp.sResources.getString(R.string.key_resistantadult)))
+        else if (sp_age.equals(MainApp.gs(R.string.key_resistantadult)))
             age = RESISTANTADULT;
         else age = ADULT;
 
@@ -88,9 +88,9 @@ public class HardLimits {
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit);
             newvalue = Math.min(newvalue, highLimit);
-            String msg = String.format(MainApp.sResources.getString(R.string.valueoutofrange), valueName);
+            String msg = String.format(MainApp.gs(R.string.valueoutofrange), valueName);
             msg += ".\n";
-            msg += String.format(MainApp.sResources.getString(R.string.valuelimitedto), value, newvalue);
+            msg += String.format(MainApp.gs(R.string.valuelimitedto), value, newvalue);
             log.error(msg);
             NSUpload.uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);

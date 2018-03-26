@@ -48,11 +48,11 @@ import java.util.Iterator;
  */
 public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> extends BaseSeries<E> {
     // Default spSize
-    int spSize = 12;
+    int spSize = 14;
     // Convert the sp to pixels
     Context context = MainApp.instance().getApplicationContext();
     float scaledTextSize = spSize * context.getResources().getDisplayMetrics().scaledDensity;
-    float scaledPxSize = context.getResources().getDisplayMetrics().scaledDensity * 1.5f;
+    float scaledPxSize = context.getResources().getDisplayMetrics().scaledDensity * 3f;
 
     /**
      * choose a predefined shape to render for
@@ -233,9 +233,10 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                 } else if (value.getShape() == Shape.SMB) {
                     mPaint.setStrokeWidth(2);
                     Point[] points = new Point[3];
-                    points[0] = new Point((int)endX, (int)(endY-value.getSize()));
-                    points[1] = new Point((int)(endX+value.getSize()), (int)(endY+value.getSize()*0.67));
-                    points[2] = new Point((int)(endX-value.getSize()), (int)(endY+value.getSize()*0.67));
+                    float size = value.getSize() * scaledPxSize;
+                    points[0] = new Point((int)endX, (int)(endY-size));
+                    points[1] = new Point((int)(endX+size), (int)(endY+size*0.67));
+                    points[2] = new Point((int)(endX-size), (int)(endY+size*0.67));
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     drawArrows(points, canvas, mPaint);
                 } else if (value.getShape() == Shape.EXTENDEDBOLUS) {

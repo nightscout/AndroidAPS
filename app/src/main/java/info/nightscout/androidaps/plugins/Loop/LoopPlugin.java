@@ -23,13 +23,12 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
@@ -47,7 +46,7 @@ import info.nightscout.utils.SP;
 public class LoopPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
 
-    private static LoopPlugin loopPlugin;
+    protected static LoopPlugin loopPlugin;
 
     public static LoopPlugin getPlugin() {
         if (loopPlugin == null) {
@@ -56,7 +55,7 @@ public class LoopPlugin implements PluginBase {
         return loopPlugin;
     }
 
-    private boolean fragmentEnabled = false;
+    private boolean pluginEnabled = false;
     private boolean fragmentVisible = false;
 
     private long loopSuspendedTill = 0L; // end of manual loop suspend
@@ -95,12 +94,12 @@ public class LoopPlugin implements PluginBase {
 
     @Override
     public String getName() {
-        return MainApp.instance().getString(R.string.loop);
+        return MainApp.instance().gs(R.string.loop);
     }
 
     @Override
     public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.loop_shortname);
+        String name = MainApp.gs(R.string.loop_shortname);
         if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
@@ -112,7 +111,7 @@ public class LoopPlugin implements PluginBase {
     @Override
     public boolean isEnabled(int type) {
         boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-        return type == LOOP && fragmentEnabled && pumpCapable;
+        return type == LOOP && pluginEnabled && pumpCapable;
     }
 
     @Override
@@ -137,8 +136,8 @@ public class LoopPlugin implements PluginBase {
     }
 
     @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == LOOP) this.fragmentEnabled = fragmentEnabled;
+    public void setPluginEnabled(int type, boolean pluginEnabled) {
+        if (type == LOOP) this.pluginEnabled = pluginEnabled;
     }
 
     @Override
@@ -153,19 +152,15 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        if (ev.treatment == null || !ev.treatment.isSMB){
+        if (ev.treatment == null || !ev.treatment.isSMB) {
             invoke("EventTreatmentChange", true);
         }
     }
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (!(ev.cause instanceof EventNewBG))
-            return;
-
-        EventNewBG bgEv = (EventNewBG) ev.cause;
-        if (bgEv.isNew && bgEv.isFromActiveBgSource && bgEv.isCurrent()) {
-            invoke("New BG", true);
+        if (ev.cause instanceof EventNewBG) {
+            invoke(ev.getClass().getSimpleName() + "(" + ev.cause.getClass().getSimpleName() + ")", true);
         }
     }
 
@@ -260,10 +255,12 @@ public class LoopPlugin implements PluginBase {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
-            ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-            if (!constraintsInterface.isLoopEnabled()) {
-                log.debug(MainApp.sResources.getString(R.string.loopdisabled));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopdisabled)));
+            Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
+
+            if (!loopEnabled.value()) {
+                String message = MainApp.sResources.getString(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
+                log.debug(message);
+                MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
             }
             final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
@@ -297,8 +294,10 @@ public class LoopPlugin implements PluginBase {
 
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
-            resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
-            resultAfterConstraints.smb = constraintsInterface.applyBolusConstraints(resultAfterConstraints.smb);
+            resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
+            resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
+            resultAfterConstraints.smbConstraint = new Constraint<>(resultAfterConstraints.smb);
+            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
@@ -329,11 +328,16 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
-            if (constraintsInterface.isClosedModeEnabled()) {
+            Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
+
+            if (closedLoopEnabled.value()) {
                 if (result.isChangeRequested()) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
-                    lastRun.tbrSetByPump = waiting;
+                    if (resultAfterConstraints.tempBasalRequested)
+                        lastRun.tbrSetByPump = waiting;
+                    if (resultAfterConstraints.bolusRequested)
+                        lastRun.smbSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
                     MainApp.getConfigBuilder().applyTBRRequest(resultAfterConstraints, profile, new Callback() {
