@@ -894,13 +894,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             String units = MainApp.getConfigBuilder().getProfileUnits();
             TempTarget tempTarget = new TempTarget()
-            .date(trJson.getLong("mills"))
-            .duration(trJson.getInt("duration"))
-            .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
-            .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
-            .reason(trJson.getString("reason"))
-            ._id(trJson.getString("_id"))
-            .source(Source.NIGHTSCOUT);
+                    .date(trJson.getLong("mills"))
+                    .duration(trJson.getInt("duration"))
+                    .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
+                    .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
+                    .reason(trJson.getString("reason"))
+                    ._id(trJson.getString("_id"))
+                    .source(Source.NIGHTSCOUT);
             createOrUpdate(tempTarget);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);

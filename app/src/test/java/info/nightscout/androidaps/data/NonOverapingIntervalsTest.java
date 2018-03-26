@@ -46,4 +46,13 @@ public class NonOverapingIntervalsTest {
         Assert.assertEquals(null, list.getValueByInterval(startDate + T.hours(10).msecs() + 1));
     }
 
+    @Test
+    public void testCopyConstructor() {
+        list.reset();
+        list.add(new TemporaryBasal().date(startDate).duration((int) T.hours(10).mins()).absolute(1));
+        NonOverlappingIntervals<TemporaryBasal> list2 = new NonOverlappingIntervals<>(list);
+        Assert.assertEquals(1, list2.getList().size());
+    }
+
+
 }
