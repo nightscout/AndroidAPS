@@ -60,6 +60,20 @@ public class GlucoseStatusTest {
     }
 
     @Test
+    public void calculateMostRecentGlucoseStatus() {
+        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateMostRecentBgData());
+
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+
+        Assert.assertEquals(215d, glucoseStatus.glucose, 0.001d); // (214+216) / 2
+        Assert.assertEquals(-1.25d, glucoseStatus.delta, 0.001d);
+        Assert.assertEquals(-1.25d, glucoseStatus.short_avgdelta, 0.001d);
+        Assert.assertEquals(-1.25d, glucoseStatus.avgdelta, 0.001d);
+        Assert.assertEquals(0d, glucoseStatus.long_avgdelta, 0.001d);
+        Assert.assertEquals(1514766850000L, glucoseStatus.date); // date is average too
+    }
+
+    @Test
     public void oneRecordShouldProduceZeroDeltas() {
         when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateOneCurrentRecordBgData());
 
@@ -97,6 +111,11 @@ public class GlucoseStatusTest {
         Assert.assertNotEquals(null, glucoseStatus);
     }
 
+    @Test
+    public void averageShouldNotFailOnEmptyArray() {
+        Assert.assertEquals(0d, GlucoseStatus.average(new ArrayList<>()), 0.001d);
+    }
+
     @Before
     public void initMocking() {
         AAPSMocker.mockMainApp();
@@ -119,6 +138,18 @@ public class GlucoseStatusTest {
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":224,\"mills\":1514765400000,\"direction\":\"Flat\"}"))));
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":226,\"mills\":1514765100000,\"direction\":\"Flat\"}"))));
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    List<BgReading> generateMostRecentBgData() {
+        List<BgReading> list = new ArrayList<>();
+        try {
+            list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))));
+            list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":216,\"mills\":1514766800000,\"direction\":\"Flat\"}")))); // +2
+            list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
             e.printStackTrace();
         }
