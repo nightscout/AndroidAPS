@@ -455,7 +455,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double c_bg = SafeParse.stringToDouble(editBg.getText());
         Integer c_carbs = SafeParse.stringToInt(editCarbs.getText());
         Double c_correction = SafeParse.stringToDouble(editCorr.getText());
-        Double corrAfterConstraint = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(c_correction)).value();
+        Double corrAfterConstraint = c_correction;
+        if (c_correction > 0)
+                c_correction = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(c_correction)).value();
         if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
             editCorr.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
