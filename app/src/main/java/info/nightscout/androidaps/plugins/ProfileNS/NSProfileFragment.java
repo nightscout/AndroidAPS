@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,16 +17,19 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.OKDialog;
 
 import static butterknife.OnItemSelected.Callback.NOTHING_SELECTED;
 
@@ -53,6 +57,8 @@ public class NSProfileFragment extends SubscriberFragment {
     TextView target;
     @BindView(R.id.basal_graph)
     ProfileGraph basalGraph;
+    @BindView(R.id.nsprofile_profileswitch)
+    Button activateButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,5 +137,19 @@ public class NSProfileFragment extends SubscriberFragment {
         isf.setText("");
         basal.setText("");
         target.setText("");
+    }
+
+    @OnClick(R.id.nsprofile_profileswitch)
+    public void onClickProfileSwitch() {
+        String name = profileSpinner.getSelectedItem().toString();
+        ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
+        if (store != null) {
+            Profile profile = store.getSpecificProfile(name);
+            if (profile != null) {
+                OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
+                        NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
+                );
+            }
+        }
     }
 }
