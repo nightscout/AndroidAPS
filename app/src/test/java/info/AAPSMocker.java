@@ -15,6 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
@@ -60,6 +61,10 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering");
         when(MainApp.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode");
         when(MainApp.gs(R.string.Glimp)).thenReturn("Glimp");
+        when(MainApp.gs(R.string.glucose)).thenReturn("Glucose");
+        when(MainApp.gs(R.string.delta)).thenReturn("Delta");
+        when(MainApp.gs(R.string.short_avgdelta)).thenReturn("Short avg. delta");
+        when(MainApp.gs(R.string.long_avgdelta)).thenReturn("Long avg. delta");
     }
 
     public static MainApp mockMainApp() {
@@ -95,6 +100,11 @@ public class AAPSMocker {
     public static void mockApplicationContext() {
         Context context = mock(Context.class);
         when(MainApp.instance().getApplicationContext()).thenReturn(context);
+    }
+
+    public static void mockDatabaseHelper() {
+        DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
+        when(MainApp.getDbHelper()).thenReturn(databaseHelper);
     }
 
     public static Profile getValidProfile() throws JSONException {

@@ -159,5 +159,8 @@ public class DateUtil {
         return timeFrameString(timestamp - System.currentTimeMillis());
     }
 
+    public static long now() {
+        return System.currentTimeMillis();
+    }
 
 }
