@@ -119,10 +119,15 @@ public class NSProfileFragment extends SubscriberFragment {
                 target.setText(profile.getTargetList());
                 basalGraph.show(profile);
             }
-            if (profile.isValid("NSProfileFragment"))
+            if (profile.isValid("NSProfileFragment")) {
                 invalidProfile.setVisibility(View.GONE);
-            else
+                activateButton.setVisibility(View.VISIBLE);
+            } else {
                 invalidProfile.setVisibility(View.VISIBLE);
+                activateButton.setVisibility(View.GONE);
+            }
+        } else {
+            activateButton.setVisibility(View.GONE);
         }
     }
 
@@ -137,6 +142,7 @@ public class NSProfileFragment extends SubscriberFragment {
         isf.setText("");
         basal.setText("");
         target.setText("");
+        activateButton.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.nsprofile_profileswitch)
