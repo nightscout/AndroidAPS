@@ -24,6 +24,7 @@ ext {
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    jcenter { url "https://jcenter.bintray.com/" }
 }
 
 def generateGitBuild = { ->
@@ -210,6 +211,7 @@ dependencies {
     compile "com.google.guava:guava:20.0"
 
     compile "net.danlew:android.joda:2.9.9.1"
+    compile "uk.com.robust-it:cloning:1.9.9"
 
     compile 'org.mozilla:rhino:1.7.7.2'
 
