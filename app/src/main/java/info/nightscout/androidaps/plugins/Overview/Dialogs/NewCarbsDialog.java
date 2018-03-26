@@ -380,31 +380,31 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                     accepted = true;
 
                     if (startActivityTTCheckbox.isChecked()) {
-                        TempTarget tempTarget = new TempTarget();
-                        tempTarget.date = System.currentTimeMillis();
-                        tempTarget.durationInMinutes = finalActivityTTDuration;
-                        tempTarget.reason = MainApp.gs(R.string.activity);
-                        tempTarget.source = Source.USER;
-                        tempTarget.low = Profile.toMgdl(finalActivityTT, currentProfile.getUnits());
-                        tempTarget.high = Profile.toMgdl(finalActivityTT, currentProfile.getUnits());
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(finalActivityTTDuration)
+                                .reason(MainApp.gs(R.string.activity))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()));
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     } else if (startEatingSoonTTCheckbox.isChecked()) {
-                        TempTarget tempTarget = new TempTarget();
-                        tempTarget.date = System.currentTimeMillis();
-                        tempTarget.durationInMinutes = finalEatingSoonTTDuration;
-                        tempTarget.reason = MainApp.gs(R.string.eatingsoon);
-                        tempTarget.source = Source.USER;
-                        tempTarget.low = Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits());
-                        tempTarget.high = Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits());
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(finalEatingSoonTTDuration)
+                                .reason(MainApp.gs(R.string.eatingsoon))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()));
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     } else if (startHypoTTCheckbox.isChecked()) {
-                        TempTarget tempTarget = new TempTarget();
-                        tempTarget.date = System.currentTimeMillis();
-                        tempTarget.durationInMinutes = finalHypoTTDuration;
-                        tempTarget.reason = MainApp.gs(R.string.hypo);
-                        tempTarget.source = Source.USER;
-                        tempTarget.low = Profile.toMgdl(finalHypoTT, currentProfile.getUnits());
-                        tempTarget.high = Profile.toMgdl(finalHypoTT, currentProfile.getUnits());
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(finalHypoTTDuration)
+                                .reason(MainApp.gs(R.string.hypo))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()));
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     }
 

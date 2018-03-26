@@ -22,10 +22,6 @@ public abstract class Intervals<T extends Interval> {
         rawData = new LongSparseArray<T>();
     }
 
-    public Intervals(LongSparseArray<T> data) {
-        rawData = data;
-    }
-
     public synchronized Intervals reset() {
         rawData = new LongSparseArray<T>();
         return this;

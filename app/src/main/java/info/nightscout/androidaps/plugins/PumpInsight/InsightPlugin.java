@@ -592,12 +592,11 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
 
         if (pumpEnactResult.success) {
             // create log entry
-            final TemporaryBasal tempBasal = new TemporaryBasal();
-            tempBasal.date = System.currentTimeMillis();
-            tempBasal.isAbsolute = false;
-            tempBasal.percentRate = percent_amount;
-            tempBasal.durationInMinutes = durationInMinutes;
-            tempBasal.source = Source.USER;
+            final TemporaryBasal tempBasal = new TemporaryBasal()
+                    .date(System.currentTimeMillis())
+                    .percent(percent_amount)
+                    .duration(durationInMinutes)
+                    .source(Source.USER);
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
         }
 
@@ -643,12 +642,11 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
 
         if (pumpEnactResult.success) {
             // create log entry
-            final TemporaryBasal tempBasal = new TemporaryBasal();
-            tempBasal.date = System.currentTimeMillis();
-            tempBasal.isAbsolute = false;
-            tempBasal.percentRate = percent;
-            tempBasal.durationInMinutes = durationInMinutes;
-            tempBasal.source = Source.USER; // TODO check this is correct
+            final TemporaryBasal tempBasal = new TemporaryBasal()
+                    .date(System.currentTimeMillis())
+                    .percent(percent)
+                    .duration(durationInMinutes)
+                    .source(Source.USER); // TODO check this is correct
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
         }
 
@@ -683,13 +681,10 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
         }
 
         // TODO isn't conditional on one apparently being in progress only the history change
-        boolean enacted = false;
         final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            enacted = true;
-            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
-            tempStop.source = Source.USER;
+            TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
         }
         lastDataTime = new Date();

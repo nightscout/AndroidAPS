@@ -56,10 +56,10 @@ public class MsgHistoryEvents_v2 extends MessageBase {
         int param1 = intFromBuff(bytes, 7, 2);
         int param2 = intFromBuff(bytes, 9, 2);
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
-        temporaryBasal.date = datetime.getTime();
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = datetime.getTime();
+        TemporaryBasal temporaryBasal = new TemporaryBasal()
+                .date(datetime.getTime())
+                .source(Source.PUMP)
+                .pumpId(datetime.getTime());
 
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = datetime.getTime();

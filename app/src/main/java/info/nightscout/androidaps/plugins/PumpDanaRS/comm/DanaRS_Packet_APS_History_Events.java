@@ -85,10 +85,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         int param1 = ((intFromBuff(data, 7, 1) << 8) & 0xFF00) + (intFromBuff(data, 8, 1) & 0xFF);
         int param2 = ((intFromBuff(data, 9, 1) << 8) & 0xFF00) + (intFromBuff(data, 10, 1) & 0xFF);
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
-        temporaryBasal.date = datetime.getTime();
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = datetime.getTime();
+        TemporaryBasal temporaryBasal = new TemporaryBasal().date(datetime.getTime()).source(Source.PUMP).pumpId(datetime.getTime());
 
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = datetime.getTime();

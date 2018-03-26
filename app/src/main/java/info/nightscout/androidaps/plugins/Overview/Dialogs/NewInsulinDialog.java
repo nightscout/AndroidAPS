@@ -281,13 +281,13 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                     accepted = true;
 
                     if (startESMCheckbox.isChecked()) {
-                        TempTarget tempTarget = new TempTarget();
-                        tempTarget.date = System.currentTimeMillis();
-                        tempTarget.durationInMinutes = (int) ttDuration;
-                        tempTarget.reason = "Eating soon";
-                        tempTarget.source = Source.USER;
-                        tempTarget.low = (int) finalTT;
-                        tempTarget.high = (int) finalTT;
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration((int) ttDuration)
+                                .reason("Eating soon")
+                                .source(Source.USER)
+                                .low((int) finalTT)
+                                .high((int) finalTT);
                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                     }
 

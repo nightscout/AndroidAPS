@@ -58,7 +58,7 @@ import info.nightscout.utils.PercentageSplitter;
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling
  * data-structure (and not the DB content) should be contained in here (meaning DDL and not SQL).
- *
+ * <p>
  * This class can safely be called from Services, but should not call Services to avoid circular dependencies.
  * One major issue with this (right now) are the scheduled events, which are put into the service. Therefor all
  * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
@@ -893,14 +893,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
             String units = MainApp.getConfigBuilder().getProfileUnits();
-            TempTarget tempTarget = new TempTarget();
-            tempTarget.date = trJson.getLong("mills");
-            tempTarget.durationInMinutes = trJson.getInt("duration");
-            tempTarget.low = Profile.toMgdl(trJson.getDouble("targetBottom"), units);
-            tempTarget.high = Profile.toMgdl(trJson.getDouble("targetTop"), units);
-            tempTarget.reason = trJson.getString("reason");
-            tempTarget._id = trJson.getString("_id");
-            tempTarget.source = Source.NIGHTSCOUT;
+            TempTarget tempTarget = new TempTarget()
+            .date(trJson.getLong("mills"))
+            .duration(trJson.getInt("duration"))
+            .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
+            .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
+            .reason(trJson.getString("reason"))
+            ._id(trJson.getString("_id"))
+            .source(Source.NIGHTSCOUT);
             createOrUpdate(tempTarget);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -1169,10 +1169,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 createOrUpdate(extendedBolus);
             } else {
-                TemporaryBasal tempBasal = new TemporaryBasal();
-                tempBasal.date = trJson.getLong("mills");
-                tempBasal.source = Source.NIGHTSCOUT;
-                tempBasal.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
+                TemporaryBasal tempBasal = new TemporaryBasal()
+                        .date(trJson.getLong("mills"))
+                        .source(Source.NIGHTSCOUT)
+                        .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0);
                 if (trJson.has("duration")) {
                     tempBasal.durationInMinutes = trJson.getInt("duration");
                 }

@@ -91,6 +91,21 @@ public class TempTarget implements Interval {
         return this;
     }
 
+    public TempTarget reason(String reason) {
+        this.reason = reason;
+        return this;
+    }
+
+    public TempTarget _id(String _id) {
+        this._id = _id;
+        return this;
+    }
+
+    public TempTarget source(int source) {
+        this.source = source;
+        return this;
+    }
+
     // -------- Interval interface ---------
 
     Long cuttedEnd = null;

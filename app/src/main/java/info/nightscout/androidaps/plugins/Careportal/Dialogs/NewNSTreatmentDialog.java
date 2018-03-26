@@ -701,17 +701,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 } else if (options.executeTempTarget) {
                     try {
                         if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration") && data.getInt("duration") == 0)) {
-                            TempTarget tempTarget = new TempTarget();
-                            tempTarget.date = eventTime.getTime();
-                            tempTarget.durationInMinutes = data.getInt("duration");
-                            tempTarget.reason = data.getString("reason");
-                            tempTarget.source = Source.USER;
+                            TempTarget tempTarget = new TempTarget()
+                                    .date(eventTime.getTime())
+                                    .duration(data.getInt("duration"))
+                                    .reason(data.getString("reason"))
+                                    .source(Source.USER);
                             if (tempTarget.durationInMinutes != 0) {
-                                tempTarget.low = Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits());
-                                tempTarget.high = Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits());
+                                tempTarget.low(Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits()))
+                                        .high(Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits()));
                             } else {
-                                tempTarget.low = 0;
-                                tempTarget.high = 0;
+                                tempTarget.low(0).high(0);
                             }
                             log.debug("Creating new TempTarget db record: " + tempTarget.toString());
                             MainApp.getDbHelper().createOrUpdate(tempTarget);
