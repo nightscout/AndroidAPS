@@ -526,7 +526,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public Intervals<TempTarget> getTempTargetsFromHistory() {
         synchronized (tempTargets) {
-            return new NonOverlappingIntervals<>(tempTargets);
+            return new OverlappingIntervals<>(tempTargets);
         }
     }
 

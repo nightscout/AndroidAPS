@@ -17,10 +17,6 @@ public class NonOverlappingIntervals<T extends Interval> extends Intervals<T> {
         super();
     }
 
-    public NonOverlappingIntervals(LongSparseArray<T> data) {
-        super(data);
-    }
-
     public NonOverlappingIntervals (Intervals<T> other) {
         rawData = other.rawData.clone();
     }

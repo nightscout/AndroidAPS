@@ -43,6 +43,11 @@ public abstract class Intervals<T extends Interval> {
         merge();
     }
 
+    public synchronized void add(T interval) {
+        rawData.put(interval.start(), interval);
+        merge();
+    }
+
 
     public synchronized List<T> getList() {
         List<T> list = new ArrayList<>();

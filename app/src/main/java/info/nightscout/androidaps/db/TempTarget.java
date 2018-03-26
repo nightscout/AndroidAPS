@@ -71,6 +71,26 @@ public class TempTarget implements Interval {
         reason = t.reason;
     }
 
+    public TempTarget date(long date) {
+        this.date = date;
+        return this;
+    }
+
+    public TempTarget low(double low) {
+        this.low = low;
+        return this;
+    }
+
+    public TempTarget high(double high) {
+        this.high = high;
+        return this;
+    }
+
+    public TempTarget duration(int duration) {
+        this.durationInMinutes = duration;
+        return this;
+    }
+
     // -------- Interval interface ---------
 
     Long cuttedEnd = null;
