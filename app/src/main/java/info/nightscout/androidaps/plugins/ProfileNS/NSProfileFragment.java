@@ -79,13 +79,6 @@ public class NSProfileFragment extends SubscriberFragment {
 
     @Override
     protected void updateGUI() {
-        if (MainApp.getConfigBuilder().getProfile() == null) {
-            noProfile.setVisibility(View.VISIBLE);
-            return;
-        } else {
-            noProfile.setVisibility(View.GONE);
-        }
-
         ProfileStore profileStore = NSProfilePlugin.getPlugin().getProfile();
         if (profileStore != null) {
             ArrayList<CharSequence> profileList = profileStore.getProfileList();
@@ -97,6 +90,9 @@ public class NSProfileFragment extends SubscriberFragment {
                 if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
                     profileSpinner.setSelection(p);
             }
+            noProfile.setVisibility(View.GONE);
+        } else {
+            noProfile.setVisibility(View.VISIBLE);
         }
     }
 
