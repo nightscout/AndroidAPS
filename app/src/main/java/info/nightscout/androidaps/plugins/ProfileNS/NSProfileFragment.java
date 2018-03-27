@@ -147,7 +147,7 @@ public class NSProfileFragment extends SubscriberFragment {
 
     @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
-        String name = profileSpinner.getSelectedItem().toString();
+        String name = profileSpinner.getSelectedItem() != null ? profileSpinner.getSelectedItem().toString() : "";
         ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
