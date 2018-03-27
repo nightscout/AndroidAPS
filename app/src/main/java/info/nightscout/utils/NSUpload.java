@@ -140,7 +140,7 @@ public class NSUpload {
             data.put("splitNow", 0);
             data.put("splitExt", 100);
             data.put("enteredinsulin", extendedBolus.insulin);
-            data.put("relative", extendedBolus.insulin);
+            data.put("relative", extendedBolus.insulin / extendedBolus.durationInMinutes * 60); // U/h
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
