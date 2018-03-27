@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.common.base.Joiner;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -49,6 +48,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -321,7 +321,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                                 }
                             }
                         });
-                        Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
                     }
                 }
             });
