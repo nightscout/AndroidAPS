@@ -136,7 +136,7 @@ public class IobTotalTest {
             Assert.assertEquals(a.activity, j.getDouble("activity"), 0.0000001d);
             Assert.assertEquals(0, j.getLong("lastBolusTime"));
             Assert.assertEquals(now, DateUtil.fromISODateString(j.getString("time")).getTime(), 1000);
-            Assert.assertNotNull(j.getString("iobWithZeroTemp"));
+            Assert.assertNotNull(j.getJSONObject("iobWithZeroTemp"));
         } catch (Exception e) {
             Assert.fail("Exception: " + e.getMessage());
         }
