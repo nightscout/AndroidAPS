@@ -351,7 +351,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
         if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginBase.APS)) {
             // Add expected zere temp basal for next 240 mins
-            IobTotal basalIobWithZeroTemp = basalIob.clone();
+            IobTotal basalIobWithZeroTemp = basalIob.copy();
             TemporaryBasal t = new TemporaryBasal()
                     .date(now + 60 * 1000L)
                     .duration(240)
