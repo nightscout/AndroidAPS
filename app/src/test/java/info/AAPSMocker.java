@@ -65,6 +65,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.delta)).thenReturn("Delta");
         when(MainApp.gs(R.string.short_avgdelta)).thenReturn("Short avg. delta");
         when(MainApp.gs(R.string.long_avgdelta)).thenReturn("Long avg. delta");
+        when(MainApp.gs(R.string.zerovalueinprofile)).thenReturn("Invalid profile: %s");
     }
 
     public static MainApp mockMainApp() {
@@ -107,9 +108,11 @@ public class AAPSMocker {
         when(MainApp.getDbHelper()).thenReturn(databaseHelper);
     }
 
-    public static Profile getValidProfile() throws JSONException {
-        if (profile == null)
-            profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+    public static Profile getValidProfile() {
+        try {
+            if (profile == null)
+                profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+        } catch (JSONException e) {}
         return profile;
     }
 }
