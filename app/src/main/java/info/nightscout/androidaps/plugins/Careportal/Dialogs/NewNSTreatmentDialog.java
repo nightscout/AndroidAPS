@@ -741,6 +741,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.timeshift = timeshift;
         profileSwitch.percentage = percentage;
         MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
@@ -757,6 +758,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch.timeshift = timeshift;
             profileSwitch.percentage = percentage;
             MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
         } else {
             log.error("No profile switch existing");
         }

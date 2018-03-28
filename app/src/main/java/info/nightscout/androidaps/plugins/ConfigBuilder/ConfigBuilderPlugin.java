@@ -668,7 +668,6 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
                 MainApp.bus().post(new EventNewBasalProfile());
             }
         });
-        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     @Override
