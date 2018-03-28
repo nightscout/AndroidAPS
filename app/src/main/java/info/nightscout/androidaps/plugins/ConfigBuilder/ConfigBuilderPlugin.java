@@ -651,9 +651,6 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
 
     @Subscribe
     public void onProfileSwitch(EventProfileSwitchChange ignored) {
-        if (getCommandQueue().isRunning(Command.CommandType.BASALPROFILE))
-            return;
-
         getCommandQueue().setProfile(getProfile(), new Callback() {
             @Override
             public void run() {
