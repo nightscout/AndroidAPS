@@ -31,12 +31,11 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.queue.Callback;
@@ -389,19 +388,25 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 break;
                         }
                     break;
+                case "PUMP":
                 case "DANAR":
-                    DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
-                    if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP)) {
-                        reply = danaRPlugin.shortStatus(true);
-                        sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                    }
-                    DanaRKoreanPlugin danaRKoreanPlugin = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-                    if (danaRKoreanPlugin != null && danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
-                        reply = danaRKoreanPlugin.shortStatus(true);
-                        sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                    }
+                    ConfigBuilderPlugin.getCommandQueue().readStatus("SMS", new Callback() {
+                        @Override
+                        public void run() {
+                            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                            if (result.success) {
+                                if (pump != null) {
+                                    String reply = pump.shortStatus(true);
+                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
+                            } else {
+                                String reply = MainApp.sResources.getString(R.string.readstatusfailed);
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                            }
+                        }
+                    });
                     receivedSms.processed = true;
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("SMS_Danar"));
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("SMS_Pump"));
                     break;
                 case "BASAL":
                     if (splited.length > 1) {
@@ -492,17 +497,17 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                             @Override
                             public void run() {
-                                DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
+                                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                                 if (result.success) {
                                     String reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
-                                    if (danaRPlugin != null)
-                                        reply += "\n" + danaRPlugin.shortStatus(true);
+                                    if (pump != null)
+                                        reply += "\n" + pump.shortStatus(true);
                                     lastRemoteBolusTime = new Date();
                                     sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 } else {
                                     String reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
-                                    if (danaRPlugin != null)
-                                        reply += "\n" + danaRPlugin.shortStatus(true);
+                                    if (pump != null)
+                                        reply += "\n" + pump.shortStatus(true);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 }
                             }

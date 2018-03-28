@@ -989,5 +989,6 @@
     <string name="key_treatmentssafety_maxcarbs">treatmentssafety_maxcarbs</string>
     <string name="unsafeusage">unsafe usage</string>
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
+    <string name="readstatusfailed">Read status failed</string>
 </resources>
 
