@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.Actions;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.HistoryBrowseActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -31,6 +33,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.TDDStatsActivity;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SingleClickButton;
 
@@ -52,6 +55,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     SingleClickButton tempBasal;
     SingleClickButton tempBasalCancel;
     SingleClickButton fill;
+    SingleClickButton tddStats;
+    SingleClickButton history;
 
     public ActionsFragment() {
         super();
@@ -71,6 +76,9 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tempBasal = (SingleClickButton) view.findViewById(R.id.actions_settempbasal);
             tempBasalCancel = (SingleClickButton) view.findViewById(R.id.actions_canceltempbasal);
             fill = (SingleClickButton) view.findViewById(R.id.actions_fill);
+            tddStats = view.findViewById(R.id.actions_tddstats);
+            history = view.findViewById(R.id.actions_historybrowser);
+
 
             profileSwitch.setOnClickListener(this);
             tempTarget.setOnClickListener(this);
@@ -79,6 +87,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tempBasal.setOnClickListener(this);
             tempBasalCancel.setOnClickListener(this);
             fill.setOnClickListener(this);
+            history.setOnClickListener(this);
+            tddStats.setOnClickListener(this);
 
             updateGUI();
             return view;
@@ -227,6 +237,12 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             case R.id.actions_fill:
                 FillDialog fillDialog = new FillDialog();
                 fillDialog.show(manager, "FillDialog");
+                break;
+            case R.id.actions_historybrowser:
+                startActivity(new Intent(getContext(), HistoryBrowseActivity.class));
+                break;
+            case R.id.actions_tddstats:
+                startActivity(new Intent(getContext(), TDDStatsActivity.class));
                 break;
         }
     }

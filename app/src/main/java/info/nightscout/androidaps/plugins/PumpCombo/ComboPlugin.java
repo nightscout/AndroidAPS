@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -50,6 +53,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.WarningOrError
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
@@ -1431,6 +1435,37 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
+    }
+
+    @Override
+    public PumpEnactResult loadTDDs() {
+        
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
+        if (result.success) {
+            List<Tdd> tdds = pump.tddHistory;
+            if (tdds != null) {
+                HashMap<Long, TDD> map = new HashMap<>();
+                for (int i = 0; i < tdds.size(); i++) {
+                   Tdd currTdd = tdds.get(i);
+                   if(currTdd.total < 1) continue; //cases where dummy days are introduced (e.g. Battery change with date loss)
+                    if(map.containsKey(currTdd.timestamp)){
+                        //duplicate days on time changes
+                        TDD existing = map.get(currTdd.timestamp);
+                        existing.total += currTdd.total;
+                    } else {
+                        map.put(currTdd.timestamp, new TDD(currTdd.timestamp, 0d, 0d, currTdd.total));
+                    }
+                }
+
+                Collection<TDD> uniqueColl = map.values();
+
+                for (TDD currTdd: uniqueColl) {
+                    MainApp.getDbHelper().createOrUpdateTDD(currTdd);
+                }
+            }
+        }
+        return result;
     }
 
     // Constraints interface

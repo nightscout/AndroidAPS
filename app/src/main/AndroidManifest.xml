@@ -47,7 +47,7 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
+        <activity android:name=".TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />

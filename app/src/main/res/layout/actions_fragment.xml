@@ -104,6 +104,32 @@
                 android:drawableTop="@drawable/icon_cp_pump_canula"
                 android:text="@string/primefill" />
 
+            <info.nightscout.utils.SingleClickButton
+                android:id="@+id/actions_historybrowser"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/icon_danarhistory"
+                android:text="@string/nav_historybrowser" />
+
+            <info.nightscout.utils.SingleClickButton
+                android:id="@+id/actions_tddstats"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/icon_danarstats"
+                android:text="@string/danar_stats_tdd" />
+
         </LinearLayout>
 
     </ScrollView>

@@ -1,11 +1,9 @@
-package info.nightscout.androidaps.plugins.PumpDanaR.activities;
+package info.nightscout.androidaps;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -35,21 +33,26 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
-public class DanaRStatsActivity extends Activity {
-    private static Logger log = LoggerFactory.getLogger(DanaRStatsActivity.class);
+public class TDDStatsActivity extends Activity {
+    private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
@@ -60,10 +63,10 @@ public class DanaRStatsActivity extends Activity {
     double magicNumber;
     DecimalFormat decimalFormat;
 
-    List<DanaRHistoryRecord> historyList = new ArrayList<>();
-    List<DanaRHistoryRecord> dummies;
+    List<TDD> historyList = new ArrayList<>();
+    List<TDD> dummies;
 
-    public DanaRStatsActivity() {
+    public TDDStatsActivity() {
         super();
     }
 
@@ -232,10 +235,10 @@ public class DanaRStatsActivity extends Activity {
                         statsMessage.setText(getString(R.string.danar_stats_warning_Message));
                     }
                 });
-                ConfigBuilderPlugin.getCommandQueue().loadHistory(RecordTypes.RECORD_TYPE_DAILY, new Callback() {
+                ConfigBuilderPlugin.getCommandQueue().loadTDDs( new Callback() {
                     @Override
                     public void run() {
-                        loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+                        loadDataFromDB();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -268,18 +271,18 @@ public class DanaRStatsActivity extends Activity {
                 } else {
                     SP.putString("TBB", totalBaseBasal.getText().toString());
                     TBB = SP.getString("TBB", "");
-                    loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+                    loadDataFromDB();
                     InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(totalBaseBasal.getWindowToken(), 0);
                 }
             }
         });
 
-        loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+        loadDataFromDB();
     }
 
-    private void loadDataFromDB(byte type) {
-        historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(type);
+    private void loadDataFromDB() {
+        historyList = MainApp.getDbHelper().getTDDs();
 
         //only use newest 10
         historyList = historyList.subList(0, Math.min(10, historyList.size()));
@@ -288,24 +291,24 @@ public class DanaRStatsActivity extends Activity {
         dummies = new LinkedList();
         DateFormat df = new SimpleDateFormat("dd.MM.");
         for (int i = 0; i < historyList.size() - 1; i++) {
-            DanaRHistoryRecord elem1 = historyList.get(i);
-            DanaRHistoryRecord elem2 = historyList.get(i + 1);
+            TDD elem1 = historyList.get(i);
+            TDD elem2 = historyList.get(i + 1);
 
-            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25 * 60 * 60 * 1000)))) {
-                DanaRHistoryRecord dummy = new DanaRHistoryRecord();
-                dummy.recordDate = elem1.recordDate - 24 * 60 * 60 * 1000;
-                dummy.recordDailyBasal = elem1.recordDailyBasal / 2;
-                dummy.recordDailyBolus = elem1.recordDailyBolus / 2;
+            if (!df.format(new Date(elem1.date)).equals(df.format(new Date(elem2.date + 25 * 60 * 60 * 1000)))) {
+                TDD dummy = new TDD();
+                dummy.date = elem1.date - 24 * 60 * 60 * 1000;
+                dummy.basal = elem1.basal / 2;
+                dummy.bolus = elem1.bolus / 2;
                 dummies.add(dummy);
-                elem1.recordDailyBasal /= 2;
-                elem1.recordDailyBolus /= 2;
+                elem1.basal /= 2;
+                elem1.bolus /= 2;
             }
         }
         historyList.addAll(dummies);
-        Collections.sort(historyList, new Comparator<DanaRHistoryRecord>() {
+        Collections.sort(historyList, new Comparator<TDD>() {
             @Override
-            public int compare(DanaRHistoryRecord lhs, DanaRHistoryRecord rhs) {
-                return (int) (rhs.recordDate - lhs.recordDate);
+            public int compare(TDD lhs, TDD rhs) {
+                return (int) (rhs.date - lhs.date);
             }
         });
 
@@ -333,11 +336,13 @@ public class DanaRStatsActivity extends Activity {
                 double weighted05 = 0d;
                 double weighted07 = 0d;
 
-                for (DanaRHistoryRecord record : historyList) {
-                    double tdd = record.recordDailyBolus + record.recordDailyBasal;
+
+                //TDD table
+                for (TDD record : historyList) {
+                    double tdd = record.getTotal();
 
                     // Create the table row
-                    TableRow tr = new TableRow(DanaRStatsActivity.this);
+                    TableRow tr = new TableRow(TDDStatsActivity.this);
                     if (i % 2 != 0) tr.setBackgroundColor(Color.DKGRAY);
                     if (dummies.contains(record)) {
                         tr.setBackgroundColor(Color.argb(125, 255, 0, 0));
@@ -348,31 +353,31 @@ public class DanaRStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     // Here create the TextView dynamically
-                    TextView labelDATE = new TextView(DanaRStatsActivity.this);
+                    TextView labelDATE = new TextView(TDDStatsActivity.this);
                     labelDATE.setId(200 + i);
-                    labelDATE.setText(df.format(new Date(record.recordDate)));
+                    labelDATE.setText(df.format(new Date(record.date)));
                     labelDATE.setTextColor(Color.WHITE);
                     tr.addView(labelDATE);
 
-                    TextView labelBASAL = new TextView(DanaRStatsActivity.this);
+                    TextView labelBASAL = new TextView(TDDStatsActivity.this);
                     labelBASAL.setId(300 + i);
-                    labelBASAL.setText(DecimalFormatter.to2Decimal(record.recordDailyBasal) + " U");
+                    labelBASAL.setText(DecimalFormatter.to2Decimal(record.basal) + " U");
                     labelBASAL.setTextColor(Color.WHITE);
                     tr.addView(labelBASAL);
 
-                    TextView labelBOLUS = new TextView(DanaRStatsActivity.this);
+                    TextView labelBOLUS = new TextView(TDDStatsActivity.this);
                     labelBOLUS.setId(400 + i);
-                    labelBOLUS.setText(DecimalFormatter.to2Decimal(record.recordDailyBolus) + " U");
+                    labelBOLUS.setText(DecimalFormatter.to2Decimal(record.bolus) + " U");
                     labelBOLUS.setTextColor(Color.WHITE);
                     tr.addView(labelBOLUS);
 
-                    TextView labelTDD = new TextView(DanaRStatsActivity.this);
+                    TextView labelTDD = new TextView(TDDStatsActivity.this);
                     labelTDD.setId(500 + i);
                     labelTDD.setText(DecimalFormatter.to2Decimal(tdd) + " U");
                     labelTDD.setTextColor(Color.WHITE);
                     tr.addView(labelTDD);
 
-                    TextView labelRATIO = new TextView(DanaRStatsActivity.this);
+                    TextView labelRATIO = new TextView(TDDStatsActivity.this);
                     labelRATIO.setId(600 + i);
                     labelRATIO.setText(Math.round(100 * tdd / magicNumber) + " %");
                     labelRATIO.setTextColor(Color.WHITE);
@@ -383,11 +388,23 @@ public class DanaRStatsActivity extends Activity {
                             TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
-                    sum = sum + tdd;
+                    i++;
+                }
+
+                i = 0;
+
+                //cumulative TDDs
+                for (TDD record : historyList) {
+                    if(!historyList.isEmpty() && df.format(new Date(record.date)).equals(df.format(new Date()))) {
+                        //Today should not be included
+                        continue;
+                    }
                     i++;
 
+                    sum = sum + record.getTotal();
+
                     // Create the cumtable row
-                    TableRow ctr = new TableRow(DanaRStatsActivity.this);
+                    TableRow ctr = new TableRow(TDDStatsActivity.this);
                     if (i % 2 == 0) ctr.setBackgroundColor(Color.DKGRAY);
                     ctr.setId(700 + i);
                     ctr.setLayoutParams(new TableLayout.LayoutParams(
@@ -395,19 +412,19 @@ public class DanaRStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     // Here create the TextView dynamically
-                    TextView labelDAYS = new TextView(DanaRStatsActivity.this);
+                    TextView labelDAYS = new TextView(TDDStatsActivity.this);
                     labelDAYS.setId(800 + i);
                     labelDAYS.setText("" + i);
                     labelDAYS.setTextColor(Color.WHITE);
                     ctr.addView(labelDAYS);
 
-                    TextView labelCUMTDD = new TextView(DanaRStatsActivity.this);
+                    TextView labelCUMTDD = new TextView(TDDStatsActivity.this);
                     labelCUMTDD.setId(900 + i);
                     labelCUMTDD.setText(DecimalFormatter.to2Decimal(sum / i) + " U");
                     labelCUMTDD.setTextColor(Color.WHITE);
                     ctr.addView(labelCUMTDD);
 
-                    TextView labelCUMRATIO = new TextView(DanaRStatsActivity.this);
+                    TextView labelCUMRATIO = new TextView(TDDStatsActivity.this);
                     labelCUMRATIO.setId(1000 + i);
                     labelCUMRATIO.setText(Math.round(100 * sum / i / magicNumber) + " %");
                     labelCUMRATIO.setTextColor(Color.WHITE);
@@ -419,7 +436,7 @@ public class DanaRStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
-                if (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).recordDate)).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))))) {
+                if (isOldData(historyList)) {
                     statsMessage.setVisibility(View.VISIBLE);
                     statsMessage.setText(getString(R.string.danar_stats_olddata_Message));
 
@@ -427,12 +444,17 @@ public class DanaRStatsActivity extends Activity {
                     tl.setBackgroundColor(Color.TRANSPARENT);
                 }
 
+                if(!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
+                    //Today should not be included
+                    historyList.remove(0);
+                }
+
                 Collections.reverse(historyList);
 
                 i = 0;
 
-                for (DanaRHistoryRecord record : historyList) {
-                    double tdd = record.recordDailyBolus + record.recordDailyBasal;
+                for (TDD record : historyList) {
+                    double tdd = record.getTotal();
                     if (i == 0) {
                         weighted03 = tdd;
                         weighted05 = tdd;
@@ -447,7 +469,7 @@ public class DanaRStatsActivity extends Activity {
                 }
 
                 // Create the exptable row
-                TableRow etr = new TableRow(DanaRStatsActivity.this);
+                TableRow etr = new TableRow(TDDStatsActivity.this);
                 if (i % 2 != 0) etr.setBackgroundColor(Color.DKGRAY);
                 etr.setId(1100 + i);
                 etr.setLayoutParams(new TableLayout.LayoutParams(
@@ -455,13 +477,13 @@ public class DanaRStatsActivity extends Activity {
                         TableLayout.LayoutParams.WRAP_CONTENT));
 
                 // Here create the TextView dynamically
-                TextView labelWEIGHT = new TextView(DanaRStatsActivity.this);
+                TextView labelWEIGHT = new TextView(TDDStatsActivity.this);
                 labelWEIGHT.setId(1200 + i);
                 labelWEIGHT.setText("0.3\n" + "0.5\n" + "0.7");
                 labelWEIGHT.setTextColor(Color.WHITE);
                 etr.addView(labelWEIGHT);
 
-                TextView labelEXPTDD = new TextView(DanaRStatsActivity.this);
+                TextView labelEXPTDD = new TextView(TDDStatsActivity.this);
                 labelEXPTDD.setId(1300 + i);
                 labelEXPTDD.setText(DecimalFormatter.to2Decimal(weighted03)
                         + " U\n" + DecimalFormatter.to2Decimal(weighted05)
@@ -469,7 +491,7 @@ public class DanaRStatsActivity extends Activity {
                 labelEXPTDD.setTextColor(Color.WHITE);
                 etr.addView(labelEXPTDD);
 
-                TextView labelEXPRATIO = new TextView(DanaRStatsActivity.this);
+                TextView labelEXPRATIO = new TextView(TDDStatsActivity.this);
                 labelEXPRATIO.setId(1400 + i);
                 labelEXPRATIO.setText(Math.round(100 * weighted03 / magicNumber) + " %\n"
                         + Math.round(100 * weighted05 / magicNumber) + " %\n"
@@ -515,5 +537,20 @@ public class DanaRStatsActivity extends Activity {
                     }
                 }
         );
+    }
+
+
+    public static boolean isOldData(List<TDD> historyList) {
+        Object activePump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
+        PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
+        PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+        PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+        PumpInterface insight = MainApp.getSpecificPlugin(InsightPlugin.class);
+
+        boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
+
+        DateFormat df = new SimpleDateFormat("dd.MM.");
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday?1000 * 60 * 60 * 24:0))))));
     }
 }

@@ -50,10 +50,12 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistor
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PercentageSplitter;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling
@@ -76,6 +78,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
+    public static final String DATABASE_TDDS = "TDDs";
 
     private static final int DATABASE_VERSION = 8;
 
@@ -124,6 +127,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
+            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -227,6 +231,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
+            TableUtils.dropTable(connectionSource, TDD.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -236,6 +241,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
+            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -323,6 +329,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleProfileSwitchChange();
     }
 
+    public void resetTDDs() {
+        try {
+            TableUtils.dropTable(connectionSource, TDD.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
 
     // ------------------ getDao -------------------------------------------
 
@@ -340,6 +354,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<DanaRHistoryRecord, String> getDaoDanaRHistory() throws SQLException {
         return getDao(DanaRHistoryRecord.class);
+    }
+
+    private Dao<TDD, String> getDaoTDD() throws SQLException {
+        return getDao(TDD.class);
     }
 
     private Dao<DbRequest, String> getDaoDbRequest() throws SQLException {
@@ -494,6 +512,34 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return new ArrayList<BgReading>();
     }
+
+    // -------------------  TDD handling -----------------------
+    public void createOrUpdateTDD(TDD tdd){
+        try {
+            Dao<TDD, String> dao = getDaoTDD();
+            dao.createOrUpdate(tdd);
+        } catch (SQLException e) {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "createOrUpdate-Exception");
+            log.error("Unhandled exception", e);
+        }
+    }
+
+    public List<TDD> getTDDs() {
+        List<TDD> tddList;
+        try {
+            QueryBuilder<TDD, String> queryBuilder = getDaoTDD().queryBuilder();
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(10L);
+            PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
+            tddList = getDaoTDD().query(preparedQuery);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+            tddList = new ArrayList<>();
+        }
+        return tddList;
+    }
+
+
 
     // ------------- DbRequests handling -------------------
 
@@ -940,6 +986,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createOrUpdate(DanaRHistoryRecord record) {
         try {
             getDaoDanaRHistory().createOrUpdate(record);
+
+            //If it is a TDD, store it for stats also.
+            if(record.recordCode == RecordTypes.RECORD_TYPE_DAILY){
+                createOrUpdateTDD(new TDD(record.recordDate, record.recordDailyBolus, record.recordDailyBasal, 0));
+            }
+
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
