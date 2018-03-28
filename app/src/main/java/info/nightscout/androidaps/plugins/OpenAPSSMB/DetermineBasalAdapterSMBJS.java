@@ -46,6 +46,7 @@ public class DetermineBasalAdapterSMBJS {
     private JSONObject mCurrentTemp;
     private JSONObject mAutosensData = null;
     private boolean mMicrobolusAllowed;
+    private boolean mSMBAlwaysAllowed;
 
     private String storedCurrentTemp = null;
     private String storedIobData = null;
@@ -55,6 +56,7 @@ public class DetermineBasalAdapterSMBJS {
     private String storedMeal_data = null;
     private String storedAutosens_data = null;
     private String storedMicroBolusAllowed = null;
+    private String storedSMBAlwaysAllowed = null;
 
     private String scriptDebug = "";
 
@@ -82,6 +84,7 @@ public class DetermineBasalAdapterSMBJS {
             log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
         log.debug("Reservoir data: " + "undefined");
         log.debug("MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
+        log.debug("SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
 
         DetermineBasalResultSMB determineBasalResultSMB = null;
 
@@ -210,7 +213,8 @@ public class DetermineBasalAdapterSMBJS {
                         MealData mealData,
                         double autosensDataRatio,
                         boolean tempTargetSet,
-                        boolean microBolusAllowed
+                        boolean microBolusAllowed,
+                        boolean smbAlwaysAllowed
     ) throws JSONException {
 
         String units = profile.getUnits();
@@ -244,12 +248,11 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        boolean SMBEnabled = MainApp.getConstraintChecker().isSMBModeEnabled().value() && MainApp.getConstraintChecker().isClosedLoopAllowed().value();
-        mProfile.put("enableSMB_with_COB", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
-        mProfile.put("enableSMB_with_temptarget", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
-        mProfile.put("allowSMB_with_high_temptarget", SMBEnabled && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
-        mProfile.put("enableSMB_always", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_always, false) && ConfigBuilderPlugin.getActiveBgSource().advancedFilteringSupported());
-        mProfile.put("enableSMB_after_carbs", SMBEnabled && SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && ConfigBuilderPlugin.getActiveBgSource().advancedFilteringSupported());
+        mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_enableSMB_with_COB, false));
+        mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
+        mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
+        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_enableSMB_always, false) && smbAlwaysAllowed);
+        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && smbAlwaysAllowed);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
@@ -308,6 +311,7 @@ public class DetermineBasalAdapterSMBJS {
             mAutosensData.put("ratio", 1.0);
         }
         mMicrobolusAllowed = microBolusAllowed;
+        mSMBAlwaysAllowed = smbAlwaysAllowed;
 
     }
 

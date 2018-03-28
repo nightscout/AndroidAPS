@@ -22,7 +22,15 @@ import info.nightscout.utils.DateUtil;
 public class ProfileIntervals<T extends Interval> {
     private static Logger log = LoggerFactory.getLogger(ProfileIntervals.class);
 
-    private LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
+    private LongSparseArray<T> rawData; // oldest at index 0
+
+    public ProfileIntervals () {
+        rawData = new LongSparseArray<>();
+    }
+
+    public ProfileIntervals (ProfileIntervals<T> other) {
+        rawData = other.rawData.clone();
+    }
 
     public synchronized ProfileIntervals reset() {
         rawData = new LongSparseArray<>();
@@ -30,8 +38,10 @@ public class ProfileIntervals<T extends Interval> {
     }
 
     public synchronized void add(T newInterval) {
-        rawData.put(newInterval.start(), newInterval);
-        merge();
+        if (newInterval.isValid()) {
+            rawData.put(newInterval.start(), newInterval);
+            merge();
+        }
     }
 
     public synchronized void add(List<T> list) {
@@ -56,10 +66,12 @@ public class ProfileIntervals<T extends Interval> {
     public synchronized Interval getValueToTime(long time) {
         int index = binarySearch(time);
         if (index >= 0) return rawData.valueAt(index);
-        // if we request data older than first record, use oldest instead
-        if (rawData.size() > 0) {
-            log.debug("Requested profile for time: " + DateUtil.dateAndTimeString(time) + ". Providing oldest record: " + rawData.valueAt(0).toString());
-            return rawData.valueAt(0);
+        // if we request data older than first record, use oldest with zero duration instead
+        for (index = 0; index < rawData.size(); index++) {
+            if (rawData.valueAt(index).durationInMsec() == 0) {
+                //log.debug("Requested profile for time: " + DateUtil.dateAndTimeString(time) + ". Providing oldest record: " + rawData.valueAt(0).toString());
+                return rawData.valueAt(index);
+            }
         }
         return null;
     }
@@ -116,5 +128,10 @@ public class ProfileIntervals<T extends Interval> {
 
     public synchronized T getReversed(int index) {
         return rawData.valueAt(size() - 1 - index);
+    }
+
+    @Override
+    public String toString() {
+        return rawData.toString();
     }
 }

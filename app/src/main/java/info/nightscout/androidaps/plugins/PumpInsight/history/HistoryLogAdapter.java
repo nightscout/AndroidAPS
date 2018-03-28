@@ -10,9 +10,8 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 
 /**
  * Created by jamorham on 27/01/2018.
- *
+ * <p>
  * Write to the History Log
- *
  */
 
 class HistoryLogAdapter {
@@ -25,7 +24,7 @@ class HistoryLogAdapter {
 
     void createTBRrecord(Date eventDate, int percent, int duration, long record_id) {
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal(eventDate.getTime());
+        TemporaryBasal temporaryBasal = new TemporaryBasal().date(eventDate.getTime());
 
         final TemporaryBasal temporaryBasalFromHistory = MainApp.getConfigBuilder().getTempBasalFromHistory(eventDate.getTime());
 
@@ -50,10 +49,10 @@ class HistoryLogAdapter {
             }
         }
 
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = record_id;
-        temporaryBasal.percentRate = percent;
-        temporaryBasal.durationInMinutes = duration;
+        temporaryBasal.source(Source.PUMP)
+                .pumpId(record_id)
+                .percent(percent)
+                .duration(duration);
 
         MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
     }

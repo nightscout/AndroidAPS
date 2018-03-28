@@ -51,13 +51,13 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
@@ -108,6 +108,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     Date eventTime;
 
+    private static Integer seconds = null;
+
     public void setOptions(OptionsToShow options, int event) {
         this.options = options;
         this.event = MainApp.sResources.getString(event);
@@ -115,6 +117,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     public NewNSTreatmentDialog() {
         super();
+
+        if (seconds == null) {
+            seconds = new Double(Math.random() * 59).intValue();
+        }
     }
 
     @Override
@@ -327,7 +333,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         };
 
-        Double maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+        Double maxAbsolute = HardLimits.maxBasal();
+        if (profile != null)
+            maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
         editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
 
@@ -340,18 +348,18 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
         editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false);
 
-        ProfileSwitch ps = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+        ProfileSwitch ps = MainApp.getConfigBuilder().getProfileSwitchFromHistory(DateUtil.now());
         if (ps != null && ps.isCPP) {
             final int percentage = ps.percentage;
             final int timeshift = ps.timeshift;
             reuseButton.setText(reuseButton.getText() + " " + percentage + "% " + timeshift + "h");
-            reuseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editPercentage.setValue((double) percentage);
-                    editTimeshift.setValue((double) timeshift);
-                }
+            reuseButton.setOnClickListener(v -> {
+                editPercentage.setValue((double) percentage);
+                editTimeshift.setValue((double) timeshift);
             });
+        }
+        if (ps == null) {
+            options.duration = false;
         }
 
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_eventtime_layout), options.date);
@@ -421,8 +429,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         long millis = eventTime.getTime() - (150 * 1000L); // 2,5 * 60 * 1000
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(millis, true);
         if ((data.size() > 0) &&
-            (data.get(0).date > millis - 7 * 60 * 1000L) &&
-            (data.get(0).date < millis + 7 * 60 * 1000L)) {
+                (data.get(0).date > millis - 7 * 60 * 1000L) &&
+                (data.get(0).date < millis + 7 * 60 * 1000L)) {
             editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
         }
     }
@@ -440,7 +448,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
-        eventTime.setSeconds(second);
+        eventTime.setSeconds(this.seconds++); // randomize seconds to prevent creating record of the same time, if user choose time manually
         timeButton.setText(DateUtil.timeString(eventTime));
         updateBGforDateTime();
     }
@@ -692,17 +700,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 } else if (options.executeTempTarget) {
                     try {
                         if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration") && data.getInt("duration") == 0)) {
-                            TempTarget tempTarget = new TempTarget();
-                            tempTarget.date = eventTime.getTime();
-                            tempTarget.durationInMinutes = data.getInt("duration");
-                            tempTarget.reason = data.getString("reason");
-                            tempTarget.source = Source.USER;
+                            TempTarget tempTarget = new TempTarget()
+                                    .date(eventTime.getTime())
+                                    .duration(data.getInt("duration"))
+                                    .reason(data.getString("reason"))
+                                    .source(Source.USER);
                             if (tempTarget.durationInMinutes != 0) {
-                                tempTarget.low = Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits());
-                                tempTarget.high = Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits());
+                                tempTarget.low(Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits()))
+                                        .high(Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits()));
                             } else {
-                                tempTarget.low = 0;
-                                tempTarget.high = 0;
+                                tempTarget.low(0).high(0);
                             }
                             log.debug("Creating new TempTarget db record: " + tempTarget.toString());
                             MainApp.getDbHelper().createOrUpdate(tempTarget);

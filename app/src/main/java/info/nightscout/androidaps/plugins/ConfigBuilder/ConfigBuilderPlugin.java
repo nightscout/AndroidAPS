@@ -4,12 +4,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -20,6 +23,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -45,6 +49,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.ToastUtils;
 
@@ -54,7 +59,15 @@ import info.nightscout.utils.ToastUtils;
 public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
-    private static BgSourceInterface activeBgSource;
+    private static ConfigBuilderPlugin configBuilderPlugin;
+
+    static public ConfigBuilderPlugin getPlugin() {
+        if (configBuilderPlugin == null)
+            configBuilderPlugin = new ConfigBuilderPlugin();
+        return configBuilderPlugin;
+    }
+
+    private BgSourceInterface activeBgSource;
     private static PumpInterface activePump;
     private static ProfileInterface activeProfile;
     private static TreatmentsInterface activeTreatments;
@@ -193,7 +206,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
         return commandQueue;
     }
 
-    public static BgSourceInterface getActiveBgSource() {
+    public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
@@ -653,9 +666,12 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
             if (profileSwitch.profileJson != null) {
                 return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
             } else {
-                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                if (profile != null)
-                    return profileSwitch.profileName;
+                ProfileStore profileStore = activeProfile.getProfile();
+                if (profileStore != null) {
+                    Profile profile = profileStore.getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null)
+                        return profileSwitch.profileName;
+                }
             }
         }
         return MainApp.gs(R.string.noprofileselected);
@@ -691,6 +707,14 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
                 if (profile != null)
                     return profile;
             }
+        }
+        if (getProfileSwitchesFromHistory().size() > 0) {
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
+                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                    .putCustomAttribute("version", BuildConfig.VERSION)
+                    .putCustomAttribute("time", time)
+                    .putCustomAttribute("getProfileSwitchesFromHistory", getProfileSwitchesFromHistory().toString())
+            );
         }
         log.debug("getProfile at the end: returning null");
         return null;

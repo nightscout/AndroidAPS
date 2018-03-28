@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -126,6 +128,21 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         boolean enabled = SP.getBoolean(R.string.key_use_smb, false);
         if (!enabled)
             value.set(false, MainApp.gs(R.string.smbdisabledinpreferences), this);
+        ConstraintChecker constraintChecker = MainApp.getConstraintChecker();
+        Constraint<Boolean> closedLoop = constraintChecker.isClosedLoopAllowed();
+        if (!closedLoop.value())
+            value.set(false, MainApp.gs(R.string.smbnotallowedinopenloopmode), this);
+        return value;
+    }
+
+    @Override
+    public Constraint<Boolean> isAdvancedFilteringEnabled(Constraint<Boolean> value) {
+        BgSourceInterface bgSource = MainApp.getConfigBuilder().getActiveBgSource();
+
+        if (bgSource != null) {
+            if (!bgSource.advancedFilteringSupported())
+                value.set(false, MainApp.gs(R.string.smbalwaysdisabled), this);
+        }
         return value;
     }
 

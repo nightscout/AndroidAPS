@@ -13,7 +13,9 @@ import java.util.Locale;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
@@ -56,6 +58,14 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable");
         when(MainApp.gs(R.string.loop)).thenReturn("Loop");
         when(MainApp.gs(R.string.loop_shortname)).thenReturn("LOOP");
+        when(MainApp.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering");
+        when(MainApp.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode");
+        when(MainApp.gs(R.string.Glimp)).thenReturn("Glimp");
+        when(MainApp.gs(R.string.glucose)).thenReturn("Glucose");
+        when(MainApp.gs(R.string.delta)).thenReturn("Delta");
+        when(MainApp.gs(R.string.short_avgdelta)).thenReturn("Short avg. delta");
+        when(MainApp.gs(R.string.long_avgdelta)).thenReturn("Long avg. delta");
+        when(MainApp.gs(R.string.zerovalueinprofile)).thenReturn("Invalid profile: %s");
     }
 
     public static MainApp mockMainApp() {
@@ -69,6 +79,11 @@ public class AAPSMocker {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+    }
+
+    public static void mockConstraintsChecker() {
+        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
+        when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
     }
 
     public static void mockBus() {
@@ -88,9 +103,16 @@ public class AAPSMocker {
         when(MainApp.instance().getApplicationContext()).thenReturn(context);
     }
 
-    public static Profile getValidProfile() throws JSONException {
-        if (profile == null)
-            profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+    public static void mockDatabaseHelper() {
+        DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
+        when(MainApp.getDbHelper()).thenReturn(databaseHelper);
+    }
+
+    public static Profile getValidProfile() {
+        try {
+            if (profile == null)
+                profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+        } catch (JSONException e) {}
         return profile;
     }
 }

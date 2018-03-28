@@ -68,33 +68,29 @@ public class MsgStatusTempBasal extends MessageBase {
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal
-                    TemporaryBasal tempStop = new TemporaryBasal(danaRPump.tempBasalStart.getTime() - 1000);
-                    tempStop.source = Source.USER;
+                    TemporaryBasal tempStop = new TemporaryBasal().date(danaRPump.tempBasalStart.getTime() - 1000).source(Source.USER);
                     treatmentsInterface.addToHistoryTempBasal(tempStop);
                     // Create new
-                    TemporaryBasal newTempBasal = new TemporaryBasal();
-                    newTempBasal.date = danaRPump.tempBasalStart.getTime();
-                    newTempBasal.percentRate = danaRPump.tempBasalPercent;
-                    newTempBasal.isAbsolute = false;
-                    newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
-                    newTempBasal.source = Source.USER;
+                    TemporaryBasal newTempBasal = new TemporaryBasal()
+                            .date(danaRPump.tempBasalStart.getTime())
+                            .percent(danaRPump.tempBasalPercent)
+                            .duration(danaRPump.tempBasalTotalSec / 60)
+                            .source(Source.USER);
                     treatmentsInterface.addToHistoryTempBasal(newTempBasal);
                 }
             } else {
                 // Close current temp basal
-                TemporaryBasal tempStop = new TemporaryBasal(now);
-                tempStop.source = Source.USER;
+                TemporaryBasal tempStop = new TemporaryBasal().date(now).source(Source.USER);
                 treatmentsInterface.addToHistoryTempBasal(tempStop);
             }
         } else {
             if (danaRPump.isTempBasalInProgress) {
                 // Create new
-                TemporaryBasal newTempBasal = new TemporaryBasal();
-                newTempBasal.date = danaRPump.tempBasalStart.getTime();
-                newTempBasal.percentRate = danaRPump.tempBasalPercent;
-                newTempBasal.isAbsolute = false;
-                newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
-                newTempBasal.source = Source.USER;
+                TemporaryBasal newTempBasal = new TemporaryBasal()
+                        .date(danaRPump.tempBasalStart.getTime())
+                        .percent(danaRPump.tempBasalPercent)
+                        .duration(danaRPump.tempBasalTotalSec / 60)
+                        .source(Source.USER);
                 treatmentsInterface.addToHistoryTempBasal(newTempBasal);
             }
         }

@@ -100,7 +100,11 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                     holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
                 }
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
-                IobTotal iob = tempBasal.iobCalc(System.currentTimeMillis());
+                IobTotal iob = new IobTotal(System.currentTimeMillis());
+                try { // in case app loaded and still no profile selected
+                    iob = tempBasal.iobCalc(System.currentTimeMillis());
+                } catch (Exception e) {
+                }
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
                 holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
                 holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");

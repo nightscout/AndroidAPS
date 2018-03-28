@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.utils.Round;
 
 /**
  * Created by Adrian on 15.04.2018.
@@ -48,7 +49,7 @@ public class ProfileGraph extends GraphView {
 
         getViewport().setYAxisBoundsManual(true);
         getViewport().setMinY(0);
-        getViewport().setMaxY(profile.getMaxDailyBasal()*1.1);
+        getViewport().setMaxY(Round.ceilTo(profile.getMaxDailyBasal()*1.1, 0.5));
 
         getGridLabelRenderer().setNumHorizontalLabels(13);
         getGridLabelRenderer().setVerticalLabelsColor(basalSeries.getColor());

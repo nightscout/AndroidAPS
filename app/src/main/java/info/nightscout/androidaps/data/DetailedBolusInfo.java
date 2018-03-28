@@ -2,6 +2,8 @@ package info.nightscout.androidaps.data;
 
 import android.content.Context;
 
+import com.rits.cloning.Cloner;
+
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -30,21 +32,22 @@ public class DetailedBolusInfo {
     public long deliverAt = 0;             // SMB should be delivered within 1 min from this time
 
     public DetailedBolusInfo copy() {
-        DetailedBolusInfo copy = new DetailedBolusInfo();
-        copy.date = this.date;
-        copy.eventType = this.eventType;
-        copy.insulin = this.insulin;
-        copy.carbs = this.carbs;
-        copy.source = this.source;
-        copy.isValid = this.isValid;
-        copy.glucose = this.glucose;
-        copy.glucoseType = this.glucoseType;
-        copy.carbTime = this.carbTime;
-        copy.boluscalc = this.boluscalc;
-        copy.context = this.context;
-        copy.pumpId = this.pumpId;
-        copy.isSMB = this.isSMB;
-        return copy;
+        DetailedBolusInfo n = new DetailedBolusInfo();
+        n.date = date;
+        n.eventType = eventType;
+        n.insulin = insulin;
+        n.carbs = carbs;
+        n.source = source;
+        n.isValid = isValid;
+        n.glucose = glucose;
+        n.glucoseType = glucoseType;
+        n.carbTime = carbTime;
+        n.boluscalc = boluscalc;
+        n.context = context;
+        n.pumpId = pumpId;
+        n.isSMB = isSMB;
+        n.deliverAt = deliverAt;
+        return n;
     }
 
     @Override

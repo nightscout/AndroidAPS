@@ -116,9 +116,14 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null) {
-                        tempTarget.setVisibility(View.GONE);
+                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
+                        profileSwitch.setVisibility(View.VISIBLE);
+                    } else {
                         profileSwitch.setVisibility(View.GONE);
+                    }
+
+                    if (MainApp.getConfigBuilder().getProfile() == null) {
+                        tempTarget.setVisibility(View.GONE);
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                         tempBasal.setVisibility(View.GONE);
@@ -126,6 +131,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         fill.setVisibility(View.GONE);
                         return;
                     }
+
                     final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                     final boolean basalprofileEnabled = MainApp.isEngineeringModeOrRelease()
                             && pump.getPumpDescription().isSetBasalProfileCapable;

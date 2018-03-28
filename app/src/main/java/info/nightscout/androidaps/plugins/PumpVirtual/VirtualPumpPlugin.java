@@ -98,7 +98,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.01d;
 
-        pumpDescription.isRefillingCapable = false;
+        pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = false;
         pumpDescription.is30minBasalRatesCapable = true;
@@ -291,12 +291,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        TemporaryBasal tempBasal = new TemporaryBasal();
-        tempBasal.date = System.currentTimeMillis();
-        tempBasal.isAbsolute = true;
-        tempBasal.absoluteRate = absoluteRate;
-        tempBasal.durationInMinutes = durationInMinutes;
-        tempBasal.source = Source.USER;
+        TemporaryBasal tempBasal = new TemporaryBasal()
+                .date(System.currentTimeMillis())
+                .absolute(absoluteRate)
+                .duration(durationInMinutes)
+                .source(Source.USER);
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = true;
@@ -321,12 +320,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             if (!result.success)
                 return result;
         }
-        TemporaryBasal tempBasal = new TemporaryBasal();
-        tempBasal.date = System.currentTimeMillis();
-        tempBasal.isAbsolute = false;
-        tempBasal.percentRate = percent;
-        tempBasal.durationInMinutes = durationInMinutes;
-        tempBasal.source = Source.USER;
+        TemporaryBasal tempBasal = new TemporaryBasal()
+                .date(System.currentTimeMillis())
+                .percent(percent)
+                .duration(durationInMinutes)
+                .source(Source.USER);
         result.success = true;
         result.enacted = true;
         result.percent = percent;
@@ -376,8 +374,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         if (treatmentsInterface.isTempBasalInProgress()) {
             result.enacted = true;
-            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
-            tempStop.source = Source.USER;
+            TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             treatmentsInterface.addToHistoryTempBasal(tempStop);
             //tempBasal = null;
             if (Config.logPumpComm)

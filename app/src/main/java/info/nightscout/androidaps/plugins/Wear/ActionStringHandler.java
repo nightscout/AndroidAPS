@@ -309,8 +309,8 @@ public class ActionStringHandler {
                                 } else {
                                     sendStatusmessage("TDD", generateTDDMessage(historyList, dummies));
                                 }
-                                    }
-                                });
+                            }
+                        });
                     }
                 } else {
                     // if up to date: prepare, send (check if CPP is activated -> add CPP stats)
@@ -604,17 +604,15 @@ public class ActionStringHandler {
     }
 
     private static void generateTempTarget(int duration, double low, double high) {
-        TempTarget tempTarget = new TempTarget();
-        tempTarget.date = System.currentTimeMillis();
-        tempTarget.durationInMinutes = duration;
-        tempTarget.reason = "WearPlugin";
-        tempTarget.source = Source.USER;
+        TempTarget tempTarget = new TempTarget()
+                .date(System.currentTimeMillis())
+                .duration(duration)
+                .reason("WearPlugin")
+                .source(Source.USER);
         if (tempTarget.durationInMinutes != 0) {
-            tempTarget.low = low;
-            tempTarget.high = high;
+            tempTarget.low(low).high(high);
         } else {
-            tempTarget.low = 0;
-            tempTarget.high = 0;
+            tempTarget.low(0).high(0);
         }
         MainApp.getDbHelper().createOrUpdate(tempTarget);
 

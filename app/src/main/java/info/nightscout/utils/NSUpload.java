@@ -140,7 +140,7 @@ public class NSUpload {
             data.put("splitNow", 0);
             data.put("splitExt", 100);
             data.put("enteredinsulin", extendedBolus.insulin);
-            data.put("relative", extendedBolus.insulin);
+            data.put("relative", extendedBolus.insulin / extendedBolus.durationInMinutes * 60); // U/h
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
@@ -473,6 +473,27 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         }
+    }
+
+    public static void uploadEvent(String careportalEvent, long time) {
+        Context context = MainApp.instance().getApplicationContext();
+        Bundle bundle = new Bundle();
+        bundle.putString("action", "dbAdd");
+        bundle.putString("collection", "treatments");
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", careportalEvent);
+            data.put("created_at", DateUtil.toISOString(time));
+            data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        bundle.putString("data", data.toString());
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
     }
 
     public static void removeFoodFromNS(String _id) {

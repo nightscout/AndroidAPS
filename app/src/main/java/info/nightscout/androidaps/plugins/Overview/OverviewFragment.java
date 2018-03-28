@@ -288,13 +288,28 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             llm = new LinearLayoutManager(view.getContext());
             notificationsView.setLayoutManager(llm);
 
+            int axisWidth = 50;
+
+            if (dm.densityDpi <= 120)
+                axisWidth = 3;
+            else if (dm.densityDpi <= 160)
+                axisWidth = 10;
+            else if (dm.densityDpi <= 320)
+                axisWidth = 35;
+            else if (dm.densityDpi <= 420)
+                axisWidth = 50;
+            else if (dm.densityDpi <= 560)
+                axisWidth = 70;
+            else
+                axisWidth = 80;
+
             bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             bgGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             iobGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
-            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
+            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
             iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
             rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
@@ -1166,7 +1181,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setText(extendedBolusText);
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(View.GONE);
+                extendedBolusView.setVisibility(View.INVISIBLE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
@@ -1194,7 +1209,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, lastBG, false);
-            text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
                 quickWizardButton.setVisibility(View.GONE);

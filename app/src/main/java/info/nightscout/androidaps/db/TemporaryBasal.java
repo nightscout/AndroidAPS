@@ -60,8 +60,36 @@ public class TemporaryBasal implements Interval {
     public TemporaryBasal() {
     }
 
-    public TemporaryBasal(long date) {
+    public TemporaryBasal date(long date) {
         this.date = date;
+        return this;
+    }
+
+    public TemporaryBasal duration(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+        return this;
+    }
+
+    public TemporaryBasal absolute(double absoluteRate) {
+        this.absoluteRate = absoluteRate;
+        this.isAbsolute = true;
+        return this;
+    }
+
+    public TemporaryBasal percent(int percentRate) {
+        this.percentRate = percentRate;
+        this.isAbsolute = false;
+        return this;
+    }
+
+    public TemporaryBasal source(int source) {
+        this.source = source;
+        return this;
+    }
+
+    public TemporaryBasal pumpId(long pumpId) {
+        this.pumpId = pumpId;
+        return this;
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
