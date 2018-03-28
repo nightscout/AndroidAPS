@@ -741,22 +741,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.timeshift = timeshift;
         profileSwitch.percentage = percentage;
         MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
-
-        ConfigBuilderPlugin.getCommandQueue().setProfile(profileSwitch.getProfileObject(), new Callback() {
-            @Override
-            public void run() {
-                if (!result.success) {
-                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                    i.putExtra("soundid", R.raw.boluserror);
-                    i.putExtra("status", result.comment);
-                    i.putExtra("title", MainApp.sResources.getString(R.string.failedupdatebasalprofile));
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    MainApp.instance().startActivity(i);
-                }
-                MainApp.bus().post(new EventNewBasalProfile());
-            }
-        });
-        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
@@ -773,22 +757,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch.timeshift = timeshift;
             profileSwitch.percentage = percentage;
             MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
-
-            ConfigBuilderPlugin.getCommandQueue().setProfile(profileSwitch.getProfileObject(), new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                        i.putExtra("soundid", R.raw.boluserror);
-                        i.putExtra("status", result.comment);
-                        i.putExtra("title", MainApp.sResources.getString(R.string.failedupdatebasalprofile));
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        MainApp.instance().startActivity(i);
-                    }
-                    MainApp.bus().post(new EventNewBasalProfile());
-                }
-            });
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
         } else {
             log.error("No profile switch existing");
         }

@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.answers.CustomEvent;
+import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,8 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
+import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -44,11 +48,13 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.ToastUtils;
@@ -641,6 +647,28 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
         MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         activeTreatments.addToHistoryProfileSwitch(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
+    }
+
+    @Subscribe
+    public void onProfileSwitch(EventProfileSwitchChange ignored) {
+        if (getCommandQueue().isRunning(Command.CommandType.BASALPROFILE))
+            return;
+
+        getCommandQueue().setProfile(getProfile(), new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                    i.putExtra("soundid", R.raw.boluserror);
+                    i.putExtra("status", result.comment);
+                    i.putExtra("title", MainApp.sResources.getString(R.string.failedupdatebasalprofile));
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    MainApp.instance().startActivity(i);
+                }
+                MainApp.bus().post(new EventNewBasalProfile());
+            }
+        });
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     @Override

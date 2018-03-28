@@ -18,6 +18,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -60,11 +61,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
 
             if (!pump.isThisProfileSet(profile)) {
-                MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
+                MainApp.bus().post(new EventProfileSwitchChange());
             } else if (isStatusOutdated && !pump.isBusy()) {
-                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
+                ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
             } else if (isBasalOutdated && !pump.isBusy()) {
-                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
+                ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
             }
         }
     }

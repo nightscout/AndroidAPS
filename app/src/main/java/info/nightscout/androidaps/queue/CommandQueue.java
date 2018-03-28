@@ -84,7 +84,7 @@ public class CommandQueue {
         return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
     }
 
-    private boolean isRunning(Command.CommandType type) {
+    public boolean isRunning(Command.CommandType type) {
         if (performing != null && performing.commandType == type)
             return true;
         return false;
@@ -294,21 +294,6 @@ public class CommandQueue {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
-        }
-
-        // Check that there is a valid profileSwitch NOW
-        if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
-            // wait for DatabaseHelper.scheduleProfiSwitch() to do the profile switch // TODO clean this crap up
-            SystemClock.sleep(5000);
-            if (MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis())==null) {
-                Notification noProfileSwitchNotif = new Notification(Notification.PROFILE_SWITCH_MISSING, MainApp.gs(R.string.profileswitch_ismissing), Notification.NORMAL);
-                MainApp.bus().post(new EventNewNotification(noProfileSwitchNotif));
-                if (callback != null) {
-                    PumpEnactResult result = new PumpEnactResult().success(false).enacted(false).comment("Refuse to send profile to pump! No ProfileSwitch!");
-                    callback.result(result).run();
-                }
-                return false;
-            }
         }
 
         if (!MainApp.isEngineeringModeOrRelease()) {
