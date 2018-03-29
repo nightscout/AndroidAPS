@@ -88,18 +88,17 @@ public class CommandQueueTest extends CommandQueue {
         extendedBolus(1, 30, null);
         Assert.assertEquals(2, size());
 
-        // add setProfile (command is not queued before unless a ProfileSwitch exists)
-        // TODO test with profile switch set
+        // add setProfile
         setProfile(profile, null);
-        Assert.assertEquals(2, size());
+        Assert.assertEquals(3, size());
 
         // add loadHistory
         loadHistory((byte) 0, null);
-        Assert.assertEquals(3, size());
+        Assert.assertEquals(4, size());
 
         // add loadEvents
         loadEvents(null);
-        Assert.assertEquals(4, size());
+        Assert.assertEquals(5, size());
 
         clear();
         tempBasalAbsolute(0, 30, true, profile, null);
