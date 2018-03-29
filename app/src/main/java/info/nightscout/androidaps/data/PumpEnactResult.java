@@ -21,19 +21,19 @@ public class PumpEnactResult {
     public String comment = "";
 
     // Result of basal change
-    public Integer duration = -1;      // duration set [minutes]
+    public int duration = -1;      // duration set [minutes]
     public double absolute = -1d;      // absolute rate [U/h] , isPercent = false
     public int percent = -1;       // percent of current basal [%] (100% = current basal), isPercent = true
     public boolean isPercent = false;  // if true percent is used, otherwise absolute
     public boolean isTempCancel = false; // if true we are caceling temp basal
     // Result of treatment delivery
-    public Double bolusDelivered = 0d; // real value of delivered insulin
-    public Double carbsDelivered = 0d; // real value of delivered carbs
+    public double bolusDelivered = 0d; // real value of delivered insulin
+    public double carbsDelivered = 0d; // real value of delivered carbs
 
     public boolean queued = false;
 
     public PumpEnactResult success(boolean success) {
-       this.success = success;
+        this.success = success;
         return this;
     }
 
@@ -87,76 +87,83 @@ public class PumpEnactResult {
         return this;
     }
 
-     public String log() {
-        return "Success: " + success + " Enacted: " + enacted + " Comment: " + comment + " Duration: " + duration + " Absolute: " + absolute + " Percent: " + percent + " IsPercent: " + isPercent + " Queued: " + queued;
+    public String log() {
+        return "Success: " + success +
+                " Enacted: " + enacted +
+                " Comment: " + comment +
+                " Duration: " + duration +
+                " Absolute: " + absolute +
+                " Percent: " + percent +
+                " IsPercent: " + isPercent +
+                " IsTempCancel: " + isTempCancel +
+                " bolusDelivered: " + bolusDelivered +
+                " carbsDelivered: " + carbsDelivered +
+                " Queued: " + queued;
     }
 
     public String toString() {
-        String ret = MainApp.sResources.getString(R.string.success) + ": " + success;
+        String ret = MainApp.gs(R.string.success) + ": " + success;
         if (enacted) {
             if (bolusDelivered > 0) {
-                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
-                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.sResources.getString(R.string.smb_shortname)
+                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.gs(R.string.smb_shortname)
                         + ": " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
-                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
-                    ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
-                ret += MainApp.sResources.getString(R.string.canceltemp);
+                    ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.gs(R.string.canceltemp);
             } else if (isPercent) {
-                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
-                    ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.sResources.getString(R.string.duration) + ": " + duration + " min";
-                ret += "\n" + MainApp.sResources.getString(R.string.percent) + ": " + percent + "%";
+                    ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.gs(R.string.duration) + ": " + duration + " min";
+                ret += "\n" + MainApp.gs(R.string.percent) + ": " + percent + "%";
             } else {
-                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
-                    ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.sResources.getString(R.string.duration) + ": " + duration + " min";
-                ret += "\n" + MainApp.sResources.getString(R.string.absolute) + ": " + absolute + " U/h";
+                    ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.gs(R.string.duration) + ": " + duration + " min";
+                ret += "\n" + MainApp.gs(R.string.absolute) + ": " + absolute + " U/h";
             }
         } else {
-            ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+            ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
         }
         return ret;
     }
 
-    public Spanned toSpanned() {
-        String ret = "<b>" + MainApp.sResources.getString(R.string.success) + "</b>: " + success;
+    public String toHtml() {
+        String ret = "<b>" + MainApp.gs(R.string.success) + "</b>: " + success;
         if (queued) {
-            ret = MainApp.sResources.getString(R.string.waitingforpumpresult);
+            ret = MainApp.gs(R.string.waitingforpumpresult);
         } else if (enacted) {
             if (bolusDelivered > 0) {
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
-                    ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
+                    ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + MainApp.gs(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
-                        "<br>" + MainApp.sResources.getString(R.string.canceltemp);
+                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment +
+                        "<br>" + MainApp.gs(R.string.canceltemp);
             } else if (isPercent && percent != -1) {
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
-                    ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.percent) + "</b>: " + percent + "%";
+                    ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + MainApp.gs(R.string.duration) + "</b>: " + duration + " min";
+                ret += "<br><b>" + MainApp.gs(R.string.percent) + "</b>: " + percent + "%";
             } else if (absolute != -1) {
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
-                    ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
+                    ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + MainApp.gs(R.string.duration) + "</b>: " + duration + " min";
+                ret += "<br><b>" + MainApp.gs(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
             }
         } else {
-            ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+            ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
         }
-        return Html.fromHtml(ret);
-    }
-
-    public PumpEnactResult() {
+        return ret;
     }
 
     public JSONObject json(Profile profile) {
