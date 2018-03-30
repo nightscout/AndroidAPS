@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
@@ -31,7 +32,7 @@ import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.utils.LocaleHelper;
@@ -111,7 +112,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             id = args.getInt("id");
         }
 
-        void addPreferencesFromResourceIfEnabled(PluginBase p, int type) {
+        void addPreferencesFromResourceIfEnabled(PluginBase p, PluginType type) {
             if (p.isEnabled(type) && p.getPreferencesId() != -1)
                 addPreferencesFromResource(p.getPreferencesId());
         }
@@ -139,50 +140,50 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_quickwizard);
                 }
-                addPreferencesFromResourceIfEnabled(SourceDexcomG5Plugin.getPlugin(), PluginBase.BGSOURCE);
-                addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginBase.GENERAL);
-                addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginBase.CONSTRAINTS);
+                addPreferencesFromResourceIfEnabled(SourceDexcomG5Plugin.getPlugin(), PluginType.BGSOURCE);
+                addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginType.CONSTRAINTS);
                 if (Config.APS) {
-                    addPreferencesFromResourceIfEnabled(LoopPlugin.getPlugin(), PluginBase.LOOP);
-                    addPreferencesFromResourceIfEnabled(OpenAPSMAPlugin.getPlugin(), PluginBase.APS);
-                    addPreferencesFromResourceIfEnabled(OpenAPSAMAPlugin.getPlugin(), PluginBase.APS);
-                    addPreferencesFromResourceIfEnabled(OpenAPSSMBPlugin.getPlugin(), PluginBase.APS);
+                    addPreferencesFromResourceIfEnabled(LoopPlugin.getPlugin(), PluginType.LOOP);
+                    addPreferencesFromResourceIfEnabled(OpenAPSMAPlugin.getPlugin(), PluginType.APS);
+                    addPreferencesFromResourceIfEnabled(OpenAPSAMAPlugin.getPlugin(), PluginType.APS);
+                    addPreferencesFromResourceIfEnabled(OpenAPSSMBPlugin.getPlugin(), PluginType.APS);
                 }
 
-                addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginBase.SENSITIVITY);
-                addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginBase.SENSITIVITY);
-                addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginBase.SENSITIVITY);
+                addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginType.SENSITIVITY);
+                addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginType.SENSITIVITY);
+                addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginType.SENSITIVITY);
 
                 if (Config.HWPUMPS) {
-                    addPreferencesFromResourceIfEnabled(DanaRPlugin.getPlugin(), PluginBase.PUMP);
-                    addPreferencesFromResourceIfEnabled(DanaRKoreanPlugin.getPlugin(), PluginBase.PUMP);
-                    addPreferencesFromResourceIfEnabled(DanaRv2Plugin.getPlugin(), PluginBase.PUMP);
-                    addPreferencesFromResourceIfEnabled(DanaRSPlugin.getPlugin(), PluginBase.PUMP);
+                    addPreferencesFromResourceIfEnabled(DanaRPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(DanaRKoreanPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(DanaRv2Plugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(DanaRSPlugin.getPlugin(), PluginType.PUMP);
 
-                    if (DanaRPlugin.getPlugin().isEnabled(PluginBase.PROFILE)
-                            || DanaRKoreanPlugin.getPlugin().isEnabled(PluginBase.PROFILE)
-                            || DanaRv2Plugin.getPlugin().isEnabled(PluginBase.PROFILE)
-                            || DanaRSPlugin.getPlugin().isEnabled(PluginBase.PROFILE)) {
+                    if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
+                            || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
+                            || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
+                            || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
                         addPreferencesFromResource(R.xml.pref_danarprofile);
                     }
                 }
 
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
-                    addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginBase.PUMP);
+                    addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginType.PUMP);
                 }
 
-                addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginBase.INSULIN);
+                addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginType.INSULIN);
 
-                addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginBase.GENERAL);
-                addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginBase.GENERAL);
+                addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
 
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_others);
                 }
                 addPreferencesFromResource(R.xml.pref_advanced);
 
-                addPreferencesFromResourceIfEnabled(WearPlugin.getPlugin(), PluginBase.GENERAL);
-                addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginBase.GENERAL);
+                addPreferencesFromResourceIfEnabled(WearPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
             }
 
             initSummary(getPreferenceScreen());

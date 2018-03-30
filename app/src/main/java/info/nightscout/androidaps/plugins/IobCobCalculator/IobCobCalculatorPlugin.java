@@ -29,6 +29,8 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
@@ -38,8 +40,16 @@ import info.nightscout.utils.DateUtil;
  * Created by mike on 24.04.2017.
  */
 
-public class IobCobCalculatorPlugin implements PluginBase {
-    private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
+public class IobCobCalculatorPlugin extends PluginBase {
+    private Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
+
+    private static IobCobCalculatorPlugin plugin = null;
+
+    public static IobCobCalculatorPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new IobCobCalculatorPlugin();
+        return plugin;
+    }
 
     private LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
     private LongSparseArray<AutosensData> autosensDataTable = new LongSparseArray<>(); // oldest at index 0
@@ -55,12 +65,26 @@ public class IobCobCalculatorPlugin implements PluginBase {
     boolean stopCalculationTrigger = false;
     private IobCobThread thread = null;
 
-    private static IobCobCalculatorPlugin plugin = null;
+    public IobCobCalculatorPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.GENERAL)
+                .pluginName(R.string.iobcobcalculator)
+                .showInList(false)
+                .neverVisible(true)
+                .alwaysEnabled(true)
+        );
+     }
 
-    public static IobCobCalculatorPlugin getPlugin() {
-        if (plugin == null)
-            plugin = new IobCobCalculatorPlugin();
-        return plugin;
+    @Override
+    public void onStart() {
+        super.onStart();
+        MainApp.bus().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MainApp.bus().unregister(this);
     }
 
     public LongSparseArray<AutosensData> getAutosensDataTable() {
@@ -69,70 +93,6 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     public List<BgReading> getBucketedData() {
         return bucketed_data;
-    }
-
-    @Override
-    public int getType() {
-        return GENERAL;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return "IOB COB Calculator";
-    }
-
-    @Override
-    public String getNameShort() {
-        return "IOC";
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == GENERAL;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return false;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return false;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return false;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return false;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
-
-    public IobCobCalculatorPlugin() {
-        MainApp.bus().register(this);
     }
 
     @Nullable
@@ -323,7 +283,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         log.debug("Bucketed data created. Size: " + bucketed_data.size());
     }
 
-    public static long oldestDataAvailable() {
+    public long oldestDataAvailable() {
         long now = System.currentTimeMillis();
 
         long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvailable();
@@ -349,7 +309,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
         IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
-        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginBase.APS)) {
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS)) {
             // Add expected zere temp basal for next 240 mins
             IobTotal basalIobWithZeroTemp = basalIob.copy();
             TemporaryBasal t = new TemporaryBasal()
@@ -447,7 +407,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             log.debug("AUTOSENSDATA null: autosensDataTable empty (" + reason + ")");
             return null;
         }
-        AutosensData data = null;
+        AutosensData data;
         try {
             data = autosensDataTable.valueAt(autosensDataTable.size() - 1);
         } catch (Exception e) {
@@ -461,8 +421,6 @@ public class IobCobCalculatorPlugin implements PluginBase {
             log.debug("AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastdata=" + DateUtil.dateAndTimeString(data.time));
             return null;
         } else {
-            if (data == null)
-                log.debug("AUTOSENSDATA null: data == null (" + " " + reason + ") size()=" + autosensDataTable.size() + " lastdata=" + DateUtil.dateAndTimeString(data.time));
             return data;
         }
     }

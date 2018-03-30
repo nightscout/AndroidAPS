@@ -18,7 +18,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
@@ -34,11 +33,11 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
-import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.utils.BundleLogger;
 import info.nightscout.utils.NSUpload;
@@ -63,8 +62,13 @@ public class DataService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-
-        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource() == null) {
+            xDripEnabled = true;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = false;
+            dexcomG5Enabled = false;
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
@@ -96,7 +100,7 @@ public class DataService extends IntentService {
             dexcomG5Enabled = true;
         }
 
-        boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
+        boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -223,7 +227,7 @@ public class DataService extends IntentService {
         try {
             JSONArray jsonArray = new JSONArray(data);
             log.debug("Received Dexcom Data size:" + jsonArray.length());
-            for(int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
                 bgReading.value = json.getInt("m_value");
                 bgReading.direction = json.getString("m_trend");
@@ -474,7 +478,7 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
                 || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
-            int mode =  Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
+            int mode = Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
             EventNsFood evt = new EventNsFood(mode, bundles);
             MainApp.bus().post(evt);
         }

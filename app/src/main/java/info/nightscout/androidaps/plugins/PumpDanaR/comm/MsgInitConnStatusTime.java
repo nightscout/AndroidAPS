@@ -9,10 +9,10 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventRefreshGui;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -31,20 +31,20 @@ public class MsgInitConnStatusTime extends MessageBase {
             MainApp.bus().post(new EventNewNotification(notification));
             MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to Korean DanaR");
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setPluginEnabled(PluginBase.PUMP, true);
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginBase.PUMP, true);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setPluginEnabled(PluginBase.PUMP, false);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginBase.PUMP, false);
+            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setPluginEnabled(PluginType.PUMP, true);
+            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginType.PUMP, true);
+            MainApp.getSpecificPlugin(DanaRPlugin.class).setPluginEnabled(PluginType.PUMP, false);
+            MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginType.PUMP, false);
 
             DanaRPump.reset(); // mark not initialized
 
             //If profile coming from pump, switch it as well
-            if(MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PROFILE)){
-                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginBase.PROFILE, false);
-                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setPluginEnabled(PluginBase.PROFILE, true);
+            if(MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PROFILE)){
+                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginType.PROFILE, false);
+                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setPluginEnabled(PluginType.PROFILE, true);
             }
 
-            MainApp.getConfigBuilder().storeSettings();
+            MainApp.getConfigBuilder().storeSettings("ChangingDanaDriver");
             MainApp.bus().post(new EventRefreshGui());
             ConfigBuilderPlugin.getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;

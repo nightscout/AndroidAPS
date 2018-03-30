@@ -8,6 +8,7 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
@@ -73,7 +74,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isLoopInvokationAllowed(value);
         }
         return value;
@@ -85,7 +86,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isClosedLoopAllowed(value);
         }
         return value;
@@ -97,7 +98,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isAutosensModeEnabled(value);
         }
         return value;
@@ -109,7 +110,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.isAMAModeEnabled(value);
         }
         return value;
@@ -121,7 +122,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isSMBModeEnabled(value);
         }
         return value;
@@ -132,7 +133,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isAdvancedFilteringEnabled(value);
         }
         return value;
@@ -143,7 +144,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.applyBasalConstraints(absoluteRate, profile);
         }
         return absoluteRate;
@@ -154,7 +155,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.applyBasalPercentConstraints(percentRate, profile);
         }
         return percentRate;
@@ -165,7 +166,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.applyBolusConstraints(insulin);
         }
         return insulin;
@@ -176,7 +177,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.applyCarbsConstraints(carbs);
         }
         return carbs;
@@ -187,7 +188,7 @@ public class ConstraintChecker implements ConstraintsInterface {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.applyMaxIOBConstraints(maxIob);
         }
         return maxIob;

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SourceDexcomG5;
+package info.nightscout.androidaps.plugins.Source;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -25,8 +25,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;

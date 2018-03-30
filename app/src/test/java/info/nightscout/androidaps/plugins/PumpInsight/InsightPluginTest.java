@@ -14,7 +14,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
 import info.nightscout.utils.ToastUtils;
@@ -31,7 +31,7 @@ public class InsightPluginTest {
 
     @Test
     public void basalRateShouldBeLimited() throws Exception {
-        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBasalAmount = 1.1d;
         insightPlugin.setStatusResult(result);

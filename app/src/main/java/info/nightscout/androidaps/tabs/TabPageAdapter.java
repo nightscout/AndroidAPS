@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.interfaces.PluginBase;
 
 /**
@@ -37,7 +36,7 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     @Nullable
     public Fragment getItem(int position) {
         //Fragment fragment = (Fragment) visibleFragmentList.get(position);
-        return Fragment.instantiate(context, visibleFragmentList.get(position).getFragmentClass());
+        return Fragment.instantiate(context, visibleFragmentList.get(position).pluginDescription.getFragmentClass());
     }
 
     @Override
@@ -67,7 +66,7 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     }
 
     public void registerNewFragment(PluginBase plugin) {
-        if (plugin.hasFragment() && plugin.isVisibleInTabs(plugin.getType())) {
+        if (plugin.hasFragment() && plugin.isFragmentVisible()) {
             visibleFragmentList.add(plugin);
             notifyDataSetChanged();
         }

@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.ConstraintsSafety;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
@@ -11,6 +8,8 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
@@ -23,8 +22,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class SafetyPlugin implements PluginBase, ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(SafetyPlugin.class);
+public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
     static SafetyPlugin plugin = null;
 
@@ -34,64 +32,15 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         return plugin;
     }
 
-    @Override
-    public String getFragmentClass() {
-        return null;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.CONSTRAINTS;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.safety);
-    }
-
-    @Override
-    public String getNameShort() {
-        // use long name as fallback (no tabs)
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == CONSTRAINTS;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return false;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return false;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return false;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_safety;
+    public SafetyPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.CONSTRAINTS)
+                .neverVisible(true)
+                .alwaysEnabled(true)
+                .showInList(false)
+                .pluginName(R.string.safety)
+                .preferencesId(R.xml.pref_safety)
+        );
     }
 
     /**
@@ -215,11 +164,11 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         double maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
         maxIob.setIfSmaller(maxIobPref, String.format(MainApp.gs(R.string.limitingiob), maxIobPref, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
-        if (OpenAPSMAPlugin.getPlugin().isEnabled(PluginBase.APS))
+        if (OpenAPSMAPlugin.getPlugin().isEnabled(PluginType.APS))
             maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
-        if (OpenAPSAMAPlugin.getPlugin().isEnabled(PluginBase.APS))
+        if (OpenAPSAMAPlugin.getPlugin().isEnabled(PluginType.APS))
             maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
-        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginBase.APS))
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
             maxIob.setIfSmaller(HardLimits.maxIobSMB(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobSMB(), MainApp.gs(R.string.hardlimit)), this);
         return maxIob;
     }

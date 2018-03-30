@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.answers.CustomEvent;
@@ -38,25 +36,30 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
+public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
     private static ConfigBuilderPlugin configBuilderPlugin;
@@ -86,116 +89,159 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     private static CommandQueue commandQueue = new CommandQueue();
 
     public ConfigBuilderPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.GENERAL)
+                .fragmentClass(ConfigBuilderFragment.class.getName())
+                .showInList(false)
+                .alwaysEnabled(true)
+                .alwayVisible(true)
+                .pluginName(R.string.configbuilder)
+                .shortName(R.string.configbuilder_shortname)
+        );
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         MainApp.bus().register(this);
     }
 
     @Override
-    public int getType() {
-        return PluginBase.GENERAL;
+    public void onStop() {
+        super.onStop();
+        MainApp.bus().unregister(this);
     }
 
-    @Override
-    public String getFragmentClass() {
-        return ConfigBuilderFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.configbuilder);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.configbuilder_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == GENERAL;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == GENERAL;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return false;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return false;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        // Always enabled
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        // Always visible
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
 
     public void initialize() {
         pluginList = MainApp.getPluginsList();
+        upgradeSettings();
         loadSettings();
         MainApp.bus().post(new EventAppInitialized());
     }
 
-    public void storeSettings() {
+    public void storeSettings(String from) {
         if (pluginList != null) {
             if (Config.logPrefsChange)
-                log.debug("Storing settings");
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            SharedPreferences.Editor editor = settings.edit();
+                log.debug("Storing settings from: " + from);
 
-            for (int type = 1; type < PluginBase.LAST; type++) {
-                for (PluginBase p : pluginList) {
-                    String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
-                    String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
-                    editor.putBoolean(settingEnabled, p.isEnabled(type));
-                    editor.putBoolean(settingVisible, p.isVisibleInTabs(type));
+            for (PluginBase p : pluginList) {
+                PluginType type = p.getType();
+                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwayVisible)
+                    continue;
+                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible)
+                    continue;
+                savePref(p, type, true);
+                if (type == PluginType.PUMP) {
+                    if (p instanceof ProfileInterface) { // Store state of optional Profile interface
+                        savePref(p, PluginType.PROFILE, false);
+                    }
                 }
             }
-            editor.apply();
             verifySelectionInCategories();
+        }
+    }
+
+    private void savePref(PluginBase p, PluginType type, boolean storeVisible) {
+        String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
+        SP.putBoolean(settingEnabled, p.isEnabled(type));
+        log.debug("Storing: " + settingEnabled + ":" + p.isEnabled(type));
+        if (storeVisible) {
+            String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
+            SP.putBoolean(settingVisible, p.isFragmentVisible());
+            log.debug("Storing: " + settingVisible + ":" + p.isFragmentVisible());
         }
     }
 
     private void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        for (int type = 1; type < PluginBase.LAST; type++) {
-            for (PluginBase p : pluginList) {
-                try {
-                    String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
-                    String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
-                    if (SP.contains(settingEnabled))
-                        p.setPluginEnabled(type, SP.getBoolean(settingEnabled, true));
-                    if (SP.contains(settingVisible))
-                        p.setFragmentVisible(type, SP.getBoolean(settingVisible, true) && SP.getBoolean(settingEnabled, true));
-                } catch (Exception e) {
-                    log.error("Unhandled exception", e);
+        for (PluginBase p : pluginList) {
+            PluginType type = p.getType();
+            loadPref(p, type, true);
+            if (p.getType() == PluginType.PUMP) {
+                if (p instanceof ProfileInterface) {
+                    loadPref(p, PluginType.PROFILE, false);
+                }
+            }
+        }
+        verifySelectionInCategories();
+    }
+
+    private void loadPref(PluginBase p, PluginType type, boolean loadVisible) {
+        String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
+        if (SP.contains(settingEnabled))
+            p.setPluginEnabled(type, SP.getBoolean(settingEnabled, false));
+        else if (p.getType() == type && p.pluginDescription.enableByDefault) {
+            p.setPluginEnabled(type, true);
+        }
+        log.debug("Loaded: " + settingEnabled + ":" + p.isEnabled(type));
+        if (loadVisible) {
+            String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
+            if (SP.contains(settingVisible))
+                p.setFragmentVisible(type, SP.getBoolean(settingVisible, false) && SP.getBoolean(settingEnabled, false));
+            else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+                p.setFragmentVisible(type, true);
+            }
+            log.debug("Loaded: " + settingVisible + ":" + p.isFragmentVisible());
+        }
+    }
+
+    private void upgradeSettings() {
+        if (!SP.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
+            return;
+        if (Config.logPrefsChange)
+            log.debug("Upgrading stored settings");
+        for (PluginBase p : pluginList) {
+            for (int type = 1; type < 11; type++) {
+                PluginType newType;
+                switch (type) {
+                    case 1:
+                        newType = PluginType.GENERAL;
+                        break;
+                    case 2:
+                        newType = PluginType.TREATMENT;
+                        break;
+                    case 3:
+                        newType = PluginType.SENSITIVITY;
+                        break;
+                    case 4:
+                        newType = PluginType.PROFILE;
+                        break;
+                    case 5:
+                        newType = PluginType.APS;
+                        break;
+                    case 6:
+                        newType = PluginType.PUMP;
+                        break;
+                    case 7:
+                        newType = PluginType.CONSTRAINTS;
+                        break;
+                    case 8:
+                        newType = PluginType.LOOP;
+                        break;
+                    case 9:
+                        newType = PluginType.BGSOURCE;
+                        break;
+                    case 10:
+                        newType = PluginType.INSULIN;
+                        break;
+                    default:
+                        newType = PluginType.GENERAL;
+                        break;
+                }
+                String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
+                String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
+                if (SP.contains(settingEnabled))
+                    p.setPluginEnabled(newType, SP.getBoolean(settingEnabled, false));
+                if (SP.contains(settingVisible))
+                    p.setFragmentVisible(newType, SP.getBoolean(settingVisible, false) && SP.getBoolean(settingEnabled, false));
+                SP.remove(settingEnabled);
+                SP.remove(settingVisible);
+                if (newType == p.getType()) {
+                    savePref(p, newType, true);
+                } else if (p.getType() == PluginType.PUMP && p instanceof ProfileInterface) {
+                    savePref(p, PluginType.PROFILE, false);
                 }
             }
         }
@@ -237,16 +283,16 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     void logPluginStatus() {
         for (PluginBase p : pluginList) {
             log.debug(p.getName() + ":" +
-                    (p.isEnabled(1) ? " GENERAL" : "") +
-                    (p.isEnabled(2) ? " TREATMENT" : "") +
-                    (p.isEnabled(3) ? " SENSITIVITY" : "") +
-                    (p.isEnabled(4) ? " PROFILE" : "") +
-                    (p.isEnabled(5) ? " APS" : "") +
-                    (p.isEnabled(6) ? " PUMP" : "") +
-                    (p.isEnabled(7) ? " CONSTRAINTS" : "") +
-                    (p.isEnabled(8) ? " LOOP" : "") +
-                    (p.isEnabled(9) ? " BGSOURCE" : "") +
-                    (p.isEnabled(10) ? " INSULIN" : "")
+                    (p.isEnabled(PluginType.GENERAL) ? " GENERAL" : "") +
+                    (p.isEnabled(PluginType.TREATMENT) ? " TREATMENT" : "") +
+                    (p.isEnabled(PluginType.SENSITIVITY) ? " SENSITIVITY" : "") +
+                    (p.isEnabled(PluginType.PROFILE) ? " PROFILE" : "") +
+                    (p.isEnabled(PluginType.APS) ? " APS" : "") +
+                    (p.isEnabled(PluginType.PUMP) ? " PUMP" : "") +
+                    (p.isEnabled(PluginType.CONSTRAINTS) ? " CONSTRAINTS" : "") +
+                    (p.isEnabled(PluginType.LOOP) ? " LOOP" : "") +
+                    (p.isEnabled(PluginType.BGSOURCE) ? " BGSOURCE" : "") +
+                    (p.isEnabled(PluginType.INSULIN) ? " INSULIN" : "")
             );
         }
     }
@@ -254,33 +300,47 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     private void verifySelectionInCategories() {
         ArrayList<PluginBase> pluginsInCategory;
 
-        // PluginBase.APS
-        activeAPS = this.determineActivePlugin(APSInterface.class, PluginBase.APS);
+        // PluginType.APS
+        activeAPS = this.determineActivePlugin(APSInterface.class, PluginType.APS);
 
-        // PluginBase.INSULIN
-        activeInsulin = this.determineActivePlugin(InsulinInterface.class, PluginBase.INSULIN);
+        // PluginType.INSULIN
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.INSULIN);
+        activeInsulin = (InsulinInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.INSULIN);
+        if (activeInsulin == null) {
+            activeInsulin = InsulinOrefRapidActingPlugin.getPlugin();
+            InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(PluginType.INSULIN, true);
+        }
+        this.setFragmentVisiblities(((PluginBase) activeInsulin).getName(), pluginsInCategory, PluginType.INSULIN);
 
-        // PluginBase.SENSITIVITY
-        activeSensitivity = this.determineActivePlugin(SensitivityInterface.class, PluginBase.SENSITIVITY);
+        // PluginType.SENSITIVITY
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.SENSITIVITY);
+        activeSensitivity = (SensitivityInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.SENSITIVITY);
+        if (activeSensitivity == null) {
+            activeSensitivity = SensitivityOref0Plugin.getPlugin();
+            SensitivityOref0Plugin.getPlugin().setPluginEnabled(PluginType.SENSITIVITY, true);
+        }
+        this.setFragmentVisiblities(((PluginBase) activeSensitivity).getName(), pluginsInCategory, PluginType.SENSITIVITY);
 
-        // PluginBase.PROFILE
-        activeProfile = this.determineActivePlugin(ProfileInterface.class, PluginBase.PROFILE);
+        // PluginType.PROFILE
+        activeProfile = this.determineActivePlugin(ProfileInterface.class, PluginType.PROFILE);
 
-        // PluginBase.BGSOURCE
-        activeBgSource = this.determineActivePlugin(BgSourceInterface.class, PluginBase.BGSOURCE);
+        // PluginType.BGSOURCE
+        activeBgSource = this.determineActivePlugin(BgSourceInterface.class, PluginType.BGSOURCE);
 
-        // PluginBase.PUMP
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.PUMP);
-        activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
-        if (activePump == null)
-            activePump = VirtualPumpPlugin.getPlugin(); // for NSClient build
-        this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginBase.PUMP);
+        // PluginType.PUMP
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.PUMP);
+        activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP);
+        if (activePump == null) {
+            activePump = VirtualPumpPlugin.getPlugin();
+            VirtualPumpPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
+        }
+        this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
 
-        // PluginBase.LOOP
-        activeLoop = this.determineActivePlugin(PluginBase.LOOP);
+        // PluginType.LOOP
+        activeLoop = this.determineActivePlugin(PluginType.LOOP);
 
-        // PluginBase.TREATMENT
-        activeTreatments = this.determineActivePlugin(PluginBase.TREATMENT);
+        // PluginType.TREATMENT
+        activeTreatments = this.determineActivePlugin(PluginType.TREATMENT);
     }
 
     /**
@@ -292,14 +352,14 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
      * @param <T>
      * @return
      */
-    private <T> T determineActivePlugin(Class<T> pluginInterface, int pluginType) {
+    private <T> T determineActivePlugin(Class<T> pluginInterface, PluginType pluginType) {
         ArrayList<PluginBase> pluginsInCategory;
         pluginsInCategory = MainApp.getSpecificPluginsListByInterface(pluginInterface);
 
         return this.determineActivePlugin(pluginsInCategory, pluginType);
     }
 
-    private <T> T determineActivePlugin(int pluginType) {
+    private <T> T determineActivePlugin(PluginType pluginType) {
         ArrayList<PluginBase> pluginsInCategory;
         pluginsInCategory = MainApp.getSpecificPluginsList(pluginType);
 
@@ -321,7 +381,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
      * @return
      */
     private <T> T determineActivePlugin(ArrayList<PluginBase> pluginsInCategory,
-                                        int pluginType) {
+                                        PluginType pluginType) {
         T activePlugin = (T) getTheOneEnabledInArray(pluginsInCategory, pluginType);
 
         if (activePlugin != null) {
@@ -333,7 +393,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     }
 
     private void setFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
-                                        int pluginType) {
+                                        PluginType pluginType) {
         if (Config.logConfigBuilder)
             log.debug("Selected interface: " + activePluginName);
         for (PluginBase p : pluginsInCategory) {
@@ -344,7 +404,7 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Nullable
-    private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory, int type) {
+    private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory, PluginType type) {
         PluginBase found = null;
         for (PluginBase p : pluginsInCategory) {
             if (p.isEnabled(type) && found == null) {
@@ -355,8 +415,8 @@ public class ConfigBuilderPlugin implements PluginBase, TreatmentsInterface {
             }
         }
         // If none enabled, enable first one
-        if (found == null && pluginsInCategory.size() > 0)
-            found = pluginsInCategory.get(0);
+        //if (found == null && pluginsInCategory.size() > 0)
+        //    found = pluginsInCategory.get(0);
         return found;
     }
 

@@ -26,9 +26,11 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
@@ -43,7 +45,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class LoopPlugin implements PluginBase {
+public class LoopPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
 
     protected static LoopPlugin loopPlugin;
@@ -54,9 +56,6 @@ public class LoopPlugin implements PluginBase {
         }
         return loopPlugin;
     }
-
-    private boolean pluginEnabled = false;
-    private boolean fragmentVisible = false;
 
     private long loopSuspendedTill = 0L; // end of manual loop suspend
     private boolean isSuperBolus = false;
@@ -76,78 +75,34 @@ public class LoopPlugin implements PluginBase {
     static public LastRun lastRun = null;
 
     public LoopPlugin() {
-        MainApp.bus().register(this);
+        super(new PluginDescription()
+                .mainType(PluginType.LOOP)
+                .fragmentClass(LoopFragment.class.getName())
+                .pluginName(R.string.loop)
+                .shortName(R.string.loop_shortname)
+                .preferencesId(R.xml.pref_closedmode)
+        );
         loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);
         isSuperBolus = SP.getBoolean("isSuperBolus", false);
         isDisconnected = SP.getBoolean("isDisconnected", false);
     }
 
     @Override
-    public String getFragmentClass() {
-        return LoopFragment.class.getName();
+    protected void onStart() {
+        super.onStart();
+        MainApp.bus().register(this);
     }
 
     @Override
-    public int getType() {
-        return PluginBase.LOOP;
+    protected void onStop() {
+        super.onStop();
+        MainApp.bus().unregister(this);
     }
 
     @Override
-    public String getName() {
-        return MainApp.instance().gs(R.string.loop);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.gs(R.string.loop_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-        return type == LOOP && pluginEnabled && pumpCapable;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-        return type == LOOP && fragmentVisible && pumpCapable;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean pluginEnabled) {
-        if (type == LOOP) this.pluginEnabled = pluginEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == LOOP) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_closedmode;
+    public boolean specialEnableCondition() {
+        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Subscribe
@@ -266,7 +221,7 @@ public class LoopPlugin implements PluginBase {
             final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
             APSResult result = null;
 
-            if (!isEnabled(PluginBase.LOOP))
+            if (!isEnabled(PluginType.LOOP))
                 return;
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -281,7 +236,7 @@ public class LoopPlugin implements PluginBase {
             if (pump.getBaseBasalRate() < 0.01d) return;
 
             APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
-            if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
+            if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
                 usedAPS.invoke(initiator);
                 result = usedAPS.getLastAPSResult();
             }

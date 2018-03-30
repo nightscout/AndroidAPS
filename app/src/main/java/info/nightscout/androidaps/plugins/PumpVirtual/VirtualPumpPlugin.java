@@ -20,6 +20,8 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -34,18 +36,22 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class VirtualPumpPlugin implements PluginBase, PumpInterface {
+public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpPlugin.class);
 
-    public static Double defaultBasalValue = 0.2d;
+    private static VirtualPumpPlugin plugin = null;
+
+    public static VirtualPumpPlugin getPlugin() {
+        loadFakingStatus();
+        if (plugin == null)
+            plugin = new VirtualPumpPlugin();
+        return plugin;
+    }
 
     static Integer batteryPercent = 50;
     static Integer reservoirInUnits = 50;
 
     private Date lastDataTime = new Date(0);
-
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
 
     private static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
@@ -64,16 +70,14 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         return fromNSAreCommingFakedExtendedBoluses;
     }
 
-    private static VirtualPumpPlugin plugin = null;
-
-    public static VirtualPumpPlugin getPlugin() {
-        loadFakingStatus();
-        if (plugin == null)
-            plugin = new VirtualPumpPlugin();
-        return plugin;
-    }
-
     public VirtualPumpPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.PUMP)
+                .fragmentClass(VirtualPumpFragment.class.getName())
+                .pluginName(R.string.virtualpump)
+                .shortName(R.string.virtualpump_shortname)
+                .preferencesId(R.xml.pref_virtualpump)
+        );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
@@ -102,72 +106,6 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
         pumpDescription.storesCarbInfo = false;
         pumpDescription.is30minBasalRatesCapable = true;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return VirtualPumpFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.virtualpump);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.virtualpump_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == PUMP && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == PUMP && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == PUMP) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PUMP) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_virtualpump;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.PUMP;
     }
 
     @Override

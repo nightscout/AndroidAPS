@@ -22,6 +22,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.utils.Round;
@@ -41,6 +42,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     public DanaRPlugin() {
+        super();
         log = LoggerFactory.getLogger(DanaRPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 
@@ -98,7 +100,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange s) {
-        if (isEnabled(PUMP)) {
+        if (isEnabled(PluginType.PUMP)) {
             boolean previousValue = useExtendedBoluses;
             useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 

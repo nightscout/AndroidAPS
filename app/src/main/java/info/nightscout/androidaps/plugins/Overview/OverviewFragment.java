@@ -84,7 +84,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -112,8 +112,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
@@ -458,7 +458,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (activeloop == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
-            if (activeloop.isEnabled(PluginBase.LOOP)) {
+            if (activeloop.isEnabled(PluginType.LOOP)) {
                 menu.add(MainApp.sResources.getString(R.string.disableloop));
                 if (!activeloop.isSuspended()) {
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor1h));
@@ -476,7 +476,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.sResources.getString(R.string.resume));
                 }
             }
-            if (!activeloop.isEnabled(PluginBase.LOOP))
+            if (!activeloop.isEnabled(PluginType.LOOP))
                 menu.add(MainApp.sResources.getString(R.string.enableloop));
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.profile));
@@ -494,9 +494,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
-            activeloop.setPluginEnabled(PluginBase.LOOP, false);
-            activeloop.setFragmentVisible(PluginBase.LOOP, false);
-            MainApp.getConfigBuilder().storeSettings();
+            activeloop.setPluginEnabled(PluginType.LOOP, false);
+            activeloop.setFragmentVisible(PluginType.LOOP, false);
+            MainApp.getConfigBuilder().storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
             MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
@@ -509,9 +509,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
-            activeloop.setPluginEnabled(PluginBase.LOOP, true);
-            activeloop.setFragmentVisible(PluginBase.LOOP, true);
-            MainApp.getConfigBuilder().storeSettings();
+            activeloop.setPluginEnabled(PluginType.LOOP, true);
+            activeloop.setFragmentVisible(PluginType.LOOP, true);
+            MainApp.getConfigBuilder().storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
@@ -581,8 +581,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
-        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
         String units = MainApp.getConfigBuilder().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
@@ -1101,8 +1101,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** Calibration & CGM buttons ****
-        boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
-        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
         boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
             if ((xDripIsBgSource || g5IsBgSource) && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {

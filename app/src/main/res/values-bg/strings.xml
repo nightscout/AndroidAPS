@@ -586,7 +586,7 @@
     <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
     <string name="careportal_pump_label">ПОМПА</string>
     <string name="date">Дата</string>
-    <string name="dia_too_short" formatted="false">DIA от %s е твърде кратка - използвай %s вместо това!</string>
+    <string name="dia_too_short" formatted="false">DIA от %f е твърде кратка - използвай %f вместо това!</string>
     <string name="free_peak_oref">Със свободен пик по Oref</string>
     <string name="insulin_oref_peak">Пик на кривата на IOB</string>
     <string name="insulin_peak_time">Време на пик [мин.]</string>

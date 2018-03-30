@@ -15,7 +15,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -36,8 +36,8 @@ public class DanaRPluginTest {
 
     @Test
     public void basalRateShouldBeLimited() throws Exception {
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         Constraint<Double> c = new Constraint<>(Constants.REALLYHIGHBASALRATE);
@@ -49,8 +49,8 @@ public class DanaRPluginTest {
 
     @Test
     public void percentBasalRateShouldBeLimited() throws Exception {
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         Constraint<Integer> c = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);

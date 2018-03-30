@@ -25,6 +25,8 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -74,21 +76,27 @@ import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache
  */
 
 @SuppressWarnings("AccessStaticViaInstance")
-public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
+public class InsightPlugin extends PluginBase implements PumpInterface, ConstraintsInterface {
+
+    private static volatile InsightPlugin plugin;
+
+    public static InsightPlugin getPlugin() {
+        if (plugin == null) {
+            plugin = new InsightPlugin();
+        }
+        return plugin;
+    }
 
     private static final long BUSY_WAIT_TIME = 20000;
-    static Integer batteryPercent = 0;
-    static Integer reservoirInUnits = 0;
-    static boolean initialized = false;
+    private static Integer batteryPercent = 0;
+    private static Integer reservoirInUnits = 0;
+    private static boolean initialized = false;
     private static volatile boolean update_pending = false;
     private static Logger log = LoggerFactory.getLogger(InsightPlugin.class);
-    private static volatile InsightPlugin plugin;
     private final InsightAsyncAdapter async = new InsightAsyncAdapter();
     private StatusTaskRunner.Result statusResult;
     private long statusResultTime = -1;
     private Date lastDataTime = new Date(0);
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
     private boolean fauxTBRcancel = true;
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
@@ -97,6 +105,13 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
     private List<BRProfileBlock.ProfileBlock> profileBlocks;
 
     private InsightPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.PUMP)
+                .fragmentClass(InsightFragment.class.getName())
+                .pluginName(R.string.insightpump)
+                .shortName(R.string.insightpump_shortname)
+                .preferencesId(R.xml.pref_insightpump)
+        );
         log("InsightPlugin instantiated");
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions?)
@@ -129,20 +144,6 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
 
-    public static InsightPlugin getPlugin() {
-        if (plugin == null) {
-            createInstance();
-        }
-        return plugin;
-    }
-
-    private static synchronized void createInstance() {
-        if (plugin == null) {
-            log("creating instance");
-            plugin = new InsightPlugin();
-        }
-    }
-
     // just log during debugging
     private static void log(String msg) {
         android.util.Log.e("INSIGHTPUMP", msg);
@@ -157,7 +158,8 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
         MainApp.bus().post(e);
     }
 
-    private void enableConnector() {
+    @Override
+    protected void onStart() {
         if (!connector_enabled) {
             synchronized (this) {
                 if (!connector_enabled) {
@@ -170,7 +172,7 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
         }
     }
 
-    private void disableConnector() {
+    protected void onStop() {
         if (connector_enabled) {
             synchronized (this) {
                 if (connector_enabled) {
@@ -180,81 +182,6 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
                 }
             }
         }
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return InsightFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.insightpump);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.instance().getString(R.string.insightpump_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        if (type == PluginBase.PUMP) return fragmentEnabled;
-        else if (type == PluginBase.CONSTRAINTS) return fragmentEnabled;
-        return false;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == PUMP && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return type == PUMP;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == PUMP) {
-            if (fragmentEnabled) {
-                enableConnector();
-            } else {
-                disableConnector();
-            }
-            this.fragmentEnabled = fragmentEnabled;
-        }
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PUMP) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_insightpump;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.PUMP;
     }
 
     @Override
@@ -593,7 +520,6 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
         pumpEnactResult.percent = percent_amount;
         pumpEnactResult.success = ms.success();
-        pumpEnactResult.isTempCancel = percent_amount == 100; // 100% temp basal is a cancellation
         pumpEnactResult.comment = ms.getCommandComment();
 
 
@@ -644,7 +570,6 @@ public class InsightPlugin implements PluginBase, PumpInterface, ConstraintsInte
         PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
         pumpEnactResult.percent = percent;
         pumpEnactResult.success = ms.success();
-        pumpEnactResult.isTempCancel = percent == 100; // 100% temp basal is a cancellation
         pumpEnactResult.comment = ms.getCommandComment();
 
         if (pumpEnactResult.success) {
