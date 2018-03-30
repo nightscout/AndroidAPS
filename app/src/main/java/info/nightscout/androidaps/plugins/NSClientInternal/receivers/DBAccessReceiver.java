@@ -94,7 +94,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                     UploadQueue.add(dbr);
                 }
                 if (collection.equals("treatments")) {
-                    genereateTreatmentOfflineBroadcast(dbr);
+                    generateTreatmentOfflineBroadcast(dbr);
                 }
             }
 
@@ -109,7 +109,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
         return nsClientPlugin.isEnabled(PluginBase.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
     }
 
-    public void genereateTreatmentOfflineBroadcast(DbRequest request) {
+    public void generateTreatmentOfflineBroadcast(DbRequest request) {
         if (request.action.equals("dbAdd")) {
             try {
                 JSONObject data = new JSONObject(request.data);
