@@ -18,10 +18,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.SP;
 
 /**
