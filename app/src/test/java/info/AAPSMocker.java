@@ -66,6 +66,16 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.short_avgdelta)).thenReturn("Short avg. delta");
         when(MainApp.gs(R.string.long_avgdelta)).thenReturn("Long avg. delta");
         when(MainApp.gs(R.string.zerovalueinprofile)).thenReturn("Invalid profile: %s");
+        when(MainApp.gs(R.string.success)).thenReturn("Success");
+        when(MainApp.gs(R.string.enacted)).thenReturn("Enacted");
+        when(MainApp.gs(R.string.comment)).thenReturn("Comment");
+        when(MainApp.gs(R.string.smb_shortname)).thenReturn("SMB");
+        when(MainApp.gs(R.string.canceltemp)).thenReturn("Cancel temp basal");
+        when(MainApp.gs(R.string.duration)).thenReturn("Duration");
+        when(MainApp.gs(R.string.percent)).thenReturn("Percent");
+        when(MainApp.gs(R.string.absolute)).thenReturn("Absolute");
+        when(MainApp.gs(R.string.waitingforpumpresult)).thenReturn("Waiting for result");
+        when(MainApp.gs(R.string.insulin_unit_shortname)).thenReturn("U");
     }
 
     public static MainApp mockMainApp() {

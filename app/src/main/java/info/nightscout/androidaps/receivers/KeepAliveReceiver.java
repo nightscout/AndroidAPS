@@ -18,11 +18,12 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.LocalAlertUtils;
-import info.nightscout.utils.SP;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -59,12 +60,12 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
             LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
 
-            if (!pump.isThisProfileSet(profile)) {
-                MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
+            if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                MainApp.bus().post(new EventProfileSwitchChange());
             } else if (isStatusOutdated && !pump.isBusy()) {
-                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
+                ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
             } else if (isBasalOutdated && !pump.isBusy()) {
-                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
+                ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
             }
         }
     }
