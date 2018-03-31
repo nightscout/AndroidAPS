@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.PumpDanaR;
+package info.nightscout.androidaps.plugins.PumpDanaR;
 
 import android.content.Context;
 
@@ -17,8 +17,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 

@@ -282,9 +282,6 @@ public class MainApp extends Application {
     }
 
     public static DatabaseHelper getDbHelper() {
-        if (sDatabaseHelper == null) {
-            sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
-        }
         return sDatabaseHelper;
     }
 
@@ -320,21 +317,6 @@ public class MainApp extends Application {
         }
         return newList;
     }
-
-    /*
-    @Nullable
-    public static InsulinInterface getInsulinIterfaceById(int id) {
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getType() == PluginType.INSULIN && ((InsulinInterface) p).getId() == id)
-                    return (InsulinInterface) p;
-            }
-        } else {
-            log.error("InsulinInterface not found");
-        }
-        return null;
-    }
-    */
 
     public static ArrayList<PluginBase> getSpecificPluginsVisibleInList(PluginType type) {
         ArrayList<PluginBase> newList = new ArrayList<>();
@@ -399,7 +381,7 @@ public class MainApp extends Application {
         return engineeringMode || !devBranch;
     }
 
-    private String getLogDirectory() {
+    public String getLogDirectory() {
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         return lc.getProperty("EXT_FILES_DIR");
     }
@@ -407,6 +389,9 @@ public class MainApp extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        sDatabaseHelper.close();
+        if (sDatabaseHelper != null) {
+            sDatabaseHelper.close();
+            sDatabaseHelper = null;
+        }
     }
 }
