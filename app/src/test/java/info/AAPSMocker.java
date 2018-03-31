@@ -76,6 +76,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.absolute)).thenReturn("Absolute");
         when(MainApp.gs(R.string.waitingforpumpresult)).thenReturn("Waiting for result");
         when(MainApp.gs(R.string.insulin_unit_shortname)).thenReturn("U");
+        when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("Basal value replaced by minimal supported value");
+        when(MainApp.gs(R.string.basalprofilenotaligned)).thenReturn("Basal values not aligned to hours: %s");
     }
 
     public static MainApp mockMainApp() {
@@ -125,4 +127,31 @@ public class AAPSMocker {
         } catch (JSONException ignored) {}
         return profile;
     }
+
+    private static MockedBus bus = new MockedBus();
+
+    public static void prepareMockedBus() {
+        when(MainApp.bus()).thenReturn(bus);
+    }
+
+    public static class MockedBus extends Bus {
+        public boolean registered = false;
+        public boolean notificationSent = false;
+
+        @Override
+        public void register(Object event) {
+            registered = true;
+        }
+
+        @Override
+        public void unregister(Object event) {
+            registered = false;
+        }
+
+        @Override
+        public void post(Object event) {
+            notificationSent = true;
+        }
+    }
+
 }

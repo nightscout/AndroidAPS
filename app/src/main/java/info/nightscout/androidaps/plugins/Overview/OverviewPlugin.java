@@ -61,12 +61,12 @@ public class OverviewPlugin extends PluginBase {
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         MainApp.bus().register(this);
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         MainApp.bus().unregister(this);
     }
 

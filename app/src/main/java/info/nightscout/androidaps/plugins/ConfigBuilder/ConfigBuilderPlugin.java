@@ -106,13 +106,13 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         MainApp.bus().register(this);
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
         MainApp.bus().unregister(this);
     }
