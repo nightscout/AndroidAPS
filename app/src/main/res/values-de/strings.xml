@@ -567,7 +567,7 @@
     <string formatted="false" name="dia_too_short">DIA von %f ist zu kurz - AAPS nutzt stattdessen %f!</string>
     <string name="danar_stats_warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
     <string name="danar_stats_ratio">Verhältnis</string>
-    <string name="activate_profile">AKTIVIERE PROFIL</string>
+    <string name="activate_profile">Aktiviere profil</string>
     <string name="activity_duration">Aktivitätsdauer</string>
     <string name="activity_target">Aktivitätsziel</string>
     <string name="bloodsugarmeasurementalert">BZ-Messung</string>

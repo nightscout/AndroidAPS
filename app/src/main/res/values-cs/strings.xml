@@ -570,7 +570,7 @@
     <string name="unsupportednsversion">Nepodporovaná verze Nightscoutu</string>
     <string name="uploader">Uploader</string>
     <string name="uploader_short">UPLD</string>
-    <string name="activate_profile">AKTIVOVAT PROFIL</string>
+    <string name="activate_profile">Aktivovat profil</string>
     <string name="danar_visualizeextendedaspercentage_title">Zobrazovat prodloužený bolus v %</string>
     <string name="date">Datum</string>
     <string name="dia_too_short" formatted="false">DIA %f je příliž krátké - použito %f !</string>

@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 /**
@@ -129,7 +130,9 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS))
                     apsEnabled = true;
 
-                return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && apsEnabled && vpUploadNeeded,
+                boolean profileSwitchExists = MainApp.getConfigBuilder().getProfileSwitchFromHistory(DateUtil.now()) != null;
+
+                return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && apsEnabled && vpUploadNeeded && profileSwitchExists,
                         MainApp.gs(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
                                 + "\n" + MainApp.gs(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientPlugin.getPlugin().hasWritePermission())
                                 + (isVirtualPump ? "\n" + MainApp.gs(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
@@ -137,6 +140,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
                                 + "\n" + MainApp.gs(R.string.hasbgdata) + ": " + yesOrNo(hasBGData)
                                 + "\n" + MainApp.gs(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
                                 + "\n" + MainApp.gs(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
+                                + "\n" + MainApp.gs(R.string.activate_profile) + ": " + yesOrNo(profileSwitchExists)
                 );
             case 1:
                 return new RequirementResult(manualEnacts >= manualEnactsNeeded,

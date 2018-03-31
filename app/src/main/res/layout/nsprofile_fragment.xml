@@ -10,11 +10,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp" />
 
-    <include
-        layout="@layout/profileviewer_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <Button
         android:id="@+id/nsprofile_profileswitch"
         style="?android:attr/buttonStyle"
@@ -23,5 +18,11 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/activate_profile"
         android:textColor="@color/colorProfileSwitchButton" />
+
+    <include
+        layout="@layout/profileviewer_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>
