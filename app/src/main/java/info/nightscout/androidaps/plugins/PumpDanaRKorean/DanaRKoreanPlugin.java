@@ -26,6 +26,8 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
+import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 
@@ -46,11 +48,6 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         super();
         log = LoggerFactory.getLogger(DanaRKoreanPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
-
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
@@ -77,6 +74,22 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = true;
+    }
+
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        MainApp.bus().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
+
+        MainApp.bus().unregister(this);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

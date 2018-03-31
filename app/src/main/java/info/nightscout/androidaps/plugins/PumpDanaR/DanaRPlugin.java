@@ -46,11 +46,6 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         log = LoggerFactory.getLogger(DanaRPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
-
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d;
 
@@ -76,6 +71,22 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = true;
+    }
+
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, DanaRExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        MainApp.bus().register(this);
+   }
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
+
+        MainApp.bus().unregister(this);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

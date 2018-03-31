@@ -23,6 +23,8 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
+import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -43,11 +45,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private DanaRv2Plugin() {
         log = LoggerFactory.getLogger(DanaRv2Plugin.class);
         useExtendedBoluses = false;
-
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRv2ExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d;
@@ -76,6 +73,23 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = true;
+    }
+
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, DanaRv2ExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        MainApp.bus().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
+
+        MainApp.bus().unregister(this);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
