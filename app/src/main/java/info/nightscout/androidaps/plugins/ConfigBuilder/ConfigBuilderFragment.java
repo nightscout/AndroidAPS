@@ -40,7 +40,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingPlugin;
+import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
@@ -383,7 +383,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                 if (type == PluginType.PUMP)
                     VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginType.INSULIN)
-                    InsulinFastactingPlugin.getPlugin().setPluginEnabled(type, true);
+                    InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginType.SENSITIVITY)
                     SensitivityOref0Plugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginType.PROFILE)
