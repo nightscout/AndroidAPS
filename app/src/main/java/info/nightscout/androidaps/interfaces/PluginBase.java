@@ -1,15 +1,16 @@
 package info.nightscout.androidaps.interfaces;
 
-import java.util.Date;
-import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 
 /**
  * Created by mike on 09.06.2016.
  */
 public abstract class PluginBase {
+    private static Logger log = LoggerFactory.getLogger(PluginBase.class);
+
     public enum State {
         NOT_INITIALIZED,
         ENABLED,
@@ -79,10 +80,6 @@ public abstract class PluginBase {
         return false;
     }
 
-    public boolean canBeHidden(PluginType type) {
-        return pluginDescription.canBeHidden;
-    }
-
     public boolean hasFragment() {
         return pluginDescription.fragmentClass != null;
     }
@@ -100,6 +97,7 @@ public abstract class PluginBase {
                 if (state != State.ENABLED) {
                     onStateChange(type, state, State.ENABLED);
                     state = State.ENABLED;
+                    log.debug("Starting: " + getName());
                     onStart();
                 }
             } else { // disabling plugin
@@ -107,6 +105,7 @@ public abstract class PluginBase {
                     onStateChange(type, state, State.ENABLED);
                     state = State.DISABLED;
                     onStop();
+                    log.debug("Stopping: " + getName());
                 }
             }
         } else if (type == PluginType.PROFILE) {

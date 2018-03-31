@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -65,6 +66,10 @@ public class NSClientPlugin extends PluginBase {
                 .shortName(R.string.nsclientinternal_shortname)
                 .preferencesId(R.xml.pref_nsclientinternal)
         );
+
+        if (Config.NSCLIENT || Config.G5UPLOADER) {
+            pluginDescription.alwaysEnabled(true).visibleByDefault(true);
+        }
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
 
@@ -90,11 +95,6 @@ public class NSClientPlugin extends PluginBase {
         context.unbindService(mConnection);
     }
 
-    @Override
-    public boolean specialShowInListCondition() {
-        return !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
@@ -105,7 +105,8 @@ public class NSClientPlugin extends PluginBase {
         public void onServiceConnected(ComponentName name, IBinder service) {
             log.debug("Service is connected");
             NSClientService.LocalBinder mLocalBinder = (NSClientService.LocalBinder) service;
-            nsClientService = mLocalBinder.getServiceInstance();
+            if (mLocalBinder != null) // is null when running in roboelectric
+                nsClientService = mLocalBinder.getServiceInstance();
         }
     };
 

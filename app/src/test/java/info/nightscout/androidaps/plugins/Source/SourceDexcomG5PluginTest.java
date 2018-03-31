@@ -16,11 +16,6 @@ public class SourceDexcomG5PluginTest {
     }
 
     @Test
-    public void specialShowInListCondition() {
-        Assert.assertEquals(!Config.G5UPLOADER, SourceDexcomG5Plugin.getPlugin().specialShowInListCondition());
-    }
-
-    @Test
     public void advancedFilteringSupported() {
         Assert.assertEquals(true, SourceDexcomG5Plugin.getPlugin().advancedFilteringSupported());
     }

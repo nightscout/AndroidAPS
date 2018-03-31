@@ -45,6 +45,9 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
                 .fragmentClass(NSProfileFragment.class.getName())
                 .pluginName(R.string.profileviewer)
                 .shortName(R.string.profileviewer_shortname)
+                .alwaysEnabled(Config.NSCLIENT)
+                .alwayVisible(Config.NSCLIENT)
+                .showInList(!Config.NSCLIENT)
         );
         loadNSProfile();
     }
@@ -57,11 +60,6 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public boolean specialShowInListCondition() {
-        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Subscribe

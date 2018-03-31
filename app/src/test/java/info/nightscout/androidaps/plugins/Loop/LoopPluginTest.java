@@ -42,7 +42,6 @@ public class LoopPluginTest {
         Assert.assertEquals(PluginType.LOOP, loopPlugin.getType());
         Assert.assertEquals("Loop", loopPlugin.getName());
         Assert.assertEquals("LOOP", loopPlugin.getNameShort());
-        Assert.assertEquals(true, loopPlugin.canBeHidden(PluginType.LOOP));
         Assert.assertEquals(true, loopPlugin.hasFragment());
         Assert.assertEquals(true, loopPlugin.showInList(PluginType.LOOP));
         Assert.assertEquals(R.xml.pref_closedmode, loopPlugin.getPreferencesId());

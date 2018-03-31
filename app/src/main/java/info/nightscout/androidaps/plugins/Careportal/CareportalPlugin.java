@@ -26,9 +26,4 @@ public class CareportalPlugin extends PluginBase {
         );
     }
 
-    @Override
-    public boolean specialShowInListCondition() {
-        return !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
 }

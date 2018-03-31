@@ -77,11 +77,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
-    public boolean specialShowInListCondition() {
-        return !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
-    @Override
     protected void onStart() {
         MainApp.bus().register(this);
         initializeTempBasalData();

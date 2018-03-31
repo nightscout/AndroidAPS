@@ -27,13 +27,9 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.DexcomG5)
                 .shortName(R.string.dexcomG5_shortname)
+                .showInList(!Config.NSCLIENT)
                 .preferencesId(R.xml.pref_dexcomg5)
         );
-    }
-
-    @Override
-    public boolean specialShowInListCondition() {
-        return !Config.G5UPLOADER;
     }
 
     @Override

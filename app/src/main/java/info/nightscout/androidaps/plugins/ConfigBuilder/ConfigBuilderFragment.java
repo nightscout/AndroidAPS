@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
@@ -142,8 +143,10 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         setListViewHeightBasedOnChildren(bgsourceListView);
         pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP), PluginType.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP).size() == 0 || Config.NSCLIENT || Config.G5UPLOADER) {
             pumpLabel.setVisibility(View.GONE);
+            pumpListView.setVisibility(View.GONE);
+        }
         setListViewHeightBasedOnChildren(pumpListView);
         loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP), PluginType.LOOP);
         loopListView.setAdapter(loopDataAdapter);
@@ -278,9 +281,12 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             holder.checkboxVisible.setTag(plugin);
             holder.settings.setTag(plugin);
 
-            if (!plugin.canBeHidden(type)) {
+            if (plugin.pluginDescription.alwaysEnabled) {
                 holder.checkboxEnabled.setEnabled(false);
-                holder.checkboxVisible.setEnabled(false);
+            }
+
+           if (plugin.pluginDescription.alwayVisible) {
+                holder.checkboxEnabled.setEnabled(false);
             }
 
             if (!plugin.isEnabled(type)) {

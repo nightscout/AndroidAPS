@@ -162,7 +162,7 @@ public class MainApp extends Application {
             if (Config.HWPUMPS && engineeringMode)
                 pluginsList.add(ComboPlugin.getPlugin()); // <-- Enable Combo plugin here
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
-            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
+            pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
             if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
             if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());

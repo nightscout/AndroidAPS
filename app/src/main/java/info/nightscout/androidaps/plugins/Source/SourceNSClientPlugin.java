@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Source;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -24,6 +25,8 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.nsclientbg)
+                .showInList(!Config.NSCLIENT)
+                .alwaysEnabled(Config.NSCLIENT)
         );
     }
 

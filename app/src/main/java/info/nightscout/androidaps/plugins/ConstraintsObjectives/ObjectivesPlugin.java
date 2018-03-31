@@ -49,7 +49,8 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
                 .fragmentClass(ObjectivesFragment.class.getName())
-                .alwaysEnabled(true)
+                .alwaysEnabled(!Config.NSCLIENT && !Config.G5UPLOADER)
+                .showInList(!Config.NSCLIENT && !Config.G5UPLOADER)
                 .pluginName(R.string.objectives)
                 .shortName(R.string.objectives_shortname)
         );
@@ -61,11 +62,6 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     public boolean specialEnableCondition() {
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
-    }
-
-    @Override
-    public boolean specialShowInListCondition() {
-        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     public class Objective {

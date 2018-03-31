@@ -27,12 +27,6 @@ public class PluginDescriptionTest {
     }
 
     @Test
-    public void canBeHiddenTest() {
-        PluginDescription pluginDescription = new PluginDescription().canBeHidden(false);
-        Assert.assertEquals(false, pluginDescription.canBeHidden);
-    }
-
-    @Test
     public void alwaysEnabledTest() {
         PluginDescription pluginDescription = new PluginDescription().alwaysEnabled(true);
         Assert.assertEquals(true, pluginDescription.alwaysEnabled);

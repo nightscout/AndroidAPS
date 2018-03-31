@@ -177,7 +177,7 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
         String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
         if (SP.contains(settingEnabled))
             p.setPluginEnabled(type, SP.getBoolean(settingEnabled, false));
-        else if (p.getType() == type && p.pluginDescription.enableByDefault) {
+        else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true);
         }
         log.debug("Loaded: " + settingEnabled + ":" + p.isEnabled(type));

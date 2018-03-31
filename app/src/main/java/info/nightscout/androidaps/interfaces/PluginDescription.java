@@ -3,7 +3,6 @@ package info.nightscout.androidaps.interfaces;
 public class PluginDescription {
     PluginType mainType = PluginType.GENERAL;
     String fragmentClass = null;
-    boolean canBeHidden = true;
     public boolean alwayVisible = false;
     public boolean neverVisible = false;
     public boolean alwaysEnabled = false;
@@ -22,11 +21,6 @@ public class PluginDescription {
 
     public PluginDescription fragmentClass(String fragmentClass) {
         this.fragmentClass = fragmentClass;
-        return this;
-    }
-
-    public PluginDescription canBeHidden(boolean canBeHidden) {
-        this.canBeHidden = canBeHidden;
         return this;
     }
 

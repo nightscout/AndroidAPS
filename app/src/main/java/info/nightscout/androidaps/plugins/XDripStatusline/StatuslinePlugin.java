@@ -74,11 +74,6 @@ public class StatuslinePlugin extends PluginBase {
     }
 
     @Override
-    public boolean specialShowInListCondition() {
-        return !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         MainApp.bus().register(this);
