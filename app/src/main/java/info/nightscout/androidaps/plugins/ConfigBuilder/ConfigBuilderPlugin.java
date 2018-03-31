@@ -192,12 +192,14 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
         }
     }
 
+    // Detect settings prior 1.60
     private void upgradeSettings() {
         if (!SP.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
         if (Config.logPrefsChange)
             log.debug("Upgrading stored settings");
         for (PluginBase p : pluginList) {
+            log.debug("Processing " + p.getName());
             for (int type = 1; type < 11; type++) {
                 PluginType newType;
                 switch (type) {
@@ -250,7 +252,6 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
                 }
             }
         }
-        verifySelectionInCategories();
     }
 
     public static CommandQueue getCommandQueue() {

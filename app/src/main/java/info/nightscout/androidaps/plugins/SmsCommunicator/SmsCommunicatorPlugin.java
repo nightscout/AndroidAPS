@@ -138,7 +138,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
     }
 
     @Subscribe
-    private void processSettings(final EventPreferenceChange ev) {
+    public void processSettings(final EventPreferenceChange ev) {
         if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
             String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 
