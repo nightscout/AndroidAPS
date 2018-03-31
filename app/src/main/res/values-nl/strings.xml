@@ -587,7 +587,7 @@
     <string name="activate_profile">Activeer profiel</string>
     <string name="date">Datum</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="dia_too_short" formatted="false">DIA van %s te kort -  %s wordt inplaats gebruikt!\"</string>
+    <string name="dia_too_short" formatted="false">DIA van %f te kort -  %f wordt inplaats gebruikt!\"</string>
     <string name="insulin_oref_peak">IOB curve piek tijd</string>
     <string name="insulin_peak_time">Piek tijd [min]</string>
     <string name="invalid">Ongeldig</string>

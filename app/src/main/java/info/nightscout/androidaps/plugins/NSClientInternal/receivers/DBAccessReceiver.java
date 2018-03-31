@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
@@ -106,7 +106,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
 
     public boolean shouldUpload() {
         NSClientPlugin nsClientPlugin = MainApp.getSpecificPlugin(NSClientPlugin.class);
-        return nsClientPlugin.isEnabled(PluginBase.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
+        return nsClientPlugin.isEnabled(PluginType.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
     }
 
     public void generateTreatmentOfflineBroadcast(DbRequest request) {

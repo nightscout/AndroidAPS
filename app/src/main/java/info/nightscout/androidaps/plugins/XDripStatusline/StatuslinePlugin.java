@@ -22,6 +22,8 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -31,19 +33,7 @@ import info.nightscout.utils.DecimalFormatter;
  * Created by adrian on 17/11/16.
  */
 
-public class StatuslinePlugin implements PluginBase {
-
-    //broadcast related constants
-    private static final String EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline";
-    private static final String ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline";
-    private static final String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE";
-
-
-    private boolean fragmentEnabled = false;
-    private boolean lastLoopStatus;
-
-    private final Context ctx;
-    private SharedPreferences mPrefs;
+public class StatuslinePlugin extends PluginBase {
 
     private static StatuslinePlugin statuslinePlugin;
 
@@ -51,8 +41,19 @@ public class StatuslinePlugin implements PluginBase {
         return statuslinePlugin;
     }
 
-    public static StatuslinePlugin initPlugin(Context ctx) {
+    //broadcast related constants
+    private static final String EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline";
+    private static final String ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline";
+    private static final String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE";
 
+
+    private boolean lastLoopStatus;
+
+    private final Context ctx;
+    private SharedPreferences mPrefs;
+
+
+    public static StatuslinePlugin initPlugin(Context ctx) {
         if (statuslinePlugin == null) {
             statuslinePlugin = new StatuslinePlugin(ctx);
         }
@@ -60,100 +61,43 @@ public class StatuslinePlugin implements PluginBase {
         return statuslinePlugin;
     }
 
-    private StatuslinePlugin(Context ctx) {
+    public StatuslinePlugin(Context ctx) {
+        super(new PluginDescription()
+                .mainType(PluginType.GENERAL)
+                .pluginName(R.string.xdripstatus)
+                .shortName(R.string.xdripstatus_shortname)
+                .neverVisible(true)
+                .preferencesId(R.xml.pref_xdripstatus)
+        );
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
     @Override
-    public int getType() {
-        return PluginBase.GENERAL;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return ctx.getString(R.string.xdripstatus);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.xdripstatus_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == GENERAL && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return false;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return false;
-    }
-
-    @Override
-    public boolean showInList(int type) {
+    public boolean specialShowInListCondition() {
         return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == GENERAL) {
-            this.fragmentEnabled = fragmentEnabled;
-
-            if (fragmentEnabled) {
-                try {
-                    MainApp.bus().register(this);
-                } catch (Exception e) {
-                }
-                sendStatus();
-            } else {
-                try {
-                    MainApp.bus().unregister(this);
-                } catch (Exception e) {
-                }
-                sendStatus();
-            }
-        }
+    protected void onStart() {
+        super.onStart();
+        MainApp.bus().register(this);
+        sendStatus();
     }
 
     @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        // do nothing, no gui
+    protected void onStop() {
+        super.onStop();
+        MainApp.bus().unregister(this);
+        sendStatus();
     }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_xdripstatus;
-    }
-
 
     private void sendStatus() {
         String status = ""; // sent once on disable
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (fragmentEnabled && profile != null) {
+        if (isEnabled(PluginType.GENERAL) && profile != null) {
             status = buildStatusString(profile);
         }
 
@@ -171,10 +115,10 @@ public class StatuslinePlugin implements PluginBase {
         String status = "";
         LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
 
-        if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
+        if (activeloop != null && !activeloop.isEnabled(PluginType.LOOP)) {
             status += ctx.getString(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
-        } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
+        } else if (activeloop != null && activeloop.isEnabled(PluginType.LOOP)) {
             lastLoopStatus = true;
         }
 
@@ -246,14 +190,9 @@ public class StatuslinePlugin implements PluginBase {
         LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (activeloop == null) return;
 
-        if ((lastLoopStatus != activeloop.isEnabled(PluginBase.LOOP))) {
+        if ((lastLoopStatus != activeloop.isEnabled(PluginType.LOOP))) {
             sendStatus();
         }
-    }
-
-
-    public boolean isEnabled() {
-        return fragmentEnabled;
     }
 
 }

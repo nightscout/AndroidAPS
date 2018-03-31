@@ -24,9 +24,10 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.FabricPrivacy;
 
-public class ObjectivesFragment extends Fragment {
+public class ObjectivesFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
 
     RecyclerView recyclerView;
@@ -214,15 +215,13 @@ public class ObjectivesFragment extends Fragment {
         return null;
     }
 
-    void updateGUI() {
+    @Override
+    public void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(ObjectivesPlugin.objectives);
-                    recyclerView.setAdapter(adapter);
-                }
+            activity.runOnUiThread(() -> {
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(ObjectivesPlugin.objectives);
+                recyclerView.setAdapter(adapter);
             });
     }
 

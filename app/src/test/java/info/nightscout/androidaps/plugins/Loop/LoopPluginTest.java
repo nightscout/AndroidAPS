@@ -17,6 +17,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.SP;
@@ -37,30 +38,30 @@ public class LoopPluginTest {
 
     @Test
     public void testPluginInterface() {
-        Assert.assertEquals(LoopFragment.class.getName(), loopPlugin.getFragmentClass());
-        Assert.assertEquals(PluginBase.LOOP, loopPlugin.getType());
+        Assert.assertEquals(LoopFragment.class.getName(), loopPlugin.pluginDescription.getFragmentClass());
+        Assert.assertEquals(PluginType.LOOP, loopPlugin.getType());
         Assert.assertEquals("Loop", loopPlugin.getName());
         Assert.assertEquals("LOOP", loopPlugin.getNameShort());
-        Assert.assertEquals(true, loopPlugin.canBeHidden(PluginBase.LOOP));
+        Assert.assertEquals(true, loopPlugin.canBeHidden(PluginType.LOOP));
         Assert.assertEquals(true, loopPlugin.hasFragment());
-        Assert.assertEquals(true, loopPlugin.showInList(PluginBase.LOOP));
+        Assert.assertEquals(true, loopPlugin.showInList(PluginType.LOOP));
         Assert.assertEquals(R.xml.pref_closedmode, loopPlugin.getPreferencesId());
 
         // Plugin is disabled by default
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginBase.LOOP));
-        loopPlugin.setPluginEnabled(PluginBase.LOOP, true);
-        Assert.assertEquals(true, loopPlugin.isEnabled(PluginBase.LOOP));
+        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP));
+        loopPlugin.setPluginEnabled(PluginType.LOOP, true);
+        Assert.assertEquals(true, loopPlugin.isEnabled(PluginType.LOOP));
 
         // No temp basal capable pump should disable plugin
         virtualPumpPlugin.getPumpDescription().isTempBasalCapable = false;
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginBase.LOOP));
+        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP));
         virtualPumpPlugin.getPumpDescription().isTempBasalCapable = true;
 
 
         // Fragment is hidden by default
-        Assert.assertEquals(false, loopPlugin.isVisibleInTabs(PluginBase.LOOP));
-        loopPlugin.setFragmentVisible(PluginBase.LOOP, true);
-        Assert.assertEquals(true, loopPlugin.isVisibleInTabs(PluginBase.LOOP));
+        Assert.assertEquals(false, loopPlugin.isFragmentVisible());
+        loopPlugin.setFragmentVisible(PluginType.LOOP, true);
+        Assert.assertEquals(true, loopPlugin.isFragmentVisible());
 
     }
     

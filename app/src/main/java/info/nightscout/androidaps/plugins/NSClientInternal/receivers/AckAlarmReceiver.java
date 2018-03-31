@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
@@ -27,7 +28,7 @@ public class AckAlarmReceiver extends BroadcastReceiver {
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 AckAlarmReceiver.class.getSimpleName());
         NSClientPlugin nsClientPlugin = MainApp.getSpecificPlugin(NSClientPlugin.class);
-        if (!nsClientPlugin.isEnabled(PluginBase.GENERAL)) {
+        if (!nsClientPlugin.isEnabled(PluginType.GENERAL)) {
             return;
         }
         if (SP.getBoolean(R.string.key_ns_noupload, false)) {

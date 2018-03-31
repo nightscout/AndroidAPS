@@ -564,7 +564,7 @@
     <string name="insulin_peak_time">Peak Time [min]</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
-    <string formatted="false" name="dia_too_short">DIA von %s ist zu kurz - AAPS nutzt stattdessen %s!</string>
+    <string formatted="false" name="dia_too_short">DIA von %f ist zu kurz - AAPS nutzt stattdessen %f!</string>
     <string name="danar_stats_warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
     <string name="danar_stats_ratio">Verhältnis</string>
     <string name="activate_profile">AKTIVIERE PROFIL</string>

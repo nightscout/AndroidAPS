@@ -24,6 +24,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
@@ -31,7 +33,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientServ
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
-public class NSClientPlugin implements PluginBase {
+public class NSClientPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientPlugin.class);
 
     static NSClientPlugin nsClientPlugin;
@@ -42,9 +44,6 @@ public class NSClientPlugin implements PluginBase {
         }
         return nsClientPlugin;
     }
-
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
 
     public Handler handler;
 
@@ -58,8 +57,14 @@ public class NSClientPlugin implements PluginBase {
 
     public NSClientService nsClientService = null;
 
-    NSClientPlugin() {
-        MainApp.bus().register(this);
+    public NSClientPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.GENERAL)
+                .fragmentClass(NSClientFragment.class.getName())
+                .pluginName(R.string.nsclientinternal)
+                .shortName(R.string.nsclientinternal_shortname)
+                .preferencesId(R.xml.pref_nsclientinternal)
+        );
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
 
@@ -68,76 +73,26 @@ public class NSClientPlugin implements PluginBase {
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
+    }
 
+    @Override
+    protected void onStart() {
+        MainApp.bus().register(this);
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    public int getType() {
-        return PluginBase.GENERAL;
+    protected void onStop() {
+        MainApp.bus().unregister(this);
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
     }
 
     @Override
-    public String getFragmentClass() {
-        return NSClientFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.sResources.getString(R.string.nsclientinternal);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.nsclientinternal_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == GENERAL && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == GENERAL && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
+    public boolean specialShowInListCondition() {
         return !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == GENERAL) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == GENERAL) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_nsclientinternal;
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

@@ -34,6 +34,8 @@ import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
@@ -43,7 +45,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
+public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(TreatmentsPlugin.class);
 
     private static TreatmentsPlugin treatmentsPlugin;
@@ -63,82 +65,35 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     private final static Intervals<TempTarget> tempTargets = new OverlappingIntervals<>();
     private final static ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
-
-    @Override
-    public String getFragmentClass() {
-        return TreatmentsFragment.class.getName();
+    public TreatmentsPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.TREATMENT)
+                .fragmentClass(TreatmentsFragment.class.getName())
+                .pluginName(R.string.treatments)
+                .shortName(R.string.treatments_shortname)
+                .preferencesId(R.xml.pref_absorption_oref0)
+                .alwaysEnabled(true)
+        );
     }
 
     @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.treatments);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.treatments_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == TREATMENT && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == TREATMENT && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
+    public boolean specialShowInListCondition() {
         return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == TREATMENT) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == TREATMENT) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.TREATMENT;
-    }
-
-    private TreatmentsPlugin() {
+    protected void onStart() {
         MainApp.bus().register(this);
         initializeTempBasalData();
         initializeTreatmentData();
         initializeExtendedBolusData();
         initializeTempTargetData();
         initializeProfileSwitchData();
+    }
+
+    @Override
+    protected void onStop() {
+        MainApp.bus().register(this);
     }
 
     private static void initializeTreatmentData() {

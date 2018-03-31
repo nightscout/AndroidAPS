@@ -31,11 +31,13 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -63,14 +65,18 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
+public class ComboPlugin extends PluginBase implements PumpInterface, ConstraintsInterface {
     private static final Logger log = LoggerFactory.getLogger(ComboPlugin.class);
     public static final String COMBO_TBRS_SET = "combo_tbrs_set";
     public static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
     private static ComboPlugin plugin = null;
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
+
+    public static ComboPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new ComboPlugin();
+        return plugin;
+    }
 
     private final static PumpDescription pumpDescription = new PumpDescription();
 
@@ -147,42 +153,21 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
 
-    public static ComboPlugin getPlugin() {
-        if (plugin == null)
-            plugin = new ComboPlugin();
-        return plugin;
-    }
-
     private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
             .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
 
     private ComboPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.PUMP)
+                .fragmentClass(ComboFragment.class.getName())
+                .pluginName(R.string.combopump)
+                .shortName(R.string.combopump_shortname)
+        );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
     }
 
     public ComboPump getPump() {
         return pump;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return ComboFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.gs(R.string.combopump);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.gs(R.string.combopump_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
     }
 
     String getStateSummary() {
@@ -201,53 +186,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             return MainApp.gs(R.string.loopdisabled);
         }
         return MainApp.gs(R.string.combo_pump_state_running);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        if (type == PluginBase.PUMP) return fragmentEnabled;
-        else if (type == PluginBase.CONSTRAINTS) return fragmentEnabled;
-        return false;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == PUMP && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return type == PUMP;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == PUMP) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PUMP) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.PUMP;
     }
 
     @Override
@@ -360,9 +298,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             double rate = profile.getBasalTimeFromMidnight(i * 60 * 60);
 
             /*The Combo pump does hava a different granularity for basal rate:
-            * 0.01 - if below 1U/h
-            * 0.05 - if above 1U/h
-            * */
+             * 0.01 - if below 1U/h
+             * 0.05 - if above 1U/h
+             * */
 
             if (rate < 1) {
                 //round to 0.01 granularity;
@@ -1439,7 +1377,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public PumpEnactResult loadTDDs() {
-        
+
         PumpEnactResult result = new PumpEnactResult();
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
         if (result.success) {
@@ -1447,9 +1385,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (tdds != null) {
                 HashMap<Long, TDD> map = new HashMap<>();
                 for (int i = 0; i < tdds.size(); i++) {
-                   Tdd currTdd = tdds.get(i);
-                   if(currTdd.total < 1) continue; //cases where dummy days are introduced (e.g. Battery change with date loss)
-                    if(map.containsKey(currTdd.timestamp)){
+                    Tdd currTdd = tdds.get(i);
+                    if (currTdd.total < 1)
+                        continue; //cases where dummy days are introduced (e.g. Battery change with date loss)
+                    if (map.containsKey(currTdd.timestamp)) {
                         //duplicate days on time changes
                         TDD existing = map.get(currTdd.timestamp);
                         existing.total += currTdd.total;
@@ -1460,7 +1399,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
                 Collection<TDD> uniqueColl = map.values();
 
-                for (TDD currTdd: uniqueColl) {
+                for (TDD currTdd : uniqueColl) {
                     MainApp.getDbHelper().createOrUpdateTDD(currTdd);
                 }
             }

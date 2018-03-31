@@ -5,6 +5,7 @@ import com.squareup.otto.Bus;
 import junit.framework.Assert;
 
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -16,6 +17,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -44,12 +46,8 @@ public class ProfileTest {
 
     //String profileStore = "{\"defaultProfile\":\"Default\",\"store\":{\"Default\":" + validProfile + "}}";
 
-    boolean notificationSent = false;
-
     @Test
     public void doTests() throws Exception {
-        prepareMock();
-
         Profile p = new Profile();
 
         // Test valid profile
@@ -105,7 +103,7 @@ public class ProfileTest {
         //Test basal profile below limit
         p = new Profile(new JSONObject(belowLimitValidProfile), 100, 0);
         p.isValid("Test");
-        Assert.assertEquals(true, notificationSent);
+        Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
 
         // Test profile w/o units
         p = new Profile(new JSONObject(noUnitsValidProfile), 100, 0);
@@ -140,37 +138,24 @@ public class ProfileTest {
 
         // Test hour alignment
         MainApp.getConfigBuilder().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
-        notificationSent = false;
+        ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
         p = new Profile(new JSONObject(notAllignedBasalValidProfile), 100, 0);
         p.isValid("Test");
-        Assert.assertEquals(true, notificationSent);
+        Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
     }
 
-    private void prepareMock() throws Exception {
-        Locale.setDefault(new Locale("en", "US"));
-        ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
-        PowerMockito.mockStatic(ConfigBuilderPlugin.class);
+    @Before
+    public void prepareMock() throws Exception {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockStrings();
+        AAPSMocker.prepareMockedBus();
 
-        MainApp mainApp = mock(MainApp.class);
-        PowerMockito.mockStatic(MainApp.class);
-        when(MainApp.instance()).thenReturn(mainApp);
-        when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
         when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
-        when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("AnyString");
-        when(MainApp.gs(R.string.basalprofilenotaligned)).thenReturn("AnyString");
 
         PowerMockito.mockStatic(FabricPrivacy.class);
 //        PowerMockito.doNothing().when(FabricPrivacy.log(""));
 
-        MockedBus bus = new MockedBus();
-        when(MainApp.bus()).thenReturn(bus);
     }
 
-    class MockedBus extends Bus {
-        @Override
-        public void post(Object event) {
-            notificationSent = true;
-        }
-    }
-
-}
+ }

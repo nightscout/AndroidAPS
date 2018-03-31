@@ -22,9 +22,12 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
+import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 
@@ -42,13 +45,9 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     public DanaRKoreanPlugin() {
+        super();
         log = LoggerFactory.getLogger(DanaRKoreanPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
-
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
@@ -77,6 +76,22 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         pumpDescription.storesCarbInfo = true;
     }
 
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        MainApp.bus().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
+
+        MainApp.bus().unregister(this);
+    }
+
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
@@ -99,7 +114,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange s) {
-        if (isEnabled(PUMP)) {
+        if (isEnabled(PluginType.PUMP)) {
             boolean previousValue = useExtendedBoluses;
             useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 
@@ -138,7 +153,8 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -250,7 +266,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            return setTempBasalPercent(percentRate, durationInMinutes, profile,false);
+            return setTempBasalPercent(percentRate, durationInMinutes, profile, false);
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress
@@ -331,7 +347,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     public PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;

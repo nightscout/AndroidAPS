@@ -580,7 +580,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
     <string name="ultrarapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
-    <string name="dia_too_short" formatted="false">"DIA για %s πολύ μικρή - χρησιμοποιήστε %s! "</string>
+    <string name="dia_too_short" formatted="false">"DIA για %f πολύ μικρή - χρησιμοποιήστε %f! "</string>
     <string name="activate_profile">ΕΝΕΡΓΟΠΟΙΗΣΗ ΠΡΟΦΙΛ</string>
     <string name="date">Ημερομηνία</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>

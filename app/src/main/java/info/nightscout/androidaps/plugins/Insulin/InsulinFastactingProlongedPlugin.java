@@ -8,15 +8,14 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 
 /**
  * Created by mike on 17.04.2017.
  */
 
-public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInterface {
-
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
+public class InsulinFastactingProlongedPlugin extends PluginBase implements InsulinInterface {
 
     private static InsulinFastactingProlongedPlugin plugin = null;
 
@@ -26,64 +25,13 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
         return plugin;
     }
 
-    @Override
-    public int getType() {
-        return INSULIN;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return InsulinFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.sResources.getString(R.string.fastactinginsulinprolonged);
-    }
-
-    @Override
-    public String getNameShort() {
-        return MainApp.sResources.getString(R.string.insulin_shortname);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == INSULIN && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == INSULIN && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == INSULIN) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == INSULIN) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
+    public InsulinFastactingProlongedPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.INSULIN)
+                .fragmentClass(InsulinFragment.class.getName())
+                .pluginName(R.string.fastactinginsulinprolonged)
+                .shortName(R.string.insulin_shortname)
+        );
     }
 
     // Insulin interface

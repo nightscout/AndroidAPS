@@ -22,6 +22,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.utils.Round;
@@ -41,13 +42,9 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     public DanaRPlugin() {
+        super();
         log = LoggerFactory.getLogger(DanaRPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
-
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.05d;
@@ -76,6 +73,22 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         pumpDescription.storesCarbInfo = true;
     }
 
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, DanaRExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        MainApp.bus().register(this);
+   }
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
+
+        MainApp.bus().unregister(this);
+    }
+
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
@@ -98,7 +111,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange s) {
-        if (isEnabled(PUMP)) {
+        if (isEnabled(PluginType.PUMP)) {
             boolean previousValue = useExtendedBoluses;
             useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 

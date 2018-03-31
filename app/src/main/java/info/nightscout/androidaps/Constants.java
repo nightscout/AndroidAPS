@@ -1,5 +1,7 @@
 package info.nightscout.androidaps;
 
+import info.nightscout.utils.T;
+
 /**
  * Created by mike on 07.06.2016.
  */
@@ -61,4 +63,7 @@ public class Constants {
     // Pump
     public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1;
     public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
+
+    //SMS Communicator
+    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
 }

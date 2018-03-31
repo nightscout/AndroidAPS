@@ -17,6 +17,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.SP;
@@ -24,7 +26,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class NSProfilePlugin implements PluginBase, ProfileInterface {
+public class NSProfilePlugin extends PluginBase implements ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(NSProfilePlugin.class);
 
     private static NSProfilePlugin nsProfilePlugin;
@@ -35,81 +37,31 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         return nsProfilePlugin;
     }
 
-    @Override
-    public String getFragmentClass() {
-        return NSProfileFragment.class.getName();
-    }
-
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
-
     private ProfileStore profile = null;
 
     private NSProfilePlugin() {
-        MainApp.bus().register(this);
+        super(new PluginDescription()
+                .mainType(PluginType.PROFILE)
+                .fragmentClass(NSProfileFragment.class.getName())
+                .pluginName(R.string.profileviewer)
+                .shortName(R.string.profileviewer_shortname)
+        );
         loadNSProfile();
-
     }
 
     @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.profileviewer);
+    protected void onStart() {
+        MainApp.bus().register(this);
     }
 
     @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.profileviewer_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
+    protected void onStop() {
+        MainApp.bus().unregister(this);
     }
 
     @Override
-    public boolean isEnabled(int type) {
-        return type == PROFILE && (Config.NSCLIENT || Config.G5UPLOADER|| fragmentEnabled);
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && (Config.NSCLIENT || Config.G5UPLOADER|| fragmentVisible);
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
+    public boolean specialShowInListCondition() {
         return !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == PROFILE) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PROFILE) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.PROFILE;
     }
 
     @Subscribe

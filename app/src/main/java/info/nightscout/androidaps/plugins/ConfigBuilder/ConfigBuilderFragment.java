@@ -34,6 +34,7 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
@@ -131,48 +132,48 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     @Override
     protected void updateGUI() {
 
-        insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginBase.INSULIN), PluginBase.INSULIN);
+        insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN), PluginType.INSULIN);
         insulinListView.setAdapter(insulinDataAdapter);
         setListViewHeightBasedOnChildren(insulinListView);
-        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginBase.BGSOURCE), PluginBase.BGSOURCE);
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE), PluginType.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.BGSOURCE).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.BGSOURCE).size() == 0)
             bgsourceLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(bgsourceListView);
-        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP), PluginBase.PUMP);
+        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP), PluginType.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP).size() == 0)
             pumpLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(pumpListView);
-        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP), PluginBase.LOOP);
+        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP), PluginType.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP).size() == 0)
             loopLabel.setVisibility(View.GONE);
-        treatmentDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT), PluginBase.TREATMENT);
+        treatmentDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT), PluginType.TREATMENT);
         treatmentsListView.setAdapter(treatmentDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT).size() == 0)
             treatmentsLabel.setVisibility(View.GONE);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.PROFILE), PluginBase.PROFILE);
+        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE), PluginType.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.PROFILE).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.PROFILE).size() == 0)
             profileLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(profileListView);
-        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.APS), PluginBase.APS);
+        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.APS), PluginType.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.APS).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.APS).size() == 0)
             apsLabel.setVisibility(View.GONE);
-        sensivityDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginBase.SENSITIVITY), PluginBase.SENSITIVITY);
+        sensivityDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY), PluginType.SENSITIVITY);
         sensitivityListView.setAdapter(sensivityDataAdapter);
         setListViewHeightBasedOnChildren(sensitivityListView);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginBase.CONSTRAINTS), PluginBase.CONSTRAINTS);
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS), PluginType.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.CONSTRAINTS).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginType.CONSTRAINTS).size() == 0)
             constraintsLabel.setVisibility(View.GONE);
-        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.GENERAL), PluginBase.GENERAL);
+        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL), PluginType.GENERAL);
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
     }
@@ -184,10 +185,10 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     private class PluginCustomAdapter extends ArrayAdapter<PluginBase> {
 
         private ArrayList<PluginBase> pluginList;
-        final private int type;
+        final private PluginType type;
 
         PluginCustomAdapter(Context context, int textViewResourceId,
-                            ArrayList<PluginBase> pluginList, int type) {
+                            ArrayList<PluginBase> pluginList, PluginType type) {
             super(context, textViewResourceId, pluginList);
             this.pluginList = new ArrayList<>();
             this.pluginList.addAll(pluginList);
@@ -230,7 +231,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                     plugin1.setPluginEnabled(type, cb.isChecked());
                     plugin1.setFragmentVisible(type, cb.isChecked());
                     onEnabledCategoryChanged(plugin1, type);
-                    ConfigBuilderPlugin.getPlugin().storeSettings();
+                    ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
                     MainApp.bus().post(new EventRefreshGui());
                     MainApp.bus().post(new EventConfigBuilderChange());
                     ConfigBuilderPlugin.getPlugin().logPluginStatus();
@@ -241,7 +242,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                     CheckBox cb = (CheckBox) v;
                     PluginBase plugin12 = (PluginBase) cb.getTag();
                     plugin12.setFragmentVisible(type, cb.isChecked());
-                    ConfigBuilderPlugin.getPlugin().storeSettings();
+                    ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible");
                     MainApp.bus().post(new EventRefreshGui());
                     ConfigBuilderPlugin.getPlugin().logPluginStatus();
                 });
@@ -271,7 +272,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
 
             holder.name.setText(plugin.getName());
             holder.checkboxEnabled.setChecked(plugin.isEnabled(type));
-            holder.checkboxVisible.setChecked(plugin.isVisibleInTabs(type));
+            holder.checkboxVisible.setChecked(plugin.isFragmentVisible());
             holder.name.setTag(plugin);
             holder.checkboxEnabled.setTag(plugin);
             holder.checkboxVisible.setTag(plugin);
@@ -291,19 +292,19 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             }
 
             // Hide enabled control and force enabled plugin if there is only one plugin available
-            if (type == PluginBase.INSULIN || type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.PROFILE || type == PluginBase.SENSITIVITY)
+            if (type == PluginType.INSULIN || type == PluginType.PUMP || type == PluginType.SENSITIVITY)
                 if (pluginList.size() < 2) {
                     holder.checkboxEnabled.setEnabled(false);
                     plugin.setPluginEnabled(type, true);
-                    ConfigBuilderPlugin.getPlugin().storeSettings();
+                    ConfigBuilderPlugin.getPlugin().storeSettings("ForceEnable");
                 }
 
             // Constraints cannot be disabled
-            if (type == PluginBase.CONSTRAINTS)
+            if (type == PluginType.CONSTRAINTS)
                 holder.checkboxEnabled.setEnabled(false);
 
             // Hide disabled profiles by default
-            if (type == PluginBase.PROFILE) {
+            if (type == PluginType.PROFILE) {
                 if (!plugin.isEnabled(type)) {
                     holder.checkboxVisible.setEnabled(false);
                     holder.checkboxVisible.setChecked(false);
@@ -313,9 +314,9 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             }
 
             // Disable profile control for pump profiles if pump is not enabled
-            if (type == PluginBase.PROFILE) {
+            if (type == PluginType.PROFILE) {
                 if (PumpInterface.class.isAssignableFrom(plugin.getClass())) {
-                    if (!plugin.isEnabled(PluginBase.PUMP)) {
+                    if (!plugin.isEnabled(PluginType.PUMP)) {
                         holder.checkboxEnabled.setEnabled(false);
                         holder.checkboxEnabled.setChecked(false);
                     }
@@ -332,32 +333,32 @@ public class ConfigBuilderFragment extends SubscriberFragment {
 
     }
 
-    void onEnabledCategoryChanged(PluginBase changedPlugin, int type) {
+    void onEnabledCategoryChanged(PluginBase changedPlugin, PluginType type) {
         ArrayList<PluginBase> pluginsInCategory = null;
         switch (type) {
             // Multiple selection allowed
-            case PluginBase.GENERAL:
-            case PluginBase.CONSTRAINTS:
-            case PluginBase.LOOP:
+            case GENERAL:
+            case CONSTRAINTS:
+            case LOOP:
                 break;
             // Single selection allowed
-            case PluginBase.INSULIN:
+            case INSULIN:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
                 break;
-            case PluginBase.SENSITIVITY:
+            case SENSITIVITY:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
                 break;
-            case PluginBase.APS:
+            case APS:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
                 break;
-            case PluginBase.PROFILE:
+            case PROFILE:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
                 break;
-            case PluginBase.BGSOURCE:
+            case BGSOURCE:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
                 break;
-            case PluginBase.TREATMENT:
-            case PluginBase.PUMP:
+            case TREATMENT:
+            case PUMP:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(PumpInterface.class);
                 break;
         }
@@ -373,13 +374,13 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                     }
                 }
             } else { // enable first plugin in list
-                if (type == PluginBase.PUMP)
+                if (type == PluginType.PUMP)
                     VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
-                else if (type == PluginBase.INSULIN)
+                else if (type == PluginType.INSULIN)
                     InsulinFastactingPlugin.getPlugin().setPluginEnabled(type, true);
-                else if (type == PluginBase.SENSITIVITY)
+                else if (type == PluginType.SENSITIVITY)
                     SensitivityOref0Plugin.getPlugin().setPluginEnabled(type, true);
-                else if (type == PluginBase.PROFILE)
+                else if (type == PluginType.PROFILE)
                     NSProfilePlugin.getPlugin().setPluginEnabled(type, true);
                 else
                     pluginsInCategory.get(0).setPluginEnabled(type, true);

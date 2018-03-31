@@ -547,7 +547,7 @@
     <string name="danar_visualizeextendedaspercentage_title">Просмотреть расширенный болюс %</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>
-    <string name="dia_too_short" formatted="false">pначение длительности работы инс %s слишком мало - применено %s</string>
+    <string name="dia_too_short" formatted="false">pначение длительности работы инс %f слишком мало - применено %f</string>
     <string name="extendedbolus">расширенный болюс</string>
     <string name="free_peak_oref">Акуу-Зуфл Щкуа</string>
     <string name="hours">час</string>

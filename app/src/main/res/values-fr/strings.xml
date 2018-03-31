@@ -579,7 +579,7 @@
     <string name="insulin_peak_time">"Durée du Pic [min] "</string>
     <string name="rapid_acting_oref">"Insuline à Action Rapide Oref "</string>
     <string name="ultrarapid_oref">Insuline à Action Ultra Rapide Oref</string>
-    <string name="dia_too_short" formatted="false">Durée d’Action pour %s trop courte - utiliser %s à la place!</string>
+    <string name="dia_too_short" formatted="false">Durée d’Action pour %f trop courte - utiliser %f à la place!</string>
     <string name="activate_profile">ACTIVER LE PROFIL</string>
     <string name="date">" Date"</string>
     <string name="invalid">INVALID</string>

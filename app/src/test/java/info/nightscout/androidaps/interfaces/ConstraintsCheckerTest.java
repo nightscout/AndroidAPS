@@ -34,7 +34,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
@@ -64,7 +64,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isLoopInvokationAllowedTest() throws Exception {
-        comboPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        comboPlugin.setPluginEnabled(PluginType.PUMP, true);
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
         Constraint<Boolean> c = constraintChecker.isLoopInvokationAllowed();
@@ -137,12 +137,12 @@ public class ConstraintsCheckerTest {
     @Test
     public void basalRateShouldBeLimited() throws Exception {
         // DanaR, RS
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
-        danaRSPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
+        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         // Insight
-        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBasalAmount = 1.1d;
         insightPlugin.setStatusResult(result);
@@ -164,12 +164,12 @@ public class ConstraintsCheckerTest {
     @Test
     public void percentBasalRateShouldBeLimited() throws Exception {
         // DanaR, RS
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
-        danaRSPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
+        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true);
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         // Insight
-        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBasalAmount = 1.1d;
         insightPlugin.setStatusResult(result);
@@ -192,12 +192,12 @@ public class ConstraintsCheckerTest {
     @Test
     public void bolusAmountShouldBeLimited() throws Exception {
         // DanaR, RS
-        danaRPlugin.setPluginEnabled(PluginBase.PUMP, true);
-        danaRSPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        danaRPlugin.setPluginEnabled(PluginType.PUMP, true);
+        danaRSPlugin.setPluginEnabled(PluginType.PUMP, true);
         DanaRPump.getInstance().maxBolus = 6d;
 
         // Insight
-        insightPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
         StatusTaskRunner.Result result = new StatusTaskRunner.Result();
         result.maximumBolusAmount = 7d;
         insightPlugin.setStatusResult(result);
@@ -233,9 +233,9 @@ public class ConstraintsCheckerTest {
         // No limit by default
         when(SP.getDouble(R.string.key_openapsma_max_iob, 1.5d)).thenReturn(1.5d);
         when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
-        OpenAPSMAPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
-        OpenAPSAMAPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
-        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginBase.APS, true);
+        OpenAPSMAPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
+        OpenAPSAMAPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
+        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
 
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxIOBAllowed();

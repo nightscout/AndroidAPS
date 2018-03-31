@@ -30,8 +30,8 @@ import static org.mockito.Mockito.when;
  */
 
 public class AAPSMocker {
-    static String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
-    static Profile profile;
+    private static String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
+    private static Profile profile;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -76,6 +76,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.absolute)).thenReturn("Absolute");
         when(MainApp.gs(R.string.waitingforpumpresult)).thenReturn("Waiting for result");
         when(MainApp.gs(R.string.insulin_unit_shortname)).thenReturn("U");
+        when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("Basal value replaced by minimal supported value");
+        when(MainApp.gs(R.string.basalprofilenotaligned)).thenReturn("Basal values not aligned to hours: %s");
     }
 
     public static MainApp mockMainApp() {
@@ -122,7 +124,34 @@ public class AAPSMocker {
         try {
             if (profile == null)
                 profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
-        } catch (JSONException e) {}
+        } catch (JSONException ignored) {}
         return profile;
     }
+
+    private static MockedBus bus = new MockedBus();
+
+    public static void prepareMockedBus() {
+        when(MainApp.bus()).thenReturn(bus);
+    }
+
+    public static class MockedBus extends Bus {
+        public boolean registered = false;
+        public boolean notificationSent = false;
+
+        @Override
+        public void register(Object event) {
+            registered = true;
+        }
+
+        @Override
+        public void unregister(Object event) {
+            registered = false;
+        }
+
+        @Override
+        public void post(Object event) {
+            notificationSent = true;
+        }
+    }
+
 }

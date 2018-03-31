@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
@@ -18,8 +17,9 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
@@ -32,12 +32,11 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
-import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
+public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSAMAPlugin.class);
 
     private static OpenAPSAMAPlugin openAPSAMAPlugin;
@@ -55,75 +54,26 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     DetermineBasalResultAMA lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.openapsama);
+    public OpenAPSAMAPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.APS)
+                .fragmentClass(OpenAPSAMAFragment.class.getName())
+                .pluginName(R.string.openapsama)
+                .shortName(R.string.oaps_shortname)
+                .preferencesId(R.xml.pref_openapsama)
+        );
     }
 
     @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.oaps_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
+    public boolean specialEnableCondition() {
+        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
-    public boolean isEnabled(int type) {
-        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump() != null && ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-        return type == APS && fragmentEnabled && pumpCapable;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        boolean pumpCapable = ConfigBuilderPlugin.getActivePump() == null || ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-        return type == APS && fragmentVisible && pumpCapable;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == APS) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_openapsama;
-    }
-
-    @Override
-    public void setPluginEnabled(int type, boolean fragmentEnabled) {
-        if (type == APS) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.APS;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return OpenAPSAMAFragment.class.getName();
+    public boolean specialShowInListCondition() {
+        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -159,7 +109,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        if (!isEnabled(PluginBase.APS)) {
+        if (!isEnabled(PluginType.APS)) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_disabled)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_disabled));
@@ -192,7 +142,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         MealData mealData = MainApp.getConfigBuilder().getMealData();
         Profiler.log(log, "getMealData()", startPart);
 
-        double  maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
+        double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
 
         minBg = HardLimits.verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = HardLimits.verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
@@ -221,7 +171,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         startPart = new Date();
         if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
-            lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
+            lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.getPlugin().oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
         }

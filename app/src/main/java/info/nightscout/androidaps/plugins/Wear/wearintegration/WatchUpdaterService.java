@@ -21,15 +21,11 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -42,11 +38,11 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
@@ -290,7 +286,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 deltastring += DecimalFormatter.to0Decimal(Math.abs(deltaMGDL));
             }
         } else {
-            if (detailed){
+            if (detailed) {
                 deltastring += DecimalFormatter.to2Decimal(Math.abs(deltaMMOL));
             } else {
                 deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
@@ -364,8 +360,6 @@ public class WatchUpdaterService extends WearableListenerService implements
         ArrayList<DataMap> temps = new ArrayList<>();
         ArrayList<DataMap> boluses = new ArrayList<>();
         ArrayList<DataMap> predictions = new ArrayList<>();
-
-
 
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -469,15 +463,15 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
 
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
-        for (Treatment treatment:treatments) {
-            if(treatment.date > startTimeWindow){
+        for (Treatment treatment : treatments) {
+            if (treatment.date > startTimeWindow) {
                 boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
             }
 
         }
 
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if(SP.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null){
+        if (SP.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null) {
             List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
 
             if (!predArray.isEmpty()) {
@@ -586,8 +580,8 @@ public class WatchUpdaterService extends WearableListenerService implements
             Profile profile = MainApp.getConfigBuilder().getProfile();
             String status = MainApp.instance().getString(R.string.noprofile);
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
-            iobSum =  iobDetail = cobString = currentBasal = bgiString = "";
-            if(profile!=null) {
+            iobSum = iobDetail = cobString = currentBasal = bgiString = "";
+            if (profile != null) {
                 TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
                 treatmentsInterface.updateTotalIOBTreatments();
                 IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
@@ -605,7 +599,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
 
-                status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
+                status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString);
             }
 
 
@@ -616,9 +610,9 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             long openApsStatus = -1;
             //OpenAPS status
-            if(Config.APS){
+            if (Config.APS) {
                 //we are AndroidAPS
-                openApsStatus = LoopPlugin.lastRun != null && LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime(): -1;
+                openApsStatus = LoopPlugin.lastRun != null && LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime() : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
@@ -673,10 +667,10 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
 
-        if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
+        if (activeloop != null && !activeloop.isEnabled(PluginType.LOOP)) {
             status += getString(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
-        } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
+        } else if (activeloop != null && activeloop.isEnabled(PluginType.LOOP)) {
             lastLoopStatus = true;
         }
 

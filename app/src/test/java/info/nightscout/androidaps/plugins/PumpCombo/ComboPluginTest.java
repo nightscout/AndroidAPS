@@ -12,7 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.utils.ToastUtils;
@@ -27,14 +27,14 @@ public class ComboPluginTest {
 
     @Test
     public void invalidBasalRateOnComboPumpShouldLimitLoopInvokation() throws Exception {
-        comboPlugin.setPluginEnabled(PluginBase.PUMP, true);
+        comboPlugin.setPluginEnabled(PluginType.PUMP, true);
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = comboPlugin.isLoopInvokationAllowed(c);
         Assert.assertEquals("Combo: No valid basal rate read from pump", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
-        comboPlugin.setPluginEnabled(PluginBase.PUMP, false);
+        comboPlugin.setPluginEnabled(PluginType.PUMP, false);
     }
 
     @Test
