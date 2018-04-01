@@ -31,8 +31,6 @@ import info.nightscout.utils.SP;
 
 public class WearPlugin extends PluginBase {
 
-    private static boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
 
@@ -194,10 +192,6 @@ public class WearPlugin extends PluginBase {
         intent.putExtra("message", message);
         intent.putExtra("actionstring", actionstring);
         ctx.startService(intent);
-    }
-
-    public static boolean isEnabled() {
-        return fragmentEnabled;
     }
 
     public static void registerWatchUpdaterService(WatchUpdaterService wus) {
