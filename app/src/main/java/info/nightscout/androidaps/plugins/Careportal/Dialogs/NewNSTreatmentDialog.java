@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.Careportal.Dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -50,11 +49,8 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
-import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.HardLimits;
@@ -348,7 +344,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
         editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false);
 
-        ProfileSwitch ps = MainApp.getConfigBuilder().getProfileSwitchFromHistory(DateUtil.now());
+        ProfileSwitch ps = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now());
         if (ps != null && ps.isCPP) {
             final int percentage = ps.percentage;
             final int timeshift = ps.timeshift;
@@ -740,12 +736,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.isCPP = percentage != 100 || timeshift != 0;
         profileSwitch.timeshift = timeshift;
         profileSwitch.percentage = percentage;
-        MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+        TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
         FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
-        ProfileSwitch profileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+        ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null) {
             profileSwitch = new ProfileSwitch();
             profileSwitch.date = System.currentTimeMillis();
@@ -757,7 +753,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch.isCPP = percentage != 100 || timeshift != 0;
             profileSwitch.timeshift = timeshift;
             profileSwitch.percentage = percentage;
-            MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+            TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
             FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
         } else {
             log.error("No profile switch existing");

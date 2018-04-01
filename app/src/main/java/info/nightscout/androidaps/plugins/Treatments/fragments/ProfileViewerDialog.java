@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -114,8 +114,8 @@ public class ProfileViewerDialog extends DialogFragment {
 
     private void setContent() {
         Profile profile = null;
-        ProfileSwitch profileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(time);
-        if(profileSwitch!=null && profileSwitch.profileJson != null){
+        ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time);
+        if (profileSwitch != null && profileSwitch.profileJson != null) {
             profile = profileSwitch.getProfileObject();
         }
         if (profile != null) {

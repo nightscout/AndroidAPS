@@ -27,10 +27,10 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
@@ -244,7 +244,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
         //TODO: align with max-absorption model in AMA sensitivity
-        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));;
+        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
+        ;
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
@@ -266,7 +267,7 @@ public class DetermineBasalAdapterSMBJS {
 
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
@@ -274,7 +275,7 @@ public class DetermineBasalAdapterSMBJS {
         mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         // as we have non default temps longer than 30 mintues
-        TemporaryBasal tempBasal = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal tempBasal = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (tempBasal != null) {
             mCurrentTemp.put("minutesrunning", tempBasal.getRealDuration());
         }

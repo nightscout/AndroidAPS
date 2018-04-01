@@ -6,10 +6,10 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -32,7 +32,7 @@ public class CommandSetProfile extends Command {
             callback.result(r).run();
 
         // Send SMS notification if ProfileSwitch is comming from NS
-        ProfileSwitch profileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+        ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
         if (r.enacted && profileSwitch.source == Source.NIGHTSCOUT) {
             SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
             if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {

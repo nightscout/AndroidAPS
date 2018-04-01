@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
@@ -18,20 +17,13 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Intervals;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
@@ -50,8 +42,6 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -64,7 +54,7 @@ import info.nightscout.utils.ToastUtils;
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterface {
+public class ConfigBuilderPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
     private static ConfigBuilderPlugin configBuilderPlugin;
@@ -459,7 +449,7 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
             log.debug("applyAPSRequest: " + request.toString());
 
         long now = System.currentTimeMillis();
-        TemporaryBasal activeTemp = getTempBasalFromHistory(now);
+        TemporaryBasal activeTemp = activeTreatments.getTempBasalFromHistory(now);
         if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
             if (activeTemp != null) {
                 if (Config.logCongigBuilderActions)
@@ -496,7 +486,7 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
             return;
         }
 
-        long lastBolusTime = getLastBolusTime();
+        long lastBolusTime = activeTreatments.getLastBolusTime();
         if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             log.debug("SMB requested but still in 3 min interval");
             if (callback != null) {
@@ -540,175 +530,6 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
         getCommandQueue().bolus(detailedBolusInfo, callback);
     }
 
-    //  ****** Treatments interface *****
-    @Override
-    public void updateTotalIOBTreatments() {
-        activeTreatments.updateTotalIOBTreatments();
-    }
-
-    @Override
-    public void updateTotalIOBTempBasals() {
-        activeTreatments.updateTotalIOBTempBasals();
-    }
-
-    @Override
-    public IobTotal getLastCalculationTreatments() {
-        return activeTreatments.getLastCalculationTreatments();
-    }
-
-    @Override
-    public IobTotal getCalculationToTimeTreatments(long time) {
-        return activeTreatments.getCalculationToTimeTreatments(time);
-    }
-
-    @Override
-    public IobTotal getLastCalculationTempBasals() {
-        return activeTreatments.getLastCalculationTempBasals();
-    }
-
-    @Override
-    public IobTotal getCalculationToTimeTempBasals(long time) {
-        return activeTreatments.getCalculationToTimeTempBasals(time);
-    }
-
-    @Override
-    public MealData getMealData() {
-        return activeTreatments.getMealData();
-    }
-
-    @Override
-    public List<Treatment> getTreatmentsFromHistory() {
-        return activeTreatments.getTreatmentsFromHistory();
-    }
-
-    @Override
-    public List<Treatment> getTreatments5MinBackFromHistory(long time) {
-        return activeTreatments.getTreatments5MinBackFromHistory(time);
-    }
-
-    @Override
-    public long getLastBolusTime() {
-        return activeTreatments.getLastBolusTime();
-    }
-
-    @Override
-    public boolean isInHistoryRealTempBasalInProgress() {
-        return activeTreatments.isInHistoryRealTempBasalInProgress();
-    }
-
-    @Override
-    @Nullable
-    public TemporaryBasal getRealTempBasalFromHistory(long time) {
-        return activeTreatments.getRealTempBasalFromHistory(time);
-    }
-
-    @Override
-    public boolean isTempBasalInProgress() {
-        return activeTreatments != null && activeTreatments.isTempBasalInProgress();
-    }
-
-    @Override
-    @Nullable
-    public TemporaryBasal getTempBasalFromHistory(long time) {
-        return activeTreatments != null ? activeTreatments.getTempBasalFromHistory(time) : null;
-    }
-
-    @Override
-    public Intervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
-        return activeTreatments.getTemporaryBasalsFromHistory();
-    }
-
-    @Override
-    public boolean addToHistoryTempBasal(TemporaryBasal tempBasal) {
-        boolean newRecordCreated = activeTreatments.addToHistoryTempBasal(tempBasal);
-        if (newRecordCreated) {
-            if (tempBasal.durationInMinutes == 0)
-                NSUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
-            else if (tempBasal.isAbsolute)
-                NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
-            else
-                NSUpload.uploadTempBasalStartPercent(tempBasal);
-        }
-        return newRecordCreated;
-    }
-
-    @Override
-    public boolean isInHistoryExtendedBoluslInProgress() {
-        return activeTreatments.isInHistoryExtendedBoluslInProgress();
-    }
-
-    @Override
-    @Nullable
-    public ExtendedBolus getExtendedBolusFromHistory(long time) {
-        return activeTreatments.getExtendedBolusFromHistory(time);
-    }
-
-    @Override
-    public boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus) {
-        boolean newRecordCreated = activeTreatments.addToHistoryExtendedBolus(extendedBolus);
-        if (newRecordCreated) {
-            if (extendedBolus.durationInMinutes == 0) {
-                if (activePump.isFakingTempsByExtendedBoluses())
-                    NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
-                else
-                    NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
-            } else if (activePump.isFakingTempsByExtendedBoluses())
-                NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
-            else
-                NSUpload.uploadExtendedBolus(extendedBolus);
-        }
-        return newRecordCreated;
-    }
-
-    @Override
-    public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
-        return activeTreatments.getExtendedBolusesFromHistory();
-    }
-
-    @Override
-    // return true if new record is created
-    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
-        boolean newRecordCreated = activeTreatments.addToHistoryTreatment(detailedBolusInfo);
-        if (newRecordCreated && detailedBolusInfo.isValid)
-            NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
-        return newRecordCreated;
-    }
-
-    @Override
-    @Nullable
-    public TempTarget getTempTargetFromHistory() {
-        return activeTreatments.getTempTargetFromHistory(System.currentTimeMillis());
-    }
-
-    @Override
-    @Nullable
-    public TempTarget getTempTargetFromHistory(long time) {
-        return activeTreatments.getTempTargetFromHistory(time);
-    }
-
-    @Override
-    public Intervals<TempTarget> getTempTargetsFromHistory() {
-        return activeTreatments.getTempTargetsFromHistory();
-    }
-
-    @Override
-    @Nullable
-    public ProfileSwitch getProfileSwitchFromHistory(long time) {
-        return activeTreatments.getProfileSwitchFromHistory(time);
-    }
-
-    @Override
-    public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
-        return activeTreatments.getProfileSwitchesFromHistory();
-    }
-
-    @Override
-    public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
-        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
-        activeTreatments.addToHistoryProfileSwitch(profileSwitch);
-        NSUpload.uploadProfileSwitch(profileSwitch);
-    }
-
     @Subscribe
     public void onProfileSwitch(EventProfileSwitchChange ignored) {
         getCommandQueue().setProfile(getProfile(), new Callback() {
@@ -727,11 +548,6 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
         });
     }
 
-    @Override
-    public long oldestDataAvailable() {
-        return activeTreatments.oldestDataAvailable();
-    }
-
     public String getProfileName() {
         return getProfileName(System.currentTimeMillis());
     }
@@ -745,7 +561,7 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
     }
 
     public String getProfileName(long time, boolean customized) {
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+        ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
             if (profileSwitch.profileJson != null) {
                 return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
@@ -782,7 +598,7 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
             return null; //app not initialized
         }
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+        ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
             if (profileSwitch.profileJson != null) {
                 return profileSwitch.getProfileObject();
@@ -792,12 +608,12 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
                     return profile;
             }
         }
-        if (getProfileSwitchesFromHistory().size() > 0) {
+        if (activeTreatments.getProfileSwitchesFromHistory().size() > 0) {
             FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
                     .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
                     .putCustomAttribute("version", BuildConfig.VERSION)
                     .putCustomAttribute("time", time)
-                    .putCustomAttribute("getProfileSwitchesFromHistory", getProfileSwitchesFromHistory().toString())
+                    .putCustomAttribute("getProfileSwitchesFromHistory", activeTreatments.getProfileSwitchesFromHistory().toString())
             );
         }
         log.debug("getProfile at the end: returning null");
@@ -814,7 +630,7 @@ public class ConfigBuilderPlugin extends PluginBase implements TreatmentsInterfa
                 }
             }
         });
-        if (getActivePump().getPumpDescription().isExtendedBolusCapable && isInHistoryExtendedBoluslInProgress()) {
+        if (getActivePump().getPumpDescription().isExtendedBolusCapable && activeTreatments.isInHistoryExtendedBoluslInProgress()) {
             getCommandQueue().cancelExtended(new Callback() {
                 @Override
                 public void run() {

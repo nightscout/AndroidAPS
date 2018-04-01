@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -374,8 +375,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         double beginBasalValue = profile.getBasal(beginBasalSegmentTime);
         double endBasalValue = beginBasalValue;
 
-        TemporaryBasal tb1 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
-        TemporaryBasal tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
+        TemporaryBasal tb1 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(runningTime);
+        TemporaryBasal tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(runningTime);
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
@@ -404,7 +405,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
 
             //temps
-            tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
+            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(runningTime);
 
             if (tb1 == null && tb2 == null) {
                 //no temp stays no temp
@@ -437,7 +438,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
         }
         if (tb1 != null) {
-            tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
                 temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
@@ -453,7 +454,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 }
             }
         } else {
-            tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
                 Profile profileTB = MainApp.getConfigBuilder().getProfile(runningTime);
@@ -462,7 +463,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
         }
 
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+        List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
         for (Treatment treatment : treatments) {
             if (treatment.date > startTimeWindow) {
                 boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
@@ -582,7 +583,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
-                TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+                TreatmentsInterface treatmentsInterface = TreatmentsPlugin.getPlugin();
                 treatmentsInterface.updateTotalIOBTreatments();
                 IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
                 treatmentsInterface.updateTotalIOBTempBasals();

@@ -33,6 +33,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
@@ -185,7 +186,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                             }
                                         });
                                     } else {
-                                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
                                     }
                                     FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
                                 }

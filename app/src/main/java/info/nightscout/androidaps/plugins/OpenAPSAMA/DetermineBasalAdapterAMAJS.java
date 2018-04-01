@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterAMAJS {
@@ -220,7 +221,7 @@ public class DetermineBasalAdapterAMAJS {
         }
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
@@ -228,7 +229,7 @@ public class DetermineBasalAdapterAMAJS {
         mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         // as we have non default temps longer than 30 mintues
-        TemporaryBasal tempBasal = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal tempBasal = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (tempBasal != null) {
             mCurrentTemp.put("minutesrunning", tempBasal.getRealDuration());
         }
@@ -255,14 +256,14 @@ public class DetermineBasalAdapterAMAJS {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {
-           mAutosensData = null;
+            mAutosensData = null;
         }
     }
 
 
     public Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
 
-        if(jsonObject == null) return Undefined.instance;
+        if (jsonObject == null) return Undefined.instance;
 
         Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), new Callable() {
             @Override
@@ -274,8 +275,8 @@ public class DetermineBasalAdapterAMAJS {
     }
 
     public Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
-            //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
-            Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), new Callable() {
+        //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
+        Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), new Callable() {
             @Override
             public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
                 return objects[1];

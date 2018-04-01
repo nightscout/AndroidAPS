@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Profiler;
@@ -135,14 +136,14 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         maxBg = Round.roundTo(maxBg, 0.1d);
 
         Date start = new Date();
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments();
-        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+        IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        MealData mealData = MainApp.getConfigBuilder().getMealData();
+        MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
 
         double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
         Profiler.log(log, "MA data gathering", start);
@@ -151,7 +152,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         maxBg = verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
         targetBg = verifyHardLimits(targetBg, "targetBg", HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1]);
 
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
+        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
             minBg = verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
             maxBg = verifyHardLimits(tempTarget.high, "maxBg", HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
@@ -182,11 +183,11 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
         // Fix bug determinef basal
-        if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
+        if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultMA.tempBasalRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
             if (activeTemp != null && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
                 // going to cancel
             } else if (activeTemp != null && Math.abs(determineBasalResultMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {

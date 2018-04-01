@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
@@ -18,6 +17,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.HistoryBrowseActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.TDDStatsActivity;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -33,7 +33,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.TDDStatsActivity;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SingleClickButton;
 
@@ -155,7 +155,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                     } else {
-                        ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+                        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
                         if (activeExtendedBolus != null) {
                             extendedBolus.setVisibility(View.GONE);
                             extendedBolusCancel.setVisibility(View.VISIBLE);
@@ -171,7 +171,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         tempBasal.setVisibility(View.GONE);
                         tempBasalCancel.setVisibility(View.GONE);
                     } else {
-                        final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+                        final TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
                         if (activeTemp != null) {
                             tempBasal.setVisibility(View.GONE);
                             tempBasalCancel.setVisibility(View.VISIBLE);
@@ -219,13 +219,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 newExtendedDialog.show(manager, "NewExtendedDialog");
                 break;
             case R.id.actions_extendedbolus_cancel:
-                if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
                     ConfigBuilderPlugin.getCommandQueue().cancelExtended(null);
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
-                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
                     ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }

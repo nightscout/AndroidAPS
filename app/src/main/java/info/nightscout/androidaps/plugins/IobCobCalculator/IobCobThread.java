@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.support.v4.util.LongSparseArray;
 
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
-import info.nightscout.androidaps.queue.QueueThread;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 
@@ -33,7 +32,7 @@ import info.nightscout.utils.FabricPrivacy;
  */
 
 public class IobCobThread extends Thread {
-    private static Logger log = LoggerFactory.getLogger(QueueThread.class);
+    private static Logger log = LoggerFactory.getLogger(IobCobThread.class);
     private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
@@ -145,8 +144,8 @@ public class IobCobThread extends Thread {
                     double deviation = delta - bgi;
                     double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
 
-                    double slopeFromMaxDeviation  = 0;
-                    double slopeFromMinDeviation  = 999;
+                    double slopeFromMaxDeviation = 0;
+                    double slopeFromMinDeviation = 999;
                     double maxDeviation = 0;
                     double minDeviation = 999;
 
@@ -188,7 +187,7 @@ public class IobCobThread extends Thread {
                         }
                     }
 
-                    List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
+                    List<Treatment> recentTreatments = TreatmentsPlugin.getPlugin().getTreatments5MinBackFromHistory(bgTime);
                     for (int ir = 0; ir < recentTreatments.size(); ir++) {
                         autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
                         autosensData.activeCarbsList.add(new AutosensData.CarbsInPast(recentTreatments.get(ir)));

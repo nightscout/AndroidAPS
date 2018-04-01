@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -40,6 +39,9 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -103,7 +105,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private static void initializeTempBasalData() {
-         double dia = Constants.defaultDIA;
+        double dia = Constants.defaultDIA;
         if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
             dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
@@ -381,7 +383,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus) {
         //log.debug("Adding new ExtentedBolus record" + extendedBolus.log());
-        return MainApp.getDbHelper().createOrUpdate(extendedBolus);
+        boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(extendedBolus);
+        if (newRecordCreated) {
+            if (extendedBolus.durationInMinutes == 0) {
+                if (MainApp.getConfigBuilder().getActivePump().isFakingTempsByExtendedBoluses())
+                    NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
+                else
+                    NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
+            } else if (MainApp.getConfigBuilder().getActivePump().isFakingTempsByExtendedBoluses())
+                NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
+            else
+                NSUpload.uploadExtendedBolus(extendedBolus);
+        }
+        return newRecordCreated;
     }
 
     @Override
@@ -401,9 +415,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public boolean addToHistoryTempBasal(TemporaryBasal tempBasal) {
         //log.debug("Adding new TemporaryBasal record" + tempBasal.toString());
-        return MainApp.getDbHelper().createOrUpdate(tempBasal);
+        boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(tempBasal);
+        if (newRecordCreated) {
+            if (tempBasal.durationInMinutes == 0)
+                NSUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
+            else if (tempBasal.isAbsolute)
+                NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
+            else
+                NSUpload.uploadTempBasalStartPercent(tempBasal);
+        }
+        return newRecordCreated;
     }
 
+    // return true if new record is created
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
         Treatment treatment = new Treatment();
@@ -429,6 +453,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             MainApp.getDbHelper().createOrUpdate(carbsTreatment);
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
+        if (newRecordCreated && detailedBolusInfo.isValid)
+            NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
         return newRecordCreated;
     }
 
@@ -503,7 +529,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
+        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
+        NSUpload.uploadProfileSwitch(profileSwitch);
     }
 
 

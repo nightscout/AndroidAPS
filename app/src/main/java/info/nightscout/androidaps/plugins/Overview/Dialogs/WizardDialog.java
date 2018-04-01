@@ -58,6 +58,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -255,7 +256,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         saveCheckedStates();
-        ttCheckbox.setEnabled(bgCheckbox.isChecked() && MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
+        ttCheckbox.setEnabled(bgCheckbox.isChecked() && TreatmentsPlugin.getPlugin().getTempTargetFromHistory() != null);
         calculateInsulin();
     }
 
@@ -377,7 +378,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             }
                                         });
                                     } else {
-                                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
                                     }
                                     FabricPrivacy.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }
@@ -426,13 +427,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         } else {
             editBg.setValue(0d);
         }
-        ttCheckbox.setEnabled(MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
+        ttCheckbox.setEnabled(TreatmentsPlugin.getPlugin().getTempTargetFromHistory() != null);
 
         // IOB calculation
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+        IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(-bolusIob.iob) + "U");
         basalIobInsulin.setText(DecimalFormatter.to2Decimal(-basalIob.basaliob) + "U");
@@ -457,7 +458,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double c_correction = SafeParse.stringToDouble(editCorr.getText());
         Double corrAfterConstraint = c_correction;
         if (c_correction > 0)
-                c_correction = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(c_correction)).value();
+            c_correction = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(c_correction)).value();
         if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
             editCorr.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
@@ -471,14 +472,14 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         }
 
         c_bg = bgCheckbox.isChecked() ? c_bg : 0d;
-        TempTarget tempTarget = ttCheckbox.isChecked() ? MainApp.getConfigBuilder().getTempTargetFromHistory() : null;
+        TempTarget tempTarget = ttCheckbox.isChecked() ? TreatmentsPlugin.getPlugin().getTempTargetFromHistory() : null;
 
         // COB
         Double c_cob = 0d;
         if (cobCheckbox.isChecked()) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Wizard COB");
 
-            if(autosensData != null) {
+            if (autosensData != null) {
                 c_cob = autosensData.cob;
             }
         }

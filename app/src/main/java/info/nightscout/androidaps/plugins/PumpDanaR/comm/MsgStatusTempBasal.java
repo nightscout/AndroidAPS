@@ -8,11 +8,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 public class MsgStatusTempBasal extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgStatusTempBasal.class);
@@ -59,29 +58,28 @@ public class MsgStatusTempBasal extends MessageBase {
     }
 
     public static void updateTempBasalInDB() {
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump danaRPump = DanaRPump.getInstance();
         long now = System.currentTimeMillis();
 
-        if (treatmentsInterface.isInHistoryRealTempBasalInProgress()) {
-            TemporaryBasal tempBasal = treatmentsInterface.getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
+            TemporaryBasal tempBasal = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis());
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal
                     TemporaryBasal tempStop = new TemporaryBasal().date(danaRPump.tempBasalStart.getTime() - 1000).source(Source.USER);
-                    treatmentsInterface.addToHistoryTempBasal(tempStop);
+                    TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
                     // Create new
                     TemporaryBasal newTempBasal = new TemporaryBasal()
                             .date(danaRPump.tempBasalStart.getTime())
                             .percent(danaRPump.tempBasalPercent)
                             .duration(danaRPump.tempBasalTotalSec / 60)
                             .source(Source.USER);
-                    treatmentsInterface.addToHistoryTempBasal(newTempBasal);
+                    TreatmentsPlugin.getPlugin().addToHistoryTempBasal(newTempBasal);
                 }
             } else {
                 // Close current temp basal
                 TemporaryBasal tempStop = new TemporaryBasal().date(now).source(Source.USER);
-                treatmentsInterface.addToHistoryTempBasal(tempStop);
+                TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
             }
         } else {
             if (danaRPump.isTempBasalInProgress) {
@@ -91,7 +89,7 @@ public class MsgStatusTempBasal extends MessageBase {
                         .percent(danaRPump.tempBasalPercent)
                         .duration(danaRPump.tempBasalTotalSec / 60)
                         .source(Source.USER);
-                treatmentsInterface.addToHistoryTempBasal(newTempBasal);
+                TreatmentsPlugin.getPlugin().addToHistoryTempBasal(newTempBasal);
             }
         }
     }

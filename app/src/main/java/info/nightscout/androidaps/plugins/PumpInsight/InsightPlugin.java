@@ -44,6 +44,7 @@ import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -426,7 +427,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             bolusingEvent.bolusId = bolusId;
             bolusingEvent.percent = 0;
             MainApp.bus().post(bolusingEvent);
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
         } else {
             log.debug("Failure to deliver treatment");
         }
@@ -530,7 +531,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     .percent(percent_amount)
                     .duration(durationInMinutes)
                     .source(Source.USER);
-            MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
+            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
         }
 
         if (Config.logPumpComm)
@@ -579,7 +580,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     .percent(percent)
                     .duration(durationInMinutes)
                     .source(Source.USER); // TODO check this is correct
-            MainApp.getConfigBuilder().addToHistoryTempBasal(tempBasal);
+            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
         }
 
         updateGui();
@@ -615,9 +616,9 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         // TODO isn't conditional on one apparently being in progress only the history change
         final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
-            MainApp.getConfigBuilder().addToHistoryTempBasal(tempStop);
+            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
         }
         lastDataTime = new Date();
         updateGui();
@@ -659,7 +660,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             extendedBolus.durationInMinutes = durationInMinutes;
             extendedBolus.source = Source.USER;
             extendedBolus.pumpId = getRecordUniqueID(ms.getResponseID());
-            MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+            TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
         }
 
         if (Config.logPumpComm)
@@ -688,10 +689,10 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
         final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
 
-        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+        if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
             ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
             exStop.source = Source.USER;
-            MainApp.getConfigBuilder().addToHistoryExtendedBolus(exStop);
+            TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(exStop);
         }
 
         if (Config.logPumpComm)
@@ -741,13 +742,13 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(now);
+            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -847,9 +848,9 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
         }
 
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
             try {
-                l.add(new StatusItem(gs(R.string.pump_tempbasal_label), MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull()));
+                l.add(new StatusItem(gs(R.string.pump_tempbasal_label), TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull()));
             } catch (NullPointerException e) {
                 //
             }
@@ -865,10 +866,10 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             }
         }
 
-        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+        if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
             try {
 
-                l.add(new StatusItem(gs(R.string.virtualpump_extendedbolus_label), MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString()));
+                l.add(new StatusItem(gs(R.string.virtualpump_extendedbolus_label), TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis()).toString()));
             } catch (NullPointerException e) {
                 //
             }

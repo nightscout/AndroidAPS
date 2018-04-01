@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
@@ -130,7 +131,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS))
                     apsEnabled = true;
 
-                boolean profileSwitchExists = MainApp.getConfigBuilder().getProfileSwitchFromHistory(DateUtil.now()) != null;
+                boolean profileSwitchExists = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now()) != null;
 
                 return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && apsEnabled && vpUploadNeeded && profileSwitchExists,
                         MainApp.gs(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)

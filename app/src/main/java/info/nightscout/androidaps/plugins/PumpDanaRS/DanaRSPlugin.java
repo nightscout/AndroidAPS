@@ -47,6 +47,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
 import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -426,7 +427,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
         if (doTempOff) {
             // If temp in progress
-            if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelTempBasal(false);
@@ -448,7 +449,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500;
             // Check if some temp is already in progress
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
             if (activeTemp != null) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: currently running: " + activeTemp.toString());
@@ -502,7 +503,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         long now = System.currentTimeMillis();
-        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+        TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -570,7 +571,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
         PumpEnactResult result = new PumpEnactResult();
-        ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        ExtendedBolus runningEB = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
             result.success = true;
@@ -607,7 +608,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     @Override
     public synchronized PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             danaRSService.tempBasalStop();
             result.enacted = true;
@@ -632,7 +633,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     @Override
     public synchronized PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
-        ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        ExtendedBolus runningEB = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (runningEB != null) {
             danaRSService.extendedBolusStop();
             result.enacted = true;
@@ -672,13 +673,13 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                 extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
                 extended.put("LastBolusAmount", pump.lastBolusAmount);
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(now);
+            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -722,11 +723,11 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        ExtendedBolus activeExtendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }

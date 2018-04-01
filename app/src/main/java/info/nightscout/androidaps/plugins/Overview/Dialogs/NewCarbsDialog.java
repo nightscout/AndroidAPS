@@ -45,6 +45,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -430,7 +431,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                                 }
                             });
                         } else {
-                            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
                         }
                     }
                 }

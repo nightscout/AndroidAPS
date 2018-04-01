@@ -84,10 +84,10 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -114,6 +114,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
@@ -188,7 +189,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     final Object updateSync = new Object();
 
-    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN};
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN}
+
+    ;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -709,7 +712,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
+        final TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
 
         final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null && profile != null) {
@@ -1072,7 +1075,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // temp target
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
+        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
@@ -1121,7 +1124,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
-        final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        final TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
@@ -1159,7 +1162,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         baseBasalView.setText(basalText);
 
-        final ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        final ExtendedBolus extendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         String extendedBolusText = "";
         if (extendedBolusView != null) { // must not exists in all layouts
             if (shorttextmode) {
@@ -1265,10 +1268,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoView.setText(DateUtil.minAgo(lastBG.date));
 
         // iob
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        final IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-        final IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+        final IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
+        final IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
         if (shorttextmode) {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U";

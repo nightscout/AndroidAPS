@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Profiler;
@@ -139,7 +140,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
-        MealData mealData = MainApp.getConfigBuilder().getMealData();
+        MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
         Profiler.log(log, "getMealData()", startPart);
 
         double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
@@ -149,7 +150,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         targetBg = HardLimits.verifyHardLimits(targetBg, "targetBg", HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1]);
 
         boolean isTempTarget = false;
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
+        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
             isTempTarget = true;
             minBg = HardLimits.verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
@@ -193,12 +194,12 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
         Profiler.log(log, "AMA calculation", start);
         // Fix bug determine basal
-        if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
+        if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultAMA.tempBasalRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
             long now = System.currentTimeMillis();
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
             if (activeTemp != null && determineBasalResultAMA.rate == 0 && determineBasalResultAMA.duration == 0) {
                 // going to cancel
             } else if (activeTemp != null && Math.abs(determineBasalResultAMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {

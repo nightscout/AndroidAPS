@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
@@ -214,10 +215,10 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     if (glucoseStatus != null)
                         reply += MainApp.sResources.getString(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
 
-                    MainApp.getConfigBuilder().updateTotalIOBTreatments();
-                    IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-                    MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-                    IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+                    TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+                    IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
+                    TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+                    IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
                     reply += MainApp.sResources.getString(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                             + MainApp.sResources.getString(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

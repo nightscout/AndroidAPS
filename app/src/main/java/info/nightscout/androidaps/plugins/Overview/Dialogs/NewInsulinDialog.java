@@ -29,7 +29,6 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -45,6 +44,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -301,7 +301,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                         detailedBolusInfo.date = eventTime.getTime();
                         detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
                         detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
                     } else {
                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                         detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;

@@ -32,6 +32,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -94,16 +95,16 @@ public class PersistentNotificationPlugin extends PluginBase {
             }
         }
 
-        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             line1 += "  " + activeTemp.toStringShort();
         }
 
         //IOB
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+        IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
         String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

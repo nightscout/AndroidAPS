@@ -6,11 +6,9 @@ import android.support.annotation.NonNull;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,6 +40,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -245,7 +244,7 @@ public class ActionStringHandler {
             lastBolusWizard = bolusWizard;
 
         } else if ("opencpp".equals(act[0])) {
-            ProfileSwitch activeProfileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+            ProfileSwitch activeProfileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
             if (activeProfileSwitch == null) {
                 sendError("No active profile switch!");
                 return;
@@ -257,7 +256,7 @@ public class ActionStringHandler {
             }
 
         } else if ("cppset".equals(act[0])) {
-            ProfileSwitch activeProfileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+            ProfileSwitch activeProfileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
             if (activeProfileSwitch == null) {
                 sendError("No active profile switch!");
                 return;
@@ -271,7 +270,7 @@ public class ActionStringHandler {
 
         } else if ("tddstats".equals(act[0])) {
             Object activePump = MainApp.getConfigBuilder().getActivePump();
-            if (activePump!= null) {
+            if (activePump != null) {
                 // check if DB up to date
                 List<TDD> dummies = new LinkedList<TDD>();
                 List<TDD> historyList = getTDDList(dummies);
@@ -326,7 +325,7 @@ public class ActionStringHandler {
             return "No profile loaded :(";
         }
 
-        if(historyList.isEmpty()){
+        if (historyList.isEmpty()) {
             return "No history data!";
         }
 
@@ -336,7 +335,7 @@ public class ActionStringHandler {
         double refTDD = profile.baseBasalSum() * 2;
 
         PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-        if(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))){
+        if (df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
             double tdd = historyList.get(0).getTotal();
             historyList.remove(0);
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n";
@@ -394,7 +393,7 @@ public class ActionStringHandler {
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday?1000 * 60 * 60 * 24:0))))));
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday ? 1000 * 60 * 60 * 24 : 0))))));
     }
 
     @NonNull
@@ -480,7 +479,7 @@ public class ActionStringHandler {
         }
 
         //Check for Temp-Target:
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
+        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
             ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profile.getUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
@@ -663,7 +662,7 @@ public class ActionStringHandler {
                 }
             });
         } else {
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
         }
     }
 

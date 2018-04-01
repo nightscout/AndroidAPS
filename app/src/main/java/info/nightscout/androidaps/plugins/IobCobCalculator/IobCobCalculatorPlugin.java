@@ -34,6 +34,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -286,7 +287,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     public long oldestDataAvailable() {
         long now = System.currentTimeMillis();
 
-        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvailable();
+        long oldestDataAvailable = TreatmentsPlugin.getPlugin().oldestDataAvailable();
         long getBGDataFrom = Math.max(oldestDataAvailable, (long) (now - 60 * 60 * 1000L * (24 + MainApp.getConfigBuilder().getProfile().getDia())));
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
         return getBGDataFrom;
@@ -307,8 +308,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
         } else {
             //log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
         }
-        IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
+        IobTotal bolusIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTreatments(time).round();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time).round();
         if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS)) {
             // Add expected zere temp basal for next 240 mins
             IobTotal basalIobWithZeroTemp = basalIob.copy();
@@ -349,7 +350,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         if (retval == null) {
             retval = new BasalData();
             Profile profile = MainApp.getConfigBuilder().getProfile(time);
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
+            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(time);
             retval.basal = profile.getBasal(time);
             if (tb != null) {
                 retval.isTempBasalRunning = true;

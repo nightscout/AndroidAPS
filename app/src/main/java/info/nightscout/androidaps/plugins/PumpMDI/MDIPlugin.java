@@ -19,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -134,7 +135,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
         return result;
     }
 

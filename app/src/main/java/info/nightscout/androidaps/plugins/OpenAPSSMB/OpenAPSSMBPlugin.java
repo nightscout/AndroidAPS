@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.NSUpload;
@@ -146,7 +147,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
-        MealData mealData = MainApp.getConfigBuilder().getMealData();
+        MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
         Profiler.log(log, "getMealData()", startPart);
 
         double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
@@ -156,7 +157,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         targetBg = verifyHardLimits(targetBg, "targetBg", HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1]);
 
         boolean isTempTarget = false;
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
+        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
             isTempTarget = true;
             minBg = verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
@@ -213,11 +214,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         Profiler.log(log, "SMB calculation", start);
         // TODO still needed with oref1?
         // Fix bug determine basal
-        if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
+        if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultSMB.tempBasalRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(now);
+            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
             if (activeTemp != null && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
                 // going to cancel
             } else if (activeTemp != null && Math.abs(determineBasalResultSMB.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {

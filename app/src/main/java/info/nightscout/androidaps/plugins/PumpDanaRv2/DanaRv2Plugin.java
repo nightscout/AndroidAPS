@@ -23,9 +23,8 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceChange;
-import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 
@@ -216,7 +215,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
         if (doTempOff) {
             // If temp in progress
-            if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelTempBasal(false);
@@ -238,7 +237,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500;
             // Check if some temp is already in progress
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
             if (activeTemp != null) {
                 // Correct basal already set ?
                 if (activeTemp.percentRate == percentRate) {
@@ -290,7 +289,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
         long now = System.currentTimeMillis();
-        TemporaryBasal runningTB = MainApp.getConfigBuilder().getRealTempBasalFromHistory(now);
+        TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(now);
         if (runningTB != null && runningTB.percentRate == percent && !enforceNew) {
             result.enacted = false;
             result.success = true;
@@ -354,7 +353,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;
