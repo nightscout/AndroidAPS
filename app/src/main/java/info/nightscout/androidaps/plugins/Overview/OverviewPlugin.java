@@ -62,6 +62,7 @@ public class OverviewPlugin extends PluginBase {
     @Override
     protected void onStart() {
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override

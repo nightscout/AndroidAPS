@@ -81,6 +81,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override

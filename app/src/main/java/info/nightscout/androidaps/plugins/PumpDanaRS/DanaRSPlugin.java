@@ -131,6 +131,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
         MainApp.bus().register(this);
         onStatusEvent(new EventDanaRSDeviceChange()); // load device name
+        super.onStart();
     }
 
     @Override

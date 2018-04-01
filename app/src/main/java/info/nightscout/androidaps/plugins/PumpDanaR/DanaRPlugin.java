@@ -80,6 +80,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         Intent intent = new Intent(context, DanaRExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override

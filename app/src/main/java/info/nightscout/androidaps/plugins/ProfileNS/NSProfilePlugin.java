@@ -55,6 +55,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
     @Override
     protected void onStart() {
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override

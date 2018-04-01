@@ -81,6 +81,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override

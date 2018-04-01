@@ -86,6 +86,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         initializeExtendedBolusData();
         initializeTempTargetData();
         initializeProfileSwitchData();
+        super.onStart();
     }
 
     @Override

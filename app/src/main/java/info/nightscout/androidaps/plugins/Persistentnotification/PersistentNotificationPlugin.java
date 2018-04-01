@@ -58,6 +58,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     protected void onStart() {
         MainApp.bus().register(this);
         updateNotification();
+        super.onStart();
     }
 
     @Override

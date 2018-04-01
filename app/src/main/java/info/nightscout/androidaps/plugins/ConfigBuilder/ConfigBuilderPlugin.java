@@ -97,8 +97,8 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        super.onStart();
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override

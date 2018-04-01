@@ -75,9 +75,9 @@ public class StatuslinePlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        super.onStart();
         MainApp.bus().register(this);
         sendStatus();
+        super.onStart();
     }
 
     @Override

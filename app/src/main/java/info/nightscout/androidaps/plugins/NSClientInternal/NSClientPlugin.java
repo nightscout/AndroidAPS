@@ -86,6 +86,7 @@ public class NSClientPlugin extends PluginBase {
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        super.onStart();
     }
 
     @Override

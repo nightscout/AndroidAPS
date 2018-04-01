@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.interfaces;
 
+import android.os.SystemClock;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by mike on 09.06.2016.
@@ -146,6 +149,12 @@ public abstract class PluginBase {
     }
 
     protected void onStart() {
+        if (getType() == PluginType.PUMP) {
+            new Thread(() -> {
+                SystemClock.sleep(3000);
+                ConfigBuilderPlugin.getCommandQueue().readStatus("Pump driver changed.", null);
+            }).start();
+        }
     }
 
     protected void onStop() {

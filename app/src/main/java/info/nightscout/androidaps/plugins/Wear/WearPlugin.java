@@ -66,6 +66,7 @@ public class WearPlugin extends PluginBase {
         if (watchUS != null) {
             watchUS.setSettings();
         }
+        super.onStart();
     }
 
     @Override

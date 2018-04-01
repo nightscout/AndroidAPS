@@ -171,6 +171,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 }
             }
         }
+        super.onStart();
     }
 
     protected void onStop() {
