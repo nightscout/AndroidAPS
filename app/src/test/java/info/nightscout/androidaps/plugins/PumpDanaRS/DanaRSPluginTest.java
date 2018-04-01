@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.PumpDanaRS;
 
 import android.content.Context;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +19,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -41,9 +40,9 @@ public class DanaRSPluginTest {
 
         Constraint<Double> c = new Constraint<>(Constants.REALLYHIGHBASALRATE);
         danaRSPlugin.applyBasalConstraints(c, AAPSMocker.getValidProfile());
-        Assert.assertEquals(0.8d, c.value());
-        Assert.assertEquals("DanaRS: Limiting basal rate to 0.80 U/h because of pump limit", c.getReasons());
-        Assert.assertEquals("DanaRS: Limiting basal rate to 0.80 U/h because of pump limit", c.getMostLimitedReasons());
+        assertEquals(Double.valueOf(0.8d), c.value());
+        assertEquals("DanaRS: Limiting basal rate to 0.80 U/h because of pump limit", c.getReasons());
+        assertEquals("DanaRS: Limiting basal rate to 0.80 U/h because of pump limit", c.getMostLimitedReasons());
     }
 
     @Test
@@ -54,9 +53,9 @@ public class DanaRSPluginTest {
 
         Constraint<Integer> c = new Constraint<>(Constants.REALLYHIGHPERCENTBASALRATE);
         danaRSPlugin.applyBasalPercentConstraints(c, AAPSMocker.getValidProfile());
-        Assert.assertEquals((Integer) 200, c.value());
-        Assert.assertEquals("DanaRS: Limiting percent rate to 200% because of pump limit", c.getReasons());
-        Assert.assertEquals("DanaRS: Limiting percent rate to 200% because of pump limit", c.getMostLimitedReasons());
+        assertEquals((Integer) 200, c.value());
+        assertEquals("DanaRS: Limiting percent rate to 200% because of pump limit", c.getReasons());
+        assertEquals("DanaRS: Limiting percent rate to 200% because of pump limit", c.getMostLimitedReasons());
     }
 
     @Before
