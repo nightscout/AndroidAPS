@@ -619,6 +619,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 List<Treatment> trList = getDaoTreatments().query(preparedQuery);
                 if (trList.size() > 0) {
                     // do nothing, pump history record cannot be changed
+                    log.debug("TREATMENT: Pump record already found in database: " + treatment.toString());
                     return false;
                 }
                 getDaoTreatments().create(treatment);
