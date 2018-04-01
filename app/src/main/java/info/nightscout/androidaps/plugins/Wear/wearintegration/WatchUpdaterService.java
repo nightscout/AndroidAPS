@@ -108,7 +108,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     public void setSettings() {
-        wear_integration = WearPlugin.isEnabled();
+        wear_integration = WearPlugin.getPlugin().isEnabled(PluginType.GENERAL);
         if (wear_integration) {
             googleApiConnect();
         }
