@@ -107,10 +107,12 @@ public class CommandQueue {
 
     private synchronized void inject(Command command) {
         // inject as a first command
+        log.debug("QUEUE: Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.addFirst(command);
     }
 
     private synchronized void add(Command command) {
+        log.debug("QUEUE: Adding: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.add(command);
     }
 
@@ -142,9 +144,16 @@ public class CommandQueue {
     // After new command added to the queue
     // start thread again if not already running
     protected synchronized void notifyAboutNewCommand() {
+        while (thread != null && thread.getState() != Thread.State.TERMINATED && thread.waitingForDisconnect) {
+            log.debug("QUEUE: Waiting for previous thread finish");
+            SystemClock.sleep(500);
+        }
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
+            log.debug("QUEUE: Starting new thread");
+        } else {
+            log.debug("QUEUE: Thread is already running");
         }
     }
 
@@ -321,7 +330,7 @@ public class CommandQueue {
         MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
 
         if (isThisProfileSet(profile)) {
-            log.debug("Correct profile already set");
+            log.debug("QUEUE: Correct profile already set");
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).enacted(false)).run();
             return false;

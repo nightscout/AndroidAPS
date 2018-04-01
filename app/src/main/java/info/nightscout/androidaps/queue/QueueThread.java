@@ -32,6 +32,7 @@ public class QueueThread extends Thread {
 
     private long lastCommandTime = 0;
     private boolean connectLogged = false;
+    public boolean waitingForDisconnect = false;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -130,10 +131,12 @@ public class QueueThread extends Thread {
                 if (queue.size() == 0 && queue.performing() == null) {
                     long secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000;
                     if (secondsFromLastCommand >= 5) {
+                        waitingForDisconnect = true;
                         log.debug("QUEUE: queue empty. disconnect");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
                         pump.disconnect("Queue empty");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+                        log.debug("QUEUE: disconnected");
                         return;
                     } else {
                         log.debug("QUEUE: waiting for disconnect");
