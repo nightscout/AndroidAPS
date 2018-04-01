@@ -57,16 +57,16 @@ public class DateUtilTest {
 
     @Test
     public void timeStringTest() {
-        assertTrue(DateUtil.timeString(new Date(1513902750000L)).contains("1:32"));
-        assertTrue(DateUtil.timeString(1513902750000L).contains("1:32"));
+        assertTrue(DateUtil.timeString(new Date(1513902750000L)).contains("32"));
+        assertTrue(DateUtil.timeString(1513902750000L).contains("32"));
     }
 
     @Test
     public void dateAndTimeStringTest() {
         assertTrue(DateUtil.dateAndTimeString(1513902750000L).contains("22"));
-        assertTrue(DateUtil.dateAndTimeString(1513902750000L).contains("1:32"));
+        assertTrue(DateUtil.dateAndTimeString(1513902750000L).contains("32"));
         assertTrue(DateUtil.dateAndTimeString(new Date(1513902750000L)).contains("22"));
-        assertTrue(DateUtil.dateAndTimeString(new Date(1513902750000L)).contains("1:32"));
+        assertTrue(DateUtil.dateAndTimeString(new Date(1513902750000L)).contains("32"));
     }
 
     @Test
