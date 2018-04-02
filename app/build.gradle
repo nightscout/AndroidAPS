@@ -16,9 +16,11 @@ apply plugin: 'com.jakewharton.butterknife'
 
 ext {
     supportLibraryVersion = "27.0.2"
+    sdkBuildVersion = "27.0.3"
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
+    butterknifeVersion = "8.8.1"
 }
 
 
@@ -55,7 +57,7 @@ tasks.matching {it instanceof Test}.all {
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "${supportLibraryVersion}"
+    buildToolsVersion "${sdkBuildVersion}"
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
@@ -221,8 +223,8 @@ dependencies {
 
     implementation 'org.mozilla:rhino:1.7.7.2'
 
-    api "com.jakewharton:butterknife:8.8.1"
-    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
+    implementation "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 
     testImplementation "junit:junit:4.12"
     testImplementation "org.json:json:20140107"
