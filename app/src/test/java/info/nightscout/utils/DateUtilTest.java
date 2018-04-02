@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * Created by mike on 20.11.2017.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, DateUtil.class})
+@PrepareForTest({MainApp.class})
 public class DateUtilTest {
 
     @Test

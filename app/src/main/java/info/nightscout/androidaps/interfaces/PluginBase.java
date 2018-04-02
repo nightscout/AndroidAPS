@@ -20,8 +20,8 @@ public abstract class PluginBase {
         DISABLED
     }
 
-    State state = State.NOT_INITIALIZED;
-    boolean isFragmentVisible = false;
+    private State state = State.NOT_INITIALIZED;
+    private boolean isFragmentVisible = false;
     public PluginDescription pluginDescription;
 
 
@@ -152,7 +152,10 @@ public abstract class PluginBase {
         if (getType() == PluginType.PUMP) {
             new Thread(() -> {
                 SystemClock.sleep(3000);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("Pump driver changed.", null);
+                try {
+                    ConfigBuilderPlugin.getCommandQueue().readStatus("Pump driver changed.", null);
+                } catch (Exception ignored) { // Thread fail to start in tests
+                }
             }).start();
         }
     }
