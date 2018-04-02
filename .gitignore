@@ -8,3 +8,6 @@
 build/
 .idea/
 app/src/main/jniLibs
+full/
+debug/
+release/
