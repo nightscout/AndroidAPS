@@ -60,7 +60,7 @@ android {
     defaultConfig {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 27
         multiDexEnabled true
         versionCode 1500
         version "1.60c-dev"
