@@ -40,6 +40,16 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
 
     private static final String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
 
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        //TODO check if edited is a valid profile!
+        this.edited = edited;
+    }
+
+    boolean edited;
     boolean mgdl;
     boolean mmol;
     Double dia;
@@ -125,6 +135,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
             } catch (JSONException ignored) {
             }
         }
+        createConvertedProfile();
     }
 
     /*
@@ -189,16 +200,12 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
-        if (convertedProfile == null)
-            createConvertedProfile();
         if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.localprofile)))
             return null;
         return convertedProfile;
     }
 
     public ProfileStore getRawProfile() {
-        if (convertedProfile == null)
-            createConvertedProfile();
         return convertedProfile;
     }
 
@@ -209,8 +216,6 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
 
     @Override
     public String getProfileName() {
-        if (convertedProfile == null)
-            createConvertedProfile();
         return DecimalFormatter.to2Decimal(convertedProfile.getDefaultProfile().percentageBasalSum()) + "U ";
     }
 
