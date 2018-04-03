@@ -98,6 +98,20 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
     }
 
+    public String age(int threshold) {
+        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
+        if (OverviewFragment.shorttextmode)
+            if(diff.get(TimeUnit.DAYS) > threshold)
+                return "isOLD"+diff.get(TimeUnit.DAYS) +"d" + diff.get(TimeUnit.HOURS) + "h";
+            else
+                return diff.get(TimeUnit.DAYS) +"d" + diff.get(TimeUnit.HOURS) + "h";
+        else
+        if(diff.get(TimeUnit.DAYS) > threshold)
+            return "isOLD"+diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
+        else
+            return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
+    }
+
     public String log() {
         return "CareportalEvent{" +
                 "date= " + date +
@@ -259,4 +273,5 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     public int getSecondColor() {
         return 0;
     }
+
 }
