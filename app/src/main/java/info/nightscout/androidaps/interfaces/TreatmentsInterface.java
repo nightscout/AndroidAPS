@@ -41,8 +41,6 @@ public interface TreatmentsInterface {
     // basal that can be faked by extended boluses
     boolean isTempBasalInProgress();
     TemporaryBasal getTempBasalFromHistory(long time);
-    double getTempBasalAbsoluteRateHistory();
-    double getTempBasalRemainingMinutesFromHistory();
     Intervals<TemporaryBasal> getTemporaryBasalsFromHistory();
 
     boolean isInHistoryExtendedBoluslInProgress();

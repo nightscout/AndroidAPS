@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 public class MsgStatusBolusExtended extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgStatusBolusExtended.class);
@@ -65,7 +65,7 @@ public class MsgStatusBolusExtended extends MessageBase {
     }
 
     public static void updateExtendedBolusInDB() {
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+        TreatmentsInterface treatmentsInterface = TreatmentsPlugin.getPlugin();
         DanaRPump pump = DanaRPump.getInstance();
         long now = System.currentTimeMillis();
 

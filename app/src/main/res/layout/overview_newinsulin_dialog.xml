@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
@@ -23,33 +21,42 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/overview_insulin_label"
-                android:textColor="@color/colorInsulinButton"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/colorInsulinButton" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:padding="5dp"
                 android:src="@drawable/icon_bolus" />
-
-            <CheckBox
-                android:id="@+id/newinsulin_start_eating_soon_tt"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:text="@string/start_eating_soon_tt" />
-
-            <CheckBox
-                android:id="@+id/newinsulin_record_only"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/don_t_bolus_record_only" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:orientation="vertical"
                 android:layout_gravity="center_horizontal">
+
+                <CheckBox
+                    android:id="@+id/newinsulin_start_eating_soon_tt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/start_eating_soon_tt" />
+
+                <CheckBox
+                    android:id="@+id/newinsulin_record_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/don_t_bolus_record_only" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/newinsulin_eventdate"
@@ -83,9 +90,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/newinsulin_plus05"

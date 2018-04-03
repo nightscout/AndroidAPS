@@ -32,26 +32,33 @@
                 android:padding="5dp"
                 android:src="@drawable/icon_cp_bolus_carbs" />
 
-            <CheckBox
-                android:id="@+id/newcarbs_activity_tt"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:text="@string/start_activity_tt" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/carbs_eating_soon_tt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:text="@string/start_eating_soon_tt" />
+                <RadioButton
+                    android:id="@+id/newcarbs_activity_tt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/start_activity_tt" />
 
-            <CheckBox
-                android:id="@+id/newcarbs_suspend_loop"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:text="@string/suspendloopfor30min" />
+                <RadioButton
+                    android:id="@+id/newcarbs_eating_soon_tt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/start_eating_soon_tt" />
+
+                <RadioButton
+                    android:id="@+id/newcarbs_hypo_tt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/start_hypo_tt" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -75,15 +82,6 @@
                     android:padding="5dp"
                     android:text="08:20pm" />
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/newcarb_food"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="180dp"
-                android:inputType="text|textCapWords"
-                android:visibility="gone" />
 
             <info.nightscout.utils.NumberPicker
                 android:id="@+id/newcarb_carbsamount"

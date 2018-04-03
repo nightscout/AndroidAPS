@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -23,15 +22,16 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -85,15 +85,14 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
                 holder.reasonColon.setText("");
             }
             if (tempTarget.isInProgress()) {
-                if(tempTarget == currentlyActiveTarget){
+                if (tempTarget == currentlyActiveTarget) {
                     // active as newest
                     holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
                 } else {
                     // other's that might become active again after the latest (overlapping) is over
                     holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 }
-            }
-            else {
+            } else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
             }
             holder.remove.setTag(tempTarget);
@@ -176,7 +175,7 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getTempTargetsFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTempTargetsFromHistory());
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.temptargetrange_refreshfromnightscout);
@@ -225,7 +224,7 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getTempTargetsFromHistory()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTempTargetsFromHistory()), false);
                 }
             });
     }

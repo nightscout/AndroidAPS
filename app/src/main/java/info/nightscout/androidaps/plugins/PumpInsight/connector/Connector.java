@@ -14,7 +14,7 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventFeatureRunning;
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
@@ -76,7 +76,7 @@ public class Connector {
                     extendKeepAliveIfActive();
                 }
 
-                MainApp.bus().post(new EventInsightPumpUpdateGui());
+                MainApp.bus().post(new EventInsightUpdateGui());
             } else {
                 log("Same status as before: " + status);
             }
@@ -148,7 +148,7 @@ public class Connector {
 
     public synchronized static void connectToPump(long keep_alive) {
         log("Attempting to connect to pump.");
-        if (keep_alive > 0) {
+        if (keep_alive > 0 && Helpers.tsl() + keep_alive > stayConnectedTill) {
             stayConnectedTime = keep_alive;
             stayConnectedTill = Helpers.tsl() + keep_alive;
             log("Staying connected till: " + Helpers.dateTimeText(stayConnectedTill));

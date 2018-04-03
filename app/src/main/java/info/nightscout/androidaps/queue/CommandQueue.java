@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -17,13 +18,14 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
@@ -31,6 +33,7 @@ import info.nightscout.androidaps.queue.commands.CommandCancelTempBasal;
 import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
+import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
 import info.nightscout.androidaps.queue.commands.CommandReadStatus;
 import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
@@ -104,10 +107,12 @@ public class CommandQueue {
 
     private synchronized void inject(Command command) {
         // inject as a first command
+        log.debug("QUEUE: Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.addFirst(command);
     }
 
     private synchronized void add(Command command) {
+        log.debug("QUEUE: Adding: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.add(command);
     }
 
@@ -139,9 +144,16 @@ public class CommandQueue {
     // After new command added to the queue
     // start thread again if not already running
     protected synchronized void notifyAboutNewCommand() {
+        while (thread != null && thread.getState() != Thread.State.TERMINATED && thread.waitingForDisconnect) {
+            log.debug("QUEUE: Waiting for previous thread finish");
+            SystemClock.sleep(500);
+        }
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
+            log.debug("QUEUE: Starting new thread");
+        } else {
+            log.debug("QUEUE: Thread is already running");
         }
     }
 
@@ -164,8 +176,8 @@ public class CommandQueue {
         removeAll(type);
 
         // apply constraints
-        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>((int) detailedBolusInfo.carbs)).value();
 
         // add new command to queue
         if (detailedBolusInfo.isSMB) {
@@ -185,7 +197,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -195,10 +207,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(absoluteRate);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -206,7 +218,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public boolean tempBasalPercent(Integer percent, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -216,10 +228,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Integer percentAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(percent);
+        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -234,7 +246,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);
@@ -293,12 +305,20 @@ public class CommandQueue {
             return false;
         }
 
+        if (!MainApp.isEngineeringModeOrRelease()) {
+            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.not_eng_mode_or_release))).run();
+            return false;
+        }
+
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
-        for (int index = 0; index < basalValues.length; index++) {
-            if (basalValues[index].value < pump.getPumpDescription().basalMinimumRate) {
+        for (Profile.BasalValue basalValue : basalValues) {
+            if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
@@ -310,7 +330,7 @@ public class CommandQueue {
         MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
 
         if (isThisProfileSet(profile)) {
-            log.debug("Correct profile already set");
+            log.debug("QUEUE: Correct profile already set");
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).enacted(false)).run();
             return false;
@@ -367,6 +387,25 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
+    public boolean loadTDDs(Callback callback) {
+        if (isRunning(Command.CommandType.LOADHISTORY)) {
+            if (callback != null)
+                callback.result(executingNowError()).run();
+            return false;
+        }
+
+        // remove all unfinished
+        removeAll(Command.CommandType.LOADHISTORY);
+
+        // add new command to queue
+        add(new CommandLoadTDDs(callback));
+
+        notifyAboutNewCommand();
+
+        return true;
+    }
+
+    // returns true if command is queued
     public boolean loadEvents(Callback callback) {
         if (isRunning(Command.CommandType.LOADEVENTS)) {
             if (callback != null)
@@ -403,10 +442,11 @@ public class CommandQueue {
 
     public boolean isThisProfileSet(Profile profile) {
         PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
-        if (activePump != null) {
+        Profile current = MainApp.getConfigBuilder().getProfile();
+        if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);
             if (!result) {
-                log.debug("Current profile: " + MainApp.getConfigBuilder().getProfile().getData().toString());
+                log.debug("Current profile: " + current.getData().toString());
                 log.debug("New profile: " + profile.getData().toString());
             }
             return result;

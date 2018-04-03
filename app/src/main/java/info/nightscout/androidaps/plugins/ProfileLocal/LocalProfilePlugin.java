@@ -15,6 +15,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
@@ -22,7 +24,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class LocalProfilePlugin implements PluginBase, ProfileInterface {
+public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     public static final String LOCAL_PROFILE = "LocalProfile";
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
 
@@ -34,13 +36,9 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         return localProfilePlugin;
     }
 
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
-
     private ProfileStore convertedProfile = null;
-    private String convertedProfileName = null;
 
-    public static final String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
+    private static final String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
 
     boolean mgdl;
     boolean mmol;
@@ -52,73 +50,13 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     JSONArray targetHigh;
 
     public LocalProfilePlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.PROFILE)
+                .fragmentClass(LocalProfileFragment.class.getName())
+                .pluginName(R.string.localprofile)
+                .shortName(R.string.localprofile_shortname)
+        );
         loadSettings();
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return LocalProfileFragment.class.getName();
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.PROFILE;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.localprofile);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.localprofile_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == PROFILE && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == PROFILE) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PROFILE) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
     }
 
     public void storeSettings() {
@@ -246,7 +184,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             log.error("Unhandled exception", e);
         }
         convertedProfile = new ProfileStore(json);
-        convertedProfileName = LOCAL_PROFILE;
     }
 
     @Override

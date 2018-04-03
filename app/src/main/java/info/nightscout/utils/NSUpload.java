@@ -34,8 +34,6 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
-import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 
 /**
  * Created by mike on 26.05.2017.
@@ -142,7 +140,7 @@ public class NSUpload {
             data.put("splitNow", 0);
             data.put("splitExt", 100);
             data.put("enteredinsulin", extendedBolus.insulin);
-            data.put("relative", extendedBolus.insulin);
+            data.put("relative", extendedBolus.insulin / extendedBolus.durationInMinutes * 60); // U/h
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
@@ -190,6 +188,14 @@ public class NSUpload {
     }
 
     public static void uploadDeviceStatus() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        String profileName = MainApp.getConfigBuilder().getProfileName();
+
+        if (profile == null || profileName == null) {
+            log.error("Profile is null. Skipping upload");
+            return;
+        }
+
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
@@ -202,22 +208,31 @@ public class NSUpload {
                 deviceStatus.iob = lastRun.request.iob.json();
                 deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
 
-                if (lastRun.setByPump != null && lastRun.setByPump.enacted) { // enacted
+                JSONObject requested = new JSONObject();
+
+                if (lastRun.tbrSetByPump != null && lastRun.tbrSetByPump.enacted) { // enacted
                     deviceStatus.enacted = lastRun.request.json();
-                    deviceStatus.enacted.put("rate", lastRun.setByPump.json().get("rate"));
-                    deviceStatus.enacted.put("duration", lastRun.setByPump.json().get("duration"));
+                    deviceStatus.enacted.put("rate", lastRun.tbrSetByPump.json(profile).get("rate"));
+                    deviceStatus.enacted.put("duration", lastRun.tbrSetByPump.json(profile).get("duration"));
                     deviceStatus.enacted.put("recieved", true);
-                    JSONObject requested = new JSONObject();
                     requested.put("duration", lastRun.request.duration);
                     requested.put("rate", lastRun.request.rate);
                     requested.put("temp", "absolute");
+                    deviceStatus.enacted.put("requested", requested);
+                }
+                if (lastRun.smbSetByPump != null && lastRun.smbSetByPump.enacted) { // enacted
+                    if (deviceStatus.enacted == null) {
+                        deviceStatus.enacted = lastRun.request.json();
+                    }
+                    deviceStatus.enacted.put("smb", lastRun.smbSetByPump.bolusDelivered);
+                    requested.put("smb", lastRun.request.smb);
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
                 log.debug("OpenAPS data too old to upload");
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus();
+            JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus(profile, profileName);
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }
@@ -458,6 +473,27 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         }
+    }
+
+    public static void uploadEvent(String careportalEvent, long time) {
+        Context context = MainApp.instance().getApplicationContext();
+        Bundle bundle = new Bundle();
+        bundle.putString("action", "dbAdd");
+        bundle.putString("collection", "treatments");
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", careportalEvent);
+            data.put("created_at", DateUtil.toISOString(time));
+            data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        bundle.putString("data", data.toString());
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
     }
 
     public static void removeFoodFromNS(String _id) {

@@ -61,6 +61,31 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     private Profile profile = null;
 
+    public ProfileSwitch date(long date) {
+        this.date = date;
+        return this;
+    }
+
+    public ProfileSwitch profileName(String profileName) {
+        this.profileName = profileName;
+        return this;
+    }
+
+    public ProfileSwitch profile(Profile profile) {
+        this.profile = profile;
+        return this;
+    }
+
+   public ProfileSwitch source(int source) {
+        this.source = source;
+        return this;
+    }
+
+   public ProfileSwitch duration(int duration) {
+        this.durationInMinutes = duration;
+        return this;
+    }
+
     @Nullable
     public Profile getProfileObject() {
         if (profile == null)

@@ -5,8 +5,6 @@
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
     <string name="nav_preferences">Опции</string>
     <string name="nav_refreshtreatments">Обнови леченията от NS</string>
-    <string name="nav_backup">Резервно копие</string>
-    <string name="nav_test_alert">Тест на аларма</string>
     <string name="nav_resetdb">Нулирай базата данни</string>
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="nav_exit">Изход</string>
@@ -20,7 +18,6 @@
     <string name="objectives_button_verify">Провери</string>
     <string name="nsprofileview_units_label">Единици</string>
     <string name="nsprofileview_dia_label">DIA (Време на действие на инсулина):</string>
-    <string name="nsprofileview_activeprofile_label">Активен профил</string>
     <string name="nsprofileview_ic_label">IC (Инсулин/въглехидр.):</string>
     <string name="nsprofileview_isf_label">ISF (Инс.чувствителност):</string>
     <string name="nsprofileview_basal_label">Базал</string>
@@ -43,16 +40,14 @@
     <string name="treatments_wizard_bg_label">КЗ</string>
     <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
-    <string name="treatments_wizard_unit_label">Ед</string>
+    <string name="insulin_unit_shortname">Ед</string>
     <string name="treatments_wizard_bolusiob_label">IOB от болуси</string>
-    <string name="treatments_wizard_total_label">ОБШО</string>
     <string name="openapsma_run">Старт сега</string>
     <string name="pump_basebasalrate_label">Базова базална стойност</string>
     <string name="pump_battery_label">Батерия</string>
     <string name="virtualpump_extendedbolus_label">Удължен болус</string>
     <string name="pump_reservoir_label">Резервоар</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_sqlerror">Грешка в базата данни</string>
     <string name="pump_tempbasal_label">Временен базал</string>
     <string name="vitualpump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="openapsma_lastrun_label">Последно изпълнение</string>
@@ -64,8 +59,6 @@
     <string name="openapsma_mealdata_label">Данни за хранене</string>
     <string name="result">Резултат</string>
     <string name="openapsma_noglucosedata">Няма данни за КЗ</string>
-    <string name="openapsma_noprofile">Няма зададен профил</string>
-    <string name="openapsma_nopump">Няма избана помпа</string>
     <string name="nochangerequested">Не се изисква промяна</string>
     <string name="openapsma_request_label">Искане</string>
     <string name="rate">Стойност</string>
@@ -74,7 +67,6 @@
     <string name="glucose">Кръвна захар</string>
     <string name="delta">Изменение (Δ)</string>
     <string name="sms_delta">Delta:</string>
-    <string name="avgdelta">Средно изменение (Δ),</string>
     <string name="configbuilder">Конфигурация</string>
     <string name="objectives">Цели</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -87,18 +79,16 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_treatments">Treatments</string>
-    <string name="configbuilder_tempbasals">Временен базал</string>
     <string name="configbuilder_profile">Профил</string>
     <string name="configbuilder_aps">Алгоритъм за APS</string>
     <string name="configbuilder_general">Общи</string>
     <string name="days">дни</string>
     <string name="objectives_minimalduration">Минимална продължителност</string>
-    <string name="configbuilder_constraints">Ограничения</string>
+    <string name="constraints">Ограничения</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">След ограничения</string>
-    <string name="loop_setbypump_label">Зададено на помпата</string>
     <string name="openapsma_lastenact_label">Последно зададено</string>
     <string name="ok">OK</string>
     <string name="cancel">Откажи</string>
@@ -125,7 +115,6 @@
     <string name="setextendedbolusquestion">Задай нов удължен болус:</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="xdrip">xDrip</string>
-    <string name="nsclient">NSClient</string>
     <string name="apsmode_title">APS режим</string>
 
     <string name="closedloop">Closed Loop</string>
@@ -184,11 +173,7 @@
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
-    <string name="send">ИЗПРАТИ</string>
     <string name="missing">Липсва</string>
-    <string name="enabled">Разрешен</string>
-    <string name="visible">Видим</string>
-    <string name="up">Нагоре</string>
     <string name="exported">Настройките са експортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
@@ -224,7 +209,6 @@
     <string name="danar_iob_label">IOB на помпата</string>
     <string name="danar_dailyunits">Инсулин за деня</string>
     <string name="pump_lastbolus_label">Последен болус:</string>
-    <string name="hoursago">ч по-рано</string>
     <string name="danar_invalidinput">Грешни входящи данни</string>
     <string name="danar_valuenotsetproperly">Неправилна стойност</string>
     <string name="reloadprofile">Презареди профил</string>
@@ -290,7 +274,6 @@
     <string name="overview_bolusprogress_stop">Спри</string>
     <string name="overview_bolusprogress_stoppressed">Натиснат е СТОП!</string>
     <string name="waitingforpump">Очаква помпата</string>
-    <string name="waitingforpumpclicktorefresh">Очаква резутат. Натисни за обновяване.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Ще достави %.2fЕ</string>
     <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
     <string name="objectives_1_gate">Работете в Open Loop няколко дни и ръчно прилагайте на много временни базали</string>
@@ -346,17 +329,11 @@
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>
     <string name="button3">Бутон 3</string>
-    <string name="percentagefactor_hint">% с който базовият профил ще бъде променен.</string>
-    <string name="timeshift_hint">Точен брой часове, с които ще бъде изместен профила!</string>
-     <string name="units">Единици:</string>
+    <string name="units">Единици:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
     <string name="dia">DIA:</string>
     <string name="target_range">Целева КЗ:</string>
-    <string name="edit_base_basal">Редактирай базални стойности</string>
-    <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
-    <string name="edit_base_ic">Редактирай Инс./ВХ</string>
-    <string name="base_profile_label">Базов профил:</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
     <string name="low_mark">Ниска КЗ под</string>
@@ -416,10 +393,8 @@
     <string name="loop_shortname">LOOP</string>
     <string name="simpleprofile_shortname">ОПр</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="temptargetrange_shortname">Вцел</string>
     <string name="localprofile_shortname">ЛПр</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="tempbasals_shortname">ВБ</string>
     <string name="overview_shortname">ОСН</string>
     <string name="virtualpump_shortname">ВП</string>
     <string name="profileviewer_shortname">NSП</string>
@@ -429,7 +404,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Използвай къси имена</string>
-    <string name="prefs_delta_title">Настройки на параметър Δ КЗ</string>
     <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
     <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум</string>
     <string name="advancedsettings_title">Разширени настройки</string>
@@ -459,8 +433,6 @@
     <string name="smscommunicator_remotecalibrationnotallowed">Не е разрешена отдалечена калибрация</string>
     <string name="smscommunicator_calibrationsent">Неуспешно. Получаването трябва да е разрешено в xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip не получава калибрации</string>
-    <string name="dont_show_again">Не показвай отново</string>
-    <string name="pumpsuspendedclicktorefresh">Помпата е спряна. Натиснете за обновяване</string>
     <string name="pumpsuspended">Помпата е спряна</string>
     <string name="gettingpumpstatus">Получава статус на помпата</string>
     <string name="settingtempbasal">Настройва временен базал</string>
@@ -476,7 +448,7 @@
     <string name="settings_password">Парола за настройки</string>
     <string name="unlock_settings">Отключи настройките</string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
-    <string name="nsclientinternal">вътрешен NSClient</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Автопревъртане</string>
@@ -487,9 +459,6 @@
     <string name="nsclientinternal_secret_title">NS API парола</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Въведете NS API secret (мин 12 символа)</string>
-    <string name="nsclientinternal_devicename_title">Име на устройството</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Въведете името на телефона</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Ще се използва за полето \"Въведено от\"</string>
     <string name="deliver_now">Изпрати сега</string>
     <string name="clear_queue">Изчисти опашка</string>
     <string name="show_queue">Покажи опашка</string>
@@ -508,7 +477,6 @@
     <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor" formatted="false">Изключен (%d мин)</string>
     <string name="loopsuperbolusfor" formatted="false">Суперболус (%d мин)</string>
-    <string name="loopmenu">Меню Loop</string>
     <string name="suspendloopfor1h">Изключи Loop за 1ч</string>
     <string name="suspendloopfor2h">Изключи Loop за 2ч</string>
     <string name="suspendloopfor3h">Изключи Loop за 3ч</string>
@@ -518,7 +486,6 @@
     <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
     <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
     <string name="disconnectpumpfor3h">Изключи помпата за 3 ч</string>
-    <string name="disconnectpumpfor10h">Изключи помпата за 10 ч</string>
     <string name="resume">Възстанови</string>
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
@@ -538,14 +505,11 @@
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
-    <string name="predictionshortlabel">PRE</string>
-    <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Последно свързване</string>
     <string name="danar_bluetooth_status">Bluetooh статус</string>
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
-    <string name="dev">DEV</string>
     <string name="xdripstatus_settings">xDrip статус (часовник)</string>
     <string name="xdripstatus">xDrip статус (часовник)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -563,10 +527,6 @@
     <string name="careportal_insulinage_label">Възраст на инсулина</string>
     <string name="hours">часа</string>
     <string name="overview_newtempbasal_basaltype_label">Тип базал</string>
-    <string name="isfmissing">ISF липсва в профила. По подразбиране.</string>
-    <string name="icmissing">IC липсва в профила. По подразбиране.</string>
-    <string name="basalmissing">Базал липсва в профила. По подразбиране.</string>
-    <string name="targetmissing">Целева КЗ липсва в профила. По подразбиране.</string>
     <string name="invalidprofile">Грешен профил !!!</string>
     <string name="profileswitch">Смяна на профил</string>
     <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
@@ -576,18 +536,14 @@
     <string name="nsalarm_high">Висока</string>
     <string name="nsalarm_low">Ниска</string>
     <string name="nsalarm_urgentlow">Много ниска</string>
-    <string name="nsalarm_summary" formatted="false">Текущата стойност е %f</string>
     <string name="nsalarm_staledata">Няма данни</string>
     <string name="nsalarm_urgentstaledata">Много стари данни</string>
     <string name="nsalarm_staledatavalue_label">Когато няма данни повече от [мин]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
-    <string name="do_not_track_profile_switch">Игнорирай събитията от тип Смяна на профил</string>
-    <string name="do_not_track_profile_switch_summary">Всички смени на профила се игнорират и винаги се използва текущия профил</string>
     <string name="pump">Помпа</string>
     <string name="openaps">OpenAPS</string>
-    <string name="device">Устройство</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
@@ -630,7 +586,7 @@
     <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
     <string name="careportal_pump_label">ПОМПА</string>
     <string name="date">Дата</string>
-    <string name="dia_too_short" formatted="false">DIA от %s е твърде кратка - използвай %s вместо това!</string>
+    <string name="dia_too_short" formatted="false">DIA от %f е твърде кратка - използвай %f вместо това!</string>
     <string name="free_peak_oref">Със свободен пик по Oref</string>
     <string name="insulin_oref_peak">Пик на кривата на IOB</string>
     <string name="insulin_peak_time">Време на пик [мин.]</string>
@@ -638,7 +594,6 @@
     <string name="nl_lang">Dutch</string>
     <string name="overview_newtempbasal_basalabsolute">Базална стойност [Е/ч]</string>
     <string name="rapid_acting_oref">Бързодействащ по Oref</string>
-    <string name="ratio_short">SEN</string>
     <string name="sv_lang">Swedish</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
@@ -669,8 +624,6 @@
     <string name="treatments_wizard_tt_label">ЛЕЧ</string>
     <string name="waitingforpairing">Очаква сдвояване с помпа</string>
     <string name="connectiontimedout">Времето за връзка изтече</string>
-    <string name="wear_overviewnotifications">Преглед на известията</string>
-    <string name="wear_overviewnotifications_summary">Изпращай известията като съобщения към часовника</string>
     <string name="wear_settings">Настройки на часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
@@ -679,7 +632,6 @@
     <string name="combo_activity_setting_basal_profile">Настройва базалният профил</string>
     <string name="combo_error_bolus_recovery_progress">Опитва се да възстанови връзката</string>
     <string name="combo_error_bolus_verification_failed">Доставянето на болуса и проверката на историята на помпата са неуспешни, моля, проверете помпата и ако е доставен болус го добавете като запис през Careportal</string>
-    <string name="customapp">Модифицирано приложение за изтегляне</string>
     <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
     <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>

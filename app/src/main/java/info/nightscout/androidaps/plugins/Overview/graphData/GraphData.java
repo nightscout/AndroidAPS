@@ -26,8 +26,8 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
@@ -221,12 +221,7 @@ public class GraphData {
         addSeries(absoluteBasalsLineSeries);
     }
 
-    public void addTargetLine(long fromTime, long toTime) {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) {
-            return;
-        }
-
+    public void addTargetLine(long fromTime, long toTime, Profile profile) {
         LineGraphSeries<DataPoint> targetsSeries;
 
         Scale targetsScale = new Scale();
@@ -247,9 +242,10 @@ public class GraphData {
             TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
             double value;
             if (tt == null) {
-                value = (profile.getTargetLow(time) + profile.getTargetHigh(time))  / 2;
+                value = (profile.getTargetLow(time) + profile.getTargetHigh(time)) / 2;
             } else {
                 value = tt.target();
+                value = Profile.fromMgdlToUnits(value, profile.getUnits());
             }
             if (lastTarget > 0 && lastTarget != value) {
                 targetsSeriesArray.add(new DataPoint(time, lastTarget));
@@ -272,7 +268,7 @@ public class GraphData {
     public void addTreatments(long fromTime, long endTime) {
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+        List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
@@ -282,7 +278,7 @@ public class GraphData {
         }
 
         // ProfileSwitch
-        List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
+        List<ProfileSwitch> profileSwitches = TreatmentsPlugin.getPlugin().getProfileSwitchesFromHistory().getList();
 
         for (int tx = 0; tx < profileSwitches.size(); tx++) {
             DataPointWithLabelInterface t = profileSwitches.get(tx);
@@ -292,7 +288,7 @@ public class GraphData {
 
         // Extended bolus
         if (!ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
-            List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
+            List<ExtendedBolus> extendedBoluses = TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().getList();
 
             for (int tx = 0; tx < extendedBoluses.size(); tx++) {
                 DataPointWithLabelInterface t = extendedBoluses.get(tx);
@@ -560,15 +556,15 @@ public class GraphData {
     public void performUpdate() {
         // clear old data
         graph.getSeries().clear();
-        
+
         // add precalculated series
-        for (Series s: series) {
+        for (Series s : series) {
             if (!s.isEmpty()) {
                 s.onGraphViewAttached(graph);
                 graph.getSeries().add(s);
             }
         }
-        
+
         // draw it
         graph.onDataChanged(false, false);
     }

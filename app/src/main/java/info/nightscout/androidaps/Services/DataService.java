@@ -18,7 +18,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -33,11 +33,11 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
-import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.utils.BundleLogger;
 import info.nightscout.utils.NSUpload;
@@ -62,32 +62,37 @@ public class DataService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-
-        if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource() == null) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+            xDripEnabled = true;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = false;
+            dexcomG5Enabled = false;
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
             glimpEnabled = false;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = true;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
@@ -95,7 +100,7 @@ public class DataService extends IntentService {
             dexcomG5Enabled = true;
         }
 
-        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
+        boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -123,8 +128,8 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                // always backfill SGV from NS
-                handleNewDataFromNSClient(intent);
+                if (nsClientEnabled || SP.getBoolean(R.string.ns_autobackfill, true))
+                    handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
@@ -222,7 +227,7 @@ public class DataService extends IntentService {
         try {
             JSONArray jsonArray = new JSONArray(data);
             log.debug("Received Dexcom Data size:" + jsonArray.length());
-            for(int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
                 bgReading.value = json.getInt("m_value");
                 bgReading.direction = json.getString("m_trend");
@@ -365,11 +370,8 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
-                NSProfilePlugin.storeNewProfile(profileStore);
+                NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
-                // if there are no profile switches this should lead to profile update
-                if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)
-                    MainApp.bus().post(new EventNewBasalProfile());
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
@@ -474,55 +476,17 @@ public class DataService extends IntentService {
             }
         }
 
-        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD) || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
-            try {
-                if (bundles.containsKey("food")) {
-                    String trstring = bundles.getString("food");
-                    handleAddChangeFoodRecord(new JSONObject(trstring));
-                }
-                if (bundles.containsKey("foods")) {
-                    String trstring = bundles.getString("foods");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        handleAddChangeFoodRecord(trJson);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
+                || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
+            int mode = Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
+            EventNsFood evt = new EventNsFood(mode, bundles);
+            MainApp.bus().post(evt);
         }
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            try {
-                if (bundles.containsKey("food")) {
-                    String trstring = bundles.getString("food");
-                    JSONObject trJson = new JSONObject(trstring);
-                    String _id = trJson.getString("_id");
-                    handleRemovedFoodRecord(_id);
-                }
-
-                if (bundles.containsKey("foods")) {
-                    String trstring = bundles.getString("foods");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String _id = trJson.getString("_id");
-                        handleRemovedFoodRecord(_id);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
+            MainApp.bus().post(evt);
         }
-    }
-
-    private void handleRemovedFoodRecord(String _id) {
-        MainApp.getDbHelper().foodHelper.deleteFoodById(_id);
-    }
-
-    public void handleAddChangeFoodRecord(JSONObject trJson) throws JSONException {
-        MainApp.getDbHelper().foodHelper.createFoodFromJsonIfNotExists(trJson);
     }
 
     private void handleRemovedRecordFromNS(String _id) {

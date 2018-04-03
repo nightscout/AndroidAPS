@@ -21,6 +21,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
@@ -40,17 +41,10 @@ public class GlucoseStatus {
 
     @Override
     public String toString() {
-        return MainApp.sResources.getString(R.string.glucose) + " " + DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
-                MainApp.sResources.getString(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
-                MainApp.sResources.getString(R.string.short_avgdelta) + " " + DecimalFormatter.to2Decimal(short_avgdelta) + " mg/dl\n" +
-                MainApp.sResources.getString(R.string.long_avgdelta) + " " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl";
-    }
-
-    public Spanned toSpanned() {
-        return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
-                "<b>" + MainApp.sResources.getString(R.string.delta) + "</b>: " + DecimalFormatter.to0Decimal(delta) + " mg/dl<br>" +
-                "<b>" + MainApp.sResources.getString(R.string.short_avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(short_avgdelta) + " mg/dl<br>" +
-                "<b>" + MainApp.sResources.getString(R.string.long_avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl");
+        return MainApp.gs(R.string.glucose) + " " + DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
+                MainApp.gs(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
+                MainApp.gs(R.string.short_avgdelta) + " " + DecimalFormatter.to2Decimal(short_avgdelta) + " mg/dl\n" +
+                MainApp.gs(R.string.long_avgdelta) + " " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl";
     }
 
     public GlucoseStatus() {
@@ -75,11 +69,15 @@ public class GlucoseStatus {
     @Nullable
     public static GlucoseStatus getGlucoseStatusData(boolean allowOldData) {
         // load 45min
-        long fromtime = (long) (System.currentTimeMillis() - 60 * 1000L * 45);
+        long fromtime = DateUtil.now() - 60 * 1000L * 45;
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
-        if (sizeRecords < 1 || (data.get(0).date < System.currentTimeMillis() - 7 * 60 * 1000L && !allowOldData)) {
+        if (sizeRecords == 0) {
+            return null;
+        }
+
+        if (data.get(0).date < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
             return null;
         }
 
@@ -87,13 +85,14 @@ public class GlucoseStatus {
         long now_date = now.date;
         double change;
 
-        if (sizeRecords < 2) {
+        if (sizeRecords == 1) {
             GlucoseStatus status = new GlucoseStatus();
             status.glucose = now.value;
             status.short_avgdelta = 0d;
             status.delta = 0d;
             status.long_avgdelta = 0d;
             status.avgdelta = 0d; // for OpenAPS MA
+            status.date = now_date;
             return status.round();
         }
 

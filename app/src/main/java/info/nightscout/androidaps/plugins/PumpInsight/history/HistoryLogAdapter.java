@@ -7,12 +7,12 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
  * Created by jamorham on 27/01/2018.
- *
+ * <p>
  * Write to the History Log
- *
  */
 
 class HistoryLogAdapter {
@@ -25,9 +25,9 @@ class HistoryLogAdapter {
 
     void createTBRrecord(Date eventDate, int percent, int duration, long record_id) {
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal(eventDate.getTime());
+        TemporaryBasal temporaryBasal = new TemporaryBasal().date(eventDate.getTime());
 
-        final TemporaryBasal temporaryBasalFromHistory = MainApp.getConfigBuilder().getTempBasalFromHistory(eventDate.getTime());
+        final TemporaryBasal temporaryBasalFromHistory = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(eventDate.getTime());
 
         if (temporaryBasalFromHistory == null) {
             log("Create new TBR: " + eventDate + " " + percent + " " + duration);
@@ -50,12 +50,12 @@ class HistoryLogAdapter {
             }
         }
 
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = record_id;
-        temporaryBasal.percentRate = percent;
-        temporaryBasal.durationInMinutes = duration;
+        temporaryBasal.source(Source.PUMP)
+                .pumpId(record_id)
+                .percent(percent)
+                .duration(duration);
 
-        MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
+        TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
     }
 
     void createExtendedBolusRecord(Date eventDate, double insulin, int durationInMinutes, long record_id) {
@@ -69,7 +69,7 @@ class HistoryLogAdapter {
         extendedBolus.source = Source.PUMP;
         extendedBolus.pumpId = record_id;
 
-        MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+        TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
     }
 
     void createStandardBolusRecord(Date eventDate, double insulin, long record_id) {
@@ -83,6 +83,6 @@ class HistoryLogAdapter {
         detailedBolusInfo.source = Source.PUMP;
         detailedBolusInfo.pumpId = record_id;
         detailedBolusInfo.insulin = insulin;
-        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
     }
 }

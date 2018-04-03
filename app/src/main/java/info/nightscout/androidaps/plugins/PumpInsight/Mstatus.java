@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpInsight;
 
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCallback;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightCallback;
 
 /**
  * Created by jamorham on 01/02/2018.
@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpCal
 class Mstatus {
 
     Cstatus cstatus = Cstatus.UNKNOWN;
-    EventInsightPumpCallback event;
+    EventInsightCallback event;
 
     // comment field preparation for results
     String getCommandComment() {

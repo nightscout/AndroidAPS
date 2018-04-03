@@ -6,8 +6,6 @@
     <string name="treatmentssafety_maxcarbs_title">Glucides max. autorisés [g]</string>
     <string name="nav_preferences">Préférences</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
-    <string name="nav_backup">Sauvegarde</string>
-    <string name="nav_test_alert">Alarme test</string>
     <string name="nav_resetdb">"Réinitialiser les Bases de Données "</string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
@@ -21,7 +19,6 @@
     <string name="objectives_button_verify">Vérifier</string>
     <string name="nsprofileview_units_label">Unités</string>
     <string name="nsprofileview_dia_label">Durée d’Action</string>
-    <string name="nsprofileview_activeprofile_label">Profil actif</string>
     <string name="nsprofileview_ic_label">"I:G (Ratio Insuline/Glucides)"</string>
     <string name="nsprofileview_isf_label">"Facteur SI"</string>
     <string name="nsprofileview_basal_label">Basal</string>
@@ -45,14 +42,12 @@
     <string name="treatments_wizard_tt_label">CT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
     <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IR</string>
-    <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">"Exécuter maintenant "</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
     <string name="virtualpump_extendedbolus_label">Bolus étendu</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_sqlerror">Erreur SQL</string>
     <string name="openapsma_lastrun_label">Dérnière exécution</string>
     <string name="openapsma_inputparameters_label">Paramètres de saisie</string>
     <string name="openapsma_glucosestatus_label">État de la glycémie</string>
@@ -62,8 +57,6 @@
     <string name="openapsma_mealdata_label">Données repas</string>
     <string name="result">Résultat</string>
     <string name="openapsma_noglucosedata">Pas de données glycémiques dispo</string>
-    <string name="openapsma_noprofile">Pas de profil dispo</string>
-    <string name="openapsma_nopump">Pas de pompe dispo</string>
     <string name="openapsma_request_label">Requête</string>
     <string name="rate">"Taux "</string>
     <string name="duration">Durée</string>
@@ -71,7 +64,6 @@
     <string name="glucose">Glucose</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
-    <string name="avgdelta">Moyenne</string>
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objectifs</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -84,18 +76,16 @@
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_treatments">Traitements</string>
-    <string name="configbuilder_tempbasals">Basaux tempo</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Général</string>
     <string name="days">Jours</string>
     <string name="objectives_minimalduration">Durée minimale</string>
-    <string name="configbuilder_constraints">Restrictions</string>
+    <string name="constraints">Restrictions</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
-    <string name="loop_setbypump_label">"Défini par pompe  "</string>
     <string name="openapsma_lastenact_label">Dérnière mise en marche</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
@@ -122,7 +112,6 @@
     <string name="setextendedbolusquestion">Définir un nouveau bolus étendu</string>
     <string name="configbuilder_bgsource">Source de glycémie</string>
     <string name="xdrip">xDrip</string>
-    <string name="nsclient">NSClient</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="closedloop">Boucle fermée</string>
     <string name="openloop">Boucle ouverte</string>
@@ -178,11 +167,7 @@
     <string name="overview_tempbasal_button">Basal Tempo</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout:</string>
-    <string name="send">TRANSMETTRE</string>
     <string name="missing">Manquants</string>
-    <string name="enabled">Activé</string>
-    <string name="visible">Visible</string>
-    <string name="up">Up</string>
     <string name="exported">Préférences exportées</string>
     <string name="export_to">Exporter les paramètres au</string>
     <string name="import_from">Importer les paramètres depuis</string>
@@ -283,7 +268,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">Boutton Stop Activé</string>
     <string name="waitingforpump">Attente connection pompe</string>
-    <string name="waitingforpumpclicktorefresh">Attente connection pompe. Cliquez sur Actualiser</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU va être administré</string>
     <string name="objectives_0_objective">Paramétrez la visualisation et la surveillance des données, analysez les débits de base et les ratios</string>
     <string name="objectives_0_gate">Vérifiez que la G est disponible sur Nightscout, et les données d’insuline sur pompe ont été téléchargées</string>
@@ -342,17 +326,11 @@
     <string name="button1">Touche 1</string>
     <string name="button2">Touche 2</string>
     <string name="button3">Touche 3</string>
-    <string name="percentagefactor_hint">Le facteur pourcentage avec lequel le profil de base sera multiplié</string>
-    <string name="timeshift_hint">Temps en heures avec lequel le profil sera modifié en round-robin</string>
     <string name="units">Unités</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">Durée d\'Action d\'Insuline</string>
     <string name="target_range">Fourchette cible:</string>
-    <string name="edit_base_basal">"Éditer Débit de Base:  "</string>
-    <string name="edit_base_isf">"Éditer Facteur SI de Base: "</string>
-    <string name="edit_base_ic">"Éditer I:G de Base: "</string>
-    <string name="base_profile_label">Profil de Base:</string>
     <string name="prefs_range_title">Écart de visualisation</string>
     <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l’apercu et la montre</string>
     <string name="low_mark">Repère BAS</string>
@@ -412,10 +390,8 @@
     <string name="loop_shortname">LOOP</string>
     <string name="simpleprofile_shortname">SP</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">POMPEV</string>
     <string name="profileviewer_shortname">PROFIL NS</string>
@@ -425,7 +401,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Raccourcir les titres des onglets</string>
-    <string name="prefs_delta_title">Paramètres Delta</string>
     <string name="always_use_shortavg">Toujours utilisez une moyenne (delta) courte au lieu d’une moyenne normale</string>
     <string name="always_use_shortavg_summary">Utile quand les données provenant de sources non filtrées lorsque xDrip devient bruyant</string>
     <string name="advancedsettings_title">Paramètres Avancés</string>
@@ -447,8 +422,6 @@
     <string name="smscommunicator_remotecalibrationnotallowed">L\'étalonnage à distance n\'est pas autorisé</string>
     <string name="smscommunicator_calibrationsent">"Étalonnage envoyé. La récepetion doit être activée dans xDrip. "</string>
     <string name="smscommunicator_calibrationfailed">xDrip ne reçoit pas les étalonnages</string>
-    <string name="dont_show_again">Ne plus montrer ce message</string>
-    <string name="pumpsuspendedclicktorefresh">Pompe suspendue. Cliquez pour actualiser le profile</string>
     <string name="pumpsuspended">Pompe suspendue</string>
     <string name="gettingpumpstatus">Obtenir l\'état de pompe</string>
     <string name="settingtempbasal">Définir basal tempo</string>
@@ -475,9 +448,6 @@
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Entrez NS API secret (12 carac. min)</string>
-    <string name="nsclientinternal_devicename_title">Nom de l\'appareil</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Entrez le nom de l\'appareil</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Cela sera utilisé pour le champ \"Entré par\"</string>
     <string name="deliver_now">Transmettre maintenant</string>
     <string name="clear_queue">Vider la file d\'attente</string>
     <string name="show_queue">Afficher la file d\'attente</string>
@@ -503,7 +473,6 @@
     <string name="loopsuspended">Loop suspendu</string>
     <string name="loopsuspendedfor" formatted="false">Suspendu (%d m)</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
-    <string name="loopmenu">Menu loop</string>
     <string name="suspendloopfor1h">Suspendre Loop pour 1h</string>
     <string name="suspendloopfor2h">Suspendre Loop pour 2h</string>
     <string name="suspendloopfor3h">Suspendre Loop pour 3h</string>
@@ -513,7 +482,6 @@
     <string name="disconnectpumpfor1h">Déconnecter la pompe 1h</string>
     <string name="disconnectpumpfor2h">Déconnecter la pompe 2h</string>
     <string name="disconnectpumpfor3h">Déconnecter la pompe 3h</string>
-    <string name="disconnectpumpfor10h">Déconnecter la pompe 10h</string>
     <string name="resume">Reprendre</string>
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
     <string name="smscommunicator_loopsuspended">Loop suspendu</string>
@@ -534,13 +502,10 @@
     <string name="enablesuperbolus_summary">Activer la fonctionalité superbolus dans l’assistant. Ne pas l’activez jusqu’au moment où vous appreniez comment il fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT!</string>
     <string name="iob">" IR"</string>
     <string name="cob">GR</string>
-    <string name="predictionshortlabel">"PRÉ "</string>
-    <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_bluetooth_status">État Bluetooth</string>
     <string name="nav_about">à propos de</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
-    <string name="dev">DEV</string>
     <string name="xdripstatus_settings">État Xdrip (hr)</string>
     <string name="xdripstatus">Barre d\'état pour xDrip (Montre)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -558,10 +523,6 @@
     <string name="careportal_insulinage_label">Durée d\'insuline</string>
     <string name="hours">Heures</string>
     <string name="overview_newtempbasal_basaltype_label">Type du Basal</string>
-    <string name="isfmissing">"Facteur SI manquant dans le profile. Utilisez les valeurs par défaut. "</string>
-    <string name="icmissing">I:G manquant dans le profile. Utilisez les valeurs par défaut.</string>
-    <string name="basalmissing">Basal manquant dans le profile. Utilisez les valeurs par défaut</string>
-    <string name="targetmissing">Cible manquante dans le profile. Utilisez les valeurs par défaut</string>
     <string name="invalidprofile">Profile incorrect!!!</string>
     <string name="profileswitch">Changement de Profil</string>
     <string name="careportal_pbage_label">Durée batterie pompe</string>
@@ -571,19 +532,14 @@
     <string name="nsalarm_high">Haute</string>
     <string name="nsalarm_low">Basse</string>
     <string name="nsalarm_urgentlow">Basse urgent</string>
-    <string name="nsalarm_summary" formatted="false">Actuellement programmé à %f</string>
     <string name="nsalarm_staledata">"Données obsolètes "</string>
     <string name="nsalarm_urgentstaledata">Données obsolètes urgent</string>
     <string name="nsalarm_staledatavalue_label">"Seuil des données obsolètes [min] "</string>
     <string name="nsalarm_urgent_staledatavalue_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="openapsama_autosens_period">"l’intervalle pour autosens [h] "</string>
     <string name="openapsama_autosens_period_summary">Le nombre d’heures écoulées pour la détection de sensibilité (le temps d’absorption des glucides est exclu)</string>
-    <string name="ratio_short">SEN</string>
-    <string name="do_not_track_profile_switch">Ignorer les événements de changement de profil</string>
-    <string name="do_not_track_profile_switch_summary">Tout les événements de changement de profils sont ignorés et le profil actif reste le seul profil en activité continue</string>
     <string name="pump">Pompe</string>
     <string name="openaps">OpenAPS</string>
-    <string name="device">Dispositif</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Détection de sensibilité</string>
     <string name="sensitivity_shortname">SENS</string>
@@ -609,8 +565,6 @@
     <string name="mdtp_cancel">Annuler</string>
     <string name="notloadedplugins">Pas tous les profils sont téléchargés!</string>
     <string name="valuesnotstored">Valeurs non enregistrées!</string>
-    <string name="wear_overviewnotifications">Notifications d\'aperçu</string>
-    <string name="wear_overviewnotifications_summary">Transférez les notifications d’aperçu comme des messages de confirmation sur la montre.</string>
     <string name="ns_localbroadcasts">Activer les transmissions de données sur d\'autres app. (ex. Xdrip)</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales.</string>
     <string name="careportal_activity_label">ACTIVITÉ et FEEDBACK</string>
@@ -625,7 +579,7 @@
     <string name="insulin_peak_time">"Durée du Pic [min] "</string>
     <string name="rapid_acting_oref">"Insuline à Action Rapide Oref "</string>
     <string name="ultrarapid_oref">Insuline à Action Ultra Rapide Oref</string>
-    <string name="dia_too_short" formatted="false">Durée d’Action pour %s trop courte - utiliser %s à la place!</string>
+    <string name="dia_too_short" formatted="false">Durée d’Action pour %f trop courte - utiliser %f à la place!</string>
     <string name="activate_profile">ACTIVER LE PROFIL</string>
     <string name="date">" Date"</string>
     <string name="invalid">INVALID</string>
@@ -680,7 +634,6 @@
     <string name="DexcomG5">App Dexcom G5 (adaptée)</string>
     <string name="dexcomg5_nsupload_title">Télécharger Les données glycémiques sur NS</string>
     <string name="dexcomg5_upload">Paramètres de téléchargement du G5</string>
-    <string name="customapp">APK personalisée pour le téléchargement</string>
     <string name="wear_detailed_delta_title">Afficher le delta détaillé</string>
     <string name="wear_detailed_delta_summary">Afficher delta avec une décimale supplémentaire</string>
     <string name="unsupportedfirmware">"Firmware pompe incompatible "</string>
@@ -736,8 +689,6 @@
     <string name="combo_pump_activity_label">Activité</string>
     <string name="combo_no_pump_connection" formatted="false">Pas de connexion depuis %d min</string>
     <string name="combo_tbr_remaining" formatted="false">%d%% (%d min restantes)</string>
-    <string name="combo_pump_action_initializing">Initialisation</string>
-    <string name="combo_pump_state_disconnected">Déconnectée</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspendu pour cause d\'erreur</string>
     <string name="combo_pump_state_suspended_by_user">Suspendu par l\'utilisateur</string>
     <string name="combo_pump_state_running">En cours d\'exécution</string>
@@ -751,7 +702,6 @@
     <string name="combo_pump_action_setting_tbr" formatted="false">"Paramétrer TBR (%d%% / %d min) "</string>
     <string name="combo_pump_action_bolusing">"Administration du bolus en cours (%.1f U) "</string>
     <string name="combo_pump_action_refreshing">Actualisation en cours</string>
-    <string name="combo_pump_never_connected">Jamais</string>
     <string name="combo_pump_unsupported_operation">L\'opération demandée n\'est pas prise en charge par la pompe</string>
     <string name="combo_low_suspend_forced_notification">Utilisation dangereuse : les bolus étendus ou carrés sont actifs. Le mode Loop a été programmé pour le low suspend seulement pour 6 heures. Uniquement les bolus normaux sont pris en charge par le mode Loop</string>
     <string name="combo_force_disabled_notification">Utilisation dangereuse : la pompe utilise un profile taux basal différent de celui du premier. Le Loop a été désactivé</string>
@@ -774,8 +724,6 @@
     <string name="combo_notification_check_time_date">Mise à jour nécessaire pour l\'heure de la pompe</string>
     <string name="combo_history">Historique</string>
     <string name="combo_warning">Warning</string>
-    <string name="combo_read_full_history_warning">Ceci va lire l’historique et l’état complet de la pompe. Tout ce qui est dans les données et le taux du basal. Les bolus et les TBRs seront ajoutés aux traitements s’ils n’existent pas déjà. Cela peut provoquer une duplication des entrées parce que l’heure de la pompe est imprécise. Utilisant cette fonction quand la boucle normale est fortement déconseillée et réservée à des circonstances spéciales. Si vous voulez toujours essayer cela, appuyez longuement encore ce ce bouton. WARNING : ceci peut provoquer un bug ce qui ordonne la pompe à rejeter toutes les tentatives de connexion et qui va nécessiter d’appuyer un bouton sur la pompe pour restaurer et par conséquent le bug devrait être évité</string>
-    <string name="combo_read_full_history_confirmation">Êtes-vous sur de bien vouloir lire toutes les données de la pompe et assumer les conséquences de cette action?</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR ANNULÉ warning confirmé</string>
     <string name="combo_error_no_bolus_delivered">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, Veuillez vérifier la pompe pour éviter un double bolus ensuite re bolusez une nouvelle fois</string>
     <string name="combo_error_partial_bolus_delivered" formatted="false">Seulement %.2f U de %.2f U du bolus demandé a été administré dû à une erreur. Veuillez svp vérifier la pompe pour contrôler cela et prendre les mesures appropriées</string>

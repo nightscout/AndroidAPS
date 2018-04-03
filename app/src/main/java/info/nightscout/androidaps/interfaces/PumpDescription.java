@@ -39,4 +39,6 @@ public class PumpDescription {
     public boolean isRefillingCapable = false;
 
     public boolean storesCarbInfo = true;
+
+    public boolean is30minBasalRatesCapable = false;
 }

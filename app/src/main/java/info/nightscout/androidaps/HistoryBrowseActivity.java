@@ -2,11 +2,18 @@ package info.nightscout.androidaps;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
@@ -26,6 +33,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.utils.DateUtil;
@@ -33,6 +41,13 @@ import info.nightscout.utils.SP;
 
 public class HistoryBrowseActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);
+
+
+    ImageButton chartButton;
+
+    boolean showBasal = true;
+    boolean showIob, showCob, showDev, showRat;
+
 
     @BindView(R.id.historybrowse_date)
     Button buttonDate;
@@ -44,19 +59,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     GraphView iobGraph;
     @BindView(R.id.historybrowse_seekBar)
     SeekBar seekBar;
-
-    @BindView(R.id.overview_showprediction)
-    CheckBox showPredictionCheckbox;
-    @BindView(R.id.overview_showbasals)
-    CheckBox showBasalsCheckbox;
-    @BindView(R.id.overview_showiob)
-    CheckBox showIobCheckbox;
-    @BindView(R.id.overview_showcob)
-    CheckBox showCobCheckbox;
-    @BindView(R.id.overview_showdeviations)
-    CheckBox showDeviationsCheckbox;
-    @BindView(R.id.overview_showratios)
-    CheckBox showRatiosCheckbox;
+    @BindView(R.id.historybrowse_noprofile)
+    TextView noProfile;
 
     private int rangeToDisplay = 24; // for graph
     private long start;
@@ -84,6 +88,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
+
+        setupChartMenu();
 
         // set start of current day
         Calendar calendar = Calendar.getInstance();
@@ -162,15 +168,6 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     void onClickDate() {
     }
 
-    @OnClick({R.id.overview_showbasals, R.id.overview_showprediction, R.id.overview_showiob, R.id.overview_showcob, R.id.overview_showdeviations, R.id.overview_showratios})
-    void onClickDate(View view) {
-        //((CheckBox) view).toggle();
-        updateGUI("checkboxToggle");
-        iobCobCalculatorPlugin.clearCache();
-        iobCobCalculatorPlugin.runCalculation("onClickDate", start, true, eventCustomCalculationFinished);
-    }
-
-
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished e) {
         Activity activity = this;
@@ -188,6 +185,14 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     void updateGUI(String from) {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (profile == null) {
+            noProfile.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            noProfile.setVisibility(View.GONE);
+        }
+
         final String units = profile.getUnits();
 
         double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
@@ -247,7 +252,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         graphData.addTreatments(fromTime, toTime);
 
         // add basal data
-        if (pump.getPumpDescription().isTempBasalCapable && showBasalsCheckbox.isChecked()) {
+        if (pump.getPumpDescription().isTempBasalCapable && showBasal) {
             graphData.addBasals(fromTime, toTime, lowLine / graphData.maxY / 1.2d);
         }
 
@@ -263,23 +268,23 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         boolean useDevForScale = false;
         boolean useRatioForScale = false;
 
-        if (showIobCheckbox.isChecked()) {
+        if (showIob) {
             useIobForScale = true;
-        } else if (showCobCheckbox.isChecked()) {
+        } else if (showCob) {
             useCobForScale = true;
-        } else if (showDeviationsCheckbox.isChecked()) {
+        } else if (showDev) {
             useDevForScale = true;
-        } else if (showRatiosCheckbox.isChecked()) {
+        } else if (showRat) {
             useRatioForScale = true;
         }
 
-        if (showIobCheckbox.isChecked())
+        if (showIob)
             secondGraphData.addIob(fromTime, toTime, useIobForScale, 1d);
-        if (showCobCheckbox.isChecked())
+        if (showCob)
             secondGraphData.addCob(fromTime, toTime, useCobForScale, useCobForScale ? 1d : 0.5d);
-        if (showDeviationsCheckbox.isChecked())
+        if (showDev)
             secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1d);
-        if (showRatiosCheckbox.isChecked())
+        if (showRat)
             secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1d);
 
         // **** NOW line ****
@@ -288,7 +293,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         secondGraphData.addNowLine(pointer);
 
         // do GUI update
-        if (showIobCheckbox.isChecked() || showCobCheckbox.isChecked() || showDeviationsCheckbox.isChecked() || showRatiosCheckbox.isChecked()) {
+        if (showIob || showCob || showDev || showRat) {
             iobGraph.setVisibility(View.VISIBLE);
         } else {
             iobGraph.setVisibility(View.GONE);
@@ -297,4 +302,90 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         graphData.performUpdate();
         secondGraphData.performUpdate();
     }
+
+    private void setupChartMenu() {
+        chartButton = (ImageButton) findViewById(R.id.overview_chartMenuButton);
+        chartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MenuItem item;
+                CharSequence title;
+                SpannableString s;
+                PopupMenu popup = new PopupMenu(v.getContext(), v);
+
+
+                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(showBasal);
+
+                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(showIob);
+
+                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(showCob);
+
+                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(showDev);
+
+                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(showRat);
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                         if (item.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
+                            showBasal =  !item.isChecked();
+
+                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
+                             showIob =  !item.isChecked();
+
+                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
+                             showCob =  !item.isChecked();
+
+                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
+                             showDev =  !item.isChecked();
+
+                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
+                             showRat =  !item.isChecked();
+                        }
+                        updateGUI("onGraphCheckboxesCheckedChanged");
+                        return true;
+                    }
+                });
+                chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+                popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                    @Override
+                    public void onDismiss(PopupMenu menu) {
+                        chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+                    }
+                });
+                popup.show();
+            }
+        });
+    }
+
 }

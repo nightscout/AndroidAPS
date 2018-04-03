@@ -16,21 +16,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,7 +84,8 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
@@ -105,8 +112,9 @@ import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
@@ -120,7 +128,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SingleClickButton;
 import info.nightscout.utils.ToastUtils;
 
-public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, View.OnLongClickListener {
+public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     TextView timeView;
@@ -144,24 +152,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
+    ImageButton chartButton;
 
     TextView iage;
     TextView cage;
     TextView sage;
     TextView pbage;
-
-    TextView showPredictionLabel;
-    CheckBox showPredictionCheckbox;
-    TextView showBasalsLabel;
-    CheckBox showBasalsCheckbox;
-    TextView showIobLabel;
-    CheckBox showIobCheckbox;
-    TextView showCobLabel;
-    CheckBox showCobCheckbox;
-    TextView showDeviationsLabel;
-    CheckBox showDeviationsCheckbox;
-    TextView showRatiosLabel;
-    CheckBox showRatiosCheckbox;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -192,6 +188,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Runnable sRefreshLoop = null;
 
     final Object updateSync = new Object();
+
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN}
+
+    ;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -286,50 +286,33 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
-            showPredictionCheckbox = (CheckBox) view.findViewById(R.id.overview_showprediction);
-            showBasalsCheckbox = (CheckBox) view.findViewById(R.id.overview_showbasals);
-            showIobCheckbox = (CheckBox) view.findViewById(R.id.overview_showiob);
-            showCobCheckbox = (CheckBox) view.findViewById(R.id.overview_showcob);
-            showDeviationsCheckbox = (CheckBox) view.findViewById(R.id.overview_showdeviations);
-            showRatiosCheckbox = (CheckBox) view.findViewById(R.id.overview_showratios);
-            showPredictionCheckbox.setChecked(SP.getBoolean("showprediction", false));
-            showBasalsCheckbox.setChecked(SP.getBoolean("showbasals", true));
-            showIobCheckbox.setChecked(SP.getBoolean("showiob", false));
-            showCobCheckbox.setChecked(SP.getBoolean("showcob", false));
-            showDeviationsCheckbox.setChecked(SP.getBoolean("showdeviations", false));
-            showRatiosCheckbox.setChecked(SP.getBoolean("showratios", false));
-            showPredictionCheckbox.setOnCheckedChangeListener(this);
-            showBasalsCheckbox.setOnCheckedChangeListener(this);
-            showIobCheckbox.setOnCheckedChangeListener(this);
-            showCobCheckbox.setOnCheckedChangeListener(this);
-            showDeviationsCheckbox.setOnCheckedChangeListener(this);
-            showRatiosCheckbox.setOnCheckedChangeListener(this);
-
-            showPredictionLabel = (TextView) view.findViewById(R.id.overview_showprediction_label);
-            showPredictionLabel.setOnClickListener(this);
-            showBasalsLabel = (TextView) view.findViewById(R.id.overview_showbasals_label);
-            showBasalsLabel.setOnClickListener(this);
-            showIobLabel = (TextView) view.findViewById(R.id.overview_showiob_label);
-            showIobLabel.setOnClickListener(this);
-            showCobLabel = (TextView) view.findViewById(R.id.overview_showcob_label);
-            showCobLabel.setOnClickListener(this);
-            showDeviationsLabel = (TextView) view.findViewById(R.id.overview_showdeviations_label);
-            showDeviationsLabel.setOnClickListener(this);
-            showRatiosLabel = (TextView) view.findViewById(R.id.overview_showratios_label);
-            showRatiosLabel.setOnClickListener(this);
-
             notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
             notificationsView.setHasFixedSize(true);
             llm = new LinearLayoutManager(view.getContext());
             notificationsView.setLayoutManager(llm);
+
+            int axisWidth = 50;
+
+            if (dm.densityDpi <= 120)
+                axisWidth = 3;
+            else if (dm.densityDpi <= 160)
+                axisWidth = 10;
+            else if (dm.densityDpi <= 320)
+                axisWidth = 35;
+            else if (dm.densityDpi <= 420)
+                axisWidth = 50;
+            else if (dm.densityDpi <= 560)
+                axisWidth = 70;
+            else
+                axisWidth = 80;
 
             bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             bgGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
             iobGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
-            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
+            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
             iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
             rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
@@ -344,6 +327,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     return false;
                 }
             });
+
+            setupChartMenu(view);
 
             lockScreen = (CheckBox) view.findViewById(R.id.overview_lockscreen);
             if (lockScreen != null) {
@@ -366,6 +351,106 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         return null;
     }
 
+    private void setupChartMenu(View view) {
+        chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
+        chartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+                final boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
+
+                MenuItem item;
+                CharSequence title;
+                SpannableString s;
+                PopupMenu popup = new PopupMenu(v.getContext(), v);
+
+                if (predictionsAvailable) {
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(SP.getBoolean("showprediction", true));
+                }
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showbasals", true));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showiob", true));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showcob", true));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showdeviations", false));
+
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showratios", false));
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
+                            SP.putBoolean("showprediction", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
+                            SP.putBoolean("showbasals", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
+                            SP.putBoolean("showiob", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
+                            SP.putBoolean("showcob", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
+                            SP.putBoolean("showdeviations", !item.isChecked());
+
+                        } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
+                            SP.putBoolean("showratios", !item.isChecked());
+                        }
+                        scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
+                        return true;
+                    }
+                });
+                chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+                popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                    @Override
+                    public void onDismiss(PopupMenu menu) {
+                        chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+                    }
+                });
+                popup.show();
+            }
+        });
+    }
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -373,10 +458,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (v == apsModeView) {
             final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
-            if (activeloop == null)
+            if (activeloop == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
-            if (activeloop.isEnabled(PluginBase.LOOP)) {
+            if (activeloop.isEnabled(PluginType.LOOP)) {
                 menu.add(MainApp.sResources.getString(R.string.disableloop));
                 if (!activeloop.isSuspended()) {
                     menu.add(MainApp.sResources.getString(R.string.suspendloopfor1h));
@@ -394,51 +479,27 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.sResources.getString(R.string.resume));
                 }
             }
-            if (!activeloop.isEnabled(PluginBase.LOOP))
+            if (!activeloop.isEnabled(PluginType.LOOP))
                 menu.add(MainApp.sResources.getString(R.string.enableloop));
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.sResources.getString(R.string.profile));
             menu.add(MainApp.sResources.getString(R.string.danar_viewprofile));
-            menu.add(MainApp.sResources.getString(R.string.careportal_profileswitch));
+            if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
+                menu.add(MainApp.sResources.getString(R.string.careportal_profileswitch));
+            }
         }
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.overview_showprediction:
-            case R.id.overview_showbasals:
-            case R.id.overview_showiob:
-                break;
-            case R.id.overview_showcob:
-                showDeviationsCheckbox.setOnCheckedChangeListener(null);
-                showDeviationsCheckbox.setChecked(false);
-                showDeviationsCheckbox.setOnCheckedChangeListener(this);
-                break;
-            case R.id.overview_showdeviations:
-                showCobCheckbox.setOnCheckedChangeListener(null);
-                showCobCheckbox.setChecked(false);
-                showCobCheckbox.setOnCheckedChangeListener(this);
-                break;
-            case R.id.overview_showratios:
-                break;
-        }
-        SP.putBoolean("showiob", showIobCheckbox.isChecked());
-        SP.putBoolean("showprediction", showPredictionCheckbox.isChecked());
-        SP.putBoolean("showbasals", showBasalsCheckbox.isChecked());
-        SP.putBoolean("showcob", showCobCheckbox.isChecked());
-        SP.putBoolean("showdeviations", showDeviationsCheckbox.isChecked());
-        SP.putBoolean("showratios", showRatiosCheckbox.isChecked());
-        scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null)
+            return true;
         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
-            activeloop.setFragmentEnabled(PluginBase.LOOP, false);
-            activeloop.setFragmentVisible(PluginBase.LOOP, false);
-            MainApp.getConfigBuilder().storeSettings();
+            activeloop.setPluginEnabled(PluginType.LOOP, false);
+            activeloop.setFragmentVisible(PluginType.LOOP, false);
+            MainApp.getConfigBuilder().storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
             MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
@@ -451,9 +512,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
-            activeloop.setFragmentEnabled(PluginBase.LOOP, true);
-            activeloop.setFragmentVisible(PluginBase.LOOP, true);
-            MainApp.getConfigBuilder().storeSettings();
+            activeloop.setPluginEnabled(PluginType.LOOP, true);
+            activeloop.setFragmentVisible(PluginType.LOOP, true);
+            MainApp.getConfigBuilder().storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
@@ -487,23 +548,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor15m))) {
-            MainApp.getConfigBuilder().disconnectPump(15);
+            MainApp.getConfigBuilder().disconnectPump(15, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
-            MainApp.getConfigBuilder().disconnectPump(30);
+            MainApp.getConfigBuilder().disconnectPump(30, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
-            MainApp.getConfigBuilder().disconnectPump(60);
+            MainApp.getConfigBuilder().disconnectPump(60, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
-            MainApp.getConfigBuilder().disconnectPump(120);
+            MainApp.getConfigBuilder().disconnectPump(120, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
-            MainApp.getConfigBuilder().disconnectPump(180);
+            MainApp.getConfigBuilder().disconnectPump(180, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
@@ -523,8 +584,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
-        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
         String units = MainApp.getConfigBuilder().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
@@ -574,24 +635,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (ConfigBuilderPlugin.getActivePump().isSuspended() || !ConfigBuilderPlugin.getActivePump().isInitialized())
                     ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
                 break;
-            case R.id.overview_showprediction_label:
-                showPredictionCheckbox.toggle();
-                break;
-            case R.id.overview_showbasals_label:
-                showBasalsCheckbox.toggle();
-                break;
-            case R.id.overview_showiob_label:
-                showIobCheckbox.toggle();
-                break;
-            case R.id.overview_showcob_label:
-                showCobCheckbox.toggle();
-                break;
-            case R.id.overview_showdeviations_label:
-                showDeviationsCheckbox.toggle();
-                break;
-            case R.id.overview_showratios_label:
-                showRatiosCheckbox.toggle();
-                break;
         }
 
     }
@@ -627,7 +670,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void onClickAcceptTemp() {
-        if (ConfigBuilderPlugin.getActiveLoop() != null) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (ConfigBuilderPlugin.getActiveLoop() != null && profile != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
@@ -638,11 +683,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int id) {
                         hideTempRecommendation();
                         clearNotification();
-                        MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed, new Callback() {
+                        MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
                             @Override
                             public void run() {
                                 if (result.enacted) {
-                                    finalLastRun.setByPump = result;
+                                    finalLastRun.tbrSetByPump = result;
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
@@ -667,10 +712,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
-        final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
+        final TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
 
         final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && actualBg != null) {
+        if (quickWizardEntry != null && actualBg != null && profile != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, actualBg, true);
 
@@ -700,8 +745,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
                 String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(wizard.calculatedTotalInsulin);
-                Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(quickWizardEntry.carbs());
+                Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(wizard.calculatedTotalInsulin)).value();
+                Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
                 confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                 confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -737,7 +782,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                         activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                         MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                     }
-                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, new Callback() {
+                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                         @Override
                                         public void run() {
                                             if (!result.success) {
@@ -946,7 +991,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
-        if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
+        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
@@ -962,16 +1007,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        String units = profile.getUnits();
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (units == null) {
-            pumpStatusView.setText(R.string.noprofileset);
-            pumpStatusLayout.setVisibility(View.VISIBLE);
-            loopStatusLayout.setVisibility(View.GONE);
-            return;
-        }
-
+        final String units = profile.getUnits();
         final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
         final double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
 
@@ -1000,6 +1038,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
+        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
+
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
@@ -1020,7 +1060,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-                if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+                if (closedLoopEnabled.value()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
                     apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
@@ -1035,7 +1075,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // temp target
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
+        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
@@ -1050,7 +1090,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Temp button ****
         if (acceptTempLayout != null) {
-            boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+            boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
@@ -1064,8 +1104,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** Calibration & CGM buttons ****
-        boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE);
-        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginBase.BGSOURCE);
+        boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
         boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
             if ((xDripIsBgSource || g5IsBgSource) && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {
@@ -1084,18 +1124,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
-        final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        final TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
                 basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
-                basalText = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
+                basalText = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             }
             baseBasalView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String fullText = MainApp.sResources.getString(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h\n";
+                    String fullText = MainApp.sResources.getString(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h\n";
                     if (activeTemp != null) {
                         fullText += MainApp.sResources.getString(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                     }
@@ -1108,7 +1148,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 basalText = activeTemp.toStringFull() + " ";
             }
             if (Config.NSCLIENT || Config.G5UPLOADER)
-                basalText += "(" + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h)";
+                basalText += "(" + DecimalFormatter.to2Decimal(profile.getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
@@ -1122,7 +1162,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         baseBasalView.setText(basalText);
 
-        final ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        final ExtendedBolus extendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         String extendedBolusText = "";
         if (extendedBolusView != null) { // must not exists in all layouts
             if (shorttextmode) {
@@ -1144,7 +1184,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setText(extendedBolusText);
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(View.GONE);
+                extendedBolusView.setVisibility(View.INVISIBLE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
@@ -1172,7 +1212,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, lastBG, false);
-            text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
                 quickWizardButton.setVisibility(View.GONE);
@@ -1182,8 +1222,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // **** Various treatment buttons ****
         if (carbsButton != null) {
             if (SP.getBoolean(R.string.key_show_carbs_button, true)
-                    && !ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
-                    (pump.isInitialized() && !pump.isSuspended())) {
+                    && (!ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    (pump.isInitialized() && !pump.isSuspended()))) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {
                 carbsButton.setVisibility(View.GONE);
@@ -1225,15 +1265,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
         bgView.setPaintFlags(flag);
 
-        Long agoMsec = System.currentTimeMillis() - lastBG.date;
-        int agoMin = (int) (agoMsec / 60d / 1000d);
-        timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
+        timeAgoView.setText(DateUtil.minAgo(lastBG.date));
 
         // iob
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        final IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-        final IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+        final IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
+        final IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
         if (shorttextmode) {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U";
@@ -1269,14 +1307,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         final boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
-        if (predictionsAvailable) {
-            showPredictionCheckbox.setVisibility(View.VISIBLE);
-            showPredictionLabel.setVisibility(View.VISIBLE);
-        } else {
-            showPredictionCheckbox.setVisibility(View.GONE);
-            showPredictionLabel.setVisibility(View.GONE);
-        }
-
         // pump status from ns
         if (pumpDeviceStatusView != null) {
             pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
@@ -1327,7 +1357,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 final long toTime;
                 final long fromTime;
                 final long endTime;
-                if (predictionsAvailable && showPredictionCheckbox.isChecked()) {
+                if (predictionsAvailable && SP.getBoolean("showprediction", false)) {
                     int predHours = (int) (Math.ceil(finalLastRun.constraintsProcessed.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
                     predHours = Math.min(2, predHours);
                     predHours = Math.max(0, predHours);
@@ -1354,7 +1384,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
 
                 // **** BG ****
-                if (predictionsAvailable && showPredictionCheckbox.isChecked())
+                if (predictionsAvailable && SP.getBoolean("showprediction", false))
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, finalLastRun.constraintsProcessed);
                 else
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
@@ -1366,12 +1396,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 graphData.addTreatments(fromTime, endTime);
 
                 // add basal data
-                if (pump.getPumpDescription().isTempBasalCapable && showBasalsCheckbox.isChecked()) {
+                if (pump.getPumpDescription().isTempBasalCapable && SP.getBoolean("showbasals", true)) {
                     graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2d);
                 }
 
                 // add target line
-                graphData.addTargetLine(fromTime, toTime);
+                graphData.addTargetLine(fromTime, toTime, profile);
 
                 // **** NOW line ****
                 graphData.addNowLine(now);
@@ -1387,25 +1417,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 boolean useRatioForScale = false;
                 boolean useDSForScale = false;
 
-                if (showIobCheckbox.isChecked()) {
+                if (SP.getBoolean("showiob", true)) {
                     useIobForScale = true;
-                } else if (showCobCheckbox.isChecked()) {
+                } else if (SP.getBoolean("showcob", true)) {
                     useCobForScale = true;
-                } else if (showDeviationsCheckbox.isChecked()) {
+                } else if (SP.getBoolean("showdeviations", false)) {
                     useDevForScale = true;
-                } else if (showRatiosCheckbox.isChecked()) {
+                } else if (SP.getBoolean("showratios", false)) {
                     useRatioForScale = true;
                 } else if (Config.displayDeviationSlope) {
                     useDSForScale = true;
                 }
 
-                if (showIobCheckbox.isChecked())
+                if (SP.getBoolean("showiob", true))
                     secondGraphData.addIob(fromTime, now, useIobForScale, 1d);
-                if (showCobCheckbox.isChecked())
+                if (SP.getBoolean("showcob", true))
                     secondGraphData.addCob(fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
-                if (showDeviationsCheckbox.isChecked())
+                if (SP.getBoolean("showdeviations", false))
                     secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
-                if (showRatiosCheckbox.isChecked())
+                if (SP.getBoolean("showratios", false))
                     secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
                 if (Config.displayDeviationSlope)
                     secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
@@ -1421,7 +1451,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (showIobCheckbox.isChecked() || showCobCheckbox.isChecked() || showDeviationsCheckbox.isChecked() || showRatiosCheckbox.isChecked() || Config.displayDeviationSlope) {
+                            if (SP.getBoolean("showiob", true) || SP.getBoolean("showcob", true) || SP.getBoolean("showdeviations", false) || SP.getBoolean("showratios", false) || Config.displayDeviationSlope) {
                                 iobGraph.setVisibility(View.VISIBLE);
                             } else {
                                 iobGraph.setVisibility(View.GONE);

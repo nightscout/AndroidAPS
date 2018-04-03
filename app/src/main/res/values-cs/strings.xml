@@ -3,7 +3,6 @@
     <string name="closedloop">Uzavřená smyčka</string>
     <string name="openloop">Otevřená smyčka</string>
     <string name="apsmode_title">Typ smyčky</string>
-    <string name="avgdelta">Prům. změna</string>
     <string name="basal">Bazál</string>
     <string name="objectives_bgavailableinns">Glykémie dostupná v NS</string>
     <string name="bolus">Bolus</string>
@@ -48,12 +47,11 @@
     <string name="configbuilder">Konfigurace</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
-    <string name="configbuilder_constraints">Omezení</string>
+    <string name="constraints">Omezení</string>
     <string name="configbuilder_general">Obecné</string>
     <string name="configbuilder_loop">Smyčka</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_pump">Pumpa</string>
-    <string name="configbuilder_tempbasals">Dočasný bazál</string>
     <string name="configbuilder_treatments">Ošetření</string>
     <string name="confirmation">Potvrzení</string>
     <string name="constraintapllied">Aplikováno omezení!</string>
@@ -68,22 +66,19 @@
     <string name="loop">Smyčka</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
-    <string name="loop_setbypump_label">Nastaveno pumpou</string>
+    <string name="loop_tbrsetbypump_label">Bazál nastavený pumpou</string>
+    <string name="loop_smbsetbypump_label">SMB provedené pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
     <string name="objectives_minimalduration">Minimální trvání</string>
-    <string name="nav_backup">Záloha</string>
     <string name="nav_exit">Ukončit</string>
     <string name="nav_preferences">Nastavení</string>
     <string name="nav_refreshtreatments">Aktualizuj ošetření z NS</string>
     <string name="nav_resetdb">Inicializuj databáze</string>
-    <string name="nav_test_alert">Test alarmu</string>
     <string name="noapsselected">ŽÁDNÉ APS NEVYBRÁNO NEBO NEVRÁTILO VÝSLEDEK</string>
     <string name="nochangerequested">Změna nepožadována</string>
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
     <string name="ns_sync_use_absolute_title">Vždy použít absolutní hodnoty bazálu</string>
-    <string name="nsclient">NSClient</string>
-    <string name="nsprofileview_activeprofile_label">Aktivní profil</string>
     <string name="nsprofileview_basal_label">Bazál</string>
     <string name="nsprofileview_dia_label">Doba působnosti inzulínu</string>
     <string name="nsprofileview_ic_label">Inzulínosacharidový poměr</string>
@@ -105,8 +100,6 @@
     <string name="openapsma_lastrun_label">Poslední spuštění</string>
     <string name="openapsma_mealdata_label">Data o jídle</string>
     <string name="openapsma_noglucosedata">Nedostupná data o glykémiích</string>
-    <string name="openapsma_noprofile">Nedostupný profil</string>
-    <string name="openapsma_nopump">Žádná pumpa</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_request_label">Požadavek</string>
     <string name="result">Výsledek</string>
@@ -146,8 +139,7 @@
     <string name="treatments_wizard_bolusiob_label">Bolusové IOB</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
-    <string name="treatments_wizard_total_label">CELKEM</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální povolené sacharidy [g]</string>
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
@@ -158,7 +150,6 @@
     <string name="virtualpump_extendedbolus_label">Prodloužený bolus</string>
     <string name="pump_reservoir_label">Zásobník</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_sqlerror">Chyba databáze</string>
     <string name="pump_tempbasal_label">Dočasný bazál</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="xdrip">xDrip</string>
@@ -170,11 +161,7 @@
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
-    <string name="send">POSLAT</string>
     <string name="missing">Chybí</string>
-    <string name="enabled">Povolený</string>
-    <string name="visible">Viditelný</string>
-    <string name="up">Nahoru</string>
     <string name="exported">Nastavení exportováno</string>
     <string name="setting_imported">Nastavení importováno</string>
     <string name="import_from">Importovat nastavení z</string>
@@ -262,7 +249,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoped">Zastaveno</string>
     <string name="overview_bolusprogress_stoppressed">STISKNUTO STOP</string>
-    <string name="waitingforpumpclicktorefresh">Čekání na pumpu. Klik pro připojení.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Podávání %.2fU inzulínu</string>
     <string name="objectives_0_gate">Zkontrolovat, zda jsou glykémie a údaje z pumpy viditelné v Nightscoutu</string>
     <string name="objectives_0_objective">Nastavit vizualizaci a monitoring, analyzovat bazály a koeficienty</string>
@@ -308,16 +294,12 @@
     <string name="actions">Akce</string>
     <string name="androidaps_start">AndroidAPS restartován</string>
     <string name="alert_dialog_storage_permission_text">Prosím restartujte Váš telefon nebo restartujte AndroidAPS z nastavení systému jinak nebudou zaznamenány ladící informace (důležité pro sledování a kontrolu, zda algoritmus pracuje správně)</string>
-    <string name="base_profile_label">Bazální profil:</string>
     <string name="batterydischarged">Baterie v pumpě vybitá</string>
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
     <string name="button3">Tlačítko 3</string>
     <string name="dia">DIA:</string>
     <string name="disabledloop">Smyčka zakázána</string>
-    <string name="edit_base_basal">Editovat základní bazál:</string>
-    <string name="edit_base_ic">Editovat základní IC:</string>
-    <string name="edit_base_isf">Editovat základní ISF:</string>
     <string name="fillbolus_title">Hodnoty plnění/doplňování</string>
     <string name="fillwarning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
     <string name="high_mark">Horní značka</string>
@@ -329,7 +311,6 @@
     <string name="ns_upload_only_summary">Pouze nahrávání dat do NS. Neplatí pro glykémie, dokud není vybraný místní zdroj dat jako xDrip. Neplatí pro profily, pokud se používá NS profil.</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
     <string name="othersettings_title">Jiné</string>
-    <string name="percentagefactor_hint">Hodnota v procentech, kterou bude základní profil vynásoben.</string>
     <string name="prefs_range_summary">Značka vysoké a nízké hodnoty v přehledu a na hodinkách Wear</string>
     <string name="prefs_range_title">Rozsah pro zobrazení</string>
     <string name="primefill">Plnění/doplňování</string>
@@ -339,7 +320,6 @@
     <string name="resend_all_data">Znovu poslat všechna data</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze</string>
     <string name="target_range">Cílový rozsah:</string>
-    <string name="timeshift_hint">Čas v hodinách, o který bude bazál posunutý.</string>
     <string name="units">Jednotky:</string>
     <string name="wear">Wear</string>
     <string name="basal_rate">Bazál:</string>
@@ -382,8 +362,6 @@
     <string name="wear_shortname">"WEAR"</string>
     <string name="virtualpump_shortname">VPUM</string>
     <string name="treatments_shortname">OŠET</string>
-    <string name="temptargetrange_shortname">"CROZ"</string>
-    <string name="tempbasals_shortname">"DBAZ"</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="simpleprofile_shortname">JPRO</string>
     <string name="profileviewer_shortname">"PROF"</string>
@@ -412,7 +390,6 @@
     <string name="danar_stats_tdd">TDD</string>
     <string name="danar_stats_warning_Message">Pravděpodobně nepřesné při používání bolusů k doplňování</string>
     <string name="danar_stats_weight">Váha</string>
-    <string name="prefs_delta_title">Nastavení parametru delta BG</string>
     <string name="profile">Profil</string>
     <string name="short_tabtitles">Krátké názvy modulů</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -441,11 +418,9 @@
     <string name="smscommunicator_calibrationsent">Kalibrace odeslána. Příjem musí být v xDripu povolený.</string>
     <string name="smscommunicator_remotecalibrationnotallowed">Vzdálené kalibrace nejsou povoleny</string>
     <string name="disconnecting">Odpojuji</string>
-    <string name="dont_show_again">Nezobrazovat znovu</string>
     <string name="executing">Provádím</string>
     <string name="gettingpumpstatus">Nahrávám stav pumpy</string>
     <string name="pumpsuspended">Pumpa pozastavena</string>
-    <string name="pumpsuspendedclicktorefresh">Pumpa pozastavena. Klik pro obnovení stavu</string>
     <string name="settingextendedbolus">Nastavuji extended bolus</string>
     <string name="settingtempbasal">Nastavuji dočasný bazál</string>
     <string name="stoppingextendedbolus">Zastavuji extended bolus</string>
@@ -467,11 +442,8 @@
     <string name="nosuccess">neúspěšně - zkontrolujte mobil</string>
     <string name="notavailable">Nedostupný</string>
     <string name="nowritepermission">NSClient nedostal oprávnění k zápisu. Špatné API secret?</string>
-    <string name="nsclientinternal">NSClient interní</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Posouvat</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Bude použito v poli zadal</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Zadej jméno zařízení</string>
-    <string name="nsclientinternal_devicename_title">Jméno zařízení</string>
     <string name="nsclientinternal_secret_dialogmessage">Vložte API secret (min 12. znaků)</string>
     <string name="nsclientinternal_shortname">NSCl</string>
     <string name="nsclientinternal_title">Interní NSClient</string>
@@ -491,14 +463,12 @@
     <string name="wear_settings">Nastavení hodinek</string>
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Zařízení patrně nepodporuje vyloučení z optimalizace baterie.</string>
-    <string name="disconnectpumpfor10h">Odpojit pumpu na 10 h</string>
     <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
     <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
     <string name="disconnectpumpfor15m">Odpojit pumpu na 15 min</string>
     <string name="disconnectpumpfor30m">Odpojit pumpu na 30 min</string>
     <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
     <string name="enableloop">Povolit smyčku</string>
-    <string name="loopmenu">Menu smyčky</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
     <string name="loopsuspendedfor" formatted="false">Pozastaveno (%d min)</string>
     <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
@@ -532,7 +502,6 @@
     <string name="absorption_maxtime_summary">Čas v hodinách, ve kterém předpokládáme, že všechny sacharidy budou strávené</string>
     <string name="absorption_maxtime_title">Max. doba absorbce sacharidu [h]</string>
     <string name="absorptionsettings_title">Nastavení absorbce sacharidů</string>
-    <string name="basalshortlabel">BAS</string>
     <string name="bolus_step">Krok bolusu</string>
     <string name="careportal_canulaage_label">Stáří kanyly</string>
     <string name="careportal_canulaage_label_short">KAN</string>
@@ -552,16 +521,10 @@
     <string name="notloadedplugins">Všechny profily nenačteny</string>
     <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
     <string name="danarv2pump">DanaRv2</string>
-    <string name="dev">ODCH</string>
-    <string name="device">Zařízení</string>
-    <string name="do_not_track_profile_switch">Ignorovat přepnutí profilu</string>
-    <string name="do_not_track_profile_switch_summary">Všechny záznamy přepnutí profilu jsou ignorovány a vždy je použit aktivní profil</string>
     <string name="extendedbolus">ProdlouženýBolus</string>
     <string name="hours">hodin</string>
-    <string name="icmissing">I:S chybí. Je použita výchozí hodnota.</string>
     <string name="invalidprofile">Chybný profil !!!</string>
     <string name="iob">IOB</string>
-    <string name="isfmissing">Senzitivita chybí. Je použita výchozí hodnota.</string>
     <string name="lock_screen">Zámek obrazovky</string>
     <string name="lock_screen_short">Zámek</string>
     <string name="mdtp_cancel">Zrušit</string>
@@ -575,7 +538,6 @@
     <string name="nsalarm_low">Nízká</string>
     <string name="nsalarm_staledata">Zastaralá data</string>
     <string name="nsalarm_staledatavalue_label">Mezní hodnota pro zastaralá data [min]</string>
-    <string name="nsalarm_summary">Právě nastaveno na %f</string>
     <string name="nsalarm_urgent_staledatavalue_label">Urgetní mezní hodnota pro zastaralá data [min]</string>
     <string name="nsalarm_urgenthigh">Urgentně vysoká</string>
     <string name="nsalarm_urgentlow">Urgentně nízká</string>
@@ -583,19 +545,14 @@
     <string name="overview_extendedbolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="overview_newtempbasal_basalabsolute">Hodnota bazálu [U/h]</string>
     <string name="overview_newtempbasal_basaltype_label">Typ bazálu</string>
-    <string name="predictionshortlabel">PRE</string>
     <string name="profileswitch">PřepnutíProfilu</string>
     <string name="pump">Pumpa</string>
-    <string name="ratio_short">SEN</string>
     <string name="xdripstatus">Statusový řádek xDripu (hodinky)</string>
     <string name="xdripstatus_settings">Status z xDripu (hodinky)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="targetmissing">Chybí cílový rozsah. Použity výchozí hodnoty.</string>
     <string name="tempbasal">DočasnýBazál</string>
     <string name="temptarget">DočasnýCíl</string>
-    <string name="wear_overviewnotifications">Oznámení na hodinkách</string>
-    <string name="wear_overviewnotifications_summary">Předávat oznámení jako zprávy do hodinek</string>
     <string name="wear_showbgi_summary">Přidat BGI do stavové řádky</string>
     <string name="wear_showbgi_title">Zobrazovat BGI</string>
     <string name="sensitivity_shortname">SENS</string>
@@ -608,24 +565,22 @@
     <string name="openaps_short">OAPS</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="careportal_activity_label">AKTIVITA &amp; ZPĚTNÁ VAZBA</string>
-    <string name="basalmissing">Chybějící bazál v profilu. Použita výchozí hodnota</string>
     <string name="basal_step">Krok bazálu</string>
     <string name="basal_short">BAZ</string>
     <string name="unsupportednsversion">Nepodporovaná verze Nightscoutu</string>
     <string name="uploader">Uploader</string>
     <string name="uploader_short">UPLD</string>
-    <string name="app_name">AndroidAPS</string>
-    <string name="activate_profile">AKTIVOVAT PROFIL</string>
+    <string name="activate_profile">Aktivovat profil</string>
     <string name="danar_visualizeextendedaspercentage_title">Zobrazovat prodloužený bolus v %</string>
     <string name="date">Datum</string>
-    <string name="dia_too_short" formatted="false">DIA %s je příliž krátké - použito %s !</string>
+    <string name="dia_too_short" formatted="false">DIA %f je příliž krátké - použito %f !</string>
     <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
     <string name="insulin_peak_time">Vrchol křivky [min]</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="nl_lang">Nizozemština</string>
     <string name="sv_lang">Švédština</string>
-    <string name="activity_duration">trvání aktivity</string>
-    <string name="activity_target">cíl při aktivitě</string>
+    <string name="activity_duration">Trvání aktivity</string>
+    <string name="activity_target">Cíl při aktivitě</string>
     <string name="careportal_newnstreatment_percentage_label">% změna</string>
     <string name="careportal_newnstreatment_timeshift_label">Posun času</string>
     <string name="danar_setbasalstep001">Nastavte bazální krok 0.01U/h</string>
@@ -703,7 +658,6 @@
     <string name="DexcomG5">DexcomG5 aplikace (upravená)</string>
     <string name="dexcomg5_nsupload_title">Nahrávat data do NS</string>
     <string name="dexcomg5_upload">Nastavení nahrávání z G5</string>
-    <string name="customapp">Upravená aplikace pro stažení</string>
     <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
     <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
     <string name="unsupportedfirmware">Nepodporovaný firmware v pumpě</string>
@@ -736,8 +690,7 @@
     <string name="combo_pump_activity_label">Aktivita</string>
     <string name="combo_no_pump_connection" formatted="false">Žádné spojení %d min</string>
     <string name="combo_tbr_remaining" formatted="false">%d%% (%d min zbývá)</string>
-    <string name="combo_pump_action_initializing">Inicializace</string>
-    <string name="combo_pump_state_disconnected">Odpojeno</string>
+    <string name="combo_pump_state_initializing">Inicializace</string>
     <string name="combo_pump_state_suspended_due_to_error">Vypnuto díky chybě</string>
     <string name="combo_pump_state_suspended_by_user">Vypnuto uživatelem</string>
     <string name="combo_pump_state_running">Beží</string>
@@ -745,7 +698,6 @@
     <string name="combo_pump_action_setting_tbr" formatted="false">Nastavování doč. bazálu (%d%% / %d min)</string>
     <string name="combo_pump_action_bolusing" formatted="false">Bolus (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Obnovování</string>
-    <string name="combo_pump_never_connected">Nikdy</string>
     <string name="combo_pump_unsupported_operation">Požadovaná operace není pumpou podporována</string>
     <string name="combo_low_suspend_forced_notification">Nebezpečné použití: extended nebo multiwave bolus je aktivní. Pumpa byla vypnuta jen na 6 hodin. Povolené jsou pouze normální bolusy.</string>
     <string name="combo_force_disabled_notification">Nebezpečné použití: pumpa má nastavený jiný bazální profil než první. Smyčka byla zakázána. Nastavete první profil a znovu načtěte.</string>
@@ -773,8 +725,6 @@
     <string name="combo_no_alert_data_note">Pro přečtení historie chyb dlouze stiskněte tlačítko ALERTS. Varování: může to způsobit chybu, že pumpa bude odmítat všechny připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
     <string name="combo_notification_check_time_date">Je vyžadována aktualizace času na pumpě</string>
     <string name="combo_no_tdd_data_note">Pro přečtení celkových denních dávek dlouze stikněte na pumpě tlačítko TDDS. Varování: může to způsobit chybu, že pumpa bude odmítat všechna připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
-    <string name="combo_read_full_history_warning">Toto načte kompletní historii pumpy a stavy. Všechno v My Data a hodnoty bazálů. Bolusy a dočasné bazály budou přidány do ošetření, pokud neexistují. Může to způsobit duplicity díky nepřesnosti času v pumpě. Nedoporučuje se pokud používáte smyčku a je určeno pouze pro speciální připady. Varování: může to způsobit chybu, že pumpa bude odmítat všechny připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
-    <string name="combo_read_full_history_confirmation">Opravdu chcete přečíst historii z pumpy a nést důsledky z toho vyplývající?</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="smb_shortname">SMB</string>
@@ -784,7 +734,7 @@
     <string name="enablesmb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
     <string name="enableuam_summary">Detekce neoznámených jídel</string>
     <string name="insightpump_shortname">Insight</string>
-    <string name="insightpump">Pumpa Insight</string>
+    <string name="insightpump">Insight</string>
     <string name="status_no_colon">Stav</string>
     <string name="changed">Změněno</string>
     <string name="pump_stopped_uppercase">PUMPA ZASTAVENA</string>
@@ -863,10 +813,41 @@
     <string name="fabric_upload">Odesílání do Fabric</string>
     <string name="allow_automated_crash_reporting">Automatické odesílání chyb aplikace a statistiky používání vývojářům pomocí služby fabric.io</string>
     <string name="g5appnotdetected">Prosím aktualizujte G5 aplikaci na podporovanou verzi</string>
-    <string name="suspendloopfor30min">Pozastavit na 30 min</string>
     <string name="start_activity_tt">Spustit Dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit Dočasný cíl Blížící se jídlo</string>
     <string name="temptargetshort">DoCíl</string>
     <string name="insight_min">min</string>
     <string name="don_t_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
+    <string name="subcategory">Podkategorie</string>
+    <string name="category">Kategorie</string>
+    <string name="bolusrecordedonly">Bolus bude pouze zaznamenán</string>
+    <string name="ns_autobackfill">Automaticky doplňovat chybějící glykémie z NS</string>
+    <string name="hypo">Hypoglykémie</string>
+    <string name="combo_tdds">CDD</string>
+    <string name="combo_read_full_history_info">Dlouhé stisknutí tohoto tlačítka pro plné načtení historie a bazálního profilu z pumpy. Obvykle to není nutné, protože se to děje průběžně, ale může to pomoci v případě změny datumu v pumpě nebo v případě výměny pumpy.</string>
+    <string name="overview_show_sensitivity">Citlivost</string>
+    <string name="overview_show_deviations">Odchylky</string>
+    <string name="overview_show_cob">Zbývající sacharidy</string>
+    <string name="overview_show_iob">Zbývající inzulín</string>
+    <string name="overview_show_basals">Bazály</string>
+    <string name="no_action_selected">Žádná akce nevybrána, nic se neprovede</string>
+    <string name="start_hypo_tt">Spustit doč. cíl Hypo</string>
+    <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
+    <string name="engineering_mode_enabled">Expertní mód povolen</string>
+    <string name="not_eng_mode_or_release">Expertní mód není povolen a neběží vydaná verze</string>
+    <string name="combo_actvity_reading_basal_profile">Načítám bazální profil</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba. Pokud bude potřeba bolus stejné velikosti, počkejte 2 minuty, protože bolusy stejné velikosti jsou blokovány z bezpečnostních důvodů.</string>
+    <string name="combo_error_updating_treatment_record">Bolus úspěšne podán, ale zápis se nezdařil. To se může stát pokud jsou podány bolusy stejné velikosti během 2 minut. Zkontrolujte historii pumpy a zadejte chybějící položky do ošetření. Ujistěte se, že nezadáváte stejnou velikost v rámci 1 minuty.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Odmítnut vysoký dočasný bazál, protože kalkulace neuvažovala poslední změny v historii pumpy</string>
+    <string name="combo_activity_checking_pump_state">Obnovuji stav pumpy</string>
+    <string name="combo_warning_pump_basal_rate_changed">Bazál na pumpě byl změnen a bude brzo aktualizován</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Bazál na pumpě byl změnen, ale čtení selhalo</string>
+    <string name="combo_activity_checking_for_history_changes">Kontroluji změny v historii</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Byly načteny bolusy stejné velikosti během jedné minuty. Do ošetření je možné přidat jen jeden. Zkontrolujte pumpu a přidejte bolus do ošetření ručně tak, aby čas nekolidoval.</string>
+    <string name="about_link_urls">"\nhttp://www.androidaps.org\n\nfacebook: http://facebook.androidaps.org"</string>
+    <string name="combo_check_date">Poslední bolus je starší než 24h nebo v budoucnu. Zkontrolujte čas v pumpě.</string>
+    <string name="combo_suspious_bolus_time">Datum/čas podaného bolusu se zdá špatně. IOB bude chybné. Zkontrolujte čas v pumpě.</string>
+    <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu</string>
+    <string name="combo_bolus_count">Počet bolusů</string>
+    <string name="combo_tbr_count">Počet dočasných bazálů</string>
 </resources>

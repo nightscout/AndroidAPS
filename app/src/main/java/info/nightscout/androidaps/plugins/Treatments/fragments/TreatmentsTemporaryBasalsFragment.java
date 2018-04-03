@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -24,18 +23,20 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.Intervals;
 
 
 public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
@@ -86,14 +87,24 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes) + " min");
                 if (tempBasal.isAbsolute) {
-                    holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date)) + " U/h");
-                    holder.percent.setText("");
+                    Profile profile = MainApp.getConfigBuilder().getProfile(tempBasal.date);
+                    if (profile != null) {
+                        holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile)) + " U/h");
+                        holder.percent.setText("");
+                    } else {
+                        holder.absolute.setText(MainApp.gs(R.string.noprofile));
+                        holder.percent.setText("");
+                    }
                 } else {
                     holder.absolute.setText("");
                     holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
                 }
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
-                IobTotal iob = tempBasal.iobCalc(System.currentTimeMillis());
+                IobTotal iob = new IobTotal(System.currentTimeMillis());
+                try { // in case app loaded and still no profile selected
+                    iob = tempBasal.iobCalc(System.currentTimeMillis());
+                } catch (Exception e) {
+                }
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
                 holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
                 holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
@@ -193,7 +204,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getTemporaryBasalsFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory());
         recyclerView.setAdapter(adapter);
 
         tempBasalTotalView = (TextView) view.findViewById(R.id.tempbasals_totaltempiob);
@@ -221,9 +232,9 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getTemporaryBasalsFromHistory()), false);
-                    if (MainApp.getConfigBuilder().getLastCalculationTempBasals() != null) {
-                        String totalText = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getLastCalculationTempBasals().basaliob) + " U";
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory()), false);
+                    if (TreatmentsPlugin.getPlugin().getLastCalculationTempBasals() != null) {
+                        String totalText = DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().basaliob) + " U";
                         tempBasalTotalView.setText(totalText);
                     }
                 }

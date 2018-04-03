@@ -13,10 +13,9 @@ public class Config {
     public static final boolean G5UPLOADER = BuildConfig.G5UPLOADER;
     public static final boolean PUMPCONTROL = BuildConfig.PUMPCONTROL;
 
-    public static final boolean DANAR = BuildConfig.PUMPDRIVERS;
+    public static final boolean HWPUMPS = BuildConfig.PUMPDRIVERS;
 
     public static final boolean ACTION = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
-    public static final boolean VIRTUALPUMP = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
     public static final boolean MDI = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
     public static final boolean OTHERPROFILES = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
     public static final boolean SAFETY = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
@@ -44,4 +43,6 @@ public class Config {
     public static final boolean logDanaBTComm = true;
     public static boolean logDanaMessageDetail = true;
     public static final boolean logDanaSerialEngine = true;
+
+    public static final boolean enableComboBetaFeatures = false;
 }

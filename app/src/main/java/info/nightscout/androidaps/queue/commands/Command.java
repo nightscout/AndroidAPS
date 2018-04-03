@@ -16,7 +16,7 @@ public abstract class Command {
         EXTENDEDBOLUS,
         BASALPROFILE,
         READSTATUS,
-        LOADHISTORY, // so far only Dana specific
+        LOADHISTORY, // TDDs and so far only Dana specific
         LOADEVENTS // so far only Dana specific
     }
 

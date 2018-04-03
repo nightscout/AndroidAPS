@@ -452,7 +452,7 @@ public class BgGraphBuilder {
 
         // add all full hours within the timeframe
         while (hourTick < end_time){
-            if(Math.abs(hourTick - timeNow) > (1000 * 60 * 8 * timespan)){
+            if(Math.abs(hourTick - timeNow) > (8 * (end_time-start_time)/60)){
                 xAxisValues.add(new AxisValue(fuzz(hourTick)).setLabel(timeFormat.format(hourTick)));
             } else {
                 //don't print hour label if too close to now to avoid overlaps
