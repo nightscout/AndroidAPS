@@ -171,7 +171,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="reset"
+                    android:text="@string/reset"
                     android:textColor="@color/colorProfileSwitchButton" />
 
                 <Button
