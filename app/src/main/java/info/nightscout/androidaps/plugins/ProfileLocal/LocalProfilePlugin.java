@@ -60,6 +60,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     }
 
     public void storeSettings() {
+        if (1==1) return;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(LOCAL_PROFILE + "mmol", mmol);
