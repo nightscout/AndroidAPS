@@ -57,7 +57,6 @@ public class LocalProfileFragment extends SubscriberFragment {
         if (basalView != null) {
             basalView.updateLabel(MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel());
         }
-        updateGUI();
     };
 
     TextWatcher textWatch = new TextWatcher() {
@@ -76,7 +75,6 @@ public class LocalProfileFragment extends SubscriberFragment {
                                   int before, int count) {
             LocalProfilePlugin.getPlugin().dia = SafeParse.stringToDouble(diaView.getText().toString());
             doEdit();
-            updateGUI();
         }
     };
 
@@ -146,6 +144,7 @@ public class LocalProfileFragment extends SubscriberFragment {
                 isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.getPlugin().isf, null, 0.5, 500d, 0.1d, new DecimalFormat("0.0"), save);
                 basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), LocalProfilePlugin.getPlugin().basal, null, pumpDescription.basalMinimumRate, 10, 0.01d, new DecimalFormat("0.00"), save);
                 targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.getPlugin().targetLow, LocalProfilePlugin.getPlugin().targetHigh, 3d, 200, 0.1d, new DecimalFormat("0.0"), save);
+                updateGUI();
             });
 
             return layout;
@@ -158,12 +157,14 @@ public class LocalProfileFragment extends SubscriberFragment {
     }
 
     public void doEdit() {
-        LocalProfilePlugin.getPlugin().storeSettings();
+        //LocalProfilePlugin.getPlugin().storeSettings();
+        LocalProfilePlugin.getPlugin().setEdited(true);
+        updateGUI();
     }
 
     @NonNull
     public String getSumLabel() {
-        ProfileStore profile = LocalProfilePlugin.getPlugin().getProfile();
+        ProfileStore profile = LocalProfilePlugin.getPlugin().createProfileStore();
         if (profile != null)
             return " ∑" + DecimalFormatter.to2Decimal(profile.getDefaultProfile().baseBasalSum()) + "U";
         else
@@ -182,16 +183,23 @@ public class LocalProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    boolean isValid = LocalProfilePlugin.getPlugin().getProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid(MainApp.gs(R.string.localprofile));
-                    if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended() || !isValid) {
-                        profileswitchButton.setVisibility(View.GONE);
-                    } else {
-                        profileswitchButton.setVisibility(View.VISIBLE);
-                    }
-                    if (isValid)
+                    boolean isValid = LocalProfilePlugin.getPlugin().isValidEditState();
+                    if (isValid) {
                         invalidProfile.setVisibility(View.GONE);
-                    else
+
+
+                        if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
+                            profileswitchButton.setVisibility(View.GONE);
+                        } else {
+                            profileswitchButton.setVisibility(View.VISIBLE);
+                        }
+
+
+                    }
+                    else {
                         invalidProfile.setVisibility(View.VISIBLE);
+                        profileswitchButton.setVisibility(View.GONE);
+                    }
                 }
             });
     }
