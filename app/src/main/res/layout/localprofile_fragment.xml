@@ -153,22 +153,43 @@
                 android:text="@string/activate_profile"
                 android:textColor="@color/colorProfileSwitchButton" />
 
-            <Button
-                android:id="@+id/localprofile_reset"
-                style="?android:attr/buttonStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="3dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="reset"
-                android:textColor="@color/colorProfileSwitchButton" />
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/localprofile_reset"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="reset"
+                    android:textColor="@color/colorProfileSwitchButton" />
 
+                <Button
+                    android:id="@+id/localprofile_save"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/save"
+                    android:textColor="@color/colorProfileSwitchButton" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

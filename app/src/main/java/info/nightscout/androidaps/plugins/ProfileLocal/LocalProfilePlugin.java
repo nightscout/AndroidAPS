@@ -46,7 +46,6 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     }
 
     public void setEdited(boolean edited) {
-        //TODO check if edited is a valid profile!
         this.edited = edited;
     }
 
@@ -71,7 +70,6 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     }
 
     public synchronized void storeSettings() {
-        if (1==1) return;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(LOCAL_PROFILE + "mmol", mmol);
@@ -183,7 +181,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
         convertedProfile = createProfileStore();
     }
 
-    public boolean isValidEditState() {
+    public synchronized boolean isValidEditState() {
         return createProfileStore().getDefaultProfile().isValid(MainApp.gs(R.string.localprofile));
     }
 

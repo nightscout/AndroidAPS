@@ -50,6 +50,8 @@ public class LocalProfileFragment extends SubscriberFragment {
     TimeListEdit targetView;
     Button profileswitchButton;
     Button resetButton;
+    Button saveButton;
+
     TextView invalidProfile;
 
     Runnable save = () -> {
@@ -95,6 +97,8 @@ public class LocalProfileFragment extends SubscriberFragment {
             targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.getPlugin().targetLow, LocalProfilePlugin.getPlugin().targetHigh, 3d, 200, 0.1d, new DecimalFormat("0.0"), save);
             profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
             resetButton = (Button) layout.findViewById(R.id.localprofile_reset);
+            saveButton = (Button) layout.findViewById(R.id.localprofile_save);
+
 
             invalidProfile = (TextView) layout.findViewById(R.id.invalidprofile);
 
@@ -147,6 +151,14 @@ public class LocalProfileFragment extends SubscriberFragment {
                 updateGUI();
             });
 
+            saveButton.setOnClickListener(view -> {
+                if(!LocalProfilePlugin.getPlugin().isValidEditState()){
+                    return; //Should not happen as saveButton should not be visible if not valid
+                }
+                LocalProfilePlugin.getPlugin().storeSettings();
+                updateGUI();
+            });
+
             return layout;
         } catch (Exception e) {
             log.error("Unhandled exception: ", e);
@@ -157,7 +169,6 @@ public class LocalProfileFragment extends SubscriberFragment {
     }
 
     public void doEdit() {
-        //LocalProfilePlugin.getPlugin().storeSettings();
         LocalProfilePlugin.getPlugin().setEdited(true);
         updateGUI();
     }
@@ -184,21 +195,37 @@ public class LocalProfileFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     boolean isValid = LocalProfilePlugin.getPlugin().isValidEditState();
+                    boolean isEdited = LocalProfilePlugin.getPlugin().isEdited();
                     if (isValid) {
-                        invalidProfile.setVisibility(View.GONE);
+                        invalidProfile.setVisibility(View.GONE); //show invalid profile
 
-
-                        if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
+                        if (isEdited || !ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
+                            //edited profile -> save first
+                            //pump not initialized -> don't update profile yet
                             profileswitchButton.setVisibility(View.GONE);
                         } else {
                             profileswitchButton.setVisibility(View.VISIBLE);
                         }
 
+                        if(isEdited){
+                            saveButton.setVisibility(View.VISIBLE);
+                        } else {
+                            saveButton.setVisibility(View.GONE);
 
-                    }
-                    else {
+                        }
+
+
+                    } else {
                         invalidProfile.setVisibility(View.VISIBLE);
                         profileswitchButton.setVisibility(View.GONE);
+                        saveButton.setVisibility(View.GONE); //don't save an invalid profile
+                    }
+
+                    //Show reset button iff data was edited
+                    if(isEdited) {
+                        resetButton.setVisibility(View.VISIBLE);
+                    } else {
+                        resetButton.setVisibility(View.GONE);
                     }
                 }
             });
