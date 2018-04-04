@@ -55,7 +55,7 @@ tasks.matching {it instanceof Test}.all {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 25
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
