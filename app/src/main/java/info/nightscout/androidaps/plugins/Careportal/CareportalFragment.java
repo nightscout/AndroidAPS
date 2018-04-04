@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -22,11 +27,11 @@ import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.utils.FabricPrivacy;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
-
     TextView iage;
     TextView cage;
     TextView sage;
@@ -212,12 +217,33 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                         @Override
                         public void run() {
                             CareportalEvent careportalEvent;
-                            String isOld = "";
+                            NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+                            JSONObject extendedSettings = nsSettings.getExtendedSettings();
+                            // Thresholds in NS are in hours
+                            double iageThreshold = 7*24;
+                            double cageThreshold = 3*24;
+                            double sageThreshold = 7*24;
+                            double pbageThreshold = 15*24;
+//                            log.debug("NSExtendedSettings are "+extendedSettings.toString());
+//                            try {
+                                JSONObject iageSettings = extendedSettings.optJSONObject("iage");
+                                if(iageSettings != null)
+                                    iageThreshold = iageSettings.optDouble("urgent", 7*24);
+                                JSONObject cageSettings = extendedSettings.optJSONObject("cage");
+                                if(cageSettings != null)
+                                    cageThreshold = cageSettings.optDouble("urgent", 3*24);
+//                                    log.debug("cageThreshold is "+cageThreshold);
+                                JSONObject sageSettings = extendedSettings.optJSONObject("sage");
+                                if(sageSettings != null)
+                                    sageThreshold = sageSettings.optDouble("urgent", 7*24);
+//                            } catch (JSONException e) {
+//                                log.error("Unhandled exception", e);
+//                            }
                             String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.sResources.getString(R.string.notavailable);
                             if (sage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(7)){
+                                    if(careportalEvent.isOlderThan( sageThreshold/24)){
                                         sage.setTextColor(MainApp.sResources.getColor(R.color.low));
                                         sage.setText(careportalEvent.age());
                                     } else {
@@ -231,7 +257,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (iage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(5)){
+                                    if(careportalEvent.isOlderThan(iageThreshold/24)){
                                         iage.setTextColor(MainApp.sResources.getColor(R.color.low));
                                         iage.setText(careportalEvent.age());
                                     } else {
@@ -245,7 +271,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (cage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
                                     if (careportalEvent != null) {
-                                        if(careportalEvent.isOlderThan(3)){
+                                        if(careportalEvent.isOlderThan(cageThreshold/24)){
                                             cage.setTextColor(MainApp.sResources.getColor(R.color.low));
                                             cage.setText(careportalEvent.age());
                                         } else {
@@ -259,7 +285,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (pbage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(15)){
+                                    if(careportalEvent.isOlderThan(pbageThreshold/24)){
                                         pbage.setTextColor(MainApp.sResources.getColor(R.color.low));
                                         pbage.setText(careportalEvent.age());
                                     } else {
