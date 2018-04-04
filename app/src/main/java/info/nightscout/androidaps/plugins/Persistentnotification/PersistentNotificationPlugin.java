@@ -1,11 +1,14 @@
 package info.nightscout.androidaps.plugins.Persistentnotification;
 
+import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -41,6 +44,8 @@ import info.nightscout.utils.DecimalFormatter;
 
 public class PersistentNotificationPlugin extends PluginBase {
 
+    public static final String CHANNEL_ID = "AndroidAPS-Ongoing";
+
     private static final int ONGOING_NOTIFICATION_ID = 4711;
     private final Context ctx;
 
@@ -57,8 +62,21 @@ public class PersistentNotificationPlugin extends PluginBase {
     @Override
     protected void onStart() {
         MainApp.bus().register(this);
+        createNotificationChannel();
         updateNotification();
         super.onStart();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -118,7 +136,7 @@ public class PersistentNotificationPlugin extends PluginBase {
         line3 += " - " + MainApp.getConfigBuilder().getProfileName();
 
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         builder.setOngoing(true);
         builder.setCategory(NotificationCompat.CATEGORY_STATUS);
         builder.setSmallIcon(R.drawable.ic_notification);
