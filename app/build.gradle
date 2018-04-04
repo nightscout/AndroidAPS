@@ -15,7 +15,7 @@ apply plugin: "jacoco-android"
 apply plugin: 'com.jakewharton.butterknife'
 
 ext {
-    supportLibraryVersion = "27.0.2"
+    supportLibraryVersion = "25.4.0"
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
