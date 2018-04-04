@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 
 ext {
-    supportLibraryVersion = "23.0.1"
-    wearableVersion = "2.0.1"    
+    wearableVersion = "2.0.1"
 }
 
 def generateGitBuild = { ->
@@ -27,13 +26,12 @@ def generateGitBuild = { ->
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 20
-        targetSdkVersion 23
+        minSdkVersion 21
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0.2"
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
