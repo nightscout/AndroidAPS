@@ -170,6 +170,38 @@ public class NSSettingsStatus {
 
     }
 
+    // return JSONObject with the WARN and URGENT values of cage,sage and iage
+    // added pbage for pump battery warnings
+    public JSONObject getExtendedValues(){
+        JSONObject extendedValues = new JSONObject(); //
+        JSONObject defaultSettings = new JSONObject();
+        JSONObject extendedSettings = this.getExtendedSettings();
+        // Thresholds in NS are in hours
+        try {
+            // Default
+            defaultSettings.put("urgent", 7*24D);
+            defaultSettings.put("warn", 5*24D);
+
+            JSONObject iageSettings = extendedSettings.optJSONObject("iage") != null ? extendedSettings.optJSONObject("iage") : defaultSettings;
+            JSONObject cageSettings = extendedSettings.optJSONObject("cage") != null ? extendedSettings.optJSONObject("cage") : defaultSettings;
+            JSONObject sageSettings = extendedSettings.optJSONObject("sage") != null ? extendedSettings.optJSONObject("sage") : defaultSettings;
+
+            extendedValues.put("cageUrgent", cageSettings.optDouble("urgent", 3 * 24));
+            extendedValues.put("cageWarn", cageSettings.optDouble("warn", 2 * 24));
+            extendedValues.put("sageUrgent", sageSettings.optDouble("urgent", 7 * 24));
+            extendedValues.put("sageWarn", sageSettings.optDouble("warn", 7 * 24));
+            extendedValues.put("iageUrgent", iageSettings.optDouble("urgent", 7 * 24));
+            extendedValues.put("iageWarn", iageSettings.optDouble("warn", 5 * 24));
+            extendedValues.put("pbageWarn", 240D);
+            extendedValues.put("pbageUrgent", 360D);
+
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+
+     return extendedValues;
+    }
+
     public String getActiveProfile() {
         return getStringOrNull("activeProfile");
     }
