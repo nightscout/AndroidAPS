@@ -217,12 +217,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (sage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
                                 if(careportalEvent != null) {
-                                    isOld = careportalEvent.age(7).substring(0, 5);
-                                    if(isOld.equals("isOLD")){
+                                    if(careportalEvent.isOlderThan(7)){
                                         sage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                        sage.setText(careportalEvent.age(7).substring(5));
+                                        sage.setText(careportalEvent.age());
                                     } else {
-                                        sage.setText(careportalEvent.age(7));
+                                        sage.setText(careportalEvent.age());
                                     }
 
                                 } else {
@@ -232,12 +231,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (iage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
                                 if(careportalEvent != null) {
-                                    isOld = careportalEvent.age(7).substring(0, 5);
-                                    if(isOld.equals("isOLD")){
+                                    if(careportalEvent.isOlderThan(5)){
                                         iage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                        iage.setText(careportalEvent.age(7).substring(5));
+                                        iage.setText(careportalEvent.age());
                                     } else {
-                                        iage.setText(careportalEvent.age(7));
+                                        iage.setText(careportalEvent.age());
                                     }
 
                                 } else {
@@ -247,12 +245,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (cage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
                                     if (careportalEvent != null) {
-                                        isOld = careportalEvent.age(3).substring(0, 5);
-                                        if(isOld.equals("isOLD")){
+                                        if(careportalEvent.isOlderThan(3)){
                                             cage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                            cage.setText(careportalEvent.age(3).substring(5));
+                                            cage.setText(careportalEvent.age());
                                         } else {
-                                            cage.setText(careportalEvent.age(3));
+                                            cage.setText(careportalEvent.age());
                                         }
 
                                     } else {
@@ -262,12 +259,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (pbage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
                                 if(careportalEvent != null) {
-                                    isOld = careportalEvent.age(15).substring(0, 5);
-                                    if(isOld.equals("isOLD")){
+                                    if(careportalEvent.isOlderThan(15)){
                                         pbage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                        pbage.setText(careportalEvent.age(15).substring(5));
+                                        pbage.setText(careportalEvent.age());
                                     } else {
-                                        pbage.setText(careportalEvent.age(15));
+                                        pbage.setText(careportalEvent.age());
                                     }
 
                                 } else {
