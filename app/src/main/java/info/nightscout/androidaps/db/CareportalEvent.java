@@ -98,9 +98,9 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
     }
 
-    public boolean isOlderThan(double threshold) {
+    public boolean isOlderThan(double days) {
         Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
-            if(diff.get(TimeUnit.DAYS) > threshold)
+            if(diff.get(TimeUnit.DAYS) > days)
                 return true;
             else
                 return false;
