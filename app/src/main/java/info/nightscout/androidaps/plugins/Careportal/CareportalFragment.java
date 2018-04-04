@@ -32,6 +32,8 @@ import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.utils.FabricPrivacy;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(CareportalFragment.class);
+
     TextView iage;
     TextView cage;
     TextView sage;
@@ -218,33 +220,42 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                         public void run() {
                             CareportalEvent careportalEvent;
                             NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
-                            JSONObject extendedSettings = nsSettings.getExtendedSettings();
+                            JSONObject extendedSettings = nsSettings.getExtendedValues();
+                            double iageUrgent = 7 * 24;
+                            double iageWarn = 5 * 24;
+                            double cageUrgent = 3 * 24;
+                            double cageWarn = 2 * 24;
+                            double sageUrgent = 7 * 24;
+                            double sageWarn = 6 * 24;
+                            double pbageUrgent = 10 * 24;
+                            double pbageWarn = 15 * 24;
+                            log.debug("Values from NSSettings "+extendedSettings.toString());
                             // Thresholds in NS are in hours
-                            double iageThreshold = 7*24;
-                            double cageThreshold = 3*24;
-                            double sageThreshold = 7*24;
-                            double pbageThreshold = 15*24;
-//                            log.debug("NSExtendedSettings are "+extendedSettings.toString());
-//                            try {
-                                JSONObject iageSettings = extendedSettings.optJSONObject("iage");
-                                if(iageSettings != null)
-                                    iageThreshold = iageSettings.optDouble("urgent", 7*24);
-                                JSONObject cageSettings = extendedSettings.optJSONObject("cage");
-                                if(cageSettings != null)
-                                    cageThreshold = cageSettings.optDouble("urgent", 3*24);
-//                                    log.debug("cageThreshold is "+cageThreshold);
-                                JSONObject sageSettings = extendedSettings.optJSONObject("sage");
-                                if(sageSettings != null)
-                                    sageThreshold = sageSettings.optDouble("urgent", 7*24);
-//                            } catch (JSONException e) {
-//                                log.error("Unhandled exception", e);
-//                            }
+                            try {
+                                iageUrgent = extendedSettings.getDouble("iageUrgent");
+                                iageWarn = extendedSettings.getDouble("iageWarn");
+                                cageUrgent = extendedSettings.getDouble("cageUrgent");
+                                cageWarn = extendedSettings.getDouble("cageWarn");
+                                sageUrgent = extendedSettings.getDouble("sageUrgent");
+                                sageWarn = extendedSettings.getDouble("sageWarn");
+                                pbageUrgent = extendedSettings.getDouble("pbageUrgent");
+                                pbageWarn = extendedSettings.getDouble("pbageWarn");
+
+                            } catch (JSONException e) {
+                                log.error("Unhandled exception", e);
+                            }
+
+
+
                             String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.sResources.getString(R.string.notavailable);
                             if (sage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan( sageThreshold/24)){
+                                    if(careportalEvent.isOlderThan( sageUrgent/24)){
                                         sage.setTextColor(MainApp.sResources.getColor(R.color.low));
+                                        sage.setText(careportalEvent.age());
+                                    } else if(careportalEvent.isOlderThan( sageWarn/24)){
+                                        sage.setTextColor(MainApp.sResources.getColor(R.color.high));
                                         sage.setText(careportalEvent.age());
                                     } else {
                                         sage.setText(careportalEvent.age());
@@ -257,8 +268,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (iage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(iageThreshold/24)){
+                                    if(careportalEvent.isOlderThan(iageUrgent/24)){
                                         iage.setTextColor(MainApp.sResources.getColor(R.color.low));
+                                        iage.setText(careportalEvent.age());
+                                    } else if(careportalEvent.isOlderThan( iageWarn/24)) {
+                                        iage.setTextColor(MainApp.sResources.getColor(R.color.high));
                                         iage.setText(careportalEvent.age());
                                     } else {
                                         iage.setText(careportalEvent.age());
@@ -271,8 +285,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (cage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
                                     if (careportalEvent != null) {
-                                        if(careportalEvent.isOlderThan(cageThreshold/24)){
+                                        if(careportalEvent.isOlderThan(cageUrgent/24)){
                                             cage.setTextColor(MainApp.sResources.getColor(R.color.low));
+                                            cage.setText(careportalEvent.age());
+                                        } else if(careportalEvent.isOlderThan( cageWarn/24)) {
+                                            cage.setTextColor(MainApp.sResources.getColor(R.color.high));
                                             cage.setText(careportalEvent.age());
                                         } else {
                                             cage.setText(careportalEvent.age());
@@ -285,8 +302,11 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (pbage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(pbageThreshold/24)){
+                                    if(careportalEvent.isOlderThan(pbageUrgent/24)){
                                         pbage.setTextColor(MainApp.sResources.getColor(R.color.low));
+                                        pbage.setText(careportalEvent.age());
+                                    } else if(careportalEvent.isOlderThan( pbageWarn/24)) {
+                                        pbage.setTextColor(MainApp.sResources.getColor(R.color.high));
                                         pbage.setText(careportalEvent.age());
                                     } else {
                                         pbage.setText(careportalEvent.age());
