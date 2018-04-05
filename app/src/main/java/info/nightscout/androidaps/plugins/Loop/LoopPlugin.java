@@ -1,11 +1,14 @@
 package info.nightscout.androidaps.plugins.Loop;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.crashlytics.android.answers.CustomEvent;
@@ -47,6 +50,9 @@ import info.nightscout.utils.SP;
  */
 public class LoopPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
+
+    public static final String CHANNEL_ID = "AndroidAPS-Openloop";
+
 
     protected static LoopPlugin loopPlugin;
 
@@ -90,7 +96,20 @@ public class LoopPlugin extends PluginBase {
     @Override
     protected void onStart() {
         MainApp.bus().register(this);
+        createNotificationChannel();
         super.onStart();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) MainApp.instance().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -322,7 +341,7 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (result.isChangeRequested() && allowNotification) {
                     NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
+                            new NotificationCompat.Builder(MainApp.instance().getApplicationContext(), CHANNEL_ID);
                     builder.setSmallIcon(R.drawable.notif_icon)
                             .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
                             .setContentText(resultAfterConstraints.toString())
