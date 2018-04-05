@@ -212,11 +212,6 @@ public class MainApp extends Application {
                 startKeepAliveService();
             }).start();
         }
-
-        if (!isEngineeringModeOrRelease()) {
-            Notification n = new Notification(Notification.TOAST_ALARM, gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
-            bus().post(new EventNewNotification(n));
-        }
     }
 
     private void registerLocalBroadcastReceiver() {
