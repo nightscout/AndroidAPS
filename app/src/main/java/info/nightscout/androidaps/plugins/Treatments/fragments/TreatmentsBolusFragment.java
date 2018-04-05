@@ -31,7 +31,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
@@ -145,14 +145,14 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                                 final String _id = treatment._id;
                                 if (treatment.source == Source.PUMP) {
                                     treatment.isValid = false;
-                                    MainApp.getDbHelper().update(treatment);
+                                    TreatmentsPlugin.getPlugin().getService().update(treatment);
                                 } else {
                                     if (NSUpload.isIdValid(_id)) {
                                         NSUpload.removeCareportalEntryFromNS(_id);
                                     } else {
                                         UploadQueue.removeID("dbAdd", _id);
                                     }
-                                    MainApp.getDbHelper().delete(treatment);
+                                    TreatmentsPlugin.getPlugin().getService().delete(treatment);
                                 }
                                 updateGUI();
                                 FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
@@ -204,7 +204,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + "?");
                 builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        MainApp.getDbHelper().resetTreatments();
+                        TreatmentsPlugin.getPlugin().getService().resetTreatments();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     }

@@ -48,6 +48,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -378,7 +379,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 MainApp.getDbHelper().resetDatabases();
                                                 // should be handled by Plugin-Interface and
                                                 // additional service interface and plugin registry
-                                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().resetFood();
+                                                FoodPlugin.getPlugin().getService().resetFood();
+                                                TreatmentsPlugin.getPlugin().getService().resetTreatments();
                                             }
                                         })
                                         .create()
