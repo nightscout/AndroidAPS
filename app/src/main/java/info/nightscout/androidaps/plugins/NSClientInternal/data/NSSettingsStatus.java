@@ -170,36 +170,17 @@ public class NSSettingsStatus {
 
     }
 
-    // return JSONObject with the WARN and URGENT values of cage,sage and iage
-    // added pbage for pump battery warnings
-    public JSONObject getExtendedValues(){
-        JSONObject extendedValues = new JSONObject(); //
-        JSONObject defaultSettings = new JSONObject();
+    // valid property is "warn" or "urgent"
+    // plugings "iage" "sage" "cage" "pbage"
+
+    public double getExtendedWarnValue(String plugin, String property, double defaultvalue) {
         JSONObject extendedSettings = this.getExtendedSettings();
-        // Thresholds in NS are in hours
-        try {
-            // Default
-            defaultSettings.put("urgent", 7*24D);
-            defaultSettings.put("warn", 5*24D);
-
-            JSONObject iageSettings = extendedSettings.optJSONObject("iage") != null ? extendedSettings.optJSONObject("iage") : defaultSettings;
-            JSONObject cageSettings = extendedSettings.optJSONObject("cage") != null ? extendedSettings.optJSONObject("cage") : defaultSettings;
-            JSONObject sageSettings = extendedSettings.optJSONObject("sage") != null ? extendedSettings.optJSONObject("sage") : defaultSettings;
-
-            extendedValues.put("cageUrgent", cageSettings.optDouble("urgent", 72));
-            extendedValues.put("cageWarn", cageSettings.optDouble("warn", 48));
-            extendedValues.put("sageUrgent", sageSettings.optDouble("urgent", 166));
-            extendedValues.put("sageWarn", sageSettings.optDouble("warn", 164));
-            extendedValues.put("iageUrgent", iageSettings.optDouble("urgent", 72));
-            extendedValues.put("iageWarn", iageSettings.optDouble("warn", 48));
-            extendedValues.put("pbageWarn", 240D);
-            extendedValues.put("pbageUrgent", 360D);
-
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-
-     return extendedValues;
+        if (extendedSettings == null)
+            return defaultvalue;
+        JSONObject pluginJson = extendedSettings.optJSONObject(plugin);
+        if (pluginJson == null)
+            return defaultvalue;
+        return pluginJson.optDouble(property, defaultvalue);
     }
 
     public String getActiveProfile() {
@@ -225,7 +206,7 @@ public class NSSettingsStatus {
                         return result;
                     }
                 }
-                if (settingsO.has("alarmTimeagoWarnMins") && Objects.equals(what, "alarmTimeagoWarnMins")){
+                if (settingsO.has("alarmTimeagoWarnMins") && Objects.equals(what, "alarmTimeagoWarnMins")) {
                     Double result = settingsO.getDouble(what);
                     return result;
                 }
@@ -238,7 +219,7 @@ public class NSSettingsStatus {
 
     private String getStringOrNull(String key) {
         String ret = null;
-        if(data == null) return null;
+        if (data == null) return null;
         if (data.has(key)) {
             try {
                 ret = data.getString(key);
@@ -320,21 +301,21 @@ public class NSSettingsStatus {
             JSONObject pump = extentendedPumpSettings();
             switch (setting) {
                 case "warnClock":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentClock":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "warnRes":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentRes":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "warnBattV":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentBattV":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
-               case "warnBattP":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "warnBattP":
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentBattP":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -342,12 +323,12 @@ public class NSSettingsStatus {
         return 0d;
     }
 
-	
+
     @Nullable
     public JSONObject extentendedPumpSettings() {
         try {
             JSONObject extended = getExtendedSettings();
-            if(extended == null) return null;
+            if (extended == null) return null;
             if (extended.has("pump")) {
                 JSONObject pump = extended.getJSONObject("pump");
                 return pump;
@@ -382,7 +363,7 @@ public class NSSettingsStatus {
         return "";
     }
 
-	    public boolean openAPSEnabledAlerts() {
+    public boolean openAPSEnabledAlerts() {
         try {
             JSONObject pump = extentendedPumpSettings();
             if (pump != null && pump.has("openaps")) {
