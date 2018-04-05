@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.Careportal;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -221,14 +222,15 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             CareportalEvent careportalEvent;
                             NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
                             JSONObject extendedSettings = nsSettings.getExtendedValues();
-                            double iageUrgent = 7 * 24;
-                            double iageWarn = 5 * 24;
-                            double cageUrgent = 3 * 24;
-                            double cageWarn = 2 * 24;
-                            double sageUrgent = 7 * 24;
-                            double sageWarn = 6 * 24;
-                            double pbageUrgent = 10 * 24;
-                            double pbageWarn = 15 * 24;
+
+                            double iageUrgent = 0;
+                            double iageWarn = 0;
+                            double cageUrgent = 0;
+                            double cageWarn = 0;
+                            double sageUrgent = 0;
+                            double sageWarn = 0;
+                            double pbageUrgent = 0;
+                            double pbageWarn = 0;
                             log.debug("Values from NSSettings "+extendedSettings.toString());
                             // Thresholds in NS are in hours
                             try {
@@ -251,16 +253,8 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (sage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan( sageUrgent/24)){
-                                        sage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                        sage.setText(careportalEvent.age());
-                                    } else if(careportalEvent.isOlderThan( sageWarn/24)){
-                                        sage.setTextColor(MainApp.sResources.getColor(R.color.high));
-                                        sage.setText(careportalEvent.age());
-                                    } else {
-                                        sage.setText(careportalEvent.age());
-                                    }
-
+                                    sage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, sageUrgent, sageWarn));
+                                    sage.setText(careportalEvent.age());
                                 } else {
                                     sage.setText(notavailable);
                                 }
@@ -268,16 +262,8 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (iage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
                                 if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(iageUrgent/24)){
-                                        iage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                        iage.setText(careportalEvent.age());
-                                    } else if(careportalEvent.isOlderThan( iageWarn/24)) {
-                                        iage.setTextColor(MainApp.sResources.getColor(R.color.high));
-                                        iage.setText(careportalEvent.age());
-                                    } else {
-                                        iage.setText(careportalEvent.age());
-                                    }
-
+                                    iage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, iageUrgent, iageWarn));
+                                    iage.setText(careportalEvent.age());
                                 } else {
                                     iage.setText(notavailable);
                                 }
@@ -285,33 +271,17 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                             if (cage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
                                     if (careportalEvent != null) {
-                                        if(careportalEvent.isOlderThan(cageUrgent/24)){
-                                            cage.setTextColor(MainApp.sResources.getColor(R.color.low));
-                                            cage.setText(careportalEvent.age());
-                                        } else if(careportalEvent.isOlderThan( cageWarn/24)) {
-                                            cage.setTextColor(MainApp.sResources.getColor(R.color.high));
-                                            cage.setText(careportalEvent.age());
-                                        } else {
-                                            cage.setText(careportalEvent.age());
-                                        }
-
+                                        cage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, cageUrgent, cageWarn));
+                                        cage.setText(careportalEvent.age());
                                     } else {
                                         cage.setText(notavailable);
                                     }
                             }
                             if (pbage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
-                                if(careportalEvent != null) {
-                                    if(careportalEvent.isOlderThan(pbageUrgent/24)){
-                                        pbage.setTextColor(MainApp.sResources.getColor(R.color.low));
+                                if (careportalEvent != null) {
+                                        pbage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, pbageUrgent, pbageWarn));
                                         pbage.setText(careportalEvent.age());
-                                    } else if(careportalEvent.isOlderThan( pbageWarn/24)) {
-                                        pbage.setTextColor(MainApp.sResources.getColor(R.color.high));
-                                        pbage.setText(careportalEvent.age());
-                                    } else {
-                                        pbage.setText(careportalEvent.age());
-                                    }
-
                                 } else {
                                     pbage.setText(notavailable);
                                 }
@@ -322,5 +292,15 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
         }
     }
 
+    public static int determineTextColor(CareportalEvent careportalEvent, double warnThreshold, double urgentThreshold){
+        if(careportalEvent.isOlderThan(urgentThreshold)){
+            return MainApp.sResources.getColor(R.color.low);
+        } else if(careportalEvent.isOlderThan( warnThreshold)) {
+            return MainApp.sResources.getColor(R.color.high);
+        } else {
+            return Color.WHITE;
+        }
+
+    }
 }
 
