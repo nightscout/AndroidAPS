@@ -167,4 +167,8 @@ public class DateUtil {
         return System.currentTimeMillis();
     }
 
+    public static long roundDateToSec(long date) {
+        return date - date % 1000;
+    }
+
 }

@@ -5,8 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -18,9 +16,7 @@ import info.nightscout.utils.JsonHelper;
 
 @DatabaseTable(tableName = Food.TABLE_FOODS)
 public class Food {
-    private static Logger log = LoggerFactory.getLogger(Food.class);
-
-    public static final String TABLE_FOODS = "Foods";
+    static final String TABLE_FOODS = "Foods";
 
     @DatabaseField(id = true)
     public long key;
@@ -65,7 +61,7 @@ public class Food {
     @DatabaseField
     public int gi; // not used yet
 
-    public Food() {
+    private Food() {
         key = System.currentTimeMillis();
     }
 

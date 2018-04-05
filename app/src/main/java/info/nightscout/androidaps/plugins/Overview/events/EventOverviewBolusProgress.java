@@ -3,8 +3,7 @@ package info.nightscout.androidaps.plugins.Overview.events;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.Event;
 
 public class EventOverviewBolusProgress extends Event {

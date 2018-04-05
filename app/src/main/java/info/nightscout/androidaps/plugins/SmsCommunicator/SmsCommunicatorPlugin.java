@@ -315,7 +315,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         switch (splited[1].toUpperCase()) {
                             case "REFRESH":
                                 Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                                MainApp.getDbHelper().resetTreatments();
+                                TreatmentsPlugin.getPlugin().getService().resetTreatments();
                                 MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                                 List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
                                 reply = "TERATMENTS REFRESH " + q.size() + " receivers";
