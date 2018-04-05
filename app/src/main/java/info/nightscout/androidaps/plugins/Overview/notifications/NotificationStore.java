@@ -49,13 +49,13 @@ public class NotificationStore {
         }
     }
 
-    public synchronized void add(Notification n) {
+    public synchronized boolean add(Notification n) {
         log.info("Notification received: " + n.text);
         for (Notification storeNotification : store) {
             if (storeNotification.id == n.id) {
                 storeNotification.date = n.date;
                 storeNotification.validTo = n.validTo;
-                return;
+                return false;
             }
         }
         store.add(n);
@@ -71,6 +71,7 @@ public class NotificationStore {
         }
 
         Collections.sort(store, new NotificationComparator());
+        return true;
     }
 
     public synchronized boolean remove(int id) {

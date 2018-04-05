@@ -306,12 +306,6 @@ public class CommandQueue {
             return false;
         }
 
-        if (isRunning(Command.CommandType.BASALPROFILE)) {
-            if (callback != null)
-                callback.result(executingNowError()).run();
-            return false;
-        }
-
         if (!MainApp.isEngineeringModeOrRelease()) {
             Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
