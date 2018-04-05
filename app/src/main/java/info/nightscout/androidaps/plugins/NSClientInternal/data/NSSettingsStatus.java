@@ -186,12 +186,12 @@ public class NSSettingsStatus {
             JSONObject cageSettings = extendedSettings.optJSONObject("cage") != null ? extendedSettings.optJSONObject("cage") : defaultSettings;
             JSONObject sageSettings = extendedSettings.optJSONObject("sage") != null ? extendedSettings.optJSONObject("sage") : defaultSettings;
 
-            extendedValues.put("cageUrgent", cageSettings.optDouble("urgent", 3 * 24));
-            extendedValues.put("cageWarn", cageSettings.optDouble("warn", 2 * 24));
-            extendedValues.put("sageUrgent", sageSettings.optDouble("urgent", 7 * 24));
-            extendedValues.put("sageWarn", sageSettings.optDouble("warn", 7 * 24));
-            extendedValues.put("iageUrgent", iageSettings.optDouble("urgent", 7 * 24));
-            extendedValues.put("iageWarn", iageSettings.optDouble("warn", 5 * 24));
+            extendedValues.put("cageUrgent", cageSettings.optDouble("urgent", 72));
+            extendedValues.put("cageWarn", cageSettings.optDouble("warn", 48));
+            extendedValues.put("sageUrgent", sageSettings.optDouble("urgent", 166));
+            extendedValues.put("sageWarn", sageSettings.optDouble("warn", 164));
+            extendedValues.put("iageUrgent", iageSettings.optDouble("urgent", 72));
+            extendedValues.put("iageWarn", iageSettings.optDouble("warn", 48));
             extendedValues.put("pbageWarn", 240D);
             extendedValues.put("pbageUrgent", 360D);
 
