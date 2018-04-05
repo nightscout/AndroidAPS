@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="treatmentssafety_title">Tratments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -996,5 +996,5 @@
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
+    <string name="loopdisconnectedfor">Disconnected (%d m)</string>
 </resources>
-

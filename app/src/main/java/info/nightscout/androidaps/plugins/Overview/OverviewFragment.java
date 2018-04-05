@@ -1051,6 +1051,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuperbolusfor), activeloop.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
+            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isDisconnected()) {
+                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopdisconnectedfor), activeloop.minutesToEndOfSuspend()));
+                apsModeView.setTextColor(Color.WHITE);
             } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuspended()) {
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuspendedfor), activeloop.minutesToEndOfSuspend()));
