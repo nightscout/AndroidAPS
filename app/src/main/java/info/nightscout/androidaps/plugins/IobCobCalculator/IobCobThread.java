@@ -155,7 +155,8 @@ public class IobCobThread extends Thread {
                         AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
                         if (hourAgoData != null) {
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
-                            log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString());
+                            if (Config.logAutosensData)
+                                log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString());
                             int past = 1;
                             try {
                                 for (; past < 12; past++) {
@@ -242,7 +243,8 @@ public class IobCobThread extends Thread {
 
                     previous = autosensData;
                     autosensDataTable.put(bgTime, autosensData);
-                    log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
+                    if (Config.logAutosensData)
+                        log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
                     autosensData.autosensRatio = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime).ratio;
                     if (Config.logAutosensData)
                         log.debug(autosensData.toString());

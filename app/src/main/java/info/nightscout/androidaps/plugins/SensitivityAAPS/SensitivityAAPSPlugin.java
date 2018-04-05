@@ -30,7 +30,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInterface{
+public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInterface {
     private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
 
     static SensitivityAAPSPlugin plugin = null;
@@ -118,7 +118,9 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
         String ratioLimit = "";
         String sensResult = "";
 
-        log.debug("Records: " + index + "   " + pastSensitivity);
+        if (Config.logAutosensData)
+            log.debug("Records: " + index + "   " + pastSensitivity);
+
         Arrays.sort(deviations);
 
         double percentile = IobCobCalculatorPlugin.percentile(deviations, 0.50);
@@ -133,7 +135,8 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
             sensResult = "Sensitivity normal";
         }
 
-        log.debug(sensResult);
+        if (Config.logAutosensData)
+            log.debug(sensResult);
 
         double rawRatio = ratio;
         ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
