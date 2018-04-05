@@ -18,7 +18,7 @@ before_install:
 
 script:
   # Unit Test
-  - ./gradlew -Pcoverage test jacocoTestReport
+  - ./gradlew -Pcoverage testFullDebugUnitTest jacocoTestFullDebugUnitTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
