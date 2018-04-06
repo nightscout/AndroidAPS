@@ -997,5 +997,5 @@
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
+    <string name="loopdisconnectedfor">Disconnected (%d m)</string>
 </resources>
-

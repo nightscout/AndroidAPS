@@ -72,8 +72,8 @@ public class OverviewPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewNotification n) {
-        notificationStore.add(n.notification);
-        MainApp.bus().post(new EventRefreshOverview("EventNewNotification"));
+        if (notificationStore.add(n.notification))
+            MainApp.bus().post(new EventRefreshOverview("EventNewNotification"));
     }
 
     @Subscribe

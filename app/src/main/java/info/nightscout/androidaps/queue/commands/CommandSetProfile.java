@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.queue.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -17,6 +20,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandSetProfile extends Command {
+    private static Logger log = LoggerFactory.getLogger(CommandSetProfile.class);
     private Profile profile;
 
     public CommandSetProfile(Profile profile, Callback callback) {
@@ -27,6 +31,13 @@ public class CommandSetProfile extends Command {
 
     @Override
     public void execute() {
+        if (ConfigBuilderPlugin.getCommandQueue().isThisProfileSet(profile)) {
+            log.debug("QUEUE: Correct profile already set");
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(true).enacted(false)).run();
+            return;
+        }
+
         PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setNewBasalProfile(profile);
         if (callback != null)
             callback.result(r).run();
