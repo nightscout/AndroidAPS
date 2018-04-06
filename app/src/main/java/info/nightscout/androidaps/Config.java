@@ -42,6 +42,4 @@ public class Config {
     public static final boolean logDanaBTComm = true;
     public static boolean logDanaMessageDetail = true;
     public static final boolean logDanaSerialEngine = true;
-
-    public static final boolean enableComboBetaFeatures = false;
 }

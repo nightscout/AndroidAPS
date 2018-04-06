@@ -676,7 +676,6 @@
     <string name="zerovalueinprofile" formatted="false">Perfil invalido: %s</string>
     <string name="combo_programming_bolus">Programando bomba para emitir bolo</string>
     <string name="combo_refresh">Actualizar</string>
-    <string name="combo_tdds">TDDS</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividad</string>
     <string name="combo_no_pump_connection" formatted="false">Ninguna coneccnion por %d min</string>
@@ -694,21 +693,14 @@
     <string name="bolus_frequency_exceeded">Un bolo de mismo valor ha sido dado durante el pasado minuto. Para evitar bolos dobles y asegurarse contra bugs esto no es permitido.</string>
     <string name="combo_pump_connected_now">Ahora</string>
     <string name="combo_activity_reading_pump_history">Leiendo historia bomba</string>
-    <string name="combo_pump_alerts">Alarmas</string>
     <string name="combo_activity_setting_basal_profile">" Activando perfil base "</string>
     <string name="combo_pump_cartridge_low_warrning">"Nivel del deposito bajo "</string>
     <string name="combo_pump_battery_low_warrning">Bateria casi agotada</string>
     <string name="combo_is_in_error_state" formatted="false">La bomba muesta el error E%d: %s</string>
-    <string name="combo_no_alert_data_note">Para leer historial de los errores, pincha unos segundo el boton \"ALARMAS\" ATENCION: esto puede causar un bug. La bomba no vuelve a conectarse - necesitas pulsar un boton en la misma bomba para reiniciarse. Deberias evitar esto.</string>
-    <string name="combo_no_tdd_data_note">Para leer el hisorial TDD de la bomba pulsa el boton TDDS unso segundos. ATENCION: esto puede causar un bug. La bomba no vuelve a conectarse - necesitas pulsar un boton en la misma bomba para reiniciarse. Deberias evitar esto.</string>
-    <string name="combo_tdd_minimum" formatted="false">Mínimo: %3.1f U</string>
-    <string name="combo_tdd_average" formatted="false">Media: %3.1f U</string>
-    <string name="combo_tdd_maximum" formatted="false">Máximo: %3.1f U</string>
     <string name="combo_reservoir_low">Bajo</string>
     <string name="combo_reservoir_empty">Vacio</string>
     <string name="combo_reservoir_normal">Normal</string>
     <string name="combo_notification_check_time_date">Se necesita actualizar reloj de la bomba</string>
-    <string name="combo_history">Historial</string>
     <string name="combo_warning">Alerta</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR cancelada, advertencia acceptada</string>
     <string name="combo_error_no_bolus_delivered">Emision del bolo fallado. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automaticamente.</string>

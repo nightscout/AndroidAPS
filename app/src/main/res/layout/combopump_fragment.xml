@@ -499,46 +499,6 @@
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/combo_refresh" />
-
-            <info.nightscout.utils.SingleClickButton
-                android:id="@+id/combo_alerts_button"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_marginRight="-4dp"
-                android:drawableTop="@drawable/icon_cp_announcement"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:visibility="gone"
-                android:text="@string/combo_pump_alerts" />
-
-            <info.nightscout.utils.SingleClickButton
-                android:id="@+id/combo_tdds_button"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_marginRight="-4dp"
-                android:drawableTop="@drawable/icon_danarstats"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:visibility="gone"
-                android:text="@string/combo_tdds" />
-
-            <info.nightscout.utils.SingleClickButton
-                android:id="@+id/combo_full_history_button"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_marginRight="-4dp"
-                android:drawableTop="@drawable/icon_danarhistory"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:visibility="gone"
-                android:text="@string/combo_history" />
-
         </LinearLayout>
 
     </LinearLayout>
