@@ -4,6 +4,10 @@ import android.content.Intent;
 
 import java.util.Date;
 
+import android.database.DatabaseUtils;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.TDD;
 import sugar.free.sightparser.handling.HistoryBroadcast;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.updatePumpSerialNumber;
@@ -108,5 +112,13 @@ class HistoryIntentAdapter {
             default:
                 log("ERROR, UNKNWON BOLUS TYPE: " + bolus_type);
         }
+    }
+
+    void processDailyTotalIntent(Intent intent) {
+        Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_TOTAL_DATE);
+        double basal = intent.getDoubleExtra(HistoryBroadcast.EXTRA_BASAL_TOTAL, 0D);
+        double bolus = intent.getDoubleExtra(HistoryBroadcast.EXTRA_BOLUS_TOTAL, 0D);
+        TDD tdd = new TDD(date.getTime(), bolus, basal, bolus + basal);
+        MainApp.getDbHelper().createOrUpdateTDD(tdd);
     }
 }
