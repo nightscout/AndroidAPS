@@ -29,7 +29,7 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
-public class ComboFragment extends SubscriberFragment implements View.OnClickListener, View.OnLongClickListener {
+public class ComboFragment extends SubscriberFragment implements View.OnClickListener {
     private TextView stateView;
     private TextView activityView;
     private TextView batteryView;
@@ -41,7 +41,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private Button refreshButton;
     private TextView bolusCount;
     private TextView tbrCount;
-    private Button fullHistoryButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -61,10 +60,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
         refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(this);
-
-        fullHistoryButton = view.findViewById(R.id.combo_full_history_button);
-        fullHistoryButton.setOnClickListener(this);
-        fullHistoryButton.setOnLongClickListener(this);
 
         updateGUI();
         return view;
@@ -89,31 +84,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
                 });
                 break;
-            case R.id.combo_full_history_button:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage(R.string.combo_read_full_history_info);
-                builder.show();
-                break;
         }
-    }
-
-    // TODO clean up when when queuing
-    @Override
-    public boolean onLongClick(View view) {
-        switch (view.getId()) {
-            case R.id.combo_full_history_button:
-                fullHistoryButton.setEnabled(false);
-                new Thread(() -> ComboPlugin.getPlugin().readAllPumpData(new Callback() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> {
-                            fullHistoryButton.setEnabled(true);
-                        });
-                    }
-                })).start();
-                return true;
-        }
-        return false;
     }
 
     @Subscribe
@@ -158,9 +129,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
             }
 
             if (plugin.isInitialized()) {
-                refreshButton.setVisibility(View.VISIBLE);
-                fullHistoryButton.setVisibility(View.VISIBLE);
-
                 // battery
                 batteryView.setTextSize(20);
                 if (ps.batteryState == PumpState.EMPTY) {

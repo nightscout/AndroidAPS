@@ -1171,30 +1171,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
     }
 
-    // TODO use queue once ready
-    void readAllPumpData(Callback post) {
-//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
-//            @Override
-//            public void run() {
-        readHistory(new PumpHistoryRequest()
-                .bolusHistory(PumpHistoryRequest.FULL)
-                .pumpErrorHistory(PumpHistoryRequest.FULL)
-                .tddHistory(PumpHistoryRequest.FULL));
-        CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
-        if (readBasalResult.success) {
-            pump.basalProfile = readBasalResult.basalProfile;
-        }
-//            }
-//        }, post);
-        if (post != null) {
-            post.run();
-        }
-        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
-        if (commandQueue.performing() == null && commandQueue.size() == 0) {
-            ruffyScripter.disconnect();
-        }
-    }
-
     /**
      * Reads QuickInfo to update reservoir level and determine if new boluses exist on the pump
      * and if so, queries the history for all new records.
