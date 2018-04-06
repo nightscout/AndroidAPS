@@ -40,7 +40,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView tempBasalText;
     private Button refreshButton;
     private Button alertsButton;
-    private Button tddsButton;
     private TextView bolusCount;
     private TextView tbrCount;
     private Button fullHistoryButton;
@@ -67,10 +66,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         alertsButton = (Button) view.findViewById(R.id.combo_alerts_button);
         alertsButton.setOnClickListener(this);
         alertsButton.setOnLongClickListener(this);
-
-        tddsButton = (Button) view.findViewById(R.id.combo_tdds_button);
-        tddsButton.setOnClickListener(this);
-        tddsButton.setOnLongClickListener(this);
 
         fullHistoryButton = (Button) view.findViewById(R.id.combo_full_history_button);
         fullHistoryButton.setOnClickListener(this);
@@ -103,10 +98,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 ComboAlertHistoryDialog ehd = new ComboAlertHistoryDialog();
                 ehd.show(getFragmentManager(), ComboAlertHistoryDialog.class.getSimpleName());
                 break;
-            case R.id.combo_tdds_button:
-                ComboTddHistoryDialog thd = new ComboTddHistoryDialog();
-                thd.show(getFragmentManager(), ComboTddHistoryDialog.class.getSimpleName());
-                break;
             case R.id.combo_full_history_button:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(R.string.combo_read_full_history_info);
@@ -121,29 +112,12 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.combo_alerts_button:
                 alertsButton.setEnabled(false);
-                tddsButton.setEnabled(false);
                 fullHistoryButton.setEnabled(false);
                 new Thread(() -> ComboPlugin.getPlugin().readAlertData(new Callback() {
                     @Override
                     public void run() {
                         runOnUiThread(() -> {
                             alertsButton.setEnabled(true);
-                            tddsButton.setEnabled(true);
-                            fullHistoryButton.setEnabled(true);
-                        });
-                    }
-                })).start();
-                return true;
-            case R.id.combo_tdds_button:
-                alertsButton.setEnabled(false);
-                tddsButton.setEnabled(false);
-                fullHistoryButton.setEnabled(false);
-                new Thread(() -> ComboPlugin.getPlugin().readTddData(new Callback() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> {
-                            alertsButton.setEnabled(true);
-                            tddsButton.setEnabled(true);
                             fullHistoryButton.setEnabled(true);
                         });
                     }
@@ -151,14 +125,12 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 return true;
             case R.id.combo_full_history_button:
                 alertsButton.setEnabled(false);
-                tddsButton.setEnabled(false);
                 fullHistoryButton.setEnabled(false);
                 new Thread(() -> ComboPlugin.getPlugin().readAllPumpData(new Callback() {
                     @Override
                     public void run() {
                         runOnUiThread(() -> {
                             alertsButton.setEnabled(true);
-                            tddsButton.setEnabled(true);
                             fullHistoryButton.setEnabled(true);
                         });
                     }
@@ -213,7 +185,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 refreshButton.setVisibility(View.VISIBLE);
                 if (Config.enableComboBetaFeatures) {
                     alertsButton.setVisibility(View.VISIBLE);
-                    tddsButton.setVisibility(View.VISIBLE);
                 }
                 fullHistoryButton.setVisibility(View.VISIBLE);
 
