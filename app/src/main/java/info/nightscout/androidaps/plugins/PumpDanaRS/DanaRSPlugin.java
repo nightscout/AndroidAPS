@@ -363,9 +363,9 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                     speed = 60;
                     break;
             }
-            // v2 stores end time for bolus, we need to adjust time
+            // RS stores end time for bolus, we need to adjust time
             // default delivery speed is 12 sec/U
-            detailedBolusInfo.date += detailedBolusInfo.insulin * speed * 1000;
+            detailedBolusInfo.date = DateUtil.now() + (long)(speed * detailedBolusInfo.insulin * 1000);
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;
@@ -379,7 +379,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, System.currentTimeMillis() + carbTime * 60 * 1000, t);
+                connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
