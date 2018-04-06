@@ -68,8 +68,8 @@ import info.nightscout.utils.SP;
  */
 public class ComboPlugin extends PluginBase implements PumpInterface, ConstraintsInterface {
     private static final Logger log = LoggerFactory.getLogger(ComboPlugin.class);
-    public static final String COMBO_TBRS_SET = "combo_tbrs_set";
-    public static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
+    static final String COMBO_TBRS_SET = "combo_tbrs_set";
+    static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
     private static ComboPlugin plugin = null;
 
@@ -1124,11 +1124,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
-        if (!historyResult.success) {
+        PumpHistory history = historyResult.history;
+        if (!historyResult.success || history == null) {
             return false;
         }
 
-        PumpHistory history = historyResult.history;
         updateDbFromPumpHistory(history);
 
         // update local cache
@@ -1320,7 +1320,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     @Override
     public PumpEnactResult loadTDDs() {
-
         PumpEnactResult result = new PumpEnactResult();
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
         if (result.success) {
