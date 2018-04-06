@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.MainApp;
@@ -39,35 +39,30 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     private TextView baseBasalRate;
     private TextView tempBasalText;
     private Button refreshButton;
-    private Button alertsButton;
     private TextView bolusCount;
     private TextView tbrCount;
     private Button fullHistoryButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
-        stateView = (TextView) view.findViewById(R.id.combo_state);
-        activityView = (TextView) view.findViewById(R.id.combo_activity);
-        batteryView = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
-        reservoirView = (TextView) view.findViewById(R.id.combo_insulinstate);
-        lastBolusView = (TextView) view.findViewById(R.id.combo_last_bolus);
-        lastConnectionView = (TextView) view.findViewById(R.id.combo_lastconnection);
-        baseBasalRate = (TextView) view.findViewById(R.id.combo_base_basal_rate);
-        tempBasalText = (TextView) view.findViewById(R.id.combo_temp_basal);
-        bolusCount = (TextView) view.findViewById(R.id.combo_bolus_count);
-        tbrCount = (TextView) view.findViewById(R.id.combo_tbr_count);
+        stateView = view.findViewById(R.id.combo_state);
+        activityView = view.findViewById(R.id.combo_activity);
+        batteryView = view.findViewById(R.id.combo_pumpstate_battery);
+        reservoirView = view.findViewById(R.id.combo_insulinstate);
+        lastBolusView = view.findViewById(R.id.combo_last_bolus);
+        lastConnectionView = view.findViewById(R.id.combo_lastconnection);
+        baseBasalRate = view.findViewById(R.id.combo_base_basal_rate);
+        tempBasalText = view.findViewById(R.id.combo_temp_basal);
+        bolusCount = view.findViewById(R.id.combo_bolus_count);
+        tbrCount = view.findViewById(R.id.combo_tbr_count);
 
-        refreshButton = (Button) view.findViewById(R.id.combo_refresh_button);
+        refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(this);
 
-        alertsButton = (Button) view.findViewById(R.id.combo_alerts_button);
-        alertsButton.setOnClickListener(this);
-        alertsButton.setOnLongClickListener(this);
-
-        fullHistoryButton = (Button) view.findViewById(R.id.combo_full_history_button);
+        fullHistoryButton = view.findViewById(R.id.combo_full_history_button);
         fullHistoryButton.setOnClickListener(this);
         fullHistoryButton.setOnLongClickListener(this);
 
@@ -94,10 +89,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                     }
                 });
                 break;
-            case R.id.combo_alerts_button:
-                ComboAlertHistoryDialog ehd = new ComboAlertHistoryDialog();
-                ehd.show(getFragmentManager(), ComboAlertHistoryDialog.class.getSimpleName());
-                break;
             case R.id.combo_full_history_button:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(R.string.combo_read_full_history_info);
@@ -110,27 +101,12 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
     @Override
     public boolean onLongClick(View view) {
         switch (view.getId()) {
-            case R.id.combo_alerts_button:
-                alertsButton.setEnabled(false);
-                fullHistoryButton.setEnabled(false);
-                new Thread(() -> ComboPlugin.getPlugin().readAlertData(new Callback() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> {
-                            alertsButton.setEnabled(true);
-                            fullHistoryButton.setEnabled(true);
-                        });
-                    }
-                })).start();
-                return true;
             case R.id.combo_full_history_button:
-                alertsButton.setEnabled(false);
                 fullHistoryButton.setEnabled(false);
                 new Thread(() -> ComboPlugin.getPlugin().readAllPumpData(new Callback() {
                     @Override
                     public void run() {
                         runOnUiThread(() -> {
-                            alertsButton.setEnabled(true);
                             fullHistoryButton.setEnabled(true);
                         });
                     }
@@ -183,9 +159,6 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
             if (plugin.isInitialized()) {
                 refreshButton.setVisibility(View.VISIBLE);
-                if (Config.enableComboBetaFeatures) {
-                    alertsButton.setVisibility(View.VISIBLE);
-                }
                 fullHistoryButton.setVisibility(View.VISIBLE);
 
                 // battery

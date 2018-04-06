@@ -1172,23 +1172,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     // TODO use queue once ready
-    void readAlertData(Callback post) {
-//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
-//            @Override
-//            public void run() {
-        readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
-//            }
-//        }, post);
-        if (post != null) {
-            post.run();
-        }
-        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
-        if (commandQueue.performing() == null && commandQueue.size() == 0) {
-            ruffyScripter.disconnect();
-        }
-    }
-
-    // TODO use queue once ready
     void readAllPumpData(Callback post) {
 //        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
 //            @Override
