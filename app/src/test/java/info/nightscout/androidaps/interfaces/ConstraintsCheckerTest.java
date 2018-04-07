@@ -257,6 +257,7 @@ public class ConstraintsCheckerTest {
         AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
         AAPSMocker.mockSP();
+        AAPSMocker.mockCommandQueue();
 
         // RS constructor
         when(SP.getString(R.string.key_danars_address, "")).thenReturn("");

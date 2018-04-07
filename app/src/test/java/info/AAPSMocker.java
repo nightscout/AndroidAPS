@@ -17,6 +17,7 @@ import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.SP;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -122,11 +123,17 @@ public class AAPSMocker {
         when(MainApp.getDbHelper()).thenReturn(databaseHelper);
     }
 
+    public static void mockCommandQueue() {
+        CommandQueue queue = mock(CommandQueue.class);
+        when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
+    }
+
     public static Profile getValidProfile() {
         try {
             if (profile == null)
                 profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
-        } catch (JSONException ignored) {}
+        } catch (JSONException ignored) {
+        }
         return profile;
     }
 

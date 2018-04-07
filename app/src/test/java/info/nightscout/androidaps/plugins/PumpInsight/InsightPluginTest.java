@@ -49,6 +49,7 @@ public class InsightPluginTest {
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
+        AAPSMocker.mockCommandQueue();
 
         insightPlugin = InsightPlugin.getPlugin();
     }
