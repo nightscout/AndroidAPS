@@ -346,7 +346,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoBgReadings().update(bgReading);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -1199,6 +1199,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         scheduleCareportalEventChange();
+    }
+
+    public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
+        try {
+            return getDaoCareportalEvents().queryForId(timestamp);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
     }
 
     @Nullable

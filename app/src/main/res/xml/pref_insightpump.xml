@@ -19,4 +19,9 @@
         android:key="insight_real_tbr_cancel"
         android:title="@string/insight_use_real_tbr_cancels"
         android:summary="@string/insight_actually_cancel_tbr_summary"/>
-</PreferenceScreen  >
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="insight_automatic_careportal_events"
+        android:title="@string/automatic_careportal_events"
+        android:summary="@string/automatically_upload_insulin_cannula_and_battery_changes_to_nightscout"/>
+</PreferenceScreen>

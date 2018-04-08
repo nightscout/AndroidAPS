@@ -989,6 +989,8 @@
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
     <string name="loopdisconnectedfor">Disconnected (%d m)</string>
+    <string name="automatic_careportal_events">Automatic careportal events</string>
+    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatically upload insulin, cannula and battery changes and pump alarms to Nightscout</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
