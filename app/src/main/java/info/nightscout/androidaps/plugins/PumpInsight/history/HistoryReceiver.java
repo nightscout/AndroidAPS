@@ -46,6 +46,7 @@ public class HistoryReceiver {
         filter.addAction(ACTION_CANNULA_FILLED);
         filter.addAction(ACTION_CARTRIDGE_INSERTED);
         filter.addAction(ACTION_BATTERY_INSERTED);
+        filter.addAction(ACTION_OCCURENCE_OF_ALERT);
 
         MainApp.instance().registerReceiver(historyReceiver, filter);
     }
