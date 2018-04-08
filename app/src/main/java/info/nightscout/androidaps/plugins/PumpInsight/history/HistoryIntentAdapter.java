@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpInsight.history;
 
 import android.content.Intent;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.utils.DateUtil;
@@ -141,8 +142,7 @@ class HistoryIntentAdapter {
 
     private void uploadCareportalEvent(Date date, String event) {
         if (SP.getBoolean("insight_automatic_careportal_events", false)) {
-            CareportalEvent careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(event);
-            if (careportalEvent == null || careportalEvent.date == date.getTime()) return;
+            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
             try {
                 JSONObject data = new JSONObject();
                 String enteredBy = SP.getString("careportal_enteredby", "");
@@ -154,5 +154,50 @@ class HistoryIntentAdapter {
                 e.printStackTrace();
             }
         }
+    }
+
+    void processOccurenceOfAlertIntent(Intent intent) {
+        if (SP.getBoolean("insight_automatic_careportal_events", false)) {
+            Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
+            String alertType = intent.getStringExtra(HistoryBroadcast.EXTRA_ALERT_TYPE);
+            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
+            try {
+                JSONObject data = new JSONObject();
+                String enteredBy = SP.getString("careportal_enteredby", "");
+                if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
+                data.put("created_at", DateUtil.toISOString(date));
+                data.put("eventType", CareportalEvent.NOTE);
+                data.put("notes", MainApp.instance().getString(getAlertText(alertType)));
+                NSUpload.uploadCareportalEntryToNS(data);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private int getAlertText(String type) {
+        if (type.equals("Error6MechanicalError")) return R.string.alert_e6;
+        if (type.equals("Error7ElectronicError")) return R.string.alert_e7;
+        if (type.equals("Error10RewindError")) return R.string.alert_e10;
+        if (type.equals("Error13LanguageError")) return R.string.alert_e13;
+        if (type.equals("Maintenance20CartridgeNotInserted")) return R.string.alert_m20;
+        if (type.equals("Maintenance21CartridgeEmpty")) return R.string.alert_m21;
+        if (type.equals("Maintenance22BatteryEmpty")) return R.string.alert_m22;
+        if (type.equals("Maintenance23AutomaticOff")) return R.string.alert_m23;
+        if (type.equals("Maintenance24Occlusion")) return R.string.alert_m24;
+        if (type.equals("Maintenance25LoantimeOver")) return R.string.alert_m25;
+        if (type.equals("Maintenance26CartridgeChangeNotCompleted")) return R.string.alert_m26;
+        if (type.equals("Maintenance27DataDownloadFailed")) return R.string.alert_m27;
+        if (type.equals("Maintenance28PauseModeTimeout")) return R.string.alert_m28;
+        if (type.equals("Maintenance29BatteryTypeNotSet")) return R.string.alert_m29;
+        if (type.equals("Maintenance30CartridgeTypeNotSet")) return R.string.alert_m30;
+        if (type.equals("Warning31CartridgeLow")) return R.string.alert_w31;
+        if (type.equals("Warning32BatteryLow")) return R.string.alert_w32;
+        if (type.equals("Warning33InvalidDateTime")) return R.string.alert_w33;
+        if (type.equals("Warning34EndOfWarranty")) return R.string.alert_w34;
+        if (type.equals("Warning36TBRCancelled")) return R.string.alert_w36;
+        if (type.equals("Warning38BolusCancelled")) return R.string.alert_w38;
+        if (type.equals("Warning39LoantimeWarning")) return R.string.alert_w39;
+        return 0;
     }
 }

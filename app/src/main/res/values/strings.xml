@@ -989,4 +989,6 @@
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
     <string name="loopdisconnectedfor">Disconnected (%d m)</string>
+    <string name="automatic_careportal_events">Automatic careportal events</string>
+    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatically upload insulin, cannula and battery changes to Nightscout</string>
 </resources>

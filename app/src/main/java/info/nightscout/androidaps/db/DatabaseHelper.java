@@ -1230,6 +1230,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleCareportalEventChange();
     }
 
+    public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
+        try {
+            return getDaoCareportalEvents().queryForId(timestamp);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Nullable
     public CareportalEvent getLastCareportalEvent(String event) {
         try {

@@ -104,6 +104,9 @@ public class HistoryReceiver {
                     case ACTION_BATTERY_INSERTED:
                         intentAdapter.processBatteryInsertedIntent(intent);
                         break;
+                    case ACTION_OCCURENCE_OF_ALERT:
+                        intentAdapter.processOccurenceOfAlertIntent(intent);
+                        break;
                 }
             }
         };
