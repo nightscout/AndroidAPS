@@ -111,6 +111,9 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = true;
+
+        pumpDescription.supportsTDDs = true;
+        pumpDescription.needsManualTDDLoad = true;
     }
 
     @Override

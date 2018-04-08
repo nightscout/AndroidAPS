@@ -73,6 +73,9 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = true;
+
+        pumpDescription.supportsTDDs = true;
+        pumpDescription.needsManualTDDLoad = true;
     }
 
     @Override

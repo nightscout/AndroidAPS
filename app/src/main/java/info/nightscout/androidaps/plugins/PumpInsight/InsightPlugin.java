@@ -142,6 +142,9 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         pumpDescription.isRefillingCapable = true;
 
         pumpDescription.storesCarbInfo = false;
+
+        pumpDescription.supportsTDDs = true;
+        pumpDescription.needsManualTDDLoad = false;
     }
 
 

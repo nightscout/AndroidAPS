@@ -112,6 +112,9 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         pumpDescription.storesCarbInfo = false;
 
         pumpDescription.is30minBasalRatesCapable = false;
+
+        pumpDescription.supportsTDDs = true;
+        pumpDescription.needsManualTDDLoad = true;
     }
 
     @NonNull
