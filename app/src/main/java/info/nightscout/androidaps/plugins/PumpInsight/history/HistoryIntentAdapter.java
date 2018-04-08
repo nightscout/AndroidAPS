@@ -1,22 +1,24 @@
 package info.nightscout.androidaps.plugins.PumpInsight.history;
 
 import android.content.Intent;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.TDD;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
+import org.json.JSONException;
+import org.json.JSONObject;
+import sugar.free.sightparser.handling.HistoryBroadcast;
 
 import java.util.Date;
-
-import android.database.DatabaseUtils;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.db.TDD;
-import sugar.free.sightparser.handling.HistoryBroadcast;
 
 import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache.updatePumpSerialNumber;
 
 /**
  * Created by jamorham on 27/01/2018.
- *
+ * <p>
  * Parse inbound logbook intents
- *
  */
 
 class HistoryIntentAdapter {
@@ -120,5 +122,37 @@ class HistoryIntentAdapter {
         double bolus = intent.getDoubleExtra(HistoryBroadcast.EXTRA_BOLUS_TOTAL, 0D);
         TDD tdd = new TDD(date.getTime(), bolus, basal, bolus + basal);
         MainApp.getDbHelper().createOrUpdateTDD(tdd);
+    }
+
+    void processCannulaFilledIntent(Intent intent) {
+        Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
+        uploadCareportalEvent(date, CareportalEvent.SITECHANGE);
+    }
+
+    void processCartridgeInsertedIntent(Intent intent) {
+        Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
+        uploadCareportalEvent(date, CareportalEvent.INSULINCHANGE);
+    }
+
+    void processBatteryInsertedIntent(Intent intent) {
+        Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
+        uploadCareportalEvent(date, CareportalEvent.PUMPBATTERYCHANGE);
+    }
+
+    private void uploadCareportalEvent(Date date, String event) {
+        if (SP.getBoolean("insight_automatic_careportal_events", false)) {
+            CareportalEvent careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(event);
+            if (careportalEvent == null || careportalEvent.date == date.getTime()) return;
+            try {
+                JSONObject data = new JSONObject();
+                String enteredBy = SP.getString("careportal_enteredby", "");
+                if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
+                data.put("created_at", DateUtil.toISOString(date));
+                data.put("eventType", event);
+                NSUpload.uploadCareportalEntryToNS(data);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

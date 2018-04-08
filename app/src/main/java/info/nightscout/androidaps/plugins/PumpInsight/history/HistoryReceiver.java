@@ -43,6 +43,9 @@ public class HistoryReceiver {
         filter.addAction(ACTION_SYNC_STARTED);
         filter.addAction(ACTION_STILL_SYNCING);
         filter.addAction(ACTION_SYNC_FINISHED);
+        filter.addAction(ACTION_CANNULA_FILLED);
+        filter.addAction(ACTION_CARTRIDGE_INSERTED);
+        filter.addAction(ACTION_BATTERY_INSERTED);
 
         MainApp.instance().registerReceiver(historyReceiver, filter);
     }
@@ -74,7 +77,6 @@ public class HistoryReceiver {
                 }
 
                 switch (action) {
-
                     case ACTION_SYNC_STARTED:
                         status = SYNCING;
                         break;
@@ -92,6 +94,15 @@ public class HistoryReceiver {
                         break;
                     case ACTION_DAILY_TOTAL:
                         intentAdapter.processDailyTotalIntent(intent);
+                        break;
+                    case ACTION_CANNULA_FILLED:
+                        intentAdapter.processCannulaFilledIntent(intent);
+                        break;
+                    case ACTION_CARTRIDGE_INSERTED:
+                        intentAdapter.processCartridgeInsertedIntent(intent);
+                        break;
+                    case ACTION_BATTERY_INSERTED:
+                        intentAdapter.processBatteryInsertedIntent(intent);
                         break;
                 }
             }
