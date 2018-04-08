@@ -203,7 +203,7 @@
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
-    <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis will default to zero. After several days or weeks, depending on your comfort level, you may choose to adjust this number.</string>
+    <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language">Language</string>
@@ -989,4 +989,7 @@
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
     <string name="loopdisconnectedfor">Disconnected (%d m)</string>
+    <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
+    <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
+    <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
 </resources>

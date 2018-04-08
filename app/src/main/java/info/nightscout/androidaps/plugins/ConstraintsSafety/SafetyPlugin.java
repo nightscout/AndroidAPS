@@ -169,7 +169,11 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
-        double maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        double maxIobPref;
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
+            maxIobPref = SP.getDouble(R.string.key_openapssmb_max_iob, 3d);
+        else
+            maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
         maxIob.setIfSmaller(maxIobPref, String.format(MainApp.gs(R.string.limitingiob), maxIobPref, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
         if (OpenAPSMAPlugin.getPlugin().isEnabled(PluginType.APS))
