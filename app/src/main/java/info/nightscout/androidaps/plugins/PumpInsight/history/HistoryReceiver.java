@@ -11,13 +11,7 @@ import info.nightscout.androidaps.R;
 import static info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver.Status.BUSY;
 import static info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver.Status.SYNCED;
 import static info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver.Status.SYNCING;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_BOLUS_DELIVERED;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_BOLUS_PROGRAMMED;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_END_OF_TBR;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_PUMP_STATUS_CHANGED;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_STILL_SYNCING;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_SYNC_FINISHED;
-import static sugar.free.sightparser.handling.HistoryBroadcast.ACTION_SYNC_STARTED;
+import static sugar.free.sightparser.handling.HistoryBroadcast.*;
 
 /**
  * Created by jamorham on 27/01/2018.
@@ -45,6 +39,7 @@ public class HistoryReceiver {
         filter.addAction(ACTION_BOLUS_PROGRAMMED);
         filter.addAction(ACTION_BOLUS_DELIVERED);
         filter.addAction(ACTION_END_OF_TBR);
+        filter.addAction(ACTION_DAILY_TOTAL);
         filter.addAction(ACTION_SYNC_STARTED);
         filter.addAction(ACTION_STILL_SYNCING);
         filter.addAction(ACTION_SYNC_FINISHED);
@@ -94,6 +89,9 @@ public class HistoryReceiver {
                         break;
                     case ACTION_END_OF_TBR:
                         intentAdapter.processTBRIntent(intent);
+                        break;
+                    case ACTION_DAILY_TOTAL:
+                        intentAdapter.processDailyTotalIntent(intent);
                         break;
                 }
             }

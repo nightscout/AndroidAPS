@@ -299,9 +299,10 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean setProfile(Profile profile, Callback callback) {
-        if (isRunning(Command.CommandType.BASALPROFILE)) {
+        if (isThisProfileSet(profile)) {
+            log.debug("QUEUE: Correct profile already set");
             if (callback != null)
-                callback.result(executingNowError()).run();
+                callback.result(new PumpEnactResult().success(true).enacted(false)).run();
             return false;
         }
 
@@ -328,13 +329,6 @@ public class CommandQueue {
         }
 
         MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
-
-        if (isThisProfileSet(profile)) {
-            log.debug("QUEUE: Correct profile already set");
-            if (callback != null)
-                callback.result(new PumpEnactResult().success(true).enacted(false)).run();
-            return false;
-        }
 
         // remove all unfinished
         removeAll(Command.CommandType.BASALPROFILE);

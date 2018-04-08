@@ -230,6 +230,7 @@ public class SafetyPluginTest {
         AAPSMocker.mockConstraintsChecker();
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
+        AAPSMocker.mockBus();
 
 
         when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);

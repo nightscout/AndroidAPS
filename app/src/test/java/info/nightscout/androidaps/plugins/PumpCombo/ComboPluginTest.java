@@ -15,12 +15,13 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.ToastUtils;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class, CommandQueue.class})
 public class ComboPluginTest {
 
     ComboPlugin comboPlugin;
@@ -63,6 +64,7 @@ public class ComboPluginTest {
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
+        AAPSMocker.mockCommandQueue();
 
         comboPlugin = ComboPlugin.getPlugin();
     }

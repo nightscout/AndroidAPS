@@ -1,10 +1,12 @@
-package info.nightscout.androidaps.db;
+package info.nightscout.androidaps.plugins.Treatments;
 
 import android.graphics.Color;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
@@ -21,10 +25,13 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWith
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.JsonHelper;
 
-@DatabaseTable(tableName = DatabaseHelper.DATABASE_TREATMENTS)
+@DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(Treatment.class);
+
+    public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
     public long date;
@@ -57,6 +64,32 @@ public class Treatment implements DataPointWithLabelInterface {
     public Treatment() {
     }
 
+    public static Treatment createFromJson(JSONObject json) throws JSONException {
+        Treatment treatment = new Treatment();
+        treatment.source = Source.NIGHTSCOUT;
+        treatment.date = DateUtil.roundDateToSec(JsonHelper.safeGetLong(json, "mills"));
+        if (treatment.date == 0L)
+            return null;
+        treatment.carbs = JsonHelper.safeGetDouble(json,"carbs");
+        treatment.insulin = JsonHelper.safeGetDouble(json,"insulin");
+        treatment.pumpId = JsonHelper.safeGetLong(json, "pumpId");
+        treatment._id = json.getString("_id");
+        treatment.isSMB = JsonHelper.safeGetBoolean(json,"isSMB");
+        if (json.has("eventType")) {
+            treatment.mealBolus = !json.get("eventType").equals("Correction Bolus");
+            double carbs = treatment.carbs;
+            if (json.has("boluscalc")) {
+                JSONObject boluscalc = json.getJSONObject("boluscalc");
+                if (boluscalc.has("carbs")) {
+                    carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
+                }
+            }
+            if (carbs <= 0)
+                treatment.mealBolus = false;
+        }
+        return treatment;
+    }
+
     public String toString() {
         return "Treatment{" +
                 "date= " + date +
@@ -72,9 +105,8 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     public boolean isDataChanging(Treatment other) {
-        if (date != other.date) {
+        if (date != other.date)
             return true;
-        }
         if (insulin != other.insulin)
             return true;
         if (carbs != other.carbs)
@@ -83,9 +115,8 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     public boolean isEqual(Treatment other) {
-        if (date != other.date) {
+        if (date != other.date)
             return false;
-        }
         if (insulin != other.insulin)
             return false;
         if (carbs != other.carbs)

@@ -780,7 +780,6 @@
     <string name="zerovalueinprofile" formatted="false">Invalid profile: %s</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
     <string name="combo_refresh">Refresh</string>
-    <string name="combo_tdds">TDDS</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>
@@ -801,23 +800,15 @@
     <string name="combo_pump_connected_now">Now</string>
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="danar_history">pump history</string>
-    <string name="combo_pump_alerts">Alerts</string>
     <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
     <string name="combo_is_in_error_state">The pump is showing the error E%d: %s</string>
-    <string name="combo_no_alert_data_note">To read the pump\'s error history, long press this button</string>
-    <string name="combo_no_tdd_data_note">To read the pump\'s TDD history, long press this button</string>
-    <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
-    <string name="combo_tdd_average">Average: %3.1f U</string>
-    <string name="combo_tdd_maximum">Maximum: %3.1f U</string>
     <string name="combo_reservoir_low">Low</string>
     <string name="combo_reservoir_empty">Empty</string>
     <string name="combo_reservoir_normal">Normal</string>
     <string name="combo_notification_check_time_date">Pump clock update needed</string>
-    <string name="combo_history">History</string>
     <string name="combo_warning">Warning</string>
-    <string name="combo_read_full_history_info">Long press this button to force a full read of history and basal profile from the pump. This is generally not needed, since the pump\'s history is read continuously, but can be useful if the pump\'s date and time changed significantly or the pump was replaced.</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
     <string name="combo_error_no_connection_no_bolus_delivered">The pump could not be reached. No bolus was given</string>
     <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
@@ -997,5 +988,6 @@
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="reset">reset</string>
+    <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
+    <string name="loopdisconnectedfor">Disconnected (%d m)</string>
 </resources>
-

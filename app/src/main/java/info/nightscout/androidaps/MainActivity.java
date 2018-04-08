@@ -48,6 +48,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -378,7 +379,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 MainApp.getDbHelper().resetDatabases();
                                                 // should be handled by Plugin-Interface and
                                                 // additional service interface and plugin registry
-                                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().resetFood();
+                                                FoodPlugin.getPlugin().getService().resetFood();
+                                                TreatmentsPlugin.getPlugin().getService().resetTreatments();
                                             }
                                         })
                                         .create()
@@ -403,7 +405,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 else
                                     builder.setIcon(R.mipmap.blueowl);
                                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
-                                message += MainApp.sResources.getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                                message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
+                                message += getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
                                 if (MainApp.engineeringMode)
                                     message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
                                 message += getString(R.string.about_link_urls);

@@ -21,7 +21,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -193,8 +193,8 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
     @Override
     public PumpEnactResult loadTDDs() {
-        //TODO: read TDDs and store to DB
         PumpEnactResult result = new PumpEnactResult();
+        result.success = true;
         return result;
     }
 
@@ -242,7 +242,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         // TODO review
         if (!Config.NSCLIENT && !Config.G5UPLOADER)
             NSUpload.uploadDeviceStatus();
-        lastDataTime = new Date();
     }
 
     @Override
@@ -283,7 +282,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     public void getPumpStatus() {
 
         log("getPumpStatus");
-        lastDataTime = new Date();
         if (Connector.get().isPumpConnected()) {
             log("is connected.. requesting status");
             final UUID uuid = aSyncTaskRunner(new StatusTaskRunner(connector.getServiceConnector()), "Status");
@@ -439,7 +437,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         updateGui();
         connector.tryToGetPumpStatusAgain();
 
-        lastDataTime = new Date();
         connector.requestHistorySync(30000);
 
         if (result.success) while (true) {
@@ -538,8 +535,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + pumpEnactResult.success);
 
-        lastDataTime = new Date();
-
         updateGui();
 
         connector.requestHistorySync(5000);
@@ -621,7 +616,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
         }
-        lastDataTime = new Date();
         updateGui();
         if (Config.logPumpComm)
             log.debug("Canceling temp basal: "); // TODO get more info
@@ -950,6 +944,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     singleMessageTaskRunner.fetch(new TaskRunner.ResultCallback() {
                         @Override
                         public void onResult(Object o) {
+                            lastDataTime = new Date();
                             log(name + " success");
                             event.response_object = o;
                             if (o instanceof BolusMessage) {
@@ -988,6 +983,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     task.fetch(new TaskRunner.ResultCallback() {
                         @Override
                         public void onResult(Object o) {
+                            lastDataTime = new Date();
                             log(name + " success");
                             event.response_object = o;
                             event.success = true;

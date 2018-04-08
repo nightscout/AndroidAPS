@@ -347,6 +347,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
      * @param _id
      * @return
      */
+    @Nullable
     public Food findByNSId(String _id) {
         try {
             List<Food> list = this.getDao().queryForEq("_id", _id);

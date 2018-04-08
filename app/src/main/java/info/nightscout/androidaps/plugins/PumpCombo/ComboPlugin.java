@@ -28,7 +28,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -68,8 +68,8 @@ import info.nightscout.utils.SP;
  */
 public class ComboPlugin extends PluginBase implements PumpInterface, ConstraintsInterface {
     private static final Logger log = LoggerFactory.getLogger(ComboPlugin.class);
-    public static final String COMBO_TBRS_SET = "combo_tbrs_set";
-    public static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
+    static final String COMBO_TBRS_SET = "combo_tbrs_set";
+    static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
     private static ComboPlugin plugin = null;
 
@@ -1124,11 +1124,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
         CommandResult historyResult = runCommand(MainApp.gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
-        if (!historyResult.success) {
+        PumpHistory history = historyResult.history;
+        if (!historyResult.success || history == null) {
             return false;
         }
 
-        PumpHistory history = historyResult.history;
         updateDbFromPumpHistory(history);
 
         // update local cache
@@ -1169,64 +1169,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         double bolus = pumpBolus.amount - 0.1;
         int secondsFromBolus = (int) (bolus * 10 * 1000);
         return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
-    }
-
-    // TODO use queue once ready
-    void readTddData(Callback post) {
-//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
-//            @Override
-//            public void run() {
-        readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
-//            }
-//        }, post);
-        if (post != null) {
-            post.run();
-        }
-        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
-        if (commandQueue.performing() == null && commandQueue.size() == 0) {
-            ruffyScripter.disconnect();
-        }
-    }
-
-    // TODO use queue once ready
-    void readAlertData(Callback post) {
-//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
-//            @Override
-//            public void run() {
-        readHistory(new PumpHistoryRequest().pumpErrorHistory(PumpHistoryRequest.FULL));
-//            }
-//        }, post);
-        if (post != null) {
-            post.run();
-        }
-        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
-        if (commandQueue.performing() == null && commandQueue.size() == 0) {
-            ruffyScripter.disconnect();
-        }
-    }
-
-    // TODO use queue once ready
-    void readAllPumpData(Callback post) {
-//        ConfigBuilderPlugin.getCommandQueue().custom(new Callback() {
-//            @Override
-//            public void run() {
-        readHistory(new PumpHistoryRequest()
-                .bolusHistory(PumpHistoryRequest.FULL)
-                .pumpErrorHistory(PumpHistoryRequest.FULL)
-                .tddHistory(PumpHistoryRequest.FULL));
-        CommandResult readBasalResult = runCommand(MainApp.gs(R.string.combo_actvity_reading_basal_profile), 2, ruffyScripter::readBasalProfile);
-        if (readBasalResult.success) {
-            pump.basalProfile = readBasalResult.basalProfile;
-        }
-//            }
-//        }, post);
-        if (post != null) {
-            post.run();
-        }
-        CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
-        if (commandQueue.performing() == null && commandQueue.size() == 0) {
-            ruffyScripter.disconnect();
-        }
     }
 
     /**
@@ -1378,7 +1320,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     @Override
     public PumpEnactResult loadTDDs() {
-
         PumpEnactResult result = new PumpEnactResult();
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
         if (result.success) {
