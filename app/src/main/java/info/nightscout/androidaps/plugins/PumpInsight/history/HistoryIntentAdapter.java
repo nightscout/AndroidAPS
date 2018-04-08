@@ -160,18 +160,7 @@ class HistoryIntentAdapter {
         if (SP.getBoolean("insight_automatic_careportal_events", false)) {
             Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
             String alertType = intent.getStringExtra(HistoryBroadcast.EXTRA_ALERT_TYPE);
-            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
-            try {
-                JSONObject data = new JSONObject();
-                String enteredBy = SP.getString("careportal_enteredby", "");
-                if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
-                data.put("created_at", DateUtil.toISOString(date));
-                data.put("eventType", CareportalEvent.NOTE);
-                data.put("notes", MainApp.instance().getString(getAlertText(alertType)));
-                NSUpload.uploadCareportalEntryToNS(data);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            NSUpload.uploadError(MainApp.instance().getString(getAlertText(alertType)), date);
         }
     }
 
