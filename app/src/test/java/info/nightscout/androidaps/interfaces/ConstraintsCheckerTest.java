@@ -229,19 +229,33 @@ public class ConstraintsCheckerTest {
 
     // applyMaxIOBConstraints tests
     @Test
-    public void iobShouldBeLimited() throws Exception {
+    public void iobAMAShouldBeLimited() {
         // No limit by default
         when(SP.getDouble(R.string.key_openapsma_max_iob, 1.5d)).thenReturn(1.5d);
         when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
         OpenAPSMAPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
         OpenAPSAMAPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
-        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
 
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxIOBAllowed();
         Assert.assertEquals(1.5d, d.value());
-        Assert.assertEquals(true, d.getReasonList().size() == 4);
+        Assert.assertEquals(3, d.getReasonList().size());
         Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons());
+
+    }
+
+    @Test
+    public void iobSMBShouldBeLimited() {
+        // No limit by default
+        when(SP.getDouble(R.string.key_openapssmb_max_iob, 3d)).thenReturn(3d);
+        when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
+        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
+
+        // Apply all limits
+        Constraint<Double> d = constraintChecker.getMaxIOBAllowed();
+        Assert.assertEquals(3d, d.value());
+        Assert.assertEquals(4, d.getReasonList().size());
+        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons());
 
     }
 

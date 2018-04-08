@@ -210,7 +210,7 @@ public class SafetyPluginTest {
         when(SP.getString(R.string.key_age, "")).thenReturn("teenage");
         OpenAPSMAPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
         OpenAPSAMAPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
-        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
+        //OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
 
         // Apply all limits
         Constraint<Double> d = new Constraint<>(Constants.REALLYHIGHIOB);
@@ -218,8 +218,7 @@ public class SafetyPluginTest {
         Assert.assertEquals(1.5d, d.value());
         Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences\n" +
                 "Safety: Limiting IOB to 7.0 U because of hard limit\n" +
-                "Safety: Limiting IOB to 7.0 U because of hard limit\n" +
-                "Safety: Limiting IOB to 12.0 U because of hard limit", d.getReasons());
+                "Safety: Limiting IOB to 7.0 U because of hard limit", d.getReasons());
         Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons());
     }
 
