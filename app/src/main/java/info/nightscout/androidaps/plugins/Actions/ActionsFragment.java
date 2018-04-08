@@ -79,6 +79,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tddStats = view.findViewById(R.id.actions_tddstats);
             history = view.findViewById(R.id.actions_historybrowser);
 
+            if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().supportsTDDs) tddStats.setVisibility(View.GONE);
 
             profileSwitch.setOnClickListener(this);
             tempTarget.setOnClickListener(this);
