@@ -280,7 +280,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(TempTarget.class);
     }
 
-     private Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
+    private Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
         return getDao(BgReading.class);
     }
 
@@ -369,8 +369,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /*
-         * Return last BgReading from database or null if db is empty
-         */
+     * Return last BgReading from database or null if db is empty
+     */
     @Nullable
     public static BgReading lastBg() {
         List<BgReading> bgList = null;
@@ -394,9 +394,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /*
-         * Return bg reading if not old ( <9 min )
-         * or null if older
-         */
+     * Return bg reading if not old ( <9 min )
+     * or null if older
+     */
     @Nullable
     public static BgReading actualBg() {
         BgReading lastBg = lastBg();
@@ -446,7 +446,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     // -------------------  TDD handling -----------------------
-    public void createOrUpdateTDD(TDD tdd){
+    public void createOrUpdateTDD(TDD tdd) {
         try {
             Dao<TDD, String> dao = getDaoTDD();
             dao.createOrUpdate(tdd);
@@ -470,7 +470,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return tddList;
     }
-
 
 
     // ------------- DbRequests handling -------------------
@@ -509,7 +508,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.limit(10L);
             PreparedQuery<DbRequest> preparedQuery = queryBuilder.prepare();
             List<DbRequest> dbList = getDaoDbRequest().query(preparedQuery);
-            log.error("deleteDbRequestbyMongoId query size: " + dbList.size());
             for (DbRequest r : dbList) {
                 delete(r);
             }
@@ -714,7 +712,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             getDaoDanaRHistory().createOrUpdate(record);
 
             //If it is a TDD, store it for stats also.
-            if(record.recordCode == RecordTypes.RECORD_TYPE_DAILY){
+            if (record.recordCode == RecordTypes.RECORD_TYPE_DAILY) {
                 createOrUpdateTDD(new TDD(record.recordDate, record.recordDailyBolus, record.recordDailyBasal, 0));
             }
 
@@ -1154,37 +1152,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
      */
 
-    public void createExtendedBolusFromJsonIfNotExists(JSONObject trJson) {
-        try {
-            QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
-            queryBuilder = getDaoExtendedBolus().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
-            List<ExtendedBolus> list = getDaoExtendedBolus().query(preparedQuery);
-            ExtendedBolus extendedBolus;
-            if (list.size() == 0) {
-                extendedBolus = new ExtendedBolus();
-                extendedBolus.source = Source.NIGHTSCOUT;
-                if (Config.logIncommingData)
-                    log.debug("Adding ExtendedBolus record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                extendedBolus = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Updating ExtendedBolus record in database: " + trJson.toString());
-            } else {
-                log.error("Something went wrong");
-                return;
-            }
-            extendedBolus.date = trJson.getLong("mills");
-            extendedBolus.durationInMinutes = trJson.has("duration") ? trJson.getInt("duration") : 0;
-            extendedBolus.insulin = trJson.getDouble("relative");
-            extendedBolus._id = trJson.getString("_id");
+    public void createExtendedBolusFromJsonIfNotExists(JSONObject json) {
+        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(json);
+        if (extendedBolus != null)
             createOrUpdate(extendedBolus);
-        } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception", e);
-        }
     }
 
     private static void scheduleExtendedBolusChange() {
