@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -68,6 +69,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     private Button fav1Button;
     private Button fav2Button;
     private Button fav3Button;
+
+    private EditText notesEdit;
 
     private static final int FAV1_DEFAULT = 5;
     private static final int FAV2_DEFAULT = 10;
@@ -156,6 +159,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         fav3Button = view.findViewById(R.id.newcarbs_plus3);
         fav3Button.setOnClickListener(this);
         fav3Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
+
+        notesEdit = (EditText) view.findViewById(R.id.newcarbs_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -358,6 +363,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             final int finalEatingSoonTTDuration = eatingSoonTTDuration;
             final double finalHypoTT = hypoTT;
             final int finalHypoTTDuration = hypoTTDuration;
+            final String finalNotes = notesEdit.getText().toString();
 
             if (!initialEventTime.equals(eventTime)) {
                 actions.add("Time: " + DateUtil.dateAndTimeString(eventTime));
@@ -416,6 +422,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                         detailedBolusInfo.context = context;
                         detailedBolusInfo.source = Source.USER;
+                        detailedBolusInfo.notes = finalNotes;
                         if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
                             ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                 @Override

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -275,6 +276,9 @@ public class NSUpload {
                 data.put("boluscalc", detailedBolusInfo.boluscalc);
             if (detailedBolusInfo.carbTime != 0)
                 data.put("preBolus", detailedBolusInfo.carbTime);
+            if (!StringUtils.isEmpty(detailedBolusInfo.notes)) {
+                data.put("notes", detailedBolusInfo.notes);
+            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
