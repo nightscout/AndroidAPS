@@ -136,7 +136,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         Date start = new Date();
         Date startPart = new Date();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia();
+        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();

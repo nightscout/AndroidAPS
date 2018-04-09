@@ -24,9 +24,6 @@ public class IobTotal {
 
     // oref1
     public long lastBolusTime;
-    public long lastTempDate;
-    public int lastTempDuration;
-    public double lastTempRate;
     public IobTotal iobWithZeroTemp;
 
     public double netInsulin = 0d; // for calculations from temp basals only
@@ -76,9 +73,6 @@ public class IobTotal {
         result.netInsulin = basalIob.netInsulin + bolusIOB.netInsulin;
         result.extendedBolusInsulin = basalIob.extendedBolusInsulin + bolusIOB.extendedBolusInsulin;
         result.lastBolusTime = bolusIOB.lastBolusTime;
-        result.lastTempDate = basalIob.lastTempDate;
-        result.lastTempRate = basalIob.lastTempRate;
-        result.lastTempDuration = basalIob.lastTempDuration;
         result.iobWithZeroTemp = basalIob.iobWithZeroTemp;
         return result;
     }

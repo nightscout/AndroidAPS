@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
@@ -320,22 +321,15 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
-    public IobTotal getCalculationToTimeTempBasals(long time) {
+    public IobTotal getCalculationToTimeTempBasals(long time, Profile profile) {
         IobTotal total = new IobTotal(time);
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
                 TemporaryBasal t = tempBasals.get(pos);
                 if (t.date > time) continue;
-                IobTotal calc = t.iobCalc(time);
+                IobTotal calc = t.iobCalc(time, profile);
                 //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
                 total.plus(calc);
-                if (!t.isEndingEvent()) {
-                    total.lastTempDate = t.date;
-                    total.lastTempDuration = t.durationInMinutes;
-                    Profile profile = MainApp.getConfigBuilder().getProfile(t.date);
-                    total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date, profile);
-                }
-
             }
         }
         if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
@@ -346,13 +340,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     if (e.date > time) continue;
                     IobTotal calc = e.iobCalc(time);
                     totalExt.plus(calc);
-                    TemporaryBasal t = new TemporaryBasal(e);
-                    if (!t.isEndingEvent() && t.date > total.lastTempDate) {
-                        total.lastTempDate = t.date;
-                        total.lastTempDuration = t.durationInMinutes;
-                        Profile profile = MainApp.getConfigBuilder().getProfile(t.date);
-                        total.lastTempRate = t.tempBasalConvertedToAbsolute(t.date, profile);
-                    }
                 }
             }
             // Convert to basal iob
@@ -367,7 +354,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public void updateTotalIOBTempBasals() {
-        lastTempBasalsCalculation = getCalculationToTimeTempBasals(System.currentTimeMillis());
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile != null)
+            lastTempBasalsCalculation = getCalculationToTimeTempBasals(DateUtil.now(), profile);
     }
 
     @Nullable

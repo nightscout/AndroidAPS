@@ -23,7 +23,6 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
@@ -38,6 +37,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.ScaledDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.Round;
 
@@ -334,7 +334,10 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            double iob = IobCobCalculatorPlugin.getPlugin().calculateFromTreatmentsAndTempsSynchronized(time).iob;
+            Profile profile = MainApp.getConfigBuilder().getProfile(time);
+            double iob = 0d;
+            if (profile != null)
+                iob = IobCobCalculatorPlugin.getPlugin().calculateFromTreatmentsAndTempsSynchronized(time, profile).iob;
             if (Math.abs(lastIob - iob) > 0.02) {
                 if (Math.abs(lastIob - iob) > 0.2)
                     iobArray.add(new ScaledDataPoint(time, lastIob, iobScale));

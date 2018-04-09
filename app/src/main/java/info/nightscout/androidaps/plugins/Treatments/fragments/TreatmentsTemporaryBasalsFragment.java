@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.Treatments.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -17,9 +17,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -40,8 +37,6 @@ import info.nightscout.utils.NSUpload;
 
 
 public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsTemporaryBasalsFragment.class);
-
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -70,7 +65,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
             holder.ns.setVisibility(NSUpload.isIdValid(tempBasal._id) ? View.VISIBLE : View.GONE);
             if (tempBasal.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
-                holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
+                holder.duration.setText(MainApp.gs(R.string.cancel));
                 holder.absolute.setText("");
                 holder.percent.setText("");
                 holder.realDuration.setText("");
@@ -82,14 +77,16 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
             } else {
                 if (tempBasal.isInProgress()) {
                     holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 } else {
-                    holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date) + " - " + DateUtil.timeString(tempBasal.end()));
+                    holder.date.setText(DateUtil.dateAndTimeRangeString(tempBasal.date, tempBasal.end()));
+                    holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
                 }
-                holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes) + " min");
+                holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes, " min"));
                 if (tempBasal.isAbsolute) {
                     Profile profile = MainApp.getConfigBuilder().getProfile(tempBasal.date);
                     if (profile != null) {
-                        holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile)) + " U/h");
+                        holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile), " U/h"));
                         holder.percent.setText("");
                     } else {
                         holder.absolute.setText(MainApp.gs(R.string.noprofile));
@@ -97,24 +94,19 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                     }
                 } else {
                     holder.absolute.setText("");
-                    holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
+                    holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate, "%"));
                 }
-                holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
-                IobTotal iob = new IobTotal(System.currentTimeMillis());
-                try { // in case app loaded and still no profile selected
-                    iob = tempBasal.iobCalc(System.currentTimeMillis());
-                } catch (Exception e) {
-                }
-                holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
-                holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
-                holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
-                //holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
+                holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration(), " min"));
+                long now = DateUtil.now();
+                IobTotal iob = new IobTotal(now);
+                Profile profile = MainApp.getConfigBuilder().getProfile(now);
+                if (profile != null)
+                    iob = tempBasal.iobCalc(now, profile);
+                holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob, " U"));
+                holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin, " U"));
+                holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio, " U/h"));
                 holder.extendedFlag.setVisibility(View.GONE);
-                if (tempBasal.isInProgress())
-                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-                else
-                    holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
-                if (tempBasal.iobCalc(System.currentTimeMillis()).basaliob != 0)
+                if (iob.basaliob != 0)
                     holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.iob.setTextColor(holder.netRatio.getCurrentTextColor());
@@ -172,21 +164,19 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 switch (v.getId()) {
                     case R.id.tempbasals_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                final String _id = tempBasal._id;
-                                if (NSUpload.isIdValid(_id)) {
-                                    NSUpload.removeCareportalEntryFromNS(_id);
-                                } else {
-                                    UploadQueue.removeID("dbAdd", _id);
-                                }
-                                MainApp.getDbHelper().delete(tempBasal);
-                                FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                            final String _id = tempBasal._id;
+                            if (NSUpload.isIdValid(_id)) {
+                                NSUpload.removeCareportalEntryFromNS(_id);
+                            } else {
+                                UploadQueue.removeID("dbAdd", _id);
                             }
+                            MainApp.getDbHelper().delete(tempBasal);
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                 }
@@ -195,7 +185,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.treatments_tempbasals_fragment, container, false);
 
@@ -216,12 +206,12 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
+    public void onStatusEvent(final EventTempBasalChange ignored) {
         updateGUI();
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
+    public void onStatusEvent(final EventNewBG ignored) {
         updateGUI();
     }
 
@@ -229,15 +219,11 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory()), false);
-                    if (TreatmentsPlugin.getPlugin().getLastCalculationTempBasals() != null) {
-                        String totalText = DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().basaliob) + " U";
-                        tempBasalTotalView.setText(totalText);
-                    }
-                }
+            activity.runOnUiThread(() -> {
+                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory()), false);
+                IobTotal tempBasalsCalculation = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals();
+                if (tempBasalsCalculation != null)
+                    tempBasalTotalView.setText(DecimalFormatter.to2Decimal(tempBasalsCalculation.basaliob, " U"));
             });
     }
 

@@ -217,7 +217,7 @@ public class TemporaryBasal implements Interval {
 
     // -------- Interval interface end ---------
 
-    public IobTotal iobCalc(long time) {
+    public IobTotal iobCalc(long time, Profile profile) {
 
         if(isFakeExtended){
             log.error("iobCalc should only be called on Extended boluses separately");
@@ -225,7 +225,6 @@ public class TemporaryBasal implements Interval {
         }
 
         IobTotal result = new IobTotal(time);
-        Profile profile = MainApp.getConfigBuilder().getProfile(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
        int realDuration = getDurationToTime(time);

@@ -138,7 +138,7 @@ public class IobCobThread extends Thread {
                     delta = (bg - bucketed_data.get(i + 1).value);
                     avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
 
-                    IobTotal iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTemps(bgTime);
+                    IobTotal iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTemps(bgTime, profile);
 
                     double bgi = -iob.activity * sens * 5;
                     double deviation = delta - bgi;

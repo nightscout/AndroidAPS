@@ -122,6 +122,10 @@ public class DateUtil {
         return dateString(date) + " " + timeString(date);
     }
 
+    public static String dateAndTimeRangeString(long start, long end) {
+        return dateAndTimeString(start) + " - " + timeString(end);
+    }
+
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
     }
