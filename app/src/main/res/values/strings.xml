@@ -987,6 +987,7 @@
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
+    <string name="reset">reset</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
     <string name="loopdisconnectedfor">Disconnected (%d m)</string>
     <string name="automatic_careportal_events">Automatic careportal events</string>
