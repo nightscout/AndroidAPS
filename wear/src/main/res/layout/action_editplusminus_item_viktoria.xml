@@ -22,7 +22,7 @@
                 android:layout_gravity="left|center_vertical"
                 android:gravity="center"
                 android:rotation="90"
-                android:text="label"
+                android:text="labelx"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
