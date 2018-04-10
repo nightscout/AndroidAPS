@@ -264,6 +264,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeAPS;
     }
 
+    @Nullable
     public static LoopPlugin getActiveLoop() {
         return activeLoop;
     }

@@ -459,10 +459,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (v == apsModeView) {
             final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
-            if (activeloop == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
+            if (!MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.gs(R.string.loop));
-            if (activeloop.isEnabled(PluginType.LOOP)) {
+            if (activeloop == null) {
+                menu.add(MainApp.gs(R.string.enableloop));
+            } else {
                 menu.add(MainApp.gs(R.string.disableloop));
                 if (!activeloop.isSuspended()) {
                     menu.add(MainApp.gs(R.string.suspendloopfor1h));
@@ -480,8 +482,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.gs(R.string.resume));
                 }
             }
-            if (!activeloop.isEnabled(PluginType.LOOP))
-                menu.add(MainApp.gs(R.string.enableloop));
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.gs(R.string.profile));
             menu.add(MainApp.gs(R.string.danar_viewprofile));
@@ -496,13 +496,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null)
             return true;
-        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.gs(R.string.disableloop))) {
+            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             activeloop.setPluginEnabled(PluginType.LOOP, false);
             activeloop.setFragmentVisible(PluginType.LOOP, false);
             MainApp.getConfigBuilder().storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
-            MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -513,16 +513,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.enableloop))) {
-            activeloop.setPluginEnabled(PluginType.LOOP, true);
-            activeloop.setFragmentVisible(PluginType.LOOP, true);
+            final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+            loopPlugin.setPluginEnabled(PluginType.LOOP, true);
+            loopPlugin.setFragmentVisible(PluginType.LOOP, true);
             MainApp.getConfigBuilder().storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.resume))) {
+            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             activeloop.suspendTo(0L);
             updateGUI("suspendmenu");
-            MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
