@@ -118,12 +118,15 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
         String ratioLimit = "";
         String sensResult = "";
 
-        log.debug("Records: " + index + "   " + pastSensitivity);
+        if (Config.logAutosensData)
+            log.debug("Records: " + index + "   " + pastSensitivity);
+
         Arrays.sort(deviations);
 
         for (double i = 0.9; i > 0.1; i = i - 0.02) {
             if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.02)) >= 0 && IobCobCalculatorPlugin.percentile(deviations, i) < 0) {
-                log.debug(Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
+                if (Config.logAutosensData)
+                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
             }
         }
         double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
@@ -140,7 +143,10 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
         } else {
             sensResult = "Sensitivity normal";
         }
-        log.debug(sensResult);
+
+        if (Config.logAutosensData)
+            log.debug(sensResult);
+
         ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
         double rawRatio = ratio;

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.ProfileLocal;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,15 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
 
     private static final String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
 
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
+    }
+
+    boolean edited;
     boolean mgdl;
     boolean mmol;
     Double dia;
@@ -59,7 +69,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
         loadSettings();
     }
 
-    public void storeSettings() {
+    public synchronized void storeSettings() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(LOCAL_PROFILE + "mmol", mmol);
@@ -72,12 +82,13 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
         editor.putString(LOCAL_PROFILE + "targethigh", targetHigh.toString());
 
         editor.apply();
-        createConvertedProfile();
+        createAndStoreConvertedProfile();
+        edited = false;
         if (Config.logPrefsChange)
             log.debug("Storing settings: " + getRawProfile().getData().toString());
     }
 
-    public void loadSettings() {
+    public synchronized void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
 
@@ -124,6 +135,8 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
             } catch (JSONException ignored) {
             }
         }
+        edited = false;
+        createAndStoreConvertedProfile();
     }
 
     /*
@@ -164,7 +177,16 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
             "created_at": "2016-06-16T08:34:41.256Z"
         }
         */
-    private void createConvertedProfile() {
+    private void createAndStoreConvertedProfile() {
+        convertedProfile = createProfileStore();
+    }
+
+    public synchronized boolean isValidEditState() {
+        return createProfileStore().getDefaultProfile().isValid(MainApp.gs(R.string.localprofile));
+    }
+
+    @NonNull
+    public ProfileStore createProfileStore() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
@@ -183,21 +205,17 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
-        convertedProfile = new ProfileStore(json);
+        return new ProfileStore(json);
     }
 
     @Override
     public ProfileStore getProfile() {
-        if (convertedProfile == null)
-            createConvertedProfile();
         if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.localprofile)))
             return null;
         return convertedProfile;
     }
 
     public ProfileStore getRawProfile() {
-        if (convertedProfile == null)
-            createConvertedProfile();
         return convertedProfile;
     }
 
@@ -208,8 +226,6 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
 
     @Override
     public String getProfileName() {
-        if (convertedProfile == null)
-            createConvertedProfile();
         return DecimalFormatter.to2Decimal(convertedProfile.getDefaultProfile().percentageBasalSum()) + "U ";
     }
 

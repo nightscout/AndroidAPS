@@ -122,6 +122,10 @@ public class DateUtil {
         return dateString(date) + " " + timeString(date);
     }
 
+    public static String dateAndTimeRangeString(long start, long end) {
+        return dateAndTimeString(start) + " - " + timeString(end);
+    }
+
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
     }
@@ -165,6 +169,10 @@ public class DateUtil {
 
     public static long now() {
         return System.currentTimeMillis();
+    }
+
+    public static long roundDateToSec(long date) {
+        return date - date % 1000;
     }
 
 }

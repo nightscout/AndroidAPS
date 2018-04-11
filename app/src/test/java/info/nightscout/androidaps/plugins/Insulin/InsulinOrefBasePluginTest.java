@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

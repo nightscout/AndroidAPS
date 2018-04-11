@@ -684,7 +684,6 @@
     <string name="zerovalueinprofile">Profile incorrect: %s</string>
     <string name="combo_programming_bolus">Programmer la pompe pour administrer un bolus</string>
     <string name="combo_refresh">Actualiser</string>
-    <string name="combo_tdds">TDDS</string>
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
     <string name="combo_no_pump_connection" formatted="false">Pas de connexion depuis %d min</string>
@@ -708,21 +707,14 @@
     <string name="bolus_frequency_exceeded">Un bolus avec la même quantité d’insuline a été demandé au cours de la dernière minute. Pour prévenir l’administration accidentelle de deux bolus à la fois et pour protéger contre les bugs quand ceci (bolus) non autorisé</string>
     <string name="combo_pump_connected_now">Maintenant</string>
     <string name="combo_activity_reading_pump_history">Lecture historique pompe</string>
-    <string name="combo_pump_alerts">Alertes</string>
     <string name="combo_activity_setting_basal_profile">Définir le profil basal</string>
     <string name="combo_pump_cartridge_low_warrning">Niveau cartouche pompe bas</string>
     <string name="combo_pump_battery_low_warrning">Niveau batterie pompe bas</string>
     <string name="combo_is_in_error_state" formatted="false">La pompe  affiche l’erreur E%d: %s</string>
-    <string name="combo_no_alert_data_note">Pour lire l’historique des erreurs de pompe, Appuyez longuement sur le bouton ALERTES, WARNING : ceci peut provoquer un bug et ce dernier va ordonner la pompe à rejeter toutes les tentatives de connexion et qui va nécessiter d’appuyer un bouton sur la pompe pour restaurer et par conséquent le bug devrait être évité</string>
-    <string name="combo_no_tdd_data_note">Pour lire l’historique DTQ de la pompe, Appuyez longuement les boutons DTQS, WARNING :  ceci peut provoquer un bug ce qui ordonne la pompe à rejeter toutes les tentatives de connexion et qui va nécessiter d’appuyer un bouton sur la pompe pour restaurer et par conséquent le bug devrait être évité</string>
-    <string name="combo_tdd_minimum" formatted="false">Minimum: %3.1f U</string>
-    <string name="combo_tdd_average" formatted="false">Moyen: %3.1f U</string>
-    <string name="combo_tdd_maximum" formatted="false">Maximum: %3.1f U</string>
     <string name="combo_reservoir_low">Bas</string>
     <string name="combo_reservoir_empty">Vide</string>
     <string name="combo_reservoir_normal">Normal</string>
     <string name="combo_notification_check_time_date">Mise à jour nécessaire pour l\'heure de la pompe</string>
-    <string name="combo_history">Historique</string>
     <string name="combo_warning">Warning</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR ANNULÉ warning confirmé</string>
     <string name="combo_error_no_bolus_delivered">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, Veuillez vérifier la pompe pour éviter un double bolus ensuite re bolusez une nouvelle fois</string>

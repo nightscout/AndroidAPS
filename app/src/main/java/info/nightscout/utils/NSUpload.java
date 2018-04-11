@@ -406,6 +406,10 @@ public class NSUpload {
     }
 
     public static void uploadError(String error) {
+        uploadError(error, new Date());
+    }
+
+    public static void uploadError(String error, Date date) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
@@ -413,7 +417,7 @@ public class NSUpload {
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", "Announcement");
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("created_at", DateUtil.toISOString(date));
             data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
             data.put("notes", error);
             data.put("isAnnouncement", true);

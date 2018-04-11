@@ -129,6 +129,9 @@ public class TDDStatsActivity extends Activity {
         }
         totalBaseBasal.setText(TBB);
 
+        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().needsManualTDDLoad)
+            reloadButton.setVisibility(View.GONE);
+
         // stats table
         tl = (TableLayout) findViewById(R.id.main_table);
         TableRow tr_head = new TableRow(this);
@@ -436,7 +439,7 @@ public class TDDStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
-                if (isOldData(historyList)) {
+                if (isOldData(historyList) && ConfigBuilderPlugin.getActivePump().getPumpDescription().needsManualTDDLoad) {
                     statsMessage.setVisibility(View.VISIBLE);
                     statsMessage.setText(getString(R.string.danar_stats_olddata_Message));
 

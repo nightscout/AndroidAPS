@@ -293,13 +293,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return getBGDataFrom;
     }
 
-    public IobTotal calculateFromTreatmentsAndTempsSynchronized(long time) {
+    public IobTotal calculateFromTreatmentsAndTempsSynchronized(long time, Profile profile) {
         synchronized (dataLock) {
-            return calculateFromTreatmentsAndTemps(time);
+            return calculateFromTreatmentsAndTemps(time, profile);
         }
     }
 
-    public IobTotal calculateFromTreatmentsAndTemps(long time) {
+    public IobTotal calculateFromTreatmentsAndTemps(long time, Profile profile) {
         long now = System.currentTimeMillis();
         time = roundUpTime(time);
         if (time < now && iobTable.get(time) != null) {
@@ -309,16 +309,16 @@ public class IobCobCalculatorPlugin extends PluginBase {
             //log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
         }
         IobTotal bolusIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time).round();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time, profile).round();
         if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS)) {
-            // Add expected zere temp basal for next 240 mins
+            // Add expected zero temp basal for next 240 mins
             IobTotal basalIobWithZeroTemp = basalIob.copy();
             TemporaryBasal t = new TemporaryBasal()
                     .date(now + 60 * 1000L)
                     .duration(240)
                     .absolute(0);
             if (t.date < time) {
-                IobTotal calc = t.iobCalc(time);
+                IobTotal calc = t.iobCalc(time, profile);
                 basalIobWithZeroTemp.plus(calc);
             }
 
@@ -426,8 +426,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
-    public IobTotal[] calculateIobArrayInDia() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+    public IobTotal[] calculateIobArrayInDia(Profile profile) {
         // predict IOB out to DIA plus 30m
         long time = System.currentTimeMillis();
         time = roundUpTime(time);
@@ -436,15 +435,14 @@ public class IobCobCalculatorPlugin extends PluginBase {
         int pos = 0;
         for (int i = 0; i < len; i++) {
             long t = time + i * 5 * 60000;
-            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t);
+            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t, profile);
             array[pos] = iob;
             pos++;
         }
         return array;
     }
 
-    public IobTotal[] calculateIobArrayForSMB() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+    public IobTotal[] calculateIobArrayForSMB(Profile profile) {
         // predict IOB out to DIA plus 30m
         long time = System.currentTimeMillis();
         time = roundUpTime(time);
@@ -453,7 +451,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         int pos = 0;
         for (int i = 0; i < len; i++) {
             long t = time + i * 5 * 60000;
-            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t);
+            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t, profile);
             array[pos] = iob;
             pos++;
         }
@@ -479,6 +477,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void onEventAppInitialized(EventAppInitialized ev) {
         if (this != getPlugin()) {
             log.debug("Ignoring event for non default instance");
@@ -488,6 +487,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void onEventNewBG(EventNewBG ev) {
         if (this != getPlugin()) {
             log.debug("Ignoring event for non default instance");

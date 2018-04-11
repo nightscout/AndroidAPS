@@ -78,6 +78,7 @@ public class TimeListEdit {
 
     private void buildView() {
         layout = (LinearLayout) view.findViewById(resLayoutId);
+        layout.removeAllViews();
 
         textlabel = new TextView(context);
         textlabel.setText(label);

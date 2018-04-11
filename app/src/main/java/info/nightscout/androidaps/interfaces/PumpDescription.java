@@ -41,4 +41,7 @@ public class PumpDescription {
     public boolean storesCarbInfo = true;
 
     public boolean is30minBasalRatesCapable = false;
+
+    public boolean supportsTDDs = false;
+    public boolean needsManualTDDLoad = true;
 }

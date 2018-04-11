@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
+import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -40,6 +41,7 @@ import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.utils.BundleLogger;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
@@ -382,19 +384,18 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
                 if (bundles.containsKey("treatment")) {
-                    String trstring = bundles.getString("treatment");
-                    handleAddChangeDataFromNS(trstring);
+                    JSONObject json = new JSONObject(bundles.getString("treatment"));
+                    handleTreatmentFromNS(json, intent);
                 }
                 if (bundles.containsKey("treatments")) {
                     String trstring = bundles.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String trstr = trJson.toString();
-                        handleAddChangeDataFromNS(trstr);
+                        JSONObject json = jsonArray.getJSONObject(i);
+                        handleTreatmentFromNS(json, intent);
                     }
                 }
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
         }
@@ -403,21 +404,19 @@ public class DataService extends IntentService {
             try {
                 if (bundles.containsKey("treatment")) {
                     String trstring = bundles.getString("treatment");
-                    JSONObject trJson = new JSONObject(trstring);
-                    String _id = trJson.getString("_id");
-                    handleRemovedRecordFromNS(_id);
+                    JSONObject json = new JSONObject(trstring);
+                    handleTreatmentFromNS(json);
                 }
 
                 if (bundles.containsKey("treatments")) {
                     String trstring = bundles.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String _id = trJson.getString("_id");
-                        handleRemovedRecordFromNS(_id);
+                        JSONObject json = jsonArray.getJSONObject(i);
+                        handleTreatmentFromNS(json);
                     }
                 }
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
         }
@@ -489,8 +488,12 @@ public class DataService extends IntentService {
         }
     }
 
-    private void handleRemovedRecordFromNS(String _id) {
-        MainApp.getDbHelper().deleteTreatmentById(_id);
+    private void handleTreatmentFromNS(JSONObject json) {
+        // new DB model
+        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.REMOVE, json);
+        MainApp.bus().post(evtTreatment);
+        // old DB model
+        String _id = JsonHelper.safeGetString(json, "_id");
         MainApp.getDbHelper().deleteTempTargetById(_id);
         MainApp.getDbHelper().deleteTempBasalById(_id);
         MainApp.getDbHelper().deleteExtendedBolusById(_id);
@@ -498,83 +501,50 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
-    private void handleAddChangeDataFromNS(String trstring) throws JSONException {
-        JSONObject trJson = new JSONObject(trstring);
-        handleDanaRHistoryRecords(trJson); // update record _id in history
-        handleAddChangeTempTargetRecord(trJson);
-        handleAddChangeTempBasalRecord(trJson);
-        handleAddChangeExtendedBolusRecord(trJson);
-        handleAddChangeCareportalEventRecord(trJson);
-        handleAddChangeTreatmentRecord(trJson);
-        handleAddChangeProfileSwitchRecord(trJson);
-    }
-
-    public void handleDanaRHistoryRecords(JSONObject trJson) {
-        if (trJson.has(DanaRNSHistorySync.DANARSIGNATURE)) {
-            MainApp.getDbHelper().updateDanaRHistoryRecordId(trJson);
-        }
-    }
-
-    public void handleAddChangeTreatmentRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("insulin") || trJson.has("carbs")) {
-            MainApp.getDbHelper().createTreatmentFromJsonIfNotExists(trJson);
-            return;
-        }
-    }
-
-    public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPORARYTARGET)) {
-            MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(trJson);
-        }
-    }
-
-    public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPBASAL)) {
-            MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(trJson);
-        }
-    }
-
-    public void handleAddChangeExtendedBolusRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.COMBOBOLUS)) {
-            MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(trJson);
-        }
-    }
-
-    public void handleAddChangeCareportalEventRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("insulin") && trJson.getDouble("insulin") > 0)
-            return;
-        if (trJson.has("carbs") && trJson.getDouble("carbs") > 0)
-            return;
-        if (trJson.has("eventType") && (
-                trJson.getString("eventType").equals(CareportalEvent.SITECHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.BGCHECK) ||
-                        trJson.getString("eventType").equals(CareportalEvent.NOTE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.NONE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT) ||
-                        trJson.getString("eventType").equals(CareportalEvent.QUESTION) ||
-                        trJson.getString("eventType").equals(CareportalEvent.EXERCISE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.OPENAPSOFFLINE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.PUMPBATTERYCHANGE)
-        )) {
-            MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
+    private void handleTreatmentFromNS(JSONObject json, Intent intent) throws JSONException {
+        // new DB model
+        int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
+        double insulin = JsonHelper.safeGetDouble(json, "insulin");
+        double carbs = JsonHelper.safeGetDouble(json, "carbs");
+        String eventType = JsonHelper.safeGetString(json, "eventType");
+        if (insulin > 0 || carbs > 0) {
+            EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
+            MainApp.bus().post(evtTreatment);
+        } else if (json.has(DanaRNSHistorySync.DANARSIGNATURE)) {
+            // old DB model
+            MainApp.getDbHelper().updateDanaRHistoryRecordId(json);
+        } else if (eventType.equals(CareportalEvent.TEMPORARYTARGET)) {
+            MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.TEMPBASAL)) {
+            MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
+            MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
+            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
+                eventType.equals(CareportalEvent.INSULINCHANGE) ||
+                eventType.equals(CareportalEvent.SENSORCHANGE) ||
+                eventType.equals(CareportalEvent.BGCHECK) ||
+                eventType.equals(CareportalEvent.NOTE) ||
+                eventType.equals(CareportalEvent.NONE) ||
+                eventType.equals(CareportalEvent.ANNOUNCEMENT) ||
+                eventType.equals(CareportalEvent.QUESTION) ||
+                eventType.equals(CareportalEvent.EXERCISE) ||
+                eventType.equals(CareportalEvent.OPENAPSOFFLINE) ||
+                eventType.equals(CareportalEvent.PUMPBATTERYCHANGE)) {
+            MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
         }
 
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
-            long date = trJson.getLong("mills");
+        if (eventType.equals(CareportalEvent.ANNOUNCEMENT)) {
+            long date = JsonHelper.safeGetLong(json,"mills");
             long now = System.currentTimeMillis();
-            if (date > now - 15 * 60 * 1000L && trJson.has("notes")
-                    && !(trJson.has("enteredBy") && trJson.getString("enteredBy").equals(SP.getString("careportal_enteredby", "AndroidAPS")))) {
-                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, trJson.getString("notes"), Notification.ANNOUNCEMENT, 60);
+            String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
+            String notes = JsonHelper.safeGetString(json, "notes", "");
+            if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
+                    && !enteredBy.equals(SP.getString("careportal_enteredby", "AndroidAPS"))) {
+                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
-        }
-    }
-
-    public void handleAddChangeProfileSwitchRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.PROFILESWITCH)) {
-            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
         }
     }
 

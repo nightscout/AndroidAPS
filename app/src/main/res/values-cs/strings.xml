@@ -704,7 +704,6 @@
     <string name="bolus_frequency_exceeded">Bolus stejné velikosti už byl během poslední minuty požadován. Jako preventivní ochrana před zdvojeným bolusem byla operace zakázána.</string>
     <string name="combo_pump_connected_now">Teď</string>
     <string name="combo_activity_reading_pump_history">Načítání historie pumpy</string>
-    <string name="combo_pump_alerts">Výstrahy</string>
     <string name="combo_activity_setting_basal_profile">Nastavení bazálního profilu</string>
     <string name="combo_pump_cartridge_low_warrning">V zásobníku je málo inzulínu</string>
     <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
@@ -713,18 +712,12 @@
     <string name="combo_error_bolus_verification_failed">Provádění bolusu a čtení historie selhalo. Zkontrolujte pumpu a zadejte bolus přes péči</string>
     <string name="combo_error_no_bolus_delivered">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
     <string name="combo_error_partial_bolus_delivered" formatted="false">Pouze %.2f U z bolusu %.2f bylo podáno díky chybě. Zkontrolujte pumpu a proveďte nápravu.</string>
-    <string name="combo_history">Historie</string>
     <string name="combo_pump_tbr_cancelled_warrning">Varování o ukončeném dočasném bazálu bylo potvrzeno.</string>
     <string name="combo_warning">Varování</string>
     <string name="combo_reservoir_empty">Prázdný</string>
     <string name="combo_reservoir_low">Nízký</string>
     <string name="combo_reservoir_normal">Normální</string>
-    <string name="combo_tdd_average" formatted="false">Průměr: %3.1f U</string>
-    <string name="combo_tdd_maximum" formatted="false">Maximum: %3.1f U</string>
-    <string name="combo_tdd_minimum" formatted="false">Minimum: %3.1f U</string>
-    <string name="combo_no_alert_data_note">Pro přečtení historie chyb dlouze stiskněte tlačítko ALERTS. Varování: může to způsobit chybu, že pumpa bude odmítat všechny připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
     <string name="combo_notification_check_time_date">Je vyžadována aktualizace času na pumpě</string>
-    <string name="combo_no_tdd_data_note">Pro přečtení celkových denních dávek dlouze stikněte na pumpě tlačítko TDDS. Varování: může to způsobit chybu, že pumpa bude odmítat všechna připojení a je pak vyžadováno stisknutí tlačítka na pumpě pro obnovení komunikace.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="smb_shortname">SMB</string>
@@ -823,8 +816,6 @@
     <string name="bolusrecordedonly">Bolus bude pouze zaznamenán</string>
     <string name="ns_autobackfill">Automaticky doplňovat chybějící glykémie z NS</string>
     <string name="hypo">Hypoglykémie</string>
-    <string name="combo_tdds">CDD</string>
-    <string name="combo_read_full_history_info">Dlouhé stisknutí tohoto tlačítka pro plné načtení historie a bazálního profilu z pumpy. Obvykle to není nutné, protože se to děje průběžně, ale může to pomoci v případě změny datumu v pumpě nebo v případě výměny pumpy.</string>
     <string name="overview_show_sensitivity">Citlivost</string>
     <string name="overview_show_deviations">Odchylky</string>
     <string name="overview_show_cob">Zbývající sacharidy</string>

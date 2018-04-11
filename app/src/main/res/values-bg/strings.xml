@@ -678,9 +678,6 @@
     <string name="shortenergy">En</string>
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
     <string name="combo_warning">Внимание</string>
-    <string name="combo_tdd_minimum" formatted="false">Минимум: %3.1f U</string>
-    <string name="combo_tdd_maximum" formatted="false">Максимум: %3.1f U</string>
-    <string name="combo_tdd_average" formatted="false">Средно: %3.1f U</string>
     <string name="combo_reservoir_normal">Нормално</string>
     <string name="combo_reservoir_low">Ниско</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>

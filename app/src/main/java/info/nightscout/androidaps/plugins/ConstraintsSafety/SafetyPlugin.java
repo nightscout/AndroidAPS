@@ -14,6 +14,8 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Round;
@@ -55,12 +57,18 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        if (!MainApp.isEngineeringModeOrRelease())
-            value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
-
         String mode = SP.getString("aps_mode", "open");
         if (!mode.equals("closed"))
             value.set(false, MainApp.gs(R.string.closedmodedisabledinpreferences), this);
+
+        if (!MainApp.isEngineeringModeOrRelease()) {
+            if (value.value()) {
+                Notification n = new Notification(Notification.TOAST_ALARM, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
+                MainApp.bus().post(new EventNewNotification(n));
+            }
+            value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
+        }
+
         return value;
     }
 
@@ -161,7 +169,11 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
-        double maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        double maxIobPref;
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
+            maxIobPref = SP.getDouble(R.string.key_openapssmb_max_iob, 3d);
+        else
+            maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
         maxIob.setIfSmaller(maxIobPref, String.format(MainApp.gs(R.string.limitingiob), maxIobPref, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
         if (OpenAPSMAPlugin.getPlugin().isEnabled(PluginType.APS))

@@ -17,16 +17,32 @@ public class DecimalFormatter {
         return format0dec.format(value);
     }
 
+    public static String to0Decimal(double value, String unit) {
+        return format0dec.format(value) + unit;
+    }
+
     public static String to1Decimal(double value) {
         return format1dec.format(value);
+    }
+
+    public static String to1Decimal(double value, String unit) {
+        return format1dec.format(value) + unit;
     }
 
     public static String to2Decimal(double value) {
         return format2dec.format(value);
     }
 
+    public static String to2Decimal(double value, String unit) {
+        return format2dec.format(value) + unit;
+    }
+
     public static String to3Decimal(double value) {
         return format3dec.format(value);
+    }
+
+    public static String to3Decimal(double value, String unit) {
+        return format3dec.format(value) + unit;
     }
 
     public static String toPumpSupportedBolus(double value) {

@@ -143,7 +143,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
 
         Date start = new Date();
         Date startPart = new Date();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB();
+        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(profile);
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();

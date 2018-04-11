@@ -6,7 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
@@ -217,7 +217,7 @@ public class TemporaryBasal implements Interval {
 
     // -------- Interval interface end ---------
 
-    public IobTotal iobCalc(long time) {
+    public IobTotal iobCalc(long time, Profile profile) {
 
         if(isFakeExtended){
             log.error("iobCalc should only be called on Extended boluses separately");
@@ -225,7 +225,6 @@ public class TemporaryBasal implements Interval {
         }
 
         IobTotal result = new IobTotal(time);
-        Profile profile = MainApp.getConfigBuilder().getProfile(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
        int realDuration = getDurationToTime(time);
