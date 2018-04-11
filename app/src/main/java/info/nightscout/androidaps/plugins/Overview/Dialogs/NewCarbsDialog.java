@@ -132,6 +132,9 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
         maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
 
+        editCarbs = view.findViewById(R.id.newcarb_carbsamount);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+
         startActivityTTCheckbox = view.findViewById(R.id.newcarbs_activity_tt);
         startActivityTTCheckbox.setOnCheckedChangeListener(this);
         startEatingSoonTTCheckbox = view.findViewById(R.id.newcarbs_eating_soon_tt);
@@ -146,22 +149,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         durationLayout.setVisibility(MainApp.engineeringMode ? View.VISIBLE : View.GONE);
         editDuration = view.findViewById(R.id.new_carbs_duration);
         editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
-
-        editCarbs = view.findViewById(R.id.newcarb_carbsamount);
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-
-        if (MainApp.engineeringMode) {
-            // use SMB's carbs required as preset, check hypo TT if any
-            if (ConfigBuilderPlugin.getActiveAPS() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null) {
-                APSResult lastAPSResult = ConfigBuilderPlugin.getActiveAPS().getLastAPSResult();
-                if (lastAPSResult != null && lastAPSResult instanceof DetermineBasalResultSMB && ((DetermineBasalResultSMB) lastAPSResult).carbsReq > 0) {
-                    editCarbs.setValue(((DetermineBasalResultSMB) lastAPSResult).carbsReq);
-                    startHypoTTCheckbox.setOnCheckedChangeListener(null);
-                    startHypoTTCheckbox.setChecked(true);
-                    startHypoTTCheckbox.setOnClickListener(this);
-                }
-            }
-        }
 
         fav1Button = view.findViewById(R.id.newcarbs_plus1);
         fav1Button.setOnClickListener(this);
