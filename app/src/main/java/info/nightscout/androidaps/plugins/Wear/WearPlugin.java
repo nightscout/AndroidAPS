@@ -140,11 +140,7 @@ public class WearPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
-
-        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-        if (activeloop == null) return;
-
-        if (WatchUpdaterService.shouldReportLoopStatus(activeloop.isEnabled(PluginType.LOOP))) {
+        if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))) {
             sendDataToWatch(true, false, false);
         }
     }

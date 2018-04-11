@@ -264,11 +264,6 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeAPS;
     }
 
-    @Nullable
-    public static LoopPlugin getActiveLoop() {
-        return activeLoop;
-    }
-
     public static PumpInterface getActivePump() {
         return activePump;
     }
@@ -622,7 +617,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
-        getActiveLoop().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
+        LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
         getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
             @Override
             public void run() {
@@ -645,7 +640,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     }
 
     public void suspendLoop(int durationInMinutes) {
-        getActiveLoop().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
+        LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
         getCommandQueue().cancelTempBasal(true, new Callback() {
             @Override
             public void run() {
