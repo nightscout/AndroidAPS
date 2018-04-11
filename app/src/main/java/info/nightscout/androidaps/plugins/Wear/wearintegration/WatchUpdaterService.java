@@ -666,12 +666,12 @@ public class WatchUpdaterService extends WearableListenerService implements
             return status;
         }
 
-        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        LoopPlugin activeloop = LoopPlugin.getPlugin();
 
-        if (activeloop != null && !activeloop.isEnabled(PluginType.LOOP)) {
+        if (!activeloop.isEnabled(PluginType.LOOP)) {
             status += getString(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
-        } else if (activeloop != null && activeloop.isEnabled(PluginType.LOOP)) {
+        } else {
             lastLoopStatus = true;
         }
 
