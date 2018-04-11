@@ -476,6 +476,32 @@ public class NSUpload {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
+            // now adding another note with the device running AndroidAPS
+            uploadDeviceNote();
+        }
+    }
+
+    public static void uploadDeviceNote(){
+        if (SP.getBoolean(R.string.key_ns_logappstartedevent, true)) {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            JSONObject data = new JSONObject();
+            try {
+                data.put("eventType", "Note");
+                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("notes", "Started on "+ Build.MANUFACTURER + " "+ Build.MODEL);
+//                log.debug("Running on: "+Build.MANUFACTURER + " "+ Build.MODEL);
+            } catch (JSONException e) {
+                log.error("Unhandled exception", e);
+            }
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
         }
     }
 
