@@ -413,7 +413,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                 long smallCarbAmount = Math.round(remainingCarbs / (editDuration.getValue() * 4));
                                 if (smallCarbAmount == 0) smallCarbAmount = 1;
                                 while (remainingCarbs > 0) {
-                                    createCarb(smallCarbAmount, carbTime);
+                                    createCarb(Math.min(smallCarbAmount, (long) remainingCarbs), carbTime);
                                     remainingCarbs -= smallCarbAmount;
                                     carbTime += 15 * 60 * 1000;
                                 }
