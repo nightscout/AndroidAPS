@@ -54,6 +54,7 @@ import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -340,9 +341,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                 accepted = true;
                                 if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
                                     if (useSuperBolus) {
-                                        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                                        if (activeloop != null) {
-                                            activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                        final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+                                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                                            loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
                                         ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
