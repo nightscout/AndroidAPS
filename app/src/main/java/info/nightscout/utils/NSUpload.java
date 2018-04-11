@@ -466,7 +466,7 @@ public class NSUpload {
             try {
                 data.put("eventType", "Note");
                 data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
@@ -476,7 +476,7 @@ public class NSUpload {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
-        }
+            }
     }
 
     public static void uploadEvent(String careportalEvent, long time) {
