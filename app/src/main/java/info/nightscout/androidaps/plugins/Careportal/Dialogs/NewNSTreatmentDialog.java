@@ -708,7 +708,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                 tempTarget.low(0).high(0);
                             }
                             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
-                            NSUpload.uploadCareportalEntryToNS(data);
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("TempTarget"));
                         }
                     } catch (JSONException e) {
