@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -16,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
@@ -53,6 +55,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
     private Button fav1Button;
     private Button fav2Button;
     private Button fav3Button;
+
+    private EditText notesEdit;
 
     private static final int FAV1_DEFAULT = 5;
     private static final int FAV2_DEFAULT = 10;
@@ -154,6 +158,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         fav3Button = view.findViewById(R.id.newcarbs_plus3);
         fav3Button.setOnClickListener(this);
         fav3Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
+
+        notesEdit = (EditText) view.findViewById(R.id.newcarbs_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -337,6 +343,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             final int finalEatingSoonTTDuration = eatingSoonTTDuration;
             final double finalHypoTT = hypoTT;
             final int finalHypoTTDuration = hypoTTDuration;
+            final String finalNotes = notesEdit.getText().toString();
 
             long timeOffset = editTime.getValue().longValue();
             final long time = DateUtil.now() + timeOffset * 1000 * 60;
@@ -388,14 +395,14 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
                         if (carbsAfterConstraints > 0) {
                             if (duration == 0) {
-                                createCarb(carbsAfterConstraints, time);
+                                createCarb(carbsAfterConstraints, time, finalNotes);
                             } else {
                                 long remainingCarbs = carbsAfterConstraints;
                                 long carbTime = time;
                                 long smallCarbAmount = Math.round(remainingCarbs / (editDuration.getValue() * 4));
                                 if (smallCarbAmount == 0) smallCarbAmount = 1;
                                 while (remainingCarbs > 0) {
-                                    createCarb(Math.min(smallCarbAmount, remainingCarbs), carbTime);
+                                    createCarb(Math.min(smallCarbAmount, remainingCarbs), carbTime, finalNotes);
                                     remainingCarbs -= smallCarbAmount;
                                     carbTime += 15 * 60 * 1000;
                                 }
@@ -414,13 +421,14 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         }
     }
 
-    private void createCarb(long carbs, long time) {
+    private void createCarb(long carbs, long time, @Nullable String notes) {
         DetailedBolusInfo carbInfo = new DetailedBolusInfo();
         carbInfo.date = time;
         carbInfo.eventType = CareportalEvent.CARBCORRECTION;
         carbInfo.carbs = carbs;
         carbInfo.context = getContext();
         carbInfo.source = Source.USER;
+        carbInfo.notes = notes;
         if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
             ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
                 @Override
