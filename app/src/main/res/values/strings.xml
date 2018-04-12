@@ -715,6 +715,8 @@
     <string name="connectiontimedout">Connection timed out</string>
     <string name="food">Food</string>
     <string name="shortgramm">g</string>
+    <string name="shortminute">m</string>
+    <string name="shorthour">h</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -995,4 +997,5 @@
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
+    <string name="time">Time</string>
 </resources>

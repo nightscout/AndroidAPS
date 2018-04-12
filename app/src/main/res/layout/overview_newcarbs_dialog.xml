@@ -125,7 +125,8 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Time" />
+                    android:textStyle="bold"
+                    android:text="@string/time" />
 
                 <info.nightscout.utils.NumberPicker
                     android:id="@+id/newcarbs_time"
@@ -139,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="m" />
+                    android:text="@string/shortminute" />
             </LinearLayout>
 
             <LinearLayout
@@ -153,7 +154,8 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Duration"/>
+                    android:textStyle="bold"
+                    android:text="@string/duration"/>
 
                 <info.nightscout.utils.NumberPicker
                     android:id="@+id/new_carbs_duration"
@@ -167,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="h"/>
+                    android:text="@string/shorthour"/>
             </LinearLayout>
 
             <View
@@ -187,7 +189,8 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Carbs" />
+                    android:textStyle="bold"
+                    android:text="@string/overview_carbs_label" />
 
                 <info.nightscout.utils.NumberPicker
                     android:id="@+id/newcarb_carbsamount"
@@ -201,7 +204,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="g" />
+                    android:text="@string/shortgramm" />
             </LinearLayout>
 
             <LinearLayout
@@ -240,9 +243,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
                     android:width="60dp"
                     android:padding="2dp"
                     android:text="@string/careportal_newnstreatment_notes_label"
