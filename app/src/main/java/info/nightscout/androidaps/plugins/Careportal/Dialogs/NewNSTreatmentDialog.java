@@ -707,8 +707,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                             } else {
                                 tempTarget.low(0).high(0);
                             }
-                            log.debug("Creating new TempTarget db record: " + tempTarget.toString());
-                            MainApp.getDbHelper().createOrUpdate(tempTarget);
+                            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                             NSUpload.uploadCareportalEntryToNS(data);
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("TempTarget"));
                         }
