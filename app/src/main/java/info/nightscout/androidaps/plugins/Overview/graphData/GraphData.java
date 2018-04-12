@@ -172,7 +172,7 @@ public class GraphData {
             lastAbsoluteLineBasal = absoluteLineValue;
             lastLineBasal = baseBasalValue;
             lastTempBasal = tempBasalValue;
-            maxBasalValueFound = Math.max(maxBasalValueFound, basal);
+            maxBasalValueFound = Math.max(maxBasalValueFound, Math.max(tempBasalValue, baseBasalValue));
         }
 
         basalLineArray.add(new ScaledDataPoint(toTime, lastLineBasal, basalScale));
