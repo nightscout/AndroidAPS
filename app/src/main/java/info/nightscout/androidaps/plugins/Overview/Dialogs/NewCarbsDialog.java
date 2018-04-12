@@ -16,7 +16,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
@@ -39,8 +38,6 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.DetermineBasalResultSMB;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
@@ -52,8 +49,6 @@ import info.nightscout.utils.ToastUtils;
 
 public class NewCarbsDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NewCarbsDialog.class);
-
-    private ImageView helpView;
 
     private Button fav1Button;
     private Button fav2Button;
@@ -127,9 +122,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        helpView = view.findViewById(R.id.newcarbs_help);
-        helpView.setOnClickListener(this);
-
         maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
 
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
@@ -147,6 +139,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
         durationLayout = view.findViewById(R.id.newcarbs_duration_layout);
         durationLayout.setVisibility(MainApp.engineeringMode ? View.VISIBLE : View.GONE);
+
         editDuration = view.findViewById(R.id.new_carbs_duration);
         editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
 
@@ -179,17 +172,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                 break;
             case R.id.cancel:
                 dismiss();
-                break;
-            case R.id.newcarbs_help:
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Help");
-                builder.setMessage(Html.fromHtml("<b>Time</b>: relative offset to now<br/>" +
-                        "<b>Duration</b>: splits carb up over entered time, one every 15m<br/>" +
-                        "<br/>" +
-                        "Did I ever tell you the story about the old tree and the wooden house? So " +
-                        "anyway, there I was, in the middle of the forest with all my clothes gone.<br/>" +
-                        "<br/>Also: blablabla"));
-                builder.show();
                 break;
             case R.id.newcarbs_plus1:
                 editCarbs.setValue(Math.max(0, editCarbs.getValue()
