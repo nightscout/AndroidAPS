@@ -622,10 +622,7 @@ public class ActionStringHandler {
         } else {
             tempTarget.low(0).high(0);
         }
-        MainApp.getDbHelper().createOrUpdate(tempTarget);
-
-        //TODO: Nightscout-Treatment for Temp-Target!
-        //ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
     }
 
     private static void doFillBolus(final Double amount) {

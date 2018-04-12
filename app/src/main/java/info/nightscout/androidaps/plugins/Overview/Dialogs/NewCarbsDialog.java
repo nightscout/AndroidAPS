@@ -388,7 +388,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                                 .source(Source.USER)
                                 .low(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()))
                                 .high(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()));
-                        MainApp.getDbHelper().createOrUpdate(tempTarget);
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                     } else if (startEatingSoonTTCheckbox.isChecked()) {
                         TempTarget tempTarget = new TempTarget()
                                 .date(System.currentTimeMillis())
@@ -397,7 +397,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                                 .source(Source.USER)
                                 .low(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()))
                                 .high(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()));
-                        MainApp.getDbHelper().createOrUpdate(tempTarget);
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                     } else if (startHypoTTCheckbox.isChecked()) {
                         TempTarget tempTarget = new TempTarget()
                                 .date(System.currentTimeMillis())
@@ -406,7 +406,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                                 .source(Source.USER)
                                 .low(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()))
                                 .high(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()));
-                        MainApp.getDbHelper().createOrUpdate(tempTarget);
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                     }
 
                     if (finalCarbsAfterConstraints > 0) {

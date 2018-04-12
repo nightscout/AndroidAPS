@@ -505,6 +505,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
     }
 
+    @Override
+    public void addToHistoryTempTarget(TempTarget tempTarget) {
+        //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
+        MainApp.getDbHelper().createOrUpdate(tempTarget);
+        NSUpload.uploadTempTarget(tempTarget);
+    }
+
     // Profile Switch
     @Subscribe
     @SuppressWarnings("unused")

@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.HardLimits;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
@@ -694,26 +695,24 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                         }
                     }
                 } else if (options.executeTempTarget) {
-                    try {
-                        if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration") && data.getInt("duration") == 0)) {
-                            TempTarget tempTarget = new TempTarget()
-                                    .date(eventTime.getTime())
-                                    .duration(data.getInt("duration"))
-                                    .reason(data.getString("reason"))
-                                    .source(Source.USER);
-                            if (tempTarget.durationInMinutes != 0) {
-                                tempTarget.low(Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits()))
-                                        .high(Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits()));
-                            } else {
-                                tempTarget.low(0).high(0);
-                            }
-                            log.debug("Creating new TempTarget db record: " + tempTarget.toString());
-                            MainApp.getDbHelper().createOrUpdate(tempTarget);
-                            NSUpload.uploadCareportalEntryToNS(data);
-                            FabricPrivacy.getInstance().logCustom(new CustomEvent("TempTarget"));
+                    final int duration = JsonHelper.safeGetInt(data, "duration");
+                    final double targetBottom = JsonHelper.safeGetDouble(data, "targetBottom");
+                    final double targetTop = JsonHelper.safeGetDouble(data, "targetTop");
+                    final String reason = JsonHelper.safeGetString(data, "reason", "");
+                    if ((targetBottom != 0d && targetTop != 0d) || duration == 0) {
+                        TempTarget tempTarget = new TempTarget()
+                                .date(eventTime.getTime())
+                                .duration(duration)
+                                .reason(reason)
+                                .source(Source.USER);
+                        if (tempTarget.durationInMinutes != 0) {
+                            tempTarget.low(Profile.toMgdl(targetBottom, profile.getUnits()))
+                                    .high(Profile.toMgdl(targetTop, profile.getUnits()));
+                        } else {
+                            tempTarget.low(0).high(0);
                         }
-                    } catch (JSONException e) {
-                        log.error("Unhandled exception", e);
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("TempTarget"));
                     }
                 } else {
                     NSUpload.uploadCareportalEntryToNS(data);

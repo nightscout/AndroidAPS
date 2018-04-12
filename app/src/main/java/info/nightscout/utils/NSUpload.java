@@ -28,6 +28,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
@@ -295,6 +296,22 @@ public class NSUpload {
                 data.put("percentage", profileSwitch.percentage);
             }
             data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
+
+    public static void uploadTempTarget(TempTarget tempTarget) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.TEMPORARYTARGET);
+            data.put("duration", tempTarget.durationInMinutes);
+            data.put("reason", tempTarget.reason);
+            data.put("targetBottom", tempTarget.low);
+            data.put("targetTop", tempTarget.high);
+            data.put("created_at", DateUtil.toISOString(tempTarget.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
