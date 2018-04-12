@@ -401,13 +401,12 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                 createCarb(carbsAfterConstraints, time, finalNotes);
                             } else {
                                 long remainingCarbs = carbsAfterConstraints;
-                                long carbTime = time;
-                                long smallCarbAmount = Math.round(remainingCarbs / (editDuration.getValue() * 4));
-                                if (smallCarbAmount == 0) smallCarbAmount = 1;
-                                while (remainingCarbs > 0) {
-                                    createCarb(Math.min(smallCarbAmount, remainingCarbs), carbTime, finalNotes);
+                                int ticks = (duration * 4); //duration guaranteed to be integer greater zero
+                                for (int i = 0; i < ticks; i++){
+                                    long carbTime = time + i * 15 * 60 * 1000;
+                                    long smallCarbAmount = Math.round((1d * remainingCarbs) / (ticks-i));  //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
                                     remainingCarbs -= smallCarbAmount;
-                                    carbTime += 15 * 60 * 1000;
+                                    createCarb(smallCarbAmount, carbTime, finalNotes);
                                 }
                             }
                         }
