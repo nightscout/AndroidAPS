@@ -105,6 +105,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     NumberPicker editCorr;
     NumberPicker editCarbTime;
 
+    LinearLayout notesLayout;
     EditText notesEdit;
 
     Integer calculatedCarbs = 0;
@@ -209,6 +210,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         superbolus = (TextView) view.findViewById(R.id.treatments_wizard_sb);
         superbolusInsulin = (TextView) view.findViewById(R.id.treatments_wizard_sbinsulin);
 
+        notesLayout = view.findViewById(R.id.treatments_wizard_notes_layout);
+        notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = (EditText) view.findViewById(R.id.newcarbs_notes);
 
         bgTrend = (TextView) view.findViewById(R.id.treatments_wizard_bgtrend);

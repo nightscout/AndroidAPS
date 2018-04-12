@@ -112,5 +112,9 @@
                 android:summary="@string/show_calibration_button_summary"/>
 
         </PreferenceScreen>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_show_notes_entry_dialogs"
+            android:title="@string/overview_show_notes_field_in_dialogs_title" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -998,4 +998,6 @@
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="time">Time</string>
+    <string name="key_show_notes_entry_dialogs">show_notes_entry_dialogs</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Show notes field in dialogs</string>
 </resources>

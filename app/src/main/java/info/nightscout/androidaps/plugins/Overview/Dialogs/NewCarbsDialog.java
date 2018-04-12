@@ -56,6 +56,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
     private Button fav2Button;
     private Button fav3Button;
 
+    private LinearLayout notesLayout;
     private EditText notesEdit;
 
     private static final int FAV1_DEFAULT = 5;
@@ -159,7 +160,9 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         fav3Button.setOnClickListener(this);
         fav3Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
 
-        notesEdit = (EditText) view.findViewById(R.id.newcarbs_notes);
+        notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
+        notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
+        notesEdit = view.findViewById(R.id.newcarbs_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
