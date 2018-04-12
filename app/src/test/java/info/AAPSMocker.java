@@ -1,11 +1,17 @@
 package info;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
+import org.mockito.ArgumentMatchers;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.Locale;
@@ -33,6 +39,8 @@ import static org.mockito.Mockito.when;
 public class AAPSMocker {
     private static String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
     private static Profile profile;
+
+    public static Intent intentSent = null;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -81,6 +89,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.basalprofilenotaligned)).thenReturn("Basal values not aligned to hours: %s");
         when(MainApp.gs(R.string.minago)).thenReturn("%d min ago");
         when(MainApp.gs(R.string.hoursago)).thenReturn("%.1fh ago");
+        when(MainApp.gs(R.string.careportal_profileswitch)).thenReturn("Profile Switch");
     }
 
     public static MainApp mockMainApp() {
@@ -116,6 +125,28 @@ public class AAPSMocker {
     public static void mockApplicationContext() {
         Context context = mock(Context.class);
         when(MainApp.instance().getApplicationContext()).thenReturn(context);
+        try {
+            PowerMockito.when(context, "sendBroadcast", ArgumentMatchers.any()).then(invocation -> {
+                Intent i = invocation.getArgument(0);
+                intentSent = i;
+                return null;
+            });
+        } catch (Exception e) {
+            Assert.fail("Unable to mock the construction of the Context object: " + e.getMessage());
+        }
+    }
+
+    public static void mockBundle() {
+        try {
+            PowerMockito.whenNew(Bundle.class).withNoArguments().thenAnswer(new Answer<Bundle>() {
+                @Override
+                public Bundle answer(InvocationOnMock invocation) throws Throwable {
+                    return BundleMock.mock();
+                }
+            });
+        } catch (Exception e) {
+            Assert.fail("Unable to mock the construction of the Bundle object: " + e.getMessage());
+        }
     }
 
     public static void mockDatabaseHelper() {

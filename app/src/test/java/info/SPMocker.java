@@ -36,8 +36,7 @@ public class SPMocker {
                 return value;
             });
         } catch (Exception e) {
-            Assert.fail("Unable to mock the construction of "
-                    + "the SP object");
+            Assert.fail("Unable to mock the construction of the SP object");
         }
 
     }
