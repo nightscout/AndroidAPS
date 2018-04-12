@@ -279,8 +279,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 FabricPrivacy.getInstance().logCustom(new CustomEvent("SMS_Loop_Status"));
                                 break;
                             case "RESUME":
-                                final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                                activeloop.suspendTo(0);
+                                LoopPlugin.getPlugin().suspendTo(0);
                                 MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_RESUME"));
                                 NSUpload.uploadOpenAPSOffline(0);
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_loopresumed);
@@ -517,8 +516,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             @Override
                             public void run() {
                                 if (result.success) {
-                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                                    activeloop.suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
+                                    LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
                                     NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
                                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                                     String reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +

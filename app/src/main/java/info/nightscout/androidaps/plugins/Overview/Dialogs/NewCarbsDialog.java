@@ -357,34 +357,34 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                         }
                         accepted = true;
 
-                        if (startActivityTTCheckbox.isChecked()) {
-                            TempTarget tempTarget = new TempTarget()
-                                    .date(System.currentTimeMillis())
-                                    .duration(finalActivityTTDuration)
-                                    .reason(MainApp.gs(R.string.activity))
-                                    .source(Source.USER)
-                                    .low(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()))
-                                    .high(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()));
-                            MainApp.getDbHelper().createOrUpdate(tempTarget);
-                        } else if (startEatingSoonTTCheckbox.isChecked()) {
-                            TempTarget tempTarget = new TempTarget()
-                                    .date(System.currentTimeMillis())
-                                    .duration(finalEatingSoonTTDuration)
-                                    .reason(MainApp.gs(R.string.eatingsoon))
-                                    .source(Source.USER)
-                                    .low(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()))
-                                    .high(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()));
-                            MainApp.getDbHelper().createOrUpdate(tempTarget);
-                        } else if (startHypoTTCheckbox.isChecked()) {
-                            TempTarget tempTarget = new TempTarget()
-                                    .date(System.currentTimeMillis())
-                                    .duration(finalHypoTTDuration)
-                                    .reason(MainApp.gs(R.string.hypo))
-                                    .source(Source.USER)
-                                    .low(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()))
-                                    .high(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()));
-                            MainApp.getDbHelper().createOrUpdate(tempTarget);
-                        }
+                    if (startActivityTTCheckbox.isChecked()) {
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(finalActivityTTDuration)
+                                .reason(MainApp.gs(R.string.activity))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()));
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                    } else if (startEatingSoonTTCheckbox.isChecked()) {
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(finalEatingSoonTTDuration)
+                                .reason(MainApp.gs(R.string.eatingsoon))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()));
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                    } else if (startHypoTTCheckbox.isChecked()) {
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(finalHypoTTDuration)
+                                .reason(MainApp.gs(R.string.hypo))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()));
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                    }
 
                         if (carbsAfterConstraints > 0) {
                             if (duration == 0) {

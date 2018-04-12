@@ -288,7 +288,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
                                 .source(Source.USER)
                                 .low((int) finalTT)
                                 .high((int) finalTT);
-                        MainApp.getDbHelper().createOrUpdate(tempTarget);
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                     }
 
                     if (finalInsulinAfterConstraints <= 0.01) {

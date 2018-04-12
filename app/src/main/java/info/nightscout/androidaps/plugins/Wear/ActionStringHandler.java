@@ -441,21 +441,21 @@ public class ActionStringHandler {
     private static String getLoopStatus() {
         String ret = "";
         // decide if enabled/disabled closed/open; what Plugin as APS?
-        final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-        if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+        final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+        if (loopPlugin.isEnabled(loopPlugin.getType())) {
             if (MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
                 ret += "CLOSED LOOP\n";
             } else {
                 ret += "OPEN LOOP\n";
             }
-            final APSInterface aps = MainApp.getConfigBuilder().getActiveAPS();
+            final APSInterface aps = ConfigBuilderPlugin.getActiveAPS();
             ret += "APS: " + ((aps == null) ? "NO APS SELECTED!" : ((PluginBase) aps).getName());
-            if (activeloop.lastRun != null) {
-                if (activeloop.lastRun.lastAPSRun != null)
-                    ret += "\nLast Run: " + DateUtil.timeString(activeloop.lastRun.lastAPSRun);
+            if (LoopPlugin.lastRun != null) {
+                if (LoopPlugin.lastRun.lastAPSRun != null)
+                    ret += "\nLast Run: " + DateUtil.timeString(LoopPlugin.lastRun.lastAPSRun);
 
-                if (activeloop.lastRun.lastEnact != null)
-                    ret += "\nLast Enact: " + DateUtil.timeString(activeloop.lastRun.lastEnact);
+                if (LoopPlugin.lastRun.lastEnact != null)
+                    ret += "\nLast Enact: " + DateUtil.timeString(LoopPlugin.lastRun.lastEnact);
 
             }
 
@@ -502,7 +502,7 @@ public class ActionStringHandler {
             return "No profile set :(";
         }
 
-        APSInterface usedAPS = MainApp.getConfigBuilder().getActiveAPS();
+        APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
         if (usedAPS == null) {
             return "No active APS :(!";
         }
@@ -622,10 +622,7 @@ public class ActionStringHandler {
         } else {
             tempTarget.low(0).high(0);
         }
-        MainApp.getDbHelper().createOrUpdate(tempTarget);
-
-        //TODO: Nightscout-Treatment for Temp-Target!
-        //ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
     }
 
     private static void doFillBolus(final Double amount) {
