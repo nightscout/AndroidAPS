@@ -50,16 +50,15 @@ import static info.nightscout.utils.DateUtil.now;
 public class FillDialog extends DialogFragment implements OnClickListener {
     private static Logger log = LoggerFactory.getLogger(FillDialog.class);
 
+    private CheckBox pumpSiteChangeCheckbox;
+    private CheckBox insulinCartridgeChangeCheckbox;
+
+    private NumberPicker editInsulin;
+
     double amount1 = 0d;
     double amount2 = 0d;
     double amount3 = 0d;
 
-    CheckBox pumpSiteChangeCheckbox;
-    CheckBox insulinCartridgeChangeCheckbox;
-
-    NumberPicker editInsulin;
-
-    private LinearLayout notesLayout;
     private EditText notesEdit;
 
     final private TextWatcher textWatcher = new TextWatcher() {
@@ -133,7 +132,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             preset3Button.setVisibility(View.GONE);
         }
 
-        notesLayout = view.findViewById(R.id.fill_notes_layout);
+        LinearLayout notesLayout = view.findViewById(R.id.fill_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = view.findViewById(R.id.fill_notes);
 

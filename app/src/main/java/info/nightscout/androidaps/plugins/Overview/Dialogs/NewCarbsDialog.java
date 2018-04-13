@@ -53,27 +53,21 @@ import static info.nightscout.utils.DateUtil.now;
 public class NewCarbsDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NewCarbsDialog.class);
 
-    private Button fav1Button;
-    private Button fav2Button;
-    private Button fav3Button;
-
-    private LinearLayout notesLayout;
-    private EditText notesEdit;
-
     private static final int FAV1_DEFAULT = 5;
     private static final int FAV2_DEFAULT = 10;
     private static final int FAV3_DEFAULT = 20;
+
     private RadioButton startActivityTTCheckbox;
     private RadioButton startEatingSoonTTCheckbox;
     private RadioButton startHypoTTCheckbox;
     private boolean togglingTT;
 
     private NumberPicker editTime;
-    private LinearLayout durationLayout;
     private NumberPicker editDuration;
     private NumberPicker editCarbs;
-
     private Integer maxCarbs;
+
+    private EditText notesEdit;
 
     //one shot guards
     private boolean accepted;
@@ -128,11 +122,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
-
-        editCarbs = view.findViewById(R.id.newcarb_carbsamount);
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-
         startActivityTTCheckbox = view.findViewById(R.id.newcarbs_activity_tt);
         startActivityTTCheckbox.setOnCheckedChangeListener(this);
         startEatingSoonTTCheckbox = view.findViewById(R.id.newcarbs_eating_soon_tt);
@@ -143,25 +132,30 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         editTime = view.findViewById(R.id.newcarbs_time);
         editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
 
-        durationLayout = view.findViewById(R.id.newcarbs_duration_layout);
+        LinearLayout durationLayout = view.findViewById(R.id.newcarbs_duration_layout);
         durationLayout.setVisibility(MainApp.engineeringMode ? View.VISIBLE : View.GONE);
 
         editDuration = view.findViewById(R.id.new_carbs_duration);
         editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
 
-        fav1Button = view.findViewById(R.id.newcarbs_plus1);
+        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
+
+        editCarbs = view.findViewById(R.id.newcarb_carbsamount);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+
+        Button fav1Button = view.findViewById(R.id.newcarbs_plus1);
         fav1Button.setOnClickListener(this);
         fav1Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)));
 
-        fav2Button = view.findViewById(R.id.newcarbs_plus2);
+        Button fav2Button = view.findViewById(R.id.newcarbs_plus2);
         fav2Button.setOnClickListener(this);
         fav2Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)));
 
-        fav3Button = view.findViewById(R.id.newcarbs_plus3);
+        Button fav3Button = view.findViewById(R.id.newcarbs_plus3);
         fav3Button.setOnClickListener(this);
         fav3Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
 
-        notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
+        LinearLayout notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = view.findViewById(R.id.newcarbs_notes);
 
@@ -336,7 +330,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             int timeOffset = editTime.getValue().intValue();
             final long time = now() + timeOffset * 1000 * 60;
             if (timeOffset != 0) {
-                actions.add("Time: " + DateUtil.dateAndTimeString(time));
+                actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time));
             }
             int duration = editDuration.getValue().intValue();
             if (duration > 0) {

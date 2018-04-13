@@ -55,16 +55,6 @@ import static info.nightscout.utils.DateUtil.now;
 public class NewInsulinDialog extends DialogFragment implements OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NewInsulinDialog.class);
 
-    private LinearLayout editLayout;
-    private NumberPicker editTime;
-    private NumberPicker editInsulin;
-    private LinearLayout notesLayout;
-    private EditText notesEdit;
-
-    private Button plus1Button;
-    private Button plus2Button;
-    private Button plus3Button;
-
     public static final double PLUS1_DEFAULT = 0.5d;
     public static final double PLUS2_DEFAULT = 1d;
     public static final double PLUS3_DEFAULT = 2d;
@@ -72,7 +62,12 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
     private CheckBox startESMCheckbox;
     private CheckBox recordOnlyCheckbox;
 
+    private LinearLayout editLayout;
+    private NumberPicker editTime;
+    private NumberPicker editInsulin;
     private Double maxInsulin;
+
+    private EditText notesEdit;
 
     //one shot guards
     private boolean accepted;
@@ -137,17 +132,17 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
         editInsulin = view.findViewById(R.id.newinsulin_amount);
         editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
-        plus1Button = view.findViewById(R.id.newinsulin_plus05);
+        Button plus1Button = view.findViewById(R.id.newinsulin_plus05);
         plus1Button.setOnClickListener(this);
         plus1Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT)));
-        plus2Button = view.findViewById(R.id.newinsulin_plus10);
+        Button plus2Button = view.findViewById(R.id.newinsulin_plus10);
         plus2Button.setOnClickListener(this);
         plus2Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT)));
-        plus3Button = view.findViewById(R.id.newinsulin_plus20);
+        Button plus3Button = view.findViewById(R.id.newinsulin_plus20);
         plus3Button.setOnClickListener(this);
         plus3Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)));
 
-        notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
+        LinearLayout notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = view.findViewById(R.id.newcarbs_notes);
 
@@ -234,7 +229,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
             int timeOffset = editTime.getValue().intValue();
             final long time = now() + timeOffset * 1000 * 60;
             if (timeOffset != 0) {
-                actions.add(MainApp.gs(R.string.time) + DateUtil.dateAndTimeString(time));
+                actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time));
             }
             final String notes = notesEdit.getText().toString();
             if (!notes.isEmpty()) {
@@ -268,35 +263,33 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                         }
 
-                        if (finalInsulinAfterConstraints == 0) {
-                            return;
-                        }
-
-                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                        detailedBolusInfo.context = context;
-                        detailedBolusInfo.source = Source.USER;
-                        detailedBolusInfo.notes = notes;
-                        if (recordOnlyCheckbox.isChecked()) {
-                            detailedBolusInfo.date = time;
-                            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
-                        } else {
-                            detailedBolusInfo.date = now();
-                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                @Override
-                                public void run() {
-                                    if (!result.success) {
-                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                        i.putExtra("soundid", R.raw.boluserror);
-                                        i.putExtra("status", result.comment);
-                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        MainApp.instance().startActivity(i);
+                        if (finalInsulinAfterConstraints > 0) {
+                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                            detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                            detailedBolusInfo.context = context;
+                            detailedBolusInfo.source = Source.USER;
+                            detailedBolusInfo.notes = notes;
+                            if (recordOnlyCheckbox.isChecked()) {
+                                detailedBolusInfo.date = time;
+                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                            } else {
+                                detailedBolusInfo.date = now();
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
+                                        }
                                     }
-                                }
-                            });
-                            FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
+                                });
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
+                            }
                         }
                     }
                 });
