@@ -97,12 +97,12 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         int time = editTime.getValue().intValue();
         if (time > 12 * 60 || time < -12 * 60) {
             editTime.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.constraintapllied));
         }
         Double duration = editDuration.getValue();
         if (duration > 10) {
             editDuration.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.constraintapllied));
         }
         int carbs = editCarbs.getValue().intValue();
         if (carbs > maxCarbs) {
