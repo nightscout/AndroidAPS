@@ -46,8 +46,9 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
+
+import static info.nightscout.utils.DateUtil.now;
 
 public class NewCarbsDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NewCarbsDialog.class);
@@ -86,6 +87,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
     final private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            validateInputs();
         }
 
         @Override
@@ -94,22 +96,21 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            validateInputs();
         }
     };
 
     private void validateInputs() {
-        Integer time = SafeParse.stringToInt(editTime.getText());
+        int time = editTime.getValue().intValue();
         if (time > 12 * 60 || time < -12 * 60) {
             editTime.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
         }
-        Integer duration = SafeParse.stringToInt(editDuration.getText());
+        Double duration = editDuration.getValue();
         if (duration > 10) {
             editDuration.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
         }
-        Integer carbs = SafeParse.stringToInt(editCarbs.getText());
+        int carbs = editCarbs.getValue().intValue();
         if (carbs > maxCarbs) {
             editCarbs.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
@@ -287,18 +288,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         }
         okClicked = true;
         try {
-            final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
-
-            List<String> actions = new LinkedList<>();
-            if (carbs > 0)
-                actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + carbsAfterConstraints + "g" + "</font>");
-            if (!carbsAfterConstraints.equals(carbs))
-                actions.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>");
-
             final Profile currentProfile = MainApp.getConfigBuilder().getProfile();
-            if (currentProfile == null)
+            if (currentProfile == null) {
                 return;
+            }
+
+            int carbs = editCarbs.getValue().intValue();
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
             int activityTTDuration = SP.getInt(R.string.key_activity_duration, Constants.defaultActivityTTDuration);
             activityTTDuration = activityTTDuration > 0 ? activityTTDuration : Constants.defaultActivityTTDuration;
@@ -314,6 +310,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             hypoTTDuration = hypoTTDuration > 0 ? hypoTTDuration : Constants.defaultHypoTTDuration;
             double hypoTT = SP.getDouble(R.string.key_hypo_target, currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultHypoTTmmol : Constants.defaultHypoTTmgdl);
             hypoTT = hypoTT > 0 ? hypoTT : currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultHypoTTmmol : Constants.defaultHypoTTmgdl;
+
+            List<String> actions = new LinkedList<>();
 
             if (startActivityTTCheckbox.isChecked()) {
                 if (currentProfile.getUnits().equals(Constants.MMOL)) {
@@ -335,9 +333,24 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                     actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(hypoTT) + " mg/dl (" + hypoTTDuration + " min)</font>");
             }
 
-            int duration = SafeParse.stringToInt(editDuration.getText());
+            int timeOffset = editTime.getValue().intValue();
+            final long time = now() + timeOffset * 1000 * 60;
+            if (timeOffset != 0) {
+                actions.add("Time: " + DateUtil.dateAndTimeString(time));
+            }
+            int duration = editDuration.getValue().intValue();
             if (duration > 0) {
-                actions.add("Duration: " + editDuration.getText() + "h");
+                actions.add(MainApp.gs(R.string.duration) + ": " + duration + MainApp.gs(R.string.shorthour));
+            }
+            if (carbs > 0) {
+                actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + carbsAfterConstraints + "g" + "</font>");
+            }
+            if (!carbsAfterConstraints.equals(carbs)) {
+                actions.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>");
+            }
+            final String notes = notesEdit.getText().toString();
+            if (!notes.isEmpty()) {
+                actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes);
             }
 
             final double finalActivityTT = activityTT;
@@ -346,13 +359,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             final int finalEatingSoonTTDuration = eatingSoonTTDuration;
             final double finalHypoTT = hypoTT;
             final int finalHypoTTDuration = hypoTTDuration;
-            final String finalNotes = notesEdit.getText().toString();
-
-            long timeOffset = editTime.getValue().longValue();
-            final long time = DateUtil.now() + timeOffset * 1000 * 60;
-            if (timeOffset != 0) {
-                actions.add("Time: " + DateUtil.dateAndTimeString(time));
-            }
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(MainApp.gs(R.string.confirmation));
@@ -398,7 +404,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
                         if (carbsAfterConstraints > 0) {
                             if (duration == 0) {
-                                createCarb(carbsAfterConstraints, time, finalNotes);
+                                createCarb(carbsAfterConstraints, time, notes);
                             } else {
                                 long remainingCarbs = carbsAfterConstraints;
                                 int ticks = (duration * 4); //duration guaranteed to be integer greater zero
@@ -406,7 +412,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                     long carbTime = time + i * 15 * 60 * 1000;
                                     long smallCarbAmount = Math.round((1d * remainingCarbs) / (ticks-i));  //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
                                     remainingCarbs -= smallCarbAmount;
-                                    createCarb(smallCarbAmount, carbTime, finalNotes);
+                                    createCarb(smallCarbAmount, carbTime, notes);
                                 }
                             }
                         }
