@@ -452,7 +452,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
         if (newRecordCreated && detailedBolusInfo.isValid)
-            NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
+            NSUpload.uploadTreatmentRecord(detailedBolusInfo);
         return newRecordCreated;
     }
 

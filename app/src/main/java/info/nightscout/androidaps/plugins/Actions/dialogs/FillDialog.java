@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.common.base.Joiner;
@@ -21,8 +25,6 @@ import com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
-import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +43,9 @@ import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.ToastUtils;
+
+import static info.nightscout.utils.DateUtil.now;
 
 public class FillDialog extends DialogFragment implements OnClickListener {
     private static Logger log = LoggerFactory.getLogger(FillDialog.class);
@@ -49,11 +54,35 @@ public class FillDialog extends DialogFragment implements OnClickListener {
     double amount2 = 0d;
     double amount3 = 0d;
 
-    NumberPicker editInsulin;
     CheckBox pumpSiteChangeCheckbox;
     CheckBox insulinCartridgeChangeCheckbox;
 
-    public FillDialog() {
+    NumberPicker editInsulin;
+
+    private LinearLayout notesLayout;
+    private EditText notesEdit;
+
+    final private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            validateInputs();
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    };
+
+    private void validateInputs() {
+        int time = editInsulin.getValue().intValue();
+        if (Math.abs(time) > 12 * 60) {
+            editInsulin.setValue(0d);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.constraintapllied));
+        }
     }
 
     @Override
@@ -67,44 +96,46 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        pumpSiteChangeCheckbox = view.findViewById(R.id.catheter_change);
-        insulinCartridgeChangeCheckbox = view.findViewById(R.id.cartridge_change);
+        pumpSiteChangeCheckbox = view.findViewById(R.id.fill_catheter_change);
+        insulinCartridgeChangeCheckbox = view.findViewById(R.id.fill_cartridge_change);
 
         Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
-        editInsulin = view.findViewById(R.id.treatments_newtreatment_insulinamount);
-        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false);
+        editInsulin = view.findViewById(R.id.fill_insulinamount);
+        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
-        //setup preset buttons
-        Button button1 = (Button) view.findViewById(R.id.fill_preset_button1);
-        Button button2 = (Button) view.findViewById(R.id.fill_preset_button2);
-        Button button3 = (Button) view.findViewById(R.id.fill_preset_button3);
 
+        Button preset1Button = view.findViewById(R.id.fill_preset_button1);
         amount1 = SP.getDouble("fill_button1", 0.3);
-        amount2 = SP.getDouble("fill_button2", 0d);
-        amount3 = SP.getDouble("fill_button3", 0d);
-
         if (amount1 > 0) {
-            button1.setVisibility(View.VISIBLE);
-            button1.setText(DecimalFormatter.toPumpSupportedBolus(amount1)); // + "U");
-            button1.setOnClickListener(this);
+            preset1Button.setVisibility(View.VISIBLE);
+            preset1Button.setText(DecimalFormatter.toPumpSupportedBolus(amount1)); // + "U");
+            preset1Button.setOnClickListener(this);
         } else {
-            button1.setVisibility(View.GONE);
+            preset1Button.setVisibility(View.GONE);
         }
+        Button preset2Button = view.findViewById(R.id.fill_preset_button2);
+        amount2 = SP.getDouble("fill_button2", 0d);
         if (amount2 > 0) {
-            button2.setVisibility(View.VISIBLE);
-            button2.setText(DecimalFormatter.toPumpSupportedBolus(amount2)); // + "U");
-            button2.setOnClickListener(this);
+            preset2Button.setVisibility(View.VISIBLE);
+            preset2Button.setText(DecimalFormatter.toPumpSupportedBolus(amount2)); // + "U");
+            preset2Button.setOnClickListener(this);
         } else {
-            button2.setVisibility(View.GONE);
+            preset2Button.setVisibility(View.GONE);
         }
+        Button preset3Button = view.findViewById(R.id.fill_preset_button3);
+        amount3 = SP.getDouble("fill_button3", 0d);
         if (amount3 > 0) {
-            button3.setVisibility(View.VISIBLE);
-            button3.setText(DecimalFormatter.toPumpSupportedBolus(amount3)); // + "U");
-            button3.setOnClickListener(this);
+            preset3Button.setVisibility(View.VISIBLE);
+            preset3Button.setText(DecimalFormatter.toPumpSupportedBolus(amount3)); // + "U");
+            preset3Button.setOnClickListener(this);
         } else {
-            button3.setVisibility(View.GONE);
+            preset3Button.setVisibility(View.GONE);
         }
+
+        notesLayout = view.findViewById(R.id.fill_notes_layout);
+        notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
+        notesEdit = view.findViewById(R.id.fill_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -154,42 +185,50 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             if (insulinCartridgeChangeCheckbox.isChecked())
                 confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + getString(R.string.record_insulin_cartridge_change) + "</font>");
 
+            final String notes = notesEdit.getText().toString();
+            if (!notes.isEmpty()) {
+                confirmMessage.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes);
+            }
+
             final Double finalInsulinAfterConstraints = insulinAfterConstraints;
 
             final Context context = getContext();
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-            if (confirmMessage.isEmpty())
-                confirmMessage.add(MainApp.gs(R.string.no_action_selected));
-
             builder.setTitle(MainApp.gs(R.string.confirmation));
-            builder.setMessage(Html.fromHtml(Joiner.on("<br/>").join(confirmMessage)));
-            builder.setPositiveButton(getString(R.string.primefill), (dialog, id) -> {
-                if (finalInsulinAfterConstraints > 0) {
-                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                    detailedBolusInfo.context = context;
-                    detailedBolusInfo.source = Source.USER;
-                    detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
-                    ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                        @Override
-                        public void run() {
-                            if (!result.success) {
-                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                i.putExtra("soundid", R.raw.boluserror);
-                                i.putExtra("status", result.comment);
-                                i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                MainApp.instance().startActivity(i);
+            if (insulinAfterConstraints > 0 || pumpSiteChangeCheckbox.isChecked() || insulinCartridgeChangeCheckbox.isChecked()) {
+                builder.setMessage(Html.fromHtml(Joiner.on("<br/>").join(confirmMessage)));
+                builder.setPositiveButton(getString(R.string.primefill), (dialog, id) -> {
+                    if (finalInsulinAfterConstraints > 0) {
+                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                        detailedBolusInfo.context = context;
+                        detailedBolusInfo.source = Source.USER;
+                        detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
+                        detailedBolusInfo.notes = notes;
+                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                            @Override
+                            public void run() {
+                                if (!result.success) {
+                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                    i.putExtra("soundid", R.raw.boluserror);
+                                    i.putExtra("status", result.comment);
+                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    MainApp.instance().startActivity(i);
+                                }
                             }
-                        }
-                    });
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("Fill"));
-                }
-                long now = System.currentTimeMillis();
-                if (pumpSiteChangeCheckbox.isChecked()) NSUpload.uploadEvent(CareportalEvent.SITECHANGE, now);
-                if (insulinCartridgeChangeCheckbox.isChecked()) NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, now + 1000);
-            });
+                        });
+                        FabricPrivacy.getInstance().logCustom(new CustomEvent("Fill"));
+                    }
+                    if (pumpSiteChangeCheckbox.isChecked())
+                        NSUpload.uploadEvent(CareportalEvent.SITECHANGE, now(), notes);
+                    if (insulinCartridgeChangeCheckbox.isChecked())
+                        NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, now() + 1000, notes);
+                });
+            } else {
+                builder.setMessage(MainApp.gs(R.string.no_action_selected));
+            }
             builder.setNegativeButton(getString(R.string.cancel), null);
             builder.show();
             dismiss();
