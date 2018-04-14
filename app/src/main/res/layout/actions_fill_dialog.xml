@@ -125,7 +125,8 @@
             <EditText
                 android:id="@+id/fill_notes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text|textCapWords" />
 
         </LinearLayout>
 

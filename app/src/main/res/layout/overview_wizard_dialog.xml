@@ -221,6 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="left"
+                android:inputType="text|textCapWords" />
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
