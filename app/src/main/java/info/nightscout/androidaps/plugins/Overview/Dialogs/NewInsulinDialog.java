@@ -142,7 +142,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
         plus3Button.setOnClickListener(this);
         plus3Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)));
 
-        LinearLayout notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
+        LinearLayout notesLayout = view.findViewById(R.id.newinsulin_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = view.findViewById(R.id.newcarbs_notes);
 
