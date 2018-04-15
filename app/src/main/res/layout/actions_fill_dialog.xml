@@ -48,13 +48,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:text="Pump site change" />
+                android:text="@string/careportal_pumpsitechange" />
 
             <CheckBox
                 android:id="@+id/fill_cartridge_change"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Insulin cartridge change" />
+                android:text="@string/careportal_insulincartridgechange" />
 
         </LinearLayout>
 
@@ -141,7 +141,7 @@
                 android:id="@+id/fill_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text|textCapWords" />
+                android:inputType="text|textCapSentences" />
 
         </LinearLayout>
 

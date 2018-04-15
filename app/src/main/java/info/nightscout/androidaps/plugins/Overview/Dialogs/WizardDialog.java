@@ -212,7 +212,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         notesLayout = view.findViewById(R.id.treatments_wizard_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
-        notesEdit = (EditText) view.findViewById(R.id.newcarbs_notes);
+        notesEdit = (EditText) view.findViewById(R.id.treatment_wizard_notes);
 
         bgTrend = (TextView) view.findViewById(R.id.treatments_wizard_bgtrend);
         bgTrendInsulin = (TextView) view.findViewById(R.id.treatments_wizard_bgtrendinsulin);

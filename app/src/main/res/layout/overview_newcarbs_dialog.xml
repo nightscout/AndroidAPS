@@ -69,7 +69,6 @@
                     android:id="@+id/newcarbs_hypo_tt"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:text="@string/start_hypo_tt" />
 
             </LinearLayout>
@@ -216,7 +215,7 @@
                     android:id="@+id/newcarbs_notes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text|textCapWords" />
+                    android:inputType="text|textCapSentences" />
 
             </LinearLayout>
 
