@@ -68,7 +68,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     private static String event;
 
     Profile profile;
-    ProfileStore profileStore;
+    public ProfileStore profileStore;
     String units = Constants.MGDL;
 
     TextView eventTypeText;
@@ -680,7 +680,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
 
-    void createNSTreatment(JSONObject data) {
+    public void createNSTreatment(JSONObject data) {
         if (options.executeProfileSwitch) {
             if (data.has("profile")) {
                 doProfileSwitch(profileStore, JsonHelper.safeGetString(data, "profile"), JsonHelper.safeGetInt(data, "duration"), JsonHelper.safeGetInt(data, "percentage"), JsonHelper.safeGetInt(data, "timeshift"));

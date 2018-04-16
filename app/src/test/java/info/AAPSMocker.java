@@ -2,16 +2,12 @@ package info;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.mockito.ArgumentMatchers;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.Locale;
@@ -21,8 +17,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.SP;
 
@@ -39,6 +37,8 @@ import static org.mockito.Mockito.when;
 public class AAPSMocker {
     private static String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
     private static Profile profile;
+    private static ProfileStore profileStore;
+    public static final String TESTPROFILENAME = "someProfile";
 
     public static Intent intentSent = null;
 
@@ -125,28 +125,6 @@ public class AAPSMocker {
     public static void mockApplicationContext() {
         Context context = mock(Context.class);
         when(MainApp.instance().getApplicationContext()).thenReturn(context);
-        try {
-            PowerMockito.when(context, "sendBroadcast", ArgumentMatchers.any()).then(invocation -> {
-                Intent i = invocation.getArgument(0);
-                intentSent = i;
-                return null;
-            });
-        } catch (Exception e) {
-            Assert.fail("Unable to mock the construction of the Context object: " + e.getMessage());
-        }
-    }
-
-    public static void mockBundle() {
-        try {
-            PowerMockito.whenNew(Bundle.class).withNoArguments().thenAnswer(new Answer<Bundle>() {
-                @Override
-                public Bundle answer(InvocationOnMock invocation) throws Throwable {
-                    return BundleMock.mock();
-                }
-            });
-        } catch (Exception e) {
-            Assert.fail("Unable to mock the construction of the Bundle object: " + e.getMessage());
-        }
     }
 
     public static void mockDatabaseHelper() {
@@ -159,6 +137,11 @@ public class AAPSMocker {
         when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
     }
 
+    public static void mockTreatmentService() throws Exception {
+        TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
+        PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+    }
+
     public static Profile getValidProfile() {
         try {
             if (profile == null)
@@ -166,6 +149,24 @@ public class AAPSMocker {
         } catch (JSONException ignored) {
         }
         return profile;
+    }
+
+    public static ProfileStore getValidProfileStore() {
+        try {
+            if (profileStore == null) {
+                JSONObject json = new JSONObject();
+                JSONObject store = new JSONObject();
+                JSONObject profile = new JSONObject(validProfile);
+
+                json.put("defaultProfile", TESTPROFILENAME);
+                json.put("store", store);
+                store.put(TESTPROFILENAME, profile);
+                profileStore = new ProfileStore(json);
+            }
+        } catch (JSONException ignored) {
+            Assert.fail("getValidProfileStore() failed");
+        }
+        return profileStore;
     }
 
     private static MockedBus bus = new MockedBus();
