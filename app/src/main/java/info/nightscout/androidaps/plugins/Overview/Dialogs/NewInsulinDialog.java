@@ -144,7 +144,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
         LinearLayout notesLayout = view.findViewById(R.id.newinsulin_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
-        notesEdit = view.findViewById(R.id.newcarbs_notes);
+        notesEdit = view.findViewById(R.id.newinsulin_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
