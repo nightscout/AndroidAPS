@@ -110,11 +110,11 @@
                 android:key="@string/key_show_calibration_button"
                 android:title="@string/overview_calibration"
                 android:summary="@string/show_calibration_button_summary"/>
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_show_notes_entry_dialogs"
+                android:title="@string/overview_show_notes_field_in_dialogs_title" />
 
         </PreferenceScreen>
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_show_notes_entry_dialogs"
-            android:title="@string/overview_show_notes_field_in_dialogs_title" />
     </PreferenceCategory>
 </PreferenceScreen>
