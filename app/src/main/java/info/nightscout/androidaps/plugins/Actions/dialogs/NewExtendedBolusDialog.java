@@ -2,18 +2,13 @@ package info.nightscout.androidaps.plugins.Actions.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -26,26 +21,19 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.Overview.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NewExtendedBolusDialog.class);
 
-    PlusMinusEditText editInsulin;
-    PlusMinusEditText editDuration;
-
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
+    NumberPicker editInsulin;
+    NumberPicker editDuration;
 
     public NewExtendedBolusDialog() {
-        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
-        mHandlerThread.start();
-        this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -56,22 +44,20 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
 
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
-        editInsulin = new PlusMinusEditText(view, R.id.overview_newextendedbolus_insulin, R.id.overview_newextendedbolus_insulin_plus, R.id.overview_newextendedbolus_insulin_minus, 0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
+        editInsulin = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_insulin);
+        editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
-        double extendedDurationStep = MainApp.getConfigBuilder().getPumpDescription().extendedBolusDurationStep;
-        double extendedMaxDuration = MainApp.getConfigBuilder().getPumpDescription().extendedBolusMaxDuration;
-        editDuration = new PlusMinusEditText(view, R.id.overview_newextendedbolus_duration, R.id.overview_newextendedbolus_duration_plus, R.id.overview_newextendedbolus_duration_minus, extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false);
+        double extendedDurationStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().extendedBolusDurationStep;
+        double extendedMaxDuration = ConfigBuilderPlugin.getActivePump().getPumpDescription().extendedBolusMaxDuration;
+        editDuration = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_duration);
+        editDuration.setParams(extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false);
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
-        return view;
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
+        return view;
     }
 
     @Override
@@ -100,23 +86,16 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            final PumpInterface pump = MainApp.getConfigBuilder();
-                            mHandler.post(new Runnable() {
+                            ConfigBuilderPlugin.getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
                                 @Override
                                 public void run() {
-                                    PumpEnactResult result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
                                     if (!result.success) {
-                                        try {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setTitle(context.getString(R.string.treatmentdeliveryerror));
-                                        builder.setMessage(result.comment);
-                                        builder.setPositiveButton(context.getString(R.string.ok), null);
-                                        builder.show();
-                                        } catch (WindowManager.BadTokenException | NullPointerException e) {
-                                            // window has been destroyed
-                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
-                                            MainApp.bus().post(new EventNewNotification(notification));
-                                        }
+                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                        i.putExtra("soundid", R.raw.boluserror);
+                                        i.putExtra("status", result.comment);
+                                        i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        MainApp.instance().startActivity(i);
                                     }
                                 }
                             });

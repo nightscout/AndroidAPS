@@ -7,8 +7,17 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class CareportalPlugin implements PluginBase {
 
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
+
+    static CareportalPlugin careportalPlugin;
+
+    static public CareportalPlugin getPlugin() {
+        if (careportalPlugin == null) {
+            careportalPlugin = new CareportalPlugin();
+        }
+        return careportalPlugin;
+    }
 
     @Override
     public int getType() {
@@ -58,7 +67,7 @@ public class CareportalPlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -69,6 +78,11 @@ public class CareportalPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == GENERAL) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_careportal;
     }
 
 }

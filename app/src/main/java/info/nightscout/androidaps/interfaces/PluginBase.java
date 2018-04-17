@@ -30,4 +30,5 @@ public interface PluginBase {
     boolean showInList(int type);
     void setFragmentEnabled(int type, boolean fragmentEnabled);
     void setFragmentVisible(int type, boolean fragmentVisible);
+    int getPreferencesId();
 }

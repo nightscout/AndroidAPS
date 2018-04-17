@@ -15,17 +15,6 @@ import info.nightscout.androidaps.R;
 
 public class WearFragment extends Fragment {
 
-    private static WearPlugin wearPlugin;
-
-    public static WearPlugin getPlugin(Context ctx) {
-
-        if (wearPlugin == null) {
-            wearPlugin = new WearPlugin(ctx);
-        }
-
-        return wearPlugin;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,14 +23,14 @@ public class WearFragment extends Fragment {
         view.findViewById(R.id.wear_resend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPlugin(getContext()).resendDataToWatch();
+                WearPlugin.getPlugin().resendDataToWatch();
             }
         });
 
         view.findViewById(R.id.wear_opensettings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPlugin(getContext()).openSettings();
+                WearPlugin.getPlugin().openSettings();
             }
         });
 

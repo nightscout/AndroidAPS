@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
@@ -29,7 +29,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -39,7 +39,7 @@ import info.nightscout.utils.DecimalFormatter;
 public class PersistentNotificationPlugin implements PluginBase {
 
     private static final int ONGOING_NOTIFICATION_ID = 4711;
-    static boolean fragmentEnabled = true;
+    private boolean fragmentEnabled = true;
     private final Context ctx;
 
     public PersistentNotificationPlugin(Context ctx) {
@@ -95,24 +95,27 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-
         if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
+            enableDisableNotification(fragmentEnabled);
             checkBusRegistration();
-            //updateNotification();
         }
-
     }
 
-    private void updateNotification() {
-
+    private void enableDisableNotification(boolean fragmentEnabled) {
         if (!fragmentEnabled) {
             NotificationManager mNotificationManager =
                     (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(ONGOING_NOTIFICATION_ID);
+        } else {
+            updateNotification();
+        }
+    }
+
+    private void updateNotification() {
+        if (!fragmentEnabled) {
             return;
         }
-
 
         String line1 = ctx.getString(R.string.noprofile);
 
@@ -136,10 +139,8 @@ public class PersistentNotificationPlugin implements PluginBase {
             }
         }
 
-        PumpInterface pump = MainApp.getConfigBuilder();
-
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
             line1 += "  " + activeTemp.toStringShort();
         }
 
@@ -154,7 +155,7 @@ public class PersistentNotificationPlugin implements PluginBase {
                 + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
 
 
-        String line3 = DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
+        String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h";
 
 
         line3 += " - " + MainApp.getConfigBuilder().getProfileName();
@@ -191,11 +192,16 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     private void checkBusRegistration() {
         if (fragmentEnabled) {
-            MainApp.bus().register(this);
+            try {
+                MainApp.bus().register(this);
+            } catch (IllegalArgumentException e) {
+                // already registered
+            }
         } else {
             try {
                 MainApp.bus().unregister(this);
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
+                // already unregistered
             }
         }
     }
@@ -203,6 +209,11 @@ public class PersistentNotificationPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         //no visible fragment
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return -1;
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {

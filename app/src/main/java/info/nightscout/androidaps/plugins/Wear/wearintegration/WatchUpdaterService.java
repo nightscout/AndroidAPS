@@ -23,27 +23,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -67,6 +70,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
+    private static final String NEW_PREFERENCES_PATH = "/sendpreferencestowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
@@ -76,7 +80,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     SharedPreferences mPrefs;
     private static boolean lastLoopStatus;
 
-    private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(WatchUpdaterService.class);
 
 
     @Override
@@ -119,11 +123,6 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        double timestamp = 0;
-        if (intent != null) {
-            timestamp = intent.getDoubleExtra("timestamp", 0);
-        }
-
         String action = null;
         if (intent != null) {
             action = intent.getAction();
@@ -189,8 +188,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private void cancelBolus() {
-        PumpInterface pump = MainApp.getConfigBuilder();
-        pump.stopBolusDelivering();
+        ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
     }
 
     private void sendData() {
@@ -242,23 +240,21 @@ public class WatchUpdaterService extends WearableListenerService implements
         } else if (lastBG.value < lowLine) {
             sgvLevel = -1;
         }
-        DataMap dataMap = new DataMap();
 
-        int battery = getBatteryLevel(getApplicationContext());
+        DataMap dataMap = new DataMap();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
-        dataMap.putDouble("timestamp", lastBG.date);
+        dataMap.putString("glucoseUnits", units);
+        dataMap.putLong("timestamp", lastBG.date);
         if (glucoseStatus == null) {
             dataMap.putString("slopeArrow", "");
-            dataMap.putString("delta", "");
-            dataMap.putString("avgDelta", "");
+            dataMap.putString("delta", "--");
+            dataMap.putString("avgDelta", "--");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
             dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
             dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
         }
-        dataMap.putString("battery", "" + battery);
         dataMap.putLong("sgvLevel", sgvLevel);
-        dataMap.putInt("batteryLevel", (battery >= 30) ? 1 : 0);
         dataMap.putDouble("sgvDouble", lastBG.value);
         dataMap.putDouble("high", highLine);
         dataMap.putDouble("low", lowLine);
@@ -273,10 +269,20 @@ public class WatchUpdaterService extends WearableListenerService implements
             deltastring += "-";
 
         }
+
+        boolean detailed = SP.getBoolean("wear_detailed_delta", false);
         if (units.equals(Constants.MGDL)) {
-            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+            if (detailed) {
+                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+            } else {
+                deltastring += DecimalFormatter.to0Decimal(Math.abs(deltaMGDL));
+            }
         } else {
-            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+            if (detailed){
+                deltastring += DecimalFormatter.to2Decimal(Math.abs(deltaMMOL));
+            } else {
+                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+            }
         }
         return deltastring;
     }
@@ -310,7 +316,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (last_bg == null) return;
 
         List<BgReading> graph_bgs = MainApp.getDbHelper().getBgreadingsDataFromTime(startTime, true);
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData(true);
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
@@ -328,6 +334,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             entries.putDataMapArrayList("entries", dataMaps);
             new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
         }
+        sendPreferences();
         sendBasals();
         sendStatus();
     }
@@ -470,7 +477,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(OPEN_SETTINGS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("openSettings", "openSettings");
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
@@ -483,7 +490,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BOLUS_PROGRESS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("bolusProgress", "bolusProgress");
             dataMapRequest.getDataMap().putString("progressstatus", status);
             dataMapRequest.getDataMap().putInt("progresspercent", progresspercent);
@@ -498,7 +505,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(ACTION_CONFIRMATION_REQUEST_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("actionConfirmationRequest", "actionConfirmationRequest");
             dataMapRequest.getDataMap().putString("title", title);
             dataMapRequest.getDataMap().putString("message", message);
@@ -514,14 +521,75 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private void sendStatus() {
+
         if (googleApiClient.isConnected()) {
 
-            String status = generateStatusString();
+            TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.updateTotalIOBTreatments();
+            IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
+            treatmentsInterface.updateTotalIOBTempBasals();
+            IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
+
+            String iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+            String iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            String cobString = generateCOBString();
+            String currentBasal = generateBasalString(treatmentsInterface);
+
+            //bgi
+            String bgiString = "";
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            if(profile!=null) {
+                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
+                bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+            }
+
+            String status = generateStatusString(profile, currentBasal,iobSum, iobDetail, bgiString);
+
+            //batteries
+            int phoneBattery = getBatteryLevel(getApplicationContext());
+            String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
+
+
+            long openApsStatus = -1;
+            //OpenAPS status
+            if(Config.APS){
+                //we are AndroidAPS
+                openApsStatus = LoopPlugin.lastRun != null && LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime(): -1;
+            } else {
+                //NSClient or remote
+                openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
+            }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
-            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("externalStatusString", status);
+            dataMapRequest.getDataMap().putString("iobSum", iobSum);
+            dataMapRequest.getDataMap().putString("iobDetail", iobDetail);
+            dataMapRequest.getDataMap().putBoolean("detailedIob", mPrefs.getBoolean("wear_detailediob", false));
+            dataMapRequest.getDataMap().putString("cob", cobString);
+            dataMapRequest.getDataMap().putString("currentBasal", currentBasal);
+            dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
+            dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
+            dataMapRequest.getDataMap().putLong("openApsStatus", openApsStatus);
+            dataMapRequest.getDataMap().putString("bgi", bgiString);
+            dataMapRequest.getDataMap().putBoolean("showBgi", mPrefs.getBoolean("wear_showbgi", false));
+            dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
+            PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+        } else {
+            Log.e("SendStatus", "No connection to wearable available!");
+        }
+    }
+
+    private void sendPreferences() {
+        if (googleApiClient.isConnected()) {
+
+            boolean wearcontrol = SP.getBoolean("wearcontrol", false);
+
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
+            //unique content
+            dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
@@ -530,10 +598,10 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     @NonNull
-    private String generateStatusString() {
+    private String generateStatusString(Profile profile, String currentBasal, String iobSum, String iobDetail, String bgiString) {
+
         String status = "";
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) {
             status = MainApp.sResources.getString(R.string.noprofile);
             return status;
@@ -548,36 +616,54 @@ public class WatchUpdaterService extends WearableListenerService implements
             lastLoopStatus = true;
         }
 
-        //Temp basal
-        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-
-        if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
-            status += activeTemp.toStringShort();
-
+        String iobString = "";
+        if (mPrefs.getBoolean("wear_detailediob", false)) {
+            iobString = iobSum + " " + iobDetail;
+        } else {
+            iobString = iobSum + "U";
         }
 
-        //IOB
-        treatmentsInterface.updateTotalIOBTreatments();
-        IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
-        treatmentsInterface.updateTotalIOBTempBasals();
-        IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += currentBasal + " " + iobString;
 
-        if (mPrefs.getBoolean("wear_detailediob", true)) {
-            status += "("
-                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+        //add BGI if shown, otherwise return
+        if (mPrefs.getBoolean("wear_showbgi", false)) {
+            status += " " + bgiString;
         }
-        if (!mPrefs.getBoolean("wear_showbgi", false)) {
-            return status;
-        }
-
-        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
-
-        status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
 
         return status;
+    }
+
+    @NonNull
+    private String generateBasalString(TreatmentsInterface treatmentsInterface) {
+
+        String basalStringResult;
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null)
+            return "";
+
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            basalStringResult = activeTemp.toStringShort();
+        } else {
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
+                basalStringResult = "100%";
+            } else {
+                basalStringResult = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
+            }
+        }
+        return basalStringResult;
+    }
+
+    @NonNull
+    private String generateCOBString() {
+
+        String cobStringResult = "--";
+        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData("WatcherUpdaterService");
+        if (autosensData != null) {
+            cobStringResult = (int) autosensData.cob + "g";
+        }
+        return cobStringResult;
     }
 
     @Override

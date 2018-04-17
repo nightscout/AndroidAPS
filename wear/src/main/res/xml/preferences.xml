@@ -18,26 +18,34 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/input_design"
-        android:entryValues="@array/input_design_values"
-        android:key="input_design"
-        android:summary="Input Design"
-        android:title="Input Design" />
-
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showExternalStatus"
-        android:title="Show Loop Status"
+        android:defaultValue="false"
+        android:key="show_date"
+        android:title="Show Date"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="highlight_basals"
-        android:summary="Better visible basal rate and temp basals"
-        android:title="Highlight Basals"
+        android:defaultValue="true"
+        android:key="show_iob"
+        android:title="Show IOB"
+        android:summary="Show insulin on board."
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_cob"
+        android:title="Show COB"
+        android:summary="Show carb on board."
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showDelta"
+        android:summary="Show delta. (Circle WF)"
+        android:title="Show Delta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -51,19 +59,47 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="dark"
-        android:summary="Dark theme"
-        android:title="Dark"
+        android:key="show_uploader_battery"
+        android:title="Show Phone Battery"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="show_rig_battery"
+        android:title="Show Rig Battery"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_temp_basal"
+        android:title="Show Basal Rate"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showExternalStatus"
+        android:title="Show Loop Status"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showBG"
+        android:summary="Show BG. (Circle WF)"
+        android:title="Show BG"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
-    <ListPreference
-        android:defaultValue="3"
-        android:entries="@array/chart_timeframe"
-        android:entryValues="@array/chart_timeframe_values"
-        android:key="chart_timeframe"
-        android:summary="Chart Timeframe"
-        android:title="Chart Timeframe" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_direction"
+        android:summary="Show direction arrow"
+        android:title="Show Direction Arrow"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
@@ -75,19 +111,43 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="showDelta"
-        android:summary="Show delta. (Circle WF)"
-        android:title="Show Delta"
+        android:key="dark"
+        android:summary="Dark theme"
+        android:title="Dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showBG"
-        android:summary="Show BG. (Circle WF)"
-        android:title="Show BG"
+        android:defaultValue="false"
+        android:key="highlight_basals"
+        android:summary="Better visible basal rate and temp basals"
+        android:title="Highlight Basals"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
+    <ListPreference
+        android:defaultValue="3"
+        android:entries="@array/chart_timeframe"
+        android:entryValues="@array/chart_timeframe_values"
+        android:key="chart_timeframe"
+        android:summary="Chart Timeframe"
+        android:title="Chart Timeframe" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="input_design"
+        android:summary="Input Design"
+        android:title="Input Design" />
+
+    <ListPreference
+        android:defaultValue="2"
+        android:entries="@array/delta_granularity"
+        android:entryValues="@array/delta_granularity_values"
+        android:key="delta_granularity"
+        android:summary="Delta Granularity (Steampunk)"
+        android:title="Delta Granularity (Steampunk)" />
 
     <CheckBoxPreference
         android:defaultValue="false"

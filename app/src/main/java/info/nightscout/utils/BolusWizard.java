@@ -6,6 +6,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by mike on 11.10.2016.
@@ -13,15 +14,15 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 
 public class BolusWizard {
     // Inputs
-    Profile specificProfile = null;
-    TempTarget tempTarget;
+    private Profile specificProfile = null;
+    private TempTarget tempTarget;
     public Integer carbs = 0;
-    Double bg = 0d;
-    Double correction;
-    Boolean includeBolusIOB = true;
-    Boolean includeBasalIOB = true;
-    Boolean superBolus = false;
-    Boolean trend = false;
+    private Double bg = 0d;
+    private Double correction;
+    private Boolean includeBolusIOB = true;
+    private Boolean includeBasalIOB = true;
+    public Boolean superBolus = false;
+    private Boolean trend = false;
 
     // Intermediate
     public Double sens = 0d;
@@ -70,7 +71,9 @@ public class BolusWizard {
             targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, specificProfile.getUnits());
             targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, specificProfile.getUnits());
         }
-        if (bg <= targetBGLow) {
+        if (bg >= targetBGLow && bg <= targetBGHigh) {
+            bgDiff = 0d;
+        } else if (bg <= targetBGLow) {
             bgDiff = bg - targetBGLow;
         } else {
             bgDiff = bg - targetBGHigh;
@@ -124,7 +127,7 @@ public class BolusWizard {
             calculatedTotalInsulin = 0d;
         }
 
-        double bolusStep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        double bolusStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
         return calculatedTotalInsulin;

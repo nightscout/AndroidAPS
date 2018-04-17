@@ -13,9 +13,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -24,8 +24,16 @@ import info.nightscout.utils.SP;
 public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(SimpleProfilePlugin.class);
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = true;
+    private static SimpleProfilePlugin simpleProfilePlugin;
+
+    public static SimpleProfilePlugin getPlugin() {
+        if (simpleProfilePlugin == null)
+            simpleProfilePlugin = new SimpleProfilePlugin();
+        return simpleProfilePlugin;
+    }
+
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
     private static ProfileStore convertedProfile = null;
 
@@ -38,7 +46,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     Double targetLow;
     Double targetHigh;
 
-    public SimpleProfilePlugin() {
+    private SimpleProfilePlugin() {
         loadSettings();
     }
 
@@ -103,6 +111,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     public void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");
@@ -117,8 +130,10 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         editor.putString("SimpleProfile" + "targetlow", targetLow.toString());
         editor.putString("SimpleProfile" + "targethigh", targetHigh.toString());
 
-        editor.commit();
+        editor.apply();
         createConvertedProfile();
+        if (Config.logPrefsChange)
+            log.debug("Storing settings: " + getRawProfile().getData().toString());
     }
 
     private void loadSettings() {
@@ -128,12 +143,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         mgdl = SP.getBoolean("SimpleProfile" + "mgdl", true);
         mmol = SP.getBoolean("SimpleProfile" + "mmol", false);
         dia = SP.getDouble("SimpleProfile" + "dia", Constants.defaultDIA);
-        ic = SP.getDouble("SimpleProfile" + "ic", 20d);
-        isf = SP.getDouble("SimpleProfile" + "isf", 200d);
-        basal = SP.getDouble("SimpleProfile" + "basal", 1d);
-        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 80d);
-        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 120d);
-        createConvertedProfile();
+        ic = SP.getDouble("SimpleProfile" + "ic", 0d);
+        isf = SP.getDouble("SimpleProfile" + "isf", 0d);
+        basal = SP.getDouble("SimpleProfile" + "basal", 0d);
+        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 0d);
+        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 0d);
     }
 
     /*
@@ -174,7 +188,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
             "created_at": "2016-06-16T08:34:41.256Z"
         }
         */
-    void createConvertedProfile() {
+    private void createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
@@ -198,6 +212,16 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+        if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile)))
+            return null;
+        return convertedProfile;
+    }
+
+    public ProfileStore getRawProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
         return convertedProfile;
     }
 

@@ -115,7 +115,7 @@
     <string name="danar_historyreload">Ricaricare</string>
     <string name="danar_invalidinput">Data Errata</string>
     <string name="danar_iob_label">IOB Microinfusore</string>
-    <string name="danar_lastbolus">Ultimo Bolo</string>
+    <string name="pump_lastbolus_label">Ultimo Bolo</string>
     <string name="danar_password_title">Password Microinfusore</string>
     <string name="danar_pump_settings">Setting Micro</string>
     <string name="danar_refill">ricarica</string>
@@ -330,7 +330,6 @@
     <string name="save">Salva</string>
     <string name="send">Esci</string>
     <string name="setbasalquestion">Accettare il nuovo basale temp</string>
-    <string name="send_to_pump">INVIARE ALLA POMPA</string>
     <string name="setextendedbolusquestion">Impostare il nuovo bollo esteso</string>
     <string name="setting_imported">Impostazioni importate</string>
     <string name="settingextendedbolus">Impostazioni aggiuntive bolus</string>
@@ -373,7 +372,6 @@
     <string name="suspendloopfor1h">Sospendi loop per 1h</string>
     <string name="suspendloopfor2h">Sospendi loop per 2h</string>
     <string name="suspendloopfor3h">Sospendi loop per 3h</string>
-    <string name="syncprofiletopump_title">Sincronizza profilo sul micro</string>
     <string name="target_range">Target range:</string>
     <string name="teenage">Adolescente</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
@@ -414,7 +412,7 @@
     <string name="objectives_6_objective">Abilitazione di funzioni aggiuntive per l\'uso quotidiano, ad esempio assistenza avanzata del pasto</string>
     <string name="objectives_manualenacts"></string>
     <string name="virtualpump_sqlerror">Errore SQL</string>
-    <string name="virtualpump_tempbasal_label">Basale temporale</string>
+    <string name="pump_tempbasal_label">Basale temporale</string>
     <string name="visible">Visibile</string>
     <string name="vitualpump_label">Pompa Virtuale</string>
     <string name="waitingforpump">In attesa del micro</string>
@@ -422,7 +420,6 @@
     <string name="waitingforpumpclicktorefresh">Attesa Micro. Clicca per rinnovare</string>
     <string name="wear_showbgi_title">Visualizza BGI</string>
     <string name="wrongpassword">Password Errata</string>
-    <string name="wrongpumpdriverselected">Driver Micro Errato</string>
     <string name="wrongpumppassword">Password Micro Errata</string>
     <string name="xdrip">Xdrip</string>
     <string name="xdripnotinstalled">xDrip non installato</string>
@@ -440,12 +437,12 @@
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="virtualpump_settings">Impostazioni del Micro virtuale</string>
     <string name="virtualpump_resultok">ok</string>
-    <string name="virtualpump_reservoir_label">Serbatoio</string>
-    <string name="virtualpump_lastconnection_label">Ultima conessione</string>
+    <string name="pump_reservoir_label">Serbatoio</string>
+    <string name="pump_lastconnection_label">Ultima conessione</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_extendedbolus_label">Bolo Esteso</string>
-    <string name="virtualpump_battery_label">Batteria</string>
-    <string name="virtualpump_basebasalrate_label">Base basale</string>
+    <string name="pump_battery_label">Batteria</string>
+    <string name="pump_basebasalrate_label">Base basale</string>
     <string name="virtualpump">Micro Virtuale</string>
     <string name="uploading">UpLoading</string>
     <string name="updatingbasalrates">Aggiornamento basale</string>
@@ -476,7 +473,7 @@
     <string name="tempbasals_realduration_label_string">DUR:</string>
     <string name="tempbasaldeliveryerror">Errore di somministrazione basale temporale</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Basale temporanea %.2fU/h for %d min avviata con successo</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Sospendi il loop per %d minuti riprendi</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">Sospendi il loop per %d minuti riprendi %s</string>
     <string name="smscommunicator_calibrationsent">La calibrazione è stata inviata. La ricezione deve essere abilitata in xDrip.</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Per interrompere la risposta basale della temperatura con il codice %s</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>

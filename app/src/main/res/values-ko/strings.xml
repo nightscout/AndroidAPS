@@ -48,11 +48,11 @@
     <string name="treatments_wizard_total_label">총</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="vitualpump_label">가상 펌프</string>
-    <string name="virtualpump_basebasalrate_label">기본 기초주입량</string>
-    <string name="virtualpump_tempbasal_label">임시기초주입</string>
+    <string name="pump_basebasalrate_label">기본 기초주입량</string>
+    <string name="pump_tempbasal_label">임시기초주입</string>
     <string name="virtualpump_extendedbolus_label">확장식사주입</string>
-    <string name="virtualpump_battery_label">배터리</string>
-    <string name="virtualpump_reservoir_label">인슐린 잔량</string>
+    <string name="pump_battery_label">배터리</string>
+    <string name="pump_reservoir_label">인슐린 잔량</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL 에러</string>
     <string name="openapsma_lastrun_label">최근 실행</string>
@@ -129,9 +129,9 @@
     <string name="apsmode_title">APS 모드</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
-    <string name="disabledloop">Loop 비활성화됨</string>
-    <string name="disableloop">Loop 비활성화하기</string>
-    <string name="enableloop">Loop 활성화하기</string>
+    <string name="disabledloop">Loop 중지됨</string>
+    <string name="disableloop">Loop 중지하기</string>
+    <string name="enableloop">Loop 실행하기</string>
     <string name="openloop_newsuggestion">새로운 제안이 있습니다</string>
     <string name="unsupportedclientver">지원하지 않는 NSClient 버전입니다</string>
     <string name="unsupportednsversion">지원하지 않는 Nightscout 버전입니다</string>
@@ -183,7 +183,7 @@
     <string name="overview_tempbasal_button">임시기초주입</string>
     <string name="overview_extendedbolus_button">확장식사주입</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
-    <string name="send">보내기</string>
+    <string name="send">전송하기</string>
     <string name="missing">Missing</string>
     <string name="enabled">사용</string>
     <string name="visible">보이기</string>
@@ -213,7 +213,6 @@
     <string name="connecting">연결중</string>
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="syncprofiletopump_title">프로파일을 펌프에 동기화하기</string>
     <string name="danar_pump_settings">다나R 펌프 설정</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
@@ -225,7 +224,7 @@
     <string name="connectionerror">펌프 연결 에러</string>
     <string name="danar_iob_label">펌프 IOB</string>
     <string name="danar_dailyunits">일 인슐린 총량</string>
-    <string name="danar_lastbolus">최근 식사주입:</string>
+    <string name="pump_lastbolus_label">최근 식사주입:</string>
     <string name="hoursago">시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
@@ -253,13 +252,12 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
-    <string name="careportal_temporarytarget">임시 목표</string>
-    <string name="careportal_temporarytargetcancel">임시 목표 취소</string>
+    <string name="careportal_temporarytarget">임시목표</string>
+    <string name="careportal_temporarytargetcancel">임시목표 취소</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>
     <string name="danarprofile_dia">인슐린활동시간(DIA) [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">기초주입 프로파일 갱신 실패</string>
-    <string name="danar_history">과거기록</string>
     <string name="danar_historyreload">새로고침</string>
     <string name="uploading">업로드중</string>
     <string name="danar_ebolus">E bolus</string>
@@ -307,14 +305,15 @@
     <string name="objectives_5_objective">필요하면 기초주입과 비율을 조절하고, auto-sens를 활성화한다.</string>
     <string name="objectives_5_gate">평소의 탄수화물을 입력하면서 1주일동안 낮시간대에 loop를 성공적으로 사용해본다.</string>
     <string name="objectives_6_objective">AMA(Advanced Meal Assist)같은 낮시간대를 위한 추가적인 기능들을 실행하여 본다.</string>
+    <string name="objectives_7_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해본다.</string>
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>
     <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">값 %s 은 하드리밋(Hard Limit)를 벗어났습니다</string>
+    <string name="openapsma_valuelimitedto" formatted="false">%.2f, %.2f으로 제한됨</string>
+    <string name="openapsma_valueoutofrange" formatted="false">%s값이 하드리밋(Hard Limit)를 벗어났습니다</string>
     <string name="smscommunicator_remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 실행하려면 %s 를 입력하고 답장하세요</string>
@@ -342,16 +341,15 @@
     <string name="ns_upload_only_summary">NS에 업로드만 하기. 로컬소스(xDrip)가 선택되지 않으면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
     <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
     <string name="pumpNotInitializedProfileNotSet">펌프가 초기화와 프로파일 설정이 되지 않았습니다!</string>
-    <string name="primefill">공기/채움</string>
+    <string name="primefill">교체/채움</string>
     <string name="fillwarning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
     <string name="othersettings_title">기타</string>
-    <string name="fillbolus_title">공기/채움 기본 인슐린양</string>
+    <string name="fillbolus_title">교체/채움 기본 인슐린양</string>
     <string name="button1">버튼1</string>
     <string name="button2">버튼2</string>
     <string name="button3">버튼3</string>
     <string name="percentagefactor_hint">Percentage factor by which the base profile will be multiplied.</string>
     <string name="timeshift_hint">Time in hours by which the profile will be shifted round robin.</string>
-    <string name="send_to_pump">SEND TO PUMP</string>
     <string name="units">Units:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -374,7 +372,6 @@
     <string name="pumpshutdown">펌프 중지</string>
     <string name="batterydischarged">펌프배터리 방전</string>
     <string name="danarkoreanpump">다나R 한글</string>
-    <string name="wrongpumpdriverselected">펌프 드라이버가 잘못 선택되었습니다</string>
     <string name="basal_rate">기초주입량:</string>
     <string name="profile_set_failed">기초주입 프로파일 설정이 실패하였습니다</string>
     <string name="profile_set_ok">기초주입 프로파일이 펌프에 업데이트 되었습니다</string>
@@ -388,20 +385,20 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">연속 알림</string>
     <string name="old_data">OLD DATA</string>
-    <string name="minago">%d분전</string>
-    <string name="sms_minago">%dmin ago</string>
+    <string name="minago" formatted="false">%d분전</string>
+    <string name="sms_minago" formatted="false">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Short avg. delta</string>
     <string name="long_avgdelta">Long avg. delta</string>
-    <string name="array_of_elements">Array of %d elements.\nActual value:</string>
+    <string name="array_of_elements" formatted="false">Array of %d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">AMA autosens 기능 사용하기</string>
     <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
-    <string name="removerecord">Remove record:</string>
+    <string name="removerecord">기록 삭제:</string>
     <string name="danar_stats">DanaR 통계</string>
     <string name="danar_stats_cumulative_tdd">누적 일총량</string>
     <string name="danar_stats_expweight">지수가중 일총량</string>
@@ -412,7 +409,7 @@
     <string name="danar_stats_ratio">비율</string>
     <string name="danar_stats_amount_days">#일</string>
     <string name="danar_stats_weight">가중</string>
-    <string name="danar_stats_warning_Message">공기/채움을 위해 식사주입을 사용한 경우 부정확할 수 있습니다!!</string>
+    <string name="danar_stats_warning_Message">교체/채움을 위해 식사주입을 사용한 경우 부정확할 수 있습니다!!</string>
     <string name="danar_stats_olddata_Message">오래된 데이터입니다. "새로고침"을 누르세요.</string>
     <string name="danar_stats_tbb">총기초량</string>
     <string name="danar_stats_tbb2">총기초량 * 2</string>
@@ -440,7 +437,7 @@
     <string name="always_use_shortavg">단순델타값 대신 단기평균델타값을 항상 사용합니다.</string>
     <string name="always_use_shortavg_summary">xDrip의 혈당데이터에 노이즈가 심할경우 유용합니다.</string>
     <string name="advancedsettings_title">고급 설정</string>
-    <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="danar_model" formatted="false">모델: %02X 프로토콜: %02X 코드: %02X</string>
     <string name="profile">프로파일</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대기초주입량보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 "3x max daily; 4x current"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 "3x max daily; 4x current"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이 값은 펌프에 설정된 최대기초주입량과 관계없이, 설정된 현재시간의 기초주입량에 이 값을 곱한 양을 초과할 수 없게됩니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
@@ -452,12 +449,12 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
-    <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
+    <string name="error_only_numeric_digits_range_allowed" formatted="false">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
     <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
     <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
-    <string name="copy_to_clipboard">Copy To Clipboard</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copy_to_clipboard">클립보드에 복사</string>
+    <string name="copied_to_clipboard">클립보드에 복사되었습니다</string>
     <string name="nav_show_logcat">로그 보기</string>
     <string name="overview_calibration">보정</string>
     <string name="overview_calibration_bg_label">혈당 보정</string>
@@ -479,7 +476,7 @@
     <string name="disconnecting">연결끊기중</string>
     <string name="executing">실행중</string>
     <string name="virtualpump_settings">가상펌프 설정</string>
-    <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
+    <string name="virtualpump_uploadstatus_title">NS에 상태 업로드하기</string>
     <string name="wrongpassword">잘못된 비밀번호</string>
     <string name="settings_password">설정 비밀번호</string>
     <string name="unlock_settings">설정 잠금해제</string>
@@ -487,7 +484,7 @@
     <string name="nsclientinternal">내장 NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
-    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="nsclientinternal_autoscroll">자동스크롤</string>
     <string name="restart">Restart</string>
     <string name="nsclientinternal_title">내장 NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
@@ -503,13 +500,13 @@
     <string name="show_queue">Show queue</string>
     <string name="queue">Queue:</string>
     <string name="status">Status:</string>
-    <string name="paused">Paused</string>
+    <string name="paused">일시중지</string>
     <string name="clearlog">Clear log</string>
     <string name="nowritepermission">NSCLIENT이 쓰기 권한이 없습니다. 잘못된 API secret인지 확인해보세요</string>
     <string name="wear_settings">웨어 설정</string>
     <string name="wear_detailedIOB_title">IOB 자세하게 보여주기</string>
     <string name="wear_detailedIOB_summary">워치페이스에 IOB를 식사주입IOB와 기초주입IOB로 나누어서 보여줍니다.</string>
-    <string name="nosuccess">not successful - please check phone</string>
+    <string name="nosuccess">성공하지 못했습니다. 폰을 확인하세요</string>
     <string name="notavailable">알수없음</string>
     <string name="patientage">나이</string>
     <string name="child">어린이</string>
@@ -519,10 +516,9 @@
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
     <string name="pleaseallowpermission">권한을 허용하세요.</string>
-    <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor" formatted="false">일시중지중 (%d분)</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d분)</string>
+    <string name="loopsuperbolusfor" formatted="false">수퍼 식사주입 (%d분)</string>
     <string name="loopmenu">Loop 메뉴</string>
     <string name="suspendloopfor1h">1시간동안 Loop 일시중지</string>
     <string name="suspendloopfor2h">2시간동안 Loop 일시중지</string>
@@ -533,32 +529,32 @@
     <string name="disconnectpumpfor2h">2시간동안 펌프 일시중지</string>
     <string name="disconnectpumpfor3h">3시간동안 펌프 일시중지</string>
     <string name="disconnectpumpfor10h">10시간동안 펌프 일시중지</string>
-    <string name="resume">재시작</string>
+    <string name="resume">재실행</string>
     <string name="smscommunicator_wrongduration">기간이 잘못되었습니다.</string>
-    <string name="smscommunicator_loopsuspended">Loop가 일시중지되었습니다.</string>
-    <string name="smscommunicator_loopresumed">Loop가 재시작되었습니다.</string>
+    <string name="smscommunicator_loopsuspended">Loop가 일시중지 되었습니다.</string>
+    <string name="smscommunicator_loopresumed">Loop가 재실행 되었습니다.</string>
     <string name="treatments_wizard_bgtrend_label">15분 추이</string>
     <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
+    <string name="superbolus">수퍼 식사주입</string>
     <string name="ns_logappstartedevent">앱시작을 NS에 기록하기</string>
     <string name="restartingapp">설정을 적용하기위해 앱을 종료합니다.</string>
-    <string name="danarv2pump">DanaRv2</string>
+    <string name="danarv2pump">다나Rv2</string>
     <string name="configbuilder_insulin">인슐린</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <string name="fastactinginsulincomment">노보래피드, 휴마로그, 에피드라</string>
+    <string name="ultrafastactinginsulincomment">피아스프(Fiasp)</string>
     <string name="insulin_shortname">INS</string>
     <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
-    <string name="enablesuperbolus">마법사에서 Superbolus 활성화하기</string>
-    <string name="enablesuperbolus_summary">마법사에서 Superbolus 기능을 활성화합니다. 어떤 기능인지 확실히 알기전까지 활성화 하지 마세요. 제대로 알지 못하고 사용하면 일슐린이 과다 주입될 수 있습니다!</string>
+    <string name="enablesuperbolus">마법사에서 수퍼 식사주입 활성화하기</string>
+    <string name="enablesuperbolus_summary">마법사에서 수퍼 식사주입 기능을 활성화합니다. 어떤 기능인지 확실히 알기전까지 활성화 하지 마세요. 제대로 알지 못하고 사용하면 일슐린이 과다 주입될 수 있습니다!</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="predictionshortlabel">PRE</string>
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">펌웨어</string>
-    <string name="virtualpump_lastconnection_label">최근 연결</string>
+    <string name="pump_lastconnection_label">최근 연결</string>
     <string name="danar_bluetooth_status">블루투스 상태</string>
-    <string name="nav_about">About</string>
+    <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
     <string name="dev">DEV</string>
     <string name="xdripstatus_settings">xDrip 상태(워치)</string>
@@ -587,15 +583,15 @@
     <string name="careportal_pbage_label">펌프배터리사용기간</string>
     <string name="careportal_pumpbatterychange">펌프 배터리 교체</string>
     <string name="ns_alarmoptions">알람 옵션</string>
-    <string name="nsalarm_urgenthigh">Urgent high</string>
-    <string name="nsalarm_high">High</string>
-    <string name="nsalarm_low">Low</string>
-    <string name="nsalarm_urgentlow">Urgent low</string>
+    <string name="nsalarm_urgenthigh">위험 고혈당</string>
+    <string name="nsalarm_high">고혈당</string>
+    <string name="nsalarm_low">저혈당</string>
+    <string name="nsalarm_urgentlow">위험 저혈당</string>
     <string name="nsalarm_summary" formatted="false">Currently set to %f</string>
-    <string name="nsalarm_staledata">Stale data</string>
-    <string name="nsalarm_urgentstaledata">Urgent stale data</string>
-    <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
-    <string name="nsalarm_urgent_staledatavalue_label">Urgent stale data threshold [min]</string>
+    <string name="nsalarm_staledata">누락 데이터</string>
+    <string name="nsalarm_urgentstaledata">위험 누락 데이터</string>
+    <string name="nsalarm_staledatavalue_label">누락 데이터 기준값[분]</string>
+    <string name="nsalarm_urgent_staledatavalue_label">위험 누락 데이터 기준값[분]</string>
     <string name="openapsama_autosens_period">autosens 시간 [h]</string>
     <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
     <string name="ratio_short">SEN</string>
@@ -607,8 +603,8 @@
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Sensitivity Oref0</string>
-    <string name="sensitivityaaps">Sensitivity AAPS</string>
+    <string name="sensitivityoref0">민감도 Oref0</string>
+    <string name="sensitivityaaps">민감도 AAPS</string>
     <string name="absorptionsettings_title">흡수 설정</string>
     <string name="absorption_maxtime_title">식사 최대 흡수 시간 [h]</string>
     <string name="absorption_maxtime_summary">식사로 섭취한 탄수화물이 모두 흡수될기까지 예상되는 시간</string>
@@ -624,7 +620,7 @@
     <string name="lock_screen">화면 잠금</string>
     <string name="lock_screen_short">잠금</string>
     <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
-    <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
+    <string name="sensitivityweightedaverage">민감도 가중평균</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Cancel</string>
     <string name="cpp_sync_setting_missing">needs to be activated to send values to the pump!</string>
@@ -640,14 +636,101 @@
     <string name="careportal_pump_label">펌프</string>
     <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
-    <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="insulin_oref_peak">IOB 커브 피크 시간</string>
+    <string name="insulin_peak_time">피크 시간[분]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short" formatted="false">"DIA of %s too short - using %s instead!"</string>
-    <string name="activate_profile">ACTIVATE PROFILE</string>
+    <string name="dia_too_short" formatted="false">"DIA %s는 너무 짧습니다. 대신 %s을 사용하세요!"</string>
+    <string name="activate_profile">프로파일 활성화하기</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
-    <string name="app_name">AndroidAPS</string>
+    <string name="waitingforpairing">펌프연동 대기중</string>
+    <string name="pairingok">연동완료</string>
+    <string name="pairingtimedout">연동시간초과</string>
+    <string name="pairing">연동중</string>
+    <string name="danars_nodeviceavailable">현재까지 발견된 기기가 없습니다.</string>
+    <string name="emptyreservoir">빈 주사기</string>
+    <string name="bloodsugarmeasurementalert">혈당측정알람</string>
+    <string name="remaininsulinalert">남은 인슐린 양</string>
+    <string name="danarspump">다나RS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="selectedpump">선택된 펌프</string>
+    <string name="pairpump">새 펌프와 연동</string>
+    <string name="bolusspeed">식사주입 속도</string>
+    <string name="danar_setbasalstep001">기초주입 단위를 0.01 U/h로 설정하세요</string>
+    <string name="serialnumber">시리얼번호</string>
+    <string name="careportal_newnstreatment_percentage_label">퍼센트</string>
+    <string name="careportal_newnstreatment_timeshift_label">시간 이동</string>
+    <string name="default_temptargets">임시목표 기본값</string>
+    <string name="eatingsoon_duration">eatingsoon 기간</string>
+    <string name="eatingsoon_target">eatingsoon 목표</string>
+    <string name="activity_duration">activity 기간</string>
+    <string name="activity_target">activity 목표</string>
+    <string name="danar_history_prime">교체</string>
+    <string name="gettingextendedbolusstatus">확장식사주입 상태 가져오는중</string>
+    <string name="gettingbolusstatus">식사주입상태 가져오는중</string>
+    <string name="gettingtempbasalstatus">임시기초주입상태 가져오는중</string>
+    <string name="gettingpumpsettings">펌프설정 가져오는중</string>
+    <string name="gettingpumptime">펌프시간 가져오는중</string>
+    <string name="reuse">재사용</string>
+    <string name="wearcontrol_title">워치로 작동하기</string>
+    <string name="wearcontrol_summary">임시목표와 관리입력을 워치로 설정합니다.</string>
+    <string name="connectiontimedout">연결시간초과</string>
+    <string name="food">음식</string>
+    <string name="shortgramm">g</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Fat</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="waitingforestimatedbolusend" formatted="false">식사주입 종료를 기다리고 있습니다. %d초 남았습니다.</string>
+    <string name="processinghistory">이벤트 처리중</string>
+    <string name="startingbolus">식사주입을 시작합니다.</string>
+    <string name="executingrightnow">명령을 지금 실행합니다.</string>
+    <string name="pumpdrivercorrected">펌프 드라이버가 수정되었습니다.</string>
+    <string name="pump_unreachable">펌프에 연결할 수 없습니다.</string>
+    <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
+    <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
+    <string name="localalertsettings_title">자체 경고 기능</string>
+    <string name="enable_missed_bg_readings_alert">혈당 데이터 누락시 경고하기</string>
+    <string name="enable_pump_unreachable_alert">펌프와 연결불가시 경고하기</string>
+    <string name="pump_unreachable_threshold">펌프 연결불가 기준시간[분]</string>
+    <string name="urgent_alarm">긴급 알람</string>
+    <string name="info">정보</string>
+    <string name="bluetooth">블루투스</string>
+    <string name="btwatchdog_title">블루투스 감시기능</string>
+    <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
+    <string name="DexcomG5">(패치된) DexcomG5 앱</string>
+    <string name="dexcomg5_nsupload_title">NS에 혈당데이터 업로드하기</string>
+    <string name="dexcomg5_upload">G5업로드 세팅</string>
+    <string name="customapp">Customized APK for download</string>
+    <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
+    <string name="wear_detailed_delta_summary">소수점 한자리 더 추가된 델타 보여주기</string>
+    <string name="unsupportedfirmware">지원되지 않는 펌프 펌웨어</string>
+    <string name="dexcomg5_xdripupload_title">혈당 데이터를 xDrip+에 전송하기</string>
+    <string name="dexcomg5_xdripupload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
+    <string name="minimalbasalvaluereplaced">지원되는 최소값으로 기초주입량이 대체되었습니다.</string>
+    <string name="overview_editquickwizard_usebg">혈당 계산</string>
+    <string name="overview_editquickwizard_usebolusiob">식사주입 IOB 계산</string>
+    <string name="overview_editquickwizard_usebasaliob">기초주입 IOB 계산</string>
+    <string name="overview_editquickwizard_usetrend">추세계산</string>
+    <string name="overview_editquickwizard_usesuperbolus">수퍼 식사주입 계산</string>
+    <string name="yes">네</string>
+    <string name="no">아니오</string>
+    <string name="positiveonly">양수만</string>
+    <string name="negativeonly">음수만</string>
+    <string name="overview_editquickwizard_usecob">COB 계산</string>
+    <string name="overview_editquickwizard_usetemptarget">임시목표 계산</string>
+    <string name="loopenabled">Loop 활성화됨</string>
+    <string name="apsselected">APS 선택됨</string>
+    <string name="nsclienthaswritepermission">NSClient가 쓰기권한이 있습니다</string>
+    <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
+    <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
+    <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
+    <string name="basalprofilenotaligned" formatted="false">기초주입값이 시간단위로 설정되지 않았습니다: %s</string>
+    <string name="zerovalueinprofile" formatted="false">유효하지 않은 프로파일: %s</string>
+    <string name="danar_history">펌프 이력</string>
+    <string name="extendedbolusdeliveryerror">확장식사주입 에러</string>
 </resources>

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Wear;
 
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -13,33 +12,35 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -67,8 +68,7 @@ public class ActionStringHandler {
 
     public synchronized static void handleInitiate(String actionstring) {
 
-        if (!BuildConfig.WEAR_CONTROL) return;
-
+        if (!SP.getBoolean("wearcontrol", false)) return;
 
         lastBolusWizard = null;
 
@@ -172,8 +172,8 @@ public class ActionStringHandler {
             } else if ("loop".equals(act[1])) {
                 rTitle += " LOOP";
                 rMessage = "TARGETS:\n" + getTargetsStatus();
-                rMessage += "\n\n" +  getLoopStatus();
-                rMessage += "\n\nOAPS RESULT:\n" +  getOAPSResultStatus();
+                rMessage += "\n\n" + getLoopStatus();
+                rMessage += "\n\nOAPS RESULT:\n" + getOAPSResultStatus();
             }
 
         } else if ("wizard".equals(act[0])) {
@@ -235,52 +235,50 @@ public class ActionStringHandler {
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
             if (useBasalIOB)
                 rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
-            if(percentage != 100){
-                rMessage += "\nPercentage: " +format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+            if (percentage != 100) {
+                rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U";
             }
 
             lastBolusWizard = bolusWizard;
 
-        } else if("opencpp".equals(act[0])){
-            Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
-            CircadianPercentageProfilePlugin cpp = MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
-
-            if(cpp == null || activeProfile==null || cpp != activeProfile){
-                sendError("CPP not activated!");
+        } else if ("opencpp".equals(act[0])) {
+            ProfileSwitch activeProfileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+            if (activeProfileSwitch == null) {
+                sendError("No active profile switch!");
                 return;
             } else {
                 // read CPP values
                 rTitle = "opencpp";
                 rMessage = "opencpp";
-                rAction = "opencpp" + " " + cpp.getPercentage() + " " + cpp.getTimeshift();
+                rAction = "opencpp" + " " + activeProfileSwitch.percentage + " " + activeProfileSwitch.timeshift;
             }
 
-        } else if("cppset".equals(act[0])){
-            Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
-            CircadianPercentageProfilePlugin cpp = MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
-
-            if(cpp == null || activeProfile==null || cpp != activeProfile){
-                sendError("CPP not activated!");
+        } else if ("cppset".equals(act[0])) {
+            ProfileSwitch activeProfileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+            if (activeProfileSwitch == null) {
+                sendError("No active profile switch!");
                 return;
             } else {
                 // read CPP values
-                rMessage = "CPP:" + "\n\n"+
-                            "Timeshift: " + act[1] + "\n" +
-                            "Percentage: " + act[2] + "%";
+                rMessage = "CPP:" + "\n\n" +
+                        "Timeshift: " + act[1] + "\n" +
+                        "Percentage: " + act[2] + "%";
                 rAction = actionstring;
             }
 
-        } else if("tddstats".equals(act[0])){
+        } else if ("tddstats".equals(act[0])) {
             Object activePump = MainApp.getConfigBuilder().getActivePump();
             PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
+            PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
             PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
             PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
 
 
-            if((dana == null || dana != activePump) &&
+            if ((dana == null || dana != activePump) &&
                     (danaV2 == null || danaV2 != activePump) &&
-                    (danaKorean == null || danaKorean != activePump)
-                    ){
+                    (danaKorean == null || danaKorean != activePump) &&
+                    (danaRS == null || danaRS != activePump)
+                    ) {
                 sendError("Pump does not support TDDs!");
                 return;
             } else {
@@ -288,7 +286,7 @@ public class ActionStringHandler {
                 List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
                 List<DanaRHistoryRecord> historyList = getTDDList(dummies);
 
-                if(isOldData(historyList)){
+                if (isOldData(historyList)) {
                     rTitle = "TDD";
                     rAction = "statusmessage";
                     rMessage = "OLD DATA - ";
@@ -299,20 +297,19 @@ public class ActionStringHandler {
                         rMessage += MainApp.instance().getString(R.string.pumpbusy);
                     } else {
                         rMessage += "trying to fetch data from pump.";
-                        Handler handler = new Handler(handlerThread.getLooper());
-                        handler.post(new Runnable() {
+
+                        ConfigBuilderPlugin.getCommandQueue().loadHistory(RecordTypes.RECORD_TYPE_DAILY, new Callback() {
                             @Override
                             public void run() {
-                                ((DanaRInterface)pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
                                 List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
                                 List<DanaRHistoryRecord> historyList = getTDDList(dummies);
-                                if(isOldData(historyList)){
+                                if (isOldData(historyList)) {
                                     sendStatusmessage("TDD", "TDD: Still old data! Cannot load from pump.");
                                 } else {
                                     sendStatusmessage("TDD", generateTDDMessage(historyList, dummies));
                                 }
-                            }
-                        });
+                                    }
+                                });
                     }
                 } else {
                     // if up to date: prepare, send (check if CPP is activated -> add CPP stats)
@@ -322,25 +319,27 @@ public class ActionStringHandler {
                 }
             }
 
-        }
-        else return;
+        } else return;
 
 
         // send result
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
+        WearPlugin.getPlugin().requestActionConfirmation(rTitle, rMessage, rAction);
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = rAction;
     }
 
     private static String generateTDDMessage(List<DanaRHistoryRecord> historyList, List<DanaRHistoryRecord> dummies) {
 
+        ProfileInterface activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+
+        if (activeProfile == null) {
+            return "No profile loaded :(";
+        }
+
         DateFormat df = new SimpleDateFormat("dd.MM.");
         String message = "";
 
-        CircadianPercentageProfilePlugin cpp = MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
-        boolean isCPP = (cpp!= null && cpp.isEnabled(PluginBase.PROFILE));
-        double refTDD = 100;
-        if(isCPP) refTDD = cpp.baseBasalSum()*2;
+        double refTDD = activeProfile.getProfile().getDefaultProfile().baseBasalSum() * 2;
 
         int i = 0;
         double sum = 0d;
@@ -364,15 +363,15 @@ public class ActionStringHandler {
             i++;
         }
         message += "weighted:\n";
-        message += "0.3: " + DecimalFormatter.to2Decimal(weighted03) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*weighted03/refTDD) + "%"):"") + "\n";
-        message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*weighted05/refTDD) + "%"):"") + "\n";
-        message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*weighted07/refTDD) + "%"):"") + "\n";
+        message += "0.3: " + DecimalFormatter.to2Decimal(weighted03) + "U " + (DecimalFormatter.to0Decimal(100 * weighted03 / refTDD) + "%") + "\n";
+        message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U " + (DecimalFormatter.to0Decimal(100 * weighted05 / refTDD) + "%") + "\n";
+        message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U " + (DecimalFormatter.to0Decimal(100 * weighted07 / refTDD) + "%") + "\n";
         message += "\n";
 
         PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
         if (pump != null && pump instanceof DanaRPlugin) {
             double tdd = DanaRPump.getInstance().dailyTotalUnits;
-            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*tdd/refTDD) + "%"):"") + "\n";
+            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n";
             message += "\n";
         }
 
@@ -380,7 +379,7 @@ public class ActionStringHandler {
         Collections.reverse(historyList);
         for (DanaRHistoryRecord record : historyList) {
             double tdd = record.recordDailyBolus + record.recordDailyBasal;
-            message += df.format(new Date(record.recordDate)) + " " +  DecimalFormatter.to2Decimal(tdd) +"U "  + (isCPP?(DecimalFormatter.to0Decimal(100*tdd/refTDD) + "%"):"") + (dummies.contains(record)?"x":"") +"\n";
+            message += df.format(new Date(record.recordDate)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (dummies.contains(record) ? "x" : "") + "\n";
         }
         return message;
     }
@@ -398,17 +397,17 @@ public class ActionStringHandler {
         historyList = historyList.subList(0, Math.min(10, historyList.size()));
 
         //fill single gaps
-        List<DanaRHistoryRecord> dummies = (returnDummies!=null)?returnDummies:(new LinkedList());
+        List<DanaRHistoryRecord> dummies = (returnDummies != null) ? returnDummies : (new LinkedList());
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        for(int i = 0; i < historyList.size()-1; i++){
+        for (int i = 0; i < historyList.size() - 1; i++) {
             DanaRHistoryRecord elem1 = historyList.get(i);
-            DanaRHistoryRecord elem2 = historyList.get(i+1);
+            DanaRHistoryRecord elem2 = historyList.get(i + 1);
 
-            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25*60*60*1000)))){
+            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25 * 60 * 60 * 1000)))) {
                 DanaRHistoryRecord dummy = new DanaRHistoryRecord();
-                dummy.recordDate = elem1.recordDate - 24*60*60*1000;
-                dummy.recordDailyBasal = elem1.recordDailyBasal/2;
-                dummy.recordDailyBolus = elem1.recordDailyBolus/2;
+                dummy.recordDate = elem1.recordDate - 24 * 60 * 60 * 1000;
+                dummy.recordDailyBasal = elem1.recordDailyBasal / 2;
+                dummy.recordDailyBolus = elem1.recordDailyBolus / 2;
                 dummies.add(dummy);
                 elem1.recordDailyBasal /= 2;
                 elem1.recordDailyBolus /= 2;
@@ -418,7 +417,7 @@ public class ActionStringHandler {
         Collections.sort(historyList, new Comparator<DanaRHistoryRecord>() {
             @Override
             public int compare(DanaRHistoryRecord lhs, DanaRHistoryRecord rhs) {
-                return (int) (rhs.recordDate-lhs.recordDate);
+                return (int) (rhs.recordDate - lhs.recordDate);
             }
         });
         return historyList;
@@ -426,7 +425,7 @@ public class ActionStringHandler {
 
     @NonNull
     private static String getPumpStatus() {
-        return MainApp.getConfigBuilder().shortStatus(false);
+        return ConfigBuilderPlugin.getActivePump().shortStatus(false);
     }
 
     @NonNull
@@ -505,12 +504,12 @@ public class ActionStringHandler {
         }
 
         if (!result.changeRequested) {
-           ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
+            ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
         } else if (result.rate == 0 && result.duration == 0) {
-            ret += MainApp.sResources.getString(R.string.canceltemp)+ "\n";
+            ret += MainApp.sResources.getString(R.string.canceltemp) + "\n";
         } else {
             ret += MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
-                    "(" + DecimalFormatter.to2Decimal(result.rate / MainApp.getConfigBuilder().getBaseBasalRate() * 100) + "%)\n" +
+                    "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getActivePump().getBaseBasalRate() * 100) + "%)\n" +
                     MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
         }
         ret += "\n" + MainApp.sResources.getString(R.string.reason) + ": " + result.reason;
@@ -521,7 +520,7 @@ public class ActionStringHandler {
 
     public synchronized static void handleConfirmation(String actionString) {
 
-        if (!BuildConfig.WEAR_CONTROL) return;
+        if (!SP.getBoolean("wearcontrol", false)) return;
 
 
         //Guard from old or duplicate confirmations
@@ -564,29 +563,43 @@ public class ActionStringHandler {
         } else if ("cppset".equals(act[0])) {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
-            setCPP(percentage, timeshift);
-        } else if ("dismissoverviewnotification".equals(act[0])){
+            setCPP(timeshift, percentage);
+        } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         }
         lastBolusWizard = null;
     }
 
-    private static void setCPP(int percentage, int timeshift) {
-        Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
-        CircadianPercentageProfilePlugin cpp = MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+    private static void setCPP(int timeshift, int percentage) {
 
-        if(cpp == null || activeProfile==null || cpp != activeProfile){
-            sendError("CPP not activated!");
-            return;
+        String msg = "";
+
+
+        //check for validity
+        if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
+            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage") + "\n";
         }
-        String msg = cpp.externallySetParameters(timeshift, percentage);
-        if(msg != null && !"".equals(msg)){
+        if (timeshift < 0 || timeshift > 23) {
+            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
+        }
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (profile == null || profile.getBasal() == null) {
+            msg += MainApp.sResources.getString(R.string.cpp_notloadedplugins) + "\n";
+        }
+        if (!"".equals(msg)) {
+            msg += MainApp.sResources.getString(R.string.cpp_valuesnotstored);
             String rTitle = "STATUS";
             String rAction = "statusmessage";
-            WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, msg, rAction);
+            WearPlugin.getPlugin().requestActionConfirmation(rTitle, msg, rAction);
             lastSentTimestamp = System.currentTimeMillis();
             lastConfirmActionString = rAction;
+            return;
         }
+
+        //send profile to pumpe
+        new NewNSTreatmentDialog(); //init
+        NewNSTreatmentDialog.doProfileSwitch(0, percentage, timeshift);
     }
 
     private static void generateTempTarget(int duration, double low, double high) {
@@ -609,16 +622,13 @@ public class ActionStringHandler {
     }
 
     private static void doFillBolus(final Double amount) {
-        //if(1==1)return;
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(new Runnable() {
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.insulin = amount;
+        detailedBolusInfo.isValid = false;
+        detailedBolusInfo.source = Source.USER;
+        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.insulin = amount;
-                detailedBolusInfo.isValid = false;
-                detailedBolusInfo.source = Source.USER;
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
                             "\n" +
@@ -629,16 +639,13 @@ public class ActionStringHandler {
     }
 
     private static void doBolus(final Double amount, final Integer carbs) {
-        //if(1==1)return;
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(new Runnable() {
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.insulin = amount;
+        detailedBolusInfo.carbs = carbs;
+        detailedBolusInfo.source = Source.USER;
+        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
-                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                detailedBolusInfo.insulin = amount;
-                detailedBolusInfo.carbs = carbs;
-                detailedBolusInfo.source = Source.USER;
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
                             "\n" +
@@ -649,14 +656,14 @@ public class ActionStringHandler {
     }
 
     private synchronized static void sendError(String errormessage) {
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("ERROR", errormessage, "error");
+        WearPlugin.getPlugin().requestActionConfirmation("ERROR", errormessage, "error");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
         lastBolusWizard = null;
     }
 
     private synchronized static void sendStatusmessage(String title, String message) {
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(title, message, "statusmessage");
+        WearPlugin.getPlugin().requestActionConfirmation(title, message, "statusmessage");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
         lastBolusWizard = null;
@@ -664,7 +671,7 @@ public class ActionStringHandler {
 
     public synchronized static void expectNotificationAction(String message, int id) {
         String actionstring = "dismissoverviewnotification " + id;
-        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("DISMISS", message, actionstring);
+        WearPlugin.getPlugin().requestActionConfirmation("DISMISS", message, actionstring);
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = actionstring;
         lastBolusWizard = null;

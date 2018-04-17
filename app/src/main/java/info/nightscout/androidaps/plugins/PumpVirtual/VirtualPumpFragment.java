@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -50,14 +51,20 @@ public class VirtualPumpFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.vitualpump_fragment, container, false);
-        basaBasalRateView = (TextView) view.findViewById(R.id.virtualpump_basabasalrate);
-        tempBasalView = (TextView) view.findViewById(R.id.virtualpump_tempbasal);
-        extendedBolusView = (TextView) view.findViewById(R.id.virtualpump_extendedbolus);
-        batteryView = (TextView) view.findViewById(R.id.virtualpump_battery);
-        reservoirView = (TextView) view.findViewById(R.id.virtualpump_reservoir);
+        try {
+            View view = inflater.inflate(R.layout.virtualpump_fragment, container, false);
+            basaBasalRateView = (TextView) view.findViewById(R.id.virtualpump_basabasalrate);
+            tempBasalView = (TextView) view.findViewById(R.id.virtualpump_tempbasal);
+            extendedBolusView = (TextView) view.findViewById(R.id.virtualpump_extendedbolus);
+            batteryView = (TextView) view.findViewById(R.id.virtualpump_battery);
+            reservoirView = (TextView) view.findViewById(R.id.virtualpump_reservoir);
 
-        return view;
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     @Subscribe
@@ -72,7 +79,7 @@ public class VirtualPumpFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    VirtualPumpPlugin virtualPump = VirtualPumpPlugin.getInstance();
+                    VirtualPumpPlugin virtualPump = VirtualPumpPlugin.getPlugin();
                     basaBasalRateView.setText(virtualPump.getBaseBasalRate() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                         tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());

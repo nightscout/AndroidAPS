@@ -58,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     static final int CASE_STORAGE = 0x1;
     static final int CASE_SMS = 0x2;
+    static final int CASE_LOCATION = 0x3;
 
     private boolean askForSMS = false;
+    private boolean askForLocation = true;
 
     ImageButton menuButton;
 
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CASE_STORAGE);
         }
         askForBatteryOptimizationPermission();
-        checkUpgradeToProfileTarget();
+        doMigrations();
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
@@ -110,12 +112,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                recreate();
-                try { // activity may be destroyed
-                    setUpTabs(true);
-                } catch (IllegalStateException e) {
-                    log.error("Unhandled exception", e);
+                if(ev.recreate) {
+                    recreate();
+                }else {
+                    try { // activity may be destroyed
+                        setUpTabs(true);
+                    } catch (IllegalStateException e) {
+                        log.error("Unhandled exception", e);
+                    }
                 }
+
                 boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
                 if (lockScreen)
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -156,6 +162,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }
     }
+
+    private void doMigrations() {
+
+        checkUpgradeToProfileTarget();
+
+        // guarantee that the unreachable threshold is at least 30 and of type String
+        // Added in 1.57 at 21.01.2018
+        Integer unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
+        SP.remove(R.string.key_pump_unreachable_threshold);
+        if(unreachable_threshold < 30) unreachable_threshold = 30;
+        SP.putString(R.string.key_pump_unreachable_threshold, unreachable_threshold.toString());
+    }
+
 
     private void checkUpgradeToProfileTarget() { // TODO: can be removed in the future
         boolean oldKeyExists = SP.contains("openapsma_min_bg");
@@ -202,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         askForSMSPermissions();
+        askForLocationPermissions();
     }
 
     @Override
@@ -256,6 +276,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private synchronized void askForLocationPermissions() {
+        if (askForLocation) { //only when settings were changed an MainActivity resumes.
+            askForLocation = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                askForPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION}, CASE_LOCATION);
+            }
+        }
+    }
+
     private void askForPermission(String[] permission, Integer requestCode) {
         boolean test = false;
         for (int i = 0; i < permission.length; i++) {
@@ -279,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         alert.setPositiveButton(R.string.ok, null);
                         alert.show();
                         break;
+                    case CASE_LOCATION:
                     case CASE_SMS:
                         break;
                 }
@@ -321,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     @Override
                                     public void run() {
                                         Intent i = new Intent(v.getContext(), PreferencesActivity.class);
+                                        i.putExtra("id", -1);
                                         startActivity(i);
                                     }
                                 }, null);
@@ -353,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             case R.id.nav_about:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                                 builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
-                                if (Config.NSCLIENT)
+                                if (Config.NSCLIENT|| Config.G5UPLOADER)
                                     builder.setIcon(R.mipmap.yellowowl);
                                 else
                                     builder.setIcon(R.mipmap.blueowl);

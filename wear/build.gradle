@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+ext {
+    supportLibraryVersion = "23.0.1"
+    wearableVersion = "2.0.1"    
+}
+
 def generateGitBuild = { ->
 
     StringBuilder stringBuilder = new StringBuilder();
@@ -23,7 +28,7 @@ def generateGitBuild = { ->
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
@@ -42,33 +47,6 @@ android {
 
     publishNonDefault true
 
-    productFlavors {
-        full {
-            applicationId = "info.nightscout.androidaps"
-            resValue "string", "label_xdrip", "AAPS"
-            resValue "string", "label_xdrip_large", "AAPS(Large)"
-            resValue "string", "label_xdrip_big_chart", "AAPS(BigChart)"
-            resValue "string", "label_xdrip_no_chart", "AAPS(NoChart)"
-            resValue "string", "label_xdrip_circle", "AAPS(Circle)"
-            resValue "string", "label_xdrip_activity", "AAPS Prefs."
-            resValue "string", "app_settings", "AAPS Settings"
-            buildConfigField "boolean", "WEAR_CONTROL", "true"
-
-        }
-
-        restricted {
-            applicationId = "info.nightscout.androidaps"
-            resValue "string", "label_xdrip", "AAPS"
-            resValue "string", "label_xdrip_large", "AAPS(Large)"
-            resValue "string", "label_xdrip_big_chart", "AAPS(BigChart)"
-            resValue "string", "label_xdrip_no_chart", "AAPS(NoChart)"
-            resValue "string", "label_xdrip_circle", "AAPS(Circle)"
-            resValue "string", "label_xdrip_activity", "AAPS Prefs."
-            resValue "string", "app_settings", "AAPS Settings"
-            buildConfigField "boolean", "WEAR_CONTROL", "false"
-
-        }
-    }
 }
 
 allprojects {
@@ -83,11 +61,12 @@ allprojects {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    //compile 'com.ustwo.android:clockwise-wearable:1.0.2'
-    compile 'com.google.android.support:wearable:1.4.0'
-    compile 'com.google.android.gms:play-services-wearable:7.3.0'
-    compile files('libs/hellocharts-library-1.5.5.jar')
-    compile(name:'ustwo-clockwise-debug', ext:'aar')
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
+    compile files("libs/hellocharts-library-1.5.5.jar")
+    //compile "com.ustwo.android:clockwise-wearable:1.0.2"
+    provided "com.google.android.wearable:wearable:${wearableVersion}"
+    compile "com.google.android.support:wearable:${wearableVersion}"
+    compile "com.google.android.gms:play-services-wearable:7.3.0"
+    compile(name:"ustwo-clockwise-debug", ext:"aar")
+    compile "com.android.support:support-v4:23.0.1"
+    compile "me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0"
 }

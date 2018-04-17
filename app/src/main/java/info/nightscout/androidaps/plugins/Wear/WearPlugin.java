@@ -29,10 +29,24 @@ import info.nightscout.utils.SP;
 
 public class WearPlugin implements PluginBase {
 
-    static boolean fragmentEnabled = Config.WEAR;
-    static boolean fragmentVisible = true;
+    private static boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
+
+    private static WearPlugin wearPlugin;
+
+    public static WearPlugin getPlugin() {
+        return wearPlugin;
+    }
+    public static WearPlugin initPlugin(Context ctx) {
+
+        if (wearPlugin == null) {
+            wearPlugin = new WearPlugin(ctx);
+        }
+
+        return wearPlugin;
+    }
 
     WearPlugin(Context ctx) {
         this.ctx = ctx;
@@ -103,6 +117,11 @@ public class WearPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == GENERAL) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_wear;
     }
 
     private void sendDataToWatch(boolean status, boolean basals, boolean bgValue) {
@@ -196,6 +215,8 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
+        if(ev.result == null) return;
+
         String status;
         if(ev.result.success){
             status = MainApp.sResources.getString(R.string.success);

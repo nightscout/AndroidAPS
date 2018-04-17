@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.db;
 
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -10,14 +11,19 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
 public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
@@ -55,14 +61,30 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     private Profile profile = null;
 
+    @Nullable
     public Profile getProfileObject() {
         if (profile == null)
             try {
-                profile = new Profile(new JSONObject(profileJson));
-            } catch (JSONException e) {
+                profile = new Profile(new JSONObject(profileJson), percentage, timeshift);
+            } catch (Exception e) {
                 log.error("Unhandled exception", e);
+                log.error("Unhandled exception", profileJson);
             }
         return profile;
+    }
+
+    public String getCustomizedName() {
+        String name = profileName;
+        if(LocalProfilePlugin.LOCAL_PROFILE.equals(name)){
+            name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
+        }
+        if (isCPP) {
+            name += "(" + percentage + "%";
+            if (timeshift != 0)
+                name += "," + timeshift + "h";
+            name += ")";
+        }
+        return name;
     }
 
     public boolean isEqual(ProfileSwitch other) {
@@ -156,6 +178,20 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return durationInMinutes == 0;
     }
 
+    @Override
+    public boolean isValid() {
+
+        boolean isValid = getProfileObject() != null && getProfileObject().isValid(DateUtil.dateAndTimeString(date));
+        if (!isValid)
+            createNotificationInvalidProfile(DateUtil.dateAndTimeString(date));
+        return isValid;
+    }
+
+    public void createNotificationInvalidProfile(String detail) {
+        Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, String.format(MainApp.gs(R.string.zerovalueinprofile), detail), Notification.LOW, 5);
+        MainApp.bus().post(new EventNewNotification(notification));
+    }
+
     // -------- Interval interface end ---------
 
     //  ----------------- DataPointInterface --------------------
@@ -179,7 +215,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @Override
     public String getLabel() {
-        return profileName;
+        return getCustomizedName();
     }
 
     @Override

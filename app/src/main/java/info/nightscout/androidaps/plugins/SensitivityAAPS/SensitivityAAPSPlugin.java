@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -30,8 +31,8 @@ import info.nightscout.utils.SafeParse;
 public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
     private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     static SensitivityAAPSPlugin plugin = null;
 
@@ -96,6 +97,11 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
         if (type == SENSITIVITY) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_absorption_aaps;
+    }
+
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
@@ -113,7 +119,7 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime);
+        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             log.debug("No autosens data available");
             return new AutosensResult();
@@ -186,8 +192,10 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
             log.debug(ratioLimit);
         }
 
-        log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio);
-        log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
+        if (Config.logAutosensData) {
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
+        }
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

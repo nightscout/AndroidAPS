@@ -12,15 +12,18 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
@@ -29,19 +32,27 @@ public class Profile {
 
     private JSONObject json;
     private String units = null;
-    double dia = Constants.defaultDIA;
-    TimeZone timeZone = TimeZone.getDefault();
-    JSONArray isf;
+    private double dia = Constants.defaultDIA;
+    private TimeZone timeZone = TimeZone.getDefault();
+    private JSONArray isf;
     private LongSparseArray<Double> isf_v = null; // oldest at index 0
-    JSONArray ic;
+    private JSONArray ic;
     private LongSparseArray<Double> ic_v = null; // oldest at index 0
-    JSONArray basal;
+    private JSONArray basal;
     private LongSparseArray<Double> basal_v = null; // oldest at index 0
-    JSONArray targetLow;
-    JSONArray targetHigh;
+    private JSONArray targetLow;
+    private LongSparseArray<Double> targetLow_v = null; // oldest at index 0
+    private JSONArray targetHigh;
+    private LongSparseArray<Double> targetHigh_v = null; // oldest at index 0
+
+    private int percentage = 100;
+    private int timeshift = 0;
+
+    private boolean isValid = true;
+    private boolean isValidated = false;
 
     public Profile(JSONObject json, String units) {
-        this(json);
+        this(json, 100, 0);
         if (this.units == null) {
             if (units != null)
                 this.units = units;
@@ -52,7 +63,9 @@ public class Profile {
         }
     }
 
-    public Profile(JSONObject json) {
+    public Profile(JSONObject json, int percentage, int timeshift) {
+        this.percentage = percentage;
+        this.timeshift = timeshift;
         this.json = json;
         try {
             if (json.has("units"))
@@ -110,7 +123,9 @@ public class Profile {
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.invalidprofile));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.invalidprofile));
+            isValid = false;
+            isValidated = true;
         }
     }
 
@@ -148,18 +163,100 @@ public class Profile {
     }
 
     private LongSparseArray<Double> convertToSparseArray(JSONArray array) {
+        double multiplier = getMultiplier(array);
+
         LongSparseArray<Double> sparse = new LongSparseArray<>();
         for (Integer index = 0; index < array.length(); index++) {
             try {
-                JSONObject o = array.getJSONObject(index);
-                long tas = o.getLong("timeAsSeconds");
-                Double value = o.getDouble("value");
+                final JSONObject o = array.getJSONObject(index);
+                long tas = 0;
+                try {
+                    tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
+                } catch (JSONException e) {
+                    String time = o.getString("time");
+                    tas = getShitfTimeSecs(DateUtil.toSeconds(time));
+                    //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
+                }
+                double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
+                log.error(json.toString());
             }
         }
+
+        // check if start is at 0 (midnight)
+        // and add last value before midnight if not
+        if (sparse.keyAt(0) != 0) {
+            sparse.put(0, sparse.valueAt(sparse.size() - 1));
+        }
         return sparse;
+    }
+
+    public synchronized boolean isValid(String from) {
+        if (!isValid)
+            return false;
+        if (!isValidated) {
+            if (basal_v == null)
+                basal_v = convertToSparseArray(basal);
+            validate(basal_v);
+            if (isf_v == null)
+                isf_v = convertToSparseArray(isf);
+            validate(isf_v);
+            if (ic_v == null)
+                ic_v = convertToSparseArray(ic);
+            validate(ic_v);
+            if (targetLow_v == null)
+                targetLow_v = convertToSparseArray(targetLow);
+            validate(targetLow_v);
+            if (targetHigh_v == null)
+                targetHigh_v = convertToSparseArray(targetHigh);
+            validate(targetHigh_v);
+            isValidated = true;
+        }
+
+        if (isValid) {
+            // Check for hours alignment
+            for (int index = 0; index < basal_v.size(); index++) {
+                long secondsFromMidnight = basal_v.keyAt(index);
+                if (secondsFromMidnight % 3600 != 0) {
+                    Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
+            }
+
+            // Check for minimal basal value
+            PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+            if (pump != null) {
+                PumpDescription description = pump.getPumpDescription();
+                for (int i = 0; i < basal_v.size(); i++) {
+                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
+                        basal_v.setValueAt(i, description.basalMinimumRate);
+                        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+                    }
+                }
+            } else {
+                // if pump not available (at start)
+                // do not store converted array
+                basal_v = null;
+                isValidated = false;
+            }
+
+         }
+        return isValid;
+    }
+
+    private void validate(LongSparseArray array) {
+        if (array.size() == 0) {
+            isValid = false;
+            return;
+        }
+        for (int index = 0; index < array.size(); index++) {
+            if (array.valueAt(index).equals(0d)) {
+                isValid = false;
+                return;
+            }
+        }
     }
 
     private Double getValueToTime(JSONArray array, Integer timeAsSeconds) {
@@ -182,7 +279,47 @@ public class Profile {
         return lastValue;
     }
 
-    private Double getValueToTime(LongSparseArray<Double> array, long timeAsSeconds) {
+    Integer getShitfTimeSecs(Integer originalTime) {
+        Integer shiftedTime = originalTime + timeshift * 60 * 60;
+        shiftedTime = (shiftedTime + 24 * 60 * 60) % (24 * 60 * 60);
+        if (timeshift != 0)
+            log.debug("(Sec) Original time: " + originalTime + " ShiftedTime: " + shiftedTime);
+        return shiftedTime;
+    }
+
+    private double getMultiplier(LongSparseArray<Double> array) {
+        double multiplier = 1d;
+
+        if (array == isf_v)
+            multiplier = 100d / percentage;
+        else if (array == ic_v)
+            multiplier = 100d / percentage;
+        else if (array == basal_v)
+            multiplier = percentage / 100d;
+        else
+            log.error("Unknown array type");
+        return multiplier;
+    }
+
+    private double getMultiplier(JSONArray array) {
+        double multiplier = 1d;
+
+        if (array == isf)
+            multiplier = 100d / percentage;
+        else if (array == ic)
+            multiplier = 100d / percentage;
+        else if (array == basal)
+            multiplier = percentage / 100d;
+        else if (array == targetLow)
+            multiplier = 1d;
+        else if (array == targetHigh)
+            multiplier = 1d;
+        else
+            log.error("Unknown array type");
+        return multiplier;
+    }
+
+    private Double getValueToTime(LongSparseArray<Double> array, Integer timeAsSeconds) {
         Double lastValue = null;
 
         for (Integer index = 0; index < array.size(); index++) {
@@ -197,26 +334,29 @@ public class Profile {
         return lastValue;
     }
 
-    private String getValuesList(JSONArray array, JSONArray array2, DecimalFormat format, String units) {
+    private String format_HH_MM(Integer timeAsSeconds) {
+        String time;
+        int hour = timeAsSeconds / 60 / 60;
+        int minutes = (timeAsSeconds - hour * 60 * 60) / 60;
+        DecimalFormat df = new DecimalFormat("00");
+        time = df.format(hour) + ":" + df.format(minutes);
+        return time;
+    }
+
+    private String getValuesList(LongSparseArray<Double> array, LongSparseArray<Double> array2, DecimalFormat format, String units) {
         String retValue = "";
 
-        for (Integer index = 0; index < array.length(); index++) {
-            try {
-                JSONObject o = array.getJSONObject(index);
-                retValue += o.getString("time");
-                retValue += "    ";
-                retValue += format.format(o.getDouble("value"));
-                if (array2 != null) {
-                    JSONObject o2 = array2.getJSONObject(index);
-                    retValue += " - ";
-                    retValue += format.format(o2.getDouble("value"));
-                }
-                retValue += " " + units;
-                if (index + 1 < array.length())
-                    retValue += "\n";
-            } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+        for (Integer index = 0; index < array.size(); index++) {
+            retValue += format_HH_MM((int) array.keyAt(index));
+            retValue += "    ";
+            retValue += format.format(array.valueAt(index));
+            if (array2 != null) {
+                retValue += " - ";
+                retValue += format.format(array2.valueAt(index));
             }
+            retValue += " " + units;
+            if (index + 1 < array.size())
+                retValue += "\n";
         }
         return retValue;
     }
@@ -236,7 +376,7 @@ public class Profile {
     }
 
     public String getIsfList() {
-        return getValuesList(isf, null, new DecimalFormat("0.0"), getUnits() + "/U");
+        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + "/U");
     }
 
     public Double getIc() {
@@ -254,7 +394,7 @@ public class Profile {
     }
 
     public String getIcList() {
-        return getValuesList(ic, null, new DecimalFormat("0.0"), " g/U");
+        return getValuesList(ic_v, null, new DecimalFormat("0.0"), " g/U");
     }
 
     public Double getBasal() {
@@ -265,14 +405,15 @@ public class Profile {
         return getBasal(secondsFromMidnight(time));
     }
 
-    public Double getBasal(Integer timeAsSeconds) {
-        if (basal_v == null)
+    public synchronized Double getBasal(Integer timeAsSeconds) {
+        if (basal_v == null) {
             basal_v = convertToSparseArray(basal);
+        }
         return getValueToTime(basal_v, timeAsSeconds);
     }
 
     public String getBasalList() {
-        return getValuesList(basal, null, new DecimalFormat("0.00"), "U");
+        return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U");
     }
 
     public class BasalValue {
@@ -285,21 +426,17 @@ public class Profile {
         public Double value;
     }
 
-    public BasalValue[] getBasalValues() {
-        try {
-            BasalValue[] ret = new BasalValue[basal.length()];
+    public synchronized BasalValue[] getBasalValues() {
+        if (basal_v == null)
+            basal_v = convertToSparseArray(basal);
+        BasalValue[] ret = new BasalValue[basal_v.size()];
 
-            for (Integer index = 0; index < basal.length(); index++) {
-                JSONObject o = basal.getJSONObject(index);
-                Integer tas = o.getInt("timeAsSeconds");
-                Double value = o.getDouble("value");
-                ret[index] = new BasalValue(tas, value);
-            }
-            return ret;
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+        for (Integer index = 0; index < basal_v.size(); index++) {
+            Integer tas = (int) basal_v.keyAt(index);
+            Double value = basal_v.valueAt(index);
+            ret[index] = new BasalValue(tas, value);
         }
-        return new BasalValue[0];
+        return ret;
     }
 
     public Double getTargetLow() {
@@ -311,7 +448,9 @@ public class Profile {
     }
 
     public Double getTargetLow(Integer timeAsSeconds) {
-        return getValueToTime(targetLow, timeAsSeconds);
+        if (targetLow_v == null)
+            targetLow_v = convertToSparseArray(targetLow);
+        return getValueToTime(targetLow_v, timeAsSeconds);
     }
 
     public Double getTargetHigh() {
@@ -323,11 +462,13 @@ public class Profile {
     }
 
     public Double getTargetHigh(Integer timeAsSeconds) {
-        return getValueToTime(targetHigh, timeAsSeconds);
+        if (targetHigh_v == null)
+            targetHigh_v = convertToSparseArray(targetHigh);
+        return getValueToTime(targetHigh_v, timeAsSeconds);
     }
 
     public String getTargetList() {
-        return getValuesList(targetLow, targetHigh, new DecimalFormat("0.0"), getUnits());
+        return getValuesList(targetLow_v, targetHigh_v, new DecimalFormat("0.0"), getUnits());
     }
 
     public double getMaxDailyBasal() {
@@ -342,18 +483,6 @@ public class Profile {
     public static Integer secondsFromMidnight() {
         Calendar c = Calendar.getInstance();
         long now = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = now - c.getTimeInMillis();
-        return (int) (passed / 1000);
-    }
-
-    public static Integer secondsFromMidnight(Date date) {
-        Calendar c = Calendar.getInstance();
-        long now = date.getTime();
-        c.setTime(date);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
@@ -409,5 +538,30 @@ public class Profile {
         else
             return toUnitsString(lowMgdl, lowMmol, units) + " - " + toUnitsString(highMgdl, highMmol, units);
 
+    }
+
+    public double percentageBasalSum() {
+        double result = 0d;
+        for (int i = 0; i < 24; i++) {
+            result += getBasal((Integer) (i * 60 * 60));
+        }
+        return result;
+    }
+
+
+    public double baseBasalSum() {
+        double result = 0d;
+        for (int i = 0; i < 24; i++) {
+            result += getBasal((Integer) (i * 60 * 60)) / getMultiplier(basal_v);
+        }
+        return result;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public int getTimeshift() {
+        return timeshift;
     }
 }

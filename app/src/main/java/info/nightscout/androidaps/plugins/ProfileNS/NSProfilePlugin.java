@@ -18,9 +18,10 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.SP;
 
 /**
@@ -29,17 +30,25 @@ import info.nightscout.utils.SP;
 public class NSProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(NSProfilePlugin.class);
 
+    private static NSProfilePlugin nsProfilePlugin;
+
+    public static NSProfilePlugin getPlugin() {
+        if (nsProfilePlugin == null)
+            nsProfilePlugin = new NSProfilePlugin();
+        return nsProfilePlugin;
+    }
+
     @Override
     public String getFragmentClass() {
         return NSProfileFragment.class.getName();
     }
 
-    static boolean fragmentEnabled = true;
-    static boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
 
-    static ProfileStore profile = null;
+    private static ProfileStore profile = null;
 
-    public NSProfilePlugin() {
+    private NSProfilePlugin() {
         MainApp.bus().register(this);
         loadNSProfile();
 
@@ -63,12 +72,12 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == PROFILE && (Config.NSCLIENT || fragmentEnabled);
+        return type == PROFILE && (Config.NSCLIENT || Config.G5UPLOADER|| fragmentEnabled);
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && (Config.NSCLIENT ||fragmentVisible);
+        return type == PROFILE && (Config.NSCLIENT || Config.G5UPLOADER|| fragmentVisible);
     }
 
     @Override
@@ -83,7 +92,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -97,6 +106,11 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    @Override
     public int getType() {
         return PluginBase.PROFILE;
     }
@@ -106,16 +120,17 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         profile = new ProfileStore(newProfile.getData());
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
-        PumpInterface pump = MainApp.getConfigBuilder();
-        if (SP.getBoolean("syncprofiletopump", false)) {
-            if (pump.setNewBasalProfile(MainApp.getConfigBuilder().getProfile()) == PumpInterface.SUCCESS) {
-                SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
-                if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
-                    smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
+        ConfigBuilderPlugin.getCommandQueue().setProfile(MainApp.getConfigBuilder().getProfile(), new Callback() {
+            @Override
+            public void run() {
+                if (result.enacted) {
+                    SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
+                    if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
+                        smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
+                    }
                 }
             }
-        }
-
+        });
     }
 
     private static void storeNSProfile() {

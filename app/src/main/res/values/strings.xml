@@ -50,11 +50,11 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
-    <string name="virtualpump_basebasalrate_label">Base basal rate</string>
-    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="pump_basebasalrate_label">Base basal rate</string>
+    <string name="pump_tempbasal_label">Temp basal</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus</string>
-    <string name="virtualpump_battery_label">Battery</string>
-    <string name="virtualpump_reservoir_label">Reservoir</string>
+    <string name="pump_battery_label">Battery</string>
+    <string name="pump_reservoir_label">Reservoir</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="openapsma_lastrun_label">Last run</string>
@@ -70,7 +70,7 @@
     <string name="openapsma_nopump">No pump available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
-     <string name="rate">Rate</string>
+    <string name="rate">Rate</string>
     <string name="duration">Duration</string>
     <string name="reason">Reason</string>
     <string name="glucose">Glucose</string>
@@ -209,6 +209,7 @@
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
     <string name="it_lang">Italian</string>
+    <string name="ro_lang">Romanian</string>
     <string name="ru_lang">Russian</string>
     <string name="sv_lang">Swedish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
@@ -223,7 +224,6 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="syncprofiletopump_title">Sync profile to pump</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -235,7 +235,7 @@
     <string name="connectionerror">Pump connection error</string>
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
-    <string name="danar_lastbolus">Last bolus:</string>
+    <string name="pump_lastbolus_label">Last bolus</string>
     <string name="hoursago">h ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
@@ -269,7 +269,6 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
-    <string name="danar_history">History</string>
     <string name="danar_historyreload">Reload</string>
     <string name="uploading">Uploading</string>
     <string name="danar_ebolus">E bolus</string>
@@ -317,6 +316,7 @@
     <string name="objectives_5_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
+    <string name="objectives_7_objective">Enabling additional features for daytime use, such as SMB</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -362,7 +362,6 @@
     <string name="button3">Button 3</string>
     <string name="percentagefactor_hint">Percentage factor by which the base profile will be multiplied.</string>
     <string name="timeshift_hint">Time in hours by which the profile will be shifted round robin.</string>
-    <string name="send_to_pump">SEND TO PUMP</string>
     <string name="units">Units:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
@@ -385,7 +384,6 @@
     <string name="pumpshutdown">Pump Shutdown</string>
     <string name="batterydischarged">Pump Battery Discharged</string>
     <string name="danarkoreanpump">DanaR Korean</string>
-    <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
     <string name="basal_rate">Basal rate:</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
@@ -399,7 +397,7 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
-    <string name="minago">%dmin ago</string>
+    <string name="minago">%d min ago</string>
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -454,9 +452,9 @@
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
-    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3\nThis is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
-    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4\nThis is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
     <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
@@ -466,9 +464,9 @@
     <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0\nThis is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
+    <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">Only numeric digits are allowed.</string>
     <string name="error_only_numeric_digits_range_allowed">Only numeric digits within the range %1$s - %2$s are allowed.</string>
     <string name="error_field_must_not_be_empty">The field must not be empty</string>
@@ -593,7 +591,7 @@
     <string name="predictionshortlabel">PRE</string>
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="virtualpump_lastconnection_label">Last connection</string>
+    <string name="pump_lastconnection_label">Last connection</string>
     <string name="danar_bluetooth_status">Bluetooh status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
@@ -684,12 +682,14 @@
     <string name="cpp_valuesnotstored">Values not stored!</string>
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
+    <string name="combopump" translatable="false">Accu-Chek Combo</string>
+    <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
-	<string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
-	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
-	<string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-	<string name="careportal_pump_label">PUMP</string>
+    <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
+    <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
+    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
+    <string name="careportal_pump_label">PUMP</string>
     <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
@@ -702,10 +702,164 @@
     <string name="activate_profile">ACTIVATE PROFILE</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
-    <string name="key_wizard_include_bg">wizard_include_bg</string>
-    <string name="key_wizard_include_cob">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
-    <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
-    <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
+    <string name="waitingforpairing">Waiting for pairing on pump</string>
+    <string name="pairingok">Paring OK</string>
+    <string name="pairingtimedout">Paring timed out</string>
+    <string name="pairing">PAIRING</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_paring_key_</string>
+    <string name="key_danars_address" translatable="false">danars_address</string>
+    <string name="key_danars_name" translatable="false">danars_name</string>
+    <string name="danars_nodeviceavailable">No device found so far</string>
+    <string name="emptyreservoir">Empty reservoir</string>
+    <string name="bloodsugarmeasurementalert">Blood sugar measurement alert</string>
+    <string name="remaininsulinalert">Remaining insulin level</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="selectedpump">Selected pump</string>
+    <string name="pairpump">Pair new pump</string>
+    <string name="bolusspeed">Bolus speed</string>
+    <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
+    <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
+    <string name="serialnumber">Serial number</string>
+    <string name="key_wizard_include_bg" translatable="false">wizard_include_bg</string>
+    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
+    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
+    <string name="key_wizard_include_bolus_iob" translatable="false">wizard_include_bolus_iob</string>
+    <string name="key_wizard_include_basal_iob" translatable="false">wizard_include_basal_iob</string>
+    <string name="careportal_newnstreatment_percentage_label">Percentage</string>
+    <string name="careportal_newnstreatment_timeshift_label">Time shift</string>
+    <string name="default_temptargets">Default Temp-Targets</string>
+    <string name="eatingsoon_duration">eatingsoon duration</string>
+    <string name="eatingsoon_target">eatingsoon target</string>
+    <string name="activity_duration">activity duration</string>
+    <string name="activity_target">activity target</string>
+    <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
+    <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
+    <string name="key_activity_duration" translatable="false">activity_duration</string>
+    <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="danar_history_prime">Prime</string>
+    <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
+    <string name="gettingbolusstatus">Getting bolus status</string>
+    <string name="gettingtempbasalstatus">Getting temporary basal status</string>
+    <string name="gettingpumpsettings">Gettings pump settings</string>
+    <string name="gettingpumptime">Getting pump time</string>
+    <string name="reuse">reuse</string>
+    <string name="wearcontrol_title">Controls from Watch</string>
+    <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
+    <string name="connectiontimedout">Connection timed out</string>
+    <string name="food">Food</string>
+    <string name="shortgramm">g</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Fat</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="waitingforestimatedbolusend" formatted="false">Waiting for bolus end. Remaining %d sec.</string>
+    <string name="processinghistory">Processing event</string>
+    <string name="startingbolus">Starting bolus delivery</string>
+    <string name="executingrightnow">Command is executed right now</string>
+    <string name="pumpdrivercorrected">Pump driver corrected</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
+    <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="localalertsettings_title">Local alerts</string>
+    <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
+    <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
+    <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
+    <string name="key_pump_unreachable_threshold" translatable="false">pump_unreachable_threshold</string>
+    <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
+    <string name="urgent_alarm">Urgent Alarm</string>
+    <string name="info">INFO</string>
+    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
+    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
+    <string name="DexcomG5">DexcomG5 App (patched)</string>
+    <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
+    <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
+    <string name="dexcomg5_upload">G5 upload settings</string>
+    <string name="customapp">Customized APK for download</string>
+    <string name="wear_detailed_delta_title">Show detailed delta</string>
+    <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
+    <string name="unsupportedfirmware">Unsupported pump firmware</string>
+    <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
+    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
+    <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
+    <string name="nsclientbg">NSClient BG</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value</string>
+    <string name="overview_editquickwizard_usebg">BG calculation</string>
+    <string name="overview_editquickwizard_usebolusiob">Bolus IOB calculation</string>
+    <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
+    <string name="overview_editquickwizard_usetrend">Trend calculation</string>
+    <string name="overview_editquickwizard_usesuperbolus">Superbolus calculation</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="positiveonly">Positive only</string>
+    <string name="negativeonly">Negative only</string>
+    <string name="overview_editquickwizard_usecob">COB calculation</string>
+    <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="loopenabled">Loop enabled</string>
+    <string name="apsselected">APS selected</string>
+    <string name="nsclienthaswritepermission">NSClient has write permission</string>
+    <string name="closedmodeenabled">Closed mode enabled</string>
+    <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
+    <string name="basalprofilenotaligned" formatted="false">Basal values not aligned to hours: %s</string>
+    <string name="zerovalueinprofile" formatted="false">Invalid profile: %s</string>
+    <string name="combo_programming_bolus">Programming pump for bolusing</string>
+    <string name="combo_refresh">Refresh</string>
+    <string name="combo_tdds">TDDS</string>
+    <string name="combo_pump_state_label">State</string>
+    <string name="combo_pump_activity_label">Activity</string>
+    <string name="combo_no_pump_connection">No connection for %d min</string>
+    <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
+    <string name="combo_last_bolus" translatable="false">%.1f U (%s, %s)</string>
+    <string name="combo_pump_action_initializing">Initializing</string>
+    <string name="combo_pump_state_disconnected">Disconnected</string>
+    <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
+    <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
+    <string name="combo_pump_state_running">Running</string>
+    <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
+    <string name="combo_pump_action_setting_tbr">Setting TBR (%d%% / %d min)</string>
+    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
+    <string name="combo_pump_action_refreshing">Refreshing</string>
+    <string name="combo_pump_never_connected">Never</string>
+    <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
+    <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
+    <string name="combo_force_disabled_notification">Unsafe usage: the pump uses a different basal rate profile than the first. The loop has been disabled. Select the first profile on the pump and refresh.</string>
+    <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last minute. To prevent accidental double boluses and to guard against bugs this is disallowed.</string>
+    <string name="combo_pump_connected_now">Now</string>
+    <string name="combo_activity_reading_pump_history">Reading pump history</string>
+    <string name="danar_history">pump history</string>
+    <string name="combo_pump_alerts">Alerts</string>
+    <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
+    <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
+    <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
+    <string name="combo_is_in_error_state">The pump is showing the error E%d: %s</string>
+    <string name="combo_no_alert_data_note">To read the pump\'s error history, long press the ALERTS button\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
+    <string name="combo_no_tdd_data_note">To read the pump\'s TDD history, long press the TDDS button\n\nWARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
+    <string name="combo_tdd_minimum">Minimum: %3.1f U</string>
+    <string name="combo_tdd_average">Average: %3.1f U</string>
+    <string name="combo_tdd_maximum">Maximum: %3.1f U</string>
+    <string name="combo_reservoir_low">Low</string>
+    <string name="combo_reservoir_empty">Empty</string>
+    <string name="combo_reservoir_normal">Normal</string>
+    <string name="combo_notification_check_time_date">Pump clock update needed</string>
+    <string name="combo_history">History</string>
+    <string name="combo_warning">Warning</string>
+    <string name="combo_read_full_history_warning">This will read the full history and state of the pump. Everything in My Data and the basal rate. Boluses and TBRs will be added to Treatments if they don\'t already exist. This can cause entries to be duplicated because the pump\'s time is imprecise. Using this when normally looping with the pump is highly discouraged and reserved for special circumstances. If you still want to do this, long press this button again.  WARNING: this can trigger a bug which causes the pump to reject all connection attempts and requires pressing a button on the pump to recover and should therefore be avoided.</string>
+    <string name="combo_read_full_history_confirmation">Are you really sure you want to read all pump data and take the consequences of this action?</string>
+    <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
+    <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
+    <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
+    <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually create a bolus record using the Careportal tab if a bolus was delivered.</string>
+    <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
+    <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
 </resources>
 

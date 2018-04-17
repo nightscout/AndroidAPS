@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
@@ -28,15 +29,6 @@ import info.nightscout.utils.JSONFormatter;
 public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(OpenAPSAMAFragment.class);
 
-    private static OpenAPSAMAPlugin openAPSAMAPlugin;
-
-    public static OpenAPSAMAPlugin getPlugin() {
-        if(openAPSAMAPlugin ==null){
-            openAPSAMAPlugin = new OpenAPSAMAPlugin();
-        }
-        return openAPSAMAPlugin;
-    }
-
     Button run;
     TextView lastRunView;
     TextView glucoseStatusView;
@@ -52,30 +44,36 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.openapsama_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.openapsama_fragment, container, false);
 
-        run = (Button) view.findViewById(R.id.openapsma_run);
-        run.setOnClickListener(this);
-        lastRunView = (TextView) view.findViewById(R.id.openapsma_lastrun);
-        glucoseStatusView = (TextView) view.findViewById(R.id.openapsma_glucosestatus);
-        currentTempView = (TextView) view.findViewById(R.id.openapsma_currenttemp);
-        iobDataView = (TextView) view.findViewById(R.id.openapsma_iobdata);
-        profileView = (TextView) view.findViewById(R.id.openapsma_profile);
-        mealDataView = (TextView) view.findViewById(R.id.openapsma_mealdata);
-        autosensDataView = (TextView) view.findViewById(R.id.openapsma_autosensdata);
-        scriptdebugView = (TextView) view.findViewById(R.id.openapsma_scriptdebugdata);
-        resultView = (TextView) view.findViewById(R.id.openapsma_result);
-        requestView = (TextView) view.findViewById(R.id.openapsma_request);
+            run = (Button) view.findViewById(R.id.openapsma_run);
+            run.setOnClickListener(this);
+            lastRunView = (TextView) view.findViewById(R.id.openapsma_lastrun);
+            glucoseStatusView = (TextView) view.findViewById(R.id.openapsma_glucosestatus);
+            currentTempView = (TextView) view.findViewById(R.id.openapsma_currenttemp);
+            iobDataView = (TextView) view.findViewById(R.id.openapsma_iobdata);
+            profileView = (TextView) view.findViewById(R.id.openapsma_profile);
+            mealDataView = (TextView) view.findViewById(R.id.openapsma_mealdata);
+            autosensDataView = (TextView) view.findViewById(R.id.openapsma_autosensdata);
+            scriptdebugView = (TextView) view.findViewById(R.id.openapsma_scriptdebugdata);
+            resultView = (TextView) view.findViewById(R.id.openapsma_result);
+            requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
-        updateGUI();
-        return view;
+            updateGUI();
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                getPlugin().invoke("OpenAPSAMA button");
+                OpenAPSAMAPlugin.getPlugin().invoke("OpenAPSAMA button");
                 Answers.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
                 break;
         }
@@ -99,12 +97,12 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DetermineBasalResultAMA lastAPSResult = getPlugin().lastAPSResult;
+                    DetermineBasalResultAMA lastAPSResult = OpenAPSAMAPlugin.getPlugin().lastAPSResult;
                     if (lastAPSResult != null) {
                         resultView.setText(JSONFormatter.format(lastAPSResult.json));
                         requestView.setText(lastAPSResult.toSpanned());
                     }
-                    DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS = getPlugin().lastDetermineBasalAdapterAMAJS;
+                    DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS = OpenAPSAMAPlugin.getPlugin().lastDetermineBasalAdapterAMAJS;
                     if (determineBasalAdapterAMAJS != null) {
                         glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getGlucoseStatusParam()));
                         currentTempView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getCurrentTempParam()));
@@ -119,11 +117,11 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
                         mealDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getMealDataParam()));
                         scriptdebugView.setText(determineBasalAdapterAMAJS.getScriptDebug());
                     }
-                    if (getPlugin().lastAPSRun != null) {
-                        lastRunView.setText(getPlugin().lastAPSRun.toLocaleString());
+                    if (OpenAPSAMAPlugin.getPlugin().lastAPSRun != null) {
+                        lastRunView.setText(OpenAPSAMAPlugin.getPlugin().lastAPSRun.toLocaleString());
                     }
-                    if (getPlugin().lastAutosensResult != null) {
-                        autosensDataView.setText(JSONFormatter.format(getPlugin().lastAutosensResult.json()));
+                    if (OpenAPSAMAPlugin.getPlugin().lastAutosensResult != null) {
+                        autosensDataView.setText(JSONFormatter.format(OpenAPSAMAPlugin.getPlugin().lastAutosensResult.json()));
                     }
                 }
             });

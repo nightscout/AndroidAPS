@@ -25,12 +25,12 @@ import info.nightscout.utils.DateUtil;
 public class MDIPlugin implements PluginBase, PumpInterface {
     private static Logger log = LoggerFactory.getLogger(MDIPlugin.class);
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = false;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
-    PumpDescription pumpDescription = new PumpDescription();
+    private PumpDescription pumpDescription = new PumpDescription();
 
-    static MDIPlugin plugin = null;
+    private static MDIPlugin plugin = null;
 
     public static MDIPlugin getPlugin() {
         if (plugin == null)
@@ -38,7 +38,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
         return plugin;
     }
 
-    public MDIPlugin() {
+    private MDIPlugin() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;
 
@@ -100,6 +100,11 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
+    @Override
     public int getType() {
         return PluginBase.PUMP;
     }
@@ -125,9 +130,37 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+    }
+
+    @Override
+    public void disconnect(String reason) {
+    }
+
+    @Override
+    public void stopConnecting() {
+    }
+
+    @Override
+    public void getPumpStatus() {
+    }
+
+    @Override
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        return SUCCESS;
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = true;
+        return result;
     }
 
     @Override
@@ -138,11 +171,6 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     @Override
     public Date lastDataTime() {
         return new Date();
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        // do nothing
     }
 
     @Override
@@ -166,7 +194,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);
@@ -176,7 +204,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);

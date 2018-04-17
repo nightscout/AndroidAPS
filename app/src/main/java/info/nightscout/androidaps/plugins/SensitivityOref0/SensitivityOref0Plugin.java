@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -28,8 +30,8 @@ import info.nightscout.utils.SafeParse;
 public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface {
     private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     static SensitivityOref0Plugin plugin = null;
 
@@ -94,6 +96,11 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
         if (type == SENSITIVITY) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_absorption_oref0;
+    }
+
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
@@ -113,7 +120,7 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getLastAutosensData();
+        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             log.debug("No current autosens data available");
             return new AutosensResult();
@@ -194,10 +201,8 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
             log.debug(ratioLimit);
         }
 
-        double newisf = Math.round(Profile.toMgdl(sens, profile.getUnits()) / ratio);
-        if (ratio != 1) {
-            log.debug("ISF adjusted from " + Profile.toMgdl(sens, profile.getUnits()) + " to " + newisf);
-        }
+        if (Config.logAutosensData)
+            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " ratio: " + ratio + " mealCOB: " + current.cob);
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

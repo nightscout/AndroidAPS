@@ -29,6 +29,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -66,7 +67,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             if (profile == null) return;
             ProfileSwitch profileSwitch = profileSwitchList.getReversed(position);
             holder.ph.setVisibility(profileSwitch.source == Source.PUMP ? View.VISIBLE : View.GONE);
-            holder.ns.setVisibility(profileSwitch._id != null ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(NSUpload.isIdValid(profileSwitch._id) ? View.VISIBLE : View.GONE);
 
             holder.date.setText(DateUtil.dateAndTimeString(profileSwitch.date));
             if (!profileSwitch.isEndingEvent()) {
@@ -74,7 +75,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             } else {
                 holder.duration.setText("");
             }
-            holder.name.setText(profileSwitch.profileName);
+            holder.name.setText(profileSwitch.getCustomizedName());
             if (profileSwitch.isInProgress())
                 holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
@@ -82,6 +83,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             holder.remove.setTag(profileSwitch);
             holder.name.setTag(profileSwitch);
             holder.date.setTag(profileSwitch);
+            holder.invalid.setVisibility(profileSwitch.isValid() ? View.GONE : View.VISIBLE);
 
         }
 
@@ -103,6 +105,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             TextView remove;
             TextView ph;
             TextView ns;
+            TextView invalid;
 
             ProfileSwitchViewHolder(View itemView) {
                 super(itemView);
@@ -112,6 +115,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                 name = (TextView) itemView.findViewById(R.id.profileswitch_name);
                 ph = (TextView) itemView.findViewById(R.id.pump_sign);
                 ns = (TextView) itemView.findViewById(R.id.ns_sign);
+                invalid = (TextView) itemView.findViewById(R.id.invalid_sign);
                 remove = (TextView) itemView.findViewById(R.id.profileswitch_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -131,8 +135,10 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = profileSwitch._id;
-                                if (_id != null && !_id.equals("")) {
+                                if (NSUpload.isIdValid(_id)) {
                                     NSUpload.removeCareportalEntryFromNS(_id);
+                                } else {
+                                    UploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(profileSwitch);
                             }

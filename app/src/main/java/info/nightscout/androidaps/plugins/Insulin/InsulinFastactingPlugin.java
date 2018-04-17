@@ -14,8 +14,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     private static InsulinFastactingPlugin plugin = null;
 
@@ -80,6 +80,11 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
         if (type == INSULIN) this.fragmentVisible = fragmentVisible;
     }
 
+    @Override
+    public int getPreferencesId() {
+        return -1;
+    }
+
     // Insulin interface
     @Override
     public int getId() {
@@ -102,7 +107,7 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
     }
 
     @Override
-    public Iob iobCalcForTreatment(Treatment treatment, long time, Double dia) {
+    public Iob iobCalcForTreatment(Treatment treatment, long time, double dia) {
         Iob result = new Iob();
 
         double scaleFactor = 3.0 / dia;

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/food_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardBackgroundColor="@color/cardColorBackground"
+    card_view:cardCornerRadius="6dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/food_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:text="Name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/food_portion"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Portion" />
+
+            <TextView
+                android:id="@+id/food_carbs"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Carbs" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/food_fat"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Fat" />
+
+            <TextView
+                android:id="@+id/food_protein"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Protein" />
+
+            <TextView
+                android:id="@+id/food_energy"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="Energy" />
+
+            <TextView
+                android:id="@+id/ns_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="30dp"
+                android:text="NS"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorSetTempButton" />
+
+            <TextView
+                android:id="@+id/food_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="5dp"
+                android:paddingStart="10dp"
+                android:text="@string/overview_quickwizard_item_remove_button"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_orange_light" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

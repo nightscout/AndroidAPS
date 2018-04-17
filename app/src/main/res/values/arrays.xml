@@ -20,6 +20,7 @@
         <item>@string/el_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
+        <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
         <item>@string/sv_lang</item>
     </string-array>
@@ -33,6 +34,7 @@
         <item>el</item>
         <item>it</item>
         <item>ko</item>
+        <item>ro</item>
         <item>ru</item>
         <item>sv</item>
     </string-array>
@@ -47,4 +49,55 @@
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
     </string-array>
+
+    <string-array name="danaSpeedArray">
+        <item>12 s/U</item>
+        <item>30 s/U</item>
+        <item>60 s/U</item>
+    </string-array>
+    <string-array name="danaSpeedValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBGArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseCOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBolusIOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBasalOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+        <item>@string/positiveonly</item>
+        <item>@string/negativeonly</item>
+    </string-array>
+
+    <string-array name="quickWizardUseTrendArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+        <item>@string/positiveonly</item>
+        <item>@string/negativeonly</item>
+    </string-array>
+
+    <string-array name="quickWizardUseSuperBolusArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+    </string-array>
+
+    <string-array name="quickWizardUseTempTargetArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+    </string-array>
+
 </resources>

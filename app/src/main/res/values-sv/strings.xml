@@ -134,7 +134,7 @@
     <string name="danar_historyreload">Ladda om</string>
     <string name="danar_invalidinput">Fel på inlagd data</string>
     <string name="danar_iob_label">Pump IOB</string>
-    <string name="danar_lastbolus">Sista bolus</string>
+    <string name="pump_lastbolus_label">Sista bolus</string>
     <string name="danar_password_title">Lösenord Pump</string>
     <string name="danar_pump_settings">DanaR pump inställningar</string>
     <string name="danar_refill">Påfyllnad</string>
@@ -293,7 +293,6 @@
     <string name="xdripnotinstalled">xDrip+ inte installerat</string>
     <string name="xdrip">xDrip</string>
     <string name="wrongpumppassword">Fel lösenord för pump</string>
-    <string name="wrongpumpdriverselected">Fel pump program vald</string>
     <string name="wrongpassword">Fel lösenord</string>
     <string name="wear_showbgi_title">Visa BGI</string>
     <string name="wear_showbgi_summary">Visa BGI i statusfält</string>
@@ -308,17 +307,17 @@
     <string name="vitualpump_label">Virtuell</string>
     <string name="visible">Synlig</string>
     <string name="virtualpump_uploadstatus_title">Ladda upp till NS</string>
-    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="pump_tempbasal_label">Temp basal</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="virtualpump_settings">Virtuell pump inställningar</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="virtualpump_reservoir_label">Reservoir</string>
-    <string name="virtualpump_lastconnection_label">Sista kontakt</string>
+    <string name="pump_reservoir_label">Reservoir</string>
+    <string name="pump_lastconnection_label">Sista kontakt</string>
     <string name="virtualpump_firmware_label">Programversion</string>
     <string name="virtualpump_extendedbolus_label">Förlängd bolus</string>
-    <string name="virtualpump_battery_label">Batteri</string>
-    <string name="virtualpump_basebasalrate_label">Grund basal hastighet</string>
+    <string name="pump_battery_label">Batteri</string>
+    <string name="pump_basebasalrate_label">Grund basal hastighet</string>
     <string name="virtualpump">Virtuell Pump</string>
     <string name="uploading">Uppladdning</string>
     <string name="updatingbasalrates">Uppdaterar basal hastigheter</string>
@@ -363,7 +362,6 @@
     <string name="teenage">Tonåring</string>
     <string name="targetmissing">Mål saknas i profil. Använder grundinställning</string>
     <string name="target_range">Mål gränser:</string>
-    <string name="syncprofiletopump_title">Uppdatera profil till pump</string>
     <string name="suspendloopfor3h">Stäng av loop i 3 h</string>
     <string name="suspendloopfor2h">Stäng av loop i 2 h</string>
     <string name="suspendloopfor1h">Stäng av loop i 1 h</string>
@@ -413,7 +411,6 @@
     <string name="setting_imported">inställningar importerade</string>
     <string name="setextendedbolusquestion">Ställ in ny förlängd bolus:</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
-    <string name="send_to_pump">SKICKA TILL PUMP</string>
     <string name="send_calibration" formatted="false">Skicka kalibrering %.1f till xDrip?</string>
     <string name="send">SKICKA</string>
     <string name="save">Spara</string>

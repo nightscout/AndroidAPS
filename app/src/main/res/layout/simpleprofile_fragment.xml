@@ -14,6 +14,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/invalidprofile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/invalidprofile"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/holo_red_light"
+                android:textStyle="bold" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/units"
@@ -125,7 +135,7 @@
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="@string/send_to_pump"
+                android:text="@string/activate_profile"
                 android:textColor="@color/colorProfileSwitchButton" />
 
         </LinearLayout>

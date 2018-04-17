@@ -34,6 +34,15 @@ import info.nightscout.utils.ToastUtils;
 public class NSClientInternalPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
 
+    static NSClientInternalPlugin nsClientInternalPlugin;
+
+    static public NSClientInternalPlugin getPlugin() {
+        if (nsClientInternalPlugin == null) {
+            nsClientInternalPlugin = new NSClientInternalPlugin();
+        }
+        return nsClientInternalPlugin;
+    }
+
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
 
@@ -113,7 +122,7 @@ public class NSClientInternalPlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -124,6 +133,11 @@ public class NSClientInternalPlugin implements PluginBase {
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == GENERAL) this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getPreferencesId() {
+        return R.xml.pref_nsclientinternal;
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -207,5 +221,9 @@ public class NSClientInternalPlugin implements PluginBase {
 
     public String url() {
         return NSClientService.nsURL;
+    }
+
+    public boolean hasWritePermission() {
+        return nsClientService.hasWriteAuth;
     }
 }

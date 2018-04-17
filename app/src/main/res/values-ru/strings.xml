@@ -136,7 +136,7 @@
     <string name="danar_historyreload">замена</string>
     <string name="danar_invalidinput">введенные данные неверны</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
-    <string name="danar_lastbolus">предыдущий болюс</string>
+    <string name="pump_lastbolus_label">предыдущий болюс</string>
     <string name="danar_model" formatted="false">модель: %02X протокол: %02X код: %02X</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="danar_pump_settings">настройки помпы DanaR</string>
@@ -370,7 +370,7 @@
     <string name="overview">начало</string>
     <string name="overview_bolus_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2 fU е инс</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2fU е инс</string>
     <string name="overview_bolusprogress_stop">стоп</string>
     <string name="overview_bolusprogress_stoped">остановлено</string>
     <string name="overview_bolusprogress_stoppressed">нажат стоп</string>
@@ -427,7 +427,6 @@
     <string name="save">сохранить</string>
     <string name="send">ОТПРАВИТЬ</string>
     <string name="send_calibration" formatted="false">отправить калибровку %.1f на xdrip?</string>
-    <string name="send_to_pump">ОТПРАВИТЬ НА ПОМПУ</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="setextendedbolusquestion">установить новый расширенн болюс:</string>
     <string name="setting_imported">настройки импортированы</string>
@@ -487,7 +486,6 @@
     <string name="suspendloopfor1h">приостановить цикл на 1 час</string>
     <string name="suspendloopfor2h">приостановить цикл на 2 часа</string>
     <string name="suspendloopfor3h">приостановить цикл на 3 часа</string>
-    <string name="syncprofiletopump_title">синхронизировать профиль с помпой</string>
     <string name="target_range">целевой диапазон</string>
     <string name="teenage">подросток</string>
     <string name="tempbasaldeliveryerror">ошибка доставки врем базала</string>
@@ -529,17 +527,17 @@
     <string name="updatingbasalrates">обновление значений базала</string>
     <string name="uploading">передача данных</string>
     <string name="virtualpump">виртуальная помпа</string>
-    <string name="virtualpump_basebasalrate_label">базовая величина базала</string>
-    <string name="virtualpump_battery_label">батарея</string>
+    <string name="pump_basebasalrate_label">базовая величина базала</string>
+    <string name="pump_battery_label">батарея</string>
     <string name="virtualpump_extendedbolus_label">продленный болюс</string>
     <string name="virtualpump_firmware_label">прошивка</string>
-    <string name="virtualpump_lastconnection_label">прошлое соединение</string>
-    <string name="virtualpump_reservoir_label">резервуар</string>
+    <string name="pump_lastconnection_label">прошлое соединение</string>
+    <string name="pump_reservoir_label">резервуар</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>
     <string name="virtualpump_sqlerror">ошибка SQL</string>
-    <string name="virtualpump_tempbasal_label">врем базал</string>
+    <string name="pump_tempbasal_label">врем базал</string>
     <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
     <string name="visible">виден</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
@@ -554,7 +552,6 @@
     <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
     <string name="wear_showbgi_title">показать BGI</string>
     <string name="wrongpassword">неверный пароль</string>
-    <string name="wrongpumpdriverselected">неправильно выбран драйвер помпы</string>
     <string name="wrongpumppassword">неверный пароль помпы</string>
     <string name="xdrip">xdrip</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>
@@ -591,7 +588,7 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>
     <string name="device">устройство</string>
-    <string name="dia_too_short">pначение длительности работы инс %s слишком мало - применено $s</string>
+    <string name="dia_too_short" formatted="false">pначение длительности работы инс %s слишком мало - применено %s</string>
     <string name="do_not_track_profile_switch">не отслеживать смены профиля</string>
     <string name="do_not_track_profile_switch_summary">все смены профиля игнорируются; используется только активный профиль</string>
     <string name="extendedbolus">расширенный болюс</string>

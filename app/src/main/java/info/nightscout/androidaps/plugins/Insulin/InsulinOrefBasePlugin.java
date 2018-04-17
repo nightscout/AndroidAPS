@@ -1,13 +1,14 @@
 package info.nightscout.androidaps.plugins.Insulin;
 
-import info.nightscout.androidaps.Constants;
+import com.squareup.otto.Bus;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
@@ -45,38 +46,53 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
         return true;
     }
 
+    public Bus getBus() {
+        return MainApp.bus();
+    }
+
     @Override
     public double getDia() {
         double dia = getUserDefinedDia();
         if(dia >= MIN_DIA){
             return dia;
         } else {
-            if((System.currentTimeMillis() - lastWarned) > 60*1000) {
-                lastWarned = System.currentTimeMillis();
-                Notification notification = new Notification(Notification.SHORT_DIA, String.format(MainApp.sResources.getString(R.string.dia_too_short), dia, MIN_DIA), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
-            }
+            sendShortDiaNotification(dia);
             return MIN_DIA;
         }
     }
 
+    void sendShortDiaNotification(double dia) {
+        if((System.currentTimeMillis() - lastWarned) > 60*1000) {
+            lastWarned = System.currentTimeMillis();
+            Notification notification = new Notification(Notification.SHORT_DIA, String.format(this.getNotificationPattern(), dia, MIN_DIA), Notification.URGENT);
+            this.getBus().post(new EventNewNotification(notification));
+        }
+    }
+
+    public String getNotificationPattern() {
+        return MainApp.sResources.getString(R.string.dia_too_short);
+    }
+
     public double getUserDefinedDia() {
-        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : Constants.defaultDIA;
+        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : MIN_DIA;
+    }
+
+    public Iob iobCalcForTreatment(Treatment treatment, long time) {
+        return this.iobCalcForTreatment(treatment, time, 0d);
     }
 
     @Override
-    public Iob iobCalcForTreatment(Treatment treatment, long time, Double dia) {
+    public Iob iobCalcForTreatment(Treatment treatment, long time, double dia) {
         Iob result = new Iob();
 
         int peak = getPeak();
-
 
         if (treatment.insulin != 0d) {
 
             long bolusTime = treatment.date;
             double t = (time - bolusTime) / 1000d / 60d;
 
-            double td = getDia()*60; //getDIA() always > 5
+            double td = getDia()*60; //getDIA() always >= MIN_DIA
             double tp = peak;
 
             // force the IOB to 0 if over DIA hours have passed

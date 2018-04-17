@@ -32,6 +32,8 @@ public class Constants {
     // Circadian Percentage Profile
     public static final int CPP_MIN_PERCENTAGE = 50;
     public static final int CPP_MAX_PERCENTAGE = 200;
+    public static final int CPP_MIN_TIMESHIFT = -6;
+    public static final int CPP_MAX_TIMESHIFT = 23;
 
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define
@@ -52,8 +54,12 @@ public class Constants {
 
     //Screen: Threshold for width/height to go into small width/height layout
     public static final int SMALL_WIDTH = 320;
-    public static final int SMALL_HEIGHT = 320;
+    public static final int SMALL_HEIGHT = 480;
 
     //Autosens
     public static final double DEVIATION_TO_BE_EQUAL = 2.0;
+
+    // Pump
+    public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1;
+    public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
 }
