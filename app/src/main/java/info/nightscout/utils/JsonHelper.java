@@ -1,5 +1,7 @@
 package info.nightscout.utils;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,6 +19,20 @@ public class JsonHelper {
 
     private JsonHelper() {};
 
+    public static Object safeGetObject(JSONObject json, String fieldName, Object defaultValue) {
+        Object result = defaultValue;
+
+        if (json.has(fieldName)) {
+            try {
+                result = json.get(fieldName);
+            } catch (JSONException ignored) {
+            }
+        }
+
+        return result;
+    }
+
+    @Nullable
     public static String safeGetString(JSONObject json, String fieldName) {
         String result = null;
 

@@ -85,36 +85,51 @@ public class ObjectivesFragment extends SubscriberFragment {
                 }
             });
 
-            Long now = System.currentTimeMillis();
-            if (position > 0 && objectives.get(position - 1).accomplished.getTime() == 0) {
-                // Phase 0: previous not completed
-                holder.startedLayout.setVisibility(View.GONE);
-                holder.durationLayout.setVisibility(View.GONE);
-                holder.progressLayout.setVisibility(View.GONE);
-                holder.verifyLayout.setVisibility(View.GONE);
-            } else if (o.started.getTime() == 0) {
-                // Phase 1: not started
-                holder.durationLayout.setVisibility(View.GONE);
-                holder.progressLayout.setVisibility(View.GONE);
-                holder.verifyLayout.setVisibility(View.GONE);
-                holder.started.setVisibility(View.GONE);
-            } else if (o.started.getTime() > 0 && !enableFake.isChecked() && o.accomplished.getTime() == 0 && !(o.started.getTime() + o.durationInDays * 24 * 60 * 60 * 1000 < now && requirementsMet.done)) {
-                // Phase 2: started, waiting for duration and met requirements
-                holder.startButton.setEnabled(false);
-                holder.verifyLayout.setVisibility(View.GONE);
-            } else if (o.accomplished.getTime() == 0) {
-                // Phase 3: started, after duration, requirements met
-                holder.startButton.setEnabled(false);
-                holder.accomplished.setVisibility(View.INVISIBLE);
-            } else {
-                // Phase 4: verified
-                holder.gateLayout.setVisibility(View.GONE);
-                holder.startedLayout.setVisibility(View.GONE);
-                holder.durationLayout.setVisibility(View.GONE);
-                holder.progressLayout.setVisibility(View.GONE);
-                holder.verifyButton.setVisibility(View.INVISIBLE);
+            long prevObjectiveAccomplishedTime = position > 0 ?
+                    objectives.get(position - 1).accomplished.getTime() : -1;
+
+            int phase = modifyVisibility(position, prevObjectiveAccomplishedTime,
+                    o.started.getTime(), o.durationInDays,
+                    o.accomplished.getTime(), requirementsMet.done, enableFake.isChecked());
+
+            switch (phase) {
+                case 0:
+                    // Phase 0: previous not completed
+                    holder.startedLayout.setVisibility(View.GONE);
+                    holder.durationLayout.setVisibility(View.GONE);
+                    holder.progressLayout.setVisibility(View.GONE);
+                    holder.verifyLayout.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    // Phase 1: not started
+                    holder.durationLayout.setVisibility(View.GONE);
+                    holder.progressLayout.setVisibility(View.GONE);
+                    holder.verifyLayout.setVisibility(View.GONE);
+                    holder.started.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    // Phase 2: started, waiting for duration and met requirements
+                    holder.startButton.setEnabled(false);
+                    holder.verifyLayout.setVisibility(View.GONE);
+                    break;
+                case 3:
+                    // Phase 3: started, after duration, requirements met
+                    holder.startButton.setEnabled(false);
+                    holder.accomplished.setVisibility(View.INVISIBLE);
+                    break;
+                case 4:
+                    // Phase 4: verified
+                    holder.gateLayout.setVisibility(View.GONE);
+                    holder.startedLayout.setVisibility(View.GONE);
+                    holder.durationLayout.setVisibility(View.GONE);
+                    holder.progressLayout.setVisibility(View.GONE);
+                    holder.verifyButton.setVisibility(View.INVISIBLE);
+                    break;
+                default:
+                    // should not happen
             }
         }
+
 
         @Override
         public int getItemCount() {
@@ -164,6 +179,40 @@ public class ObjectivesFragment extends SubscriberFragment {
         }
     }
 
+    /**
+     * returns an int, which represents the phase the current objective is at.
+     *
+     * this is mainly used for unit-testing the conditions
+     *
+     * @param currentPosition
+     * @param prevObjectiveAccomplishedTime
+     * @param objectiveStartedTime
+     * @param durationInDays
+     * @param objectiveAccomplishedTime
+     * @param requirementsMet
+     * @return
+     */
+    public int modifyVisibility(int currentPosition,
+                                long prevObjectiveAccomplishedTime,
+                                long objectiveStartedTime, int durationInDays,
+                                long objectiveAccomplishedTime, boolean requirementsMet,
+                                boolean enableFakeValue) {
+        Long now = System.currentTimeMillis();
+        if (currentPosition > 0 && prevObjectiveAccomplishedTime == 0) {
+            return 0;
+        } else if (objectiveStartedTime == 0) {
+            return 1;
+        } else if (objectiveStartedTime > 0 && !enableFakeValue
+                && objectiveAccomplishedTime == 0
+                && !(objectiveStartedTime + durationInDays * 24 * 60 * 60 * 1000 >= now && requirementsMet)) {
+            return 2;
+        } else if (objectiveAccomplishedTime == 0) {
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -205,6 +254,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             ObjectivesPlugin.objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
             ObjectivesPlugin.objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
             ObjectivesPlugin.objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
+
             updateGUI();
 
             return view;

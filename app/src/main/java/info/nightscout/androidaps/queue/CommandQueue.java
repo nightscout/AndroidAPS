@@ -166,14 +166,19 @@ public class CommandQueue {
     public boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
 
-        if (isRunning(type)) {
-            if (callback != null)
-                callback.result(executingNowError()).run();
-            return false;
-        }
+        if(type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0){
+            type = Command.CommandType.CARBS_ONLY_TREATMENT;
+            //Carbs only can be added in parallel as they can be "in the future".
+        } else {
+            if (isRunning(type)) {
+                if (callback != null)
+                    callback.result(executingNowError()).run();
+                return false;
+            }
 
-        // remove all unfinished boluses
-        removeAll(type);
+            // remove all unfinished boluses
+            removeAll(type);
+        }
 
         // apply constraints
         detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
@@ -183,12 +188,14 @@ public class CommandQueue {
         if (detailedBolusInfo.isSMB) {
             add(new CommandSMBBolus(detailedBolusInfo, callback));
         } else {
-            add(new CommandBolus(detailedBolusInfo, callback));
-            // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
-            // not when the Bolus command is starting. The command closes the dialog upon completion).
-            showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
-            // Notify Wear about upcoming bolus
-            MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+            add(new CommandBolus(detailedBolusInfo, callback, type));
+            if(type.equals(Command.CommandType.BOLUS)) {
+                // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
+                // not when the Bolus command is starting. The command closes the dialog upon completion).
+                showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
+                // Notify Wear about upcoming bolus
+                MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+            }
         }
 
         notifyAboutNewCommand();
