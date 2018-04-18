@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.common.collect.Lists;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -191,11 +192,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
 
         // temp target
-        final ArrayList<CharSequence> reasonList = new ArrayList<>();
-        reasonList.add(MainApp.gs(R.string.manual));
-        reasonList.add(MainApp.gs(R.string.eatingsoon));
-        reasonList.add(MainApp.gs(R.string.activity));
-        ArrayAdapter<CharSequence> adapterReason = new ArrayAdapter<>(getContext(),
+        final List<String> reasonList = Lists.newArrayList(
+                MainApp.gs(R.string.manual),
+                MainApp.gs(R.string.eatingsoon),
+                MainApp.gs(R.string.activity),
+                MainApp.gs(R.string.hypo));
+        ArrayAdapter<String> adapterReason = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_centered, reasonList);
         reasonSpinner.setAdapter(adapterReason);
         reasonSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -214,6 +216,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 } else if (MainApp.gs(R.string.activity).equals(reasonList.get(position))) {
                     defaultDuration = SP.getDouble(R.string.key_activity_duration, 0d);
                     defaultTarget = SP.getDouble(R.string.key_activity_target, 0d);
+                } else if (MainApp.gs(R.string.hypo).equals(reasonList.get(position))) {
+                    defaultDuration = SP.getDouble(R.string.key_hypo_duration, 0d);
+                    defaultTarget = SP.getDouble(R.string.key_hypo_target, 0d);
                 } else {
                     defaultDuration = 0;
                     erase = true;
