@@ -51,6 +51,7 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.JsonHelper;
@@ -210,19 +211,22 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 }
                 boolean erase = false;
 
+                String units = MainApp.getConfigBuilder().getProfileUnits();
+                DefaultValueHelper helper = new DefaultValueHelper();
                 if (MainApp.gs(R.string.eatingsoon).equals(reasonList.get(position))) {
-                    defaultDuration = SP.getDouble(R.string.key_eatingsoon_duration, 0d);
-                    defaultTarget = SP.getDouble(R.string.key_eatingsoon_target, 0d);
+                    defaultDuration = helper.determineEatingSoonTTDuration();
+                    defaultTarget = helper.determineEatingSoonTT(units);
                 } else if (MainApp.gs(R.string.activity).equals(reasonList.get(position))) {
-                    defaultDuration = SP.getDouble(R.string.key_activity_duration, 0d);
-                    defaultTarget = SP.getDouble(R.string.key_activity_target, 0d);
+                    defaultDuration = helper.determineActivityTTDuration();
+                    defaultTarget = helper.determineActivityTT(units);
                 } else if (MainApp.gs(R.string.hypo).equals(reasonList.get(position))) {
-                    defaultDuration = SP.getDouble(R.string.key_hypo_duration, 0d);
-                    defaultTarget = SP.getDouble(R.string.key_hypo_target, 0d);
+                    defaultDuration = helper.determineHypoTTDuration();
+                    defaultTarget = helper.determineHypoTT(units);
                 } else {
                     defaultDuration = 0;
                     erase = true;
                 }
+
                 if (defaultTarget != 0 || erase) {
                     editTemptarget.setValue(defaultTarget);
                 }
