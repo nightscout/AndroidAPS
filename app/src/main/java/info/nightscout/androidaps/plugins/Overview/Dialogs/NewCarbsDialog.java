@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,20 +18,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.google.common.base.Joiner;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,35 +46,28 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
-public class NewCarbsDialog extends DialogFragment implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, CompoundButton.OnCheckedChangeListener {
+import static info.nightscout.utils.DateUtil.now;
+
+public class NewCarbsDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NewCarbsDialog.class);
-
-    private NumberPicker editCarbs;
-
-    private TextView dateButton;
-    private TextView timeButton;
-
-    private Date initialEventTime;
-    private Date eventTime;
-
-    private Button fav1Button;
-    private Button fav2Button;
-    private Button fav3Button;
-
-    private EditText notesEdit;
 
     private static final int FAV1_DEFAULT = 5;
     private static final int FAV2_DEFAULT = 10;
     private static final int FAV3_DEFAULT = 20;
+
     private RadioButton startActivityTTCheckbox;
     private RadioButton startEatingSoonTTCheckbox;
     private RadioButton startHypoTTCheckbox;
     private boolean togglingTT;
 
+    private NumberPicker editTime;
+    private NumberPicker editDuration;
+    private NumberPicker editCarbs;
     private Integer maxCarbs;
+
+    private EditText notesEdit;
 
     //one shot guards
     private boolean accepted;
@@ -94,6 +81,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
     final private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            validateInputs();
         }
 
         @Override
@@ -102,12 +90,21 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            validateInputs();
         }
     };
 
     private void validateInputs() {
-        Integer carbs = SafeParse.stringToInt(editCarbs.getText());
+        int time = editTime.getValue().intValue();
+        if (time > 12 * 60 || time < -12 * 60) {
+            editTime.setValue(0d);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.constraintapllied));
+        }
+        Double duration = editDuration.getValue();
+        if (duration > 10) {
+            editDuration.setValue(0d);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.constraintapllied));
+        }
+        int carbs = editCarbs.getValue().intValue();
         if (carbs > maxCarbs) {
             editCarbs.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
@@ -125,12 +122,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
-
-        editCarbs = view.findViewById(R.id.newcarb_carbsamount);
-
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-
         startActivityTTCheckbox = view.findViewById(R.id.newcarbs_activity_tt);
         startActivityTTCheckbox.setOnCheckedChangeListener(this);
         startEatingSoonTTCheckbox = view.findViewById(R.id.newcarbs_eating_soon_tt);
@@ -138,29 +129,35 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         startHypoTTCheckbox = view.findViewById(R.id.newcarbs_hypo_tt);
         startHypoTTCheckbox.setOnCheckedChangeListener(this);
 
-        dateButton = view.findViewById(R.id.newcarbs_eventdate);
-        timeButton = view.findViewById(R.id.newcarb_eventtime);
+        editTime = view.findViewById(R.id.newcarbs_time);
+        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
 
-        initialEventTime = new Date();
-        eventTime = new Date(initialEventTime.getTime());
-        dateButton.setText(DateUtil.dateString(eventTime));
-        timeButton.setText(DateUtil.timeString(eventTime));
-        dateButton.setOnClickListener(this);
-        timeButton.setOnClickListener(this);
+        LinearLayout durationLayout = view.findViewById(R.id.newcarbs_duration_layout);
+        durationLayout.setVisibility(MainApp.engineeringMode ? View.VISIBLE : View.GONE);
 
-        fav1Button = view.findViewById(R.id.newcarbs_plus1);
+        editDuration = view.findViewById(R.id.new_carbs_duration);
+        editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
+
+        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
+
+        editCarbs = view.findViewById(R.id.newcarb_carbsamount);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+
+        Button fav1Button = view.findViewById(R.id.newcarbs_plus1);
         fav1Button.setOnClickListener(this);
         fav1Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)));
 
-        fav2Button = view.findViewById(R.id.newcarbs_plus2);
+        Button fav2Button = view.findViewById(R.id.newcarbs_plus2);
         fav2Button.setOnClickListener(this);
         fav2Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)));
 
-        fav3Button = view.findViewById(R.id.newcarbs_plus3);
+        Button fav3Button = view.findViewById(R.id.newcarbs_plus3);
         fav3Button.setOnClickListener(this);
         fav3Button.setText(toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)));
 
-        notesEdit = (EditText) view.findViewById(R.id.newcarbs_notes);
+        LinearLayout notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
+        notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
+        notesEdit = view.findViewById(R.id.newcarbs_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -173,36 +170,12 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
 
     @Override
     public synchronized void onClick(View view) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(eventTime);
         switch (view.getId()) {
             case R.id.ok:
                 submit();
                 break;
             case R.id.cancel:
                 dismiss();
-                break;
-            case R.id.newcarbs_eventdate:
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        this,
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.setThemeDark(true);
-                dpd.dismissOnPause(true);
-                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
-                break;
-            case R.id.newcarb_eventtime:
-                TimePickerDialog tpd = TimePickerDialog.newInstance(
-                        this,
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        DateFormat.is24HourFormat(getActivity())
-                );
-                tpd.setThemeDark(true);
-                tpd.dismissOnPause(true);
-                tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
                 break;
             case R.id.newcarbs_plus1:
                 editCarbs.setValue(Math.max(0, editCarbs.getValue()
@@ -309,18 +282,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         }
         okClicked = true;
         try {
-            final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
-
-            List<String> actions = new LinkedList<>();
-            if (carbs > 0)
-                actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + carbsAfterConstraints + "g" + "</font>");
-            if (!carbsAfterConstraints.equals(carbs))
-                actions.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>");
-
             final Profile currentProfile = MainApp.getConfigBuilder().getProfile();
-            if (currentProfile == null)
+            if (currentProfile == null) {
                 return;
+            }
+
+            int carbs = editCarbs.getValue().intValue();
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
             int activityTTDuration = SP.getInt(R.string.key_activity_duration, Constants.defaultActivityTTDuration);
             activityTTDuration = activityTTDuration > 0 ? activityTTDuration : Constants.defaultActivityTTDuration;
@@ -336,6 +304,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
             hypoTTDuration = hypoTTDuration > 0 ? hypoTTDuration : Constants.defaultHypoTTDuration;
             double hypoTT = SP.getDouble(R.string.key_hypo_target, currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultHypoTTmmol : Constants.defaultHypoTTmgdl);
             hypoTT = hypoTT > 0 ? hypoTT : currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultHypoTTmmol : Constants.defaultHypoTTmgdl;
+
+            List<String> actions = new LinkedList<>();
 
             if (startActivityTTCheckbox.isChecked()) {
                 if (currentProfile.getUnits().equals(Constants.MMOL)) {
@@ -357,34 +327,45 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                     actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(hypoTT) + " mg/dl (" + hypoTTDuration + " min)</font>");
             }
 
+            int timeOffset = editTime.getValue().intValue();
+            final long time = now() + timeOffset * 1000 * 60;
+            if (timeOffset != 0) {
+                actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time));
+            }
+            int duration = editDuration.getValue().intValue();
+            if (duration > 0) {
+                actions.add(MainApp.gs(R.string.duration) + ": " + duration + MainApp.gs(R.string.shorthour));
+            }
+            if (carbs > 0) {
+                actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + carbsAfterConstraints + "g" + "</font>");
+            }
+            if (!carbsAfterConstraints.equals(carbs)) {
+                actions.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>");
+            }
+            final String notes = notesEdit.getText().toString();
+            if (!notes.isEmpty()) {
+                actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes);
+            }
+
             final double finalActivityTT = activityTT;
             final int finalActivityTTDuration = activityTTDuration;
             final double finalEatigSoonTT = eatingSoonTT;
             final int finalEatingSoonTTDuration = eatingSoonTTDuration;
             final double finalHypoTT = hypoTT;
             final int finalHypoTTDuration = hypoTTDuration;
-            final String finalNotes = notesEdit.getText().toString();
 
-            if (!initialEventTime.equals(eventTime)) {
-                actions.add("Time: " + DateUtil.dateAndTimeString(eventTime));
-            }
-
-            final int finalCarbsAfterConstraints = carbsAfterConstraints;
-
-            final Context context = getContext();
-            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(MainApp.gs(R.string.confirmation));
-            builder.setMessage(actions.isEmpty()
-                    ? MainApp.gs(R.string.no_action_selected)
-                    : Html.fromHtml(Joiner.on("<br/>").join(actions)));
-            builder.setPositiveButton(MainApp.gs(R.string.ok), actions.isEmpty() ? null : (dialog, id) -> {
-                synchronized (builder) {
-                    if (accepted) {
-                        log.debug("guarding: already accepted");
-                        return;
-                    }
-                    accepted = true;
+            if (carbsAfterConstraints > 0 || startActivityTTCheckbox.isChecked()
+                    || startEatingSoonTTCheckbox.isChecked() || startHypoTTCheckbox.isChecked()) {
+                builder.setMessage(Html.fromHtml(Joiner.on("<br/>").join(actions)));
+                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                    synchronized (builder) {
+                        if (accepted) {
+                            log.debug("guarding: already accepted");
+                            return;
+                        }
+                        accepted = true;
 
                     if (startActivityTTCheckbox.isChecked()) {
                         TempTarget tempTarget = new TempTarget()
@@ -415,34 +396,25 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
                         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                     }
 
-                    if (finalCarbsAfterConstraints > 0) {
-                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                        detailedBolusInfo.date = eventTime.getTime();
-                        detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
-                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                        detailedBolusInfo.context = context;
-                        detailedBolusInfo.source = Source.USER;
-                        detailedBolusInfo.notes = finalNotes;
-                        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
-                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                @Override
-                                public void run() {
-                                    if (!result.success) {
-                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                        i.putExtra("soundid", R.raw.boluserror);
-                                        i.putExtra("status", result.comment);
-                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        MainApp.instance().startActivity(i);
-                                    }
+                        if (carbsAfterConstraints > 0) {
+                            if (duration == 0) {
+                                createCarb(carbsAfterConstraints, time, notes);
+                            } else {
+                                long remainingCarbs = carbsAfterConstraints;
+                                int ticks = (duration * 4); //duration guaranteed to be integer greater zero
+                                for (int i = 0; i < ticks; i++){
+                                    long carbTime = time + i * 15 * 60 * 1000;
+                                    long smallCarbAmount = Math.round((1d * remainingCarbs) / (ticks-i));  //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
+                                    remainingCarbs -= smallCarbAmount;
+                                    createCarb(smallCarbAmount, carbTime, notes);
                                 }
-                            });
-                        } else {
-                            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                builder.setMessage(MainApp.gs(R.string.no_action_selected));
+            }
             builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
             dismiss();
@@ -451,19 +423,30 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, D
         }
     }
 
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        eventTime.setYear(year - 1900);
-        eventTime.setMonth(monthOfYear);
-        eventTime.setDate(dayOfMonth);
-        dateButton.setText(DateUtil.dateString(eventTime));
-    }
-
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-        eventTime.setHours(hourOfDay);
-        eventTime.setMinutes(minute);
-        eventTime.setSeconds(second);
-        timeButton.setText(DateUtil.timeString(eventTime));
+    private void createCarb(long carbs, long time, @Nullable String notes) {
+        DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+        carbInfo.date = time;
+        carbInfo.eventType = CareportalEvent.CARBCORRECTION;
+        carbInfo.carbs = carbs;
+        carbInfo.context = getContext();
+        carbInfo.source = Source.USER;
+        carbInfo.notes = notes;
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+            ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("status", result.comment);
+                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainApp.instance().startActivity(i);
+                    }
+                }
+            });
+        } else {
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo);
+        }
     }
 }

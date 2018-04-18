@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,19 +17,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.common.base.Joiner;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,20 +50,10 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
-public class NewInsulinDialog extends DialogFragment implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+import static info.nightscout.utils.DateUtil.now;
+
+public class NewInsulinDialog extends DialogFragment implements OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NewInsulinDialog.class);
-
-    private NumberPicker editInsulin;
-
-    private TextView dateButton;
-    private TextView timeButton;
-
-    private Date initialEventTime;
-    private Date eventTime;
-
-    private Button plus1Button;
-    private Button plus2Button;
-    private Button plus3Button;
 
     public static final double PLUS1_DEFAULT = 0.5d;
     public static final double PLUS2_DEFAULT = 1d;
@@ -76,7 +62,12 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
     private CheckBox startESMCheckbox;
     private CheckBox recordOnlyCheckbox;
 
+    private LinearLayout editLayout;
+    private NumberPicker editTime;
+    private NumberPicker editInsulin;
     private Double maxInsulin;
+
+    private EditText notesEdit;
 
     //one shot guards
     private boolean accepted;
@@ -90,6 +81,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
     final private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            validateInputs();
         }
 
         @Override
@@ -98,12 +90,16 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            validateInputs();
         }
     };
 
     private void validateInputs() {
-        Double insulin = SafeParse.stringToDouble(editInsulin.getText());
+        int time = editTime.getValue().intValue();
+        if (Math.abs(time) > 12 * 60) {
+            editTime.setValue(0d);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.constraintapllied));
+        }
+        Double insulin = editInsulin.getValue();
         if (insulin > maxInsulin) {
             editInsulin.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.bolusconstraintapplied));
@@ -121,39 +117,34 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        startESMCheckbox = view.findViewById(R.id.newinsulin_start_eating_soon_tt);
+
+        recordOnlyCheckbox = view.findViewById(R.id.newinsulin_record_only);
+        recordOnlyCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> editLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE));
+
+        editLayout = view.findViewById(R.id.newinsulin_time_layout);
+        editLayout.setVisibility(View.GONE);
+        editTime = view.findViewById(R.id.newinsulin_time);
+        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
+
         maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
-        editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newinsulin_amount);
-
+        editInsulin = view.findViewById(R.id.newinsulin_amount);
         editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
-        dateButton = (TextView) view.findViewById(R.id.newinsulin_eventdate);
-        timeButton = (TextView) view.findViewById(R.id.newinsulin_eventtime);
-
-        initialEventTime = new Date();
-        eventTime = new Date(initialEventTime.getTime());
-        dateButton.setText(DateUtil.dateString(eventTime));
-        timeButton.setText(DateUtil.timeString(eventTime));
-        dateButton.setOnClickListener(this);
-        timeButton.setOnClickListener(this);
-
-        plus1Button = (Button) view.findViewById(R.id.newinsulin_plus05);
+        Button plus1Button = view.findViewById(R.id.newinsulin_plus05);
         plus1Button.setOnClickListener(this);
         plus1Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT)));
-        plus2Button = (Button) view.findViewById(R.id.newinsulin_plus10);
+        Button plus2Button = view.findViewById(R.id.newinsulin_plus10);
         plus2Button.setOnClickListener(this);
         plus2Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT)));
-        plus3Button = (Button) view.findViewById(R.id.newinsulin_plus20);
+        Button plus3Button = view.findViewById(R.id.newinsulin_plus20);
         plus3Button.setOnClickListener(this);
         plus3Button.setText(toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)));
 
-        startESMCheckbox = (CheckBox) view.findViewById(R.id.newinsulin_start_eating_soon_tt);
-
-        recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newinsulin_record_only);
-        recordOnlyCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (dateButton != null) dateButton.setEnabled(isChecked);
-            if (timeButton != null) timeButton.setEnabled(isChecked);
-        });
+        LinearLayout notesLayout = view.findViewById(R.id.newinsulin_notes_layout);
+        notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
+        notesEdit = view.findViewById(R.id.newinsulin_notes);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -167,36 +158,12 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
 
     @Override
     public synchronized void onClick(View view) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(eventTime);
         switch (view.getId()) {
             case R.id.ok:
                 submit();
                 break;
             case R.id.cancel:
                 dismiss();
-                break;
-            case R.id.newinsulin_eventdate:
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        this,
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.setThemeDark(true);
-                dpd.dismissOnPause(true);
-                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
-                break;
-            case R.id.newinsulin_eventtime:
-                TimePickerDialog tpd = TimePickerDialog.newInstance(
-                        this,
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        DateFormat.is24HourFormat(getActivity())
-                );
-                tpd.setThemeDark(true);
-                tpd.dismissOnPause(true);
-                tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
                 break;
             case R.id.newinsulin_plus05:
                 editInsulin.setValue(Math.max(0, editInsulin.getValue()
@@ -253,14 +220,20 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             final double finalTT = tt;
 
             if (startESMCheckbox.isChecked()) {
-                if (currentProfile.getUnits().equals("mmol")) {
+                if (currentProfile.getUnits().equals(Constants.MMOL)) {
                     actions.add("TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + Profile.toMmol(tt, Constants.MGDL) + " mmol for " + ((int) ttDuration) + " min </font>");
                 } else
                     actions.add("TT: " + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + ((int) tt) + "mg/dl for " + ((int) ttDuration) + " min </font>");
             }
 
-            if (!initialEventTime.equals(eventTime)) {
-                actions.add("Time: " + DateUtil.dateAndTimeString(eventTime));
+            int timeOffset = editTime.getValue().intValue();
+            final long time = now() + timeOffset * 1000 * 60;
+            if (timeOffset != 0) {
+                actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time));
+            }
+            final String notes = notesEdit.getText().toString();
+            if (!notes.isEmpty()) {
+                actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes);
             }
 
             final double finalInsulinAfterConstraints = insulinAfterConstraints;
@@ -269,83 +242,65 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener,
             final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
             builder.setTitle(MainApp.gs(R.string.confirmation));
-            builder.setMessage(actions.isEmpty()
-                    ? MainApp.gs(R.string.no_action_selected)
-                    : Html.fromHtml(Joiner.on("<br/>").join(actions)));
-            builder.setPositiveButton(MainApp.gs(R.string.ok), actions.isEmpty() ? null : (dialog, id) -> {
-                synchronized (builder) {
-                    if (accepted) {
-                        log.debug("guarding: already accepted");
-                        return;
-                    }
-                    accepted = true;
+            if (finalInsulinAfterConstraints > 0 || startESMCheckbox.isChecked()) {
+                builder.setMessage(Html.fromHtml(Joiner.on("<br/>").join(actions)));
+                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                    synchronized (builder) {
+                        if (accepted) {
+                            log.debug("guarding: already accepted");
+                            return;
+                        }
+                        accepted = true;
 
-                    if (startESMCheckbox.isChecked()) {
-                        TempTarget tempTarget = new TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration((int) ttDuration)
-                                .reason("Eating soon")
-                                .source(Source.USER)
-                                .low((int) finalTT)
-                                .high((int) finalTT);
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
-                    }
+                        if (startESMCheckbox.isChecked()) {
+                            TempTarget tempTarget = new TempTarget()
+                                    .date(System.currentTimeMillis())
+                                    .duration((int) ttDuration)
+                                    .reason("Eating soon")
+                                    .source(Source.USER)
+                                    .low((int) finalTT)
+                                    .high((int) finalTT);
+                            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                        }
 
-                    if (finalInsulinAfterConstraints <= 0.01) {
-                        return;
-                    }
-
-                    if (recordOnlyCheckbox.isChecked()) {
-                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                        detailedBolusInfo.source = Source.USER;
-                        detailedBolusInfo.date = eventTime.getTime();
-                        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
-                    } else {
-                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                        detailedBolusInfo.context = context;
-                        detailedBolusInfo.source = Source.USER;
-                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                            @Override
-                            public void run() {
-                                if (!result.success) {
-                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                    i.putExtra("soundid", R.raw.boluserror);
-                                    i.putExtra("status", result.comment);
-                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    MainApp.instance().startActivity(i);
-                                }
+                        if (finalInsulinAfterConstraints > 0) {
+                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                            detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                            detailedBolusInfo.context = context;
+                            detailedBolusInfo.source = Source.USER;
+                            detailedBolusInfo.notes = notes;
+                            if (recordOnlyCheckbox.isChecked()) {
+                                detailedBolusInfo.date = time;
+                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                            } else {
+                                detailedBolusInfo.date = now();
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
+                                        }
+                                    }
+                                });
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
                             }
-                        });
-                        FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                builder.setMessage(MainApp.gs(R.string.no_action_selected));
+            }
             builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
             dismiss();
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-    }
-
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        eventTime.setYear(year - 1900);
-        eventTime.setMonth(monthOfYear);
-        eventTime.setDate(dayOfMonth);
-        dateButton.setText(DateUtil.dateString(eventTime));
-    }
-
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-        eventTime.setHours(hourOfDay);
-        eventTime.setMinutes(minute);
-        eventTime.setSeconds(second);
-        timeButton.setText(DateUtil.timeString(eventTime));
     }
 }
