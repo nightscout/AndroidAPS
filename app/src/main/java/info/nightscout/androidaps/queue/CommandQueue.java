@@ -189,12 +189,13 @@ public class CommandQueue {
             add(new CommandSMBBolus(detailedBolusInfo, callback));
         } else {
             add(new CommandBolus(detailedBolusInfo, callback, type));
-            if(type.equals(Command.CommandType.BOLUS))
-            // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
-            // not when the Bolus command is starting. The command closes the dialog upon completion).
-            showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
-            // Notify Wear about upcoming bolus
-            MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+            if(type.equals(Command.CommandType.BOLUS)) {
+                // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
+                // not when the Bolus command is starting. The command closes the dialog upon completion).
+                showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
+                // Notify Wear about upcoming bolus
+                MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+            }
         }
 
         notifyAboutNewCommand();

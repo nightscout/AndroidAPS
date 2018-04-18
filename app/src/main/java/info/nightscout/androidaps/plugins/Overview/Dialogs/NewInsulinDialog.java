@@ -258,8 +258,8 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                                     .duration((int) ttDuration)
                                     .reason("Eating soon")
                                     .source(Source.USER)
-                                    .low((int) finalTT)
-                                    .high((int) finalTT);
+                                    .low(Profile.toMgdl(finalTT, currentProfile.getUnits()))
+                                    .high(Profile.toMgdl(finalTT, currentProfile.getUnits()));
                             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                         }
 
