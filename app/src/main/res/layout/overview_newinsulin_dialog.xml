@@ -16,20 +16,31 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/overview_insulin_label"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/colorInsulinButton" />
-
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:padding="5dp"
-                android:src="@drawable/icon_bolus" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_bolus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:textAlignment="center"
+                    android:text="@string/overview_insulin_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorInsulinButton" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -52,46 +63,74 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/listdelimiter" />
+
+            <LinearLayout
+                android:id="@+id/newinsulin_time_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:text="@string/time" />
+
+                <info.nightscout.utils.NumberPicker
+                    android:id="@+id/newinsulin_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/shortminute" />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="5dp">
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
 
                 <TextView
-                    android:id="@+id/newinsulin_eventdate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:enabled="false"
-                    android:padding="5dp"
-                    android:text="2017/05/05" />
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:text="@string/overview_insulin_label" />
+
+                <info.nightscout.utils.NumberPicker
+                    android:id="@+id/newinsulin_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp" />
 
                 <TextView
-                    android:id="@+id/newinsulin_eventtime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:enabled="false"
-                    android:padding="5dp"
-                    android:text="08:20pm" />
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/insulin_unit_shortname" />
             </LinearLayout>
-
-            <info.nightscout.utils.NumberPicker
-                android:id="@+id/treatments_newinsulin_amount"
-                android:layout_width="130dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -114,6 +153,31 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="+2.0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/newinsulin_notes_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:width="60dp"
+                    android:padding="2dp"
+                    android:text="@string/careportal_newnstreatment_notes_label"
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/newinsulin_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text|textCapSentences" />
 
             </LinearLayout>
 

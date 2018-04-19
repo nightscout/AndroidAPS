@@ -16,8 +16,8 @@ import info.nightscout.utils.DecimalFormatter;
 public class CommandBolus extends Command {
     DetailedBolusInfo detailedBolusInfo;
 
-    public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
-        commandType = CommandType.BOLUS;
+    public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback, CommandType type) {
+        commandType = type;
         this.detailedBolusInfo = detailedBolusInfo;
         this.callback = callback;
     }

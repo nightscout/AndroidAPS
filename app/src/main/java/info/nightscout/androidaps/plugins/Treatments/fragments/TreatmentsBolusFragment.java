@@ -89,6 +89,10 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
                 holder.iob.setTextColor(holder.carbs.getCurrentTextColor());
+            if (t.date > DateUtil.now())
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorScheduled));
+            else
+                holder.date.setTextColor(holder.carbs.getCurrentTextColor());
             holder.remove.setTag(t);
         }
 
