@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
@@ -34,14 +36,14 @@ public class AutosensData {
             carbs = t.carbs;
             remaining = t.carbs;
             if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
-                double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, 4d);
+                double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
                 Profile profile = MainApp.getConfigBuilder().getProfile(t.date);
                 double sens = Profile.toMgdl(profile.getIsf(t.date), profile.getUnits());
                 double ic = profile.getIc(t.date);
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
                 log.debug("Min 5m carbs impact for " + carbs + "g @" + new Date(t.date).toLocaleString() + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
-                min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", 3.0);
+                min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact);
             }
         }
     }
@@ -73,7 +75,7 @@ public class AutosensData {
         return (int) ((System.currentTimeMillis() - time) / 1000 / 60);
     }
 
-    // remove carbs older than 4h
+    // remove carbs older than timeframe
     public void removeOldCarbs(long toTime) {
         for (int i = 0; i < activeCarbsList.size(); i++) {
             CarbsInPast c = activeCarbsList.get(i);

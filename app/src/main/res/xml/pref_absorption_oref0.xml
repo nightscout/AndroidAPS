@@ -28,7 +28,7 @@
             android:maxLines="20"
             android:title="@string/absorption_cutoff_title"
             android:dialogMessage="@string/absorption_cutoff_summary"
-            android:key="@string/key_absorption_maxtime" />
+            android:key="@string/key_absorption_cutoff" />
 
     </PreferenceCategory>
 </PreferenceScreen>

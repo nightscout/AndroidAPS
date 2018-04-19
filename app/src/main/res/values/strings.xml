@@ -619,6 +619,8 @@
     <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>

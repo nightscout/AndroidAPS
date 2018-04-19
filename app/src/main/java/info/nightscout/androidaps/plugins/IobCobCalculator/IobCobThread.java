@@ -20,12 +20,17 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 23.01.2018.
@@ -199,9 +204,15 @@ public class IobCobThread extends Thread {
                     if (previous != null && previous.cob > 0) {
                         // calculate sum of min carb impact from all active treatments
                         double totalMinCarbsImpact = 0d;
-                        for (int ii = 0; ii < autosensData.activeCarbsList.size(); ++ii) {
-                            AutosensData.CarbsInPast c = autosensData.activeCarbsList.get(ii);
-                            totalMinCarbsImpact += c.min5minCarbImpact;
+                        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+                            //when the impact depends on a max time, sum them up as smaller carb sizes make them smaller
+                            for (int ii = 0; ii < autosensData.activeCarbsList.size(); ++ii) {
+                                AutosensData.CarbsInPast c = autosensData.activeCarbsList.get(ii);
+                                totalMinCarbsImpact += c.min5minCarbImpact;
+                            }
+                        } else {
+                            //Oref sensitivity
+                            totalMinCarbsImpact = SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact);
                         }
 
                         // figure out how many carbs that represents
