@@ -11,18 +11,20 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 25.04.2017.
  */
 
-public class AutosensData {
+public class AutosensData implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(AutosensData.class);
 
     static class CarbsInPast {
@@ -66,11 +68,11 @@ public class AutosensData {
     public double slopeFromMaxDeviation = 0;
     public double slopeFromMinDeviation = 999;
     public double usedMinCarbsImpact = 0d;
-
+    public boolean failoverToMinAbsorbtionRate = false;
 
     @Override
     public String toString() {
-        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation =" + slopeFromMinDeviation ;
+        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation =" + slopeFromMinDeviation;
     }
 
     public int minOld() {
@@ -91,7 +93,7 @@ public class AutosensData {
                 activeCarbsList.remove(i--);
                 if (c.remaining > 0)
                     cob -= c.remaining;
-                log.debug("Removing carbs at "+ new Date(toTime).toLocaleString() + " + after "+ maxAbsorptionHours +"h :" + new Date(c.time).toLocaleString());
+                log.debug("Removing carbs at " + new Date(toTime).toLocaleString() + " + after " + maxAbsorptionHours + "h :" + new Date(c.time).toLocaleString());
             }
         }
     }
@@ -106,6 +108,53 @@ public class AutosensData {
                 ac -= sub;
             }
         }
+    }
+
+    // ------- DataPointWithLabelInterface ------
+
+    @Override
+    public double getX() {
+        return time;
+    }
+
+    @Override
+    public double getY() {
+        return cob;
+    }
+
+    @Override
+    public void setY(double y) {
+
+    }
+
+    @Override
+    public String getLabel() {
+        return null;
+    }
+
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.COBFAILOVER;
+    }
+
+    @Override
+    public float getSize() {
+        return 1f;
+    }
+
+    @Override
+    public int getColor() {
+        return MainApp.gc(R.color.cob);
+    }
+
+    @Override
+    public int getSecondColor() {
+        return 0;
     }
 
 }

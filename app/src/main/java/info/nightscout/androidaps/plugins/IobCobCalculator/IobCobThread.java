@@ -20,13 +20,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.androidaps.events.Event;
-import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
@@ -218,6 +218,8 @@ public class IobCobThread extends Thread {
                         // figure out how many carbs that represents
                         // but always assume at least 3mg/dL/5m (default) absorption per active treatment
                         double ci = Math.max(deviation, totalMinCarbsImpact);
+                        if (ci != deviation)
+                            autosensData.failoverToMinAbsorbtionRate = true;
                         autosensData.absorbed = ci * profile.getIc(bgTime) / sens;
                         // and add that to the running total carbsAbsorbed
                         autosensData.cob = Math.max(previous.cob - autosensData.absorbed, 0d);
