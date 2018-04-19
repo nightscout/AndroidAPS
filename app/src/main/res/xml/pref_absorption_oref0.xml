@@ -8,7 +8,7 @@
             validate:testType="floatNumericRange"
             validate:floatminNumber="0.1"
             validate:floatmaxNumber="12.0"
-            android:defaultValue="3.0"
+            android:defaultValue="8.0"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:inputType="numberDecimal"
