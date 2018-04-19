@@ -222,6 +222,7 @@ public class IobCobThread extends Thread {
                         // and add that to the running total carbsAbsorbed
                         autosensData.cob = Math.max(previous.cob - autosensData.absorbed, 0d);
                         autosensData.substractAbosorbedCarbs();
+                        autosensData.usedMinCarbsImpact = totalMinCarbsImpact;
                     }
                     autosensData.removeOldCarbs(bgTime);
                     autosensData.cob += autosensData.carbsFromBolus;

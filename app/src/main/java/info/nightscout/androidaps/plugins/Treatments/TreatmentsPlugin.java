@@ -235,6 +235,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             result.mealCOB = autosensData.cob;
             result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation;
             result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
+            result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact;
         }
         result.lastBolusTime = getLastBolusTime();
         return result;

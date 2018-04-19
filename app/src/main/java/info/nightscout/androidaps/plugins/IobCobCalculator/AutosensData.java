@@ -65,6 +65,8 @@ public class AutosensData {
     public double autosensRatio = 1d;
     public double slopeFromMaxDeviation = 0;
     public double slopeFromMinDeviation = 999;
+    public double usedMinCarbsImpact = -0;
+
 
     @Override
     public String toString() {
