@@ -44,6 +44,7 @@ import info.nightscout.utils.BundleLogger;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 
 public class DataService extends IntentService {
@@ -197,7 +198,8 @@ public class DataService extends IntentService {
         bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
-
+        String source = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "no Source specified");
+        SourceXdripPlugin.getPlugin().setSource(source);
         MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
     }
 
