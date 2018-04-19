@@ -214,7 +214,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
         //align with max-absorption model in AMA sensitivity
-        if(mealData.usedMinCarbsImpact >0){
+        if(mealData.usedMinCarbsImpact > 0){
             mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
         } else {
             mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));

@@ -244,7 +244,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
         //align with max-absorption model in AMA sensitivity
-        if(mealData.usedMinCarbsImpact >0){
+        if(mealData.usedMinCarbsImpact > 0){
             mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
         } else {
             mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
