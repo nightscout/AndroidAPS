@@ -12,6 +12,7 @@ public abstract class Command {
     public enum CommandType {
         BOLUS,
         SMB_BOLUS,
+        CARBS_ONLY_TREATMENT,
         TEMPBASAL,
         EXTENDEDBOLUS,
         BASALPROFILE,

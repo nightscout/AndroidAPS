@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -258,7 +259,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadBolusWizardRecord(DetailedBolusInfo detailedBolusInfo) {
+    public static void uploadTreatmentRecord(DetailedBolusInfo detailedBolusInfo) {
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", detailedBolusInfo.eventType);
@@ -500,7 +501,7 @@ public class NSUpload {
             }
     }
 
-    public static void uploadEvent(String careportalEvent, long time) {
+    public static void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
@@ -510,6 +511,9 @@ public class NSUpload {
             data.put("eventType", careportalEvent);
             data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+            if (notes != null) {
+                data.put("notes", notes);
+            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
