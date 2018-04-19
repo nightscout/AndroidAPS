@@ -310,13 +310,21 @@ public class NSUpload {
 
     public static void uploadTempTarget(TempTarget tempTarget) {
         try {
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+
+            if (profile == null) {
+                log.error("Profile is null. Skipping upload");
+                return;
+            }
+
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPORARYTARGET);
             data.put("duration", tempTarget.durationInMinutes);
             data.put("reason", tempTarget.reason);
-            data.put("targetBottom", tempTarget.low);
-            data.put("targetTop", tempTarget.high);
+            data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()));
+            data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()));
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
+            data.put("units", profile.getUnits());
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {

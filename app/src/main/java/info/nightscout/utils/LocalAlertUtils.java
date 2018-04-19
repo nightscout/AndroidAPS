@@ -14,10 +14,9 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.receivers.KeepAliveReceiver;
-import info.nightscout.utils.NSUpload;
 
 /**
  * Created by adrian on 17/12/17.
@@ -26,12 +25,12 @@ import info.nightscout.utils.NSUpload;
 public class LocalAlertUtils {
     private static Logger log = LoggerFactory.getLogger(LocalAlertUtils.class);
 
-    public static int missedReadingsThreshold() {
-        return SP.getInt(MainApp.sResources.getString(R.string.key_missed_bg_readings_threshold), 30) * 60 * 1000;
+    public static long missedReadingsThreshold() {
+        return T.mins(SP.getInt(MainApp.sResources.getString(R.string.key_missed_bg_readings_threshold), 30)).msecs();
     }
 
-    private static int pumpUnreachableThreshold() {
-        return SP.getInt(MainApp.sResources.getString(R.string.key_pump_unreachable_threshold), 30) * 60 * 1000;
+    private static long pumpUnreachableThreshold() {
+        return T.mins(SP.getInt(MainApp.sResources.getString(R.string.key_pump_unreachable_threshold), 30)).msecs();
     }
 
     public static void checkPumpUnreachableAlarm(Date lastConnection, boolean isStatusOutdated) {
@@ -49,11 +48,13 @@ public class LocalAlertUtils {
                 NSUpload.uploadError(n.text);
             }
         }
+        if (!isStatusOutdated && !alarmTimeoutExpired)
+            MainApp.bus().post(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
     }
 
     /*Presnoozes the alarms with 5 minutes if no snooze exists.
-         * Call only at startup!
-         */
+     * Call only at startup!
+     */
     public static void presnoozeAlarms() {
         if (SP.getLong("nextMissedReadingsAlarm", 0l) < System.currentTimeMillis()) {
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + 5 * 60 * 1000);
@@ -74,7 +75,7 @@ public class LocalAlertUtils {
         SP.putLong("nextPumpDisconnectedAlarm", nextPumpDisconnectedAlarm);
     }
 
-    public static void notifyPumpStatusRead(){
+    public static void notifyPumpStatusRead() {
         //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
