@@ -77,13 +77,19 @@ public class AutosensData {
 
     // remove carbs older than timeframe
     public void removeOldCarbs(long toTime) {
+        double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
+        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
+        } else {
+            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME);
+        }
         for (int i = 0; i < activeCarbsList.size(); i++) {
             CarbsInPast c = activeCarbsList.get(i);
-            if (c.time + 4 * 60 * 60 * 1000L < toTime) {
+            if (c.time + maxAbsorptionHours * 60 * 60 * 1000L < toTime) {
                 activeCarbsList.remove(i--);
                 if (c.remaining > 0)
                     cob -= c.remaining;
-                log.debug("Removing carbs at "+ new Date(toTime).toLocaleString() + " + after 4h :" + new Date(c.time).toLocaleString());
+                log.debug("Removing carbs at "+ new Date(toTime).toLocaleString() + " + after "+ maxAbsorptionHours +"h :" + new Date(c.time).toLocaleString());
             }
         }
     }
