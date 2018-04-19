@@ -44,7 +44,6 @@ import info.nightscout.utils.BundleLogger;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
 
 
 public class DataService extends IntentService {
