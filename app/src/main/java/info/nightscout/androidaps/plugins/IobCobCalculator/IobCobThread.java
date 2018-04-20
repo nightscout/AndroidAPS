@@ -17,6 +17,7 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
@@ -212,7 +213,7 @@ public class IobCobThread extends Thread {
                             }
                         } else {
                             //Oref sensitivity
-                            totalMinCarbsImpact = SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact);
+                            totalMinCarbsImpact = SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
                         }
 
                         // figure out how many carbs that represents

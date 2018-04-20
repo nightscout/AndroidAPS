@@ -1004,4 +1004,5 @@
     <string name="time">Time</string>
     <string name="key_show_notes_entry_dialogs">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
+    <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
 </resources>

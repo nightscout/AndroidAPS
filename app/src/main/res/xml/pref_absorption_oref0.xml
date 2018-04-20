@@ -15,7 +15,7 @@
             android:maxLines="20"
             android:title="@string/openapsama_min_5m_carbimpact"
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
-            android:key="openapsama_min_5m_carbimpact" />
+            android:key="@string/key_openapsama_min_5m_carbimpact" />
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
             validate:testType="numericRange"

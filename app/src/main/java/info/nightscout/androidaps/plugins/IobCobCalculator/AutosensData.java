@@ -46,7 +46,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
                 log.debug("Min 5m carbs impact for " + carbs + "g @" + new Date(t.date).toLocaleString() + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
-                min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact);
+                min5minCarbImpact = SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
             }
         }
     }

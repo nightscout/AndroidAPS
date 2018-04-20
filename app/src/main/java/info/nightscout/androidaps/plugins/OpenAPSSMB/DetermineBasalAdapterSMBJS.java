@@ -247,7 +247,7 @@ public class DetermineBasalAdapterSMBJS {
         if(mealData.usedMinCarbsImpact > 0){
             mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
         } else {
-            mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
+            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
         }
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));

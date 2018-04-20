@@ -217,7 +217,7 @@ public class DetermineBasalAdapterAMAJS {
         if(mealData.usedMinCarbsImpact > 0){
             mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
         } else {
-            mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
+            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
         }
 
         if (units.equals(Constants.MMOL)) {
