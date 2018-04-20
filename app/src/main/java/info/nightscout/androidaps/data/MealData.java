@@ -11,4 +11,5 @@ public class MealData {
     public double slopeFromMinDeviation = 999;
     public long lastBolusTime;
     public long lastCarbTime = 0L;
+    public double usedMinCarbsImpact = 0d;
 }

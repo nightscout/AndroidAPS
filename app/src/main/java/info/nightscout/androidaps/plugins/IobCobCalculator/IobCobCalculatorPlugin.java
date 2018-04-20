@@ -74,7 +74,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 .neverVisible(true)
                 .alwaysEnabled(true)
         );
-     }
+    }
 
     @Override
     protected void onStart() {
@@ -548,7 +548,9 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
         if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
                 ev.isChanged(R.string.key_age) ||
-                ev.isChanged(R.string.key_absorption_maxtime)
+                ev.isChanged(R.string.key_absorption_maxtime) ||
+                ev.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
+                ev.isChanged(R.string.key_absorption_cutoff)
                 ) {
             stopCalculation("onEventPreferenceChange");
             synchronized (dataLock) {

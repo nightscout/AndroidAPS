@@ -40,6 +40,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -211,20 +213,33 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profile == null) return result;
 
         long now = System.currentTimeMillis();
-        long dia_ago = now - (Double.valueOf(1.5d * profile.getDia() * T.hours(1).msecs())).longValue();
+        long dia_ago = now - (Double.valueOf(profile.getDia() * T.hours(1).msecs())).longValue();
+
+        double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
+        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
+        } else {
+            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME);
+        }
+        long absorptionTime_ago = now - (Double.valueOf(maxAbsorptionHours * T.hours(1).msecs())).longValue();
 
         synchronized (treatments) {
             for (Treatment treatment : treatments) {
                 if (!treatment.isValid)
                     continue;
                 long t = treatment.date;
+
                 if (t > dia_ago && t <= now) {
-                    if (treatment.carbs >= 1) {
-                        result.carbs += treatment.carbs;
-                        result.lastCarbTime = t;
-                    }
                     if (treatment.insulin > 0 && treatment.mealBolus) {
                         result.boluses += treatment.insulin;
+                    }
+                }
+
+                if (t > absorptionTime_ago && t <= now) {
+                    if (treatment.carbs >= 1) {
+                        result.carbs += treatment.carbs;
+                        if(t > result.lastCarbTime)
+                            result.lastCarbTime = t;
                     }
                 }
             }
@@ -235,6 +250,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             result.mealCOB = autosensData.cob;
             result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation;
             result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
+            result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact;
         }
         result.lastBolusTime = getLastBolusTime();
         return result;

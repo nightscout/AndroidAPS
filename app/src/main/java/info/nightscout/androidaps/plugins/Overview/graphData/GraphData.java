@@ -365,6 +365,7 @@ public class GraphData {
 
     // scale in % of vertical size (like 0.3)
     public void addCob(long fromTime, long toTime, boolean useForScale, double scale) {
+        List<DataPointWithLabelInterface> minFailoverActiveList = new ArrayList<>();
         FixedLineGraphSeries<ScaledDataPoint> cobSeries;
         List<ScaledDataPoint> cobArray = new ArrayList<>();
         Double maxCobValueFound = 0d;
@@ -381,6 +382,10 @@ public class GraphData {
                     cobArray.add(new ScaledDataPoint(time, cob, cobScale));
                     maxCobValueFound = Math.max(maxCobValueFound, cob);
                     lastCob = cob;
+                }
+                if (autosensData.failoverToMinAbsorbtionRate) {
+                    autosensData.setScale(cobScale);
+                    minFailoverActiveList.add(autosensData);
                 }
             }
         }
@@ -400,6 +405,10 @@ public class GraphData {
         cobScale.setMultiplier(maxY * scale / maxCobValueFound);
 
         addSeries(cobSeries);
+
+        DataPointWithLabelInterface[] minFailover = new DataPointWithLabelInterface[minFailoverActiveList.size()];
+        minFailover = minFailoverActiveList.toArray(minFailover);
+        addSeries(new PointsWithLabelGraphSeries<>(minFailover));
     }
 
     // scale in % of vertical size (like 0.3)
