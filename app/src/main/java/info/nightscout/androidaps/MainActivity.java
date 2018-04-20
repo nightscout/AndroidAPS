@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.startupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -367,6 +368,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 break;
                             case R.id.nav_historybrowser:
                                 startActivity(new Intent(v.getContext(), HistoryBrowseActivity.class));
+                                break;
+                            case R.id.nav_setupwizard:
+                                startActivity(new Intent(v.getContext(), SetupWizardActivity.class));
                                 break;
                             case R.id.nav_resetdb:
                                 new AlertDialog.Builder(v.getContext())

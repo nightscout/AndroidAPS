@@ -62,4 +62,6 @@
     <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
 
+    <color name="black_overlay">#66000000</color>
+
 </resources>
