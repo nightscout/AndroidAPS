@@ -15,6 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
@@ -112,6 +113,12 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     // ------- DataPointWithLabelInterface ------
 
+    private Scale scale;
+
+    public void setScale(Scale scale) {
+        this.scale = scale;
+    }
+
     @Override
     public double getX() {
         return time;
@@ -119,7 +126,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        return cob;
+        return scale.transform(cob);
     }
 
     @Override

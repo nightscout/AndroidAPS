@@ -383,8 +383,10 @@ public class GraphData {
                     maxCobValueFound = Math.max(maxCobValueFound, cob);
                     lastCob = cob;
                 }
-                if (autosensData.failoverToMinAbsorbtionRate)
+                if (autosensData.failoverToMinAbsorbtionRate) {
+                    autosensData.setScale(cobScale);
                     minFailoverActiveList.add(autosensData);
+                }
             }
         }
 
