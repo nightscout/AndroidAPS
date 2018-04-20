@@ -18,7 +18,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsCareportalFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsProfileSwitchFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment;
@@ -32,6 +34,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
     TextView tempBasalsTab;
     TextView tempTargetTab;
     TextView profileSwitchTab;
+    TextView careportalTab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,11 +47,13 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
             tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
             tempTargetTab = (TextView) view.findViewById(R.id.treatments_temptargets);
             profileSwitchTab = (TextView) view.findViewById(R.id.treatments_profileswitches);
+            careportalTab = (TextView) view.findViewById(R.id.treatments_careportal);
             treatmentsTab.setOnClickListener(this);
             extendedBolusesTab.setOnClickListener(this);
             tempBasalsTab.setOnClickListener(this);
             tempTargetTab.setOnClickListener(this);
             profileSwitchTab.setOnClickListener(this);
+            careportalTab.setOnClickListener(this);
 
             setFragment(new TreatmentsBolusFragment());
             setBackgroundColorOnSelected(treatmentsTab);
@@ -86,6 +91,10 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
                 setFragment(new TreatmentsProfileSwitchFragment());
                 setBackgroundColorOnSelected(profileSwitchTab);
                 break;
+            case R.id.treatments_careportal:
+                setFragment(new TreatmentsCareportalFragment());
+                setBackgroundColorOnSelected(careportalTab);
+                break;
         }
     }
 
@@ -103,6 +112,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
         tempBasalsTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         tempTargetTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         profileSwitchTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
+        careportalTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         selected.setBackgroundColor(MainApp.sResources.getColor(R.color.tabBgColorSelected));
     }
 
@@ -113,7 +123,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
 
     @Override
     protected void updateGUI() {
-        if (MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().isExtendedBolusCapable
                 || MainApp.getConfigBuilder().getExtendedBolusesFromHistory().size() > 0) {
             extendedBolusesTab.setVisibility(View.VISIBLE);
         } else {

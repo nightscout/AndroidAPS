@@ -113,7 +113,7 @@ public class StatuslinePlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return !Config.NSCLIENT;
+        return !Config.NSCLIENT && !Config.G5UPLOADER;
     }
 
     @Override
@@ -182,10 +182,9 @@ public class StatuslinePlugin implements PluginBase {
         //Temp basal
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
-        if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
             status += activeTemp.toStringShort();
-
         }
 
         //IOB

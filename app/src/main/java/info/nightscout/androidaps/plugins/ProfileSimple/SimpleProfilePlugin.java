@@ -13,9 +13,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -28,7 +28,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     public static SimpleProfilePlugin getPlugin() {
         if (simpleProfilePlugin == null)
-            simpleProfilePlugin  = new SimpleProfilePlugin();
+            simpleProfilePlugin = new SimpleProfilePlugin();
         return simpleProfilePlugin;
     }
 
@@ -132,6 +132,8 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
         editor.apply();
         createConvertedProfile();
+        if (Config.logPrefsChange)
+            log.debug("Storing settings: " + getRawProfile().getData().toString());
     }
 
     private void loadSettings() {
@@ -141,12 +143,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         mgdl = SP.getBoolean("SimpleProfile" + "mgdl", true);
         mmol = SP.getBoolean("SimpleProfile" + "mmol", false);
         dia = SP.getDouble("SimpleProfile" + "dia", Constants.defaultDIA);
-        ic = SP.getDouble("SimpleProfile" + "ic", 20d);
-        isf = SP.getDouble("SimpleProfile" + "isf", 200d);
-        basal = SP.getDouble("SimpleProfile" + "basal", 1d);
-        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 80d);
-        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 120d);
-        createConvertedProfile();
+        ic = SP.getDouble("SimpleProfile" + "ic", 0d);
+        isf = SP.getDouble("SimpleProfile" + "isf", 0d);
+        basal = SP.getDouble("SimpleProfile" + "basal", 0d);
+        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 0d);
+        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 0d);
     }
 
     /*
@@ -211,6 +212,16 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+        if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile)))
+            return null;
+        return convertedProfile;
+    }
+
+    public ProfileStore getRawProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
         return convertedProfile;
     }
 

@@ -30,8 +30,8 @@ public class BgGraphBuilder {
     private ArrayList<BasalWatchData> basalWatchDataList;
     public List<TempWatchData> tempWatchDataList;
     private int timespan;
-    public double end_time;
-    public double start_time;
+    public long end_time;
+    public long start_time;
     public double fuzzyTimeDenom = (1000 * 60 * 1);
     public Context context;
     public double highMark;
@@ -47,7 +47,7 @@ public class BgGraphBuilder {
     public int basalBackgroundColor;
     public boolean singleLine = false;
 
-    private double endHour;
+    private long endHour;
     private List<PointValue> inRangeValues = new ArrayList<PointValue>();
     private List<PointValue> highValues = new ArrayList<PointValue>();
     private List<PointValue> lowValues = new ArrayList<PointValue>();
@@ -146,7 +146,7 @@ public class BgGraphBuilder {
 
         for (TempWatchData twd: tempWatchDataList) {
             if(twd.endTime > start_time) {
-                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight?3:2));
+                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight?(pointSize+1):pointSize));
                 if(highlight){
                     lines.add(tempValuesLine(twd, (float) minChart, factor, true, 1));
                 }
@@ -316,8 +316,8 @@ public class BgGraphBuilder {
         GregorianCalendar today = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
         SimpleDateFormat timeFormat = new SimpleDateFormat(is24? "HH" : "h a");
         timeFormat.setTimeZone(TimeZone.getDefault());
-        double start_hour = today.getTime().getTime();
-        double timeNow = System.currentTimeMillis();
+        long start_hour = today.getTime().getTime();
+        long timeNow = System.currentTimeMillis();
         for (int l = 0; l <= 24; l++) {
             if ((start_hour + (60000 * 60 * (l))) < timeNow) {
                 if ((start_hour + (60000 * 60 * (l + 1))) >= timeNow) {
@@ -332,7 +332,7 @@ public class BgGraphBuilder {
 
         //Add whole hours endTime the axis (as long as they are more than 15 mins away from the current time)
         for (int l = 0; l <= 24; l++) {
-            double timestamp = endHour - (60000 * 60 * l);
+            long timestamp = endHour - (60000 * 60 * l);
             if((timestamp - timeNow < 0) && (timestamp > start_time)) {
                 if(Math.abs(timestamp - timeNow) > (1000 * 60 * 8 * timespan)){
                     xAxisValues.add(new AxisValue(fuzz(timestamp), (timeFormat.format(timestamp)).toCharArray()));
@@ -350,7 +350,7 @@ public class BgGraphBuilder {
         return xAxis;
     }
 
-    public float fuzz(double value) {
-        return (float) Math.round(value / fuzzyTimeDenom);
+    public float fuzz(long value) {
+        return (float)  Math.round(value / fuzzyTimeDenom);
     }
 }

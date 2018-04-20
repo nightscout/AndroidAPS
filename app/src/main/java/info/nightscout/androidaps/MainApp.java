@@ -1,7 +1,6 @@
 package info.nightscout.androidaps;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
@@ -16,6 +15,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
 import com.squareup.otto.ThreadEnforcer;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,6 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
@@ -47,23 +47,20 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfileFragment;
-import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
@@ -101,6 +98,7 @@ public class MainApp extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         Fabric.with(this, new Answers());
+        JodaTimeAndroid.init(this);
         Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
@@ -129,7 +127,7 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
-            //if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
@@ -138,19 +136,22 @@ public class MainApp extends Application {
             if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
             pluginsList.add(NSProfilePlugin.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(SimpleProfilePlugin.getPlugin());
-            if (Config.OTHERPROFILES) pluginsList.add(LocalProfileFragment.getPlugin());
+            if (Config.OTHERPROFILES) pluginsList.add(LocalProfilePlugin.getPlugin());
             if (Config.OTHERPROFILES)
                 pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             pluginsList.add(TreatmentsPlugin.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
-            if (!Config.NSCLIENT)
+            if (!Config.NSCLIENT && !Config.G5UPLOADER)
                 pluginsList.add(SourceXdripPlugin.getPlugin());
-            pluginsList.add(SourceNSClientPlugin.getPlugin());
-            if (!Config.NSCLIENT)
+            if (!Config.G5UPLOADER)
+                pluginsList.add(SourceNSClientPlugin.getPlugin());
+            if (!Config.NSCLIENT && !Config.G5UPLOADER)
                 pluginsList.add(SourceMM640gPlugin.getPlugin());
-            if (!Config.NSCLIENT)
+            if (!Config.NSCLIENT && !Config.G5UPLOADER)
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourceDexcomG5Plugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 
@@ -164,22 +165,25 @@ public class MainApp extends Application {
             MainApp.getConfigBuilder().initialize();
         }
         NSUpload.uploadAppStart();
-        if (MainApp.getConfigBuilder().isClosedModeEnabled())
+        if (Config.NSCLIENT)
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
+        else if (Config.G5UPLOADER)
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
+        else if (Config.PUMPCONTROL)
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
+        else if (MainApp.getConfigBuilder().isClosedModeEnabled())
             Answers.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
         else
-            Answers.getInstance().logCustom(new CustomEvent("AppStart"));
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
 
-        Thread t = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 SystemClock.sleep(5000);
-                PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump != null)
-                    pump.refreshDataFromPump("Initialization");
+                ConfigBuilderPlugin.getCommandQueue().readStatus("Initialization", null);
                 startKeepAliveService();
             }
-        }, "pump-initialization");
-        t.start();
+        }).start();
 
     }
 
@@ -218,11 +222,19 @@ public class MainApp extends Application {
 
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
-            keepAliveReceiver.cancelAlarm(this);
+            KeepAliveReceiver.cancelAlarm(this);
     }
 
     public static Bus bus() {
         return sBus;
+    }
+
+    public static String gs(int id) {
+        return sResources.getString(id);
+    }
+
+    public static String gs(int id, Object... args) {
+        return sResources.getString(id, args);
     }
 
     public static MainApp instance() {

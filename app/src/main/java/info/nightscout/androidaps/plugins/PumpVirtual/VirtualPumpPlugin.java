@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpVirtual;
 
-import android.content.SharedPreferences;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +14,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
@@ -24,8 +23,9 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
@@ -65,6 +65,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     private static VirtualPumpPlugin plugin = null;
+
     public static VirtualPumpPlugin getPlugin() {
         loadFakingStatus();
         if (plugin == null)
@@ -166,7 +167,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return Config.NSCLIENT && fromNSAreCommingFakedExtendedBoluses;
+        return (Config.NSCLIENT || Config.G5UPLOADER) && fromNSAreCommingFakedExtendedBoluses;
     }
 
     @Override
@@ -185,27 +186,54 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(Profile profile) {
-        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+        if (!Config.NSCLIENT && !Config.G5UPLOADER)
+            NSUpload.uploadDeviceStatus();
         lastDataTime = new Date();
-        return SUCCESS;
+    }
+
+    @Override
+    public void disconnect(String reason) {
+    }
+
+    @Override
+    public void stopConnecting() {
+    }
+
+    @Override
+    public void getPumpStatus() {
+        lastDataTime = new Date();
+    }
+
+    @Override
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
+        lastDataTime = new Date();
+        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpEnactResult result = new PumpEnactResult();
+        result.success = true;
+        Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+        MainApp.bus().post(new EventNewNotification(notification));
+        return result;
     }
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return false;
+        return true;
     }
 
     @Override
     public Date lastDataTime() {
         return lastDataTime;
-    }
-
-    @Override
-    public void refreshDataFromPump(String reason) {
-        if (!BuildConfig.NSCLIENTOLNY)
-            NSUpload.uploadDeviceStatus();
-        lastDataTime = new Date();
     }
 
     @Override
@@ -280,7 +308,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
@@ -377,8 +405,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public JSONObject getJSONStatus() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        if (!preferences.getBoolean("virtualpump_uploadstatus", false)) {
+        if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
             return null;
         }
         JSONObject pump = new JSONObject();

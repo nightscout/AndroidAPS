@@ -21,6 +21,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -44,14 +45,7 @@ public class ProfileViewDialog extends DialogFragment {
 
     private  Button refreshButton;
 
-    Handler mHandler;
-    static HandlerThread mHandlerThread;
-
     public ProfileViewDialog() {
-        mHandlerThread = new HandlerThread(ProfileViewDialog.class.getSimpleName());
-        mHandlerThread.start();
-
-        mHandler = new Handler(mHandlerThread.getLooper());
     }
 
     @Override
@@ -72,18 +66,7 @@ public class ProfileViewDialog extends DialogFragment {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DanaRPump.getInstance().lastSettingsRead = new Date(0);
-                        if (MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PUMP))
-                            DanaRPlugin.doConnect("ProfileViewDialog");
-                        if (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP))
-                            DanaRKoreanPlugin.doConnect("ProfileViewDialog");
-                        if (MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginBase.PUMP))
-                            DanaRv2Plugin.doConnect("ProfileViewDialog");
-                    }
-                });
+                ConfigBuilderPlugin.getCommandQueue().readStatus("ProfileViewDialog", null);
                 dismiss();
             }
         });

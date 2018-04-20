@@ -180,6 +180,15 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/overview_extendedbolus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/mdtp_white" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -236,6 +245,13 @@
                     android:orientation="horizontal"
                     android:paddingTop="5dp">
 
+                    <CheckBox
+                        android:id="@+id/overview_showprediction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:buttonTint="@color/prediction" />
+
                     <TextView
                         android:id="@+id/overview_showprediction_label"
                         android:layout_width="wrap_content"
@@ -247,22 +263,6 @@
                         android:textStyle="bold"/>
 
                     <CheckBox
-                        android:id="@+id/overview_showprediction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        app:buttonTint="@color/prediction" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/basalshortlabel"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/basal"
-                        android:textStyle="bold" />
-
-                    <CheckBox
                         android:id="@+id/overview_showbasals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -270,12 +270,13 @@
                         app:buttonTint="@color/basal" />
 
                     <TextView
+                        android:id="@+id/overview_showbasals_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/iob"
+                        android:text="@string/basalshortlabel"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/iob"
+                        android:textColor="@color/basal"
                         android:textStyle="bold" />
 
                     <CheckBox
@@ -286,12 +287,13 @@
                         app:buttonTint="@color/iob" />
 
                     <TextView
+                        android:id="@+id/overview_showiob_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/cob"
+                        android:text="@string/iob"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/cob"
+                        android:textColor="@color/iob"
                         android:textStyle="bold" />
 
                     <CheckBox
@@ -302,12 +304,13 @@
                         app:buttonTint="@color/cob" />
 
                     <TextView
+                        android:id="@+id/overview_showcob_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/dev"
+                        android:text="@string/cob"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/deviations"
+                        android:textColor="@color/cob"
                         android:textStyle="bold" />
 
                     <CheckBox
@@ -318,11 +321,13 @@
                         app:buttonTint="@color/deviations" />
 
                     <TextView
+                        android:id="@+id/overview_showdeviations_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/ratio_short"
+                        android:text="@string/dev"
                         android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/deviations"
                         android:textStyle="bold" />
 
                     <CheckBox
@@ -330,6 +335,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
+
+                    <TextView
+                        android:id="@+id/overview_showratios_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/ratio_short"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -372,7 +386,7 @@
                 android:orientation="horizontal"
                 android:visibility="gone">
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_accepttempbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="match_parent"
@@ -389,7 +403,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -404,7 +418,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -419,7 +433,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_calibrationbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -434,7 +448,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <Button
+                <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"

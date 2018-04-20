@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
@@ -29,7 +29,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -139,10 +139,8 @@ public class PersistentNotificationPlugin implements PluginBase {
             }
         }
 
-        PumpInterface pump = MainApp.getConfigBuilder();
-
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
             line1 += "  " + activeTemp.toStringShort();
         }
 
@@ -157,7 +155,7 @@ public class PersistentNotificationPlugin implements PluginBase {
                 + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
 
 
-        String line3 = DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
+        String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h";
 
 
         line3 += " - " + MainApp.getConfigBuilder().getProfileName();

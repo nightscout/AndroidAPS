@@ -31,6 +31,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -63,7 +64,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
         public void onBindViewHolder(ExtendedBolusesViewHolder holder, int position) {
             ExtendedBolus extendedBolus = extendedBolusList.getReversed(position);
             holder.ph.setVisibility(extendedBolus.source == Source.PUMP ? View.VISIBLE : View.GONE);
-            holder.ns.setVisibility(extendedBolus._id != null ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(NSUpload.isIdValid(extendedBolus._id) ? View.VISIBLE : View.GONE);
             if (extendedBolus.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date));
                 holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
@@ -148,8 +149,10 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = extendedBolus._id;
-                                if (_id != null && !_id.equals("")) {
+                                if (NSUpload.isIdValid(_id)) {
                                     NSUpload.removeCareportalEntryFromNS(_id);
+                                } else {
+                                    UploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(extendedBolus);
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveExtendedBolus"));

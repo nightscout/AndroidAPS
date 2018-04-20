@@ -63,6 +63,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
+                android:id="@+id/invalid_sign"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingEnd="10dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <TextView
                 android:id="@+id/pump_sign"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

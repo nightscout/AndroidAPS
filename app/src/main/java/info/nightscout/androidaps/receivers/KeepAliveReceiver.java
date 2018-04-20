@@ -9,9 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +20,20 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.utils.LocalAlertUtils;
+import info.nightscout.utils.SP;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
+    public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
+
+    public static void cancelAlarm(Context context) {
+        Intent intent = new Intent(context, KeepAliveReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
+    }
 
     @Override
     public void onReceive(Context context, Intent rIntent) {
@@ -32,52 +41,40 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
 
-
-        final PumpInterface pump = MainApp.getConfigBuilder();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (pump != null && profile != null && profile.getBasal() != null) {
-            boolean isBasalOutdated = false;
-            boolean isStatusOutdated = false;
-
-            Date lastConnection = pump.lastDataTime();
-            if (lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis())
-                isStatusOutdated = true;
-            if (Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
-                isBasalOutdated = true;
-
-            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.setNewBasalProfile(profile);
-                    }
-                });
-                t.start();
-            } else if (isStatusOutdated && !pump.isBusy()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.refreshDataFromPump("KeepAlive. Status outdated.");
-                    }
-                });
-                t.start();
-            } else if (isBasalOutdated && !pump.isBusy()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.refreshDataFromPump("KeepAlive. Basal outdated.");
-                    }
-                });
-                t.start();
-            }
-        }
+        LocalAlertUtils.shortenSnoozeInterval();
+        LocalAlertUtils.checkStaleBGAlert();
+        checkPump();
 
         log.debug("KeepAlive received");
         wl.release();
     }
 
+    private void checkPump() {
+        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (pump != null && profile != null && profile.getBasal() != null) {
+            Date lastConnection = pump.lastDataTime();
+            boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
+            boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
+
+            LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
+
+            if (!pump.isThisProfileSet(profile)) {
+                MainApp.getConfigBuilder().getCommandQueue().setProfile(profile, null);
+            } else if (isStatusOutdated && !pump.isBusy()) {
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
+            } else if (isBasalOutdated && !pump.isBusy()) {
+                MainApp.getConfigBuilder().getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
+            }
+        }
+    }
+
+    //called by MainApp at first app start
     public void setAlarm(Context context) {
+
+        LocalAlertUtils.shortenSnoozeInterval();
+        LocalAlertUtils.presnoozeAlarms();
+
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, KeepAliveReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
@@ -89,10 +86,4 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.keepAliveMsecs, pi);
     }
 
-    public void cancelAlarm(Context context) {
-        Intent intent = new Intent(context, KeepAliveReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
-    }
 }

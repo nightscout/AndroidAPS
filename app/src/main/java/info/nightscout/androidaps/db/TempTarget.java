@@ -123,6 +123,11 @@ public class TempTarget implements Interval {
         return durationInMinutes == 0;
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
     // -------- Interval interface end ---------
 
     public String lowValueToUnitsToString(String units) {
