@@ -339,7 +339,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
         } else {
             ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
         }
-        return true;
+        return !start.failed;
     }
 
     public boolean carbsEntry(int amount) {

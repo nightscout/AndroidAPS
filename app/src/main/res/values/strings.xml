@@ -1005,4 +1005,5 @@
     <string name="key_show_notes_entry_dialogs">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
 </resources>
