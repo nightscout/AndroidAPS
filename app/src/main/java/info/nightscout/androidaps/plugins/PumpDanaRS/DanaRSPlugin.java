@@ -178,8 +178,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             final Object o = new Object();
 
             danaRSService.connect(from, mDeviceAddress, o);
-            pumpDescription.basalStep = pump.basalStep;
-            pumpDescription.bolusStep = pump.bolusStep;
         }
     }
 
@@ -205,8 +203,11 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
     @Override
     public void getPumpStatus() {
-        if (danaRSService != null)
+        if (danaRSService != null) {
             danaRSService.getPumpStatus();
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+        }
     }
 
     // DanaR interface

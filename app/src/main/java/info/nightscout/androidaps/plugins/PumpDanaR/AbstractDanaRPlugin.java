@@ -304,7 +304,11 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
 
     @Override
     public void getPumpStatus() {
-        if (sExecutionService != null) sExecutionService.getPumpStatus();
+        if (sExecutionService != null) {
+            sExecutionService.getPumpStatus();
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+        }
     }
 
     @Override
