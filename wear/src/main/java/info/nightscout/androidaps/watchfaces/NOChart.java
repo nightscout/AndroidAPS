@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Shader;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -22,6 +23,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.wearable.DataMap;
 import com.ustwo.clockwise.common.WatchFaceTime;
@@ -40,6 +43,7 @@ import com.ustwo.clockwise.wearable.WatchFace;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.data.ListenerService;
@@ -52,6 +56,7 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class NOChart extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
+    public static final int SCREENSIZE_SMALL = 280;
     public TextView mTime, mSgv, mTimestamp, mDelta, mAvgDelta;
     public RelativeLayout mRelativeLayout;
     public long sgvLevel = 0;
@@ -59,7 +64,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
     public int ageLevel = 1;
     public boolean lowResMode = false;
     public boolean layoutSet = false;
-    public double datetime;
+    public long datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
@@ -96,6 +101,12 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_nochart, null);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        if(metrics.widthPixels < SCREENSIZE_SMALL || metrics.heightPixels < SCREENSIZE_SMALL){
+            layoutView = inflater.inflate(R.layout.activity_nochart_small, null);
+        } else {
+            layoutView = inflater.inflate(R.layout.activity_nochart, null);
+        }
         performViewSetup();
     }
 
@@ -252,7 +263,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
                 wakeLock.acquire(50);
                 sgvLevel = dataMap.getLong("sgvLevel");
                 batteryLevel = dataMap.getInt("batteryLevel");
-                datetime = dataMap.getDouble("timestamp");
+                datetime = dataMap.getLong("timestamp");
                 sgvString = dataMap.getString("sgvString");
                 mSgv.setText(dataMap.getString("sgvString"));
 

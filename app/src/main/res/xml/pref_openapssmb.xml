@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:key="openapssmb"
+        android:title="@string/openapssmb">
+        <EditTextPreference
+            android:defaultValue="1"
+            android:key="@string/key_openapsma_max_basal"
+            android:numeric="decimal"
+            android:dialogMessage="@string/openapsma_maxbasal_summary"
+            android:title="@string/openapsma_maxbasal_title" />
+        <EditTextPreference
+            android:defaultValue="3"
+            android:key="@string/key_openapssmb_max_iob"
+            android:numeric="decimal"
+            android:dialogMessage="@string/openapssmb_maxiob_summary"
+            android:title="@string/openapssmb_maxiob_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="openapsama_useautosens"
+            android:title="@string/openapsama_useautosens" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_use_smb"
+            android:summary="@string/enablesmb_summary"
+            android:title="@string/enablesmb" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_enableSMB_with_COB"
+            android:summary="@string/enablesmbwithcob_summary"
+            android:title="@string/enablesmbwithcob"
+            android:dependency="@string/key_use_smb"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_enableSMB_with_temptarget"
+            android:summary="@string/enablesmbwithtemptarget_summary"
+            android:title="@string/enablesmbwithtemptarget"
+            android:dependency="@string/key_use_smb"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_allowSMB_with_high_temptarget"
+            android:summary="@string/enablesmbwithhightemptarget_summary"
+            android:title="@string/enablesmbwithhightemptarget"
+            android:dependency="@string/key_use_smb"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_enableSMB_always"
+            android:summary="@string/enablesmbalways_summary"
+            android:title="@string/enablesmbalways"
+            android:dependency="@string/key_use_smb"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_enableSMB_after_carbs"
+            android:summary="@string/enablesmbaftercarbs_summary"
+            android:title="@string/enablesmbaftercarbs"
+            android:dependency="@string/key_use_smb"/>
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:defaultValue="30"
+            android:dialogMessage="@string/smbmaxminutes"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="key_smbmaxminutes"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/smbmaxminutes_summary"
+            validate:maxNumber="120"
+            validate:minNumber="15"
+            validate:testType="numericRange" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_use_uam"
+            android:summary="@string/enableuam_summary"
+            android:title="@string/enableuam" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

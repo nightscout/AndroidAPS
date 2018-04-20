@@ -35,6 +35,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     static double amount;
     public static boolean bolusEnded = false;
     public static boolean running = true;
+    public static boolean stopPressed = false;
 
     public BolusProgressDialog() {
         super();
@@ -62,6 +63,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         progressBar.setMax(100);
         statusView.setText(MainApp.sResources.getString(R.string.waitingforpump));
         setCancelable(false);
+        stopPressed = false;
         return view;
     }
 
@@ -95,6 +97,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         switch (view.getId()) {
             case R.id.overview_bolusprogress_stop:
                 log.debug("Stop bolus delivery button pressed");
+                stopPressed = true;
                 stopPressedView.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.INVISIBLE);
                 ConfigBuilderPlugin.getActivePump().stopBolusDelivering();

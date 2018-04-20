@@ -20,15 +20,17 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -48,9 +50,9 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ProfileSwitchViewHolder> {
 
-        ProfileIntervals<ProfileSwitch> profileSwitchList;
+        List<ProfileSwitch> profileSwitchList;
 
-        RecyclerViewAdapter(ProfileIntervals<ProfileSwitch> profileSwitchList) {
+        RecyclerViewAdapter(List<ProfileSwitch> profileSwitchList) {
             this.profileSwitchList = profileSwitchList;
         }
 
@@ -64,9 +66,9 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         public void onBindViewHolder(ProfileSwitchViewHolder holder, int position) {
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) return;
-            ProfileSwitch profileSwitch = profileSwitchList.getReversed(position);
+            ProfileSwitch profileSwitch = profileSwitchList.get(position);
             holder.ph.setVisibility(profileSwitch.source == Source.PUMP ? View.VISIBLE : View.GONE);
-            holder.ns.setVisibility(profileSwitch._id != null ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(NSUpload.isIdValid(profileSwitch._id) ? View.VISIBLE : View.GONE);
 
             holder.date.setText(DateUtil.dateAndTimeString(profileSwitch.date));
             if (!profileSwitch.isEndingEvent()) {
@@ -82,6 +84,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             holder.remove.setTag(profileSwitch);
             holder.name.setTag(profileSwitch);
             holder.date.setTag(profileSwitch);
+            holder.invalid.setVisibility(profileSwitch.isValid() ? View.GONE : View.VISIBLE);
 
         }
 
@@ -103,6 +106,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             TextView remove;
             TextView ph;
             TextView ns;
+            TextView invalid;
 
             ProfileSwitchViewHolder(View itemView) {
                 super(itemView);
@@ -112,6 +116,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                 name = (TextView) itemView.findViewById(R.id.profileswitch_name);
                 ph = (TextView) itemView.findViewById(R.id.pump_sign);
                 ns = (TextView) itemView.findViewById(R.id.ns_sign);
+                invalid = (TextView) itemView.findViewById(R.id.invalid_sign);
                 remove = (TextView) itemView.findViewById(R.id.profileswitch_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -131,8 +136,10 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = profileSwitch._id;
-                                if (_id != null && !_id.equals("")) {
+                                if (NSUpload.isIdValid(_id)) {
                                     NSUpload.removeCareportalEntryFromNS(_id);
+                                } else {
+                                    UploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(profileSwitch);
                             }
@@ -142,7 +149,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                         break;
                     case R.id.profileswitch_date:
                     case R.id.profileswitch_name:
-                        long time = ((ProfileSwitch)v.getTag()).date;
+                        long time = ((ProfileSwitch) v.getTag()).date;
                         ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(time);
                         FragmentManager manager = getFragmentManager();
                         pvd.show(manager, "ProfileViewDialog");
@@ -162,7 +169,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getProfileSwitchesFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false));
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.profileswitch_refreshfromnightscout);
@@ -210,7 +217,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getProfileSwitchesFromHistory()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
                 }
             });
     }

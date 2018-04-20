@@ -7,13 +7,17 @@ public class BgWatchData implements Comparable<BgWatchData>{
     public double sgv;
     public double high;
     public double low;
-    public double timestamp;
+    public long timestamp;
 
-    public BgWatchData(double aSgv, double aHigh, double aLow, double aTimestamp) {
+    public BgWatchData(double aSgv, double aHigh, double aLow, long aTimestamp) {
         this.sgv = aSgv;
         this.high = aHigh;
         this.low = aLow;
         this.timestamp = aTimestamp;
+    }
+
+    public BgWatchData(){
+
     }
 
     @Override

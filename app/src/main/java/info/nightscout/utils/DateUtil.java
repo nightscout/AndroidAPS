@@ -2,10 +2,13 @@ package info.nightscout.utils;
 
 import android.support.v4.util.LongSparseArray;
 import android.text.format.DateUtils;
-import android.util.SparseIntArray;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,8 +30,7 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
-    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ssZ";
-    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private static String FORMAT_DATE_ISO_OUT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -40,17 +42,10 @@ public class DateUtil {
      */
     public static Date fromISODateString(String isoDateString)
             throws Exception {
-        SimpleDateFormat f = new SimpleDateFormat(FORMAT_DATE_ISO, Locale.getDefault());
-        Date date;
-        f.setTimeZone(TimeZone.getTimeZone("UTC"));
-        try {
-            date = f.parse(isoDateString);
-        } catch (ParseException e) {
-            f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC, Locale.getDefault());
-            f.setTimeZone(TimeZone.getTimeZone("UTC"));
-            date = f.parse(isoDateString);
-        }
-        return date;
+
+        DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+        DateTime dateTime = DateTime.parse(isoDateString, parser);
+        return dateTime.toDate();
     }
 
     /**
@@ -62,7 +57,7 @@ public class DateUtil {
      * @return the iso-formatted date string
      */
     public static String toISOString(Date date, String format, TimeZone tz) {
-        if (format == null) format = FORMAT_DATE_ISO;
+        if (format == null) format = FORMAT_DATE_ISO_OUT;
         if (tz == null) tz = TimeZone.getDefault();
         DateFormat f = new SimpleDateFormat(format, Locale.getDefault());
         f.setTimeZone(tz);
@@ -70,20 +65,19 @@ public class DateUtil {
     }
 
     public static String toISOString(Date date) {
-        return toISOString(date, FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
+        return toISOString(date, FORMAT_DATE_ISO_OUT, TimeZone.getTimeZone("UTC"));
     }
+
     public static String toISOString(long date) {
-        return toISOString(new Date(date), FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
+        return toISOString(new Date(date), FORMAT_DATE_ISO_OUT, TimeZone.getTimeZone("UTC"));
     }
 
     public static Date toDate(Integer seconds) {
         Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.MONTH, 0); // Set january to be sure we miss DST changing
         calendar.set(Calendar.HOUR_OF_DAY, seconds / 60 / 60);
-        String a = calendar.getTime().toString();
         calendar.set(Calendar.MINUTE, (seconds / 60) % 60);
-        String b = calendar.getTime().toString();
         calendar.set(Calendar.SECOND, 0);
-        String c = calendar.getTime().toString();
         return calendar.getTime();
     }
 
@@ -115,23 +109,35 @@ public class DateUtil {
     }
 
     public static String timeString(Date date) {
-        return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_TIME);
+        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_TIME);
+        return new DateTime(date).toString(DateTimeFormat.shortTime());
     }
 
     public static String timeString(long mills) {
-        return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_TIME);
+        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_TIME);
+        return new DateTime(mills).toString(DateTimeFormat.shortTime());
     }
 
     public static String dateAndTimeString(Date date) {
         return dateString(date) + " " + timeString(date);
     }
+
+    public static String dateAndTimeRangeString(long start, long end) {
+        return dateAndTimeString(start) + " - " + timeString(end);
+    }
+
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
     }
 
     public static String minAgo(long time) {
-        int mins = (int) ((System.currentTimeMillis() - time) / 1000 / 60);
-        return String.format(MainApp.sResources.getString(R.string.minago), mins);
+        int mins = (int) ((now() - time) / 1000 / 60);
+        return MainApp.gs(R.string.minago, mins);
+    }
+
+    public static String hourAgo(long time) {
+        double hours = (now() - time) / 1000d / 60 / 60;
+        return MainApp.gs(R.string.hoursago, hours);
     }
 
     private static LongSparseArray<String> timeStrings = new LongSparseArray<>();
@@ -140,26 +146,33 @@ public class DateUtil {
         String cached = timeStrings.get(seconds);
         if (cached != null)
             return cached;
-        String t = DateUtils.formatDateTime(MainApp.instance(), toDate(seconds).getTime(), DateUtils.FORMAT_SHOW_TIME);
+        String t = timeString(toDate(seconds));
         timeStrings.put(seconds, t);
         return t;
     }
 
 
-    public static String timeFrameString(long timeInMillis){
-        long remainingTimeMinutes = timeInMillis/(1000*60);
-        long remainingTimeHours = remainingTimeMinutes/60;
-        remainingTimeMinutes = remainingTimeMinutes%60;
-        return "(" + ((remainingTimeHours >0)?(remainingTimeHours + "h "):"") + remainingTimeMinutes + "')";
+    public static String timeFrameString(long timeInMillis) {
+        long remainingTimeMinutes = timeInMillis / (1000 * 60);
+        long remainingTimeHours = remainingTimeMinutes / 60;
+        remainingTimeMinutes = remainingTimeMinutes % 60;
+        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + "h ") : "") + remainingTimeMinutes + "')";
     }
 
-    public static String sinceString(long timestamp){
-        return timeFrameString(System.currentTimeMillis()-timestamp);
+    public static String sinceString(long timestamp) {
+        return timeFrameString(System.currentTimeMillis() - timestamp);
     }
 
-    public static String untilString(long timestamp){
-        return timeFrameString(timestamp- System.currentTimeMillis());
+    public static String untilString(long timestamp) {
+        return timeFrameString(timestamp - System.currentTimeMillis());
     }
 
+    public static long now() {
+        return System.currentTimeMillis();
+    }
+
+    public static long roundDateToSec(long date) {
+        return date - date % 1000;
+    }
 
 }

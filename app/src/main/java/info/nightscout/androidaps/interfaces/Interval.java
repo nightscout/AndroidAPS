@@ -21,4 +21,6 @@ public interface Interval {
 
     boolean isInProgress();
     boolean isEndingEvent();
+
+    boolean isValid();
 }

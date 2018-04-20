@@ -6,7 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
@@ -60,8 +60,36 @@ public class TemporaryBasal implements Interval {
     public TemporaryBasal() {
     }
 
-    public TemporaryBasal(long date) {
+    public TemporaryBasal date(long date) {
         this.date = date;
+        return this;
+    }
+
+    public TemporaryBasal duration(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+        return this;
+    }
+
+    public TemporaryBasal absolute(double absoluteRate) {
+        this.absoluteRate = absoluteRate;
+        this.isAbsolute = true;
+        return this;
+    }
+
+    public TemporaryBasal percent(int percentRate) {
+        this.percentRate = percentRate;
+        this.isAbsolute = false;
+        return this;
+    }
+
+    public TemporaryBasal source(int source) {
+        this.source = source;
+        return this;
+    }
+
+    public TemporaryBasal pumpId(long pumpId) {
+        this.pumpId = pumpId;
+        return this;
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
@@ -182,9 +210,14 @@ public class TemporaryBasal implements Interval {
         return durationInMinutes == 0;
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
     // -------- Interval interface end ---------
 
-    public IobTotal iobCalc(long time) {
+    public IobTotal iobCalc(long time, Profile profile) {
 
         if(isFakeExtended){
             log.error("iobCalc should only be called on Extended boluses separately");
@@ -192,7 +225,6 @@ public class TemporaryBasal implements Interval {
         }
 
         IobTotal result = new IobTotal(time);
-        Profile profile = MainApp.getConfigBuilder().getProfile(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
        int realDuration = getDurationToTime(time);
@@ -257,13 +289,13 @@ public class TemporaryBasal implements Interval {
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
-    public double tempBasalConvertedToAbsolute(long time) {
+    public double tempBasalConvertedToAbsolute(long time, Profile profile) {
         if(isFakeExtended){
-            return MainApp.getConfigBuilder().getProfile(time).getBasal(time) + netExtendedRate;
+            return profile.getBasal(time) + netExtendedRate;
         } else if (isAbsolute) {
             return absoluteRate;
         } else {
-             return MainApp.getConfigBuilder().getProfile(time).getBasal(time) * percentRate / 100;
+             return profile.getBasal(time) * percentRate / 100;
         }
     }
 
@@ -320,13 +352,13 @@ public class TemporaryBasal implements Interval {
                 if(profile != null) {
                     double basal = profile.getBasal();
                     if(basal != 0){
-                        return Math.round(rate*100d/basal) + "% ";
+                        return Math.round(rate*100d/basal) + "%";
                     }
                 }
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h ";
+            return DecimalFormatter.to2Decimal(rate) + "U/h";
         } else { // percent
-            return percentRate + "% ";
+            return percentRate + "%";
         }
     }
 

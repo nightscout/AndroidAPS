@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.Overview.activities;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +15,11 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import java.text.SimpleDateFormat;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.Overview.QuickWizard;
 import info.nightscout.androidaps.plugins.Overview.events.EventQuickWizardChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -153,6 +151,7 @@ public class QuickWizardListActivity extends AppCompatActivity implements View.O
                 break;
         }
     }
+
     @Subscribe
     public void onStatusEvent(final EventQuickWizardChange ev) {
         updateGUI();

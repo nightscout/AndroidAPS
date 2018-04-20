@@ -4,70 +4,157 @@
     android:layout_height="match_parent"
     tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.EditQuickWizardDialog">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="15dp">
-
-        <TextView
-            android:text="@string/overview_editquickwizard_buttontext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:ems="10"
-            android:id="@+id/overview_editquickwizard_button_edit" />
-
-        <TextView
-            android:text="@string/overview_editquickwizard_carbs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/overview_editquickwizard_carbs_edit" />
-
-        <TextView
-            android:text="@string/overview_editquickwizard_valid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
 
-            <Spinner
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/overview_editquickwizard_from_spinner"
-                android:layout_weight="1" />
+                android:text="@string/overview_editquickwizard_buttontext"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-            <Spinner
+            <EditText
+                android:id="@+id/overview_editquickwizard_button_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/overview_editquickwizard_to_spinner"
-                android:layout_weight="1" />
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_carbs"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <EditText
+                android:id="@+id/overview_editquickwizard_carbs_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_valid"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/overview_editquickwizard_from_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/overview_editquickwizard_to_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usebg"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usebg_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseBGArray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usebolusiob"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usebolusiob_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseBolusIOBArray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usebasaliob"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usebasaliob_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseBasalOBArray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usecob"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usecob_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseCOBArray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usetrend"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usetrend_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseTrendArray" />
+
+            <TextView
+                android:id="@+id/overview_editquickwizard_usesuperbolus_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usesuperbolus"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usesuperbolus_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseSuperBolusArray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/overview_editquickwizard_usetemptarget"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <Spinner
+                android:id="@+id/overview_editquickwizard_usetemptarget_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/quickWizardUseTempTargetArray" />
+
+            <include layout="@layout/mdtp_done_button" />
 
         </LinearLayout>
 
-        <Button
-            android:text="@string/ok"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/overview_editquickwizard_ok_button"
-            android:layout_weight="1" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

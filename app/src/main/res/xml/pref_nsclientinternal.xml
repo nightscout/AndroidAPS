@@ -24,8 +24,19 @@
 
         <SwitchPreference
             android:defaultValue="true"
+            android:key="@string/key_ns_autobackfill"
+            android:title="@string/ns_autobackfill" />
+
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="@string/key_ns_logappstartedevent"
             android:title="@string/ns_logappstartedevent" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_ns_create_announcements_from_errors"
+            android:title="@string/ns_create_announcements_from_errors_title"
+            android:summary="@string/ns_create_announcements_from_errors_summary"/>
 
         <SwitchPreference
             android:defaultValue="true"

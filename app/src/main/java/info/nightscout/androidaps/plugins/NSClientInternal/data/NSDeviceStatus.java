@@ -124,7 +124,7 @@ public class NSDeviceStatus {
     static DeviceStatusPumpData deviceStatusPumpData = null;
 
     public Spanned getExtendedPumpStatus() {
-        if (deviceStatusPumpData.extended != null)
+        if (deviceStatusPumpData != null && deviceStatusPumpData.extended != null)
             return deviceStatusPumpData.extended;
         return Html.fromHtml("");
     }
@@ -306,6 +306,15 @@ public class NSDeviceStatus {
         string.append("</span>"); // color
 
         return Html.fromHtml(string.toString());
+    }
+
+    public static long getOpenApsTimestamp() {
+
+        if (deviceStatusOpenAPSData.clockSuggested != 0) {
+            return deviceStatusOpenAPSData.clockSuggested;
+        } else {
+            return -1;
+        }
     }
 
     public Spanned getExtendedOpenApsStatus() {

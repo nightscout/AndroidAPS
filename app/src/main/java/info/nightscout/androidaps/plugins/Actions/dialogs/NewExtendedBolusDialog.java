@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -18,12 +17,13 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 
@@ -43,7 +43,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
         View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
 
-        Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         editInsulin = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_insulin);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
@@ -54,14 +54,10 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
-        return view;
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
+        return view;
     }
 
     @Override
@@ -74,7 +70,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
                     String confirmMessage = getString(R.string.setextendedbolusquestion);
 
-                    Double insulinAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+                    Double insulinAfterConstraint = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                     if (insulinAfterConstraint - insulin != 0d)
@@ -93,15 +89,17 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                             ConfigBuilderPlugin.getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
                                 @Override
                                 public void run() {
-                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                    i.putExtra("soundid", R.raw.boluserror);
-                                    i.putExtra("status", result.comment);
-                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    MainApp.instance().startActivity(i);
+                                    if (!result.success) {
+                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                        i.putExtra("soundid", R.raw.boluserror);
+                                        i.putExtra("status", result.comment);
+                                        i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        MainApp.instance().startActivity(i);
+                                    }
                                 }
                             });
-                            Answers.getInstance().logCustom(new CustomEvent("ExtendedBolus"));
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("ExtendedBolus"));
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);

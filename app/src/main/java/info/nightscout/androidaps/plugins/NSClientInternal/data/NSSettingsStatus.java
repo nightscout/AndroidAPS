@@ -170,6 +170,19 @@ public class NSSettingsStatus {
 
     }
 
+    // valid property is "warn" or "urgent"
+    // plugings "iage" "sage" "cage" "pbage"
+
+    public double getExtendedWarnValue(String plugin, String property, double defaultvalue) {
+        JSONObject extendedSettings = this.getExtendedSettings();
+        if (extendedSettings == null)
+            return defaultvalue;
+        JSONObject pluginJson = extendedSettings.optJSONObject(plugin);
+        if (pluginJson == null)
+            return defaultvalue;
+        return pluginJson.optDouble(property, defaultvalue);
+    }
+
     public String getActiveProfile() {
         return getStringOrNull("activeProfile");
     }
@@ -193,7 +206,7 @@ public class NSSettingsStatus {
                         return result;
                     }
                 }
-                if (settingsO.has("alarmTimeagoWarnMins") && Objects.equals(what, "alarmTimeagoWarnMins")){
+                if (settingsO.has("alarmTimeagoWarnMins") && Objects.equals(what, "alarmTimeagoWarnMins")) {
                     Double result = settingsO.getDouble(what);
                     return result;
                 }
@@ -206,7 +219,7 @@ public class NSSettingsStatus {
 
     private String getStringOrNull(String key) {
         String ret = null;
-        if(data == null) return null;
+        if (data == null) return null;
         if (data.has(key)) {
             try {
                 ret = data.getString(key);
@@ -288,21 +301,21 @@ public class NSSettingsStatus {
             JSONObject pump = extentendedPumpSettings();
             switch (setting) {
                 case "warnClock":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentClock":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "warnRes":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentRes":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "warnBattV":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentBattV":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
-               case "warnBattP":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "warnBattP":
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
                 case "urgentBattP":
-                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                    return pump != null && pump.has(setting) ? pump.getDouble(setting) : 30;
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -310,12 +323,12 @@ public class NSSettingsStatus {
         return 0d;
     }
 
-	
+
     @Nullable
     public JSONObject extentendedPumpSettings() {
         try {
             JSONObject extended = getExtendedSettings();
-            if(extended == null) return null;
+            if (extended == null) return null;
             if (extended.has("pump")) {
                 JSONObject pump = extended.getJSONObject("pump");
                 return pump;
@@ -350,7 +363,7 @@ public class NSSettingsStatus {
         return "";
     }
 
-	    public boolean openAPSEnabledAlerts() {
+    public boolean openAPSEnabledAlerts() {
         try {
             JSONObject pump = extentendedPumpSettings();
             if (pump != null && pump.has("openaps")) {

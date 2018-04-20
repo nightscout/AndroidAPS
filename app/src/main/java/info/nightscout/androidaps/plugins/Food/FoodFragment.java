@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -27,12 +26,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.Food;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SpinnerHelper;
 
@@ -61,7 +61,6 @@ public class FoodFragment extends SubscriberFragment {
                              Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.food_fragment, container, false);
-
             filter = (EditText) view.findViewById(R.id.food_filter);
             clearFilter = (ImageView) view.findViewById(R.id.food_clearfilter);
             category = new SpinnerHelper(view.findViewById(R.id.food_category));
@@ -122,7 +121,8 @@ public class FoodFragment extends SubscriberFragment {
                 }
             });
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().foodHelper.getFoodData());
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp
+                    .getSpecificPlugin(FoodPlugin.class).getService().getFoodData());
             recyclerView.setAdapter(adapter);
 
             loadData();
@@ -131,7 +131,7 @@ public class FoodFragment extends SubscriberFragment {
             filterData();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -145,20 +145,19 @@ public class FoodFragment extends SubscriberFragment {
     }
 
     void loadData() {
-        unfiltered = MainApp.getDbHelper().foodHelper.getFoodData();
+        unfiltered = MainApp.getSpecificPlugin(FoodPlugin.class).getService().getFoodData();
     }
 
     void fillCategories() {
-        categories = new ArrayList<>();
+        Set<CharSequence> catSet = new HashSet<>();
 
         for (Food f : unfiltered) {
             if (f.category != null && !f.category.equals(""))
-                categories.add(f.category);
+                catSet.add(f.category);
         }
 
         // make it unique
-        categories = new ArrayList<>(new HashSet<>(categories));
-
+        categories = new ArrayList<>(catSet);
         categories.add(0, MainApp.sResources.getString(R.string.none));
 
         ArrayAdapter<CharSequence> adapterCategories = new ArrayAdapter<>(getContext(),
@@ -168,19 +167,19 @@ public class FoodFragment extends SubscriberFragment {
 
     void fillSubcategories() {
         String categoryFilter = category.getSelectedItem().toString();
-        subcategories = new ArrayList<>();
+
+        Set<CharSequence> subCatSet = new HashSet<>();
 
         if (!categoryFilter.equals(EMPTY)) {
             for (Food f : unfiltered) {
                 if (f.category != null && f.category.equals(categoryFilter))
                     if (f.subcategory != null && !f.subcategory.equals(""))
-                        subcategories.add(f.subcategory);
+                        subCatSet.add(f.subcategory);
             }
         }
 
         // make it unique
-        subcategories = new ArrayList<>(new HashSet<>(subcategories));
-
+        subcategories = new ArrayList<>(subCatSet);
         subcategories.add(0, MainApp.sResources.getString(R.string.none));
 
         ArrayAdapter<CharSequence> adapterSubcategories = new ArrayAdapter<>(getContext(),
@@ -300,7 +299,7 @@ public class FoodFragment extends SubscriberFragment {
                                 if (_id != null && !_id.equals("")) {
                                     NSUpload.removeFoodFromNS(_id);
                                 }
-                                MainApp.getDbHelper().foodHelper.delete(food);
+                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().delete(food);
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

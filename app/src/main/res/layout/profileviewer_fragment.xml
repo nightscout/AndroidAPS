@@ -14,6 +14,17 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/profileview_invalidprofile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/invalidprofile"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/holo_red_light"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/profileview_noprofile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,6 +72,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/profileview_datedelimiter"
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
                 android:layout_marginBottom="5dp"
@@ -68,14 +80,13 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/listdelimiter"
-                android:id="@+id/profileview_datedelimiter"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/profileview_datelayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/profileview_datelayout"
                 android:visibility="gone">
 
                 <TextView
@@ -334,6 +345,12 @@
 
             </LinearLayout>
 
+            <info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph
+                android:id="@+id/basal_graph"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_margin="20dp" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
@@ -389,11 +406,11 @@
                 android:background="@color/listdelimiter" />
 
             <Button
+                android:id="@+id/profileview_reload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/reloadprofile"
-                android:id="@+id/profileview_reload"
                 android:layout_gravity="center_horizontal"
+                android:text="@string/reloadprofile"
                 android:visibility="gone" />
         </LinearLayout>
     </ScrollView>

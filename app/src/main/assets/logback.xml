@@ -1,6 +1,6 @@
 <configuration>
   <!-- Create a file appender for a log in the application's data directory -->
-  <property name="EXT_FILES_DIR" value="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files"/>
+  <property scope="context" name="EXT_FILES_DIR" value="${EXT_DIR:-/sdcard}/Android/data/${PACKAGE_NAME}/files"/>
   <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${EXT_FILES_DIR}/AndroidAPS.log</file>
 	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -15,7 +15,7 @@
             <maxHistory>120</maxHistory>
 	</rollingPolicy>
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%file:%line]: %msg%n</pattern>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%class:%line]: %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -24,7 +24,7 @@
 		  <pattern>%logger{0}</pattern>
 	  </tagEncoder>
     <encoder>
-      <pattern>[%thread] %-5level [%file:%line]: %msg%n</pattern>
+      <pattern>[%thread] %-5level [%class:%line]: %msg%n</pattern>
     </encoder>
   </appender>
   

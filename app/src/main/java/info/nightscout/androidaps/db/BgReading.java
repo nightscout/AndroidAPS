@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
-import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
@@ -43,7 +42,11 @@ public class BgReading implements DataPointWithLabelInterface {
     @DatabaseField
     public String _id = null; // NS _id
 
-    public boolean isPrediction = false; // true when drawing predictions as bg points
+    public boolean isCOBPrediction = false; // true when drawing predictions as bg points (COB)
+    public boolean isaCOBPrediction = false; // true when drawing predictions as bg points (aCOB)
+    public boolean isIOBPrediction = false; // true when drawing predictions as bg points (IOB)
+    public boolean isUAMPrediction = false; // true when drawing predictions as bg points (UAM)
+    public boolean isZTPrediction = false; // true when drawing predictions as bg points (ZT)
 
     public BgReading() {
     }
@@ -53,6 +56,7 @@ public class BgReading implements DataPointWithLabelInterface {
         value = sgv.getMgdl();
         raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
+        _id = sgv.getId();
     }
 
     public Double valueToUnits(String units) {
@@ -96,7 +100,9 @@ public class BgReading implements DataPointWithLabelInterface {
                 direction.compareTo("NOT COMPUTABLE") == 0 ||
                 direction.compareTo("OUT_OF_RANGE") == 0 ||
                 direction.compareTo("OUT OF RANGE") == 0 ||
-                direction.compareTo("NONE") == 0) {
+                direction.compareTo("NONE") == 0 ||
+                direction.compareTo("NotComputable") == 0
+                ) {
             return true;
         } else {
             return false;
@@ -181,7 +187,10 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public PointsWithLabelGraphSeries.Shape getShape() {
-        return PointsWithLabelGraphSeries.Shape.POINT;
+        if (isPrediction())
+            return PointsWithLabelGraphSeries.Shape.PREDICTION;
+        else
+            return PointsWithLabelGraphSeries.Shape.BG;
     }
 
     @Override
@@ -202,13 +211,32 @@ public class BgReading implements DataPointWithLabelInterface {
             highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
         int color = MainApp.sResources.getColor(R.color.inrange);
-        if (isPrediction)
+        if (isPrediction())
             color = MainApp.sResources.getColor(R.color.prediction);
         else if (valueToUnits(units) < lowLine)
             color = MainApp.sResources.getColor(R.color.low);
         else if (valueToUnits(units) > highLine)
             color = MainApp.sResources.getColor(R.color.high);
         return color;
+    }
+
+    @Override
+    public int getSecondColor() {
+        if (isIOBPrediction)
+            return MainApp.sResources.getColor(R.color.iob);
+        if (isCOBPrediction)
+            return MainApp.sResources.getColor(R.color.cob);
+        if (isaCOBPrediction)
+            return 0x80FFFFFF & MainApp.sResources.getColor(R.color.cob);
+        if (isUAMPrediction)
+            return MainApp.sResources.getColor(R.color.uam);
+        if (isZTPrediction)
+            return MainApp.sResources.getColor(R.color.zt);
+        return R.color.mdtp_white;
+    }
+
+    private boolean isPrediction() {
+        return isaCOBPrediction || isCOBPrediction || isIOBPrediction || isUAMPrediction || isZTPrediction;
     }
 
 }

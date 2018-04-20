@@ -47,7 +47,7 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
+        <activity android:name=".TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
@@ -61,6 +61,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
+        <activity android:name=".HistoryBrowseActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"
@@ -75,6 +76,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
                 <!-- Receiver from glimp -->
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
+                <!-- Receiver from DexcomG5 -->
+                <action android:name="com.dexcom.cgm.DATA" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->

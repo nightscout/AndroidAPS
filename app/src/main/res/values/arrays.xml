@@ -15,37 +15,45 @@
         <item>@string/bg_lang</item>
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
+        <item>@string/fr_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
+        <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
         <item>@string/sv_lang</item>
+        <item>@string/zh_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
         <item>en</item>
         <item>bg</item>
         <item>cs</item>
         <item>de</item>
+        <item>fr</item>
         <item>nl</item>
         <item>es</item>
         <item>el</item>
         <item>it</item>
         <item>ko</item>
+        <item>ro</item>
         <item>ru</item>
         <item>sv</item>
+        <item>zh-rCN</item>
     </string-array>
 
     <string-array name="ageArray">
         <item>@string/child</item>
         <item>@string/teenage</item>
         <item>@string/adult</item>
+        <item>@string/resistantadult</item>
     </string-array>
     <string-array name="ageValues" translatable="false">
         <item>@string/key_child</item>
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
+        <item>@string/key_resistantadult</item>
     </string-array>
 
     <string-array name="danaSpeedArray">
@@ -57,6 +65,45 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBGArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseCOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBolusIOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+    <string-array name="quickWizardUseBasalOBArray">
+        <item>@string/yes</item>
+        <item>@string/no</item>
+        <item>@string/positiveonly</item>
+        <item>@string/negativeonly</item>
+    </string-array>
+
+    <string-array name="quickWizardUseTrendArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+        <item>@string/positiveonly</item>
+        <item>@string/negativeonly</item>
+    </string-array>
+
+    <string-array name="quickWizardUseSuperBolusArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
+    </string-array>
+
+    <string-array name="quickWizardUseTempTargetArray">
+        <item>@string/no</item>
+        <item>@string/yes</item>
     </string-array>
 
 </resources>

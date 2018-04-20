@@ -3,10 +3,14 @@ package info.nightscout.androidaps.data;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.utils.DateUtil;
 
 /**
  * Created by mike on 09.05.2017.
@@ -16,8 +20,17 @@ import info.nightscout.androidaps.interfaces.Interval;
 // When no interval match the lastest record without duration is used
 
 public class ProfileIntervals<T extends Interval> {
+    private static Logger log = LoggerFactory.getLogger(ProfileIntervals.class);
 
-    private LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
+    private LongSparseArray<T> rawData; // oldest at index 0
+
+    public ProfileIntervals () {
+        rawData = new LongSparseArray<>();
+    }
+
+    public ProfileIntervals (ProfileIntervals<T> other) {
+        rawData = other.rawData.clone();
+    }
 
     public synchronized ProfileIntervals reset() {
         rawData = new LongSparseArray<>();
@@ -25,13 +38,16 @@ public class ProfileIntervals<T extends Interval> {
     }
 
     public synchronized void add(T newInterval) {
-        rawData.put(newInterval.start(), newInterval);
-        merge();
+        if (newInterval.isValid()) {
+            rawData.put(newInterval.start(), newInterval);
+            merge();
+        }
     }
 
     public synchronized void add(List<T> list) {
         for (T interval : list) {
-            rawData.put(interval.start(), interval);
+            if (interval.isValid())
+                rawData.put(interval.start(), interval);
         }
         merge();
     }
@@ -50,6 +66,13 @@ public class ProfileIntervals<T extends Interval> {
     public synchronized Interval getValueToTime(long time) {
         int index = binarySearch(time);
         if (index >= 0) return rawData.valueAt(index);
+        // if we request data older than first record, use oldest with zero duration instead
+        for (index = 0; index < rawData.size(); index++) {
+            if (rawData.valueAt(index).durationInMsec() == 0) {
+                //log.debug("Requested profile for time: " + DateUtil.dateAndTimeString(time) + ". Providing oldest record: " + rawData.valueAt(0).toString());
+                return rawData.valueAt(index);
+            }
+        }
         return null;
     }
 
@@ -62,7 +85,7 @@ public class ProfileIntervals<T extends Interval> {
 
     public synchronized List<T> getReversedList() {
         List<T> list = new ArrayList<>();
-        for (int i = rawData.size() -1; i>=0; i--)
+        for (int i = rawData.size() - 1; i >= 0; i--)
             list.add(rawData.valueAt(i));
         return list;
     }
@@ -105,5 +128,10 @@ public class ProfileIntervals<T extends Interval> {
 
     public synchronized T getReversed(int index) {
         return rawData.valueAt(size() - 1 - index);
+    }
+
+    @Override
+    public String toString() {
+        return rawData.toString();
     }
 }

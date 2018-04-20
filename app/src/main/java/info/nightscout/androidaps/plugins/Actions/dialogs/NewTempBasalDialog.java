@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Actions.dialogs;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -24,10 +22,12 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 
@@ -102,6 +102,9 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
         basalTypeRadioGroup.setOnCheckedChangeListener(this);
+
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         return view;
     }
 
@@ -115,17 +118,21 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     final boolean setAsPercent = percentRadio.isChecked();
                     int durationInMinutes = SafeParse.stringToInt(duration.getText());
 
+                    Profile profile = MainApp.getConfigBuilder().getProfile();
+                    if (profile == null)
+                        return;
+
                     String confirmMessage = getString(R.string.setbasalquestion);
                     if (setAsPercent) {
                         int basalPercentInput = SafeParse.stringToInt(basalPercent.getText());
-                        percent = MainApp.getConfigBuilder().applyBasalConstraints(basalPercentInput);
+                        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(basalPercentInput), profile).value();
                         confirmMessage += "\n" + percent + "% ";
                         confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (percent != basalPercentInput)
                             confirmMessage += "\n" + getString(R.string.constraintapllied);
                     } else {
                         Double basalAbsoluteInput = SafeParse.stringToDouble(basalAbsolute.getText());
-                        absolute = MainApp.getConfigBuilder().applyBasalConstraints(basalAbsoluteInput);
+                        absolute = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(basalAbsoluteInput), profile).value();
                         confirmMessage += "\n" + absolute + " U/h ";
                         confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (absolute - basalAbsoluteInput != 0d)
@@ -155,11 +162,11 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                 }
                             };
                             if (setAsPercent) {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, callback);
+                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, profile, callback);
                             } else {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, callback);
+                                ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, profile, callback);
                             }
-                            Answers.getInstance().logCustom(new CustomEvent("TempBasal"));
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("TempBasal"));
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);
