@@ -128,13 +128,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (id != -1) {
                 addPreferencesFromResource(id);
             } else {
-                addPreferencesFromResource(R.xml.pref_overview);
 
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_password);
                 }
                 addPreferencesFromResource(R.xml.pref_age);
                 addPreferencesFromResource(R.xml.pref_language);
+
+                addPreferencesFromResource(R.xml.pref_overview);
 
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_quickwizard);

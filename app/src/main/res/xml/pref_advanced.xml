@@ -5,13 +5,6 @@
         android:key="advanced"
         android:title="@string/advancedsettings_title">
         <PreferenceScreen android:title="@string/advancedsettings_title">
-            <PreferenceCategory android:title="@string/superbolus">
-                <SwitchPreference
-                    android:defaultValue="false"
-                    android:key="@string/key_usesuperbolus"
-                    android:summary="@string/enablesuperbolus_summary"
-                    android:title="@string/enablesuperbolus" />
-            </PreferenceCategory>
             <PreferenceCategory android:title="@string/openapsma">
                 <SwitchPreference
                     android:defaultValue="false"
