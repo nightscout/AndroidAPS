@@ -184,9 +184,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     final Object updateSync = new Object();
 
-    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN}
-
-    ;
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, DEVSLOPE}
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -410,26 +408,33 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 item.setCheckable(true);
                 item.setChecked(SP.getBoolean("showratios", false));
 
+                if (MainApp.devBranch) {
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(SP.getBoolean("showdevslope", false));
+                }
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
                             SP.putBoolean("showprediction", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
                             SP.putBoolean("showbasals", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
                             SP.putBoolean("showiob", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
                             SP.putBoolean("showcob", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
                             SP.putBoolean("showdeviations", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
                             SP.putBoolean("showratios", !item.isChecked());
+                        } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
+                            SP.putBoolean("showdevslope", !item.isChecked());
                         }
                         scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
                         return true;
@@ -1387,7 +1392,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 useDevForScale = true;
             } else if (SP.getBoolean("showratios", false)) {
                 useRatioForScale = true;
-            } else if (Config.displayDeviationSlope) {
+            } else if (SP.getBoolean("showdevslope", false)) {
                 useDSForScale = true;
             }
 
@@ -1399,7 +1404,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
             if (SP.getBoolean("showratios", false))
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
-            if (Config.displayDeviationSlope)
+            if (SP.getBoolean("showdevslope", false))
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
             // **** NOW line ****
@@ -1411,7 +1416,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             FragmentActivity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
-                    if (SP.getBoolean("showiob", true) || SP.getBoolean("showcob", true) || SP.getBoolean("showdeviations", false) || SP.getBoolean("showratios", false) || Config.displayDeviationSlope) {
+                    if (SP.getBoolean("showiob", true)
+                            || SP.getBoolean("showcob", true)
+                            || SP.getBoolean("showdeviations", false)
+                            || SP.getBoolean("showratios", false)
+                            || SP.getBoolean("showdevslope", false)) {
                         iobGraph.setVisibility(View.VISIBLE);
                     } else {
                         iobGraph.setVisibility(View.GONE);
