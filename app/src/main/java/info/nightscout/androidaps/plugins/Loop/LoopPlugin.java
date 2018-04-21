@@ -27,6 +27,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -54,6 +56,7 @@ public class LoopPlugin extends PluginBase {
 
     public static final String CHANNEL_ID = "AndroidAPS-Openloop";
 
+    long lastBgTriggeredRun = 0;
 
     protected static LoopPlugin loopPlugin;
 
@@ -135,9 +138,22 @@ public class LoopPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (ev.cause instanceof EventNewBG) {
-            invoke(ev.getClass().getSimpleName() + "(" + ev.cause.getClass().getSimpleName() + ")", true);
+        if (!(ev.cause instanceof EventNewBG)) {
+            // Autosens calculation not triggered by a new BG
+            return;
         }
+        BgReading bgReading = DatabaseHelper.actualBg();
+        if (bgReading == null) {
+            // BG outdated
+            return;
+        }
+        if (bgReading.date <= lastBgTriggeredRun) {
+            // already looped with that value
+            return;
+        }
+
+        lastBgTriggeredRun = bgReading.date;
+        invoke("AutosenseCalculation for " + bgReading, true);
     }
 
     public long suspendedTo() {
