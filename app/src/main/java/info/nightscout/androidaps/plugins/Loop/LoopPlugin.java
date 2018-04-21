@@ -29,6 +29,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -136,6 +137,15 @@ public class LoopPlugin extends PluginBase {
         }
     }
 
+    /**
+     * This method is triggered once autosens calculation has completed, so the LoopPlugin
+     * has current data to work with. However, autosens calculation can be triggered by multiple
+     * sources and currently only a new BG should trigger a loop run. Hence we return early if
+     * the event causing the calculation is not EventNewBg.
+     *
+     *  Callers of {@link info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin#runCalculation(String, long, boolean, Event)}
+     *  are sources triggering a calculation which triggers this method upon completion.
+     */
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         if (!(ev.cause instanceof EventNewBG)) {
