@@ -130,7 +130,7 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                if (nsClientEnabled || SP.getBoolean(R.string.ns_autobackfill, true))
+                if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
                     handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
