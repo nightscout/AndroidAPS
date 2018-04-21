@@ -137,9 +137,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResource(R.xml.pref_overview);
 
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
-                    addPreferencesFromResource(R.xml.pref_quickwizard);
-                }
                 addPreferencesFromResourceIfEnabled(SourceDexcomG5Plugin.getPlugin(), PluginType.BGSOURCE);
                 addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginType.CONSTRAINTS);
