@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:title="@string/nsclientinternal_title">
+
+    <PreferenceCategory android:title="@string/nsclientinternal_title">
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
             android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
@@ -14,7 +14,6 @@
             validate:testType="webUrl" />
 
         <EditTextPreference
-            android:defaultValue=""
             android:dialogMessage="@string/nsclientinternal_secret_dialogmessage"
             android:dialogTitle="@string/nsclientinternal_secret_dialogtitle"
             android:inputType="textPassword"
@@ -104,6 +103,23 @@
                 android:key="@string/key_ns_localbroadcasts"
                 android:summary="@string/ns_localbroadcasts"
                 android:title="@string/ns_localbroadcasts_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_upload_only"
+                android:summary="@string/ns_upload_only_summary"
+                android:title="@string/ns_upload_only" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_noupload"
+                android:summary="@string/ns_noupload_summary"
+                android:title="@string/ns_noupload" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="ns_sync_use_absolute"
+                android:title="@string/ns_sync_use_absolute_title" />
 
         </PreferenceScreen>
 
