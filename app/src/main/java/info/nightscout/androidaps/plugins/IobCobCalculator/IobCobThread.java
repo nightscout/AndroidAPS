@@ -24,6 +24,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
@@ -97,6 +98,8 @@ public class IobCobThread extends Thread {
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
+                    MainApp.bus().post(new EventIobCalculationProgress(i + "/" + bucketed_data.size()));
+
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                         iobCobCalculatorPlugin.stopCalculationTrigger = false;
                         log.debug("Aborting calculation thread (trigger): " + from);
@@ -269,6 +272,7 @@ public class IobCobThread extends Thread {
             log.debug("Finishing calculation thread: " + from);
         } finally {
             mWakeLock.release();
+            MainApp.bus().post(new EventIobCalculationProgress(""));
         }
     }
 

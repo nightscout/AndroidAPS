@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,10 +14,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -52,8 +48,6 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -97,9 +91,9 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
@@ -108,10 +102,8 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationRecyclerViewAdapter;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
@@ -150,6 +142,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView pumpDeviceStatusView;
     TextView openapsDeviceStatusView;
     TextView uploaderDeviceStatusView;
+    TextView iobCalculationProgressView;
     LinearLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
@@ -245,6 +238,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
             openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
             uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
+            iobCalculationProgressView = (TextView) view.findViewById(R.id.overview_iobcalculationprogess);
             loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
             pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
@@ -911,15 +905,22 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activity.runOnUiThread(() -> updatePumpStatus(s.textStatus()));
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventIobCalculationProgress e) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(() -> {
+                if (iobCalculationProgressView != null)
+                    iobCalculationProgressView.setText(e.progress);
+            });
+    }
+
     private void hideTempRecommendation() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (acceptTempLayout != null)
-                        acceptTempLayout.setVisibility(View.GONE);
-                }
+            activity.runOnUiThread(() -> {
+                if (acceptTempLayout != null)
+                    acceptTempLayout.setVisibility(View.GONE);
             });
     }
 
