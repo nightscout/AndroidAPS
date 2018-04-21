@@ -1000,8 +1000,8 @@
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="pump_stopped">Pump stopped</string>
-    <string name="pump_started">Pump paused</string>
-    <string name="pump_paused">Pump started</string>
+    <string name="pump_started">Pump started</string>
+    <string name="pump_paused">Pump paused</string>
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
     <string name="time">Time</string>

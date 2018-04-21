@@ -736,6 +736,6 @@
     <string name="combo_tbr_count">Anzahl TBRs</string>
     <string name="combo_bolus_count">Anzahl Boluse</string>
     <string name="pump_stopped">Pumpe gestoppt</string>
-    <string name="pump_started">Pumpe pausiert</string>
-    <string name="pump_paused">Pumpe gestartet</string>
+    <string name="pump_started">Pumpe gestartet</string>
+    <string name="pump_paused">Pumpe pausiert</string>
 </resources>
