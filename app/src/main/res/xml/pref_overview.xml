@@ -1,116 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory android:title="@string/overview">
+
         <PreferenceScreen android:title="@string/overview_buttons_selection">
+
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_show_treatment_button"
-                android:title="Treatments" />
+                android:title="@string/treatments" />
+
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_show_wizard_button"
-                android:title="@string/overview_calculator_label"/>
+                android:title="@string/overview_calculator_label" />
 
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_show_insulin_button"
-                android:title="Insulin" />
+                android:title="@string/configbuilder_insulin" />
+
             <com.andreabaccega.widget.ValidatingEditTextPreference
-                android:dependency="@string/key_show_insulin_button"
-                validate:testType="floatNumericRange"
-                validate:floatminNumber="-5.0"
-                validate:floatmaxNumber="5.0"
                 android:defaultValue="0.5"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
+                android:dependency="@string/key_show_insulin_button"
+                android:dialogMessage="@string/insulin_increment_button_message"
                 android:inputType="numberDecimal|numberDecimal|numberSigned"
+                android:key="@string/key_insulin_button_increment_1"
                 android:maxLines="20"
-                android:title="First insulin increment"
-                android:dialogMessage="@string/insulin_increment_button_message"
-                android:key="@string/key_insulin_button_increment_1" />
-            <com.andreabaccega.widget.ValidatingEditTextPreference
-                android:dependency="@string/key_show_insulin_button"
-                validate:testType="floatNumericRange"
-                validate:floatminNumber="-5.0"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/firstinsulinincrement"
                 validate:floatmaxNumber="5.0"
+                validate:floatminNumber="-5.0"
+                validate:testType="floatNumericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:defaultValue="1.0"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:inputType="numberDecimal|numberSigned"
-                android:maxLines="20"
-                android:title="Second insulin increment"
-                android:dialogMessage="@string/insulin_increment_button_message"
-                android:key="@string/key_insulin_button_increment_2" />
-            <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:dependency="@string/key_show_insulin_button"
-                validate:testType="floatNumericRange"
-                validate:floatminNumber="-5.0"
-                validate:floatmaxNumber="5.0"
-                android:defaultValue="2.0"
+                android:dialogMessage="@string/insulin_increment_button_message"
+                android:inputType="numberDecimal|numberSigned"
+                android:key="@string/key_insulin_button_increment_2"
+                android:maxLines="20"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="numberDecimal|numberSigned"
-                android:maxLines="20"
-                android:title="Third insulin increment"
+                android:title="@string/secondinsulinincrement"
+                validate:floatmaxNumber="5.0"
+                validate:floatminNumber="-5.0"
+                validate:testType="floatNumericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="2.0"
+                android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
-                android:key="@string/key_insulin_button_increment_3"/>
+                android:inputType="numberDecimal|numberSigned"
+                android:key="@string/key_insulin_button_increment_3"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/thirdinsulinincrement"
+                validate:floatmaxNumber="5.0"
+                validate:floatminNumber="-5.0"
+                validate:testType="floatNumericRange" />
 
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_show_carbs_button"
-                android:title="Carbs" />
+                android:title="@string/carbs" />
+
             <com.andreabaccega.widget.ValidatingEditTextPreference
-                android:dependency="@string/key_show_carbs_button"
-                validate:testType="numericRange"
-                validate:minNumber="-50"
-                validate:maxNumber="50"
                 android:defaultValue="5"
+                android:dependency="@string/key_show_carbs_button"
+                android:dialogMessage="@string/carb_increment_button_message"
+                android:inputType="numberSigned"
+                android:key="@string/key_carbs_button_increment_1"
+                android:maxLines="20"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="numberSigned"
-                android:maxLines="20"
-                android:title="First carbs increment"
-                android:dialogMessage="@string/carb_increment_button_message"
-                android:key="@string/key_carbs_button_increment_1" />
-            <com.andreabaccega.widget.ValidatingEditTextPreference
-                android:dependency="@string/key_show_carbs_button"
-                validate:testType="numericRange"
-                validate:minNumber="-50"
+                android:title="@string/firstcarbsincrement"
                 validate:maxNumber="50"
+                validate:minNumber="-50"
+                validate:testType="numericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:defaultValue="10"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:inputType="numberSigned"
-                android:maxLines="20"
-                android:title="Second carbs increment"
-                android:dialogMessage="@string/carb_increment_button_message"
-                android:key="@string/key_carbs_button_increment_2" />
-            <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:dependency="@string/key_show_carbs_button"
-                validate:testType="numericRange"
-                validate:minNumber="-50"
-                validate:maxNumber="50"
-                android:defaultValue="20"
+                android:dialogMessage="@string/carb_increment_button_message"
+                android:inputType="numberSigned"
+                android:key="@string/key_carbs_button_increment_2"
+                android:maxLines="20"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="numberSigned"
-                android:maxLines="20"
-                android:title="Third carbs increment"
+                android:title="@string/secondcarbsincrement"
+                validate:maxNumber="50"
+                validate:minNumber="-50"
+                validate:testType="numericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="20"
+                android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
-                android:key="@string/key_carbs_button_increment_3" />
+                android:inputType="numberSigned"
+                android:key="@string/key_carbs_button_increment_3"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/thirdcarbsincrement"
+                validate:maxNumber="50"
+                validate:minNumber="-50"
+                validate:testType="numericRange" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_show_cgm_button"
-                android:title="CGM"
-                android:summary="@string/show_cgm_button_summary"/>
+                android:summary="@string/show_cgm_button_summary"
+                android:title="@string/cgm" />
+
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_show_calibration_button"
-                android:title="@string/overview_calibration"
-                android:summary="@string/show_calibration_button_summary"/>
+                android:summary="@string/show_calibration_button_summary"
+                android:title="@string/overview_calibration" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_show_notes_entry_dialogs"
+                android:title="@string/overview_show_notes_field_in_dialogs_title" />
 
         </PreferenceScreen>
+
+        <Preference
+            android:key="quickwizard"
+            android:title="@string/quickwizardsettings">
+            <intent android:action="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+        </Preference>
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_usesuperbolus"
+                android:summary="@string/enablesuperbolus_summary"
+                android:title="@string/enablesuperbolus" />
+
+        </PreferenceScreen>
+
     </PreferenceCategory>
+
 </PreferenceScreen>

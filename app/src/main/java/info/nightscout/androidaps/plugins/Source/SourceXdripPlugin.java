@@ -12,6 +12,8 @@ import info.nightscout.androidaps.interfaces.PluginType;
 public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
 
     private static SourceXdripPlugin plugin = null;
+    
+    boolean advancedFiltering;
 
     public static SourceXdripPlugin getPlugin() {
         if (plugin == null)
@@ -29,6 +31,10 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
 
     @Override
     public boolean advancedFilteringSupported() {
-        return false;
+        return advancedFiltering;
+    }
+
+    public void setSource(String source) {
+        this.advancedFiltering = source.contains("G5 Native");
     }
 }

@@ -108,7 +108,7 @@ public class GraphData {
         inRangeAreaSeries = new AreaGraphSeries<>(inRangeAreaDataPoints);
         inRangeAreaSeries.setColor(0);
         inRangeAreaSeries.setDrawBackground(true);
-        inRangeAreaSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.inrangebackground));
+        inRangeAreaSeries.setBackgroundColor(MainApp.gc(R.color.inrangebackground));
 
         addSeries(inRangeAreaSeries);
     }
@@ -184,14 +184,14 @@ public class GraphData {
         baseBasal = baseBasalArray.toArray(baseBasal);
         baseBasalsSeries = new LineGraphSeries<>(baseBasal);
         baseBasalsSeries.setDrawBackground(true);
-        baseBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.basebasal));
+        baseBasalsSeries.setBackgroundColor(MainApp.gc(R.color.basebasal));
         baseBasalsSeries.setThickness(0);
 
         ScaledDataPoint[] tempBasal = new ScaledDataPoint[tempBasalArray.size()];
         tempBasal = tempBasalArray.toArray(tempBasal);
         tempBasalsSeries = new LineGraphSeries<>(tempBasal);
         tempBasalsSeries.setDrawBackground(true);
-        tempBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.tempbasal));
+        tempBasalsSeries.setBackgroundColor(MainApp.gc(R.color.tempbasal));
         tempBasalsSeries.setThickness(0);
 
         ScaledDataPoint[] basalLine = new ScaledDataPoint[basalLineArray.size()];
@@ -201,7 +201,7 @@ public class GraphData {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity * 2);
         paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
-        paint.setColor(MainApp.sResources.getColor(R.color.basal));
+        paint.setColor(MainApp.gc(R.color.basal));
         basalsLineSeries.setCustomPaint(paint);
 
         ScaledDataPoint[] absoluteBasalLine = new ScaledDataPoint[absoluteBasalLineArray.size()];
@@ -210,7 +210,7 @@ public class GraphData {
         Paint absolutePaint = new Paint();
         absolutePaint.setStyle(Paint.Style.STROKE);
         absolutePaint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity * 2);
-        absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
+        absolutePaint.setColor(MainApp.gc(R.color.basal));
         absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
 
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound);
@@ -259,7 +259,7 @@ public class GraphData {
         targets = targetsSeriesArray.toArray(targets);
         targetsSeries = new LineGraphSeries<>(targets);
         targetsSeries.setDrawBackground(false);
-        targetsSeries.setColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
+        targetsSeries.setColor(MainApp.gc(R.color.tempTargetBackground));
         targetsSeries.setThickness(2);
 
         addSeries(targetsSeries);
@@ -351,8 +351,8 @@ public class GraphData {
         iobData = iobArray.toArray(iobData);
         iobSeries = new FixedLineGraphSeries<>(iobData);
         iobSeries.setDrawBackground(true);
-        iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.iob)); //50%
-        iobSeries.setColor(MainApp.sResources.getColor(R.color.iob));
+        iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.gc(R.color.iob)); //50%
+        iobSeries.setColor(MainApp.gc(R.color.iob));
         iobSeries.setThickness(3);
 
         if (useForScale)
@@ -365,6 +365,7 @@ public class GraphData {
 
     // scale in % of vertical size (like 0.3)
     public void addCob(long fromTime, long toTime, boolean useForScale, double scale) {
+        List<DataPointWithLabelInterface> minFailoverActiveList = new ArrayList<>();
         FixedLineGraphSeries<ScaledDataPoint> cobSeries;
         List<ScaledDataPoint> cobArray = new ArrayList<>();
         Double maxCobValueFound = 0d;
@@ -382,6 +383,10 @@ public class GraphData {
                     maxCobValueFound = Math.max(maxCobValueFound, cob);
                     lastCob = cob;
                 }
+                if (autosensData.failoverToMinAbsorbtionRate) {
+                    autosensData.setScale(cobScale);
+                    minFailoverActiveList.add(autosensData);
+                }
             }
         }
 
@@ -390,8 +395,8 @@ public class GraphData {
         cobData = cobArray.toArray(cobData);
         cobSeries = new FixedLineGraphSeries<>(cobData);
         cobSeries.setDrawBackground(true);
-        cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
-        cobSeries.setColor(MainApp.sResources.getColor(R.color.cob));
+        cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.gc(R.color.cob)); //50%
+        cobSeries.setColor(MainApp.gc(R.color.cob));
         cobSeries.setThickness(3);
 
         if (useForScale)
@@ -400,6 +405,10 @@ public class GraphData {
         cobScale.setMultiplier(maxY * scale / maxCobValueFound);
 
         addSeries(cobSeries);
+
+        DataPointWithLabelInterface[] minFailover = new DataPointWithLabelInterface[minFailoverActiveList.size()];
+        minFailover = minFailoverActiveList.toArray(minFailover);
+        addSeries(new PointsWithLabelGraphSeries<>(minFailover));
     }
 
     // scale in % of vertical size (like 0.3)
@@ -468,7 +477,7 @@ public class GraphData {
         ScaledDataPoint[] ratioData = new ScaledDataPoint[ratioArray.size()];
         ratioData = ratioArray.toArray(ratioData);
         ratioSeries = new LineGraphSeries<>(ratioData);
-        ratioSeries.setColor(MainApp.sResources.getColor(R.color.ratio));
+        ratioSeries.setColor(MainApp.gc(R.color.ratio));
         ratioSeries.setThickness(3);
 
         if (useForScale)
@@ -504,13 +513,13 @@ public class GraphData {
         ScaledDataPoint[] ratioMaxData = new ScaledDataPoint[dsMaxArray.size()];
         ratioMaxData = dsMaxArray.toArray(ratioMaxData);
         dsMaxSeries = new LineGraphSeries<>(ratioMaxData);
-        dsMaxSeries.setColor(Color.MAGENTA);
+        dsMaxSeries.setColor(MainApp.gc(R.color.devslopepos));
         dsMaxSeries.setThickness(3);
 
         ScaledDataPoint[] ratioMinData = new ScaledDataPoint[dsMinArray.size()];
         ratioMinData = dsMinArray.toArray(ratioMinData);
         dsMinSeries = new LineGraphSeries<>(ratioMinData);
-        dsMinSeries.setColor(Color.YELLOW);
+        dsMinSeries.setColor(MainApp.gc(R.color.devslopeneg));
         dsMinSeries.setThickness(3);
 
         if (useForScale)

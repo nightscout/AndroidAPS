@@ -84,14 +84,10 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
                 holder.reasonLabel.setText("");
                 holder.reasonColon.setText("");
             }
-            if (tempTarget.isInProgress()) {
-                if (tempTarget == currentlyActiveTarget) {
-                    // active as newest
-                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
-                } else {
-                    // other's that might become active again after the latest (overlapping) is over
-                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-                }
+            if (tempTarget.isInProgress() && tempTarget == currentlyActiveTarget) {
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+            } else if (tempTarget.date > DateUtil.now()) {
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorScheduled));
             } else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
             }

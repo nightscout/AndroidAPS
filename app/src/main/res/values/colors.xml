@@ -8,6 +8,8 @@
     <color name="uam">#ffea00</color>
     <color name="zt">#ff9500</color>
     <color name="ratio">#FFFFFF</color>
+    <color name="devslopepos">#FFFFFF00</color>
+    <color name="devslopeneg">#FFFF00FF</color>
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
@@ -49,7 +51,7 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
 
-    <color name="colorInProgress">#c45026</color>
+    <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#1b5e20</color>
 
     <color name="loopenabled">#47c8ff</color>

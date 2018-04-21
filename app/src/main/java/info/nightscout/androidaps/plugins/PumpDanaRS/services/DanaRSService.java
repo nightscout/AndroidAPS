@@ -273,7 +273,7 @@ public class DanaRSService extends Service {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
             }
         });
-        return true;
+        return !start.failed;
     }
 
     public void bolusStop() {

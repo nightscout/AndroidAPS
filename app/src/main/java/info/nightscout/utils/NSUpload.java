@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -258,7 +259,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadBolusWizardRecord(DetailedBolusInfo detailedBolusInfo) {
+    public static void uploadTreatmentRecord(DetailedBolusInfo detailedBolusInfo) {
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", detailedBolusInfo.eventType);
@@ -309,13 +310,21 @@ public class NSUpload {
 
     public static void uploadTempTarget(TempTarget tempTarget) {
         try {
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+
+            if (profile == null) {
+                log.error("Profile is null. Skipping upload");
+                return;
+            }
+
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPORARYTARGET);
             data.put("duration", tempTarget.durationInMinutes);
             data.put("reason", tempTarget.reason);
-            data.put("targetBottom", tempTarget.low);
-            data.put("targetTop", tempTarget.high);
+            data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()));
+            data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()));
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
+            data.put("units", profile.getUnits());
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
@@ -500,7 +509,7 @@ public class NSUpload {
             }
     }
 
-    public static void uploadEvent(String careportalEvent, long time) {
+    public static void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
@@ -510,6 +519,9 @@ public class NSUpload {
             data.put("eventType", careportalEvent);
             data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+            if (notes != null) {
+                data.put("notes", notes);
+            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

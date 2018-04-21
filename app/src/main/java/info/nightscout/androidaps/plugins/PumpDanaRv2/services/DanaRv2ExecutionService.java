@@ -386,7 +386,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
             }
         });
-        return true;
+        return !start.failed;
     }
 
     public void bolusStop() {
