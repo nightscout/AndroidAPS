@@ -431,7 +431,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         carbInfo.context = getContext();
         carbInfo.source = Source.USER;
         carbInfo.notes = notes;
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
             ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
                 @Override
                 public void run() {
