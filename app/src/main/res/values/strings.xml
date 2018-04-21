@@ -1006,4 +1006,11 @@
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
+    <string name="firstinsulinincrement">First insulin increment</string>
+    <string name="secondinsulinincrement">Second insulin increment</string>
+    <string name="thirdinsulinincrement">Third insulin increment</string>
+    <string name="firstcarbsincrement">First carbs increment</string>
+    <string name="secondcarbsincrement">Second carbs increment</string>
+    <string name="thirdcarbsincrement">Third carbs increment</string>
+    <string name="cgm">CGM</string>
 </resources>
