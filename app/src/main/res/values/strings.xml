@@ -1016,4 +1016,12 @@
     <string name="secondcarbsincrement">Second carbs increment</string>
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
+    <string name="key_ns_wifionly" translatable="false">ns_wifionly</string>
+    <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
+    <string name="key_ns_allowroaming" translatable="false">ns_allowroaming</string>
+    <string name="ns_wifionly">Use WiFi connection only</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="connectionsettings_title">Connection settings</string>
+    <string name="ns_wifi_allowedssids">Allowed SSIDs (semicolon separated)</string>
+    <string name="ns_allowroaming">Allow connection in roaming</string>
 </resources>

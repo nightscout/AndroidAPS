@@ -85,7 +85,27 @@
 
         </PreferenceScreen>
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <PreferenceScreen android:title="@string/connectionsettings_title">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_wifionly"
+                android:title="@string/ns_wifionly" />
+
+            <EditTextPreference
+                android:dialogMessage="@string/ns_wifi_allowedssids"
+                android:inputType="text"
+                android:key="@string/key_ns_wifi_ssids"
+                android:title="@string/ns_wifi_ssids" />
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_ns_allowroaming"
+                android:title="@string/ns_allowroaming" />
+
+        </PreferenceScreen>
+
+       <PreferenceScreen android:title="@string/advancedsettings_title">
 
             <SwitchPreference
                 android:defaultValue="true"
