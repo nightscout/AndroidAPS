@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,10 +14,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -52,8 +48,6 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -97,9 +91,9 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
@@ -108,10 +102,8 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationRecyclerViewAdapter;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
@@ -150,6 +142,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView pumpDeviceStatusView;
     TextView openapsDeviceStatusView;
     TextView uploaderDeviceStatusView;
+    TextView iobCalculationProgressView;
     LinearLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
@@ -191,9 +184,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     final Object updateSync = new Object();
 
-    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN}
-
-    ;
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, DEVSLOPE}
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -245,6 +236,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
             openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
             uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
+            iobCalculationProgressView = (TextView) view.findViewById(R.id.overview_iobcalculationprogess);
             loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
             pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
@@ -416,26 +408,33 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 item.setCheckable(true);
                 item.setChecked(SP.getBoolean("showratios", false));
 
+                if (MainApp.devBranch) {
+                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(SP.getBoolean("showdevslope", false));
+                }
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
                             SP.putBoolean("showprediction", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
                             SP.putBoolean("showbasals", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
                             SP.putBoolean("showiob", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
                             SP.putBoolean("showcob", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
                             SP.putBoolean("showdeviations", !item.isChecked());
-
                         } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
                             SP.putBoolean("showratios", !item.isChecked());
+                        } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
+                            SP.putBoolean("showdevslope", !item.isChecked());
                         }
                         scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
                         return true;
@@ -911,15 +910,22 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activity.runOnUiThread(() -> updatePumpStatus(s.textStatus()));
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventIobCalculationProgress e) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(() -> {
+                if (iobCalculationProgressView != null)
+                    iobCalculationProgressView.setText(e.progress);
+            });
+    }
+
     private void hideTempRecommendation() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (acceptTempLayout != null)
-                        acceptTempLayout.setVisibility(View.GONE);
-                }
+            activity.runOnUiThread(() -> {
+                if (acceptTempLayout != null)
+                    acceptTempLayout.setVisibility(View.GONE);
             });
     }
 
@@ -1386,7 +1392,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 useDevForScale = true;
             } else if (SP.getBoolean("showratios", false)) {
                 useRatioForScale = true;
-            } else if (Config.displayDeviationSlope) {
+            } else if (SP.getBoolean("showdevslope", false)) {
                 useDSForScale = true;
             }
 
@@ -1398,7 +1404,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
             if (SP.getBoolean("showratios", false))
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
-            if (Config.displayDeviationSlope)
+            if (SP.getBoolean("showdevslope", false))
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
             // **** NOW line ****
@@ -1410,7 +1416,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             FragmentActivity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
-                    if (SP.getBoolean("showiob", true) || SP.getBoolean("showcob", true) || SP.getBoolean("showdeviations", false) || SP.getBoolean("showratios", false) || Config.displayDeviationSlope) {
+                    if (SP.getBoolean("showiob", true)
+                            || SP.getBoolean("showcob", true)
+                            || SP.getBoolean("showdeviations", false)
+                            || SP.getBoolean("showratios", false)
+                            || SP.getBoolean("showdevslope", false)) {
                         iobGraph.setVisibility(View.VISIBLE);
                     } else {
                         iobGraph.setVisibility(View.GONE);

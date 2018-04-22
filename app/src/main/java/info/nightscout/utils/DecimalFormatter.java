@@ -46,13 +46,13 @@ public class DecimalFormatter {
     }
 
     public static String toPumpSupportedBolus(double value) {
-        return ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep <= 0.01
+        return ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep <= 0.05
                 ? to2Decimal(value)
                 : to1Decimal(value);
     }
 
     public static DecimalFormat pumpSupportedBolusFormat() {
-        return ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep <= 0.01
+        return ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep <= 0.05
                 ? new DecimalFormat("0.00")
                 : new DecimalFormat("0.0");
     }

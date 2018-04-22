@@ -619,6 +619,8 @@
     <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
@@ -997,7 +999,29 @@
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
+    <string name="pump_stopped">Pump stopped</string>
+    <string name="pump_started">Pump started</string>
+    <string name="pump_paused">Pump paused</string>
+    <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
+    <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
     <string name="time">Time</string>
     <string name="key_show_notes_entry_dialogs">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
+    <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
+    <string name="firstinsulinincrement">First insulin increment</string>
+    <string name="secondinsulinincrement">Second insulin increment</string>
+    <string name="thirdinsulinincrement">Third insulin increment</string>
+    <string name="firstcarbsincrement">First carbs increment</string>
+    <string name="secondcarbsincrement">Second carbs increment</string>
+    <string name="thirdcarbsincrement">Third carbs increment</string>
+    <string name="cgm">CGM</string>
+    <string name="key_ns_wifionly" translatable="false">ns_wifionly</string>
+    <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
+    <string name="key_ns_allowroaming" translatable="false">ns_allowroaming</string>
+    <string name="ns_wifionly">Use WiFi connection only</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="connectionsettings_title">Connection settings</string>
+    <string name="ns_wifi_allowedssids">Allowed SSIDs (semicolon separated)</string>
+    <string name="ns_allowroaming">Allow connection in roaming</string>
 </resources>

@@ -11,6 +11,8 @@ import info.nightscout.utils.HardLimits;
 public class MsgBolusStartWithSpeed extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusStartWithSpeed.class);
 
+    public static int errorCode;
+
     public MsgBolusStartWithSpeed() {
         SetCommand(0x0104);
     }
@@ -30,13 +32,13 @@ public class MsgBolusStartWithSpeed extends MessageBase {
 
     @Override
     public void handleMessage(byte[] bytes) {
-        int result = intFromBuff(bytes, 0, 1);
-        if (result != 2) {
+        errorCode = intFromBuff(bytes, 0, 1);
+        if (errorCode != 2) {
             failed = true;
-            log.debug("Messsage response: " + result + " FAILED!!");
+            log.debug("Messsage response: " + errorCode + " FAILED!!");
         } else {
             if (Config.logDanaMessageDetail)
-                log.debug("Messsage response: " + result);
+                log.debug("Messsage response: " + errorCode + " OK");
         }
     }
 }
