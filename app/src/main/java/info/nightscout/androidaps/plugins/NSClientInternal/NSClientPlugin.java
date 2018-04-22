@@ -135,7 +135,7 @@ public class NSClientPlugin extends PluginBase {
     public void onStatusEvent(final EventNetworkChange ev) {
         boolean wifiOnly = SP.getBoolean(R.string.key_ns_wifionly, false);
         String allowedSSIDs = SP.getString(R.string.key_ns_wifi_ssids, "");
-        boolean allowRoaming = SP.getBoolean(R.string.key_ns_allowroaming, true);
+        boolean allowRoaming = SP.getBoolean(R.string.key_ns_allowroaming, true) && !wifiOnly;
 
         boolean newAllowedState = true;
 
