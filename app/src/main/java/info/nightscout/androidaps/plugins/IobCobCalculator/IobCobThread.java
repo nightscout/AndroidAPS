@@ -34,6 +34,8 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
+import static info.nightscout.utils.DateUtil.now;
+
 /**
  * Created by mike on 23.01.2018.
  */
@@ -76,24 +78,22 @@ public class IobCobThread extends Thread {
             }
             //log.debug("Locking calculateSensitivityData");
 
-            Object dataLock = iobCobCalculatorPlugin.dataLock;
-
             long oldestTimeWithData = iobCobCalculatorPlugin.oldestDataAvailable();
 
-            synchronized (dataLock) {
+            synchronized (iobCobCalculatorPlugin.dataLock) {
                 if (bgDataReload) {
                     iobCobCalculatorPlugin.loadBgData(start);
                     iobCobCalculatorPlugin.createBucketedData();
                 }
                 List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();
-                LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
+                LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
                 if (bucketed_data == null || bucketed_data.size() < 3) {
                     log.debug("Aborting calculation thread (No bucketed data available): " + from);
                     return;
                 }
 
-                long prevDataTime = iobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
+                long prevDataTime = IobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
                 log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
@@ -107,10 +107,9 @@ public class IobCobThread extends Thread {
                     }
                     // check if data already exists
                     long bgTime = bucketed_data.get(i).date;
-                    bgTime = iobCobCalculatorPlugin.roundUpTime(bgTime);
-                    if (bgTime > System.currentTimeMillis())
+                    bgTime = IobCobCalculatorPlugin.roundUpTime(bgTime);
+                    if (bgTime > IobCobCalculatorPlugin.roundUpTime(now()))
                         continue;
-                    Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
 
                     AutosensData existing;
                     if ((existing = autosensDataTable.get(bgTime)) != null) {
@@ -118,6 +117,7 @@ public class IobCobThread extends Thread {
                         continue;
                     }
 
+                    Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
                     if (profile == null) {
                         log.debug("Aborting calculation thread (no profile): " + from);
                         return; // profile not set yet
@@ -161,7 +161,7 @@ public class IobCobThread extends Thread {
                     // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
                     if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
                         long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
-                        AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
+                        AutosensData hourAgoData = IobCobCalculatorPlugin.getPlugin().getAutosensData(hourago);
                         if (hourAgoData != null) {
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
                             if (Config.logAutosensData)
