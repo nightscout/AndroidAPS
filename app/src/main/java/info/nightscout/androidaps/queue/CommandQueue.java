@@ -205,7 +205,7 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
-        if (isRunning(Command.CommandType.TEMPBASAL)) {
+        if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -226,7 +226,7 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean tempBasalPercent(Integer percent, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
-        if (isRunning(Command.CommandType.TEMPBASAL)) {
+        if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -268,7 +268,7 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean cancelTempBasal(boolean enforceNew, Callback callback) {
-        if (isRunning(Command.CommandType.TEMPBASAL)) {
+        if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;

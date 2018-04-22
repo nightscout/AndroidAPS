@@ -735,4 +735,7 @@
     <string name="combo_suspious_bolus_time">Zeit/Datum des abgegebenen Boluses auf der Pumpe erscheint falsch, IOB ist wahrscheinlich nicht korrekt. Bitte prüfe Zeit/Datum der Pumpe.</string>
     <string name="combo_tbr_count">Anzahl TBRs</string>
     <string name="combo_bolus_count">Anzahl Boluse</string>
+    <string name="pump_stopped">Pumpe gestoppt</string>
+    <string name="pump_started">Pumpe gestartet</string>
+    <string name="pump_paused">Pumpe pausiert</string>
 </resources>

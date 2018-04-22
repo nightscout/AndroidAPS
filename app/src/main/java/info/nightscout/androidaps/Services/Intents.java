@@ -37,6 +37,8 @@ public interface Intents {
     String EXTRA_SENSOR_BATTERY = "com.eveningoutpost.dexdrip.Extras.SensorBattery";
     String EXTRA_TIMESTAMP = "com.eveningoutpost.dexdrip.Extras.Time";
     String EXTRA_RAW = "com.eveningoutpost.dexdrip.Extras.Raw";
+    String XDRIP_DATA_SOURCE_DESCRIPTION = "com.eveningoutpost.dexdrip.Extras.SourceDesc";
+
 
     String ACTION_NEW_BG_ESTIMATE_NO_DATA = "com.eveningoutpost.dexdrip.BgEstimateNoData";
 

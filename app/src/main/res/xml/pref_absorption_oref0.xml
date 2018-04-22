@@ -8,14 +8,27 @@
             validate:testType="floatNumericRange"
             validate:floatminNumber="0.1"
             validate:floatmaxNumber="12.0"
-            android:defaultValue="3.0"
+            android:defaultValue="8.0"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:inputType="numberDecimal"
             android:maxLines="20"
             android:title="@string/openapsama_min_5m_carbimpact"
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
-            android:key="openapsama_min_5m_carbimpact" />
+            android:key="@string/key_openapsama_min_5m_carbimpact" />
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            validate:testType="numericRange"
+            validate:minNumber="4"
+            validate:maxNumber="10"
+            android:digits="0123456789.,"
+            android:defaultValue="6"
+            android:selectAllOnFocus="true"
+            android:inputType="number"
+            android:maxLines="20"
+            android:title="@string/absorption_cutoff_title"
+            android:dialogMessage="@string/absorption_cutoff_summary"
+            android:key="@string/key_absorption_cutoff" />
 
     </PreferenceCategory>
 </PreferenceScreen>

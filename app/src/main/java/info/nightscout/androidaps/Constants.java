@@ -59,6 +59,7 @@ public class Constants {
 
     //Autosens
     public static final double DEVIATION_TO_BE_EQUAL = 2.0;
+    public static final double DEFAULT_MAX_ABSORPTION_TIME = 6.0;
 
     // Pump
     public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1;

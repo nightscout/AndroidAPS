@@ -8,6 +8,8 @@
     <color name="uam">#ffea00</color>
     <color name="zt">#ff9500</color>
     <color name="ratio">#FFFFFF</color>
+    <color name="devslopepos">#FFFFFF00</color>
+    <color name="devslopeneg">#FFFF00FF</color>
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>

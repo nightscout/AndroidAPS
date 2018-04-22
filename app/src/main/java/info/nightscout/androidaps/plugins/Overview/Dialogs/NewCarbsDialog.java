@@ -44,6 +44,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -290,28 +291,27 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             int carbs = editCarbs.getValue().intValue();
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
-            int activityTTDuration = SP.getInt(R.string.key_activity_duration, Constants.defaultActivityTTDuration);
-            activityTTDuration = activityTTDuration > 0 ? activityTTDuration : Constants.defaultActivityTTDuration;
-            double activityTT = SP.getDouble(R.string.key_activity_target, currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultActivityTTmmol : Constants.defaultActivityTTmgdl);
-            activityTT = activityTT > 0 ? activityTT : currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultActivityTTmmol : Constants.defaultActivityTTmgdl;
+            final String units = currentProfile.getUnits();
+            DefaultValueHelper helper = new DefaultValueHelper();
 
-            int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
-            eatingSoonTTDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : Constants.defaultEatingSoonTTDuration;
-            double eatingSoonTT = SP.getDouble(R.string.key_eatingsoon_target, currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultEatingSoonTTmmol : Constants.defaultEatingSoonTTmgdl);
-            eatingSoonTT = eatingSoonTT > 0 ? eatingSoonTT : currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultEatingSoonTTmmol : Constants.defaultEatingSoonTTmgdl;
+            int activityTTDuration = helper.determineActivityTTDuration();
+            double activityTT = helper.determineActivityTT(units);
 
-            int hypoTTDuration = SP.getInt(R.string.key_hypo_duration, Constants.defaultHypoTTDuration);
-            hypoTTDuration = hypoTTDuration > 0 ? hypoTTDuration : Constants.defaultHypoTTDuration;
-            double hypoTT = SP.getDouble(R.string.key_hypo_target, currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultHypoTTmmol : Constants.defaultHypoTTmgdl);
-            hypoTT = hypoTT > 0 ? hypoTT : currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultHypoTTmmol : Constants.defaultHypoTTmgdl;
+            int eatingSoonTTDuration = helper.determineEatingSoonTTDuration();
+            double eatingSoonTT = helper.determineEatingSoonTT(units);
+
+            int hypoTTDuration = helper.determineHypoTTDuration();
+            double hypoTT = helper.determineHypoTT(units);
 
             List<String> actions = new LinkedList<>();
 
             if (startActivityTTCheckbox.isChecked()) {
+                String unitLabel = "mg/dl";
                 if (currentProfile.getUnits().equals(Constants.MMOL)) {
-                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " mmol/l (" + activityTTDuration + " min)</font>");
-                } else
-                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(activityTT) + " mg/dl (" + activityTTDuration + " min)</font>");
+                    unitLabel = "mmol/l";
+                }
+
+                actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + activityTTDuration + " min)</font>");
 
             }
             if (startEatingSoonTTCheckbox.isChecked()) {
@@ -431,7 +431,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         carbInfo.context = getContext();
         carbInfo.source = Source.USER;
         carbInfo.notes = notes;
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
             ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
                 @Override
                 public void run() {

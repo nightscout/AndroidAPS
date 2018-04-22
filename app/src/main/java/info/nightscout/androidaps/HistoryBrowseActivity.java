@@ -46,7 +46,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     ImageButton chartButton;
 
     boolean showBasal = true;
-    boolean showIob, showCob, showDev, showRat;
+    boolean showIob, showCob, showDev, showRat, showDevslope;
 
 
     @BindView(R.id.historybrowse_date)
@@ -267,6 +267,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         boolean useCobForScale = false;
         boolean useDevForScale = false;
         boolean useRatioForScale = false;
+        boolean useDevSlopeForScale = false;
 
         if (showIob) {
             useIobForScale = true;
@@ -276,6 +277,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
             useDevForScale = true;
         } else if (showRat) {
             useRatioForScale = true;
+        } else if (showDevslope) {
+            useDevSlopeForScale = true;
         }
 
         if (showIob)
@@ -286,6 +289,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
             secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1d);
         if (showRat)
             secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1d);
+        if (showDevslope)
+            secondGraphData.addDeviationSlope(fromTime, toTime, useDevSlopeForScale, 1d);
 
         // **** NOW line ****
         // set manual x bounds to have nice steps
@@ -293,7 +298,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         secondGraphData.addNowLine(pointer);
 
         // do GUI update
-        if (showIob || showCob || showDev || showRat) {
+        if (showIob || showCob || showDev || showRat || showDevslope) {
             iobGraph.setVisibility(View.VISIBLE);
         } else {
             iobGraph.setVisibility(View.GONE);
@@ -354,23 +359,31 @@ public class HistoryBrowseActivity extends AppCompatActivity {
                 item.setCheckable(true);
                 item.setChecked(showRat);
 
+                if (MainApp.devBranch) {
+                    item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
+                    title = item.getTitle();
+                    s = new SpannableString(title);
+                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
+                    item.setTitle(s);
+                    item.setCheckable(true);
+                    item.setChecked(showDevslope);
+                }
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                          if (item.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
                             showBasal =  !item.isChecked();
-
                         } else if (item.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
                              showIob =  !item.isChecked();
-
                         } else if (item.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
                              showCob =  !item.isChecked();
-
                         } else if (item.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
                              showDev =  !item.isChecked();
-
                         } else if (item.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
                              showRat =  !item.isChecked();
+                         } else if (item.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
+                             showDevslope = !item.isChecked();
                         }
                         updateGUI("onGraphCheckboxesCheckedChanged");
                         return true;

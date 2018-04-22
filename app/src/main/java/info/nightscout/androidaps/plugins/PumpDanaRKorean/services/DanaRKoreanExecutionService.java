@@ -286,7 +286,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         mBolusingTreatment = null;
         ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
 
-        return true;
+        return !start.failed;
     }
 
     public boolean carbsEntry(int amount) {

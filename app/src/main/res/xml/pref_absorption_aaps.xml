@@ -6,10 +6,10 @@
         android:title="@string/absorptionsettings_title">
         <com.andreabaccega.widget.ValidatingEditTextPreference
             validate:testType="numericRange"
-            validate:minNumber="1"
+            validate:minNumber="4"
             validate:maxNumber="10"
             android:digits="0123456789.,"
-            android:defaultValue="3"
+            android:defaultValue="6"
             android:selectAllOnFocus="true"
             android:inputType="number"
             android:maxLines="20"
