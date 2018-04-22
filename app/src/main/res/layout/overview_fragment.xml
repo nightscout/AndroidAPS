@@ -163,19 +163,13 @@
                         android:id="@+id/overview_runningtemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textStyle="normal|bold" />
-
-                    <TextView
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/overview_basebasal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
@@ -193,8 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingTop="5dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
