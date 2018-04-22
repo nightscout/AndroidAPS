@@ -183,7 +183,7 @@ class HistoryIntentAdapter {
         }
         if (intent.hasExtra(HistoryBroadcast.EXTRA_OLD_STATUS_TIME)) {
             String oldStatus = intent.getStringExtra(HistoryBroadcast.EXTRA_OLD_STATUS);
-            if (oldStatus.equals("STOPPED") ||oldStatus.equals("PAUSED")) {
+            if (oldStatus.equals("STOPPED")) {
                 Date oldStatusTime = getDateExtra(intent, HistoryBroadcast.EXTRA_OLD_STATUS_TIME);
                 int duration = (int) ((newStatusTime.getTime() - oldStatusTime.getTime()) / 60000);
 
