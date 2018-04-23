@@ -264,27 +264,29 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(new MsgSetCarbsEntry(carbtime, carbs));
         }
 
-        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-        long bolusStart = System.currentTimeMillis();
+        if (amount > 0) {
+            MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
+            long bolusStart = System.currentTimeMillis();
 
-        if (!stop.stopped) {
-            mSerialIOThread.sendMessage(start);
-        } else {
-            t.insulin = 0d;
-            return false;
-        }
-        while (!stop.stopped && !start.failed) {
-            SystemClock.sleep(100);
-            if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
-                stop.stopped = true;
-                stop.forced = true;
-                log.debug("Communication stopped");
+            if (!stop.stopped) {
+                mSerialIOThread.sendMessage(start);
+            } else {
+                t.insulin = 0d;
+                return false;
             }
-        }
-        SystemClock.sleep(300);
+            while (!stop.stopped && !start.failed) {
+                SystemClock.sleep(100);
+                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
+                    stop.stopped = true;
+                    stop.forced = true;
+                    log.debug("Communication stopped");
+                }
+            }
+            SystemClock.sleep(300);
 
-        mBolusingTreatment = null;
-        ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
+            mBolusingTreatment = null;
+            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
+        }
 
         return !start.failed;
     }

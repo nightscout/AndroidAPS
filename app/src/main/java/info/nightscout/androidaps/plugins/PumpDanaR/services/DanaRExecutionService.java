@@ -264,80 +264,82 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
             mSerialIOThread.sendMessage(new MsgSetCarbsEntry(carbtime, carbs));
         }
 
-        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-        long bolusStart = System.currentTimeMillis();
+        if (amount > 0) {
+            MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
+            long bolusStart = System.currentTimeMillis();
 
-        if (!stop.stopped) {
-            mSerialIOThread.sendMessage(start);
-        } else {
-            t.insulin = 0d;
-            return false;
-        }
-        while (!stop.stopped && !start.failed) {
-            SystemClock.sleep(100);
-            if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
-                stop.stopped = true;
-                stop.forced = true;
-                log.debug("Communication stopped");
+            if (!stop.stopped) {
+                mSerialIOThread.sendMessage(start);
+            } else {
+                t.insulin = 0d;
+                return false;
             }
-        }
-        SystemClock.sleep(300);
-
-        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.t = t;
-        bolusingEvent.percent = 99;
-
-        mBolusingTreatment = null;
-
-        int speed = 12;
-        switch (preferencesSpeed) {
-            case 0:
-                speed = 12;
-                break;
-            case 1:
-                speed = 30;
-                break;
-            case 2:
-                speed = 60;
-                break;
-        }
-        // try to find real amount if bolusing was interrupted or comm failed
-        if (t.insulin != amount) {
-            disconnect("bolusingInterrupted");
-            long bolusDurationInMSec = (long) (amount * speed * 1000);
-            long expectedEnd = bolusStart + bolusDurationInMSec + 3000;
-
-            while (System.currentTimeMillis() < expectedEnd) {
-                long waitTime = expectedEnd - System.currentTimeMillis();
-                bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.waitingforestimatedbolusend), waitTime / 1000);
-                MainApp.bus().post(bolusingEvent);
-                SystemClock.sleep(1000);
-            }
-
-            final Object o = new Object();
-            synchronized(o) {
-                ConfigBuilderPlugin.getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
-                    @Override
-                    public void run() {
-                        if (mDanaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
-                            t.insulin = mDanaRPump.lastBolusAmount;
-                            log.debug("Used bolus amount from history: " + mDanaRPump.lastBolusAmount);
-                        } else {
-                            log.debug("Bolus amount in history too old: " + mDanaRPump.lastBolusTime.toLocaleString());
-                        }
-                        synchronized (o) {
-                            o.notify();
-                        }
-                    }
-                });
-                try {
-                    o.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while (!stop.stopped && !start.failed) {
+                SystemClock.sleep(100);
+                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
+                    stop.stopped = true;
+                    stop.forced = true;
+                    log.debug("Communication stopped");
                 }
             }
-        } else {
-            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
+            SystemClock.sleep(300);
+
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            bolusingEvent.t = t;
+            bolusingEvent.percent = 99;
+
+            mBolusingTreatment = null;
+
+            int speed = 12;
+            switch (preferencesSpeed) {
+                case 0:
+                    speed = 12;
+                    break;
+                case 1:
+                    speed = 30;
+                    break;
+                case 2:
+                    speed = 60;
+                    break;
+            }
+            // try to find real amount if bolusing was interrupted or comm failed
+            if (t.insulin != amount) {
+                disconnect("bolusingInterrupted");
+                long bolusDurationInMSec = (long) (amount * speed * 1000);
+                long expectedEnd = bolusStart + bolusDurationInMSec + 3000;
+
+                while (System.currentTimeMillis() < expectedEnd) {
+                    long waitTime = expectedEnd - System.currentTimeMillis();
+                    bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.waitingforestimatedbolusend), waitTime / 1000);
+                    MainApp.bus().post(bolusingEvent);
+                    SystemClock.sleep(1000);
+                }
+
+                final Object o = new Object();
+                synchronized (o) {
+                    ConfigBuilderPlugin.getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
+                        @Override
+                        public void run() {
+                            if (mDanaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
+                                t.insulin = mDanaRPump.lastBolusAmount;
+                                log.debug("Used bolus amount from history: " + mDanaRPump.lastBolusAmount);
+                            } else {
+                                log.debug("Bolus amount in history too old: " + mDanaRPump.lastBolusTime.toLocaleString());
+                            }
+                            synchronized (o) {
+                                o.notify();
+                            }
+                        }
+                    });
+                    try {
+                        o.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
+            }
         }
         return !start.failed;
     }

@@ -73,7 +73,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
         pumpDescription.isRefillingCapable = true;
 
-        pumpDescription.storesCarbInfo = true;
+        pumpDescription.storesCarbInfo = false;
 
         pumpDescription.supportsTDDs = true;
         pumpDescription.needsManualTDDLoad = true;
