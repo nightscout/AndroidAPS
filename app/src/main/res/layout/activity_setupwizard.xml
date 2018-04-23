@@ -28,6 +28,67 @@
         android:fitsSystemWindows="true">
 
         <LinearLayout
+            android:id="@+id/fullscreen_content_fields"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textLabel1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextLabel"
+                android:visibility="gone"/>
+
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text|text"
+                android:text="Enter your setting here"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textLabel2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextLabel2"
+                android:visibility="gone"/>
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text|text"
+                android:text="Enter your setting here"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:id="@+id/radio_group_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/radio_group_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="radio button group label" />
+
+                <RadioGroup
+                    android:id="@+id/radiogroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/fullscreen_content_controls"
             style="?metaButtonBarStyle"
             android:layout_width="match_parent"
@@ -38,12 +99,29 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/dummy_button"
+                android:id="@+id/next_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="@string/next_button"
+                android:visibility="invisible" />
+            <Button
+                android:id="@+id/previous_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/previous_button" />
+
+            <Button
+                android:id="@+id/skip_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/skip_button"
+                android:visibility="invisible" />
 
         </LinearLayout>
     </FrameLayout>

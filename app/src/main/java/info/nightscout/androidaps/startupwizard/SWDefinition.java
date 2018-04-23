@@ -29,6 +29,8 @@ public class SWDefinition {
     }
 
     SWDefinition() {
+        // List all the screens here
+        // todo: SWValidator ?!?
         add(new SWScreen(R.string.nsclientinternal_title)
                 .skippable(false)
                 .add(new SWUrl().preferenceId(R.string.key_nsclientinternal_url).label(R.string.nsclientinternal_url_title).comment(R.string.nsclientinternal_url_dialogmessage))

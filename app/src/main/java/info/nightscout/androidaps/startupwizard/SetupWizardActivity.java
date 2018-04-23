@@ -7,8 +7,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import java.util.List;
 
 import info.nightscout.androidaps.R;
+
+import static info.nightscout.androidaps.startupwizard.SWItem.Type.RADIOBUTTON;
+import static info.nightscout.androidaps.startupwizard.SWItem.Type.STRING;
+import static info.nightscout.androidaps.startupwizard.SWItem.Type.URL;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -34,6 +46,21 @@ public class SetupWizardActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private LinearLayout linearLayout;
+    private TextView radioLabel;
+    private RadioGroup radioGroup;
+    private RadioButton[] radioButtons;
+    private RadioButton radioButton1;
+    private RadioButton radioButton2;
+    private RadioButton radioButton3;
+    private RadioButton radioButton4;
+    private RadioButton radioButton5;
+    private TextView screenName;
+    private TextView label1;
+    private EditText editText1;
+    private TextView label2;
+    private EditText editText2;
+    private Button skipButton;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -104,10 +131,56 @@ public class SetupWizardActivity extends AppCompatActivity {
             }
         });
 
+
+        SWDefinition swDefinition = SWDefinition.getInstance();
+        List<SWScreen> screens = swDefinition.getScreens();
+        if(screens.size() > 0){
+            SWScreen currentScreen = screens.get(1);
+            //Set screen name
+            screenName = (TextView) findViewById(R.id.fullscreen_content);
+            screenName.setText(currentScreen.getHeader());
+            //Display screen items in the order entered
+            linearLayout = (LinearLayout) findViewById(R.id.fullscreen_content_controls);
+            // is it skippable ?
+            if(currentScreen.skippable) {
+                //display skip button
+                skipButton = (Button) findViewById(R.id.skip_button);
+
+            }
+            for(int i = 0; i < currentScreen.items.size(); i++){
+                SWItem currentItem = currentScreen.items.get(i);
+
+                if(currentItem.type == URL){
+                    label1 = (TextView) findViewById(R.id.textLabel1);
+                    editText1 = (EditText) findViewById(R.id.editText1);
+                    label1.setText(currentItem.getLabel());
+                    label1.setVisibility(View.VISIBLE);
+                    editText1.setText(currentItem.getComment());
+                    editText1.setVisibility(View.VISIBLE);
+                } else if(currentItem.type == STRING){
+                    label2 = (TextView) findViewById(R.id.textLabel2);
+                    editText2 = (EditText) findViewById(R.id.editText2);
+                    label2.setText(currentItem.getLabel());
+                    label2.setVisibility(View.VISIBLE);
+                    editText2.setText(currentItem.getComment());
+                    editText2.setVisibility(View.VISIBLE);
+                } else if(currentItem.type == RADIOBUTTON){
+                    ((LinearLayout) findViewById(R.id.radio_group_layout)).setVisibility(View.VISIBLE);
+                    radioLabel = (TextView) findViewById(R.id.radio_group_label);
+                    radioLabel.setText(currentScreen.getHeader());
+                    SWRadioButton radioGroupItems = (SWRadioButton) currentItem;
+                    addRadioButtons(radioGroupItems.labels().length, radioGroupItems.labels(), radioGroupItems.values());
+                }
+
+            }
+
+
+        }
+
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.next_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -161,5 +234,24 @@ public class SetupWizardActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public void addRadioButtons(int number, String[] labels, String[] values) {
+
+        for (int row = 0; row < 1; row++) {
+            RadioGroup ll = new RadioGroup(this);
+            ll.setOrientation(LinearLayout.VERTICAL);
+
+            for (int i = 0; i < number; i++) {
+                RadioButton rdbtn = new RadioButton(this);
+                rdbtn.setId((row * 2) + i);
+//                rdbtn.setText("Radio " + rdbtn.getId());
+                rdbtn.setText(labels[i]);
+                ll.addView(rdbtn);
+            }
+            ((RadioGroup) findViewById(R.id.radiogroup)).addView(ll);
+            ((RadioGroup) findViewById(R.id.radiogroup)).setVisibility(View.VISIBLE);
+        }
+
     }
 }
