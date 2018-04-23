@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,19 +49,14 @@ public class SetupWizardActivity extends AppCompatActivity {
     private View mContentView;
     private LinearLayout linearLayout;
     private TextView radioLabel;
-    private RadioGroup radioGroup;
-    private RadioButton[] radioButtons;
-    private RadioButton radioButton1;
-    private RadioButton radioButton2;
-    private RadioButton radioButton3;
-    private RadioButton radioButton4;
-    private RadioButton radioButton5;
     private TextView screenName;
     private TextView label1;
     private EditText editText1;
     private TextView label2;
     private EditText editText2;
     private Button skipButton;
+    private int currentWizzardPage = 0;
+    public static final String INTENT_MESSAGE = "WIZZARDPAGE";
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -132,10 +128,18 @@ public class SetupWizardActivity extends AppCompatActivity {
         });
 
 
+        Intent intent = getIntent();
+        int showPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE,0);
         SWDefinition swDefinition = SWDefinition.getInstance();
         List<SWScreen> screens = swDefinition.getScreens();
         if(screens.size() > 0){
-            SWScreen currentScreen = screens.get(1);
+            SWScreen currentScreen = screens.get(showPage);
+            // show/hide prev/next buttons if we are at the beninning/end
+            if(showPage == screens.size() - 1) {
+                ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
+                ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
+            }else if(showPage == 0)
+                ((Button) findViewById(R.id.previous_button)).setVisibility(View.GONE);
             //Set screen name
             screenName = (TextView) findViewById(R.id.fullscreen_content);
             screenName.setText(currentScreen.getHeader());
@@ -254,4 +258,20 @@ public class SetupWizardActivity extends AppCompatActivity {
         }
 
     }
+
+    public void showNextPage(View view) {
+        Intent intent = new Intent(this, SetupWizardActivity.class);
+        intent.putExtra(INTENT_MESSAGE, currentWizzardPage + 1);
+        startActivity(intent);
+    }
+
+    public void showPreviousPage(View view) {
+        Intent intent = new Intent(this, SetupWizardActivity.class);
+        if(currentWizzardPage > 0)
+            intent.putExtra(INTENT_MESSAGE, currentWizzardPage - 1);
+        else
+            intent.putExtra(INTENT_MESSAGE, 0);
+        startActivity(intent);
+    }
+
 }

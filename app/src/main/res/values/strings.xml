@@ -1007,4 +1007,8 @@
     <string name="skip_button">Skip</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="setupwizard_next">Next</string>
+    <string name="setupwizard_previous">Prev</string>
+    <string name="setupwizard_skip">Skip</string>
+    <string name="setupwizard_finish">FINISH</string>
 </resources>

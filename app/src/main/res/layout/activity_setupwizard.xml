@@ -99,20 +99,13 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/next_button"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/next_button"
-                android:visibility="invisible" />
-            <Button
                 android:id="@+id/previous_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/previous_button" />
+                android:onClick="showPreviousPage"
+                android:text="@string/setupwizard_previous" />
 
             <Button
                 android:id="@+id/skip_button"
@@ -120,8 +113,28 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/skip_button"
+                android:text="@string/setupwizard_skip"
                 android:visibility="invisible" />
+
+            <Button
+            android:id="@+id/next_button"
+            style="?metaButtonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="showNextPage"
+            android:text="@string/setupwizard_next"
+            android:visibility="visible" />
+
+            <Button
+                android:id="@+id/finish_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/setupwizard_finish"
+                android:visibility="gone" />
+
 
         </LinearLayout>
     </FrameLayout>
