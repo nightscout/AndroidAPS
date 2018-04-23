@@ -1174,7 +1174,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setText(extendedBolusText);
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(View.INVISIBLE);
+                extendedBolusView.setVisibility(View.GONE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
