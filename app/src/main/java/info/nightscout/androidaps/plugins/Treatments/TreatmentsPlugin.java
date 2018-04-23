@@ -452,7 +452,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
         if (newRecordCreated && detailedBolusInfo.isValid)
-            NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
+            NSUpload.uploadTreatmentRecord(detailedBolusInfo);
         return newRecordCreated;
     }
 
@@ -503,6 +503,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         synchronized (tempTargets) {
             return new OverlappingIntervals<>(tempTargets);
         }
+    }
+
+    @Override
+    public void addToHistoryTempTarget(TempTarget tempTarget) {
+        //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
+        MainApp.getDbHelper().createOrUpdate(tempTarget);
+        NSUpload.uploadTempTarget(tempTarget);
     }
 
     // Profile Switch

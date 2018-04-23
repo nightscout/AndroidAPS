@@ -79,6 +79,7 @@ import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -457,14 +458,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
-            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+            final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
             final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
-            if (activeloop == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
+            if (loopPlugin == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.gs(R.string.loop));
-            if (activeloop.isEnabled(PluginType.LOOP)) {
+            if (loopPlugin.isEnabled(PluginType.LOOP)) {
                 menu.add(MainApp.gs(R.string.disableloop));
-                if (!activeloop.isSuspended()) {
+                if (!loopPlugin.isSuspended()) {
                     menu.add(MainApp.gs(R.string.suspendloopfor1h));
                     menu.add(MainApp.gs(R.string.suspendloopfor2h));
                     menu.add(MainApp.gs(R.string.suspendloopfor3h));
@@ -480,7 +481,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.gs(R.string.resume));
                 }
             }
-            if (!activeloop.isEnabled(PluginType.LOOP))
+            if (!loopPlugin.isEnabled(PluginType.LOOP))
                 menu.add(MainApp.gs(R.string.enableloop));
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.gs(R.string.profile));
@@ -496,13 +497,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null)
             return true;
-        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+        final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
         if (item.getTitle().equals(MainApp.gs(R.string.disableloop))) {
-            activeloop.setPluginEnabled(PluginType.LOOP, false);
-            activeloop.setFragmentVisible(PluginType.LOOP, false);
+            loopPlugin.setPluginEnabled(PluginType.LOOP, false);
+            loopPlugin.setFragmentVisible(PluginType.LOOP, false);
             MainApp.getConfigBuilder().storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
-            MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -513,16 +514,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.enableloop))) {
-            activeloop.setPluginEnabled(PluginType.LOOP, true);
-            activeloop.setFragmentVisible(PluginType.LOOP, true);
+            loopPlugin.setPluginEnabled(PluginType.LOOP, true);
+            loopPlugin.setFragmentVisible(PluginType.LOOP, true);
             MainApp.getConfigBuilder().storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.resume))) {
-            activeloop.suspendTo(0L);
+            loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
-            MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -673,36 +674,34 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     private void onClickAcceptTemp() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (ConfigBuilderPlugin.getActiveLoop() != null && profile != null) {
-            ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
+        if (LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && profile != null) {
+            LoopPlugin.getPlugin().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(getContext().getString(R.string.confirmation));
                 builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-                builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        hideTempRecommendation();
-                        clearNotification();
-                        MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
-                            @Override
-                            public void run() {
-                                if (result.enacted) {
-                                    finalLastRun.tbrSetByPump = result;
-                                    finalLastRun.lastEnact = new Date();
-                                    finalLastRun.lastOpenModeAccept = new Date();
-                                    NSUpload.uploadDeviceStatus();
-                                    ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                                    if (objectivesPlugin != null) {
-                                        ObjectivesPlugin.manualEnacts++;
-                                        ObjectivesPlugin.saveProgress();
-                                    }
+                builder.setPositiveButton(getContext().getString(R.string.ok), (dialog, id) -> {
+                    hideTempRecommendation();
+                    clearNotification();
+                    MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
+                        @Override
+                        public void run() {
+                            if (result.enacted) {
+                                finalLastRun.tbrSetByPump = result;
+                                finalLastRun.lastEnact = new Date();
+                                finalLastRun.lastOpenModeAccept = new Date();
+                                NSUpload.uploadDeviceStatus();
+                                ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                if (objectivesPlugin != null) {
+                                    ObjectivesPlugin.manualEnacts++;
+                                    ObjectivesPlugin.saveProgress();
                                 }
-                                scheduleUpdateGUI("onClickAcceptTemp");
                             }
-                        });
-                        FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
-                    }
+                            scheduleUpdateGUI("onClickAcceptTemp");
+                        }
+                    });
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
                 });
                 builder.setNegativeButton(getContext().getString(R.string.cancel), null);
                 builder.show();
@@ -768,57 +767,55 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 accepted = false;
                 builder.setTitle(MainApp.gs(R.string.confirmation));
                 builder.setMessage(confirmMessage);
-                builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        synchronized (builder) {
-                            if (accepted) {
-                                log.debug("guarding: already accepted");
-                                return;
-                            }
-                            accepted = true;
-                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                if (wizard.superBolus) {
-                                    final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                                    if (activeloop != null) {
-                                        activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
-                                        MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
-                                    }
-                                    ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
-                                        @Override
-                                        public void run() {
-                                            if (!result.success) {
-                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                                i.putExtra("soundid", R.raw.boluserror);
-                                                i.putExtra("status", result.comment);
-                                                i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
-                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                MainApp.instance().startActivity(i);
-                                            }
-                                        }
-                                    });
+                builder.setPositiveButton(getString(R.string.ok), (dialog, id) -> {
+                    synchronized (builder) {
+                        if (accepted) {
+                            log.debug("guarding: already accepted");
+                            return;
+                        }
+                        accepted = true;
+                        if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                            if (wizard.superBolus) {
+                                final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+                                if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                                    loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                    MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                 }
-                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                                detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                                detailedBolusInfo.context = context;
-                                detailedBolusInfo.boluscalc = boluscalcJSON;
-                                detailedBolusInfo.source = Source.USER;
-                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                     @Override
                                     public void run() {
                                         if (!result.success) {
                                             Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                             i.putExtra("soundid", R.raw.boluserror);
                                             i.putExtra("status", result.comment);
-                                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
                                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             MainApp.instance().startActivity(i);
                                         }
                                     }
                                 });
-                                FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                             }
+                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                            detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                            detailedBolusInfo.context = context;
+                            detailedBolusInfo.boluscalc = boluscalcJSON;
+                            detailedBolusInfo.source = Source.USER;
+                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                @Override
+                                public void run() {
+                                    if (!result.success) {
+                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                        i.putExtra("soundid", R.raw.boluserror);
+                                        i.putExtra("status", result.comment);
+                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        MainApp.instance().startActivity(i);
+                                    }
+                                }
+                            });
+                            FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                         }
                     }
                 });
@@ -900,6 +897,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
         scheduleUpdateGUI("EventTempTargetChange");
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventProfileSwitchChange ev) {
+        scheduleUpdateGUI("EventProfileSwitchChange");
     }
 
     @Subscribe
@@ -1024,24 +1026,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
             apsModeView.setTextColor(Color.BLACK);
-            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-            if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuperBolus()) {
+            final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+            if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuperBolus()) {
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
-                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), activeloop.minutesToEndOfSuspend()));
+                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
-            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isDisconnected()) {
+            } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isDisconnected()) {
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
-                apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), activeloop.minutesToEndOfSuspend()));
+                apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
-            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuspended()) {
+            } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuspended()) {
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
-                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuspendedfor), activeloop.minutesToEndOfSuspend()));
+                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (pump.isSuspended()) {
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
                 apsModeView.setText(MainApp.gs(R.string.pumpsuspended));
                 apsModeView.setTextColor(Color.WHITE);
-            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+            } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
                 if (closedLoopEnabled.value()) {
                     apsModeView.setText(MainApp.gs(R.string.closedloop));
                 } else {
@@ -1077,7 +1079,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
-            if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && ConfigBuilderPlugin.getActiveLoop() != null) {
+            if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
                 acceptTempLayout.setVisibility(View.VISIBLE);
                 acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
             } else {

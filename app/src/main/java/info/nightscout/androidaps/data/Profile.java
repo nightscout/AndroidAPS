@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -275,7 +276,7 @@ public class Profile {
     Integer getShitfTimeSecs(Integer originalTime) {
         Integer shiftedTime = originalTime + timeshift * 60 * 60;
         shiftedTime = (shiftedTime + 24 * 60 * 60) % (24 * 60 * 60);
-        if (timeshift != 0)
+        if (timeshift != 0 && Config.logProfile)
             log.debug("(Sec) Original time: " + originalTime + " ShiftedTime: " + shiftedTime);
         return shiftedTime;
     }

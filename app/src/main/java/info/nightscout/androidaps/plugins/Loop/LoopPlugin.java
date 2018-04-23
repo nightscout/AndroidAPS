@@ -9,6 +9,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.crashlytics.android.answers.CustomEvent;
@@ -56,6 +57,7 @@ public class LoopPlugin extends PluginBase {
 
     protected static LoopPlugin loopPlugin;
 
+    @NonNull
     public static LoopPlugin getPlugin() {
         if (loopPlugin == null) {
             loopPlugin = new LoopPlugin();

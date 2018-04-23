@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.ProfileLocal;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
@@ -70,18 +68,15 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     }
 
     public synchronized void storeSettings() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(LOCAL_PROFILE + "mmol", mmol);
-        editor.putBoolean(LOCAL_PROFILE + "mgdl", mgdl);
-        editor.putString(LOCAL_PROFILE + "dia", dia.toString());
-        editor.putString(LOCAL_PROFILE + "ic", ic.toString());
-        editor.putString(LOCAL_PROFILE + "isf", isf.toString());
-        editor.putString(LOCAL_PROFILE + "basal", basal.toString());
-        editor.putString(LOCAL_PROFILE + "targetlow", targetLow.toString());
-        editor.putString(LOCAL_PROFILE + "targethigh", targetHigh.toString());
+        SP.putBoolean(LOCAL_PROFILE + "mmol", mmol);
+        SP.putBoolean(LOCAL_PROFILE + "mgdl", mgdl);
+        SP.putString(LOCAL_PROFILE + "dia", dia.toString());
+        SP.putString(LOCAL_PROFILE + "ic", ic.toString());
+        SP.putString(LOCAL_PROFILE + "isf", isf.toString());
+        SP.putString(LOCAL_PROFILE + "basal", basal.toString());
+        SP.putString(LOCAL_PROFILE + "targetlow", targetLow.toString());
+        SP.putString(LOCAL_PROFILE + "targethigh", targetHigh.toString());
 
-        editor.apply();
         createAndStoreConvertedProfile();
         edited = false;
         if (Config.logPrefsChange)

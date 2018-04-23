@@ -49,7 +49,7 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
 
-    <color name="colorInProgress">#c45026</color>
+    <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#1b5e20</color>
 
     <color name="loopenabled">#47c8ff</color>
@@ -61,5 +61,7 @@
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>

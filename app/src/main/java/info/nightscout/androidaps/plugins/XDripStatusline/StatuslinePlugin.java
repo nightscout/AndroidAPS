@@ -108,12 +108,12 @@ public class StatuslinePlugin extends PluginBase {
     @NonNull
     private String buildStatusString(Profile profile) {
         String status = "";
-        LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+        LoopPlugin loopPlugin = LoopPlugin.getPlugin();
 
-        if (activeloop != null && !activeloop.isEnabled(PluginType.LOOP)) {
+        if (!loopPlugin.isEnabled(PluginType.LOOP)) {
             status += ctx.getString(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
-        } else if (activeloop != null && activeloop.isEnabled(PluginType.LOOP)) {
+        } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
             lastLoopStatus = true;
         }
 
@@ -179,13 +179,8 @@ public class StatuslinePlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
-
         //Filter events where loop is (de)activated
-
-        LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-        if (activeloop == null) return;
-
-        if ((lastLoopStatus != activeloop.isEnabled(PluginType.LOOP))) {
+        if ((lastLoopStatus != LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))) {
             sendStatus();
         }
     }

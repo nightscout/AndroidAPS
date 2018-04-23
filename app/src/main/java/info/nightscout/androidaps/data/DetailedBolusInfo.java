@@ -30,6 +30,7 @@ public class DetailedBolusInfo {
     public long pumpId = 0;                // id of record if comming from pump history (not a newly created treatment)
     public boolean isSMB = false;          // is a Super-MicroBolus
     public long deliverAt = 0;             // SMB should be delivered within 1 min from this time
+    public String notes = null;
 
     public DetailedBolusInfo copy() {
         DetailedBolusInfo n = new DetailedBolusInfo();
@@ -47,6 +48,7 @@ public class DetailedBolusInfo {
         n.pumpId = pumpId;
         n.isSMB = isSMB;
         n.deliverAt = deliverAt;
+        n.notes = notes;
         return n;
     }
 

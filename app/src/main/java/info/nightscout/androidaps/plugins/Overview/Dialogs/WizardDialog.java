@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -102,6 +104,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     NumberPicker editCarbs;
     NumberPicker editCorr;
     NumberPicker editCarbTime;
+
+    LinearLayout notesLayout;
+    EditText notesEdit;
 
     Integer calculatedCarbs = 0;
     Double calculatedTotalInsulin = 0d;
@@ -204,6 +209,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         total = (TextView) view.findViewById(R.id.treatments_wizard_total);
         superbolus = (TextView) view.findViewById(R.id.treatments_wizard_sb);
         superbolusInsulin = (TextView) view.findViewById(R.id.treatments_wizard_sbinsulin);
+
+        notesLayout = view.findViewById(R.id.treatments_wizard_notes_layout);
+        notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
+        notesEdit = (EditText) view.findViewById(R.id.treatment_wizard_notes);
 
         bgTrend = (TextView) view.findViewById(R.id.treatments_wizard_bgtrend);
         bgTrendInsulin = (TextView) view.findViewById(R.id.treatments_wizard_bgtrendinsulin);
@@ -320,6 +329,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     final Double bg = SafeParse.stringToDouble(editBg.getText());
                     final int carbTime = SafeParse.stringToInt(editCarbTime.getText());
                     final boolean useSuperBolus = superbolusCheckbox.isChecked();
+                    final String finalNotes = notesEdit.getText().toString();
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
@@ -334,9 +344,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                 accepted = true;
                                 if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
                                     if (useSuperBolus) {
-                                        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                                        if (activeloop != null) {
-                                            activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                        final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+                                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                                            loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
                                         ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
@@ -363,6 +373,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                     detailedBolusInfo.carbTime = carbTime;
                                     detailedBolusInfo.boluscalc = boluscalcJSON;
                                     detailedBolusInfo.source = Source.USER;
+                                    detailedBolusInfo.notes = finalNotes;
                                     if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
                                         ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                             @Override
