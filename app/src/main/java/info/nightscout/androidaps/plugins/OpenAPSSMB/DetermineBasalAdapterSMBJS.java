@@ -262,7 +262,7 @@ public class DetermineBasalAdapterSMBJS {
 
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
-        mProfile.put("autosens_max", SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
+        mProfile.put("autosens_max", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
 
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
@@ -288,7 +288,7 @@ public class DetermineBasalAdapterSMBJS {
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
-        if (SP.getBoolean("always_use_shortavg", false)) {
+        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);
