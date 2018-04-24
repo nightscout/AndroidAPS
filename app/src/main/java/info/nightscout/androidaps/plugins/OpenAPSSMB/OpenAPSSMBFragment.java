@@ -66,7 +66,7 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
 
     @OnClick(R.id.openapsma_run)
     public void onRunClick() {
-        OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSSMB button");
+        OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSSMB button", false);
         FabricPrivacy.getInstance().logCustom(new CustomEvent("OpenAPS_SMB_Run"));
     }
 
