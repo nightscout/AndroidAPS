@@ -489,7 +489,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double c_cob = 0d;
         if (cobCheckbox.isChecked()) {
             CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard COB");
-            if (cobInfo != null)
+            if (cobInfo != null && cobInfo.displayCob != null)
                 c_cob = cobInfo.displayCob;
         }
 
