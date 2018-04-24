@@ -216,8 +216,8 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                         CareportalEvent careportalEvent;
                         NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
 
-                        double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 72);
-                        double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 48);
+                        double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 96);
+                        double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 72);
                         double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 72);
                         double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 48);
                         double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 166);
