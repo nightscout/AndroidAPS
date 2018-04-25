@@ -2,9 +2,9 @@
 <resources>
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
-    <color name="iob">#FFFB8C00</color>
+    <color name="iob">#1e88e5</color>
     <color name="bolus">#FFFFCC03</color>
-    <color name="cob">#8BC34A</color>
+    <color name="cob">#FFFB8C00</color>
     <color name="uam">#ffea00</color>
     <color name="zt">#ff9500</color>
     <color name="ratio">#FFFFFF</color>
