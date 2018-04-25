@@ -88,8 +88,8 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
     }
 
     @Override
-    public void invoke(String initiator, boolean safety) {
-        log.debug("invoke from " + initiator + " safety: "  + safety);
+    public void invoke(String initiator, boolean tempBasalFallback) {
+        log.debug("invoke from " + initiator + " safety: "  + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterMAJS determineBasalAdapterMAJS = null;
         try {

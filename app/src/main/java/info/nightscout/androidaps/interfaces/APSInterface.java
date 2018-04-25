@@ -11,5 +11,5 @@ public interface APSInterface {
     public APSResult getLastAPSResult();
     public Date getLastAPSRun();
 
-    public void invoke(String initiator, boolean safety);
+    public void invoke(String initiator, boolean tempBasalFallback);
 }

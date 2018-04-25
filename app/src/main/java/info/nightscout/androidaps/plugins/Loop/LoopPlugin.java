@@ -258,7 +258,7 @@ public class LoopPlugin extends PluginBase {
         invoke(initiator, allowNotification, false);
     }
 
-    public void invoke(String initiator, boolean allowNotification, boolean safety) {
+    public void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
@@ -289,7 +289,7 @@ public class LoopPlugin extends PluginBase {
 
             APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
-                usedAPS.invoke(initiator, safety);
+                usedAPS.invoke(initiator, tempBasalFallback);
                 result = usedAPS.getLastAPSResult();
             }
 
@@ -364,9 +364,9 @@ public class LoopPlugin extends PluginBase {
                                         } else {
                                             new Thread(() -> {
                                                 SystemClock.sleep(1000);
-                                                LoopPlugin.getPlugin().invoke("safety", allowNotification, true);
+                                                LoopPlugin.getPlugin().invoke("tempBasalFallback", allowNotification, true);
                                             }).start();
-                                            FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run_Safety"));
+                                            FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run_TempBasalFallback"));
                                         }
                                         MainApp.bus().post(new EventLoopUpdateGui());
                                     }

@@ -91,8 +91,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
     }
 
     @Override
-    public void invoke(String initiator, boolean safety) {
-        log.debug("invoke from " + initiator + " safety: "  + safety);
+    public void invoke(String initiator, boolean tempBasalFallback) {
+        log.debug("invoke from " + initiator + " safety: "  + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = null;
         try {
@@ -184,11 +184,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = new AutosensResult();
         }
 
-        Constraint<Boolean> smbAllowed = new Constraint<>(!safety);
+        Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
         MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);
 
-        Constraint<Boolean> advancedFiltering = new Constraint<>(!safety);
+        Constraint<Boolean> advancedFiltering = new Constraint<>(!tempBasalFallback);
         MainApp.getConstraintChecker().isAdvancedFilteringEnabled(advancedFiltering);
         inputConstraints.copyReasons(advancedFiltering);
 
