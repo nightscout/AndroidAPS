@@ -92,7 +92,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
 
     @Override
     public void invoke(String initiator, boolean tempBasalFallback) {
-        log.debug("invoke from " + initiator + " safety: "  + tempBasalFallback);
+        log.debug("invoke from " + initiator + " tempBasalFallback: "  + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = null;
         try {
