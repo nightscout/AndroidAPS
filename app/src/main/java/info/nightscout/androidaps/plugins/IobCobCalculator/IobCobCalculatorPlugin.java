@@ -415,7 +415,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             displayCob = autosensData.cob;
             for (Treatment treatment : treatments) {
                 if (IobCobCalculatorPlugin.roundUpTime(treatment.date) > IobCobCalculatorPlugin.roundUpTime(autosensData.time)
-                        && treatment.date < now && treatment.carbs > 0) {
+                        && treatment.date <= now && treatment.carbs > 0) {
                     displayCob += treatment.carbs;
                 }
             }
