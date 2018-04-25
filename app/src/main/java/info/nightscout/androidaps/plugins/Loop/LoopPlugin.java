@@ -130,14 +130,7 @@ public class LoopPlugin extends PluginBase {
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        if (ev.treatment == null || !ev.treatment.isSMB) {
-            invoke("EventTreatmentChange", true);
-        }
-    }
-
+    
     /**
      * This method is triggered once autosens calculation has completed, so the LoopPlugin
      * has current data to work with. However, autosens calculation can be triggered by multiple
