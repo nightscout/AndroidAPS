@@ -353,7 +353,6 @@ public class LoopPlugin extends PluginBase {
                             if (result.enacted || result.success) {
                                 lastRun.tbrSetByPump = result;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
-
                                 MainApp.getConfigBuilder().applySMBRequest(resultAfterConstraints, new Callback() {
                                     @Override
                                     public void run() {
