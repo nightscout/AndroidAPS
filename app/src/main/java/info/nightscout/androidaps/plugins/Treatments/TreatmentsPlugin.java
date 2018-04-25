@@ -175,7 +175,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 Iob tIOB = t.iobCalc(time, dia);
                 total.iob += tIOB.iobContrib;
                 total.activity += tIOB.activityContrib;
-                if (t.date > total.lastBolusTime)
+                if (t.insulin > 0 && t.date > total.lastBolusTime)
                     total.lastBolusTime = t.date;
                 if (!t.isSMB) {
                     // instead of dividing the DIA that only worked on the bilinear curves,
