@@ -721,10 +721,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         String cobStringResult = "--";
         CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService");
         if (cobInfo.displayCob != null) {
-            cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob) + "g";
+            cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob);
             if (cobInfo.futureCarbs > 0) {
-                cobStringResult += " (" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
+                cobStringResult += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
             }
+            cobStringResult += "g";
         }
         return cobStringResult;
     }
