@@ -254,11 +254,11 @@ public class LoopPlugin extends PluginBase {
         return isDisconnected;
     }
 
-    public void invoke(String initiator, boolean allowNotification){
+    public synchronized void invoke(String initiator, boolean allowNotification){
         invoke(initiator, allowNotification, false);
     }
 
-    public void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
+    public synchronized void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
