@@ -1011,4 +1011,5 @@
     <string name="setupwizard_previous">Prev</string>
     <string name="setupwizard_skip">Skip</string>
     <string name="setupwizard_finish">FINISH</string>
+    <string name="setupwizard_language_prompt">Select your language</string>
 </resources>

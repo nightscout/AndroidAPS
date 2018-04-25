@@ -31,6 +31,8 @@ public class SWString extends SWItem {
     public void setName(String name){
         this.groupName = name;
     }
+
+    @Override
     public void generateDialog(View view) {
         Context context = view.getContext();
         LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
@@ -38,12 +40,12 @@ public class SWString extends SWItem {
 
         TextView textlabel = new TextView(context);
         textlabel.setText(groupName);
-        textlabel.setGravity(Gravity.START);
+/*        textlabel.setGravity(Gravity.START);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
         textlabel.setLayoutParams(llp);
         textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
-        TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);
+        TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);*/
 
         layout.addView(textlabel);
 

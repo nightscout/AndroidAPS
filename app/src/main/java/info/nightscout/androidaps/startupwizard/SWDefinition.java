@@ -42,6 +42,11 @@ public class SWDefinition {
                 .add(new SWRadioButton().option(R.array.ageArray, R.array.ageValues).preferenceId(R.string.key_age).label(R.string.patientage).comment(R.string.patientage_summary))
                 .validator(() -> SP.contains(R.string.key_age))
         )
+        .add(new SWScreen(R.string.language)
+                .skippable(false)
+                .add(new SWRadioButton().option(R.array.languagesArray, R.array.languagesValues).preferenceId(R.string.language).label(R.string.language).comment(R.string.setupwizard_language_prompt))
+                .validator(() -> SP.contains(R.string.language))
+        )
         ;
     }
 

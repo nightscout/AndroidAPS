@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
+import android.view.View;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.utils.SP;
@@ -58,5 +60,9 @@ public class SWItem {
     public void save(String value) {
         SP.putString(preferenceId, value);
         MainApp.bus().post(new EventPreferenceChange(preferenceId));
+    }
+
+    public void generateDialog(View view){
+
     }
 }
