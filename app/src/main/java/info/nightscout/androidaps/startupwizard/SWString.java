@@ -31,7 +31,7 @@ public class SWString extends SWItem {
     public void setName(String name){
         this.groupName = name;
     }
-    public void show(View view) {
+    public void generateDialog(View view) {
         Context context = view.getContext();
         LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
         layout.removeAllViews();

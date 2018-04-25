@@ -168,14 +168,14 @@ public class SetupWizardActivity extends AppCompatActivity {
                     SWRadioButton radioGroupItems = (SWRadioButton) currentItem;
                     radioGroupItems.setName(currentScreen.getHeader());
                     radioGroupItems.setOptions(radioGroupItems.labels(), radioGroupItems.values());
-                    radioGroupItems.show(this.findViewById(R.id.fullscreen_content_fields));
+                    radioGroupItems.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
                 }
                 if(labels.size() > 0){
                     // we have some labels lets display them
                     SWUrl swUrl = new SWUrl();
                     swUrl.setName(currentScreen.getHeader());
                     swUrl.setOptions(labels, comments);
-                    swUrl.show(this.findViewById(R.id.fullscreen_content_fields));
+                    swUrl.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
                 }
             }
 

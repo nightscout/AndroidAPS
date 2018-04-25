@@ -52,7 +52,7 @@ public class SWRadioButton extends SWItem {
         return MainApp.sResources.getStringArray(valuesArray);
     }
 
-    public void show(View view){
+    public void generateDialog(View view){
         Context context = view.getContext();
 //        LinearLayout layout = (LinearLayout) new LinearLayout(context);
         LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
