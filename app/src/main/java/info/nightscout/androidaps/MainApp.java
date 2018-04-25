@@ -155,8 +155,7 @@ public class MainApp extends Application {
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.HWPUMPS && engineeringMode)
                 pluginsList.add(InsightPlugin.getPlugin()); // <-- Enable Insight plugin here
-            if (Config.HWPUMPS && engineeringMode)
-                pluginsList.add(ComboPlugin.getPlugin()); // <-- Enable Combo plugin here
+            if (Config.HWPUMPS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());

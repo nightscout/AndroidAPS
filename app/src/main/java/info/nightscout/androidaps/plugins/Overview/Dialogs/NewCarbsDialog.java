@@ -133,9 +133,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         editTime = view.findViewById(R.id.newcarbs_time);
         editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
 
-        LinearLayout durationLayout = view.findViewById(R.id.newcarbs_duration_layout);
-        durationLayout.setVisibility(MainApp.engineeringMode ? View.VISIBLE : View.GONE);
-
         editDuration = view.findViewById(R.id.new_carbs_duration);
         editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
 
