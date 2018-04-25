@@ -3,7 +3,10 @@ package info.nightscout.androidaps.plugins.NSClientInternal;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -61,6 +64,7 @@ public class NSClientPlugin extends PluginBase {
     public String status = "";
 
     public NSClientService nsClientService = null;
+    NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
 
     private NSClientPlugin() {
         super(new PluginDescription()
@@ -92,7 +96,14 @@ public class NSClientPlugin extends PluginBase {
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
 
-        EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus();
+        // register NetworkChangeReceiver --> https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
+        // Nougat is not providing Connectivity-Action anymore ;-(
+        context.registerReceiver(networkChangeReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        context.registerReceiver(networkChangeReceiver,
+                new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
+
+        EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
         if (event != null)
             MainApp.bus().post(event);
     }
@@ -125,7 +136,7 @@ public class NSClientPlugin extends PluginBase {
                 ev.isChanged(R.string.key_ns_wifi_ssids) ||
                 ev.isChanged(R.string.key_ns_allowroaming)
                 ) {
-            EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus();
+            EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
             if (event != null)
                 MainApp.bus().post(event);
         }
