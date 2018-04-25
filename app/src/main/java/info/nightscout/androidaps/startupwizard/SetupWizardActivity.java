@@ -1,32 +1,24 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 import static info.nightscout.androidaps.startupwizard.SWItem.Type.RADIOBUTTON;
@@ -60,30 +52,17 @@ public class SetupWizardActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private TextView radioLabel;
     private int numberOfButtons = 0;
-    private String[] labels;
-    private Context context;
-    private View view;
-    private int resLayoutId;
-    private String label;
-    private JSONArray data1;
-    private JSONArray data2;
-    private double step;
-    private double min;
-    private double max;
-    private NumberFormat formatter;
-    private Runnable save;
+    private List<String> labels = new ArrayList<String>();
+    private List<String> comments = new ArrayList<String>();
+
     private LinearLayout layout;
     private TextView textlabel;
     private TextView screenName;
-    private TextView label1;
-    private EditText editText1;
-    private TextView label2;
-    private EditText editText2;
     private Button skipButton;
     //logiing
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
 
-    private int currentWizzardPage = 0;
+    private int currentWizardPage = 0;
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -181,26 +160,23 @@ public class SetupWizardActivity extends AppCompatActivity {
             }
             for(int i = 0; i < currentScreen.items.size(); i++){
                 SWItem currentItem = currentScreen.items.get(i);
-                if(currentItem.type == URL){
-                    label1 = (TextView) findViewById(R.id.textLabel1);
-                    editText1 = (EditText) findViewById(R.id.editText1);
-                    label1.setText(currentItem.getLabel());
-                    label1.setVisibility(View.VISIBLE);
-                    editText1.setText(currentItem.getComment());
-                    editText1.setVisibility(View.VISIBLE);
-                } else if(currentItem.type == STRING){
-                    label2 = (TextView) findViewById(R.id.textLabel2);
-                    editText2 = (EditText) findViewById(R.id.editText2);
-                    label2.setText(currentItem.getLabel());
-                    label2.setVisibility(View.VISIBLE);
-                    editText2.setText(currentItem.getComment());
-                    editText2.setVisibility(View.VISIBLE);
+                if(currentItem.type == URL || currentItem.type == STRING){
+                    labels.add(currentItem.getLabel());
+                    comments.add(currentItem.getComment());
                 } else if(currentItem.type == RADIOBUTTON){
                     // generate layout dynamically
                     SWRadioButton radioGroupItems = (SWRadioButton) currentItem;
-                    addRadioButtons(currentScreen.getHeader(), radioGroupItems.labels().length, radioGroupItems.labels(), radioGroupItems.values());
+                    radioGroupItems.setName(currentScreen.getHeader());
+                    radioGroupItems.setOptions(radioGroupItems.labels(), radioGroupItems.values());
+                    radioGroupItems.show(this.findViewById(R.id.fullscreen_content_fields));
                 }
-
+                if(labels.size() > 0){
+                    // we have some labels lets display them
+                    SWUrl swUrl = new SWUrl();
+                    swUrl.setName(currentScreen.getHeader());
+                    swUrl.setOptions(labels, comments);
+                    swUrl.show(this.findViewById(R.id.fullscreen_content_fields));
+                }
             }
 
 
@@ -265,53 +241,18 @@ public class SetupWizardActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    private int itemsCount() {
-        return data1.length();
-    }
 
-    public void addRadioButtons(String label, int number, String[] labels, String[] values) {
-        layout = (LinearLayout) findViewById(R.id.fullscreen_content_fields);
-        layout.removeAllViews();
-
-        textlabel = new TextView(this);
-        textlabel.setText(label);
-        textlabel.setGravity(Gravity.START);
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
-        textlabel.setLayoutParams(llp);
-        textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
-        TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);
-
-        RadioGroup rg = new RadioGroup(this);
-        for (int row = 0; row < 1; row++) {
-
-            rg.setOrientation(LinearLayout.VERTICAL);
-            rg.setVisibility(View.VISIBLE);
-
-            for (int i = 0; i < number; i++) {
-                RadioButton rdbtn = new RadioButton(this);
-                rdbtn.setId((row * 2) + i);
-                rdbtn.setText(labels[i]);
-                rg.addView(rdbtn);
-            }
-        }
-        layout.addView(textlabel);
-        layout.addView(rg);
-
-
-
-    }
 
     public void showNextPage(View view) {
         Intent intent = new Intent(this, SetupWizardActivity.class);
-        intent.putExtra(INTENT_MESSAGE, currentWizzardPage + 1);
+        intent.putExtra(INTENT_MESSAGE, currentWizardPage + 1);
         startActivity(intent);
     }
 
     public void showPreviousPage(View view) {
         Intent intent = new Intent(this, SetupWizardActivity.class);
-        if(currentWizzardPage > 0)
-            intent.putExtra(INTENT_MESSAGE, currentWizzardPage - 1);
+        if(currentWizardPage > 0)
+            intent.putExtra(INTENT_MESSAGE, currentWizardPage - 1);
         else
             intent.putExtra(INTENT_MESSAGE, 0);
         startActivity(intent);

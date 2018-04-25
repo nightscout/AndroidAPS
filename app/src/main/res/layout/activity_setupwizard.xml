@@ -33,38 +33,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textLabel1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextLabel"
-                android:visibility="gone"/>
-
-            <EditText
-                android:id="@+id/editText1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text|text"
-                android:text="Enter your setting here"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/textLabel2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextLabel2"
-                android:visibility="gone"/>
-
-            <EditText
-                android:id="@+id/editText2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text|text"
-                android:text="Enter your setting here"
-                android:visibility="gone"/>
-
         </LinearLayout>
 
         <LinearLayout
