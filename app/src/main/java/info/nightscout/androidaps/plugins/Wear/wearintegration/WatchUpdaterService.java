@@ -37,6 +37,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -718,9 +719,9 @@ public class WatchUpdaterService extends WearableListenerService implements
     private String generateCOBString() {
 
         String cobStringResult = "--";
-        AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("WatcherUpdaterService");
-        if (autosensData != null) {
-            cobStringResult = (int) autosensData.cob + "g";
+        CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService");
+        if (cobInfo.displayCob != null) {
+            cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob) + "g";
         }
         return cobStringResult;
     }
