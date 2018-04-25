@@ -65,27 +65,6 @@
                 android:text="Enter your setting here"
                 android:visibility="gone"/>
 
-
-            <LinearLayout
-                android:id="@+id/radio_group_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/radio_group_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="radio button group label" />
-
-                <RadioGroup
-                    android:id="@+id/radiogroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" />
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
