@@ -141,6 +141,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         List<SWScreen> screens = swDefinition.getScreens();
         if(screens.size() > 0){
             SWScreen currentScreen = screens.get(showPage);
+            currentWizardPage = showPage;
             // show/hide prev/next buttons if we are at the beninning/end
             if(showPage == screens.size() - 1) {
                 ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
