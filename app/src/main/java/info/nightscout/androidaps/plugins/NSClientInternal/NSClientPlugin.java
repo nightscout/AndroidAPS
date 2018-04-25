@@ -27,6 +27,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -113,6 +114,7 @@ public class NSClientPlugin extends PluginBase {
         MainApp.bus().unregister(this);
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
+        context.unregisterReceiver(networkChangeReceiver);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -143,6 +145,11 @@ public class NSClientPlugin extends PluginBase {
     }
 
     @Subscribe
+    public void onStatusEvent(final EventChargingState ev) {
+        
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventNetworkChange ev) {
         boolean wifiOnly = SP.getBoolean(R.string.key_ns_wifionly, false);
         String allowedSSIDs = SP.getString(R.string.key_ns_wifi_ssids, "");
@@ -163,8 +170,10 @@ public class NSClientPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventAppExit ignored) {
-        if (nsClientService != null)
+        if (nsClientService != null) {
             MainApp.instance().getApplicationContext().unbindService(mConnection);
+            MainApp.instance().getApplicationContext().unregisterReceiver(networkChangeReceiver);
+        }
     }
 
     @Subscribe
