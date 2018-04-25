@@ -722,6 +722,9 @@ public class WatchUpdaterService extends WearableListenerService implements
         CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService");
         if (cobInfo.displayCob != null) {
             cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob) + "g";
+            if (cobInfo.futureCarbs > 0) {
+                cobStringResult += " (" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
+            }
         }
         return cobStringResult;
     }
