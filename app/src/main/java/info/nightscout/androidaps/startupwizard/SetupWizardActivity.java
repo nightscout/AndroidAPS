@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
@@ -59,6 +61,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     private TextView textlabel;
     private TextView screenName;
     private Button skipButton;
+    private boolean nextAllowed = false;
     //logiing
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
 
@@ -139,13 +142,15 @@ public class SetupWizardActivity extends AppCompatActivity {
         int showPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE,0);
         SWDefinition swDefinition = SWDefinition.getInstance();
         List<SWScreen> screens = swDefinition.getScreens();
-        if(screens.size() > 0){
+        if(screens.size() > 0 && showPage < screens.size()){
             SWScreen currentScreen = screens.get(showPage);
             currentWizardPage = showPage;
             // show/hide prev/next buttons if we are at the beninning/end
-            if(showPage == screens.size() - 1) {
-                ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
+            if(nextAllowed && showPage == screens.size() - 1) {
                 ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
+                ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
+            } else if(nextAllowed && showPage != screens.size() - 1) {
+                ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
             }else if(showPage == 0)
                 ((Button) findViewById(R.id.previous_button)).setVisibility(View.GONE);
             //Set screen name
@@ -164,16 +169,35 @@ public class SetupWizardActivity extends AppCompatActivity {
                 if(currentItem.type == URL || currentItem.type == STRING){
                     labels.add(currentItem.getLabel());
                     comments.add(currentItem.getComment());
+
                 } else if(currentItem.type == RADIOBUTTON){
+                    //disable next before creating layout
+                    nextAllowed = false;
                     // generate layout dynamically
                     SWRadioButton radioGroupItems = (SWRadioButton) currentItem;
                     radioGroupItems.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
+                    radioGroupItems.getRadioGroup().setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            nextAllowed = radioGroupItems.isValid();
+                            if(showPage == screens.size() - 1 && nextAllowed) {
+                                ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
+                                ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
+                            } else if(nextAllowed)
+                                ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
+                            show();
+                        }
+
+                    });
+
                 }
                 if(labels.size() > 0){
                     // we have some labels lets display them
                     SWUrl swUrl = new SWUrl();
                     swUrl.setOptions(labels, comments);
                     swUrl.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
+                    nextAllowed = swUrl.isValid();
+                        ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
                 }
             }
 

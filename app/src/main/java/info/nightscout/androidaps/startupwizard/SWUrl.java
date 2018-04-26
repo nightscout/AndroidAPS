@@ -39,13 +39,6 @@ public class SWUrl extends SWItem {
         LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
         layout.removeAllViews();
 
-        /*textlabel.setGravity(Gravity.START);
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
-        textlabel.setLayoutParams(llp);
-        textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
-        TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);*/
-
         for (int row = 0; row < 1; row++) {
             for (int i = 0; i < labels.size(); i++) {
                 if(values.get(i) != "" && values.get(i) != null) {
@@ -58,5 +51,11 @@ public class SWUrl extends SWItem {
                 }
             }
         }
+    }
+
+    public boolean isValid(){
+        // checks for URL validation
+
+        return true;
     }
 }

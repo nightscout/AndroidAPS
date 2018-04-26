@@ -72,7 +72,7 @@
             android:layout_weight="1"
             android:onClick="showNextPage"
             android:text="@string/setupwizard_next"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
             <Button
                 android:id="@+id/finish_button"

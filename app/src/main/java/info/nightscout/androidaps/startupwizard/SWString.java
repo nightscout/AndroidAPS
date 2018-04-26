@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.text.InputType;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 
 public class SWString extends SWItem {
     private List<String> labels;
@@ -40,12 +37,6 @@ public class SWString extends SWItem {
 
         TextView textlabel = new TextView(context);
         textlabel.setText(groupName);
-/*        textlabel.setGravity(Gravity.START);
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
-        textlabel.setLayoutParams(llp);
-        textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
-        TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);*/
 
         layout.addView(textlabel);
 
@@ -61,5 +52,10 @@ public class SWString extends SWItem {
                 }
             }
         }
+    }
+
+    public boolean isValid(){
+
+        return true;
     }
 }
