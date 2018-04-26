@@ -156,7 +156,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public float getSize() {
-        return 1f;
+        return 0.5f;
     }
 
     @Override
