@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.utils.SP;
 
 public class SWRadioButton extends SWItem {
 
@@ -72,11 +74,6 @@ public class SWRadioButton extends SWItem {
         return this.radioGroup;
     }
 
-    // returns the id of the group
-    public int getGroupId(){
-        return radioGroup.getId();
-    }
-
     public String getCheckedValue(){
         if(radioGroup != null && radioGroup.getCheckedRadioButtonId() > -1){
             Context context = radioGroup.getRootView().getContext();
@@ -91,6 +88,12 @@ public class SWRadioButton extends SWItem {
         return this.somethingChecked;
     }
 
+    public void save(){
+        if(getCheckedValue().equals("none")) {
+            SP.putString(preferenceId, getCheckedValue());
+            MainApp.bus().post(new EventPreferenceChange(preferenceId));
+        }
+    }
     // return true if we have something checked
     public boolean isValid(){
         if(getCheckedValue().equals("none"))

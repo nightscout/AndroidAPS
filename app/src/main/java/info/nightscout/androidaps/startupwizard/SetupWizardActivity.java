@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.utils.SP;
 
 import static info.nightscout.androidaps.startupwizard.SWItem.Type.RADIOBUTTON;
 import static info.nightscout.androidaps.startupwizard.SWItem.Type.STRING;
@@ -179,7 +180,10 @@ public class SetupWizardActivity extends AppCompatActivity {
                     radioGroupItems.getRadioGroup().setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
-                            nextAllowed = radioGroupItems.isValid();
+                            log.debug("Validate radio input:" +currentScreen.validator.isValid());
+                            radioGroupItems.save();
+                            log.debug("Preference value after save is:"+ SP.getString(radioGroupItems.preferenceId, "unset"));
+                            nextAllowed = currentScreen.validator.isValid();
                             if(showPage == screens.size() - 1 && nextAllowed) {
                                 ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
                                 ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
@@ -196,6 +200,7 @@ public class SetupWizardActivity extends AppCompatActivity {
                     SWUrl swUrl = new SWUrl();
                     swUrl.setOptions(labels, comments);
                     swUrl.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
+                    log.debug("Valid input:" +currentScreen.validator.isValid());
                     nextAllowed = swUrl.isValid();
                         ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
                 }
