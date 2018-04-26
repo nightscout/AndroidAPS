@@ -2,7 +2,6 @@ package info.nightscout.androidaps.startupwizard;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 
 public class SWRadioButton extends SWItem {
 
