@@ -338,12 +338,24 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public IobTotal getCalculationToTimeTempBasals(long time, Profile profile) {
+        return getCalculationToTimeTempBasals(time, profile, false, 0);
+    }
+
+    public IobTotal getCalculationToTimeTempBasals(long time, Profile profile, boolean truncate, long truncateTime) {
         IobTotal total = new IobTotal(time);
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
                 TemporaryBasal t = tempBasals.get(pos);
                 if (t.date > time) continue;
-                IobTotal calc = t.iobCalc(time, profile);
+                IobTotal calc;
+                if(truncate && t.end() > truncateTime){
+                    TemporaryBasal dummyTemp = new TemporaryBasal();
+                    dummyTemp.copyFrom(t);
+                    dummyTemp.cutEndTo(truncateTime);
+                    calc = dummyTemp.iobCalc(time, profile);
+                } else {
+                    calc = t.iobCalc(time, profile);
+                }
                 //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
                 total.plus(calc);
             }
@@ -354,7 +366,16 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
-                    IobTotal calc = e.iobCalc(time);
+
+                    IobTotal calc;
+                    if(truncate && e.end() > truncateTime){
+                        ExtendedBolus dummyExt = new ExtendedBolus();
+                        dummyExt.copyFrom(e);
+                        dummyExt.cutEndTo(truncateTime);
+                        calc = dummyExt.iobCalc(time);
+                    } else {
+                        calc = e.iobCalc(time);
+                    }
                     totalExt.plus(calc);
                 }
             }
