@@ -88,7 +88,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
@@ -1283,10 +1283,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // cob
         if (cobView != null) { // view must not exists
-            String cobText = "";
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Overview COB");
-            if (autosensData != null)
-                cobText = (int) autosensData.cob + " g";
+            String cobText = MainApp.gs(R.string.value_unavailable_short);
+            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Overview COB");
+            if (cobInfo.displayCob != null) {
+                cobText = DecimalFormatter.to0Decimal(cobInfo.displayCob);
+                if (cobInfo.futureCarbs > 0)
+                    cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
+            }
             cobView.setText(cobText);
         }
 

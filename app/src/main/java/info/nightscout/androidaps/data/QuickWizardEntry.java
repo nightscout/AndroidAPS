@@ -11,7 +11,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -79,14 +79,10 @@ public class QuickWizardEntry {
 
         // COB
         double cob = 0d;
-        AutosensData autosensData;
-        if (_synchronized)
-            autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("QuickWizard COB");
-        else
-            autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("QuickWizard COB");
-
-        if (autosensData != null && useCOB() == YES) {
-            cob = autosensData.cob;
+        if (useCOB() == YES) {
+            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(_synchronized, "QuickWizard COB");
+            if (cobInfo.displayCob != null)
+                cob = cobInfo.displayCob;
         }
 
         // Temp target
