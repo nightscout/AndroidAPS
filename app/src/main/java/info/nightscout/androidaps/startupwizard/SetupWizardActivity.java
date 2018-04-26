@@ -180,9 +180,7 @@ public class SetupWizardActivity extends AppCompatActivity {
                     radioGroupItems.getRadioGroup().setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
-                            log.debug("Validate radio input:" +currentScreen.validator.isValid());
-                            radioGroupItems.save();
-                            log.debug("Preference value after save is:"+ SP.getString(radioGroupItems.preferenceId, "unset"));
+                            radioGroupItems.save(radioGroupItems.getCheckedValue());
                             nextAllowed = currentScreen.validator.isValid();
                             if(showPage == screens.size() - 1 && nextAllowed) {
                                 ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);

@@ -46,7 +46,8 @@ public class SWRadioButton extends SWItem {
         layout.removeAllViews();
         String[] labels = context.getResources().getStringArray(labelsArray);
         String[] values = context.getResources().getStringArray(valuesArray);
-
+        // Get if there is already value in SP
+        String previousValue = SP.getString(preferenceId, "unset");
 
         radioGroup = new RadioGroup(context);
         radioGroup.clearCheck();
@@ -60,6 +61,8 @@ public class SWRadioButton extends SWItem {
                 RadioButton rdbtn = new RadioButton(context);
                 rdbtn.setId((row * 2) + i);
                 rdbtn.setText(labels[i]);
+                if(previousValue.equals(values[i]))
+                    rdbtn.setChecked(true);
 //                log.debug("Button ["+labels[i]+"]="+rdbtn.getId()+" value is "+values[rdbtn.getId()]);
                 radioGroup.addView(rdbtn);
             }
