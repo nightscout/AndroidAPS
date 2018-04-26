@@ -385,6 +385,7 @@ public class GraphData {
                 }
                 if (autosensData.failoverToMinAbsorbtionRate) {
                     autosensData.setScale(cobScale);
+                    autosensData.setChartTime(time);
                     minFailoverActiveList.add(autosensData);
                 }
             }
