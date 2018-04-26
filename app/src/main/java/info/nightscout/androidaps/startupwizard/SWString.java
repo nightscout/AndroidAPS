@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
@@ -19,10 +17,6 @@ public class SWString extends SWItem {
 
     public SWString() {
         super(Type.STRING);
-    }
-    public void setOptions(List<String> labels, List<String> values){
-        this.labels = labels;
-        this.values = values;
     }
 
     public void setName(String name){
@@ -54,8 +48,4 @@ public class SWString extends SWItem {
         }
     }
 
-    public boolean isValid(){
-
-        return true;
-    }
 }

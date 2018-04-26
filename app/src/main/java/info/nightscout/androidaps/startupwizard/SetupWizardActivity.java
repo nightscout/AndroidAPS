@@ -10,17 +10,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.utils.SP;
 
@@ -62,7 +61,6 @@ public class SetupWizardActivity extends AppCompatActivity {
     private TextView textlabel;
     private TextView screenName;
     private Button skipButton;
-    private boolean nextAllowed = false;
     //logiing
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
 
@@ -147,12 +145,9 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWScreen currentScreen = screens.get(showPage);
             currentWizardPage = showPage;
             // show/hide prev/next buttons if we are at the beninning/end
-            if(nextAllowed && showPage == screens.size() - 1) {
-                ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
-                ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
-            } else if(nextAllowed && showPage != screens.size() - 1) {
-                ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
-            }else if(showPage == 0)
+            //showNextButton(showPage, screens.size()-1);
+
+            if(showPage == 0)
                 ((Button) findViewById(R.id.previous_button)).setVisibility(View.GONE);
             //Set screen name
             screenName = (TextView) findViewById(R.id.fullscreen_content);
@@ -172,22 +167,23 @@ public class SetupWizardActivity extends AppCompatActivity {
                     comments.add(currentItem.getComment());
 
                 } else if(currentItem.type == RADIOBUTTON){
-                    //disable next before creating layout
-                    nextAllowed = false;
                     // generate layout dynamically
                     SWRadioButton radioGroupItems = (SWRadioButton) currentItem;
                     radioGroupItems.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
+                    //allow next button if we have something saved in preferences
+                    if(!radioGroupItems.preferenceSet().equals("none")){
+                        showNextButton(showPage, screens.size()-1);
+                    }
+
+
                     radioGroupItems.getRadioGroup().setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
                             radioGroupItems.save(radioGroupItems.getCheckedValue());
-                            nextAllowed = currentScreen.validator.isValid();
-                            if(showPage == screens.size() - 1 && nextAllowed) {
-                                ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
-                                ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
-                            } else if(nextAllowed)
-                                ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
-                            show();
+                            if(currentScreen.validator.isValid()) {
+                                showNextButton(showPage, screens.size() - 1);
+                                show();
+                            }
                         }
 
                     });
@@ -199,8 +195,11 @@ public class SetupWizardActivity extends AppCompatActivity {
                     swUrl.setOptions(labels, comments);
                     swUrl.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
                     log.debug("Valid input:" +currentScreen.validator.isValid());
-                    nextAllowed = swUrl.isValid();
-                        ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
+/*                    if(currentScreen.validator.isValid()) {
+                        showNextButton(showPage, screens.size() - 1);
+                        show();
+                    }*/
+                    showNextButton(showPage, screens.size()-1);
                 }
             }
 
@@ -266,7 +265,14 @@ public class SetupWizardActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-
+    private void showNextButton(int currentPage, int maxPages){
+        if(currentPage == maxPages) {
+            ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
+            ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
+        } else
+            ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
+        show();
+    }
 
     public void showNextPage(View view) {
         Intent intent = new Intent(this, SetupWizardActivity.class);
@@ -283,4 +289,9 @@ public class SetupWizardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // Go back to overview
+    public void finishSetupWizard(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }

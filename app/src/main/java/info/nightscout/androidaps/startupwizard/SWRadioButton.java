@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -97,12 +98,10 @@ public class SWRadioButton extends SWItem {
             MainApp.bus().post(new EventPreferenceChange(preferenceId));
         }
     }
-    // return true if we have something checked
-    public boolean isValid(){
-        if(getCheckedValue().equals("none"))
-            return false;
-        else
-            return true;
+
+    public String preferenceSet(){
+        return SP.getString(preferenceId, "none");
     }
+
 
 }
