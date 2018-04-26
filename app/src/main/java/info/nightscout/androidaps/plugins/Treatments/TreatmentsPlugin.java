@@ -366,7 +366,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
-
                     IobTotal calc;
                     if(truncate && e.end() > truncateTime){
                         ExtendedBolus dummyExt = new ExtendedBolus();
