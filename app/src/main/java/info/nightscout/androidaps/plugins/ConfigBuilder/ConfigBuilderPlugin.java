@@ -417,6 +417,9 @@ public class ConfigBuilderPlugin extends PluginBase {
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
         if (!request.tempBasalRequested) {
+            if (callback != null) {
+                callback.result(new PumpEnactResult().enacted(false).success(true).comment(MainApp.gs(R.string.nochangerequested))).run();
+            }
             return;
         }
 

@@ -91,8 +91,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
     }
 
     @Override
-    public void invoke(String initiator) {
-        log.debug("invoke from " + initiator);
+    public void invoke(String initiator, boolean tempBasalFallback) {
+        log.debug("invoke from " + initiator + " tempBasalFallback: "  + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = null;
         try {
@@ -184,13 +184,13 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = new AutosensResult();
         }
 
-        Constraint<Boolean> smbAllowed = new Constraint<>(true);
+        Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
         MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);
 
-        Constraint<Boolean> smbAlwaysEnabled = new Constraint<>(true);
-        MainApp.getConstraintChecker().isAdvancedFilteringEnabled(smbAlwaysEnabled);
-        inputConstraints.copyReasons(smbAlwaysEnabled);
+        Constraint<Boolean> advancedFiltering = new Constraint<>(!tempBasalFallback);
+        MainApp.getConstraintChecker().isAdvancedFilteringEnabled(advancedFiltering);
+        inputConstraints.copyReasons(advancedFiltering);
 
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "SMB data gathering", start);
@@ -201,7 +201,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
                     smbAllowed.value(),
-                    smbAlwaysEnabled.value()
+                    advancedFiltering.value()
             );
         } catch (JSONException e) {
             log.error(e.getMessage());

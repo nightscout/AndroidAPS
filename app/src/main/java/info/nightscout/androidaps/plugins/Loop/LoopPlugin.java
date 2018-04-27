@@ -9,6 +9,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
@@ -129,14 +130,7 @@ public class LoopPlugin extends PluginBase {
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        if (ev.treatment == null || !ev.treatment.isSMB) {
-            invoke("EventTreatmentChange", true);
-        }
-    }
-
+    
     /**
      * This method is triggered once autosens calculation has completed, so the LoopPlugin
      * has current data to work with. However, autosens calculation can be triggered by multiple
@@ -253,7 +247,11 @@ public class LoopPlugin extends PluginBase {
         return isDisconnected;
     }
 
-    public void invoke(String initiator, boolean allowNotification) {
+    public synchronized void invoke(String initiator, boolean allowNotification){
+        invoke(initiator, allowNotification, false);
+    }
+
+    public synchronized void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke from " + initiator);
@@ -284,7 +282,7 @@ public class LoopPlugin extends PluginBase {
 
             APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
-                usedAPS.invoke(initiator);
+                usedAPS.invoke(initiator, tempBasalFallback);
                 result = usedAPS.getLastAPSResult();
             }
 
@@ -348,16 +346,23 @@ public class LoopPlugin extends PluginBase {
                             if (result.enacted || result.success) {
                                 lastRun.tbrSetByPump = result;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
-                            }
-                            MainApp.bus().post(new EventLoopUpdateGui());
-                        }
-                    });
-                    MainApp.getConfigBuilder().applySMBRequest(resultAfterConstraints, new Callback() {
-                        @Override
-                        public void run() {
-                            if (result.enacted || result.success) {
-                                lastRun.smbSetByPump = result;
-                                lastRun.lastEnact = lastRun.lastAPSRun;
+                                MainApp.getConfigBuilder().applySMBRequest(resultAfterConstraints, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        //Callback is only called if a bolus was acutally requested
+                                        if (result.enacted || result.success) {
+                                            lastRun.smbSetByPump = result;
+                                            lastRun.lastEnact = lastRun.lastAPSRun;
+                                        } else {
+                                            new Thread(() -> {
+                                                SystemClock.sleep(1000);
+                                                LoopPlugin.getPlugin().invoke("tempBasalFallback", allowNotification, true);
+                                            }).start();
+                                            FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run_TempBasalFallback"));
+                                        }
+                                        MainApp.bus().post(new EventLoopUpdateGui());
+                                    }
+                                });
                             }
                             MainApp.bus().post(new EventLoopUpdateGui());
                         }
