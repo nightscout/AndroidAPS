@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -49,7 +50,7 @@ public class SWRadioButton extends SWItem {
         String[] values = context.getResources().getStringArray(valuesArray);
         // Get if there is already value in SP
         String previousValue = SP.getString(preferenceId, "unset");
-
+        log.debug("Value for "+view.getContext().getString(preferenceId)+" is "+previousValue);
         radioGroup = new RadioGroup(context);
         radioGroup.clearCheck();
 
@@ -71,7 +72,7 @@ public class SWRadioButton extends SWItem {
         radioGroup.setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                save(getCheckedValue());
+                save();
             }
 
         });
@@ -98,7 +99,8 @@ public class SWRadioButton extends SWItem {
     }
 
     public void save(){
-        if(getCheckedValue().equals("none")) {
+        if(!getCheckedValue().equals("none")) {
+            log.debug("Saving "+preferenceId+" value "+getCheckedValue());
             SP.putString(preferenceId, getCheckedValue());
             MainApp.bus().post(new EventPreferenceChange(preferenceId));
         }

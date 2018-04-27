@@ -1012,4 +1012,5 @@
     <string name="setupwizard_skip">Skip</string>
     <string name="setupwizard_finish">FINISH</string>
     <string name="setupwizard_language_prompt">Select your language</string>
+    <string name="key_language">language</string>
 </resources>

@@ -20,14 +20,13 @@ public class SWUrl extends SWItem {
         super(Type.URL);
     }
 
-    public void setOptions(List<String> labels, List<String> values){
-//        log.debug("Setting options - labels "+labels.size()+" values - "+values.size());
-        this.labels = labels;
-        this.values = values;
-    }
-
     public void setName(String name){
         this.groupName = name;
+    }
+
+    public void setOptions(List<String> labels, List<String> values){
+        this.labels = labels;
+        this.values = values;
     }
 
     @Override
