@@ -6,10 +6,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 public class SWUrl extends SWItem {
-
+    private static Logger log = LoggerFactory.getLogger(SWUrl.class);
     private List<String> labels;
     private List<String> values;
     private  String groupName;
@@ -18,6 +21,7 @@ public class SWUrl extends SWItem {
     }
 
     public void setOptions(List<String> labels, List<String> values){
+//        log.debug("Setting options - labels "+labels.size()+" values - "+values.size());
         this.labels = labels;
         this.values = values;
     }
@@ -27,22 +31,18 @@ public class SWUrl extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view) {
+    public void generateDialog(View view, LinearLayout layout) {
         Context context = view.getContext();
-        LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
-        layout.removeAllViews();
 
-        for (int row = 0; row < 1; row++) {
-            for (int i = 0; i < labels.size(); i++) {
-                if(values.get(i) != "" && values.get(i) != null) {
-                    EditText editText = new EditText(context);
-                    editText.setId((row * 2) + i);
-                    editText.setText(values.get(i));
-                    editText.setInputType(InputType.TYPE_CLASS_TEXT);
-                    editText.setMaxLines(1);
-                    layout.addView(editText);
-                }
-            }
+
+        if(values.get(values.size()-1) != "" && values.get(values.size()-1) != null) {
+            EditText editText = new EditText(context);
+            editText.setId(1);
+            // get the last value in list
+            editText.setText(values.get(values.size()-1));
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+            editText.setMaxLines(1);
+            layout.addView(editText);
         }
     }
 

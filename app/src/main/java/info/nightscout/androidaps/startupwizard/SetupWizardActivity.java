@@ -160,49 +160,20 @@ public class SetupWizardActivity extends AppCompatActivity {
                 skipButton = (Button) findViewById(R.id.skip_button);
 
             }
+            //Generate layout first
+            LinearLayout layout = info.nightscout.androidaps.startupwizard.SWItem.generateLayout(this.findViewById(R.id.fullscreen_content_fields));
             for(int i = 0; i < currentScreen.items.size(); i++){
                 SWItem currentItem = currentScreen.items.get(i);
-                if(currentItem.type == URL || currentItem.type == STRING){
-                    labels.add(currentItem.getLabel());
-                    comments.add(currentItem.getComment());
-
-                } else if(currentItem.type == RADIOBUTTON){
-                    // generate layout dynamically
-                    SWRadioButton radioGroupItems = (SWRadioButton) currentItem;
-                    radioGroupItems.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
-                    //allow next button if we have something saved in preferences
-                    if(!radioGroupItems.preferenceSet().equals("none")){
-                        showNextButton(showPage, screens.size()-1);
-                    }
-
-
-                    radioGroupItems.getRadioGroup().setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup group, int checkedId) {
-                            radioGroupItems.save(radioGroupItems.getCheckedValue());
-                            if(currentScreen.validator.isValid()) {
-                                showNextButton(showPage, screens.size() - 1);
-                                show();
-                            }
-                        }
-
-                    });
-
-                }
-                if(labels.size() > 0){
-                    // we have some labels lets display them
-                    SWUrl swUrl = new SWUrl();
-                    swUrl.setOptions(labels, comments);
-                    swUrl.generateDialog(this.findViewById(R.id.fullscreen_content_fields));
-                    log.debug("Valid input:" +currentScreen.validator.isValid());
-/*                    if(currentScreen.validator.isValid()) {
-                        showNextButton(showPage, screens.size() - 1);
-                        show();
-                    }*/
-                    showNextButton(showPage, screens.size()-1);
-                }
+                labels.add(i,currentItem.getLabel());
+                comments.add(i,currentItem.getComment());
+                currentItem.setOptions(labels, comments);
+                currentItem.generateDialog(this.findViewById(R.id.fullscreen_content_fields), layout);
             }
-
+            // Check if input isValid or screen is sckippable
+            if(currentScreen.validator.isValid() || currentScreen.skippable) {
+                showNextButton(showPage, screens.size() - 1);
+                show();
+            }
 
         }
 

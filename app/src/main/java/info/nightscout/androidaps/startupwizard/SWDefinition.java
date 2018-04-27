@@ -32,7 +32,7 @@ public class SWDefinition {
         // List all the screens here
         // todo: SWValidator ?!?
         add(new SWScreen(R.string.nsclientinternal_title)
-                .skippable(false)
+                .skippable(true)
                 .add(new SWUrl().preferenceId(R.string.key_nsclientinternal_url).label(R.string.nsclientinternal_url_title).comment(R.string.nsclientinternal_url_dialogmessage))
                 .add(new SWString().preferenceId(R.string.key_nsclientinternal_api_secret).label(R.string.nsclientinternal_secret_dialogtitle).comment(R.string.nsclientinternal_secret_dialogmessage))
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)

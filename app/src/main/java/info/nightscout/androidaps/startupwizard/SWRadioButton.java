@@ -41,10 +41,10 @@ public class SWRadioButton extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view){
+    public void generateDialog(View view, LinearLayout layout){
         Context context = view.getContext();
-        LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
-        layout.removeAllViews();
+//        LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
+//        layout.removeAllViews();
         String[] labels = context.getResources().getStringArray(labelsArray);
         String[] values = context.getResources().getStringArray(valuesArray);
         // Get if there is already value in SP
@@ -64,12 +64,17 @@ public class SWRadioButton extends SWItem {
                 rdbtn.setText(labels[i]);
                 if(previousValue.equals(values[i]))
                     rdbtn.setChecked(true);
-//                log.debug("Button ["+labels[i]+"]="+rdbtn.getId()+" value is "+values[rdbtn.getId()]);
                 radioGroup.addView(rdbtn);
             }
         }
 
+        radioGroup.setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                save(getCheckedValue());
+            }
 
+        });
         layout.addView(radioGroup);
 
     }
