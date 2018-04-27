@@ -28,6 +28,10 @@ import info.nightscout.utils.SP;
 public class AutosensData implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(AutosensData.class);
 
+    public void setChartTime(long chartTime) {
+        this.chartTime = chartTime;
+    }
+
     static class CarbsInPast {
         long time = 0L;
         double carbs = 0d;
@@ -52,6 +56,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     }
 
     public long time = 0L;
+    long chartTime;
     public String pastSensitivity = "";
     public double deviation = 0d;
     boolean nonCarbsDeviation = false;
@@ -121,7 +126,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public double getX() {
-        return time;
+        return chartTime;
     }
 
     @Override
@@ -151,7 +156,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public float getSize() {
-        return 1f;
+        return 0.5f;
     }
 
     @Override

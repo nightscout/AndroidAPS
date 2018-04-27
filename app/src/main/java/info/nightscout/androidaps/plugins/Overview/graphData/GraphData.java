@@ -385,6 +385,7 @@ public class GraphData {
                 }
                 if (autosensData.failoverToMinAbsorbtionRate) {
                     autosensData.setScale(cobScale);
+                    autosensData.setChartTime(time);
                     minFailoverActiveList.add(autosensData);
                 }
             }
@@ -395,7 +396,7 @@ public class GraphData {
         cobData = cobArray.toArray(cobData);
         cobSeries = new FixedLineGraphSeries<>(cobData);
         cobSeries.setDrawBackground(true);
-        cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.gc(R.color.cob)); //50%
+        cobSeries.setBackgroundColor(0x80FFFFFF & MainApp.gc(R.color.cob)); //50%
         cobSeries.setColor(MainApp.gc(R.color.cob));
         cobSeries.setThickness(3);
 
