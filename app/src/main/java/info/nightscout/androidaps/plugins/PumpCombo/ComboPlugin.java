@@ -151,7 +151,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     /**
      * Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
-     * requiring reading pump more history. This is read/set in {@link #checkHistory()} when changed
+     * requiring reading more pump history. This is read/set in {@link #checkHistory()} when changed
      * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
      * after bolus delivery. Newest record is the first one.
      */
@@ -326,7 +326,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     /**
-     * Runs pump initializing if needed and reads the pump state from the main screen.
+     * Runs pump initialization if needed and reads the pump state from the main screen.
      */
     @Override
     public synchronized void getPumpStatus() {
@@ -442,8 +442,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             case STOPPED:
                 event.status = MainApp.gs(R.string.bolusstopped);
                 break;
-            case RECOVERING:
-                event.status = MainApp.gs(R.string.combo_error_bolus_recovery_progress);
         }
         event.percent = percent;
         MainApp.bus().post(event);
