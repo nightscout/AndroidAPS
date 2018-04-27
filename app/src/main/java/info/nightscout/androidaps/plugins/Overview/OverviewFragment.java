@@ -801,19 +801,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             detailedBolusInfo.context = context;
                             detailedBolusInfo.boluscalc = boluscalcJSON;
                             detailedBolusInfo.source = Source.USER;
-                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                @Override
-                                public void run() {
-                                    if (!result.success) {
-                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                        i.putExtra("soundid", R.raw.boluserror);
-                                        i.putExtra("status", result.comment);
-                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
-                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        MainApp.instance().startActivity(i);
+                            if (finalInsulinAfterConstraints > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.success) {
+                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                            i.putExtra("soundid", R.raw.boluserror);
+                                            i.putExtra("status", result.comment);
+                                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            MainApp.instance().startActivity(i);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                            }
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                         }
                     }
