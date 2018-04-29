@@ -2,14 +2,12 @@ package info.nightscout.androidaps.events;
 
 public class EventChargingState {
 
-    boolean isCharging = false;
-    boolean isPlugged = false;
+    public boolean isCharging = false;
 
     public EventChargingState() {}
 
-    public EventChargingState(boolean isCharging, boolean isPlugged) {
+    public EventChargingState(boolean isCharging) {
         this.isCharging = isCharging;
-        this.isPlugged = isPlugged;
     }
 
 }
