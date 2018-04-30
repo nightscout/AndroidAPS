@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.SP;
 
 import static info.nightscout.androidaps.startupwizard.SWItem.Type.RADIOBUTTON;
@@ -120,7 +123,6 @@ public class SetupWizardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_setupwizard);
 
         mVisible = true;
@@ -191,6 +193,23 @@ public class SetupWizardActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        // check is current locale is different from the one in preferences
+//        log.debug("Current: "+LocaleHelper.getLanguage(this)+" preferences: "+SP.getString("language", "en"));
+        if(!LocaleHelper.getLanguage(this).equals(SP.getString("language", "en"))) {
+            // it is so change it in locale and restart SetupWizard
+//            log.debug("Setting locale to: "+SP.getString("language", "en")+" and restarting");
+            LocaleHelper.setLocale(this, SP.getString(R.string.key_language, "en"));
+            MainApp.bus().post(new EventRefreshGui(true));
+            Intent intent = getIntent();
+            this.finish();
+            startActivity(intent);
+        }
     }
 
     private void toggle() {
@@ -265,4 +284,5 @@ public class SetupWizardActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
 }
