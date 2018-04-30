@@ -12,11 +12,12 @@ public abstract class Command {
     public enum CommandType {
         BOLUS,
         SMB_BOLUS,
+        CARBS_ONLY_TREATMENT,
         TEMPBASAL,
         EXTENDEDBOLUS,
         BASALPROFILE,
         READSTATUS,
-        LOADHISTORY, // so far only Dana specific
+        LOADHISTORY, // TDDs and so far only Dana specific
         LOADEVENTS // so far only Dana specific
     }
 

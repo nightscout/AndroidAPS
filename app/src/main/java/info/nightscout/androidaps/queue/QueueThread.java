@@ -28,11 +28,11 @@ import info.nightscout.utils.SP;
 public class QueueThread extends Thread {
     private static Logger log = LoggerFactory.getLogger(QueueThread.class);
 
-    CommandQueue queue;
+    private CommandQueue queue;
 
-    private long connectionStartTime = 0;
     private long lastCommandTime = 0;
     private boolean connectLogged = false;
+    public boolean waitingForDisconnect = false;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -48,11 +48,17 @@ public class QueueThread extends Thread {
     public final void run() {
         mWakeLock.acquire();
         MainApp.bus().post(new EventQueueChanged());
-        connectionStartTime = lastCommandTime = System.currentTimeMillis();
+        long connectionStartTime = lastCommandTime = System.currentTimeMillis();
 
         try {
             while (true) {
                 PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+                if (pump == null) {
+                    log.debug("QUEUE: pump == null");
+                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.pumpNotInitialized)));
+                    SystemClock.sleep(1000);
+                    continue;
+                }
                 long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
@@ -131,10 +137,12 @@ public class QueueThread extends Thread {
                 if (queue.size() == 0 && queue.performing() == null) {
                     long secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000;
                     if (secondsFromLastCommand >= 5) {
+                        waitingForDisconnect = true;
                         log.debug("QUEUE: queue empty. disconnect");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
                         pump.disconnect("Queue empty");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+                        log.debug("QUEUE: disconnected");
                         return;
                     } else {
                         log.debug("QUEUE: waiting for disconnect");

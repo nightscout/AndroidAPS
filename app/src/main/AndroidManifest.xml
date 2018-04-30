@@ -15,9 +15,11 @@
     <uses-permission android:name="android.permission.SEND_MMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="sugar.free.sightremote.HISTORY_BROADCASTS" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -47,7 +49,7 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
+        <activity android:name=".TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
@@ -108,6 +110,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="info.nightscout.client.DBACCESS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Network change local receiver -->
+        <receiver android:name=".receivers.NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 

@@ -195,8 +195,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public float getSize() {
-        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
-        return isTablet ? 8 : 5;
+        return 1;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package info.nightscout.utils;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,41 +19,93 @@ public class JsonHelper {
 
     private JsonHelper() {};
 
-    public static String safeGetString(JSONObject json, String fieldName) throws JSONException {
+    public static Object safeGetObject(JSONObject json, String fieldName, Object defaultValue) {
+        Object result = defaultValue;
+
+        if (json.has(fieldName)) {
+            try {
+                result = json.get(fieldName);
+            } catch (JSONException ignored) {
+            }
+        }
+
+        return result;
+    }
+
+    @Nullable
+    public static String safeGetString(JSONObject json, String fieldName) {
         String result = null;
 
         if (json.has(fieldName)) {
-            result = json.getString(fieldName);
+            try {
+                result = json.getString(fieldName);
+            } catch (JSONException ignored) {
+            }
         }
 
         return result;
     }
 
-    public static String safeGetString(JSONObject json, String fieldName, String defaultValue) throws JSONException {
+    public static String safeGetString(JSONObject json, String fieldName, String defaultValue) {
         String result = defaultValue;
 
         if (json.has(fieldName)) {
-            result = json.getString(fieldName);
+            try {
+                result = json.getString(fieldName);
+            } catch (JSONException ignored) {
+            }
         }
 
         return result;
     }
 
-    public static double safeGetDouble(JSONObject json, String fieldName) throws JSONException {
+    public static double safeGetDouble(JSONObject json, String fieldName) {
         double result = 0d;
 
         if (json.has(fieldName)) {
-            result = json.getDouble(fieldName);
+            try {
+                result = json.getDouble(fieldName);
+            } catch (JSONException ignored) {
+            }
         }
 
         return result;
     }
 
-    public static int safeGetInt(JSONObject json, String fieldName) throws JSONException {
+    public static int safeGetInt(JSONObject json, String fieldName) {
         int result = 0;
 
         if (json.has(fieldName)) {
-            result = json.getInt(fieldName);
+            try {
+                result = json.getInt(fieldName);
+            } catch (JSONException ignored) {
+            }
+        }
+
+        return result;
+    }
+
+    public static long safeGetLong(JSONObject json, String fieldName) {
+        long result = 0;
+
+        if (json.has(fieldName)) {
+            try {
+                result = json.getLong(fieldName);
+            } catch (JSONException e) {
+            }
+        }
+
+        return result;
+    }
+
+    public static boolean safeGetBoolean(JSONObject json, String fieldName) {
+        boolean result = false;
+
+        if (json.has(fieldName)) {
+            try {
+                result = json.getBoolean(fieldName);
+            } catch (JSONException e) {
+            }
         }
 
         return result;

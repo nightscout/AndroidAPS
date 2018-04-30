@@ -17,6 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -31,13 +32,18 @@ public class APSResult {
     public String reason;
     public double rate;
     public int duration;
-    public boolean tempBasalReqested = false;
+    public boolean tempBasalRequested = false;
     public boolean bolusRequested = false;
     public IobTotal iob;
     public JSONObject json = new JSONObject();
     public boolean hasPredictions = false;
     public double smb = 0d; // super micro bolus in units
     public long deliverAt = 0;
+
+    public Constraint<Double> inputConstraints;
+
+    public Constraint<Double> rateConstraint;
+    public Constraint<Double> smbConstraint;
 
     @Override
     public String toString() {
@@ -56,7 +62,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n");
+                ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb) + " U\n");
 
             // reason
             ret += MainApp.sResources.getString(R.string.reason) + ": " + reason;
@@ -76,12 +82,12 @@ public class APSResult {
                 ret = MainApp.sResources.getString(R.string.let_temp_basal_run) + "<br>";
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                      "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
-                      "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
+                        "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
 
             // smb
             if (smb != 0)
-                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>");
+                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb) + " U<br>");
 
             // reason
             ret += "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
@@ -98,9 +104,15 @@ public class APSResult {
         newResult.reason = reason;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.tempBasalReqested = tempBasalReqested;
+        newResult.tempBasalRequested = tempBasalRequested;
         newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
+        newResult.json = json;
+        newResult.hasPredictions = hasPredictions;
+        newResult.smb = smb;
+        newResult.deliverAt = deliverAt;
+        newResult.rateConstraint = rateConstraint;
+        newResult.smbConstraint = smbConstraint;
         return newResult;
     }
 
@@ -216,6 +228,6 @@ public class APSResult {
     }
 
     public boolean isChangeRequested() {
-        return tempBasalReqested || bolusRequested;
+        return tempBasalRequested || bolusRequested;
     }
 }

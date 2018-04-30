@@ -29,6 +29,10 @@ public class DanaRPump {
         return instance;
     }
 
+    public static void reset() {
+        instance = null;
+    }
+
     public static final int UNITS_MGDL = 0;
     public static final int UNITS_MMOL = 1;
 
@@ -69,9 +73,9 @@ public class DanaRPump {
 
     public static final int DOMESTIC_MODEL = 0x01;
     public static final int EXPORT_MODEL = 0x03;
-    public int model;
-    public int protocol;
-    public int productCode;
+    public int model = 0;
+    public int protocol = 0;
+    public int productCode = 0;
 
     public boolean isConfigUD;
     public boolean isExtendedBolusEnabled;
@@ -237,7 +241,7 @@ public class DanaRPump {
         for (Integer hour = 0; hour < 24; hour++) {
             //Some values get truncated to the next lower one.
             // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
-            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
+            double value = Math.round(100d * nsProfile.getBasalTimeFromMidnight((Integer) (hour * 60 * 60)))/100d + 0.00001;
             if (Config.logDanaMessageDetail)
                 log.debug("NS basal value for " + hour + ":00 is " + value);
             record[hour] = value;

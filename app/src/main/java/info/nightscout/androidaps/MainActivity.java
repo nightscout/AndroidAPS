@@ -19,6 +19,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,6 +30,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -44,6 +48,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -374,7 +379,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 MainApp.getDbHelper().resetDatabases();
                                                 // should be handled by Plugin-Interface and
                                                 // additional service interface and plugin registry
-                                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().resetFood();
+                                                FoodPlugin.getPlugin().getService().resetFood();
+                                                TreatmentsPlugin.getPlugin().getService().resetTreatments();
                                             }
                                         })
                                         .create()
@@ -399,11 +405,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 else
                                     builder.setIcon(R.mipmap.blueowl);
                                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
-                                message += MainApp.sResources.getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
-                                builder.setMessage(message);
+                                message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
+                                message += getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                                if (MainApp.engineeringMode)
+                                    message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
+                                message += getString(R.string.about_link_urls);
+                                final SpannableString messageSpanned =  new SpannableString(message);
+                                Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
+                                builder.setMessage(messageSpanned);
                                 builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                 AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
+                                ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
                                 break;
                             case R.id.nav_exit:
                                 log.debug("Exiting");

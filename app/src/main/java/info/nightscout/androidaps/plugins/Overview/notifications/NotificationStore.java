@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview.notifications;
 
+import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import org.slf4j.Logger;
@@ -28,11 +31,15 @@ import info.nightscout.utils.SP;
  */
 
 public class NotificationStore {
+
+    public static final String CHANNEL_ID = "AndroidAPS-Overview";
+
     private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
     public long snoozedUntil = 0L;
 
     public NotificationStore() {
+        createNotificationChannel();
     }
 
     public class NotificationComparator implements Comparator<Notification> {
@@ -42,13 +49,13 @@ public class NotificationStore {
         }
     }
 
-    public synchronized void add(Notification n) {
+    public synchronized boolean add(Notification n) {
         log.info("Notification received: " + n.text);
         for (Notification storeNotification : store) {
             if (storeNotification.id == n.id) {
                 storeNotification.date = n.date;
                 storeNotification.validTo = n.validTo;
-                return;
+                return false;
             }
         }
         store.add(n);
@@ -64,6 +71,7 @@ public class NotificationStore {
         }
 
         Collections.sort(store, new NotificationComparator());
+        return true;
     }
 
     public synchronized boolean remove(int id) {
@@ -110,7 +118,7 @@ public class NotificationStore {
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.blueowl);
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(context)
+                new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setLargeIcon(largeIcon)
                         .setContentText(n.text)
@@ -127,4 +135,17 @@ public class NotificationStore {
         }
         mgr.notify(n.id, notificationBuilder.build());
     }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) MainApp.instance().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+    }
+
 }

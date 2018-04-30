@@ -48,7 +48,7 @@ public class UploadQueue {
                 public void run() {
                     log.debug("QUEUE adding: " + dbr.data);
                     MainApp.getDbHelper().create(dbr);
-                    NSClientInternalPlugin plugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+                    NSClientPlugin plugin = NSClientPlugin.getPlugin();
                     if (plugin != null) {
                         plugin.resend("newdata");
                     }

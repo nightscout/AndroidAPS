@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.data;
 
+import com.rits.cloning.Cloner;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,9 +24,6 @@ public class IobTotal {
 
     // oref1
     public long lastBolusTime;
-    public long lastTempDate;
-    public int lastTempDuration;
-    public double lastTempRate;
     public IobTotal iobWithZeroTemp;
 
     public double netInsulin = 0d; // for calculations from temp basals only
@@ -35,20 +34,9 @@ public class IobTotal {
     long time;
 
 
-    public IobTotal clone() {
-        IobTotal copy = new IobTotal(time);
-        copy.iob = iob;
-        copy.activity = activity;
-        copy.bolussnooze = bolussnooze;
-        copy.basaliob = basaliob;
-        copy.netbasalinsulin = netbasalinsulin;
-        copy.hightempinsulin = hightempinsulin;
-        copy.lastBolusTime = lastBolusTime;
-        copy.lastTempDate = lastTempDate;
-        copy.lastTempDuration = lastTempDuration;
-        copy.lastTempRate = lastTempRate;
-        copy.iobWithZeroTemp = iobWithZeroTemp;
-        return copy;
+    public IobTotal copy() {
+        Cloner cloner = new Cloner();
+        return cloner.deepClone(this);
     }
 
     public IobTotal(long time) {
@@ -82,10 +70,9 @@ public class IobTotal {
         result.basaliob = bolusIOB.basaliob + basalIob.basaliob;
         result.netbasalinsulin = bolusIOB.netbasalinsulin + basalIob.netbasalinsulin;
         result.hightempinsulin = basalIob.hightempinsulin + bolusIOB.hightempinsulin;
+        result.netInsulin = basalIob.netInsulin + bolusIOB.netInsulin;
+        result.extendedBolusInsulin = basalIob.extendedBolusInsulin + bolusIOB.extendedBolusInsulin;
         result.lastBolusTime = bolusIOB.lastBolusTime;
-        result.lastTempDate = basalIob.lastTempDate;
-        result.lastTempRate = basalIob.lastTempRate;
-        result.lastTempDuration = basalIob.lastTempDuration;
         result.iobWithZeroTemp = basalIob.iobWithZeroTemp;
         return result;
     }
@@ -97,6 +84,8 @@ public class IobTotal {
         this.basaliob = Round.roundTo(this.basaliob, 0.001);
         this.netbasalinsulin = Round.roundTo(this.netbasalinsulin, 0.001);
         this.hightempinsulin = Round.roundTo(this.hightempinsulin, 0.001);
+        this.netInsulin = Round.roundTo(this.netInsulin, 0.001);
+        this.extendedBolusInsulin = Round.roundTo(this.extendedBolusInsulin, 0.001);
         return this;
     }
 

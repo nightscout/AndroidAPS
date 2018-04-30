@@ -14,7 +14,7 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventFeatureRunning;
-import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightPumpUpdateGui;
+import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
@@ -76,7 +76,7 @@ public class Connector {
                     extendKeepAliveIfActive();
                 }
 
-                MainApp.bus().post(new EventInsightPumpUpdateGui());
+                MainApp.bus().post(new EventInsightUpdateGui());
             } else {
                 log("Same status as before: " + status);
             }

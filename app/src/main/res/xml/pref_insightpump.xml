@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory
-        android:key="insightpump"
         android:title="@string/insightpump">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="insight_always_connected"
+            android:summary="@string/not_recommended_due_to_battery_drain"
+            android:title="@string/insight_stay_always_connected" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="insight_preemptive_connect"
+            android:summary="@string/automatically_connect_when"
+            android:title="@string/connect_preemptively" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="insight_real_tbr_cancel"
+            android:summary="@string/insight_actually_cancel_tbr_summary"
+            android:title="@string/insight_use_real_tbr_cancels" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="insight_automatic_careportal_events"
+            android:summary="@string/automatically_upload_insulin_cannula_and_battery_changes_to_nightscout"
+            android:title="@string/automatic_careportal_events" />
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <PreferenceCategory android:title="@string/bluetooth">
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_btwatchdog"
+                    android:summary="@string/btwatchdog_summary"
+                    android:title="@string/btwatchdog_title" />
+
+            </PreferenceCategory>
+
+        </PreferenceScreen>
+
     </PreferenceCategory>
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="insight_always_connected"
-        android:title="@string/insight_stay_always_connected"
-        android:summary="@string/not_recommended_due_to_battery_drain"/>
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="insight_preemptive_connect"
-        android:title="@string/connect_preemptively"
-        android:summary="@string/automatically_connect_when"/>
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="insight_real_tbr_cancel"
-        android:title="@string/insight_use_real_tbr_cancels"
-        android:summary="@string/insight_actually_cancel_tbr_summary"/>
-</PreferenceScreen  >
+
+</PreferenceScreen>

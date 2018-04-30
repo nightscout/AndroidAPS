@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_w31">Warnung W31: Ampulle fast leer</string>
+    <string name="alert_w32">Warnung W32: Batterie fast leer</string>
+    <string name="alert_w33">Warnung W33: Zeit/Datum ungültig</string>
+    <string name="alert_w34">Warnung W34: Garantie abgelaufen</string>
+    <string name="alert_w36">Warnung W36: TBR abgebrochen</string>
+    <string name="alert_w38">Warnung W38: Bolus abgebrochen</string>
+    <string name="alert_w39">Warnung W39: Leihdauer-Warnung</string>
+
+    <string name="alert_m20">Wartung M20: Keine Ampulle eingesetzt</string>
+    <string name="alert_m21">Wartung M21: Ampulle leer</string>
+    <string name="alert_m22">Wartung M22: Batterie leer</string>
+    <string name="alert_m23">Wartung M23: Sicherheitsabschaltung</string>
+    <string name="alert_m24">Wartung M24: Verstopfung</string>
+    <string name="alert_m25">Wartung M25: Leihdauer abgelaufen</string>
+    <string name="alert_m26">Wartung M26: Ampullenwechsel nicht abgeschlossen</string>
+    <string name="alert_m27">Wartung M27: Datenübertragung fehlgeschlagen</string>
+    <string name="alert_m28">Wartung M28: Zeitüberschreitung bei Pause</string>
+    <string name="alert_m29">Wartung M29: Batterietyp nicht eingestellt</string>
+    <string name="alert_m30">Wartung M30: Ampullentyp nicht eingestellt</string>
+
+    <string name="alert_e6">Fehler E6: Mechanikfehler</string>
+    <string name="alert_e7">Fehler E7: Elektronikfehler</string>
+    <string name="alert_e10">Fehler E10: Fehler beim Zurückfahren</string>
+    <string name="alert_e13">Fehler E13: Fehler in der Sprachanzeige</string>
+</resources>

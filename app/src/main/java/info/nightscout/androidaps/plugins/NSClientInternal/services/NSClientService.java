@@ -34,7 +34,8 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAuthAck;
@@ -180,7 +181,7 @@ public class NSClientService extends Service {
 
     @Subscribe
     public void onStatusEvent(EventConfigBuilderChange ev) {
-        if (nsEnabled != MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL)) {
+        if (nsEnabled != MainApp.getSpecificPlugin(NSClientPlugin.class).isEnabled(PluginType.GENERAL)) {
             latestDateInReceivedData = 0;
             destroy();
             initialize();
@@ -202,7 +203,10 @@ public class NSClientService extends Service {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         MainApp.bus().post(new EventNSClientStatus("Initializing"));
-        if (MainApp.getSpecificPlugin(NSClientInternalPlugin.class).paused) {
+        if (!MainApp.getSpecificPlugin(NSClientPlugin.class).allowed) {
+            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "not allowed"));
+            MainApp.bus().post(new EventNSClientStatus("Not allowed"));
+        } else if (MainApp.getSpecificPlugin(NSClientPlugin.class).paused) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "paused"));
             MainApp.bus().post(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
@@ -313,7 +317,7 @@ public class NSClientService extends Service {
     }
 
     public void readPreferences() {
-        nsEnabled = MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL);
+        nsEnabled = MainApp.getSpecificPlugin(NSClientPlugin.class).isEnabled(PluginType.GENERAL);
         nsURL = SP.getString(R.string.key_nsclientinternal_url, "");
         nsAPISecret = SP.getString(R.string.key_nsclientinternal_api_secret, "");
         nsDevice = SP.getString("careportal_enteredby", "");
@@ -651,7 +655,7 @@ public class NSClientService extends Service {
                         }
                         //MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
                     } finally {
-                       if (wakeLock.isHeld()) wakeLock.release();
+                        if (wakeLock.isHeld()) wakeLock.release();
                     }
                 }
 

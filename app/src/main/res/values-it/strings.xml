@@ -71,7 +71,7 @@
     <string name="configbuilder">Configurazione Strutturale</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">Origine glicemia</string>
-    <string name="configbuilder_constraints">Costrizione</string>
+    <string name="constraints">Costrizione</string>
     <string name="configbuilder_general">Generale</string>
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_loop">Loop</string>
@@ -79,7 +79,6 @@
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_pump">Microinfusore</string>
     <string name="configbuilder_shortname">Configurazione</string>
-    <string name="configbuilder_tempbasals">Basale Temporale</string>
     <string name="configbuilder_treatments">Trattamento</string>
     <string name="confirmation">Conferma</string>
     <string name="connected">Collegato</string>
@@ -136,13 +135,11 @@
     <string name="danarpump_shortname">DANA</string>
     <string name="days">giorno</string>
     <string name="delta">Delta</string>
-    <string name="dev">DEV</string>
     <string name="devicenotfound">Sistema selezionato non trovato</string>
     <string name="dia">DIA:</string>
     <string name="disabledloop">Loop Disabilitato</string>
     <string name="disableloop">Disabilta Loop</string>
     <string name="disconnected">Scollegato</string>
-    <string name="disconnectpumpfor10h">Sconnetti Micro per 10H</string>
     <string name="disconnectpumpfor1h">Sconnetti Micro per 1 H</string>
     <string name="disconnectpumpfor2h">Sconnetti Micro per 2 H</string>
     <string name="disconnectpumpfor15m">Sconnetti Micro per 15min</string>
@@ -151,12 +148,8 @@
     <string name="dismiss">Respingere</string>
     <string name="duration">Durata</string>
     <string name="eatingsoon">Pranzo</string>
-    <string name="edit_base_basal">Modifica Base-Basal:</string>
-    <string name="edit_base_ic">Modifica Base-IC:</string>
-    <string name="edit_base_isf">Modifica Base-ISF:</string>
     <string name="el_lang">Greco</string>
     <string name="en_lang">English</string>
-    <string name="enabled">Abilitare</string>
     <string name="enableloop">Abilitare Loop</string>
 
     <string name="enablesuperbolus">Abilitare super bolus</string>
@@ -177,7 +170,6 @@
     <string name="gettingpumpstatus">Stato Micro</string>
     <string name="glucose">Glucosio</string>
     <string name="glucosetype_sensor">Sensore</string>
-    <string name="hoursago">h fa</string>
     <string name="import_from">Importa impstazioni da</string>
     <string name="initializing">Inizzializzazione</string>
     <string name="insulin_shortname">INS</string>
@@ -189,10 +181,8 @@
     <string name="long_avgdelta">Delta acg. esteso</string>
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
-    <string name="loop_setbypump_label">Set Micro</string>
     <string name="loop_shortname">Loop</string>
     <string name="loopdisabled">Loop disabilitato da vincolo</string>
-    <string name="loopmenu">Loop menu</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolo (%d m)</string>
     <string name="loopsuspended">Sospensione Loop</string>
     <string name="loopsuspendedfor" formatted="false">Sospendi (%d m)</string>
@@ -206,14 +196,12 @@
     <string name="missing">Mancante</string>
     <string name="mmol">mmol/l</string>
     <string name="nav_about">Spegnere</string>
-    <string name="nav_backup">Backup</string>
     <string name="nav_exit">Uscita</string>
     <string name="nav_export">Esporta impostazioni</string>
     <string name="nav_import">Importa impostazioni</string>
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Ricaricare</string>
     <string name="nav_resetdb">Reset Databases</string>
-    <string name="nav_test_alert">Test Allarme</string>
     <string name="nightscout">Nightscout</string>
     <string name="noapsselected">APS selezionato o Provaider non corretto</string>
     <string name="nobtadapter">No bluetooth riconosciuto</string>
@@ -227,10 +215,7 @@
     <string name="ns_logappstartedevent">Caricare App in NS</string>
     <string name="ns_noupload">Nessun caricamento in NS</string>
     <string name="ns_sync_use_absolute_title">Utilizzare sempre valori assoluti basali</string>
-    <string name="nsclient">NsClient</string>
     <string name="nsclientinternal">NSClient</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Nome dispositivo</string>
-    <string name="nsclientinternal_devicename_title">Nome dispositivo</string>
     <string name="nsclientinternal_secret_dialogmessage">Inserisci Ns Pss (minimo 12 caratteri)</string>
     <string name="nsclientinternal_secret_dialogtitle">NS Password</string>
     <string name="nsclientinternal_secret_title">NS Password</string>
@@ -240,7 +225,6 @@
     <string name="nsclientinternal_url_dialogmessage">Digita Nightscout URL</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientnotinstalled">NsClient non istallato. Record perduto</string>
-    <string name="nsprofileview_activeprofile_label">Profilo Attivo</string>
     <string name="nsprofileview_basal_label">Basale</string>
     <string name="nsprofileview_dia_label">Durata Insulina attiva</string>
     <string name="nsprofileview_ic_label">IC(insulina/Carb)</string>
@@ -271,8 +255,6 @@
     <string name="openapsma_lastrun_label">Ultimo corsa</string>
     <string name="objectives_0_gate">Verifica che Bg sia disponibile in Nightscout, e la data micro e\' ben allineata</string>
     <string name="openapsma_noglucosedata">Valore nn disponibile in quella data</string>
-    <string name="openapsma_noprofile">Profilo non disponibile</string>
-    <string name="openapsma_nopump">Micro non disponibile</string>
     <string name="openapsma_profile_label">Profilo</string>
     <string name="copied_to_clipboard">Copiato negli appunti</string>
     <string name="copy_to_clipboard">Copia in appunti</string>
@@ -288,7 +270,6 @@
     <string name="danar_viewprofile">Visualizza Profilo</string>
     <string name="de_lang">Germania</string>
     <string name="disconnecting">Disconnetti</string>
-    <string name="dont_show_again">Non mostrarlo più</string>
     <string name="enablesuperbolus_summary">Abilita funzionalità superbolus nella procedura guidata. Non abilitare fino a quando non impari quello che realmente fa. PUÒ CAUSARE L\'INVERTIMENTO INSULINO SE USATO BLINDLY!</string>
     <string name="openapsma_request_label">Richiesta</string>
     <string name="result">Esito</string>
@@ -321,13 +302,11 @@
     <string name="pumperror">Errore Micro</string>
     <string name="pumpshutdown">Arresto Micro</string>
     <string name="pumpsuspended">Sospensione Micro</string>
-    <string name="pumpsuspendedclicktorefresh">Micro sospeso. Clicca per aggiornare</string>
     <string name="reloadprofile">Aggiorna Profilo</string>
     <string name="removerecord">Eliminare campo:</string>
     <string name="restart">Riavvio</string>
     <string name="resume">Storia</string>
     <string name="save">Salva</string>
-    <string name="send">Esci</string>
     <string name="setbasalquestion">Accettare il nuovo basale temp</string>
     <string name="setextendedbolusquestion">Impostare il nuovo bollo esteso</string>
     <string name="setting_imported">Impostazioni importate</string>
@@ -378,8 +357,6 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="basal_rate">Valore basale</string>
     <string name="basal_step">Impostazione Basale</string>
-    <string name="basalshortlabel">BAS</string>
-    <string name="base_profile_label">Profilo Basale</string>
     <string name="bg_lang">Bulgaria</string>
     <string name="bolus_step">Impostazioni Bolo</string>
     <string name="clearlog">log chiaro</string>
@@ -410,13 +387,10 @@
     <string name="objectives_5_objective">Regolare i basali e i rapporti se necessario, quindi attivare l\'autocontrollo</string>
     <string name="objectives_6_objective">Abilitazione di funzioni aggiuntive per l\'uso quotidiano, ad esempio assistenza avanzata del pasto</string>
     <string name="objectives_manualenacts"></string>
-    <string name="virtualpump_sqlerror">Errore SQL</string>
     <string name="pump_tempbasal_label">Basale temporale</string>
-    <string name="visible">Visibile</string>
     <string name="vitualpump_label">Pompa Virtuale</string>
     <string name="waitingforpump">In attesa del micro</string>
     <string name="waitingforpumpresult">Attendere risultato</string>
-    <string name="waitingforpumpclicktorefresh">Attesa Micro. Clicca per rinnovare</string>
     <string name="wear_showbgi_title">Visualizza BGI</string>
     <string name="wrongpassword">Password Errata</string>
     <string name="wrongpumppassword">Password Micro Errata</string>
@@ -445,15 +419,13 @@
     <string name="virtualpump">Micro Virtuale</string>
     <string name="uploading">UpLoading</string>
     <string name="updatingbasalrates">Aggiornamento basale</string>
-    <string name="up">Up</string>
     <string name="unsupportedclientver">Versione NsClient non supportata</string>
     <string name="unlock_settings">impostazioni sbloccate</string>
     <string name="units">Unita\':</string>
     <string name="treatmentssafety_title">Sicurezza delle prestazioni</string>
     <string name="treatmentssafety_maxcarbs_title">Valore massimo carbo (g)</string>
     <string name="treatmentssafety_maxbolus_title">Bolo massimo (U)</string>
-    <string name="treatments_wizard_unit_label">U</string>
-    <string name="treatments_wizard_total_label">Totale</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_correction_label">Correzione</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_carbs_label">Carboidrati</string>
@@ -466,9 +438,6 @@
     <string name="treatments_iobactivitytotal_label_string">Totale IOB attiva:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments">Trattamento</string>
-    <string name="timeshift_hint">Il tempo in ore in cui il profilo verrà spostato intorno al robin.</string>
-    <string name="temptargetrange_shortname">TT</string>
-    <string name="tempbasals_shortname">TB</string>
     <string name="tempbasals_realduration_label_string">DUR:</string>
     <string name="tempbasaldeliveryerror">Errore di somministrazione basale temporale</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Basale temporanea %.2fU/h for %d min avviata con successo</string>

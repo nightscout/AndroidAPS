@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R;
 
 import com.cozmo.danar.util.BleCommandUtil;
 
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 
 public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {

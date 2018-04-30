@@ -24,7 +24,7 @@ public class SP {
         return sharedPreferences.getString(key, defaultValue);
     }
 
-    static public boolean getBoolean(int resourceID, boolean defaultValue) {
+    static public boolean getBoolean(int resourceID, Boolean defaultValue) {
         try {
             return sharedPreferences.getBoolean(MainApp.sResources.getString(resourceID), defaultValue);
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class SP {
         }
     }
 
-    static public boolean getBoolean(String key, boolean defaultValue) {
+    static public boolean getBoolean(String key, Boolean defaultValue) {
         try {
             return sharedPreferences.getBoolean(key, defaultValue);
         } catch (Exception e) {

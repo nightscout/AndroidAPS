@@ -72,7 +72,7 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                OpenAPSAMAPlugin.getPlugin().invoke("OpenAPSAMA button");
+                OpenAPSAMAPlugin.getPlugin().invoke("OpenAPSAMA button", false);
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
                 break;
         }

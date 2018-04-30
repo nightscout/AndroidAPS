@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -24,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
@@ -31,11 +31,11 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.Intervals;
 
 
 public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
@@ -80,7 +80,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
                     holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date) + " - " + DateUtil.timeString(extendedBolus.end()));
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(extendedBolus.durationInMinutes) + " min");
-                holder.insulin.setText(DecimalFormatter.to2Decimal(extendedBolus.insulin) + " U");
+                holder.insulin.setText(DecimalFormatter.toPumpSupportedBolus(extendedBolus.insulin) + " U");
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(extendedBolus.getRealDuration()) + " min");
                 IobTotal iob = extendedBolus.iobCalc(System.currentTimeMillis());
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.iob) + " U");
@@ -176,7 +176,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getExtendedBolusesFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory());
         recyclerView.setAdapter(adapter);
 
         context = getContext();
@@ -202,7 +202,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getExtendedBolusesFromHistory()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory()), false);
                 }
             });
     }
