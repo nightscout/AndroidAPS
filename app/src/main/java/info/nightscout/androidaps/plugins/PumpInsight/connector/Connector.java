@@ -62,7 +62,7 @@ public class Connector {
     private int serviceReconnects = 0;
     private StatusCallback statusCallback = new StatusCallback() {
         @Override
-        public synchronized void onStatusChange(Status status) {
+        public synchronized void onStatusChange(Status status, long statusTime, long waitTime) {
 
             if ((status != lastStatus) || (Helpers.msSince(lastStatusTime) > 2000)) {
                 log("Status change: " + status);
@@ -94,7 +94,7 @@ public class Connector {
                     serviceConnector.connect();
                 } else {
                     log("PROTOCOL VERSION MISMATCH!  local: " + COMPATIBILITY_VERSION + " remote: " + remoteVersion);
-                    statusCallback.onStatusChange(Status.INCOMPATIBLE);
+                    statusCallback.onStatusChange(Status.INCOMPATIBLE, 0, 0);
                     compatabilityMessage = gs(R.string.insight_incompatible_compantion_app_we_need_version) + " " + getLocalVersion();
                     serviceConnector.disconnectFromService();
 
@@ -102,7 +102,7 @@ public class Connector {
             } catch (NullPointerException e) {
                 log("ERROR: null pointer when trying to connect to pump");
             }
-            statusCallback.onStatusChange(safeGetStatus());
+            statusCallback.onStatusChange(safeGetStatus(), 0, 0);
         }
 
         @Override
