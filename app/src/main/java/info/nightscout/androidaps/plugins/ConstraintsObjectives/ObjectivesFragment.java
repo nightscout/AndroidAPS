@@ -204,7 +204,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             return 1;
         } else if (objectiveStartedTime > 0 && !enableFakeValue
                 && objectiveAccomplishedTime == 0
-                && !(objectiveStartedTime + durationInDays * 24 * 60 * 60 * 1000 >= now && requirementsMet)) {
+                && !(objectiveStartedTime + durationInDays * 24 * 60 * 60 * 1000 < now && requirementsMet)) {
             return 2;
         } else if (objectiveAccomplishedTime == 0) {
             return 3;
