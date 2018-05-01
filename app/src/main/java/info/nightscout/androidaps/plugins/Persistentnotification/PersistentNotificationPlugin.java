@@ -138,6 +138,7 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         builder.setOngoing(true);
+        builder.setOnlyAlertOnce(true);
         builder.setCategory(NotificationCompat.CATEGORY_STATUS);
         builder.setSmallIcon(R.drawable.ic_notification);
         Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.blueowl);
