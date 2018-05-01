@@ -274,6 +274,7 @@ public class GraphData {
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
             if (t.getX() < fromTime || t.getX() > endTime) continue;
+            if (t.isSMB && !t.isValid) continue;
             t.setY(getNearestBg((long) t.getX()));
             filteredTreatments.add(t);
         }
