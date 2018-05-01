@@ -121,10 +121,16 @@ class NsClientReceiverDelegate {
 
         boolean newAllowedState = true;
 
-        if (!ev.wifiConnected && wifiOnly) newAllowedState = false;
-        if (ev.wifiConnected && !allowedSSIDs.trim().isEmpty() && !allowedSSIDs.contains(ev.ssid))
-            newAllowedState = false;
-        if (!ev.wifiConnected && !allowRoaming && ev.roaming) newAllowedState = false;
+        if (ev.wifiConnected) {
+            if (!allowedSSIDs.trim().isEmpty() && !allowedSSIDs.contains(ev.ssid)) {
+                newAllowedState = false;
+            }
+        } else {
+            if ((!allowRoaming && ev.roaming) || wifiOnly) {
+                newAllowedState = false;
+            }
+        }
+
 
         return newAllowedState;
     }

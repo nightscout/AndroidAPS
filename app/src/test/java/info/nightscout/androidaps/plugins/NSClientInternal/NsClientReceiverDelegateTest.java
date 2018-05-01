@@ -111,5 +111,13 @@ public class NsClientReceiverDelegateTest {
         ev.wifiConnected = true;
         ev.roaming = true;
         assertTrue(sut.calculateStatus(ev));
+
+        // wifiOnly = false
+        // allowRoaming = false
+        when(SP.getBoolean(R.string.key_ns_wifionly, false)).thenReturn(false);
+        when(SP.getBoolean(R.string.key_ns_allowroaming, true)).thenReturn(false);
+        ev.wifiConnected = true;
+        ev.roaming = true;
+        assertTrue(sut.calculateStatus(ev));
     }
 }
