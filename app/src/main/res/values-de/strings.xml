@@ -552,7 +552,7 @@
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, ist nicht berücksichtigt)</string>
     <string name="objectives_2_gate">Entscheide anhand von dieser Erfahrung, wie hoch max Basal sein sollte, und übernehme den Wert in die Pumpen- und AAPS-Einstellungen</string>
     <string name="objectives_3_gate">Erprobe den Closed Loop Modus mit max IOB = 0 für ein paar Tage, ohne zu viele Unterzuckerungen zu haben</string>
-    <string name="objectives_3_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werte</string>
+    <string name="objectives_3_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
     <string name="objectives_4_gate">Verwende es ein paar Tage und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst</string>
     <string name="objectives_4_objective">Fein-Einstellung des Closed-Loops, Erhöhen von max IOB über 0 und langsames Heruntersetzen des Zielbereichs</string>
     <string name="objectives_5_gate">Eine Woche erfolgreiches Loopen am Tag mit regelmäßiger Kohlenhydrat-Eingabe</string>
