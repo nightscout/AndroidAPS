@@ -77,7 +77,10 @@ public class GraphData {
         }
         if (predictions != null) {
             Collections.sort(predictions, (o1, o2) -> Double.compare(o1.getX(), o2.getX()));
-            bgListArray.addAll(predictions);
+            for (BgReading prediction : predictions) {
+                if (prediction.value >= 40)
+                    bgListArray.add(prediction);
+            }
         }
 
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
