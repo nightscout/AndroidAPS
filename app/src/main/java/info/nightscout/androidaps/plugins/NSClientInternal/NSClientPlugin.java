@@ -3,11 +3,7 @@ package info.nightscout.androidaps.plugins.NSClientInternal;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
-import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -37,8 +33,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientN
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
-import info.nightscout.androidaps.receivers.ChargingStateReceiver;
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -60,17 +54,13 @@ public class NSClientPlugin extends PluginBase {
     Spanned textLog = Html.fromHtml("");
 
     public boolean paused = false;
-    public boolean allowed = true;
-    public boolean allowedChargingsState = true;
-    public boolean allowedNetworkState = true;
     boolean autoscroll = true;
 
     public String status = "";
 
     public NSClientService nsClientService = null;
 
-    private NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
-    private ChargingStateReceiver chargingStateReceiver = new ChargingStateReceiver();
+    private NsClientReceiverDelegate nsClientReceiverDelegate;
 
     private NSClientPlugin() {
         super(new PluginDescription()
@@ -92,7 +82,15 @@ public class NSClientPlugin extends PluginBase {
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
+
+        nsClientReceiverDelegate =
+                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext(), MainApp.bus());
     }
+
+    public boolean isAllowed() {
+        return nsClientReceiverDelegate.allowed;
+    }
+
 
     @Override
     protected void onStart() {
@@ -102,32 +100,7 @@ public class NSClientPlugin extends PluginBase {
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
 
-        registerReceivers();
-
-    }
-
-    protected void registerReceivers() {
-        Context context = MainApp.instance().getApplicationContext();
-        // register NetworkChangeReceiver --> https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
-        // Nougat is not providing Connectivity-Action anymore ;-(
-        context.registerReceiver(networkChangeReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        context.registerReceiver(networkChangeReceiver,
-                new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-
-        EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(context);
-        if (event != null)
-            MainApp.bus().post(event);
-
-        context.registerReceiver(chargingStateReceiver,
-                new IntentFilter(Intent.ACTION_POWER_CONNECTED));
-        context.registerReceiver(chargingStateReceiver,
-                new IntentFilter(Intent.ACTION_POWER_DISCONNECTED));
-
-        EventChargingState eventChargingState = chargingStateReceiver.grabChargingState(context);
-        if (eventChargingState != null)
-            MainApp.bus().post(eventChargingState);
-
+        nsClientReceiverDelegate.registerReceivers();
     }
 
     @Override
@@ -135,9 +108,25 @@ public class NSClientPlugin extends PluginBase {
         MainApp.bus().unregister(this);
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
-        context.unregisterReceiver(networkChangeReceiver);
-        context.unregisterReceiver(chargingStateReceiver);
+
+        nsClientReceiverDelegate.unregisterReceivers();
     }
+
+    @Subscribe
+    public void onStatusEvent(EventPreferenceChange ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventChargingState ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNetworkChange ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -154,81 +143,12 @@ public class NSClientPlugin extends PluginBase {
         }
     };
 
-    @Subscribe
-    public void onStatusEvent(EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_ns_wifionly) ||
-                ev.isChanged(R.string.key_ns_wifi_ssids) ||
-                ev.isChanged(R.string.key_ns_allowroaming)
-                ) {
-            EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
-            if (event != null)
-                MainApp.bus().post(event);
-        } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
-            EventChargingState event = chargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
-            if (event != null)
-                MainApp.bus().post(event);
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventChargingState ev) {
-        boolean newChargingState = calculateStatus(ev);
-
-        if (newChargingState != allowedChargingsState) {
-            allowedChargingsState = newChargingState;
-            processStateChange();
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNetworkChange ev) {
-        boolean newNetworkState = calculateStatus(ev);
-
-        if (newNetworkState != allowedNetworkState) {
-            allowedNetworkState = newNetworkState;
-            processStateChange();
-        }
-    }
-
-    private void processStateChange() {
-        boolean newAllowedState =  allowedChargingsState && allowedNetworkState;
-        if (newAllowedState != allowed) {
-            allowed = newAllowedState;
-            MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
-        }
-    }
-
-    private boolean calculateStatus(final EventChargingState ev) {
-        boolean chargingOnly = SP.getBoolean(R.string.ns_chargingonly, false);
-
-        boolean newAllowedState = true;
-
-        if (!ev.isCharging && chargingOnly) newAllowedState = false;
-
-        return newAllowedState;
-    }
-
-
-    private boolean calculateStatus(final EventNetworkChange ev) {
-        boolean wifiOnly = SP.getBoolean(R.string.key_ns_wifionly, false);
-        String allowedSSIDs = SP.getString(R.string.key_ns_wifi_ssids, "");
-        boolean allowRoaming = SP.getBoolean(R.string.key_ns_allowroaming, true);
-
-        boolean newAllowedState = true;
-
-        if (!ev.wifiConnected && wifiOnly) newAllowedState = false;
-        if (ev.wifiConnected && !allowedSSIDs.isEmpty() && !allowedSSIDs.contains(ev.ssid))
-            newAllowedState = false;
-        if (!allowRoaming && ev.roaming) newAllowedState = false;
-
-        return newAllowedState;
-    }
 
     @Subscribe
     public void onStatusEvent(final EventAppExit ignored) {
         if (nsClientService != null) {
             MainApp.instance().getApplicationContext().unbindService(mConnection);
-            MainApp.instance().getApplicationContext().unregisterReceiver(networkChangeReceiver);
+            nsClientReceiverDelegate.unregisterReceivers();
         }
     }
 

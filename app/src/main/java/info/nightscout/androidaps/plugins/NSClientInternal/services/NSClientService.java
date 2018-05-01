@@ -202,7 +202,7 @@ public class NSClientService extends Service {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         MainApp.bus().post(new EventNSClientStatus("Initializing"));
-        if (!MainApp.getSpecificPlugin(NSClientPlugin.class).allowed) {
+        if (!MainApp.getSpecificPlugin(NSClientPlugin.class).isAllowed()) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "not allowed"));
             MainApp.bus().post(new EventNSClientStatus("Not allowed"));
         } else if (MainApp.getSpecificPlugin(NSClientPlugin.class).paused) {
