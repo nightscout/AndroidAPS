@@ -325,7 +325,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 basalIobWithZeroTemp.plus(calc);
             }
 
-            basalIob.iobWithZeroTemp = basalIobWithZeroTemp;
+            basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round();
         }
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
