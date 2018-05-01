@@ -2,17 +2,25 @@ buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
         jcenter()
+
+        google()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
+        //classpath 'io.realm:realm-gradle-plugin:1.1.1'
+        classpath 'io.realm:realm-gradle-plugin:4.0.0'
     }
 }
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
 apply plugin: "jacoco-android"
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'realm-android'
 
 ext {
     supportLibraryVersion = "27.0.2"

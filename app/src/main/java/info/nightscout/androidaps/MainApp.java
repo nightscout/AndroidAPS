@@ -55,6 +55,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
+import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
@@ -110,71 +111,80 @@ public class MainApp extends Application {
 
         registerLocalBroadcastReceiver();
 
-        if (pluginsList == null) {
-            pluginsList = new ArrayList<>();
-            // Register all tabs in app here
-            pluginsList.add(OverviewPlugin.getPlugin());
-            pluginsList.add(IobCobCalculatorPlugin.getPlugin());
-            if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
-            pluginsList.add(InsulinFastactingPlugin.getPlugin());
-            pluginsList.add(InsulinFastactingProlongedPlugin.getPlugin());
-            pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
-            pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
-            pluginsList.add(InsulinOrefFreePeakPlugin.getPlugin());
-            pluginsList.add(SensitivityOref0Plugin.getPlugin());
-            pluginsList.add(SensitivityAAPSPlugin.getPlugin());
-            pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
-            pluginsList.add(CareportalPlugin.getPlugin());
-            if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
-            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
-            pluginsList.add(NSProfilePlugin.getPlugin());
-            if (Config.OTHERPROFILES) pluginsList.add(SimpleProfilePlugin.getPlugin());
-            if (Config.OTHERPROFILES) pluginsList.add(LocalProfilePlugin.getPlugin());
-            if (Config.OTHERPROFILES)
-                pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
-            pluginsList.add(TreatmentsPlugin.getPlugin());
-            if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
-            if (!Config.NSCLIENT && !Config.G5UPLOADER)
-                pluginsList.add(SourceXdripPlugin.getPlugin());
-            if (!Config.G5UPLOADER)
-                pluginsList.add(SourceNSClientPlugin.getPlugin());
-            if (!Config.NSCLIENT && !Config.G5UPLOADER)
-                pluginsList.add(SourceMM640gPlugin.getPlugin());
-            if (!Config.NSCLIENT && !Config.G5UPLOADER)
-                pluginsList.add(SourceGlimpPlugin.getPlugin());
-            if (!Config.NSCLIENT)
-                pluginsList.add(SourceDexcomG5Plugin.getPlugin());
-            if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
-            pluginsList.add(FoodPlugin.getPlugin());
+        try {
 
-            pluginsList.add(WearPlugin.initPlugin(this));
-            pluginsList.add(StatuslinePlugin.initPlugin(this));
-            pluginsList.add(new PersistentNotificationPlugin(this));
-            pluginsList.add(NSClientInternalPlugin.getPlugin());
+            if (pluginsList == null) {
+                pluginsList = new ArrayList<>();
+                // Register all tabs in app here
+                pluginsList.add(OverviewPlugin.getPlugin());
+                pluginsList.add(IobCobCalculatorPlugin.getPlugin());
+                if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
+                pluginsList.add(InsulinFastactingPlugin.getPlugin());
+                pluginsList.add(InsulinFastactingProlongedPlugin.getPlugin());
+                pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
+                pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
+                pluginsList.add(InsulinOrefFreePeakPlugin.getPlugin());
+                pluginsList.add(SensitivityOref0Plugin.getPlugin());
+                pluginsList.add(SensitivityAAPSPlugin.getPlugin());
+                pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
+                if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
+                if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
+                if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
+                if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
+                if (Config.MEDTRONIC) pluginsList.add(MedtronicPumpPlugin.getPlugin());
+                pluginsList.add(CareportalPlugin.getPlugin());
+                if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
+                if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getPlugin());
+                if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
+                if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
+                if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
+                pluginsList.add(NSProfilePlugin.getPlugin());
+                if (Config.OTHERPROFILES) pluginsList.add(SimpleProfilePlugin.getPlugin());
+                if (Config.OTHERPROFILES) pluginsList.add(LocalProfilePlugin.getPlugin());
+                if (Config.OTHERPROFILES)
+                    pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
+                pluginsList.add(TreatmentsPlugin.getPlugin());
+                if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
+                if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
+                if (!Config.NSCLIENT && !Config.G5UPLOADER)
+                    pluginsList.add(SourceXdripPlugin.getPlugin());
+                if (!Config.G5UPLOADER)
+                    pluginsList.add(SourceNSClientPlugin.getPlugin());
+                if (!Config.NSCLIENT && !Config.G5UPLOADER)
+                    pluginsList.add(SourceMM640gPlugin.getPlugin());
+                if (!Config.NSCLIENT && !Config.G5UPLOADER)
+                    pluginsList.add(SourceGlimpPlugin.getPlugin());
+                if (!Config.NSCLIENT)
+                    pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+                if (Config.SMSCOMMUNICATORENABLED)
+                    pluginsList.add(SmsCommunicatorPlugin.getPlugin());
+                pluginsList.add(FoodPlugin.getPlugin());
 
-            pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
+                pluginsList.add(WearPlugin.initPlugin(this));
+                pluginsList.add(StatuslinePlugin.initPlugin(this));
+                pluginsList.add(new PersistentNotificationPlugin(this));
+                pluginsList.add(NSClientInternalPlugin.getPlugin());
 
-            MainApp.getConfigBuilder().initialize();
+                pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
+
+                MainApp.getConfigBuilder().initialize();
+            }
+            NSUpload.uploadAppStart();
+            if (Config.NSCLIENT)
+                Answers.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
+            else if (Config.G5UPLOADER)
+                Answers.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
+            else if (Config.PUMPCONTROL)
+                Answers.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
+            else if (MainApp.getConfigBuilder().isClosedModeEnabled())
+                Answers.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
+            else
+                Answers.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
         }
-        NSUpload.uploadAppStart();
-        if (Config.NSCLIENT)
-            Answers.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
-        else if (Config.G5UPLOADER)
-            Answers.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
-        else if (Config.PUMPCONTROL)
-            Answers.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConfigBuilder().isClosedModeEnabled())
-            Answers.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
-        else
-            Answers.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
+        catch(Exception ex)
+        {
+            log.error("Error loading plugins: " + ex.getMessage(), ex);
+        }
 
         new Thread(new Runnable() {
             @Override

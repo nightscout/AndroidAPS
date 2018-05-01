@@ -861,5 +861,24 @@
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
+
+    <!-- Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump">Operation not supported by pump.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
+
+    <!-- Medtronic -->
+    <string name="medtronic_name" translatable="false">Medtronic</string>
+    <string name="medtronic_serial_number">Pump Serial Number</string>
+    <string name="medtronic_pump_type">Pump Type</string>
+    <string name="medtronic_pump_frequency">Pump Frequency</string>
+    <string name="medtronic_rileylink_mac_address">RileyLink MAC Address</string>
+    <string name="medtronic_errors">Errors</string>
+    <string name="medtronic_error_serial_not_set">Serial # not set.</string>
+    <string name="medtronic_error_serial_invalid">Serial # invalid.</string>
+    <string name="medtronic_error_pump_type_not_set">Pump Type not set.</string>
+    <string name="medtronic_error_pump_type_invalid">Pump Type unsupported.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pump Frequency not set.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pump Frequency unsupported.</string>
+    <string name="medtronic_error_rileylink_address_invalid">RileyLink Address invalid.</string>
 </resources>
 

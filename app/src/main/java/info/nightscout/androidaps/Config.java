@@ -14,6 +14,7 @@ public class Config {
     public static final boolean PUMPCONTROL = BuildConfig.PUMPCONTROL;
 
     public static final boolean DANAR = BuildConfig.PUMPDRIVERS;
+    public static final boolean MEDTRONIC = true && BuildConfig.PUMPDRIVERS;
 
     public static final boolean ACTION = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
     public static final boolean VIRTUALPUMP = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;

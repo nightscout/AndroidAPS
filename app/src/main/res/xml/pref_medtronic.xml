@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/medtronic_name">
+
+        <Preference
+            android:enabled="false"
+            android:key="blescannner"
+            android:title="RileyLink Configuration (maybe)">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+        </Preference>
+
+
+        <EditTextPreference
+            android:defaultValue="000000"
+            android:key="pref_medtronic_serial"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:title="@string/medtronic_serial_number" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/medtronicPumpTypeArray"
+            android:entryValues="@array/medtronicPumpTypeArray"
+            android:key="pref_medtronic_pump_type"
+            android:title="@string/medtronic_pump_type" />
+
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/medtronicPumpFreqArray"
+            android:entryValues="@array/medtronicPumpFreqArray"
+            android:key="pref_medtronic_frequency"
+            android:selectable="true"
+            android:title="@string/medtronic_pump_frequency" />
+
+        <EditTextPreference
+            android:defaultValue="xx:xx:xx:xx:xx:xx"
+            android:editable="false"
+            android:inputType="textFilter"
+            android:key="pref_medtronic_rileylink_mac"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/medtronic_rileylink_mac_address" />
+
+
+    </PreferenceCategory>
+</PreferenceScreen>

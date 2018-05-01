@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
@@ -168,6 +169,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginBase.PUMP);
                 }
+
+                addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginBase.PUMP);
 
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginBase.INSULIN);
 

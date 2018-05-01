@@ -100,4 +100,26 @@
         <item>@string/yes</item>
     </string-array>
 
+
+    <string-array name="medtronicPumpTypeArray">
+        <item>Other (unsupported)</item>
+        <item>512</item>
+        <item>712</item>
+        <item>515</item>
+        <item>715</item>
+        <item>522</item>
+        <item>722</item>
+        <item>523 (Fw 2.4A or lower)</item>
+        <item>723 (Fw 2.4A or lower)</item>
+        <item>554 (EU Fw. &lt;= 2.6A)</item>
+        <item>754 (EU Fw. &lt;= 2.6A)</item>
+        <item>554 (CA Fw. &lt;= 2.7A)</item>
+        <item>754 (CA Fw. &lt;= 2.7A)</item>
+    </string-array>
+
+    <string-array name="medtronicPumpFreqArray">
+        <item>US</item>
+        <item>EU</item>
+    </string-array>
+
 </resources>
