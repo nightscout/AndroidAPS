@@ -142,7 +142,7 @@ public class NSClientPlugin extends PluginBase {
                 nsClientService = mLocalBinder.getServiceInstance();
         }
     };
-    
+
     @Subscribe
     public void onStatusEvent(final EventAppExit ignored) {
         if (nsClientService != null) {
