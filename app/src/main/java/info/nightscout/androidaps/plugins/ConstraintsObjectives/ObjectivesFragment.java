@@ -26,6 +26,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.T;
 
 public class ObjectivesFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
@@ -204,7 +205,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             return 1;
         } else if (objectiveStartedTime > 0 && !enableFakeValue
                 && objectiveAccomplishedTime == 0
-                && !(objectiveStartedTime + (long)durationInDays * 24 * 60 * 60 * 1000 < now && requirementsMet)) {
+                && !(objectiveStartedTime + T.days(durationInDays).msecs() < now && requirementsMet)) {
             return 2;
         } else if (objectiveAccomplishedTime == 0) {
             return 3;
