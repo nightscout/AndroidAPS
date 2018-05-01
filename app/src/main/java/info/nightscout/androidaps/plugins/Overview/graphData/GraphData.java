@@ -12,6 +12,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -61,7 +62,7 @@ public class GraphData {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
-    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {
+    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, List<BgReading> predictions) {
         double maxBgValue = 0d;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
@@ -74,9 +75,12 @@ public class GraphData {
             if (bg.value > maxBgValue) maxBgValue = bg.value;
             bgListArray.add(bg);
         }
-        if (apsResult != null) {
-            List<BgReading> predArray = apsResult.getPredictions();
-            bgListArray.addAll(predArray);
+        if (predictions != null) {
+            Collections.sort(predictions, (o1, o2) -> Double.compare(o1.getX(), o2.getX()));
+            for (BgReading prediction : predictions) {
+                if (prediction.value >= 40)
+                    bgListArray.add(prediction);
+            }
         }
 
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
@@ -273,6 +277,7 @@ public class GraphData {
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
             if (t.getX() < fromTime || t.getX() > endTime) continue;
+            if (t.isSMB && !t.isValid) continue;
             t.setY(getNearestBg((long) t.getX()));
             filteredTreatments.add(t);
         }

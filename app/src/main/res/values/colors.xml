@@ -6,7 +6,7 @@
     <color name="bolus">#FFFFCC03</color>
     <color name="cob">#FFFB8C00</color>
     <color name="uam">#ffea00</color>
-    <color name="zt">#ff9500</color>
+    <color name="zt">#00ffff</color>
     <color name="ratio">#FFFFFF</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
