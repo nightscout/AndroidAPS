@@ -1359,7 +1359,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             // **** BG ****
             if (predictionsAvailable && SP.getBoolean("showprediction", false))
-                graphData.addBgReadings(fromTime, toTime, lowLine, highLine, finalLastRun.constraintsProcessed);
+                graphData.addBgReadings(fromTime, toTime, lowLine, highLine,
+                        finalLastRun.constraintsProcessed.getPredictions());
             else
                 graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null);
 
