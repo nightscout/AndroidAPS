@@ -76,7 +76,7 @@ public class MainAppTest {
         if (Config.NSCLIENT || Config.G5UPLOADER)
             expected = 1; // VirtualPump only
         else
-            expected = 6;
+            expected = 7;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsList(PluginType.PUMP).size());
     }
 
@@ -87,7 +87,7 @@ public class MainAppTest {
         if (Config.NSCLIENT || Config.G5UPLOADER)
             expected = 1; // VirtualPump only
         else
-            expected = 6;
+            expected = 7;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsVisibleInList(PluginType.PUMP).size());
     }
 
@@ -98,7 +98,7 @@ public class MainAppTest {
         if (Config.NSCLIENT || Config.G5UPLOADER)
             expected = 1; // VirtualPump only
         else
-            expected = 6;
+            expected = 7;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsListByInterface(PumpInterface.class).size());
     }
 
@@ -109,7 +109,7 @@ public class MainAppTest {
         if (Config.NSCLIENT || Config.G5UPLOADER)
             expected = 1; // VirtualPump only
         else
-            expected = 6;
+            expected = 7;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsVisibleInListByInterface(PumpInterface.class, PluginType.PUMP).size());
     }
 
