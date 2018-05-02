@@ -134,7 +134,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
     }
 
     protected void getBTSocketForSelectedPump() {
-        mDevName = SP.getString(MainApp.sResources.getString(R.string.key_danar_bt_name), "");
+        mDevName = SP.getString(MainApp.gs(R.string.key_danar_bt_name), "");
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter != null) {
@@ -152,10 +152,10 @@ public abstract class AbstractDanaRExecutionService extends Service {
                 }
             }
         } else {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.nobtadapter));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.nobtadapter));
         }
         if (mBTDevice == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.devicenotfound));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.devicenotfound));
         }
     }
 
