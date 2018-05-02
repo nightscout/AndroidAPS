@@ -70,16 +70,25 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        MainApp.bus().register(this);
-        running = true;
-        if (bolusEnded) dismiss();
+        if (bolusEnded) {
+            dismiss();
+        } else {
+            if (getDialog() != null)
+                getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            MainApp.bus().register(this);
+            running = true;
+        }
     }
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        try {
+            super.dismiss();
+        } catch (IllegalStateException e) {
+            // dialog not running yet. onResume will try again. Set bolusEnded to make extra
+            // sure onResume will catch this
+            bolusEnded = true;
+        }
         if (helperActivity != null) {
             helperActivity.finish();
         }
