@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <string name="treatmentssafety_maxbolus_title">Μέγιστο Επιτρεπτό bolus[U]</string>
     <string name="treatmentssafety_maxcarbs_title">Μέγιστο Επιτρεπτό υδατ.[g]</string>

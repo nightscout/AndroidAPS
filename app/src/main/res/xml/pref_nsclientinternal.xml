@@ -117,7 +117,8 @@
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_ns_autobackfill"
-                android:title="@string/ns_autobackfill" />
+                android:title="@string/ns_autobackfill_title"
+                android:summary="@string/ns_autobackfill_summary" />
 
             <SwitchPreference
                 android:defaultValue="true"

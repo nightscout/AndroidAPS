@@ -331,7 +331,6 @@
     <string name="activity">Aktivität</string>
     <string name="adult">Erwachsener</string>
     <string name="advancedsettings_title">Erweiterte Einstellungen</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="basal_short">BAS</string>
     <string name="basal_step">Basal-Schritt</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
