@@ -131,7 +131,7 @@ public class HistoryReceiver {
 
         @Override
         public String toString() {
-            return MainApp.instance().getString(string_id);
+            return MainApp.gs(string_id);
         }
     }
 
