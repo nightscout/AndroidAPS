@@ -75,7 +75,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         } else {
             if (getDialog() != null)
                 getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            MainApp.bus().register(this);
+            MainApp.subscribe(this);
             running = true;
         }
     }
@@ -97,7 +97,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     @Override
     public void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
+        MainApp.unsubscribe(this);
         running = false;
     }
 
