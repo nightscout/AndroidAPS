@@ -42,8 +42,6 @@ import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
@@ -592,7 +590,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
                 iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
                 iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-                cobString = generateCOBString();
+                cobString = CobInfo.generateCOBString();
                 currentBasal = generateBasalString(treatmentsInterface);
 
                 //bgi
@@ -713,21 +711,6 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
         }
         return basalStringResult;
-    }
-
-    @NonNull
-    private String generateCOBString() {
-
-        String cobStringResult = "--";
-        CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService");
-        if (cobInfo.displayCob != null) {
-            cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob);
-            if (cobInfo.futureCarbs > 0) {
-                cobStringResult += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
-            }
-            cobStringResult += "g";
-        }
-        return cobStringResult;
     }
 
     @Override
