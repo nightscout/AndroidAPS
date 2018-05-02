@@ -215,7 +215,7 @@ public class DanaRHistoryActivity extends Activity {
         });
         profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
             finish();
         }
     }

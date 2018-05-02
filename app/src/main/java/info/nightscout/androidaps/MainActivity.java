@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 final SpannableString messageSpanned =  new SpannableString(message);
                                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
                                 builder.setMessage(messageSpanned);
-                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                                 AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());

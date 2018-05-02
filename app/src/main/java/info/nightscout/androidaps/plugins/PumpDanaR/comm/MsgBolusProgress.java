@@ -36,7 +36,7 @@ public class MsgBolusProgress extends MessageBase {
         Double done = (amount * 100 - progress) / 100d;
         t.insulin = done;
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), done);
+        bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), done);
         bolusingEvent.t = t;
         bolusingEvent.percent = Math.min((int) (done / amount * 100), 100);
 
