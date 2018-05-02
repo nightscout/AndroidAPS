@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -33,7 +33,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientN
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -55,12 +54,13 @@ public class NSClientPlugin extends PluginBase {
     Spanned textLog = Html.fromHtml("");
 
     public boolean paused = false;
-    public boolean allowed = true;
     boolean autoscroll = true;
 
     public String status = "";
 
     public NSClientService nsClientService = null;
+
+    private NsClientReceiverDelegate nsClientReceiverDelegate;
 
     private NSClientPlugin() {
         super(new PluginDescription()
@@ -82,7 +82,15 @@ public class NSClientPlugin extends PluginBase {
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
+
+        nsClientReceiverDelegate =
+                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext(), MainApp.bus());
     }
+
+    public boolean isAllowed() {
+        return nsClientReceiverDelegate.allowed;
+    }
+
 
     @Override
     protected void onStart() {
@@ -92,9 +100,7 @@ public class NSClientPlugin extends PluginBase {
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
 
-        EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus();
-        if (event != null)
-            MainApp.bus().post(event);
+        nsClientReceiverDelegate.registerReceivers();
     }
 
     @Override
@@ -102,7 +108,25 @@ public class NSClientPlugin extends PluginBase {
         MainApp.bus().unregister(this);
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
+
+        nsClientReceiverDelegate.unregisterReceivers();
     }
+
+    @Subscribe
+    public void onStatusEvent(EventPreferenceChange ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventChargingState ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNetworkChange ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -120,40 +144,11 @@ public class NSClientPlugin extends PluginBase {
     };
 
     @Subscribe
-    public void onStatusEvent(EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_ns_wifionly) ||
-                ev.isChanged(R.string.key_ns_wifi_ssids) ||
-                ev.isChanged(R.string.key_ns_allowroaming)
-                ) {
-            EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus();
-            if (event != null)
-                MainApp.bus().post(event);
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNetworkChange ev) {
-        boolean wifiOnly = SP.getBoolean(R.string.key_ns_wifionly, false);
-        String allowedSSIDs = SP.getString(R.string.key_ns_wifi_ssids, "");
-        boolean allowRoaming = SP.getBoolean(R.string.key_ns_allowroaming, true) && !wifiOnly;
-
-        boolean newAllowedState = true;
-
-        if (!ev.wifiConnected && wifiOnly) newAllowedState = false;
-        if (ev.wifiConnected && !allowedSSIDs.isEmpty() && !allowedSSIDs.contains(ev.ssid))
-            newAllowedState = false;
-        if (!allowRoaming && ev.roaming) newAllowedState = false;
-
-        if (newAllowedState != allowed) {
-            allowed = newAllowedState;
-            MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
-        }
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventAppExit ignored) {
-        if (nsClientService != null)
+        if (nsClientService != null) {
             MainApp.instance().getApplicationContext().unbindService(mConnection);
+            nsClientReceiverDelegate.unregisterReceivers();
+        }
     }
 
     @Subscribe

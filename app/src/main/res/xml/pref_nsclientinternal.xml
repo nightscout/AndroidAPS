@@ -105,6 +105,11 @@
                 android:key="@string/key_ns_allowroaming"
                 android:title="@string/ns_allowroaming" />
 
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_chargingonly"
+                android:title="@string/ns_chargingonly" />
+
         </PreferenceScreen>
 
        <PreferenceScreen android:title="@string/advancedsettings_title">
