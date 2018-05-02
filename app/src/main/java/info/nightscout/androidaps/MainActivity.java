@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 log.debug("Requesting ignore battery optimization");
 
-                OKDialog.show(this, getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
+                OKDialog.show(this, MainApp.gs(R.string.pleaseallowpermission), String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name)), new Runnable() {
 
                     @Override
                     public void run() {
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             startActivity(intent);
 
                         } catch (ActivityNotFoundException e) {
-                            final String msg = getString(R.string.batteryoptimalizationerror);
+                            final String msg = MainApp.gs(R.string.batteryoptimalizationerror);
                             ToastUtils.showToastInUiThread(getApplicationContext(), msg);
                             log.error(msg);
                         }
@@ -399,21 +399,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 break;
                             case R.id.nav_about:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                                builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
+                                builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);
                                 if (Config.NSCLIENT || Config.G5UPLOADER)
                                     builder.setIcon(R.mipmap.yellowowl);
                                 else
                                     builder.setIcon(R.mipmap.blueowl);
                                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
-                                message += getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
                                 if (MainApp.engineeringMode)
                                     message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
-                                message += getString(R.string.about_link_urls);
+                                message += MainApp.gs(R.string.about_link_urls);
                                 final SpannableString messageSpanned =  new SpannableString(message);
                                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
                                 builder.setMessage(messageSpanned);
-                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                                 AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
                                 ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());

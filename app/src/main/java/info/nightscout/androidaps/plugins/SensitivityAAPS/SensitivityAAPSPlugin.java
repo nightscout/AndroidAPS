@@ -56,9 +56,9 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
 
         String age = SP.getString(R.string.key_age, "");
         int defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(MainApp.sResources.getString(R.string.key_child))) defaultHours = 4;
+        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
+        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 4;
+        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         Profile profile = MainApp.getConfigBuilder().getProfile();

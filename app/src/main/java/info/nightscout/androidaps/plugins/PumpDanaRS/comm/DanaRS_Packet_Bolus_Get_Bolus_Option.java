@@ -102,7 +102,7 @@ public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
         int missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
         if (!pump.isExtendedBolusEnabled) {
-            Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.sResources.getString(R.string.danar_enableextendedbolus), Notification.URGENT);
+            Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.gs(R.string.danar_enableextendedbolus), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));

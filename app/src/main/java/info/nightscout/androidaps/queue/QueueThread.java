@@ -55,7 +55,7 @@ public class QueueThread extends Thread {
                 PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                 if (pump == null) {
                     log.debug("QUEUE: pump == null");
-                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.pumpNotInitialized)));
+                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.pumpNotInitialized)));
                     SystemClock.sleep(1000);
                     continue;
                 }
@@ -63,7 +63,7 @@ public class QueueThread extends Thread {
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     MainApp.bus().post(new EventDismissBolusprogressIfRunning(null));
-                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.connectiontimedout)));
+                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.connectiontimedout)));
                     log.debug("QUEUE: timed out");
                     pump.stopConnecting();
 

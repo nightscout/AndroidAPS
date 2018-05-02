@@ -53,7 +53,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle(String.format(MainApp.sResources.getString(R.string.overview_bolusprogress_goingtodeliver), amount));
+        getDialog().setTitle(String.format(MainApp.gs(R.string.overview_bolusprogress_goingtodeliver), amount));
         View view = inflater.inflate(R.layout.overview_bolusprogress_dialog, container, false);
         stopButton = (Button) view.findViewById(R.id.overview_bolusprogress_stop);
         statusView = (TextView) view.findViewById(R.id.overview_bolusprogress_status);
@@ -61,7 +61,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         progressBar = (ProgressBar) view.findViewById(R.id.overview_bolusprogress_progressbar);
         stopButton.setOnClickListener(this);
         progressBar.setMax(100);
-        statusView.setText(MainApp.sResources.getString(R.string.waitingforpump));
+        statusView.setText(MainApp.gs(R.string.waitingforpump));
         setCancelable(false);
         stopPressed = false;
         return view;

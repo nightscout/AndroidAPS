@@ -94,7 +94,7 @@ public class PersistentNotificationPlugin extends PluginBase {
             return;
         }
 
-        String line1 = ctx.getString(R.string.noprofile);
+        String line1 = MainApp.gs(R.string.noprofile);
 
         if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !MainApp.getConfigBuilder().isProfileValid("Notificiation"))
             return;
@@ -111,7 +111,7 @@ public class PersistentNotificationPlugin extends PluginBase {
                         + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
             } else {
                 line1 += " " +
-                        ctx.getString(R.string.old_data) +
+                        MainApp.gs(R.string.old_data) +
                         " ";
             }
         }
@@ -128,7 +128,7 @@ public class PersistentNotificationPlugin extends PluginBase {
         IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
 
-        String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();;
+        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();;
         
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h";
 

@@ -59,7 +59,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
             holder.gate.setText(o.gate);
-            holder.duration.setText(context.getString(R.string.objectives_minimalduration) + " " + o.durationInDays + " " + context.getString(R.string.days));
+            holder.duration.setText(MainApp.gs(R.string.objectives_minimalduration) + " " + o.durationInDays + " " + MainApp.gs(R.string.days));
             holder.progress.setText(requirementsMet.comment);
             holder.started.setText(o.started.toLocaleString());
             holder.accomplished.setText(o.accomplished.toLocaleString());
@@ -241,20 +241,20 @@ public class ObjectivesFragment extends SubscriberFragment {
             });
 
             // Add correct translations to array after app is initialized
-            ObjectivesPlugin.objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
-            ObjectivesPlugin.objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
-            ObjectivesPlugin.objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
-            ObjectivesPlugin.objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
-            ObjectivesPlugin.objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
-            ObjectivesPlugin.objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
-            ObjectivesPlugin.objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
-            ObjectivesPlugin.objectives.get(7).objective = MainApp.sResources.getString(R.string.objectives_7_objective);
-            ObjectivesPlugin.objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
-            ObjectivesPlugin.objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
-            ObjectivesPlugin.objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
-            ObjectivesPlugin.objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
-            ObjectivesPlugin.objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
-            ObjectivesPlugin.objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
+            ObjectivesPlugin.objectives.get(0).objective = MainApp.gs(R.string.objectives_0_objective);
+            ObjectivesPlugin.objectives.get(1).objective = MainApp.gs(R.string.objectives_1_objective);
+            ObjectivesPlugin.objectives.get(2).objective = MainApp.gs(R.string.objectives_2_objective);
+            ObjectivesPlugin.objectives.get(3).objective = MainApp.gs(R.string.objectives_3_objective);
+            ObjectivesPlugin.objectives.get(4).objective = MainApp.gs(R.string.objectives_4_objective);
+            ObjectivesPlugin.objectives.get(5).objective = MainApp.gs(R.string.objectives_5_objective);
+            ObjectivesPlugin.objectives.get(6).objective = MainApp.gs(R.string.objectives_6_objective);
+            ObjectivesPlugin.objectives.get(7).objective = MainApp.gs(R.string.objectives_7_objective);
+            ObjectivesPlugin.objectives.get(0).gate = MainApp.gs(R.string.objectives_0_gate);
+            ObjectivesPlugin.objectives.get(1).gate = MainApp.gs(R.string.objectives_1_gate);
+            ObjectivesPlugin.objectives.get(2).gate = MainApp.gs(R.string.objectives_2_gate);
+            ObjectivesPlugin.objectives.get(3).gate = MainApp.gs(R.string.objectives_3_gate);
+            ObjectivesPlugin.objectives.get(4).gate = MainApp.gs(R.string.objectives_4_gate);
+            ObjectivesPlugin.objectives.get(5).gate = MainApp.gs(R.string.objectives_5_gate);
 
             updateGUI();
 

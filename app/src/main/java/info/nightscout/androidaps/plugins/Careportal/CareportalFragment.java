@@ -225,7 +225,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                         double pbageUrgent = nsSettings.getExtendedWarnValue("pgage", "urgent", 360);
                         double pbageWarn = nsSettings.getExtendedWarnValue("pgage", "warn", 240);
 
-                        String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.sResources.getString(R.string.notavailable);
+                        String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.gs(R.string.notavailable);
                         if (sage != null) {
                             careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
                             if (careportalEvent != null) {

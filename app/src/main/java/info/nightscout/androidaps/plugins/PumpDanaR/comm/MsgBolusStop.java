@@ -34,10 +34,10 @@ public class MsgBolusStop extends MessageBase {
         stopped = true;
         if (!forced) {
             t.insulin = amount;
-            bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_delivered);
+            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_delivered);
             bolusingEvent.percent = 100;
         } else {
-            bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_stoped);
+            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_stoped);
         }
         MainApp.bus().post(bolusingEvent);
     }

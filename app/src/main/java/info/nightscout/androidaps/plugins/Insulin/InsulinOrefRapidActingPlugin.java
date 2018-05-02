@@ -32,12 +32,12 @@ public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
 
     @Override
     public String getFriendlyName() {
-        return MainApp.sResources.getString(R.string.rapid_acting_oref);
+        return MainApp.gs(R.string.rapid_acting_oref);
     }
 
     @Override
     public String commentStandardText() {
-        return MainApp.sResources.getString(R.string.fastactinginsulincomment);
+        return MainApp.gs(R.string.fastactinginsulincomment);
     }
 
     @Override

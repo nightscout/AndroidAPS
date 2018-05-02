@@ -134,7 +134,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         result.success = true;
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
         return result;
     }
@@ -147,7 +147,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.pumperror);
+        result.comment = MainApp.gs(R.string.pumperror);
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
         return result;
@@ -157,7 +157,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.pumperror);
+        result.comment = MainApp.gs(R.string.pumperror);
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
         return result;
@@ -167,7 +167,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.pumperror);
+        result.comment = MainApp.gs(R.string.pumperror);
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
         return result;
@@ -177,7 +177,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.pumperror);
+        result.comment = MainApp.gs(R.string.pumperror);
         if (Config.logPumpComm)
             log.debug("Cancel temp basal: " + result);
         return result;
@@ -187,7 +187,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.pumperror);
+        result.comment = MainApp.gs(R.string.pumperror);
         if (Config.logPumpComm)
             log.debug("Canceling extended basal: " + result);
         return result;

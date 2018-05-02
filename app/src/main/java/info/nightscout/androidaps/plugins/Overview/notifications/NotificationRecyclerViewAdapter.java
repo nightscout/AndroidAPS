@@ -94,7 +94,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                     }
                     // Adding current time to snooze if we got staleData
                     log.debug("Notification text is: " + notification.text);
-                    if (notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))) {
+                    if (notification.text.equals(MainApp.gs(R.string.nsalarm_staledata))) {
                         NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
                         long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
                         log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
