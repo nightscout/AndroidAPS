@@ -513,15 +513,15 @@ public class ActionStringHandler {
         }
 
         if (!result.isChangeRequested()) {
-            ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
+            ret += MainApp.gs(R.string.nochangerequested) + "\n";
         } else if (result.rate == 0 && result.duration == 0) {
-            ret += MainApp.sResources.getString(R.string.canceltemp) + "\n";
+            ret += MainApp.gs(R.string.canceltemp) + "\n";
         } else {
-            ret += MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
+            ret += MainApp.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
                     "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getActivePump().getBaseBasalRate() * 100) + "%)\n" +
-                    MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
+                    MainApp.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
         }
-        ret += "\n" + MainApp.sResources.getString(R.string.reason) + ": " + result.reason;
+        ret += "\n" + MainApp.gs(R.string.reason) + ": " + result.reason;
 
         return ret;
     }
@@ -586,18 +586,18 @@ public class ActionStringHandler {
 
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Percentage") + "\n";
+            msg += String.format(MainApp.gs(R.string.valueoutofrange), "Profile-Percentage") + "\n";
         }
         if (timeshift < 0 || timeshift > 23) {
-            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
+            msg += String.format(MainApp.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
         }
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null) {
-            msg += MainApp.sResources.getString(R.string.notloadedplugins) + "\n";
+            msg += MainApp.gs(R.string.notloadedplugins) + "\n";
         }
         if (!"".equals(msg)) {
-            msg += MainApp.sResources.getString(R.string.valuesnotstored);
+            msg += MainApp.gs(R.string.valuesnotstored);
             String rTitle = "STATUS";
             String rAction = "statusmessage";
             WearPlugin.getPlugin().requestActionConfirmation(rTitle, msg, rAction);
@@ -634,7 +634,7 @@ public class ActionStringHandler {
             @Override
             public void run() {
                 if (!result.success) {
-                    sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
+                    sendError(MainApp.gs(R.string.treatmentdeliveryerror) +
                             "\n" +
                             result.comment);
                 }
@@ -652,7 +652,7 @@ public class ActionStringHandler {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
+                        sendError(MainApp.gs(R.string.treatmentdeliveryerror) +
                                 "\n" +
                                 result.comment);
                     }

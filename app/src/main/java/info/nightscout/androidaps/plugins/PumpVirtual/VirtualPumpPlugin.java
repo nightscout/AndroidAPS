@@ -171,7 +171,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
-        Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+        Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
         MainApp.bus().post(new EventNewNotification(notification));
         return result;
     }
@@ -209,14 +209,14 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200);
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivering);
+            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), delivering);
             bolusingEvent.percent = Math.min((int) (delivering / detailedBolusInfo.insulin * 100), 100);
             MainApp.bus().post(bolusingEvent);
             delivering += 0.1d;
         }
         SystemClock.sleep(200);
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
+        bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivered), detailedBolusInfo.insulin);
         bolusingEvent.percent = 100;
         MainApp.bus().post(bolusingEvent);
         SystemClock.sleep(1000);

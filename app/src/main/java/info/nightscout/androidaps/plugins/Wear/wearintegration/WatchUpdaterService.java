@@ -661,7 +661,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         String status = "";
 
         if (profile == null) {
-            status = MainApp.sResources.getString(R.string.noprofile);
+            status = MainApp.gs(R.string.noprofile);
             return status;
         }
 
