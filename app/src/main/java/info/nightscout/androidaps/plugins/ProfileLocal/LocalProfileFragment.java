@@ -199,22 +199,14 @@ public class LocalProfileFragment extends SubscriberFragment {
                     if (isValid) {
                         invalidProfile.setVisibility(View.GONE); //show invalid profile
 
-                        if (isEdited || !ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended()) {
+                        if (isEdited) {
                             //edited profile -> save first
-                            //pump not initialized -> don't update profile yet
                             profileswitchButton.setVisibility(View.GONE);
-                        } else {
-                            profileswitchButton.setVisibility(View.VISIBLE);
-                        }
-
-                        if(isEdited){
                             saveButton.setVisibility(View.VISIBLE);
                         } else {
+                            profileswitchButton.setVisibility(View.VISIBLE);
                             saveButton.setVisibility(View.GONE);
-
                         }
-
-
                     } else {
                         invalidProfile.setVisibility(View.VISIBLE);
                         profileswitchButton.setVisibility(View.GONE);
