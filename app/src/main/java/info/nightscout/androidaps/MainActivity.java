@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 log.debug("Requesting ignore battery optimization");
 
-                OKDialog.show(this, MainApp.gs(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), MainApp.gs(R.string.app_name)), new Runnable() {
+                OKDialog.show(this, MainApp.gs(R.string.pleaseallowpermission), String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name)), new Runnable() {
 
                     @Override
                     public void run() {
@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 break;
                             case R.id.nav_about:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                                builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
+                                builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);
                                 if (Config.NSCLIENT || Config.G5UPLOADER)
                                     builder.setIcon(R.mipmap.yellowowl);
                                 else

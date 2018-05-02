@@ -52,7 +52,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle(getString(R.string.overview_tempbasal_button));
+        getDialog().setTitle(MainApp.gs(R.string.overview_tempbasal_button));
 
         View view = inflater.inflate(R.layout.overview_newtempbasal_dialog, container, false);
 
@@ -146,7 +146,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
                     builder.setMessage(confirmMessage);
-                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             Callback callback = new Callback() {
                                 @Override
@@ -169,7 +169,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("TempBasal"));
                         }
                     });
-                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                     builder.show();
                     dismiss();
 

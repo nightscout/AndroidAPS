@@ -112,14 +112,14 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
 
                 builder.setTitle(this.getContext().getString(R.string.confirmation));
                 builder.setMessage("Clear queue? All data in queue will be lost!");
-                builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         UploadQueue.clearQueue();
                         updateGUI();
                         FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
                     }
                 });
-                builder.setNegativeButton(getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
             case R.id.nsclientinternal_showqueue:

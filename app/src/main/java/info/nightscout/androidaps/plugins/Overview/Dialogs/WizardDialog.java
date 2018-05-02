@@ -270,13 +270,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void saveCheckedStates() {
-        SP.putBoolean(getString(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
-        SP.putBoolean(getString(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
+        SP.putBoolean(MainApp.gs(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
+        SP.putBoolean(MainApp.gs(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
     }
 
     private void loadCheckedStates() {
-        bgtrendCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_trend_bg), false));
-        cobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_cob), false));
+        bgtrendCheckbox.setChecked(SP.getBoolean(MainApp.gs(R.string.key_wizard_include_trend_bg), false));
+        cobCheckbox.setChecked(SP.getBoolean(MainApp.gs(R.string.key_wizard_include_cob), false));
     }
 
     @Override
@@ -318,7 +318,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                        builder.setMessage(getString(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
+                        builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
                         builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                         builder.show();
                         return;
@@ -334,7 +334,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(MainApp.gs(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
-                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             synchronized (builder) {
                                 if (accepted) {
@@ -396,7 +396,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                             }
                         }
                     });
-                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                     builder.show();
                     dismiss();
                 }

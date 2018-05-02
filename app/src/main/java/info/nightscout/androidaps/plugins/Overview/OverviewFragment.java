@@ -753,7 +753,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (!insulinAfterConstraints.equals(wizard.calculatedTotalInsulin) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                    builder.setMessage(getString(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
+                    builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
                     builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                     builder.show();
                     return;
@@ -766,7 +766,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 accepted = false;
                 builder.setTitle(MainApp.gs(R.string.confirmation));
                 builder.setMessage(confirmMessage);
-                builder.setPositiveButton(getString(R.string.ok), (dialog, id) -> {
+                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     synchronized (builder) {
                         if (accepted) {
                             log.debug("guarding: already accepted");
@@ -822,7 +822,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         }
                     }
                 });
-                builder.setNegativeButton(getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
             }
         }

@@ -197,7 +197,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setTitle(MainApp.gs(R.string.confirmation));
             if (insulinAfterConstraints > 0 || pumpSiteChangeCheckbox.isChecked() || insulinCartridgeChangeCheckbox.isChecked()) {
                 builder.setMessage(Html.fromHtml(Joiner.on("<br/>").join(confirmMessage)));
-                builder.setPositiveButton(getString(R.string.primefill), (dialog, id) -> {
+                builder.setPositiveButton(MainApp.gs(R.string.primefill), (dialog, id) -> {
                     if (finalInsulinAfterConstraints > 0) {
                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                         detailedBolusInfo.insulin = finalInsulinAfterConstraints;
@@ -228,7 +228,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             } else {
                 builder.setMessage(MainApp.gs(R.string.no_action_selected));
             }
-            builder.setNegativeButton(getString(R.string.cancel), null);
+            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
             dismiss();
         } catch (RuntimeException e) {
