@@ -1,14 +1,34 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.SP;
+
+import static info.nightscout.androidaps.startupwizard.SWItem.Type.RADIOBUTTON;
+import static info.nightscout.androidaps.startupwizard.SWItem.Type.STRING;
+import static info.nightscout.androidaps.startupwizard.SWItem.Type.URL;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -34,6 +54,21 @@ public class SetupWizardActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private LinearLayout linearLayout;
+    private TextView radioLabel;
+    private int numberOfButtons = 0;
+    private List<String> labels = new ArrayList<String>();
+    private List<String> comments = new ArrayList<String>();
+
+    private LinearLayout layout;
+    private TextView textlabel;
+    private TextView screenName;
+    private Button skipButton;
+    //logiing
+    private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
+
+    private int currentWizardPage = 0;
+    public static final String INTENT_MESSAGE = "WIZZARDPAGE";
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -88,7 +123,6 @@ public class SetupWizardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_setupwizard);
 
         mVisible = true;
@@ -104,10 +138,51 @@ public class SetupWizardActivity extends AppCompatActivity {
             }
         });
 
+
+        Intent intent = getIntent();
+        int showPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE,0);
+        SWDefinition swDefinition = SWDefinition.getInstance();
+        List<SWScreen> screens = swDefinition.getScreens();
+        if(screens.size() > 0 && showPage < screens.size()){
+            SWScreen currentScreen = screens.get(showPage);
+            currentWizardPage = showPage;
+            // show/hide prev/next buttons if we are at the beninning/end
+            //showNextButton(showPage, screens.size()-1);
+
+            if(showPage == 0)
+                ((Button) findViewById(R.id.previous_button)).setVisibility(View.GONE);
+            //Set screen name
+            screenName = (TextView) findViewById(R.id.fullscreen_content);
+            screenName.setText(currentScreen.getHeader());
+            //Display screen items in the order entered
+            linearLayout = (LinearLayout) findViewById(R.id.fullscreen_content_controls);
+            // is it skippable ?
+            if(currentScreen.skippable) {
+                //display skip button
+                skipButton = (Button) findViewById(R.id.skip_button);
+
+            }
+            //Generate layout first
+            LinearLayout layout = info.nightscout.androidaps.startupwizard.SWItem.generateLayout(this.findViewById(R.id.fullscreen_content_fields));
+            for(int i = 0; i < currentScreen.items.size(); i++){
+                SWItem currentItem = currentScreen.items.get(i);
+                labels.add(i,currentItem.getLabel());
+                comments.add(i,currentItem.getComment());
+                currentItem.setOptions(labels, comments);
+                currentItem.generateDialog(this.findViewById(R.id.fullscreen_content_fields), layout);
+            }
+            // Check if input isValid or screen is sckippable
+            if(currentScreen.validator.isValid() || currentScreen.skippable) {
+                showNextButton(showPage, screens.size() - 1);
+                show();
+            }
+
+        }
+
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.next_button).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -118,6 +193,23 @@ public class SetupWizardActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        // check is current locale is different from the one in preferences
+//        log.debug("Current: "+LocaleHelper.getLanguage(this)+" preferences: "+SP.getString("language", "en"));
+        if(!LocaleHelper.getLanguage(this).equals(SP.getString("language", "en"))) {
+            // it is so change it in locale and restart SetupWizard
+//            log.debug("Setting locale to: "+SP.getString("language", "en")+" and restarting");
+            LocaleHelper.setLocale(this, SP.getString(R.string.key_language, "en"));
+            MainApp.bus().post(new EventRefreshGui(true));
+            Intent intent = getIntent();
+            this.finish();
+            startActivity(intent);
+        }
     }
 
     private void toggle() {
@@ -162,4 +254,35 @@ public class SetupWizardActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    private void showNextButton(int currentPage, int maxPages){
+        if(currentPage == maxPages) {
+            ((Button) findViewById(R.id.finish_button)).setVisibility(View.VISIBLE);
+            ((Button) findViewById(R.id.next_button)).setVisibility(View.GONE);
+        } else
+            ((Button) findViewById(R.id.next_button)).setVisibility(View.VISIBLE);
+        show();
+    }
+
+    public void showNextPage(View view) {
+        Intent intent = new Intent(this, SetupWizardActivity.class);
+        intent.putExtra(INTENT_MESSAGE, currentWizardPage + 1);
+        startActivity(intent);
+    }
+
+    public void showPreviousPage(View view) {
+        Intent intent = new Intent(this, SetupWizardActivity.class);
+        if(currentWizardPage > 0)
+            intent.putExtra(INTENT_MESSAGE, currentWizardPage - 1);
+        else
+            intent.putExtra(INTENT_MESSAGE, 0);
+        startActivity(intent);
+    }
+
+    // Go back to overview
+    public void finishSetupWizard(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }

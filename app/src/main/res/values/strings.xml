@@ -482,7 +482,7 @@
     <string name="restart">Restart</string>
     <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
-    <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
+    <string name="nsclientinternal_url_dialogmessage">Enter Your Nightscout URL</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
@@ -1002,7 +1002,15 @@
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
 
     <string name="title_activity_setup_wizard">SetupWizardActivity</string>
-    <string name="dummy_button">Dummy Button</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Prev</string>
+    <string name="skip_button">Skip</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="setupwizard_next">Next</string>
+    <string name="setupwizard_previous">Prev</string>
+    <string name="setupwizard_skip">Skip</string>
+    <string name="setupwizard_finish">FINISH</string>
+    <string name="setupwizard_language_prompt">Select your language</string>
+    <string name="key_language">language</string>
 </resources>
