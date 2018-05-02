@@ -59,7 +59,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
             holder.gate.setText(o.gate);
-            holder.duration.setText(context.getString(R.string.objectives_minimalduration) + " " + o.durationInDays + " " + context.getString(R.string.days));
+            holder.duration.setText(MainApp.gs(R.string.objectives_minimalduration) + " " + o.durationInDays + " " + MainApp.gs(R.string.days));
             holder.progress.setText(requirementsMet.comment);
             holder.started.setText(o.started.toLocaleString());
             holder.accomplished.setText(o.accomplished.toLocaleString());

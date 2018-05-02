@@ -113,7 +113,7 @@ public class StatuslinePlugin extends PluginBase {
         LoopPlugin loopPlugin = LoopPlugin.getPlugin();
 
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-            status += ctx.getString(R.string.disabledloop) + "\n";
+            status += MainApp.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
             lastLoopStatus = true;
