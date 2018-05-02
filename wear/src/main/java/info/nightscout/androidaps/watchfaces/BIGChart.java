@@ -428,6 +428,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 BgWatchData bwd = new BgWatchData();
                 bwd.timestamp = prediction.getLong("timestamp");
                 bwd.sgv = prediction.getDouble("sgv");
+                bwd.color = prediction.getInt("color");
                 predictionList.add(bwd);
             }
         }
@@ -649,13 +650,15 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 double high = entry.getDouble("high");
                 double low = entry.getDouble("low");
                 long timestamp = entry.getLong("timestamp");
-                bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
+                int color = entry.getInt("color", 0);
+                bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
             }
         } else {
             double sgv = dataMap.getDouble("sgvDouble");
             double high = dataMap.getDouble("high");
             double low = dataMap.getDouble("low");
             long timestamp = dataMap.getLong("timestamp");
+            int color = dataMap.getInt("color", 0);
 
             final int size = bgDataList.size();
             if (size > 0) {
@@ -663,7 +666,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                     return; // Ignore duplicates.
             }
 
-            bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
+            bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
         }
 
         for (int i = 0; i < bgDataList.size(); i++) {
