@@ -212,7 +212,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                     i.putExtra("soundid", R.raw.boluserror);
                                     i.putExtra("status", result.comment);
-                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     MainApp.instance().startActivity(i);
                                 }

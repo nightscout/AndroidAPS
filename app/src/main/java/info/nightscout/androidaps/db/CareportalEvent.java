@@ -95,7 +95,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         if (OverviewFragment.shorttextmode)
             return diff.get(TimeUnit.DAYS) +"d" + diff.get(TimeUnit.HOURS) + "h";
         else
-            return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
+            return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
     }
 
     public boolean isOlderThan(double hours) {

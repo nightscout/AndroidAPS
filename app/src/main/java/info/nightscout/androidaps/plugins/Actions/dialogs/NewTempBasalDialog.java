@@ -155,7 +155,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                         i.putExtra("soundid", R.raw.boluserror);
                                         i.putExtra("status", result.comment);
-                                        i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         MainApp.instance().startActivity(i);
                                     }
