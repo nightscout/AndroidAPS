@@ -94,7 +94,7 @@ public class PersistentNotificationPlugin extends PluginBase {
             return;
         }
 
-        String line1 = MainApp.gs(R.string.noprofile);
+        String line1 = "";
 
         if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !MainApp.getConfigBuilder().isProfileValid("Notificiation"))
             return;
@@ -114,6 +114,8 @@ public class PersistentNotificationPlugin extends PluginBase {
                         MainApp.gs(R.string.old_data) +
                         " ";
             }
+        } else {
+            line1 = MainApp.gs(R.string.missed_bg_readings);
         }
 
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
