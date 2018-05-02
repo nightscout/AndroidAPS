@@ -306,19 +306,19 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
-                    String confirmMessage = getString(R.string.entertreatmentquestion);
+                    String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(calculatedTotalInsulin)).value();
                     Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(calculatedCarbs)).value();
 
-                    confirmMessage += "<br/>" + getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
-                    confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+                    confirmMessage += "<br/>" + MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
+                    confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                        builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
+                        builder.setMessage(getString(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
                         builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                         builder.show();
                         return;
@@ -472,13 +472,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             c_correction = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(c_correction)).value();
         if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
             editCorr.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.bolusconstraintapplied));
             return;
         }
         Integer carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(c_carbs)).value();
         if (c_carbs - carbsAfterConstraint != 0) {
             editCarbs.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
             return;
         }
 

@@ -742,18 +742,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             if (wizard.calculatedTotalInsulin > 0d && quickWizardEntry.carbs() > 0d) {
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-                String confirmMessage = getString(R.string.entertreatmentquestion);
+                String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
 
                 Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(wizard.calculatedTotalInsulin)).value();
                 Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
-                confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
-                confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+                confirmMessage += "\n" + MainApp.gs(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
+                confirmMessage += "\n" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
                 if (!insulinAfterConstraints.equals(wizard.calculatedTotalInsulin) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                    builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
+                    builder.setMessage(getString(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
                     builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                     builder.show();
                     return;
@@ -1269,14 +1269,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             iobView.setText(iobtext);
             iobView.setOnClickListener(v -> {
                 String iobtext1 = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U\n"
-                        + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U\n"
-                        + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U\n";
+                        + MainApp.gs(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U\n"
+                        + MainApp.gs(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U\n";
                 OKDialog.show(getActivity(), MainApp.gs(R.string.iob), iobtext1, null);
             });
         } else if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-                    + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                    + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+                    + MainApp.gs(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                    + MainApp.gs(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
             iobView.setText(iobtext);
         } else {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("

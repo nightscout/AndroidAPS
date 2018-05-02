@@ -122,21 +122,21 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     if (profile == null)
                         return;
 
-                    String confirmMessage = getString(R.string.setbasalquestion);
+                    String confirmMessage = MainApp.gs(R.string.setbasalquestion);
                     if (setAsPercent) {
                         int basalPercentInput = SafeParse.stringToInt(basalPercent.getText());
                         percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(basalPercentInput), profile).value();
                         confirmMessage += "\n" + percent + "% ";
-                        confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
+                        confirmMessage += "\n" + MainApp.gs(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (percent != basalPercentInput)
-                            confirmMessage += "\n" + getString(R.string.constraintapllied);
+                            confirmMessage += "\n" + MainApp.gs(R.string.constraintapllied);
                     } else {
                         Double basalAbsoluteInput = SafeParse.stringToDouble(basalAbsolute.getText());
                         absolute = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(basalAbsoluteInput), profile).value();
                         confirmMessage += "\n" + absolute + " U/h ";
-                        confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
+                        confirmMessage += "\n" + MainApp.gs(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (absolute - basalAbsoluteInput != 0d)
-                            confirmMessage += "\n" + getString(R.string.constraintapllied);
+                            confirmMessage += "\n" + MainApp.gs(R.string.constraintapllied);
                     }
 
                     final int finalBasalPercent = percent;
