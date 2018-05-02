@@ -309,7 +309,7 @@ public class NSClientService extends Service {
             MainApp.bus().post(new EventNSClientNewLog("ERROR", "Write treatment permission not granted !!!!"));
         }
         if (!hasWriteAuth) {
-            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.sResources.getString(R.string.nowritepermission), Notification.URGENT);
+            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.gs(R.string.nowritepermission), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(noperm));
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));

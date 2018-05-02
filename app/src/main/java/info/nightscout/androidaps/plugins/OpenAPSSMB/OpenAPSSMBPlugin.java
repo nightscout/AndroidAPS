@@ -255,9 +255,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit);
             newvalue = Math.min(newvalue, highLimit);
-            String msg = String.format(MainApp.sResources.getString(R.string.valueoutofrange), valueName);
+            String msg = String.format(MainApp.gs(R.string.valueoutofrange), valueName);
             msg += ".\n";
-            msg += String.format(MainApp.sResources.getString(R.string.valuelimitedto), value, newvalue);
+            msg += String.format(MainApp.gs(R.string.valuelimitedto), value, newvalue);
             log.error(msg);
             NSUpload.uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
