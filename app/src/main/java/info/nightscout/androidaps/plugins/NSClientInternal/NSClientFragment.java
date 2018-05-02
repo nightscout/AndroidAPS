@@ -110,7 +110,7 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
                 final Context context = getContext();
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
+                builder.setTitle(MainApp.gs(R.string.confirmation));
                 builder.setMessage("Clear queue? All data in queue will be lost!");
                 builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
