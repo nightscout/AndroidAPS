@@ -496,7 +496,7 @@ public class NSUpload {
             try {
                 data.put("eventType", "Note");
                 data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
+                data.put("notes", MainApp.gs(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

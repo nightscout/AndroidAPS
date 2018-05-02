@@ -287,7 +287,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        ToastUtils.showToastInUiThread(context, MainApp.sResources.getString(R.string.noprofileselected));
+        ToastUtils.showToastInUiThread(context, MainApp.gs(R.string.noprofileselected));
         okButton.setVisibility(View.GONE);
     }
 
@@ -317,9 +317,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                        builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
                         builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                         builder.show();
                         return;
                     }
@@ -332,7 +332,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     final String finalNotes = notesEdit.getText().toString();
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
+                    builder.setTitle(MainApp.gs(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -356,7 +356,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                                     i.putExtra("soundid", R.raw.boluserror);
                                                     i.putExtra("status", result.comment);
-                                                    i.putExtra("title", MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                                                    i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
                                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     MainApp.instance().startActivity(i);
                                                 }
@@ -382,7 +382,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                                     i.putExtra("soundid", R.raw.boluserror);
                                                     i.putExtra("status", result.comment);
-                                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     MainApp.instance().startActivity(i);
                                                 }
@@ -412,14 +412,14 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
 
         if (profile == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
             dismiss();
             return;
         }
 
         ArrayList<CharSequence> profileList;
         profileList = profileStore.getProfileList();
-        profileList.add(0, MainApp.sResources.getString(R.string.active));
+        profileList.add(0, MainApp.gs(R.string.active));
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_centered, profileList);
 
@@ -458,7 +458,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
         Profile specificProfile;
-        if (selectedAlternativeProfile.equals(MainApp.sResources.getString(R.string.active)))
+        if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active)))
             specificProfile = MainApp.getConfigBuilder().getProfile();
         else
             specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);

@@ -81,7 +81,7 @@ public class CommandQueue {
     private QueueThread thread = null;
 
     private PumpEnactResult executingNowError() {
-        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
+        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.executingrightnow));
     }
 
     public boolean isRunning(Command.CommandType type) {
@@ -314,10 +314,10 @@ public class CommandQueue {
         }
 
         if (!MainApp.isEngineeringModeOrRelease()) {
-            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
+            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.gs(R.string.not_eng_mode_or_release), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             if (callback != null)
-                callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.not_eng_mode_or_release))).run();
+                callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
             return false;
         }
 
@@ -327,10 +327,10 @@ public class CommandQueue {
 
         for (Profile.BasalValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
-                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
+                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
-                    callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.basalvaluebelowminimum))).run();
+                    callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
                 return false;
             }
         }

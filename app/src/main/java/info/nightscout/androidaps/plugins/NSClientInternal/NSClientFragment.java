@@ -165,7 +165,7 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
                     urlTextView.setText(NSClientPlugin.getPlugin().url());
-                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
+                    Spanned queuetext = Html.fromHtml(MainApp.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
                     queueTextView.setText(queuetext);
                     statusTextView.setText(NSClientPlugin.getPlugin().status);
                 }
