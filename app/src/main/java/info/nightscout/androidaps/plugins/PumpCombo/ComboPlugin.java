@@ -458,7 +458,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 log.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult().success(false).enacted(false)
                         .bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(MainApp.instance().getString(R.string.danar_invalidinput));
+                        .comment(MainApp.gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -474,7 +474,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
                 return new PumpEnactResult().success(true).enacted(true)
                         .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
-                        .comment(MainApp.instance().getString(R.string.virtualpump_resultok));
+                        .comment(MainApp.gs(R.string.virtualpump_resultok));
             }
         } finally {
             MainApp.bus().post(new EventComboPumpUpdateGUI());

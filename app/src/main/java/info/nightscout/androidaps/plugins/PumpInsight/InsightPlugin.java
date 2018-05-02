@@ -395,7 +395,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.enacted = result.bolusDelivered > 0 || result.carbsDelivered > 0;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
 
         result.percent = 100;
 
@@ -796,7 +796,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     private String gs(int id) {
-        return MainApp.instance().getString(id);
+        return MainApp.gs(id);
     }
 
     private boolean isPumpRunning() {

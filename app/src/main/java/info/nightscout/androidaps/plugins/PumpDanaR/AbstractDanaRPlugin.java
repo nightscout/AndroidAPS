@@ -166,7 +166,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             result.isTempCancel = false;
             result.enacted = false;
             result.success = false;
-            result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+            result.comment = MainApp.gs(R.string.danar_invalidinput);
             log.error("setTempBasalPercent: Invalid input");
             return result;
         }
@@ -178,7 +178,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
@@ -191,7 +191,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
@@ -202,7 +202,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
         result.enacted = false;
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.tempbasaldeliveryerror);
+        result.comment = MainApp.gs(R.string.tempbasaldeliveryerror);
         log.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }
@@ -219,7 +219,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
             result.success = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.duration = pump.extendedBolusRemainingMinutes;
             result.absolute = pump.extendedBolusAbsoluteRate;
             result.isPercent = false;
@@ -232,7 +232,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         if (connectionOK && pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = true;
             result.success = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.isTempCancel = false;
             result.duration = pump.extendedBolusRemainingMinutes;
             result.absolute = pump.extendedBolusAbsoluteRate;
@@ -245,7 +245,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
         result.enacted = false;
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+        result.comment = MainApp.gs(R.string.danar_valuenotsetproperly);
         log.error("setExtendedBolus: Failed to extended bolus");
         return result;
     }
@@ -261,13 +261,13 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
         if (!pump.isExtendedInProgress) {
             result.success = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("cancelExtendedBolus: OK");
             return result;
         } else {
             result.success = false;
-            result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+            result.comment = MainApp.gs(R.string.danar_valuenotsetproperly);
             log.error("cancelExtendedBolus: Failed to cancel extended bolus");
             return result;
         }

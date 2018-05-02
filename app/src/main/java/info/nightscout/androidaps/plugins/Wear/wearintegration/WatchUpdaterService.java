@@ -578,7 +578,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (googleApiClient.isConnected()) {
             Profile profile = MainApp.getConfigBuilder().getProfile();
-            String status = MainApp.instance().getString(R.string.noprofile);
+            String status = MainApp.gs(R.string.noprofile);
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
