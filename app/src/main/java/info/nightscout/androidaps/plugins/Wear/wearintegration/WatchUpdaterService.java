@@ -477,7 +477,8 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if (!predArray.isEmpty()) {
                 for (BgReading bg : predArray) {
-                    predictions.add(predictionMap(bg.date, bg.value));
+                    if (bg.value < 40) continue;
+                    predictions.add(predictionMap(bg.date, bg.value, bg.getPredectionColor()));
                 }
             }
         }
@@ -520,10 +521,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         return dm;
     }
 
-    private DataMap predictionMap(long timestamp, double sgv) {
+    private DataMap predictionMap(long timestamp, double sgv, int color) {
         DataMap dm = new DataMap();
         dm.putLong("timestamp", timestamp);
         dm.putDouble("sgv", sgv);
+        dm.putInt("color", color);
         return dm;
     }
 

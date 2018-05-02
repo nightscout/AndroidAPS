@@ -10,7 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.data.BasalWatchData;
@@ -173,13 +175,12 @@ public class BgGraphBuilder {
             }
         }
 
+        addPredictionLines(lines);
         lines.add(basalLine((float) minChart, factor, highlight));
         lines.add(bolusLine((float) minChart));
         lines.add(bolusInvalidLine((float) minChart));
         lines.add(carbsLine((float) minChart));
         lines.add(smbLine((float) minChart));
-        lines.add(predictionLine());
-
 
         return lines;
     }
@@ -275,28 +276,29 @@ public class BgGraphBuilder {
     }
 
 
-    private Line predictionLine() {
-
-        List<PointValue> pointValues = new ArrayList<PointValue>();
-
+    private void addPredictionLines(List<Line> lines) {
+        Map<Integer, List<PointValue>> values = new HashMap<>();
         long endTime = getPredictionEndTime();
-        for (BgWatchData bwd: predictionsList) {
-            if(bwd.timestamp <= endTime) {
-                pointValues.add(new PointValue(fuzz(bwd.timestamp), (float) bwd.sgv));
+        for (BgWatchData bwd : predictionsList) {
+            if (bwd.timestamp <= endTime) {
+                double value = bwd.sgv < 300 ? bwd.sgv : 300;
+                if (!values.containsKey(bwd.color)) {
+                    values.put(bwd.color, new ArrayList<>());
+                }
+                values.get(bwd.color).add(new PointValue(fuzz(bwd.timestamp), (float) value));
             }
         }
-        Line line = new Line(pointValues);
-        line.setColor(Color.MAGENTA);
-        line.setHasLines(false);
-        int size = pointSize/2;
-        size = (size>0)?size:1;
-        line.setPointRadius(size);
-        line.setHasPoints(true);
-        return line;
+        for (Map.Entry<Integer, List<PointValue>> entry : values.entrySet()) {
+            Line line = new Line(entry.getValue());
+            line.setColor(entry.getKey());
+            line.setHasLines(false);
+            int size = pointSize / 2;
+            size = (size > 0) ? size : 1;
+            line.setPointRadius(size);
+            line.setHasPoints(true);
+            lines.add(line);
+        }
     }
-
-
-
 
     public Line highValuesLine() {
         Line highValuesLine = new Line(highValues);
