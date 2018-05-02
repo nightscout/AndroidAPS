@@ -131,9 +131,9 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                 switch (v.getId()) {
                     case R.id.profileswitch_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(profileSwitch.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(profileSwitch.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = profileSwitch._id;
                                 if (NSUpload.isIdValid(_id)) {
@@ -144,7 +144,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                                 MainApp.getDbHelper().delete(profileSwitch);
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                     case R.id.profileswitch_date:
