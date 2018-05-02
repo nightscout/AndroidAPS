@@ -38,6 +38,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -590,7 +591,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
                 iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
                 iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-                cobString = CobInfo.generateCOBString();
+                cobString = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService").generateCOBString();
                 currentBasal = generateBasalString(treatmentsInterface);
 
                 //bgi
