@@ -465,7 +465,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
         for (Treatment treatment : treatments) {
-            if (treatment.date > startTimeWindow) {
+            if (treatment.isValid && treatment.date > startTimeWindow) {
                 boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
             }
 
