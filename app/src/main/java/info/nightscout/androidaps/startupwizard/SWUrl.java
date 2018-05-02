@@ -36,7 +36,7 @@ public class SWUrl extends SWItem {
 
         if(values.get(values.size()-1) != "" && values.get(values.size()-1) != null) {
             EditText editText = new EditText(context);
-            editText.setId(1);
+            editText.setId(View.generateViewId());
             // get the last value in list
             editText.setText(values.get(values.size()-1));
             editText.setInputType(InputType.TYPE_CLASS_TEXT);

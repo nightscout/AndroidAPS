@@ -45,7 +45,7 @@ public class SWString extends SWItem {
 
         if(values.get(values.size()-1) != "" && values.get(values.size()-1) != null) {
             EditText editText = new EditText(context);
-            editText.setId(3);
+            editText.setId(view.generateViewId());
             editText.setText(values.get(values.size()-1));
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setMaxLines(1);
