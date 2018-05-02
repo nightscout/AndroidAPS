@@ -19,7 +19,7 @@ public class CobInfo {
     @NonNull
     public static String generateCOBString() {
 
-        String cobStringResult = "--";
+        String cobStringResult = "--g";
         CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService");
         if (cobInfo.displayCob != null) {
             cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob);
