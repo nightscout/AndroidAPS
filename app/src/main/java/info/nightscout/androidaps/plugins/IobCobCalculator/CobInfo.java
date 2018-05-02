@@ -17,14 +17,12 @@ public class CobInfo {
     }
 
     @NonNull
-    public static String generateCOBString() {
-
+    public String generateCOBString() {
         String cobStringResult = "--g";
-        CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService");
-        if (cobInfo.displayCob != null) {
-            cobStringResult = DecimalFormatter.to0Decimal(cobInfo.displayCob);
-            if (cobInfo.futureCarbs > 0) {
-                cobStringResult += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
+        if (displayCob != null) {
+            cobStringResult = DecimalFormatter.to0Decimal(displayCob);
+            if (futureCarbs > 0) {
+                cobStringResult += "(" + DecimalFormatter.to0Decimal(futureCarbs) + ")";
             }
             cobStringResult += "g";
         }
