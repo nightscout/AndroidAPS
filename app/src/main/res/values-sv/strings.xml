@@ -108,7 +108,6 @@
     <string name="copied_to_clipboard">Kopierat till Urklipp</string>
     <string name="copy_to_clipboard">Kopiera till Urklipp</string>
     <string name="correctionbous">Korr</string>
-    <string name="cs_lang">CZ</string>
     <string name="danar_alarm">alarm</string>
     <string name="danar_basalhour">basal tim</string>
     <string name="danar_bluetooth_status">Bluetoothstatus</string>
@@ -153,7 +152,6 @@
     <string name="danarpump">DanaR</string>
     <string name="danarpump_shortname">Dana</string>
     <string name="days">dagar</string>
-    <string name="de_lang">Tyska</string>
     <string name="deliver_now">Synkronisera nu</string>
     <string name="delta">Delta</string>
     <string name="dev">DEV</string>
@@ -175,7 +173,6 @@
     <string name="duration">Duration</string>
     <string name="eatingsoon">Äta snart</string>
     <string name="edit_base_basal">Ändra grundbasal:</string>
-    <string name="en_lang">English</string>
     <string name="enabled">Startad</string>
     <string name="enableloop">Starta loop</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
@@ -188,7 +185,6 @@
     <string name="error_only_numeric_digits_allowed">Endast siffror tillåtna.</string>
     <string name="error_only_numeric_digits_range_allowed">Endast siffror mellan %1$s - %2$s är tillåtna.</string>
     <string name="error_phone_not_valid">Ogiltigt telefonnummer</string>
-    <string name="es_lang">Spanska</string>
     <string name="executing">Utför</string>
     <string name="export_to">Exportera inställningar till</string>
     <string name="exported">Inställningar exporterade</string>
@@ -210,8 +206,6 @@
     <string name="initializing">Startar...</string>
     <string name="invalidprofile">Ogiltig profil!</string>
     <string name="iob">IOB</string>
-    <string name="it_lang">Italienska</string>
-    <string name="ko_lang">Koreanska</string>
     <string name="language">Språk</string>
     <string name="localprofile">Lokal profil</string>
     <string name="localprofile_shortname">LP</string>
@@ -535,7 +529,6 @@
     <string name="absorption_maxtime_summary">Tid i timmar när alla KH väntas vara absorberade</string>
     <string name="absorption_maxtime_title">Måltids max absorptions tid (h)</string>
     <string name="absorptionsettings_title">Absorptionsinställningar</string>
-    <string name="bg_lang">Bulgariska</string>
     <string name="careportal_pump_label">PUMP</string>
     <string name="careportal_pumpbatterychange">Byte pumpbatteri</string>
     <string name="careportal_sensorage_label">Sensorålder</string>
@@ -544,7 +537,6 @@
     <string name="danar_stats_warning_Message">Kan visa fel om man använder bolus för priming/fyllning!</string>
     <string name="edit_base_ic">Ändra grund-IC:</string>
     <string name="edit_base_isf">Ändra grund-ISF:</string>
-    <string name="el_lang">Grekiska</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="isfmissing">ISF saknas i profilen. Använder standardvärde.</string>
     <string name="lock_screen">Lås skärm</string>
@@ -580,10 +572,6 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="overview_newtempbasal_basalpercent">Basal [%]</string>
     <string name="careportal_newnstreatment_glucosetype">BG-källa</string>
-    <string name="nl_lang">Holländska</string>
-    <string name="ro_lang">Rumänska</string>
-    <string name="ru_lang">Ryska</string>
-    <string name="sv_lang">Svenska</string>
     <string name="danar_totaluploaded">Laddade upp totalt %d värden</string>
     <string name="objectives_7_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB.</string>
     <string name="smscommunicator_remotecommandnotallowed">Otillåtet fjärrkommando</string>
