@@ -120,12 +120,18 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
             // activity
             String activity = plugin.getPump().activity;
-            if (StringUtils.isNotEmpty(activity)) {
+            if (activity != null) {
+                activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(14);
                 activityView.setText(activity);
-            } else {
+            } else if (plugin.isInitialized()){
+                activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(20);
                 activityView.setText("{fa-bed}");
+            } else {
+                activityView.setTextColor(Color.RED);
+                activityView.setTextSize(14);
+                activityView.setText(MainApp.gs(R.string.pump_unreachable));
             }
 
             if (plugin.isInitialized()) {
