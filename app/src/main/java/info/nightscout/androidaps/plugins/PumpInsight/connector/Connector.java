@@ -221,7 +221,7 @@ public class Connector {
 
     public static String getKeepAliveString() {
         if (keepAliveActive()) {
-            return MainApp.instance().getString(R.string.insight_keepalive_format_string,
+            return MainApp.gs(R.string.insight_keepalive_format_string,
                     stayConnectedTime / 1000, Helpers.hourMinuteSecondString(stayConnectedTill));
 
         } else {

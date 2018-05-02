@@ -96,30 +96,26 @@ public class Helpers {
     }
 
     public static String niceTimeScalar(long t) {
-        String unit = gs(R.string.second);
+        String unit = MainApp.gs(R.string.second);
         t = t / 1000;
         if (t > 59) {
-            unit = gs(R.string.minute);
+            unit = MainApp.gs(R.string.minute);
             t = t / 60;
             if (t > 59) {
-                unit = gs(R.string.hour);
+                unit = MainApp.gs(R.string.hour);
                 t = t / 60;
                 if (t > 24) {
-                    unit = gs(R.string.day);
+                    unit = MainApp.gs(R.string.day);
                     t = t / 24;
                     if (t > 28) {
-                        unit = gs(R.string.week);
+                        unit = MainApp.gs(R.string.week);
                         t = t / 7;
                     }
                 }
             }
         }
-        if (t != 1) unit = unit + gs(R.string.time_plural);
+        if (t != 1) unit = unit + MainApp.gs(R.string.time_plural);
         return qs((double) t, 0) + " " + unit;
-    }
-
-    private static String gs(int id) {
-        return MainApp.instance().getString(id);
     }
 
     public static String qs(double x, int digits) {
