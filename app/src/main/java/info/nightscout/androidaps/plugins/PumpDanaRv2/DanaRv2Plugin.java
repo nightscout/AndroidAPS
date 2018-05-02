@@ -174,7 +174,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
-            result.success = connectionOK && detailedBolusInfo.insulin == t.insulin;
+            result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
