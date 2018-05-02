@@ -371,6 +371,10 @@ public class MainApp extends Application {
         return engineeringMode || !devBranch;
     }
 
+    public static boolean isDev() {
+        return devBranch;
+    }
+
     public String getLogDirectory() {
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         return lc.getProperty("EXT_FILES_DIR");
