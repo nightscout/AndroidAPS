@@ -35,23 +35,8 @@ public class ObjectivesFragmentTest {
                 objectiveStartedTime, durationInDays, objectiveAccomplishedTime, requirementsMet, enableFakeValue));
 
         // started
-        // time calculation is false, requirements met is false
+        // time calculation is true, requirements met is true
         objectiveStartedTime = 10;
-        durationInDays = 0;
-        requirementsMet = true;
-        assertEquals(2, fragment.modifyVisibility(currentPosition, prevObjectiveAccomplishedTime,
-                objectiveStartedTime, durationInDays, objectiveAccomplishedTime, requirementsMet, enableFakeValue));
-
-        // started
-        // time calculation is false, requirements met is true
-        objectiveStartedTime = 10;
-        durationInDays = 999999;
-        requirementsMet = true;
-        assertEquals(2, fragment.modifyVisibility(currentPosition, prevObjectiveAccomplishedTime,
-                objectiveStartedTime, durationInDays, objectiveAccomplishedTime, requirementsMet, enableFakeValue));
-
-        // started, after duration, requirements met --> show verify
-        objectiveStartedTime = Long.MAX_VALUE;
         durationInDays = 0;
         requirementsMet = true;
         assertEquals(3, fragment.modifyVisibility(currentPosition, prevObjectiveAccomplishedTime,
