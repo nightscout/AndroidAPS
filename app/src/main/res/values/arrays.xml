@@ -100,4 +100,25 @@
         <item>@string/yes</item>
     </string-array>
 
+    <string-array name="virtualPumpTypes">
+        <item>Generic AAPS</item>
+        <item>Cellnovo</item>
+        <item>Accu-Chek Spirit</item>
+        <item>Accu-Chek Combo</item>
+        <item>Animas Ping</item>
+        <item>Animas Vibe</item>
+        <item>Insulet Omnipod</item>
+        <item>Medtronic 512/712</item>
+        <item>Medtronic 515/715</item>
+        <item>Medtronic 522/722</item>
+        <item>Medtronic 523/723</item>
+        <item>Medtronic 553/753 (Revel)</item>
+        <item>Medtronic 554/754 (Veo)</item>
+        <item>Medtronic 640G</item>
+        <item>Tandem t:slim</item>
+        <item>Tandem t:flex</item>
+        <item>Tandem t:slim G4</item>
+        <item>Tandem t:slim X2</item>
+    </string-array>
+
 </resources>

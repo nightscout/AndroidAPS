@@ -37,4 +37,40 @@ public class PumpDescription {
     public boolean isRefillingCapable = false;
 
     public boolean storesCarbInfo = true;
+
+
+    public void resetSettings()
+    {
+        isBolusCapable = true;
+        bolusStep = 0.1d;
+
+        isExtendedBolusCapable = true;
+        extendedBolusStep = 0.1d;
+        extendedBolusDurationStep = 30;
+        extendedBolusMaxDuration = 12 * 60;
+
+        isTempBasalCapable = true;
+        tempBasalStyle = PERCENT;
+
+        maxTempPercent = 200;
+        tempPercentStep = 10;
+
+        maxTempAbsolute = 10;
+        tempAbsoluteStep = 0.05d;
+
+        tempDurationStep = 60;
+        tempMaxDuration = 12 * 60;
+
+
+        isSetBasalProfileCapable = true;
+        basalStep = 0.01d;
+        basalMinimumRate = 0.04d;
+
+        isRefillingCapable = false;
+
+        storesCarbInfo = true;
+
+    }
+
+
 }
