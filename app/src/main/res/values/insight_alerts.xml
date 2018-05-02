@@ -4,8 +4,8 @@
     <string name="alert_w32">Warning W32: Battery low</string>
     <string name="alert_w33">Warning W33: Invalid time/date</string>
     <string name="alert_w34">Warning W34: End of warranty</string>
-    <string name="alert_w36">Warning W36: TBR cancelled</string>
-    <string name="alert_w38">Warning W38: Bolus canelled</string>
+    <string name="alert_w36">Warning W36: TBR canceled</string>
+    <string name="alert_w38">Warning W38: Bolus canceled</string>
     <string name="alert_w39">Warning W39: Loantime warning</string>
 
     <string name="alert_m20">Maintenance M20: Cartridge not inserted</string>

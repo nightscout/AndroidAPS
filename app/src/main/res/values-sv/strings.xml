@@ -542,5 +542,4 @@
     <string name="nsalarm_urgenthigh">Bråttom hög</string>
     <string name="nsalarm_urgentlow">Bråttom låg</string>
     <string name="nsalarm_urgentstaledata">Bråttom gammal data</string>
-    <string name="app_name">AndroidAPS</string>
 </resources>
