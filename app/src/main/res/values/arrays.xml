@@ -105,5 +105,18 @@
         <item>@string/no</item>
         <item>@string/yes</item>
     </string-array>
-
+    <string-array name="BGSourceArray">
+        <item>@string/xdrip</item>
+        <item>@string/DexcomG5</item>
+        <item>@string/nsclientbg</item>
+        <item>@string/MM640g</item>
+        <item>@string/Glimp</item>
+    </string-array>
+    <string-array name="BGSourceValues" translatable="false">
+        <item>SourceXdripPlugin</item>
+        <item>SourceDexcomG5Plugin</item>
+        <item>SourceNSClientPlugin</item>
+        <item>SourceMM640gPlugin</item>
+        <item>SourceGlimpPlugin</item>
+    </string-array>
 </resources>

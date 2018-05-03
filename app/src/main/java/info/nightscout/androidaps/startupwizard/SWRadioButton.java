@@ -9,8 +9,11 @@ import android.widget.RadioGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.utils.SP;
 
 public class SWRadioButton extends SWItem {
