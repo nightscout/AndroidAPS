@@ -7,7 +7,7 @@
     tools:context=".startupwizard.SetupWizardActivity">
 
     <TextView
-        android:id="@+id/fullscreen_content"
+        android:id="@+id/sw_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
@@ -21,7 +21,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_fields"
+            android:id="@+id/sw_content_fields"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
@@ -30,7 +30,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
+            android:id="@+id/sw_content_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"

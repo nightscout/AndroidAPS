@@ -42,20 +42,18 @@ public class SWPlugin extends SWItem {
 
         ArrayList<PluginBase> pluginsInCategory = MainApp.getSpecificPluginsList(pType);
 
-        for (int row = 0; row < 1; row++) {
-            radioGroup.setOrientation(LinearLayout.VERTICAL);
-            radioGroup.setVisibility(View.VISIBLE);
+        radioGroup.setOrientation(LinearLayout.VERTICAL);
+        radioGroup.setVisibility(View.VISIBLE);
 
-            for (int i = 0; i < pluginsInCategory.size(); i++) {
-                RadioButton rdbtn = new RadioButton(context);
-                PluginBase p = pluginsInCategory.get(i);
-                rdbtn.setId(View.generateViewId());
-                rdbtn.setText(p.getName());
-                if (p.isEnabled(pType))
-                    rdbtn.setChecked(true);
-                rdbtn.setTag(p);
-                radioGroup.addView(rdbtn);
-            }
+        for (int i = 0; i < pluginsInCategory.size(); i++) {
+            RadioButton rdbtn = new RadioButton(context);
+            PluginBase p = pluginsInCategory.get(i);
+            rdbtn.setId(View.generateViewId());
+            rdbtn.setText(p.getName());
+            if (p.isEnabled(pType))
+                rdbtn.setChecked(true);
+            rdbtn.setTag(p);
+            radioGroup.addView(rdbtn);
         }
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {

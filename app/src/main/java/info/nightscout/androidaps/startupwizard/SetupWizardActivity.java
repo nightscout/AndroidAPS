@@ -44,14 +44,14 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWScreen currentScreen = screens.get(currentWizardPage);
 
             //Set screen name
-            screenName = (TextView) findViewById(R.id.fullscreen_content);
+            screenName = (TextView) findViewById(R.id.sw_content);
             screenName.setText(currentScreen.getHeader());
 
             //Generate layout first
-            LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.fullscreen_content_fields));
+            LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.sw_content_fields));
             for (int i = 0; i < currentScreen.items.size(); i++) {
                 SWItem currentItem = currentScreen.items.get(i);
-                currentItem.generateDialog(this.findViewById(R.id.fullscreen_content_fields), layout);
+                currentItem.generateDialog(this.findViewById(R.id.sw_content_fields), layout);
             }
 
             updateButtons();
