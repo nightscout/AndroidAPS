@@ -22,8 +22,9 @@
                 android:layout_gravity="left|center_vertical"
                 android:gravity="center"
                 android:rotation="90"
-                android:text="label"
+                android:text="labelx"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white"
                 android:textSize="25sp" />
 
             <LinearLayout
@@ -53,6 +54,7 @@
                     android:minWidth="50dp"
                     android:padding="10dp"
                     android:text="112"
+                    android:textColor="@color/white"
                     android:textSize="45sp" />
 
                 <ImageView

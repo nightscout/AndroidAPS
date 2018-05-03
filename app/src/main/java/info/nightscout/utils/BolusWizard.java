@@ -1,12 +1,12 @@
 package info.nightscout.utils;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
  * Created by mike on 11.10.2016.
@@ -93,7 +93,7 @@ public class BolusWizard {
 
         // Insulin from IOB
         // IOB calculation
-        TreatmentsInterface treatments = MainApp.getConfigBuilder();
+        TreatmentsInterface treatments = TreatmentsPlugin.getPlugin();
         treatments.updateTotalIOBTreatments();
         IobTotal bolusIob = treatments.getLastCalculationTreatments().round();
         treatments.updateTotalIOBTempBasals();

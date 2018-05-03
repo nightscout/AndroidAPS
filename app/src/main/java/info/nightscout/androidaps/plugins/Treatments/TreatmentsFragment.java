@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -25,6 +24,7 @@ import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtende
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsProfileSwitchFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTemporaryBasalsFragment;
+import info.nightscout.utils.FabricPrivacy;
 
 public class TreatmentsFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
@@ -60,7 +60,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -124,7 +124,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
     @Override
     protected void updateGUI() {
         if (ConfigBuilderPlugin.getActivePump().getPumpDescription().isExtendedBolusCapable
-                || MainApp.getConfigBuilder().getExtendedBolusesFromHistory().size() > 0) {
+                || TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().size() > 0) {
             extendedBolusesTab.setVisibility(View.VISIBLE);
         } else {
             extendedBolusesTab.setVisibility(View.GONE);

@@ -105,9 +105,9 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
                 switch (v.getId()) {
                     case R.id.careportal_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(careportalEvent.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(careportalEvent.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = careportalEvent._id;
                                 if (NSUpload.isIdValid(_id)) {
@@ -118,7 +118,7 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
                                 MainApp.getDbHelper().delete(careportalEvent);
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                 }
@@ -157,16 +157,16 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
         switch (view.getId()) {
             case R.id.careportal_refreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + " ?");
-                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                builder.setTitle(MainApp.gs(R.string.confirmation));
+                builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + " ?");
+                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetCareportalEvents();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     }
                 });
-                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
         }

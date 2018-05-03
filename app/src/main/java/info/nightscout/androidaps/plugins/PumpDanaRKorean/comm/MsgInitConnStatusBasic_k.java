@@ -39,7 +39,7 @@ public class MsgInitConnStatusBasic_k extends MessageBase {
         }
 
         if (pump.isEasyModeEnabled) {
-            Notification notification = new Notification(Notification.EASYMODE_ENABLED, MainApp.sResources.getString(R.string.danar_disableeasymode), Notification.URGENT);
+            Notification notification = new Notification(Notification.EASYMODE_ENABLED, MainApp.gs(R.string.danar_disableeasymode), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EASYMODE_ENABLED));

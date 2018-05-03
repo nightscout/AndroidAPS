@@ -5,45 +5,31 @@ import com.squareup.otto.Bus;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 
 /**
  * Created by adrian on 13.08.2017.
  */
 
-public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterface {
+public abstract class InsulinOrefBasePlugin extends PluginBase implements InsulinInterface {
 
     public static double MIN_DIA = 5;
 
     long lastWarned = 0;
 
-    @Override
-    public int getType() {
-        return INSULIN;
-    }
-
-    @Override
-    public String getNameShort() {
-        return MainApp.sResources.getString(R.string.insulin_shortname);
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
+    public InsulinOrefBasePlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.INSULIN)
+                .fragmentClass(InsulinFragment.class.getName())
+                .pluginName(R.string.fastactinginsulin)
+                .shortName(R.string.insulin_shortname)
+        );
     }
 
     public Bus getBus() {
@@ -53,7 +39,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
     @Override
     public double getDia() {
         double dia = getUserDefinedDia();
-        if(dia >= MIN_DIA){
+        if (dia >= MIN_DIA) {
             return dia;
         } else {
             sendShortDiaNotification(dia);
@@ -62,7 +48,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
     }
 
     void sendShortDiaNotification(double dia) {
-        if((System.currentTimeMillis() - lastWarned) > 60*1000) {
+        if ((System.currentTimeMillis() - lastWarned) > 60 * 1000) {
             lastWarned = System.currentTimeMillis();
             Notification notification = new Notification(Notification.SHORT_DIA, String.format(this.getNotificationPattern(), dia, MIN_DIA), Notification.URGENT);
             this.getBus().post(new EventNewNotification(notification));
@@ -70,7 +56,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
     }
 
     public String getNotificationPattern() {
-        return MainApp.sResources.getString(R.string.dia_too_short);
+        return MainApp.gs(R.string.dia_too_short);
     }
 
     public double getUserDefinedDia() {
@@ -92,7 +78,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
             long bolusTime = treatment.date;
             double t = (time - bolusTime) / 1000d / 60d;
 
-            double td = getDia()*60; //getDIA() always >= MIN_DIA
+            double td = getDia() * 60; //getDIA() always >= MIN_DIA
             double tp = peak;
 
             // force the IOB to 0 if over DIA hours have passed
@@ -109,10 +95,10 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
 
     @Override
     public String getComment() {
-        String comment =  commentStandardText();
+        String comment = commentStandardText();
         double userDia = getUserDefinedDia();
-        if(userDia < MIN_DIA){
-            comment += "\n" + String.format(MainApp.sResources.getString(R.string.dia_too_short), userDia, MIN_DIA);
+        if (userDia < MIN_DIA) {
+            comment += "\n" + String.format(MainApp.gs(R.string.dia_too_short), userDia, MIN_DIA);
         }
         return comment;
     }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.db;
 
+import android.content.res.Resources;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -17,7 +19,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
-import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
@@ -43,7 +44,11 @@ public class BgReading implements DataPointWithLabelInterface {
     @DatabaseField
     public String _id = null; // NS _id
 
-    public boolean isPrediction = false; // true when drawing predictions as bg points
+    public boolean isCOBPrediction = false; // true when drawing predictions as bg points (COB)
+    public boolean isaCOBPrediction = false; // true when drawing predictions as bg points (aCOB)
+    public boolean isIOBPrediction = false; // true when drawing predictions as bg points (IOB)
+    public boolean isUAMPrediction = false; // true when drawing predictions as bg points (UAM)
+    public boolean isZTPrediction = false; // true when drawing predictions as bg points (ZT)
 
     public BgReading() {
     }
@@ -184,13 +189,15 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public PointsWithLabelGraphSeries.Shape getShape() {
-        return PointsWithLabelGraphSeries.Shape.POINT;
+        if (isPrediction())
+            return PointsWithLabelGraphSeries.Shape.PREDICTION;
+        else
+            return PointsWithLabelGraphSeries.Shape.BG;
     }
 
     @Override
     public float getSize() {
-        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
-        return isTablet ? 8 : 5;
+        return 1;
     }
 
     @Override
@@ -205,13 +212,31 @@ public class BgReading implements DataPointWithLabelInterface {
             highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
         int color = MainApp.sResources.getColor(R.color.inrange);
-        if (isPrediction)
-            color = MainApp.sResources.getColor(R.color.prediction);
+        if (isPrediction())
+            return getPredectionColor();
         else if (valueToUnits(units) < lowLine)
             color = MainApp.sResources.getColor(R.color.low);
         else if (valueToUnits(units) > highLine)
             color = MainApp.sResources.getColor(R.color.high);
         return color;
+    }
+
+    public int getPredectionColor() {
+        if (isIOBPrediction)
+            return MainApp.sResources.getColor(R.color.iob);
+        if (isCOBPrediction)
+            return MainApp.sResources.getColor(R.color.cob);
+        if (isaCOBPrediction)
+            return 0x80FFFFFF & MainApp.sResources.getColor(R.color.cob);
+        if (isUAMPrediction)
+            return MainApp.sResources.getColor(R.color.uam);
+        if (isZTPrediction)
+            return MainApp.sResources.getColor(R.color.zt);
+        return R.color.mdtp_white;
+    }
+
+    private boolean isPrediction() {
+        return isaCOBPrediction || isCOBPrediction || isIOBPrediction || isUAMPrediction || isZTPrediction;
     }
 
 }

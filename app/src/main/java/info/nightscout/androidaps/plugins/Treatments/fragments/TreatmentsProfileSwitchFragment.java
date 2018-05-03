@@ -20,11 +20,12 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
@@ -49,9 +50,9 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ProfileSwitchViewHolder> {
 
-        ProfileIntervals<ProfileSwitch> profileSwitchList;
+        List<ProfileSwitch> profileSwitchList;
 
-        RecyclerViewAdapter(ProfileIntervals<ProfileSwitch> profileSwitchList) {
+        RecyclerViewAdapter(List<ProfileSwitch> profileSwitchList) {
             this.profileSwitchList = profileSwitchList;
         }
 
@@ -65,7 +66,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         public void onBindViewHolder(ProfileSwitchViewHolder holder, int position) {
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) return;
-            ProfileSwitch profileSwitch = profileSwitchList.getReversed(position);
+            ProfileSwitch profileSwitch = profileSwitchList.get(position);
             holder.ph.setVisibility(profileSwitch.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(profileSwitch._id) ? View.VISIBLE : View.GONE);
 
@@ -130,9 +131,9 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                 switch (v.getId()) {
                     case R.id.profileswitch_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(profileSwitch.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(profileSwitch.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = profileSwitch._id;
                                 if (NSUpload.isIdValid(_id)) {
@@ -143,12 +144,12 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                                 MainApp.getDbHelper().delete(profileSwitch);
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                     case R.id.profileswitch_date:
                     case R.id.profileswitch_name:
-                        long time = ((ProfileSwitch)v.getTag()).date;
+                        long time = ((ProfileSwitch) v.getTag()).date;
                         ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(time);
                         FragmentManager manager = getFragmentManager();
                         pvd.show(manager, "ProfileViewDialog");
@@ -168,7 +169,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getProfileSwitchesFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false));
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.profileswitch_refreshfromnightscout);
@@ -189,16 +190,16 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         switch (view.getId()) {
             case R.id.profileswitch_refreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + "?");
-                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                builder.setTitle(MainApp.gs(R.string.confirmation));
+                builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?");
+                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetProfileSwitch();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     }
                 });
-                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
         }
@@ -216,7 +217,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getProfileSwitchesFromHistory()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
                 }
             });
     }

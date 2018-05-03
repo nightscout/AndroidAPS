@@ -12,6 +12,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
@@ -24,11 +26,8 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityWeightedAveragePlugin implements PluginBase, SensitivityInterface {
+public class SensitivityWeightedAveragePlugin extends PluginBase implements SensitivityInterface {
     private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
-
-    private boolean fragmentEnabled = true;
-    private boolean fragmentVisible = false;
 
     private static SensitivityWeightedAveragePlugin plugin = null;
 
@@ -38,76 +37,24 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
         return plugin;
     }
 
-    @Override
-    public int getType() {
-        return SENSITIVITY;
+    public SensitivityWeightedAveragePlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.SENSITIVITY)
+                .pluginName(R.string.sensitivityweightedaverage)
+                .shortName(R.string.sensitivity_shortname)
+                .preferencesId(R.xml.pref_absorption_aaps)
+        );
     }
-
-    @Override
-    public String getFragmentClass() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.sResources.getString(R.string.sensitivityweightedaverage);
-    }
-
-    @Override
-    public String getNameShort() {
-        return MainApp.sResources.getString(R.string.sensitivity_shortname);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == SENSITIVITY && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == SENSITIVITY && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return false;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == SENSITIVITY) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == SENSITIVITY) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_absorption_aaps;
-    }
-
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
-        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getAutosensDataTable();
+        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
         String age = SP.getString(R.string.key_age, "");
         int defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(MainApp.sResources.getString(R.string.key_child))) defaultHours = 4;
+        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
+        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 4;
+        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
@@ -116,13 +63,20 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
+        AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             if (Config.logAutosensData)
                 log.debug("No autosens data available");
             return new AutosensResult();
         }
 
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            if (Config.logAutosensData)
+                log.debug("No profile available");
+            return new AutosensResult();
+        }
 
         String pastSensitivity = "";
         int index = 0;
@@ -181,8 +135,6 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             return new AutosensResult();
         }
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-
         double sens = profile.getIsf();
 
         String ratioLimit = "";
@@ -207,8 +159,8 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             log.debug(sensResult);
 
         double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
+        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
+        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
 
         if (ratio != rawRatio) {
             ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;

@@ -11,10 +11,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  * Created by kuchjir on 12/12/2017.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { MainApp.class, GlucoseStatus.class, ConfigBuilderPlugin.class })
+@PrepareForTest( { MainApp.class, GlucoseStatus.class, ConfigBuilderPlugin.class, TreatmentsPlugin.class })
 public class BolusWizardTest {
     private static final double PUMP_BOLUS_STEP = 0.1;
 
@@ -68,12 +68,13 @@ public class BolusWizardTest {
         PowerMockito.mockStatic(GlucoseStatus.class);
         when(GlucoseStatus.getGlucoseStatusData()).thenReturn(null);
 
-        ConfigBuilderPlugin treatment = mock(ConfigBuilderPlugin.class);
+        PowerMockito.mockStatic(TreatmentsPlugin.class);
+        TreatmentsPlugin treatment = mock(TreatmentsPlugin.class);
         IobTotal iobTotalZero = new IobTotal(System.currentTimeMillis());
         when(treatment.getLastCalculationTreatments()).thenReturn(iobTotalZero);
         when(treatment.getLastCalculationTempBasals()).thenReturn(iobTotalZero);
         PowerMockito.mockStatic(MainApp.class);
-        when(MainApp.getConfigBuilder()).thenReturn(treatment);
+        when(TreatmentsPlugin.getPlugin()).thenReturn(treatment);
 
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         PumpInterface pump = MDIPlugin.getPlugin();

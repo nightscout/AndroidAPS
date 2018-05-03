@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.Actions;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,14 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.HistoryBrowseActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.TDDStatsActivity;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -32,6 +33,8 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SingleClickButton;
 
 /**
@@ -52,6 +55,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     SingleClickButton tempBasal;
     SingleClickButton tempBasalCancel;
     SingleClickButton fill;
+    SingleClickButton tddStats;
+    SingleClickButton history;
 
     public ActionsFragment() {
         super();
@@ -71,6 +76,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tempBasal = (SingleClickButton) view.findViewById(R.id.actions_settempbasal);
             tempBasalCancel = (SingleClickButton) view.findViewById(R.id.actions_canceltempbasal);
             fill = (SingleClickButton) view.findViewById(R.id.actions_fill);
+            tddStats = view.findViewById(R.id.actions_tddstats);
+            history = view.findViewById(R.id.actions_historybrowser);
 
             profileSwitch.setOnClickListener(this);
             tempTarget.setOnClickListener(this);
@@ -79,11 +86,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tempBasal.setOnClickListener(this);
             tempBasalCancel.setOnClickListener(this);
             fill.setOnClickListener(this);
+            history.setOnClickListener(this);
+            tddStats.setOnClickListener(this);
 
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -116,9 +125,14 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null) {
-                        tempTarget.setVisibility(View.GONE);
+                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
+                        profileSwitch.setVisibility(View.VISIBLE);
+                    } else {
                         profileSwitch.setVisibility(View.GONE);
+                    }
+
+                    if (MainApp.getConfigBuilder().getProfile() == null) {
+                        tempTarget.setVisibility(View.GONE);
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                         tempBasal.setVisibility(View.GONE);
@@ -126,22 +140,25 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         fill.setVisibility(View.GONE);
                         return;
                     }
+
                     final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-                    if (!pump.getPumpDescription().isSetBasalProfileCapable || !pump.isInitialized() || pump.isSuspended())
+                    final boolean basalprofileEnabled = MainApp.isEngineeringModeOrRelease()
+                            && pump.getPumpDescription().isSetBasalProfileCapable;
+
+                    if (!basalprofileEnabled || !pump.isInitialized() || pump.isSuspended())
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
-
 
                     if (!pump.getPumpDescription().isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses()) {
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                     } else {
-                        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
+                        if (activeExtendedBolus != null) {
                             extendedBolus.setVisibility(View.GONE);
                             extendedBolusCancel.setVisibility(View.VISIBLE);
-                            ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
-                            extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
+                            extendedBolusCancel.setText(MainApp.gs(R.string.cancel) + " " + activeExtendedBolus.toString());
                         } else {
                             extendedBolus.setVisibility(View.VISIBLE);
                             extendedBolusCancel.setVisibility(View.GONE);
@@ -153,11 +170,11 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         tempBasal.setVisibility(View.GONE);
                         tempBasalCancel.setVisibility(View.GONE);
                     } else {
-                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                        final TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+                        if (activeTemp != null) {
                             tempBasal.setVisibility(View.GONE);
                             tempBasalCancel.setVisibility(View.VISIBLE);
-                            final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-                            tempBasalCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + activeTemp.toStringShort());
+                            tempBasalCancel.setText(MainApp.gs(R.string.cancel) + " " + activeTemp.toStringShort());
                         } else {
                             tempBasal.setVisibility(View.VISIBLE);
                             tempBasalCancel.setVisibility(View.GONE);
@@ -173,6 +190,9 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         tempTarget.setVisibility(View.GONE);
                     else
                         tempTarget.setVisibility(View.VISIBLE);
+
+                    if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().supportsTDDs) tddStats.setVisibility(View.GONE);
+                    else tddStats.setVisibility(View.VISIBLE);
                 }
             });
     }
@@ -201,15 +221,15 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 newExtendedDialog.show(manager, "NewExtendedDialog");
                 break;
             case R.id.actions_extendedbolus_cancel:
-                if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
                     ConfigBuilderPlugin.getCommandQueue().cancelExtended(null);
-                    Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
-                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
                     ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
-                    Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
+                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;
             case R.id.actions_settempbasal:
@@ -219,6 +239,12 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             case R.id.actions_fill:
                 FillDialog fillDialog = new FillDialog();
                 fillDialog.show(manager, "FillDialog");
+                break;
+            case R.id.actions_historybrowser:
+                startActivity(new Intent(getContext(), HistoryBrowseActivity.class));
+                break;
+            case R.id.actions_tddstats:
+                startActivity(new Intent(getContext(), TDDStatsActivity.class));
                 break;
         }
     }

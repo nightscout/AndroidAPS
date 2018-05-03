@@ -1,13 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
-import com.squareup.otto.Bus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 
 public class MsgBolusStop extends MessageBase {
@@ -36,10 +34,10 @@ public class MsgBolusStop extends MessageBase {
         stopped = true;
         if (!forced) {
             t.insulin = amount;
-            bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_delivered);
+            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_delivered);
             bolusingEvent.percent = 100;
         } else {
-            bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_stoped);
+            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_stoped);
         }
         MainApp.bus().post(bolusingEvent);
     }

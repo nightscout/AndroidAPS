@@ -124,7 +124,7 @@ public class NSDeviceStatus {
     static DeviceStatusPumpData deviceStatusPumpData = null;
 
     public Spanned getExtendedPumpStatus() {
-        if (deviceStatusPumpData.extended != null)
+        if (deviceStatusPumpData != null && deviceStatusPumpData.extended != null)
             return deviceStatusPumpData.extended;
         return Html.fromHtml("");
     }
