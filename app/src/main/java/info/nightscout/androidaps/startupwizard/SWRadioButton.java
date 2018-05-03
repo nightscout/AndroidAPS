@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.SP;
 
 public class SWRadioButton extends SWItem {
@@ -46,7 +47,7 @@ public class SWRadioButton extends SWItem {
         String[] labels = context.getResources().getStringArray(labelsArray);
         String[] values = context.getResources().getStringArray(valuesArray);
         // Get if there is already value in SP
-        String previousValue = SP.getString(preferenceId, "unset");
+        String previousValue = SP.getString(preferenceId, "none");
 //        log.debug("Value for "+view.getContext().getString(preferenceId)+" is "+previousValue);
         radioGroup = new RadioGroup(context);
         radioGroup.clearCheck();
@@ -66,13 +67,8 @@ public class SWRadioButton extends SWItem {
             }
         }
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                save();
-                MainApp.bus().post(new EventRefreshGui(true));
-            }
-
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            save();
         });
         layout.addView(radioGroup);
 
@@ -92,20 +88,12 @@ public class SWRadioButton extends SWItem {
         }
     }
 
-    public boolean isSomethingChecked() {
-        return this.somethingChecked;
-    }
-
     public void save() {
         if (!getCheckedValue().equals("none")) {
             SP.putString(preferenceId, getCheckedValue());
             MainApp.bus().post(new EventPreferenceChange(preferenceId));
+            MainApp.bus().post(new EventSWUpdate());
         }
     }
-
-    public String preferenceSet() {
-        return SP.getString(preferenceId, "none");
-    }
-
 
 }

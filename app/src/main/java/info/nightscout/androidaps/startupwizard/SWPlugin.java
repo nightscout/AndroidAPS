@@ -17,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 
 public class SWPlugin extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWPlugin.class);
@@ -65,6 +66,7 @@ public class SWPlugin extends SWItem {
             ConfigBuilderFragment.processOnEnabledCategoryChanged(plugin1, pType);
             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
             MainApp.bus().post(new EventConfigBuilderChange());
+            MainApp.bus().post(new EventSWUpdate());
         });
         layout.addView(radioGroup);
     }
