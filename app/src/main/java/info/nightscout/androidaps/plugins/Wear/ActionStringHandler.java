@@ -212,19 +212,16 @@ public class ActionStringHandler {
                 return;
             }
 
-            double cob = 0;
             CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear");
-            if (cobInfo == null && useCOB) {
+            if (useCOB && (cobInfo == null ||  cobInfo.displayCob == null)) {
                 sendError("Unknown COB! BG reading missing or recent app restart?");
                 return;
-            } else {
-                cob = cobInfo.displayCob;
             }
 
             DecimalFormat format = new DecimalFormat("0.00");
             DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, null, carbsAfterConstraints, useCOB?cob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
+            bolusWizard.doCalc(profile, null, carbsAfterConstraints, useCOB?cobInfo.displayCob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
@@ -250,7 +247,7 @@ public class ActionStringHandler {
             rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) + "): ";
             rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U";
             if (useCOB)
-                rMessage += "\nFrom" + formatInt.format(cob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U";
+                rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U";
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U";
             if (useBolusIOB)
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
