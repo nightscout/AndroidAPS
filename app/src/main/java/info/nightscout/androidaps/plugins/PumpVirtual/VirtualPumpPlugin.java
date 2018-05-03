@@ -483,10 +483,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         // reset
         pumpDescription.resetSettings();
 
-        // virtual pump specific (not configurable)
-        pumpDescription.isRefillingCapable = false;
-
-        PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew);
+        PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew, true);
 
         this.pumpType = pumpTypeNew;
 

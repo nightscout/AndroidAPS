@@ -4,7 +4,10 @@ package info.nightscout.androidaps.plugins.PumpCommon.defs;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpCommon.data.DoseSettings;
+
+
 
 /**
  * Created by andy on 02/05/2018.
@@ -18,7 +21,7 @@ public enum PumpType {
             new DoseSettings(0.05f, 30, 8*60, 0.05f), //
             PumpTempBasalType.Percent, //
             new DoseSettings(10,30, 24*60, 0f, 500f), //
-            0.01f, 0.01f, null), //
+            0.01f, 0.01f, null, PumpCapability.VirtualPump), //
 
     // Cellnovo
 
@@ -26,7 +29,7 @@ public enum PumpType {
             new DoseSettings(0.05f, 30,  24*60, 1f, null),
             PumpTempBasalType.Percent,
             new DoseSettings(5,30, 24*60, 0f, 200f), //
-            0.05f, 0.05f, null), //
+            0.05f, 0.05f, null, PumpCapability.VirtualPump), //
 
     // Accu-Chek
 
@@ -34,9 +37,13 @@ public enum PumpType {
             new DoseSettings(0.1f, 15, 12*60, 0.1f), //
             PumpTempBasalType.Percent,
             new DoseSettings(10,  15, 12*60,0f, 500f),  //
-            0.01f, 0.1f, DoseStepSize.ComboBasal), //
+            0.01f, 0.1f, DoseStepSize.ComboBasal, PumpCapability.Bolus_TBR_Basal_Refill_Carb), //
 
-    AccuChekSpirit("Accu-Chek Spirit", AccuChekCombo), //
+    AccuChekSpirit("Accu-Chek Spirit", 0.1f, null, //
+            new DoseSettings(0.1f, 15, 12*60, 0.1f), //
+            PumpTempBasalType.Percent,
+            new DoseSettings(10,  15, 12*60,0f, 500f),  //
+            0.01f, 0.1f, null, PumpCapability.VirtualPump), //
 
 
     // Animas
@@ -44,33 +51,50 @@ public enum PumpType {
             new DoseSettings(0.05f, 30, 12*60, 0.05f), //
             PumpTempBasalType.Percent, //
             new DoseSettings(10, 30, 24*60, 0f, 200f), //
-            0.025f, 5f, 0f, null), //
+            0.025f, 5f, 0f, null, PumpCapability.VirtualPump), //
 
     AnimasPing("Animas Ping", AnimasVibe),
+
+    // Dana
+    DanaR("DanaR", 0.05f, null, //
+            new DoseSettings(0.05f, 30, 8*60, 0.05f), //
+            PumpTempBasalType.Percent, //
+            new DoseSettings(10f, 60, 24*60, 0f, 200f), //
+            0.04f, 0.01f, null, PumpCapability.Bolus_Extended_TBR_Basal_Refill_Carb),
+
+    DanaRKorean("DanaR Korean", 0.05f, null, //
+            new DoseSettings(0.05f, 30, 8*60, 0.05f), //
+            PumpTempBasalType.Percent, //
+            new DoseSettings(10f, 60, 24*60, 0f, 200f), //
+            0.1f, 0.01f, null, PumpCapability.Bolus_Extended_TBR_Basal_Refill_Carb),
+
+    DanaRS("DanaRS", DanaR),
+    DanaRv2("DanaRv2", DanaR),
+
 
     // Insulet
     Insulet_Omnipod("Insulet Omnipod", 0.05f, null, //
             new DoseSettings(0.05f, 30, 8*60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 12*60, 0f, 5.0f), // cannot exceed max basal rate 30u/hr
-            0.05f, 0.05f, null),
+            0.05f, 0.05f, null, PumpCapability.VirtualPump),
 
     // Medtronic
     Minimed_512_712("Medtronic 512/712", 0.05f, null, //
             new DoseSettings(0.05f, 30, 8*60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 24*60, 0f, 35f), //
-            0.05f, 0.05f, null), // TODO
+            0.05f, 0.05f, null, PumpCapability.VirtualPump), // TODO
 
-    Minimed_515_715("Medtronic 515/715", Minimed_512_712), // TODO
-    Minimed_522_722("Medtronic 522/722", Minimed_512_712), // TODO
-    Minimed_523_723("Medtronic 523/723", Minimed_512_712), // TODO
+    Minimed_515_715("Medtronic 515/715", Minimed_512_712),
+    Minimed_522_722("Medtronic 522/722", Minimed_512_712),
+    Minimed_523_723("Medtronic 523/723", Minimed_512_712),
 
     Minimed_553_753_Revel("Medtronic 553/753 (Revel)", 0.05f, null, //
             new DoseSettings(0.05f, 30, 8*60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 24*60, 0f, 35f), //
-            0.025f, 0.025f, DoseStepSize.MedtronicVeoBasal), //
+            0.025f, 0.025f, DoseStepSize.MedtronicVeoBasal, PumpCapability.VirtualPump), //
 
     Minimed_554_754_Veo("Medtronic 554/754 (Veo)", Minimed_553_753_Revel), // TODO
 
@@ -78,14 +102,14 @@ public enum PumpType {
             new DoseSettings(0.05f, 30, 8*60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 24*60, 0f, 35f), //
-            0.025f, 0.025f, DoseStepSize.MedtronicVeoBasal), //
+            0.025f, 0.025f, DoseStepSize.MedtronicVeoBasal, PumpCapability.VirtualPump), //
 
     // Tandem
     TandemTSlim("Tandem t:slim", 0.01f, null, //
             new DoseSettings(0.01f,15, 8*60, 0.4f) ,
             PumpTempBasalType.Percent,
             new DoseSettings(1,15, 8*60, 0f, 250f),  //
-            0.1f, 0.001f, null),
+            0.1f, 0.001f, null, PumpCapability.VirtualPump),
 
     TandemTFlex("Tandem t:flex", TandemTSlim), //
     TandemTSlimG4("Tandem t:slim G4", TandemTSlim), //
@@ -99,9 +123,10 @@ public enum PumpType {
     private PumpTempBasalType pumpTempBasalType;
     private DoseSettings tbrSettings;
     private float baseBasalMinValue; //
-    private float baseBasalMaxValue;
+    private Float baseBasalMaxValue;
     private float baseBasalStep; //
     private DoseStepSize baseBasalSpecialSteps; //
+    private PumpCapability pumpCapability;
 
     private PumpType parent;
     private static Map<String,PumpType> mapByDescription;
@@ -122,27 +147,25 @@ public enum PumpType {
         this.parent = parent;
     }
 
-
-    PumpType(String description, float bolusSize, DoseStepSize specialBolusSize, //
-             DoseSettings extendedBolusSettings, //
-             PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings,  //
-             float baseBasalMinValue, float baseBasalStep, DoseStepSize baseBasalSpecialSteps)
+    PumpType(String description, PumpType parent, PumpCapability pumpCapability)
     {
         this.description = description;
-                this.bolusSize = bolusSize;
-        this.specialBolusSize = specialBolusSize;
-        this.extendedBolusSettings = extendedBolusSettings;
-        this.pumpTempBasalType = pumpTempBasalType;
-        this.tbrSettings = tbrSettings;
-        this.baseBasalMinValue = baseBasalMinValue;
-        this.baseBasalStep = baseBasalStep;
-        this.baseBasalSpecialSteps = baseBasalSpecialSteps;
+        this.parent = parent;
+        this.pumpCapability = pumpCapability;
     }
 
     PumpType(String description, float bolusSize, DoseStepSize specialBolusSize, //
              DoseSettings extendedBolusSettings, //
              PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings,  //
-             float baseBasalMinValue, float baseBasalMaxValue, float baseBasalStep, DoseStepSize baseBasalSpecialSteps)
+             float baseBasalMinValue, float baseBasalStep, DoseStepSize baseBasalSpecialSteps, PumpCapability pumpCapability)
+    {
+        this(description, bolusSize, specialBolusSize, extendedBolusSettings, pumpTempBasalType, tbrSettings, baseBasalMinValue, null, baseBasalStep, baseBasalSpecialSteps, pumpCapability);
+    }
+
+    PumpType(String description, float bolusSize, DoseStepSize specialBolusSize, //
+             DoseSettings extendedBolusSettings, //
+             PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings,  //
+             float baseBasalMinValue, Float baseBasalMaxValue, float baseBasalStep, DoseStepSize baseBasalSpecialSteps, PumpCapability pumpCapability)
     {
         this.description = description;
         this.bolusSize = bolusSize;
@@ -154,6 +177,7 @@ public enum PumpType {
         this.baseBasalMaxValue = baseBasalMaxValue;
         this.baseBasalStep = baseBasalStep;
         this.baseBasalSpecialSteps = baseBasalSpecialSteps;
+        this.pumpCapability = pumpCapability;
     }
 
 
@@ -161,6 +185,13 @@ public enum PumpType {
         return description;
     }
 
+    public PumpCapability getPumpCapability() {
+
+        if (isParentSet())
+            return this.pumpCapability == null ? parent.pumpCapability : pumpCapability;
+        else
+            return this.pumpCapability;
+    }
 
     public float getBolusSize() {
         return isParentSet() ? parent.bolusSize : bolusSize;
@@ -266,6 +297,7 @@ public enum PumpType {
     public boolean hasExtendedBasals() {
         return ((getBaseBasalSpecialSteps() !=null) || (getSpecialBolusSize() != null));
     }
+
 
 
 }
