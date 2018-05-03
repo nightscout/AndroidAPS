@@ -326,6 +326,23 @@ public class ActionStringHandler {
                 }
             }
 
+        } else if ("ecarbs".equals(act[0])) {
+            ////////////////////////////////////////////// ECARBS
+            int carbs = SafeParse.stringToInt(act[1]);
+            int starttime = SafeParse.stringToInt(act[2]);
+            int duration = SafeParse.stringToInt(act[3]);
+            long starttimestamp = System.currentTimeMillis() + starttime*60*1000;
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
+            rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+            rMessage += "\n" + MainApp.gs(R.string.time) + ": " +  DateUtil.timeString(starttimestamp);
+            rMessage += "\n" + MainApp.gs(R.string.duration) + ": " + duration + "h";
+
+
+            if ( (carbsAfterConstraints - carbs != 0)) {
+                rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
+            }
+            rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
+
         } else return;
 
 
