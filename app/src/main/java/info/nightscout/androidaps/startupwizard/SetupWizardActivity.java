@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +42,7 @@ public class SetupWizardActivity extends AppCompatActivity {
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
-    private static final boolean AUTO_HIDE = true;
+    private static final boolean AUTO_HIDE = false;
 
     /**
      * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
@@ -66,7 +69,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     private Button skipButton;
     //logiing
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
-
+    private static SetupWizardActivity mWizardActivity;
     private int currentWizardPage = 0;
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -124,7 +127,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setupwizard);
-
+        mWizardActivity = this;
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
@@ -226,8 +229,8 @@ public class SetupWizardActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        mControlsView.setVisibility(View.GONE);
-        mVisible = false;
+        mControlsView.setVisibility(View.VISIBLE);
+        mVisible = true;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
@@ -281,8 +284,18 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     // Go back to overview
     public void finishSetupWizard(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        // restart app
+        Context context = getApplicationContext();
+        Intent mStartActivity = new Intent(context, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+    }
+
+    public static SetupWizardActivity instance(){
+        return mWizardActivity;
     }
 
 }

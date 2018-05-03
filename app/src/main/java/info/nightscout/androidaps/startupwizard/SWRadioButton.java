@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -11,8 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.utils.SP;
 
@@ -29,6 +32,7 @@ public class SWRadioButton extends SWItem {
     }
 
     public SWRadioButton option(int labels, int values) {
+
         this.labelsArray = labels;
         this.valuesArray = values;
         return this;
@@ -45,8 +49,6 @@ public class SWRadioButton extends SWItem {
     @Override
     public void generateDialog(View view, LinearLayout layout){
         Context context = view.getContext();
-//        LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
-//        layout.removeAllViews();
         String[] labels = context.getResources().getStringArray(labelsArray);
         String[] values = context.getResources().getStringArray(valuesArray);
         // Get if there is already value in SP
@@ -74,6 +76,7 @@ public class SWRadioButton extends SWItem {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 save();
+                MainApp.bus().post(new EventRefreshGui(true));
             }
 
         });

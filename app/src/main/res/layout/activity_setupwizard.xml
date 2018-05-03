@@ -44,6 +44,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/black_overlay"
             android:orientation="horizontal"
+            android:visibility="visible"
             tools:ignore="UselessParent">
 
             <Button
@@ -66,14 +67,14 @@
                 android:visibility="invisible" />
 
             <Button
-            android:id="@+id/next_button"
-            style="?metaButtonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="showNextPage"
-            android:text="@string/setupwizard_next"
-            android:visibility="gone" />
+                android:id="@+id/next_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="showNextPage"
+                android:text="@string/setupwizard_next"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/finish_button"

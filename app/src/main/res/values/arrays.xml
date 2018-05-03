@@ -119,4 +119,24 @@
         <item>SourceMM640gPlugin</item>
         <item>SourceGlimpPlugin</item>
     </string-array>
+    <string-array name="insulinArray">
+        <item>@string/fastactinginsulincomment</item>
+        <item>@string/ultrafastactinginsulincomment</item>
+        <item>@string/free_peak_oref</item>
+    </string-array>
+    <string-array name="insulinValues" translatable="false">
+        <item>InsulinOrefRapidActingPlugin</item>
+        <item>InsulinOrefUltraRapidActingPlugin</item>
+        <item>InsulinOrefFreePeakPlugin</item>
+    </string-array>
+    <string-array name="apsArray">
+        <item>@string/openapsma</item>
+        <item>@string/openapsama</item>
+        <item>@string/openapssmb</item>
+    </string-array>
+    <string-array name="apsValues" translatable="false">
+        <item>OpenAPSMAPlugin</item>
+        <item>OpenAPSAMAPlugin</item>
+        <item>OpenAPSSMBPlugin</item>
+    </string-array>
 </resources>
