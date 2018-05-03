@@ -861,6 +861,10 @@
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
+    <string name="virtualpump_type">Virtual Pump Type</string>
+    <string name="virtualpump_definition">Pump Definition</string>
+    <string name="virtualpump_pump_def">Bolus: Step=%s\nExtended Bolus: [Step=%s, Duration=%smin-%sh]\nBasal: Step=%s\nTBR: %s (by %s), Duration=%smin-%sh\nEXTENDED_NOTE</string>
+    <string name="virtualpump_pump_def_extended_note">* Ranged basal/bolus values are not supported by Virtual Pump.</string>
 
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump">Operation not supported by pump.</string>

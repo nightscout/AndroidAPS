@@ -26,6 +26,8 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
@@ -50,6 +52,9 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     private static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
     private PumpDescription pumpDescription = new PumpDescription();
+
+    PumpType pumpType = null;
+
 
     private static void loadFakingStatus() {
         fromNSAreCommingFakedExtendedBoluses = SP.getBoolean("fromNSAreCommingFakedExtendedBoluses", false);
@@ -458,6 +463,30 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public String shortStatus(boolean veryShort) {
         return "Virtual Pump";
+    }
+
+    public PumpType getPumpType()
+    {
+        return pumpType;
+    }
+
+
+    public void refreshConfiguration()
+    {
+        String pumptype = SP.getString("virtualpump_type", "Generic AAPS");
+
+        PumpType pumpTypeNew = PumpType.getByDescription(pumptype);
+
+        if (pumpType == pumpTypeNew)
+            return;
+
+        // reset
+        pumpDescription.resetSettings();
+
+        PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew, true);
+
+        this.pumpType = pumpTypeNew;
+
     }
 
 }

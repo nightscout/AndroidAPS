@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 
 public class VirtualPumpFragment extends SubscriberFragment {
@@ -29,6 +30,9 @@ public class VirtualPumpFragment extends SubscriberFragment {
     TextView extendedBolusView;
     TextView batteryView;
     TextView reservoirView;
+    TextView pumpTypeView;
+    TextView pumpSettingsView;
+
 
     private static Handler sLoopHandler = new Handler();
     private static Runnable sRefreshLoop = null;
@@ -58,6 +62,8 @@ public class VirtualPumpFragment extends SubscriberFragment {
             extendedBolusView = (TextView) view.findViewById(R.id.virtualpump_extendedbolus);
             batteryView = (TextView) view.findViewById(R.id.virtualpump_battery);
             reservoirView = (TextView) view.findViewById(R.id.virtualpump_reservoir);
+            pumpTypeView = (TextView) view.findViewById(R.id.virtualpump_type);
+            pumpSettingsView = (TextView) view.findViewById(R.id.virtualpump_type_def);
 
             return view;
         } catch (Exception e) {
@@ -93,6 +99,20 @@ public class VirtualPumpFragment extends SubscriberFragment {
                     }
                     batteryView.setText(virtualPump.batteryPercent + "%");
                     reservoirView.setText(virtualPump.reservoirInUnits + "U");
+
+                    virtualPump.refreshConfiguration();
+
+                    PumpType pumpType = virtualPump.getPumpType();
+
+                    pumpTypeView.setText(pumpType.getDescription());
+
+                    String template = MainApp.gs(R.string.virtualpump_pump_def);
+
+                    template = template.replace("EXTENDED_NOTE", pumpType.hasExtendedBasals() ? //
+                            MainApp.gs(R.string.virtualpump_pump_def_extended_note) : "");
+
+                    pumpSettingsView.setText(pumpType.getFullDescription(template));
+
                 }
             });
     }
