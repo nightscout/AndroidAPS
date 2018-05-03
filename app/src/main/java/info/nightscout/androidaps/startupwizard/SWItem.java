@@ -22,7 +22,8 @@ public class SWItem {
         NUMBER,
         DECIMALNUMBER,
         CHECKBOX,
-        RADIOBUTTON
+        RADIOBUTTON,
+        PLUGIN
     }
 
     Type type;
