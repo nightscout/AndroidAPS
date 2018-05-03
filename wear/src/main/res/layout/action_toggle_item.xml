@@ -10,14 +10,16 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center">
+
         <TextView
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:text="label"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:gravity="center"/>
+            android:textColor="@color/white" />
         <ImageView
             android:id="@+id/togglebutton"
             android:layout_width="wrap_content"

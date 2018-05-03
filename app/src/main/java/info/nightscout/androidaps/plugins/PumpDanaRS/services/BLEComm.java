@@ -278,16 +278,17 @@ public class BLEComm {
     }
 
     public void writeCharacteristic_NO_RESPONSE(final BluetoothGattCharacteristic characteristic, final byte[] data) {
-        if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-            log.debug("BluetoothAdapter not initialized_ERROR");
-            isConnecting = false;
-            isConnected = false;
-            return;
-        }
-
         new Thread(new Runnable() {
             public void run() {
                 SystemClock.sleep(WRITE_DELAY_MILLIS);
+
+                if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
+                    log.debug("BluetoothAdapter not initialized_ERROR");
+                    isConnecting = false;
+                    isConnected = false;
+                    return;
+                }
+
                 characteristic.setValue(data);
                 characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
                 log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
@@ -432,7 +433,7 @@ public class BLEComm {
                                     if (inputBuffer.length == 4 && inputBuffer[2] == 'O' && inputBuffer[3] == 'K') {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         // Grab pairing key from preferences if exists
-                                        String pairingKey = SP.getString(MainApp.sResources.getString(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, null);
+                                        String pairingKey = SP.getString(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, null);
                                         log.debug("Using stored pairing key: " + pairingKey);
                                         if (pairingKey != null) {
                                             byte[] encodedPairingKey = DanaRS_Packet.hexToBytes(pairingKey);
@@ -447,11 +448,11 @@ public class BLEComm {
                                     } else if (inputBuffer.length == 6 && inputBuffer[2] == 'B' && inputBuffer[3] == 'U' && inputBuffer[4] == 'S' && inputBuffer[5] == 'Y') {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.sResources.getString(R.string.pumpbusy)));
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
                                     } else {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.sResources.getString(R.string.connectionerror)));
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
                                     }
                                     break;
                                 // 2nd packet, pairing key
@@ -479,7 +480,7 @@ public class BLEComm {
                                     SendTimeInfo();
                                     byte[] pairingKey = {inputBuffer[2], inputBuffer[3]};
                                     // store pairing key to preferences
-                                    SP.putString(MainApp.sResources.getString(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey));
+                                    SP.putString(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey));
                                     log.debug("Got pairing key: " + DanaRS_Packet.bytesToHex(pairingKey));
                                     break;
                                 // time and user password information. last packet in handshake

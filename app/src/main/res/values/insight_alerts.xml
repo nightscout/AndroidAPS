@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_w31">Warning W31: Cartridge low</string>
+    <string name="alert_w32">Warning W32: Battery low</string>
+    <string name="alert_w33">Warning W33: Invalid time/date</string>
+    <string name="alert_w34">Warning W34: End of warranty</string>
+    <string name="alert_w36">Warning W36: TBR canceled</string>
+    <string name="alert_w38">Warning W38: Bolus canceled</string>
+    <string name="alert_w39">Warning W39: Loantime warning</string>
+
+    <string name="alert_m20">Maintenance M20: Cartridge not inserted</string>
+    <string name="alert_m21">Maintenance M21: Cartridge empty</string>
+    <string name="alert_m22">Maintenance M22: Battery empty</string>
+    <string name="alert_m23">Maintenance M23: Automatic off</string>
+    <string name="alert_m24">Maintenance M24: Occlusion</string>
+    <string name="alert_m25">Maintenance M25: Loantime over - end of operation</string>
+    <string name="alert_m26">Maintenance M26: Cartridge change not completed</string>
+    <string name="alert_m27">Maintenance M27: Data download failed</string>
+    <string name="alert_m28">Maintenance M28: Pause mode timeout</string>
+    <string name="alert_m29">Maintenance M29: Battery type not set</string>
+    <string name="alert_m30">Maintenance M30: Cartridge type not set</string>
+
+    <string name="alert_e6">Error E6: Mechanical error</string>
+    <string name="alert_e7">Error E7: Electronic error</string>
+    <string name="alert_e10">Error E10: Rewind error</string>
+    <string name="alert_e13">Error E13: Language error</string>
+</resources>

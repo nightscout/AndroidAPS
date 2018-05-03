@@ -28,17 +28,16 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.gms.wearable.DataMap;
-import com.ustwo.clockwise.wearable.WatchFace;
 import com.ustwo.clockwise.common.WatchFaceTime;
+import com.ustwo.clockwise.wearable.WatchFace;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 
@@ -77,9 +76,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     private String direction = "";
     private String delta = "";
     private String avgDelta = "";
-    public TreeSet<BgWatchData> bgDataList = new TreeSet<BgWatchData>();
+    public TreeSet<BgWatchData> bgDataList = new TreeSet<>();
 
-    private View layoutView;
     private int specW;
     private int specH;
     private View myLayout;
@@ -151,7 +149,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
         // prepare fields
 
-        TextView textView = null;
+        TextView textView;
         mSgv = (TextView) myLayout.findViewById(R.id.sgvString);
         textView = (TextView) myLayout.findViewById(R.id.sgvString);
         if (sharedPrefs.getBoolean("showBG", true)) {
@@ -298,10 +296,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         removePaint.setAntiAlias(true);
         removePaint.setColor(getBackgroundColor());
 
-        ;
-
-        rect = new RectF(PADDING, PADDING, (float) (displaySize.x - PADDING), (float) (displaySize.y - PADDING));
-        rectDelete = new RectF(PADDING - CIRCLE_WIDTH / 2, PADDING - CIRCLE_WIDTH / 2, (float) (displaySize.x - PADDING + CIRCLE_WIDTH / 2), (float) (displaySize.y - PADDING + CIRCLE_WIDTH / 2));
+        rect = new RectF(PADDING, PADDING, displaySize.x - PADDING, displaySize.y - PADDING);
+        rectDelete = new RectF(PADDING - CIRCLE_WIDTH / 2, PADDING - CIRCLE_WIDTH / 2, displaySize.x - PADDING + CIRCLE_WIDTH / 2, displaySize.y - PADDING + CIRCLE_WIDTH / 2);
         overlapping = ALWAYS_HIGHLIGT_SMALL || areOverlapping(angleSMALL, angleSMALL + SMALL_HAND_WIDTH + NEAR, angleBig, angleBig + BIG_HAND_WIDTH + NEAR);
         Log.d("CircleWatchface", "end prepareDrawTime");
 
@@ -577,7 +573,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             double high = dataMap.getDouble("high");
             double low = dataMap.getDouble("low");
             long timestamp = dataMap.getLong("timestamp");
-            bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
+            int color = dataMap.getInt("color", 0);
+            bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
         } else if (!sharedPrefs.getBoolean("animation", false)) {
             // don't load history at once if animations are set (less resource consumption)
             Log.d("addToWatchSet", "entries.size(): " + entries.size());
@@ -587,7 +584,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 double high = entry.getDouble("high");
                 double low = entry.getDouble("low");
                 long timestamp = entry.getLong("timestamp");
-                bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
+                int color = entry.getInt("color", 0);
+                bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
             }
         } else
 

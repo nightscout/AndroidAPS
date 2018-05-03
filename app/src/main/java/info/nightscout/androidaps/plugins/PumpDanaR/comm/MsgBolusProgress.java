@@ -1,16 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
-import com.squareup.otto.Bus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 
 public class MsgBolusProgress extends MessageBase {
@@ -40,7 +36,7 @@ public class MsgBolusProgress extends MessageBase {
         Double done = (amount * 100 - progress) / 100d;
         t.insulin = done;
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), done);
+        bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), done);
         bolusingEvent.t = t;
         bolusingEvent.percent = Math.min((int) (done / amount * 100), 100);
 

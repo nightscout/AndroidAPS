@@ -10,33 +10,60 @@ import info.nightscout.androidaps.Config;
 public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
     private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_APS_Basal_Set_Temporary_Basal.class);
 
-    private int temporaryBasalRatio;
-    private int temporaryBasalDuration;
+    int temporaryBasalRatio;
+    int temporaryBasalDuration;
     public int error;
 
-    public DanaRS_Packet_APS_Basal_Set_Temporary_Basal() {
+    final int PARAM30MIN = 160;
+    final int PARAM15MIN = 150;
+
+    DanaRS_Packet_APS_Basal_Set_Temporary_Basal() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL;
     }
 
     public DanaRS_Packet_APS_Basal_Set_Temporary_Basal(int percent) {
         this();
+        setParams(percent);
+    }
 
+    protected void setParams(int percent) {
         //HARDCODED LIMITS
         if (percent < 0) percent = 0;
         if (percent > 500) percent = 500;
 
         temporaryBasalRatio = percent;
         if (percent < 100) {
-            temporaryBasalDuration = 160;
+            temporaryBasalDuration = PARAM30MIN;
             if (Config.logDanaMessageDetail)
                 log.debug("APS Temp basal start percent: " + percent + " duration 30 min");
         } else {
-            temporaryBasalDuration = 150;
+            temporaryBasalDuration = PARAM15MIN;
             if (Config.logDanaMessageDetail)
                 log.debug("APS Temp basal start percent: " + percent + " duration 15 min");
         }
+    }
 
+    public DanaRS_Packet_APS_Basal_Set_Temporary_Basal(int percent, boolean fifteenMinutes, boolean thirtyMinutes ) {
+        this();
+        setParams(percent, fifteenMinutes, thirtyMinutes);
+    }
+
+    protected void setParams(int percent, boolean fifteenMinutes, boolean thirtyMinutes) {
+        //HARDCODED LIMITS
+        if (percent < 0) percent = 0;
+        if (percent > 500) percent = 500;
+
+        temporaryBasalRatio = percent;
+        if (thirtyMinutes && percent <= 200) { // 30 min is allowed up to 200%
+            temporaryBasalDuration = PARAM30MIN;
+            if (Config.logDanaMessageDetail)
+                log.debug("APS Temp basal start percent: " + percent + " duration 30 min");
+        } else {
+            temporaryBasalDuration = PARAM15MIN;
+            if (Config.logDanaMessageDetail)
+                log.debug("APS Temp basal start percent: " + percent + " duration 15 min");
+        }
     }
 
     @Override
@@ -55,6 +82,7 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
             failed = true;
             log.error("Set APS temp basal start result: " + result + " FAILED!!!");
         } else {
+            failed = false;
             if (Config.logDanaMessageDetail)
                 log.debug("Set APS temp basal start result: " + result);
         }

@@ -14,15 +14,20 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 
@@ -40,13 +45,9 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     public DanaRKoreanPlugin() {
+        super();
         log = LoggerFactory.getLogger(DanaRKoreanPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
-
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
@@ -72,7 +73,27 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
         pumpDescription.isRefillingCapable = true;
 
-        pumpDescription.storesCarbInfo = true;
+        pumpDescription.storesCarbInfo = false;
+
+        pumpDescription.supportsTDDs = true;
+        pumpDescription.needsManualTDDLoad = true;
+    }
+
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        MainApp.bus().register(this);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(mConnection);
+
+        MainApp.bus().unregister(this);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -97,11 +118,11 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange s) {
-        if (isEnabled(PUMP)) {
+        if (isEnabled(PluginType.PUMP)) {
             boolean previousValue = useExtendedBoluses;
             useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 
-            if (useExtendedBoluses != previousValue && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+            if (useExtendedBoluses != previousValue && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();
             }
         }
@@ -110,7 +131,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     // Plugin base interface
     @Override
     public String getName() {
-        return MainApp.instance().getString(R.string.danarkoreanpump);
+        return MainApp.gs(R.string.danarkoreanpump);
     }
 
     @Override
@@ -131,29 +152,33 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
+            t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
             PumpEnactResult result = new PumpEnactResult();
-            result.success = connectionOK;
+            result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            if (!result.success)
+                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, MsgBolusStart.errorCode);
+            else
+                result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
             detailedBolusInfo.insulin = t.insulin;
             detailedBolusInfo.date = System.currentTimeMillis();
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();
             result.success = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
-            result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+            result.comment = MainApp.gs(R.string.danar_invalidinput);
             log.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -161,7 +186,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
@@ -170,23 +195,26 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
         PumpEnactResult result = new PumpEnactResult();
 
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        absoluteRate = configBuilderPlugin.applyBasalConstraints(absoluteRate);
+        absoluteRate = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         final boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate();
         final boolean doHighTemp = absoluteRate > getBaseBasalRate() && !useExtendedBoluses;
         final boolean doExtendedTemp = absoluteRate > getBaseBasalRate() && useExtendedBoluses;
 
+        long now = System.currentTimeMillis();
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(now);
+        ExtendedBolus activeExtended = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(now);
+
         if (doTempOff) {
             // If extended in progress
-            if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
+            if (activeExtended != null && useExtendedBoluses) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping extended bolus (doTempOff)");
                 return cancelExtendedBolus();
             }
             // If temp in progress
-            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+            if (activeTemp != null) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelRealTempBasal();
@@ -212,7 +240,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                 log.debug("setTempBasalAbsolute: Calculated percent rate: " + percentRate);
 
             // If extended in progress
-            if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
+            if (activeExtended != null && useExtendedBoluses) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)");
                 result = cancelExtendedBolus();
@@ -222,20 +250,18 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                 }
             }
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+            if (activeTemp != null) {
                 // Correct basal already set ?
-                TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
                 if (Config.logPumpActions)
-                    log.debug("setTempBasalAbsolute: currently running: " + running.toString());
-                if (running.percentRate == percentRate) {
+                    log.debug("setTempBasalAbsolute: currently running: " + activeTemp.toString());
+                if (activeTemp.percentRate == percentRate) {
                     if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
                         result.success = true;
                         result.percent = percentRate;
-                        result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
                         result.enacted = false;
-                        result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
+                        result.duration = activeTemp.getPlannedRemainingMinutes();
                         result.isPercent = true;
                         result.isTempCancel = false;
                         if (Config.logPumpActions)
@@ -247,11 +273,11 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            return setTempBasalPercent(percentRate, durationInMinutes, false);
+            return setTempBasalPercent(percentRate, durationInMinutes, profile, false);
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+            if (activeTemp != null) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doExtendedTemp)");
                 result = cancelRealTempBasal();
@@ -266,18 +292,18 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             Integer durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
-            extendedRateToSet = configBuilderPlugin.applyBasalConstraints(extendedRateToSet);
+            extendedRateToSet = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
             extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
             if (Config.logPumpActions) {
-                log.debug("setTempBasalAbsolute: Extended bolus in progress: " + MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
+                log.debug("setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
                 log.debug("setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
             }
 
             // Compare with extended rate in progress
-            if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && Math.abs(pump.extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
+            if (activeExtended != null && Math.abs(pump.extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
                 // correct extended already set
                 result.success = true;
                 result.absolute = pump.extendedBolusAbsoluteRate;
@@ -313,23 +339,22 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
-        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
+        if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
-        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
-            PumpEnactResult cancelEx = cancelExtendedBolus();
-            return cancelEx;
+        if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
+            return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = false;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         result.isTempCancel = true;
         return result;
     }
 
     public PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;
@@ -338,13 +363,13 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         if (!pump.isTempBasalInProgress) {
             result.success = true;
             result.isTempCancel = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("cancelRealTempBasal: OK");
             return result;
         } else {
             result.success = false;
-            result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+            result.comment = MainApp.gs(R.string.danar_valuenotsetproperly);
             result.isTempCancel = true;
             log.error("cancelRealTempBasal: Failed to cancel temp basal");
             return result;

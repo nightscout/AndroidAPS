@@ -9,24 +9,25 @@ import android.graphics.Color;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.Round;
 
 /**
@@ -91,6 +92,16 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         pumpId = t.pumpId;
     }
 
+    public static ExtendedBolus createFromJson(JSONObject json) {
+        ExtendedBolus extendedBolus = new ExtendedBolus();
+        extendedBolus.source = Source.NIGHTSCOUT;
+        extendedBolus.date = JsonHelper.safeGetLong(json, "mills");
+        extendedBolus.durationInMinutes = JsonHelper.safeGetInt(json, "duration");
+        extendedBolus.insulin = JsonHelper.safeGetDouble(json, "relative") / 60 * extendedBolus.durationInMinutes;
+        extendedBolus._id = JsonHelper.safeGetString(json, "_id");
+        extendedBolus.pumpId = JsonHelper.safeGetLong(json, "pumpId");
+        return extendedBolus;
+    }
     // -------- Interval interface ---------
 
     Long cuttedEnd = null;
@@ -285,4 +296,5 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     public int getColor() {
         return Color.CYAN;
     }
+
 }

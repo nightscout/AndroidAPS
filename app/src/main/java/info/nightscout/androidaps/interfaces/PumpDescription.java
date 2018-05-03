@@ -27,6 +27,8 @@ public class PumpDescription {
     public double tempAbsoluteStep = 0.05d;
 
     public int tempDurationStep = 60;
+    public boolean tempDurationStep15mAllowed = false;
+    public boolean tempDurationStep30mAllowed = false;
     public int tempMaxDuration = 12 * 60;
 
 
@@ -37,4 +39,9 @@ public class PumpDescription {
     public boolean isRefillingCapable = false;
 
     public boolean storesCarbInfo = true;
+
+    public boolean is30minBasalRatesCapable = false;
+
+    public boolean supportsTDDs = false;
+    public boolean needsManualTDDLoad = true;
 }
