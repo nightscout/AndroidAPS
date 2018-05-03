@@ -1035,11 +1035,13 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
-    <string name="wear_wizard_settings">Wizard settings</string>
+    <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
     <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
     <string translatable="false" name="key_wearwizard_cob">wearwizard_cob</string>
     <string translatable="false" name="key_wearwizard_bolusiob">wearwizard_bolusiob</string>
     <string translatable="false" name="key_wearwizard_basaliob">wearwizard_basaliob</string>
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
+    <string name="wear_display_settings">Display Settings</string>
+    <string name="wear_general_settings">General Settings</string>
 </resources>
