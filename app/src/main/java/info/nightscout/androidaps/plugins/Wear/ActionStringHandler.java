@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.content.Intent;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -19,6 +21,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -35,6 +38,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -51,6 +55,8 @@ import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
+
+import static info.nightscout.utils.DateUtil.now;
 
 /**
  * Created by adrian on 09/02/17.
@@ -608,11 +614,63 @@ public class ActionStringHandler {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
             setCPP(timeshift, percentage);
+        }  else if ("ecarbs".equals(act[0])) {
+            int carbs = SafeParse.stringToInt(act[1]);
+            long starttime = SafeParse.stringToLong(act[2]);
+            int duration = SafeParse.stringToInt(act[3]);
+
+            doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         }
         lastBolusWizard = null;
     }
+
+    private static void doECarbs(int carbs, long time, int duration) {
+        if (carbs > 0) {
+            if (duration == 0) {
+                createCarb(carbs, time, "watch");
+            } else {
+                long remainingCarbs = carbs;
+                int ticks = (duration * 4); //duration guaranteed to be integer greater zero
+                for (int i = 0; i < ticks; i++){
+                    long carbTime = time + i * 15 * 60 * 1000;
+                    long smallCarbAmount = Math.round((1d * remainingCarbs) / (ticks-i));  //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
+                    remainingCarbs -= smallCarbAmount;
+                    if (smallCarbAmount > 0)
+                        createCarb(smallCarbAmount, carbTime, "watch eCarbs");
+                }
+            }
+        }
+    }
+
+    private static void createCarb(long carbs, long time, @Nullable String notes) {
+        DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+        carbInfo.date = time;
+        carbInfo.eventType = CareportalEvent.CARBCORRECTION;
+        carbInfo.carbs = carbs;
+        carbInfo.context = MainApp.instance();
+        carbInfo.source = Source.USER;
+        carbInfo.notes = notes;
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
+            ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("status", result.comment);
+                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainApp.instance().startActivity(i);
+                    }
+                }
+            });
+        } else {
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo);
+        }
+    }
+
 
     private static void setCPP(int timeshift, int percentage) {
 
