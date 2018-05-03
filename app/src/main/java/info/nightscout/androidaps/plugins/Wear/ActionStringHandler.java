@@ -192,12 +192,12 @@ public class ActionStringHandler {
                 return;
             }
 
-            boolean useBG = Boolean.parseBoolean(act[2]);
-            boolean useBolusIOB = Boolean.parseBoolean(act[3]);
-            boolean useBasalIOB = Boolean.parseBoolean(act[4]);
+            boolean useBG = true;
+            boolean useBolusIOB = true;
+            boolean useBasalIOB = true;
             boolean useCOB = true;
             boolean useTrend = true;
-            int percentage = Integer.parseInt(act[5]);
+            int percentage = Integer.parseInt(act[2]);
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) {
