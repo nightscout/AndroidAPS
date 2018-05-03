@@ -184,7 +184,7 @@ public class WizardActivity extends ViewSelectorActivity {
 
                         if (editPercentage != null) percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
 
-                        String actionstring = "wizard " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
+                        String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + useBG
                                 + " " + includeBolusIOB
                                 + " " + includeBasalIOB

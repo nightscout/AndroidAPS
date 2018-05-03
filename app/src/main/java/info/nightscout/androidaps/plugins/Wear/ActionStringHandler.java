@@ -180,6 +180,9 @@ public class ActionStringHandler {
             }
 
         } else if ("wizard".equals(act[0])) {
+            sendError("Update APP on Watch!");
+            return;
+        } else if ("wizard2".equals(act[0])) {
             ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbsBeforeConstraints)).value();
