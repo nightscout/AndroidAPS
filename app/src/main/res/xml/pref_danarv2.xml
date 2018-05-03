@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory
-        android:key="danar"
         android:title="@string/danar_pump_settings">
 
         <info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference
@@ -12,7 +12,7 @@
         <EditTextPreference
             android:inputType="numberPassword"
             android:key="@string/key_danar_password"
-            android:title="@string/danar_password_title"></EditTextPreference>
+            android:title="@string/danar_password_title" />
 
         <ListPreference
             android:defaultValue="0"
@@ -20,6 +20,20 @@
             android:entryValues="@array/danaSpeedValues"
             android:key="@string/key_danars_bolusspeed"
             android:title="@string/bolusspeed" />
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <PreferenceCategory android:title="@string/bluetooth">
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_btwatchdog"
+                    android:summary="@string/btwatchdog_summary"
+                    android:title="@string/btwatchdog_title" />
+
+            </PreferenceCategory>
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
 

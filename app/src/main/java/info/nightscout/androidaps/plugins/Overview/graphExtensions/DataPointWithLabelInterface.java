@@ -55,5 +55,4 @@ public interface DataPointWithLabelInterface extends DataPointInterface{
     PointsWithLabelGraphSeries.Shape getShape();
     float getSize();
     int getColor();
-    int getSecondColor();
 }

@@ -17,7 +17,7 @@ public class LiveHistory {
 
     public static String getStatus() {
         if (status.equals("")) return status;
-        return status + " " + Helpers.niceTimeScalar(Helpers.msSince(status_time)) + " " + gs(R.string.ago);
+        return status + " " + Helpers.niceTimeScalar(Helpers.msSince(status_time)) + " " + MainApp.gs(R.string.ago);
     }
 
     public static long getStatusTime() {
@@ -29,9 +29,5 @@ public class LiveHistory {
             status_time = eventtime;
             status = mystatus;
         }
-    }
-
-    private static String gs(int id) {
-        return MainApp.instance().getString(id);
     }
 }

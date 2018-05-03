@@ -63,7 +63,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "1.60d-dev"
+        version "1.60e-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -209,7 +209,7 @@ dependencies {
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
     }
-    implementation("io.socket:socket.io-client:0.8.3") {
+    implementation("io.socket:socket.io-client:1.0.0") {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }

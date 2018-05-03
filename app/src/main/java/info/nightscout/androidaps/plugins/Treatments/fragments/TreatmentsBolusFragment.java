@@ -81,7 +81,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
-            holder.mealOrCorrection.setText(t.isSMB ? "SMB" : t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
+            holder.mealOrCorrection.setText(t.isSMB ? "SMB" : t.mealBolus ? MainApp.gs(R.string.mealbolus) : MainApp.gs(R.string.correctionbous));
             holder.ph.setVisibility(t.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(t._id) ? View.VISIBLE : View.GONE);
             holder.invalid.setVisibility(t.isValid ? View.GONE : View.VISIBLE);
@@ -142,9 +142,9 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 switch (v.getId()) {
                     case R.id.treatments_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(treatment.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(treatment.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = treatment._id;
                                 if (treatment.source == Source.PUMP) {
@@ -162,7 +162,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                                 FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                 }
@@ -204,16 +204,16 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + "?");
-                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                builder.setTitle(MainApp.gs(R.string.confirmation));
+                builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?");
+                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         TreatmentsPlugin.getPlugin().getService().resetTreatments();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     }
                 });
-                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
         }

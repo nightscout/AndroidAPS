@@ -37,12 +37,12 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
@@ -213,7 +213,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
                 final DataMap dataMap = dataMapSingleBG(lastBG, glucoseStatus);
                 if (dataMap == null) {
-                    ToastUtils.showToastInUiThread(this, getString(R.string.noprofile));
+                    ToastUtils.showToastInUiThread(this, MainApp.gs(R.string.noprofile));
                     return;
                 }
 
@@ -330,7 +330,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
             if (entries == null) {
-                ToastUtils.showToastInUiThread(this, getString(R.string.noprofile));
+                ToastUtils.showToastInUiThread(this, MainApp.gs(R.string.noprofile));
                 return;
             }
             final ArrayList<DataMap> dataMaps = new ArrayList<>(graph_bgs.size());
@@ -477,7 +477,8 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if (!predArray.isEmpty()) {
                 for (BgReading bg : predArray) {
-                    predictions.add(predictionMap(bg.date, bg.value));
+                    if (bg.value < 40) continue;
+                    predictions.add(predictionMap(bg.date, bg.value, bg.getPredectionColor()));
                 }
             }
         }
@@ -520,10 +521,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         return dm;
     }
 
-    private DataMap predictionMap(long timestamp, double sgv) {
+    private DataMap predictionMap(long timestamp, double sgv, int color) {
         DataMap dm = new DataMap();
         dm.putLong("timestamp", timestamp);
         dm.putDouble("sgv", sgv);
+        dm.putInt("color", color);
         return dm;
     }
 
@@ -579,7 +581,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (googleApiClient.isConnected()) {
             Profile profile = MainApp.getConfigBuilder().getProfile();
-            String status = MainApp.instance().getString(R.string.noprofile);
+            String status = MainApp.gs(R.string.noprofile);
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
@@ -591,7 +593,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
                 iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
                 iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-                cobString = generateCOBString();
+                cobString = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService").generateCOBString();
                 currentBasal = generateBasalString(treatmentsInterface);
 
                 //bgi
@@ -662,14 +664,14 @@ public class WatchUpdaterService extends WearableListenerService implements
         String status = "";
 
         if (profile == null) {
-            status = MainApp.sResources.getString(R.string.noprofile);
+            status = MainApp.gs(R.string.noprofile);
             return status;
         }
 
         LoopPlugin activeloop = LoopPlugin.getPlugin();
 
         if (!activeloop.isEnabled(PluginType.LOOP)) {
-            status += getString(R.string.disabledloop) + "\n";
+            status += MainApp.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else {
             lastLoopStatus = true;
@@ -712,17 +714,6 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
         }
         return basalStringResult;
-    }
-
-    @NonNull
-    private String generateCOBString() {
-
-        String cobStringResult = "--";
-        AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("WatcherUpdaterService");
-        if (autosensData != null) {
-            cobStringResult = (int) autosensData.cob + "g";
-        }
-        return cobStringResult;
     }
 
     @Override

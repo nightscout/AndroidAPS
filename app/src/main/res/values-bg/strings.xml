@@ -578,7 +578,6 @@
     <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="careportal_activity_label">АКТИВНОСТ И ОБРАТНА ВРЪЗКА</string>
     <string name="careportal_carbsandbolus_label">ХРАНА И БОЛУС</string>

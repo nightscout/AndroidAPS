@@ -358,7 +358,6 @@
     <string name="error_phone_not_valid">Número de teléfono inválido</string>
     <string name="waitingforpump">Esperando bomba</string>
     <string name="it_lang">Italian</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="nl_lang">hollandes</string>
     <string name="el_lang">Griego</string>
     <string name="ru_lang">Ruso</string>
@@ -474,9 +473,9 @@
     <string name="adult">Adulto</string>
     <string name="patientage_summary">Por favor elige edad del paciente para emplear limites de seguridad</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Aparato parece no soportar optimisacion de bateria whitelisting!</string>
+    <string name="batteryoptimalizationerror">Aparato parece no soportar optimizacion de bateria whitelisting!</string>
     <string name="pleaseallowpermission">Por favor permita Permission</string>
-    <string name="needwhitelisting" formatted="false">%s necesita optimisacion de bateria whitelisting para funcionar bien</string>
+    <string name="needwhitelisting" formatted="false">%s necesita optimizacion de bateria whitelisting para funcionar bien</string>
     <string name="loopsuspended">Loop desactivado</string>
     <string name="loopsuspendedfor" formatted="false">desactivado (%d m)</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
@@ -518,8 +517,8 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">agregar BGI a status line</string>
-    <string name="ns_noupload">No upload to NS</string>
-    <string name="ns_noupload_summary">Todos los datos mandados a NS son borrados. AAPS esta conectado to NS pero no hay cambios en NS</string>
+    <string name="ns_noupload">datos no mandados a NS</string>
+    <string name="ns_noupload_summary">Todos los datos mandados a NS son borrados. AAPS esta conectado a NS pero no hay cambios en NS</string>
     <string name="basal_step">Nivel base</string>
     <string name="bolus_step">Nivel bolo</string>
     <string name="extendedbolus">Bolo prolongado</string>
@@ -564,7 +563,7 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Pantalle proteccion</string>
+    <string name="lock_screen">Pantalla proteccion</string>
     <string name="lock_screen_short">Cierre</string>
     <string name="sensitivity_warning">Al activar autosens recuerda editar todos carbohidratos comidos. Si no, sensividad será calculada incorrectamente !!!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
@@ -577,7 +576,7 @@
     <string name="careportal_activity_label">ACTIVITY Y FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">CARBS Y BOLUS</string>
     <string name="careportal_cgm_label">CGM Y OPENAPS</string>
-    <string name="careportal_pump_label">PUMP</string>
+    <string name="careportal_pump_label">BOMBA</string>
     <string name="overview_newtempbasal_basalabsolute">Valor base [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duracion [min]</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
@@ -593,13 +592,13 @@
     <string name="pairingok">Coneccion OK</string>
     <string name="pairingtimedout">Coneccion fuera de tiempo</string>
     <string name="pairing">CONECTANDO</string>
-    <string name="danars_nodeviceavailable">aparato no enconrado</string>
+    <string name="danars_nodeviceavailable">aparato no encontrado</string>
     <string name="emptyreservoir">Deposito vacio</string>
     <string name="bloodsugarmeasurementalert">Alerta de control de BG</string>
     <string name="remaininsulinalert">Insulina restante en deposito</string>
     <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="selectedpump">Bomba sleccionada</string>
+    <string name="selectedpump">Bomba seleccionada</string>
     <string name="pairpump">Conectar bomba nueva</string>
     <string name="bolusspeed">Velocidad bolo</string>
     <string name="danar_setbasalstep001">Poner paso base a 0.01 U/h</string>
@@ -615,7 +614,7 @@
     <string name="gettingextendedbolusstatus">recibiendo estado de bolo prolongado</string>
     <string name="gettingbolusstatus">recibiendo estado bolo</string>
     <string name="gettingtempbasalstatus">recibiendo estado bolo temporal</string>
-    <string name="gettingpumpsettings">recibiendo ah´justes bomba</string>
+    <string name="gettingpumpsettings">recibiendo ajustes bomba</string>
     <string name="gettingpumptime">recibiendo hora bomba</string>
     <string name="reuse">usar otra vez</string>
     <string name="wearcontrol_title">Control desde reloj</string>
@@ -629,9 +628,9 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grasa</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend" formatted="false">Esperande terminar bolo. Faltan %d seg.</string>
+    <string name="waitingforestimatedbolusend" formatted="false">Esperando terminar bolo. Faltan %d seg.</string>
     <string name="processinghistory">Processando</string>
-    <string name="startingbolus">"Iniciando emisioin bolo "</string>
+    <string name="startingbolus">"Iniciando emision bolo "</string>
     <string name="executingrightnow">Orden se esta efectuando en este momento</string>
     <string name="pumpdrivercorrected">control de la bomba corigido</string>
     <string name="pump_unreachable">bomba no alcanzable</string>
@@ -703,7 +702,7 @@
     <string name="combo_notification_check_time_date">Se necesita actualizar reloj de la bomba</string>
     <string name="combo_warning">Alerta</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR cancelada, advertencia acceptada</string>
-    <string name="combo_error_no_bolus_delivered">Emision del bolo fallado. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automaticamente.</string>
+    <string name="combo_error_no_bolus_delivered">Emision del bolo fallada. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automaticamente.</string>
     <string name="combo_error_partial_bolus_delivered" formatted="false">"Solo %.2f U del bolo mandado de %.2f U ha sido emitido por causa de un error. Por favorn controla la bomba para confirmar y toma acciones apropiadas. "</string>
     <string name="combo_error_bolus_verification_failed">"Fallo de emitir bolo y de controlar historical de la bomba.Por favor controla manualmente y crea un record en Careportal si el bolo ha sido emitido. "</string>
     <string name="combo_error_bolus_recovery_progress">Reestablecido coneccion fallada.</string>

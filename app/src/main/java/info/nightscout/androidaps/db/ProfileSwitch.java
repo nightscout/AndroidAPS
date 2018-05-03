@@ -263,11 +263,6 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return Color.CYAN;
     }
 
-    @Override
-    public int getSecondColor() {
-        return 0;
-    }
-
     public String toString() {
         return "ProfileSwitch{" +
                 "date=" + date +

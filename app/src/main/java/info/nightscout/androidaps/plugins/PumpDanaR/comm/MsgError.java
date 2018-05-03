@@ -25,19 +25,19 @@ public class MsgError extends MessageBase {
             case 1:
             case 2:
             case 3: // Pump error
-                errorString = MainApp.sResources.getString(R.string.pumperror) + " " + errorCode;
+                errorString = MainApp.gs(R.string.pumperror) + " " + errorCode;
                 break;
             case 4: // Shutdown
-                errorString = MainApp.sResources.getString(R.string.pumpshutdown);
+                errorString = MainApp.gs(R.string.pumpshutdown);
                 break;
             case 5: // Occlusion
-                errorString = MainApp.sResources.getString(R.string.occlusion);
+                errorString = MainApp.gs(R.string.occlusion);
                 break;
             case 7: // Low Battery
-                errorString = MainApp.sResources.getString(R.string.lowbattery);
+                errorString = MainApp.gs(R.string.lowbattery);
                 break;
             case 8: // Battery 0%
-                errorString = MainApp.sResources.getString(R.string.batterydischarged);
+                errorString = MainApp.gs(R.string.batterydischarged);
                 break;
         }
 

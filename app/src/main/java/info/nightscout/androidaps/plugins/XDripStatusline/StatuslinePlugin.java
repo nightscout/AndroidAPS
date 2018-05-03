@@ -25,6 +25,8 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -111,7 +113,7 @@ public class StatuslinePlugin extends PluginBase {
         LoopPlugin loopPlugin = LoopPlugin.getPlugin();
 
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-            status += ctx.getString(R.string.disabledloop) + "\n";
+            status += MainApp.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
             lastLoopStatus = true;
@@ -130,7 +132,7 @@ public class StatuslinePlugin extends PluginBase {
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)+"U";
 
 
         if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {
@@ -146,6 +148,7 @@ public class StatuslinePlugin extends PluginBase {
         double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
 
         status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
+        status += " " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "StatuslinePlugin").generateCOBString();
 
         return status;
     }

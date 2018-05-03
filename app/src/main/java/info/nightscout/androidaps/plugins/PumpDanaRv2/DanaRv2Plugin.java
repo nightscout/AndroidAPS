@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -119,7 +120,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     // Plugin base interface
     @Override
     public String getName() {
-        return MainApp.instance().getString(R.string.danarv2pump);
+        return MainApp.gs(R.string.danarv2pump);
     }
 
     @Override
@@ -173,10 +174,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
-            result.success = connectionOK;
+            result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            if (!result.success)
+                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, MsgBolusStartWithSpeed.errorCode);
+            else
+                result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
             // remove carbs because it's get from history seprately
@@ -186,7 +190,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.success = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
-            result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+            result.comment = MainApp.gs(R.string.danar_invalidinput);
             log.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -287,7 +291,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.isTempCancel = false;
             result.enacted = false;
             result.success = false;
-            result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+            result.comment = MainApp.gs(R.string.danar_invalidinput);
             log.error("setTempBasalPercent: Invalid input");
             return result;
         }
@@ -299,7 +303,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
@@ -317,7 +321,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
@@ -328,7 +332,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         }
         result.enacted = false;
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.tempbasaldeliveryerror);
+        result.comment = MainApp.gs(R.string.tempbasaldeliveryerror);
         log.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }
@@ -339,7 +343,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
@@ -350,7 +354,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         }
         result.enacted = false;
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+        result.comment = MainApp.gs(R.string.danar_valuenotsetproperly);
         log.error("setHighTempBasalPercent: Failed to set temp basal");
         return result;
     }
@@ -367,13 +371,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (!pump.isTempBasalInProgress) {
             result.success = true;
             result.isTempCancel = true;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("cancelRealTempBasal: OK");
             return result;
         } else {
             result.success = false;
-            result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+            result.comment = MainApp.gs(R.string.danar_valuenotsetproperly);
             result.isTempCancel = true;
             log.error("cancelRealTempBasal: Failed to cancel temp basal");
             return result;

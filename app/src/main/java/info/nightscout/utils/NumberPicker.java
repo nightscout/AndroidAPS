@@ -199,7 +199,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         value += step * multiplier;
         if (value > maxValue) {
             value = maxValue;
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.youareonallowedlimit));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
             stopUpdating();
         }
         updateEditText();
@@ -209,7 +209,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         value -= step * multiplier;
         if (value < minValue) {
             value = minValue;
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.youareonallowedlimit));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
             stopUpdating();
         }
         updateEditText();

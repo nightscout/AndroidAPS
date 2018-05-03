@@ -40,6 +40,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -173,13 +175,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 Iob tIOB = t.iobCalc(time, dia);
                 total.iob += tIOB.iobContrib;
                 total.activity += tIOB.activityContrib;
-                if (t.date > total.lastBolusTime)
+                if (t.insulin > 0 && t.date > total.lastBolusTime)
                     total.lastBolusTime = t.date;
                 if (!t.isSMB) {
                     // instead of dividing the DIA that only worked on the bilinear curves,
                     // multiply the time the treatment is seen active.
                     long timeSinceTreatment = time - t.date;
-                    long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                    long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
                     Iob bIOB = t.iobCalc(snoozeTime, dia);
                     total.bolussnooze += bIOB.iobContrib;
                 }
@@ -211,20 +213,33 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profile == null) return result;
 
         long now = System.currentTimeMillis();
-        long dia_ago = now - (Double.valueOf(1.5d * profile.getDia() * T.hours(1).msecs())).longValue();
+        long dia_ago = now - (Double.valueOf(profile.getDia() * T.hours(1).msecs())).longValue();
+
+        double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
+        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
+        } else {
+            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME);
+        }
+        long absorptionTime_ago = now - (Double.valueOf(maxAbsorptionHours * T.hours(1).msecs())).longValue();
 
         synchronized (treatments) {
             for (Treatment treatment : treatments) {
                 if (!treatment.isValid)
                     continue;
                 long t = treatment.date;
+
                 if (t > dia_ago && t <= now) {
-                    if (treatment.carbs >= 1) {
-                        result.carbs += treatment.carbs;
-                        result.lastCarbTime = t;
-                    }
                     if (treatment.insulin > 0 && treatment.mealBolus) {
                         result.boluses += treatment.insulin;
+                    }
+                }
+
+                if (t > absorptionTime_ago && t <= now) {
+                    if (treatment.carbs >= 1) {
+                        result.carbs += treatment.carbs;
+                        if(t > result.lastCarbTime)
+                            result.lastCarbTime = t;
                     }
                 }
             }
@@ -235,6 +250,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             result.mealCOB = autosensData.cob;
             result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation;
             result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
+            result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact;
         }
         result.lastBolusTime = getLastBolusTime();
         return result;
@@ -268,6 +284,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         long last = 0;
         synchronized (treatments) {
             for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
                 if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now)
                     last = t.date;
             }
@@ -322,12 +340,24 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public IobTotal getCalculationToTimeTempBasals(long time, Profile profile) {
+        return getCalculationToTimeTempBasals(time, profile, false, 0);
+    }
+
+    public IobTotal getCalculationToTimeTempBasals(long time, Profile profile, boolean truncate, long truncateTime) {
         IobTotal total = new IobTotal(time);
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
                 TemporaryBasal t = tempBasals.get(pos);
                 if (t.date > time) continue;
-                IobTotal calc = t.iobCalc(time, profile);
+                IobTotal calc;
+                if(truncate && t.end() > truncateTime){
+                    TemporaryBasal dummyTemp = new TemporaryBasal();
+                    dummyTemp.copyFrom(t);
+                    dummyTemp.cutEndTo(truncateTime);
+                    calc = dummyTemp.iobCalc(time, profile);
+                } else {
+                    calc = t.iobCalc(time, profile);
+                }
                 //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
                 total.plus(calc);
             }
@@ -338,7 +368,15 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
-                    IobTotal calc = e.iobCalc(time);
+                    IobTotal calc;
+                    if(truncate && e.end() > truncateTime){
+                        ExtendedBolus dummyExt = new ExtendedBolus();
+                        dummyExt.copyFrom(e);
+                        dummyExt.cutEndTo(truncateTime);
+                        calc = dummyExt.iobCalc(time);
+                    } else {
+                        calc = e.iobCalc(time);
+                    }
                     totalExt.plus(calc);
                 }
             }

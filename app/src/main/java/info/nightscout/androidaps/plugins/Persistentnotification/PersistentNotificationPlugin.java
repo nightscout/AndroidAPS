@@ -35,6 +35,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -92,7 +94,7 @@ public class PersistentNotificationPlugin extends PluginBase {
             return;
         }
 
-        String line1 = ctx.getString(R.string.noprofile);
+        String line1 = "";
 
         if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !MainApp.getConfigBuilder().isProfileValid("Notificiation"))
             return;
@@ -109,9 +111,11 @@ public class PersistentNotificationPlugin extends PluginBase {
                         + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
             } else {
                 line1 += " " +
-                        ctx.getString(R.string.old_data) +
+                        MainApp.gs(R.string.old_data) +
                         " ";
             }
+        } else {
+            line1 = MainApp.gs(R.string.missed_bg_readings);
         }
 
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
@@ -125,11 +129,9 @@ public class PersistentNotificationPlugin extends PluginBase {
         IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
         IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
-        String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-                + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
 
-
+        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();;
+        
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h";
 
 
@@ -138,6 +140,7 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         builder.setOngoing(true);
+        builder.setOnlyAlertOnce(true);
         builder.setCategory(NotificationCompat.CATEGORY_STATUS);
         builder.setSmallIcon(R.drawable.ic_notification);
         Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.blueowl);

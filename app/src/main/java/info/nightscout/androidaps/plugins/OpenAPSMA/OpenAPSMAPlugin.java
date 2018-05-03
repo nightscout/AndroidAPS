@@ -88,8 +88,8 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
     }
 
     @Override
-    public void invoke(String initiator) {
-        log.debug("invoke from " + initiator);
+    public void invoke(String initiator, boolean tempBasalFallback) {
+        log.debug("invoke from " + initiator + " tempBasalFallback: "  + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterMAJS determineBasalAdapterMAJS = null;
         try {
@@ -104,23 +104,23 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
         if (profile == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.noprofileselected)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
             if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.noprofileselected));
+                log.debug(MainApp.gs(R.string.noprofileselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_disabled)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
             if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_disabled));
+                log.debug(MainApp.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noglucosedata)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
             if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
+                log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
             return;
         }
 

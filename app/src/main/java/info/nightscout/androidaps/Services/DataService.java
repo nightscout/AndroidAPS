@@ -130,7 +130,7 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                if (nsClientEnabled || SP.getBoolean(R.string.ns_autobackfill, true))
+                if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
                     handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
@@ -304,7 +304,7 @@ public class DataService extends IntentService {
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
                 try {
                     if (ConfigBuilderPlugin.nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
-                        Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                        Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
                         MainApp.bus().post(new EventNewNotification(notification));
                     } else {
                         MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
@@ -313,13 +313,13 @@ public class DataService extends IntentService {
                     log.error("Unhandled exception", e);
                 }
                 if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
-                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.NORMAL);
+                    Notification notification = new Notification(Notification.OLD_NS, MainApp.gs(R.string.unsupportednsversion), Notification.NORMAL);
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else {
                     MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));
                 }
             } else {
-                Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
             }
             if (bundles.containsKey("status")) {

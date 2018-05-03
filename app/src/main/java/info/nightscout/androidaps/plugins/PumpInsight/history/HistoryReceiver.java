@@ -47,6 +47,7 @@ public class HistoryReceiver {
         filter.addAction(ACTION_CARTRIDGE_INSERTED);
         filter.addAction(ACTION_BATTERY_INSERTED);
         filter.addAction(ACTION_OCCURENCE_OF_ALERT);
+        filter.addAction(ACTION_PUMP_STATUS_CHANGED);
 
         MainApp.instance().registerReceiver(historyReceiver, filter);
     }
@@ -108,6 +109,9 @@ public class HistoryReceiver {
                     case ACTION_OCCURENCE_OF_ALERT:
                         intentAdapter.processOccurenceOfAlertIntent(intent);
                         break;
+                    case ACTION_PUMP_STATUS_CHANGED:
+                        intentAdapter.processPumpStatusChangedIntent(intent);
+                        break;
                 }
             }
         };
@@ -127,7 +131,7 @@ public class HistoryReceiver {
 
         @Override
         public String toString() {
-            return MainApp.instance().getString(string_id);
+            return MainApp.gs(string_id);
         }
     }
 

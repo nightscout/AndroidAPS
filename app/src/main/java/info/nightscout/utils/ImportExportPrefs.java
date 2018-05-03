@@ -33,7 +33,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 public class ImportExportPrefs {
     private static Logger log = LoggerFactory.getLogger(ImportExportPrefs.class);
     static File path = new File(Environment.getExternalStorageDirectory().toString());
-    static final File file = new File(path, MainApp.sResources.getString(R.string.app_name) + "Preferences");
+    static final File file = new File(path, MainApp.gs(R.string.app_name) + "Preferences");
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -59,7 +59,7 @@ public class ImportExportPrefs {
     public static void exportSharedPreferences(final Activity c) {
 
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.sResources.getString(R.string.export_to) + " " + file + " ?")
+                .setMessage(MainApp.gs(R.string.export_to) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -73,9 +73,9 @@ public class ImportExportPrefs {
                             }
                             pw.close();
                             fw.close();
-                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.exported));
+                            ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.exported));
                         } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
+                            ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.filenotfound) + " " + file);
                             log.error("Unhandled exception", e);
                         } catch (IOException e) {
                             log.error("Unhandled exception", e);
@@ -88,7 +88,7 @@ public class ImportExportPrefs {
 
     public static void importSharedPreferences(final Activity c) {
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.sResources.getString(R.string.import_from) + " " + file + " ?")
+                .setMessage(MainApp.gs(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -113,7 +113,7 @@ public class ImportExportPrefs {
                             }
                             reader.close();
                             editor.commit();
-                            OKDialog.show(c, MainApp.sResources.getString(R.string.setting_imported), MainApp.sResources.getString(R.string.restartingapp), new Runnable() {
+                            OKDialog.show(c, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), new Runnable() {
                                 @Override
                                 public void run() {
                                     log.debug("Exiting");
@@ -126,7 +126,7 @@ public class ImportExportPrefs {
                                 }
                             });
                         } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
+                            ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.filenotfound) + " " + file);
                             log.error("Unhandled exception", e);
                         } catch (IOException e) {
                             log.error("Unhandled exception", e);
