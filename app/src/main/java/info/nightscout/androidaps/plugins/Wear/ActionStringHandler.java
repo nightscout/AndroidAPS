@@ -347,6 +347,10 @@ public class ActionStringHandler {
             if ( (carbsAfterConstraints - carbs != 0)) {
                 rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
             }
+            if(carbsAfterConstraints <= 0){
+                sendError("Carbs = 0! No action taken!");
+                return;
+            }
             rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
 
         } else return;
