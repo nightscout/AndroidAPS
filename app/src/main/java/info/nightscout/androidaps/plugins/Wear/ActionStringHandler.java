@@ -31,6 +31,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -191,6 +192,7 @@ public class ActionStringHandler {
             boolean useBG = Boolean.parseBoolean(act[2]);
             boolean useBolusIOB = Boolean.parseBoolean(act[3]);
             boolean useBasalIOB = Boolean.parseBoolean(act[4]);
+            boolean useCOB = true;
             int percentage = Integer.parseInt(act[5]);
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -205,9 +207,12 @@ public class ActionStringHandler {
                 return;
             }
 
+            double cob = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear").displayCob;
+
             DecimalFormat format = new DecimalFormat("0.00");
+            DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, null, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
+            bolusWizard.doCalc(profile, null, carbsAfterConstraints, useCOB?cob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
@@ -232,6 +237,8 @@ public class ActionStringHandler {
             rMessage += "\n_____________";
             rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) + "): ";
             rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U";
+            if (useCOB)
+                rMessage += "\nFrom" + formatInt.format(cob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U";
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U";
             if (useBolusIOB)
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
