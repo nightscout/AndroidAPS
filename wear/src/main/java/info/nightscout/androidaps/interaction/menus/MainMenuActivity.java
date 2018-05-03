@@ -46,8 +46,8 @@ public class MainMenuActivity extends MenuListActivity {
 
         Vector<String> menuitems = new Vector<String>();
         menuitems.add("TempT");
-        menuitems.add("Bolus");
         if(showWizard) menuitems.add("Wizard");
+        menuitems.add("Bolus");
         menuitems.add("Settings");
         menuitems.add("Status");
         if (showPrimeFill) menuitems.add("Prime/Fill");

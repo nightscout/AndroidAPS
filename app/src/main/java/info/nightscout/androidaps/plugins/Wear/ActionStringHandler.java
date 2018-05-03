@@ -31,6 +31,8 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -179,6 +181,9 @@ public class ActionStringHandler {
             }
 
         } else if ("wizard".equals(act[0])) {
+            sendError("Update APP on Watch!");
+            return;
+        } else if ("wizard2".equals(act[0])) {
             ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbsBeforeConstraints)).value();
@@ -188,10 +193,12 @@ public class ActionStringHandler {
                 return;
             }
 
-            boolean useBG = Boolean.parseBoolean(act[2]);
-            boolean useBolusIOB = Boolean.parseBoolean(act[3]);
-            boolean useBasalIOB = Boolean.parseBoolean(act[4]);
-            int percentage = Integer.parseInt(act[5]);
+            boolean useBG = SP.getBoolean(R.string.key_wearwizard_bg, true);
+            boolean useBolusIOB = SP.getBoolean(R.string.key_wearwizard_bolusiob, true);
+            boolean useBasalIOB = SP.getBoolean(R.string.key_wearwizard_basaliob, true);
+            boolean useCOB = SP.getBoolean(R.string.key_wearwizard_cob, true);
+            boolean useTrend = SP.getBoolean(R.string.key_wearwizard_trend, false);
+            int percentage = Integer.parseInt(act[2]);
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) {
@@ -205,9 +212,16 @@ public class ActionStringHandler {
                 return;
             }
 
+            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear");
+            if (useCOB && (cobInfo == null ||  cobInfo.displayCob == null)) {
+                sendError("Unknown COB! BG reading missing or recent app restart?");
+                return;
+            }
+
             DecimalFormat format = new DecimalFormat("0.00");
+            DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, null, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
+            bolusWizard.doCalc(profile, null, carbsAfterConstraints, useCOB?cobInfo.displayCob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
@@ -232,11 +246,15 @@ public class ActionStringHandler {
             rMessage += "\n_____________";
             rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) + "): ";
             rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U";
+            if (useCOB)
+                rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U";
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U";
             if (useBolusIOB)
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
             if (useBasalIOB)
                 rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
+            if (useTrend)
+                rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.insulinFromTrend) + "U";
             if (percentage != 100) {
                 rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U";
             }
