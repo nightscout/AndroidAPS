@@ -57,8 +57,8 @@ public class SWDefinition {
             if(!SP.getString(R.string.key_language, "en").equals(LocaleHelper.getLanguage(context))) {
                 Intent intent = new Intent(MainApp.instance().getApplicationContext(), SetupWizardActivity.class);
                 intent.putExtra("WIZZARDPAGE", 0);
-                SetupWizardActivity.instance().finish();
-                SetupWizardActivity.instance().startActivity(intent);
+//                SetupWizardActivity.instance().finish();
+//                SetupWizardActivity.instance().startActivity(intent);
             }
             return SP.contains(R.string.key_language);}
         ))
@@ -67,17 +67,7 @@ public class SWDefinition {
                 .add(new SWUrl().preferenceId(R.string.key_nsclientinternal_url).label(R.string.nsclientinternal_url_title).comment(R.string.nsclientinternal_url_dialogmessage))
                 .add(new SWString().preferenceId(R.string.key_nsclientinternal_api_secret).label(R.string.nsclientinternal_secret_dialogtitle).comment(R.string.nsclientinternal_secret_dialogmessage))
                 .validator(() -> {
-                    // Check for the correct locale set and restart if not
-                    log.debug("key is: "+SP.getString(R.string.key_language,"unset")+" Locale is "+LocaleHelper.getLanguage(context));
-                    if(!SP.getString(R.string.key_language, "en").equals(LocaleHelper.getLanguage(context))) {
-                        LocaleHelper.setLocale(context, SP.getString(R.string.key_language, "en"));
-                        MainApp.bus().post(new EventRefreshGui(true));
-                        Intent intent = new Intent(MainApp.instance().getApplicationContext(), SetupWizardActivity.class);
-                        intent.putExtra("WIZZARDPAGE", 0);
-                        SetupWizardActivity.instance().finish();
-                        SetupWizardActivity.instance().startActivity(intent);
-                    }
-                    return NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth;
+                     return NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth;
                 })
         )
         .add(new SWScreen(R.string.patientage)
