@@ -160,8 +160,7 @@
         <activity
             android:name=".startupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_setup_wizard"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:label="@string/title_activity_setup_wizard"></activity>
     </application>
 
 </manifest>

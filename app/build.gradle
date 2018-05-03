@@ -172,7 +172,6 @@ configurations {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:27.1.1'
     wearApp project(':wear')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
