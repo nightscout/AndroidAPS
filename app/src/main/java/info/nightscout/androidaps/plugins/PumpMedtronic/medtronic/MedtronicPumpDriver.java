@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.medtronic;
 
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpDriver;
 
@@ -43,5 +44,44 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         pumpDescription.storesCarbInfo = false;
 
         this.pumpStatusData = new MedtronicPumpStatus(pumpDescription);
+
+
+        // take care of validBasalRateProfileSelectedOnPump
+
+
     }
+
+
+    @Override
+    public boolean isConnected() {
+        return true;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return false;
+    }
+
+    @Override
+    public void connect(String reason) {
+        // connection is established by each command specifically
+    }
+
+    @Override
+    public void stopConnecting() {
+        // we're not doing that
+    }
+
+
+    @Override
+    public PumpEnactResult cancelTempBasal(boolean enforceNew)
+    {
+
+        // FIXME
+        // send Cancel Temp Basal
+        return super.cancelTempBasal(enforceNew);
+    }
+
+
+
 }

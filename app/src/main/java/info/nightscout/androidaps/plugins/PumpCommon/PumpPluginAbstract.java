@@ -1,28 +1,30 @@
 package info.nightscout.androidaps.plugins.PumpCommon;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.json.JSONObject;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
-import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 
 /**
  * Created by andy on 23.04.18.
  */
 
-public abstract class PumpPluginAbstract implements PluginBase, PumpInterface {
+public abstract class PumpPluginAbstract implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
 
     protected boolean fragmentVisible = false;
     protected boolean fragmentEnabled = false;
@@ -34,11 +36,14 @@ public abstract class PumpPluginAbstract implements PluginBase, PumpInterface {
 
     protected static PumpPluginAbstract plugin = null;
     protected PumpDriverInterface pumpDriver;
+    protected PumpStatus pumpStatus;
 
 
-    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface)
+    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
+                                 String internalName)
     {
         this.pumpDriver = pumpDriverInterface;
+        this.pumpStatus = this.pumpDriver.getPumpStatusData();
     }
 
 
@@ -95,7 +100,8 @@ public abstract class PumpPluginAbstract implements PluginBase, PumpInterface {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PUMP) this.fragmentVisible = fragmentVisible;
+        if (type == PUMP)
+            this.fragmentVisible = fragmentVisible;
     }
 
     protected abstract String getInternalName();
@@ -245,5 +251,80 @@ public abstract class PumpPluginAbstract implements PluginBase, PumpInterface {
         return pumpDriver.isInitialized();
     }
 
+
+    // Constraints interface
+
+    @Override
+    public boolean isLoopEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isClosedModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAutosensModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isSMBModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        this.pumpStatus.constraintBasalRateAbsolute = absoluteRate;
+        return absoluteRate;
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        this.pumpStatus.constraintBasalRatePercent = percentRate;
+        return percentRate;
+    }
+
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        this.pumpStatus.constraintBolus = insulin;
+        return insulin;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        this.pumpStatus.constraintCarbs = carbs;
+        return carbs;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        this.pumpStatus.constraintMaxIob = maxIob;
+        return maxIob;
+    }
+
+    // Profile interface
+
+    @Nullable
+    public ProfileStore getProfile()
+    {
+        return this.pumpStatus.profileStore;
+    }
+
+    public String getUnits()
+    {
+        return this.pumpStatus.units;
+    }
+
+    public String getProfileName()
+    {
+        return this.pumpStatus.activeProfileName;
+    }
 
 }

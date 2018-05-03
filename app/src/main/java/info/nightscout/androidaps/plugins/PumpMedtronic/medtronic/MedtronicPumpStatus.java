@@ -1,11 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.medtronic;
 
-import android.service.autofill.RegexValidator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -27,7 +23,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     //public Date lastDataTime;
     //public long lastConnection = 0L;
     //public Date lastBolusTime;
-    //public String activeProfile = "A";
+    //public String activeProfileName = "A";
     //public double reservoirRemainingUnits = 50d;
     //public double batteryRemaining = 75d;
     //public String iob = "0";
@@ -51,7 +47,7 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     @Override
     public void initSettings() {
-        this.activeProfile = "A";
+        this.activeProfileName = "A";
         this.reservoirRemainingUnits = 75d;
         this.batteryRemaining = 75d;
     }

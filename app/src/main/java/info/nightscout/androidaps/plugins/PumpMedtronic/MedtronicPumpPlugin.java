@@ -29,17 +29,9 @@ import info.nightscout.utils.SP;
 
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
 
-    //private static final String TAG = "MedtronicPumpPlugin";
-    private static Logger LOG = LoggerFactory.getLogger(MedtronicPumpPlugin.class);
-
-    //private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-    //        .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
+    private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpPlugin.class);
 
     private ServiceClientConnection serviceClientConnection;
-
-
-    //private static MedtronicPumpPlugin plugin = null;
-    //private MedtronicPumpStatus medtronicPumpStatus = MedtronicPumpStatus.getInstance();
 
 
     public static PumpPluginAbstract getPlugin() {
@@ -49,14 +41,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return plugin;
     }
 
-    //
-    // private Date lastDataTime;
+
 
 
 
     public MedtronicPumpPlugin()
     {
-        super(new MedtronicPumpDriver());
+        super(new MedtronicPumpDriver(), //
+                "MedtronicPump"//
+        );
     }
 
 
@@ -177,4 +170,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public int getPreferencesId() {
         return R.xml.pref_medtronic;
     }
+
+
+    @Override
+    public boolean isLoopEnabled() {
+        // FIXME check if we need to override
+        return getPumpStatusData().validBasalRateProfileSelectedOnPump;
+    }
+
 }

@@ -35,7 +35,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRStatsActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
-import info.nightscout.androidaps.plugins.PumpMedtronic.medtronic.MedtronicPumpStatus;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -224,7 +223,7 @@ public class MedtronicFragment extends SubscriberFragment {
 
                     //dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
                     //SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("(" + (pump.activeProfile) + ")  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h");
+                    basaBasalRateView.setText("(" + (pump.activeProfileName) + ")  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h");
 
                     if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
                         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
