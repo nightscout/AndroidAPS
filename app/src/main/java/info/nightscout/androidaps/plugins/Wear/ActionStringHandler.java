@@ -605,7 +605,7 @@ public class ActionStringHandler {
                 high *= Constants.MMOLL_TO_MGDL;
             }
             generateTempTarget(duration, low, high);
-        } else if ("wizard".equals(act[0])) {
+        } else if ("wizard2".equals(act[0])) {
             //use last calculation as confirmed string matches
 
             doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
