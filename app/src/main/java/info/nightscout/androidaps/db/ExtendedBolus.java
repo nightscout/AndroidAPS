@@ -297,8 +297,4 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         return Color.CYAN;
     }
 
-    @Override
-    public int getSecondColor() {
-        return 0;
-    }
 }

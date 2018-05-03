@@ -18,12 +18,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventChargingState;
+import info.nightscout.androidaps.events.EventNetworkChange;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -58,7 +60,9 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    public NSClientPlugin() {
+    private NsClientReceiverDelegate nsClientReceiverDelegate;
+
+    private NSClientPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(NSClientFragment.class.getName())
@@ -78,7 +82,15 @@ public class NSClientPlugin extends PluginBase {
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
+
+        nsClientReceiverDelegate =
+                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext(), MainApp.bus());
     }
+
+    public boolean isAllowed() {
+        return nsClientReceiverDelegate.allowed;
+    }
+
 
     @Override
     protected void onStart() {
@@ -87,6 +99,8 @@ public class NSClientPlugin extends PluginBase {
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
+
+        nsClientReceiverDelegate.registerReceivers();
     }
 
     @Override
@@ -94,7 +108,25 @@ public class NSClientPlugin extends PluginBase {
         MainApp.bus().unregister(this);
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
+
+        nsClientReceiverDelegate.unregisterReceivers();
     }
+
+    @Subscribe
+    public void onStatusEvent(EventPreferenceChange ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventChargingState ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNetworkChange ev) {
+        nsClientReceiverDelegate.onStatusEvent(ev);
+    }
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -111,11 +143,12 @@ public class NSClientPlugin extends PluginBase {
         }
     };
 
-    @SuppressWarnings("UnusedParameters")
     @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        if (nsClientService != null)
+    public void onStatusEvent(final EventAppExit ignored) {
+        if (nsClientService != null) {
             MainApp.instance().getApplicationContext().unbindService(mConnection);
+            nsClientReceiverDelegate.unregisterReceivers();
+        }
     }
 
     @Subscribe

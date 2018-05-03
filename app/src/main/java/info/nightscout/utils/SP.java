@@ -21,7 +21,7 @@ public class SP {
     }
 
     static public String getString(int resourceID, String defaultValue) {
-        return sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue);
+        return sharedPreferences.getString(MainApp.gs(resourceID), defaultValue);
     }
 
     static public String getString(String key, String defaultValue) {
@@ -30,7 +30,7 @@ public class SP {
 
     static public boolean getBoolean(int resourceID, Boolean defaultValue) {
         try {
-            return sharedPreferences.getBoolean(MainApp.sResources.getString(resourceID), defaultValue);
+            return sharedPreferences.getBoolean(MainApp.gs(resourceID), defaultValue);
         } catch (Exception e) {
             return defaultValue;
         }
@@ -45,7 +45,7 @@ public class SP {
     }
 
     static public Double getDouble(int resourceID, Double defaultValue) {
-        return SafeParse.stringToDouble(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+        return SafeParse.stringToDouble(sharedPreferences.getString(MainApp.gs(resourceID), defaultValue.toString()));
     }
 
     static public Double getDouble(String key, Double defaultValue) {
@@ -54,9 +54,9 @@ public class SP {
 
     static public int getInt(int resourceID, Integer defaultValue) {
         try {
-            return sharedPreferences.getInt(MainApp.sResources.getString(resourceID), defaultValue);
+            return sharedPreferences.getInt(MainApp.gs(resourceID), defaultValue);
         } catch (Exception e) {
-            return SafeParse.stringToInt(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+            return SafeParse.stringToInt(sharedPreferences.getString(MainApp.gs(resourceID), defaultValue.toString()));
         }
     }
 
@@ -70,9 +70,9 @@ public class SP {
 
     static public long getLong(int resourceID, Long defaultValue) {
         try {
-            return sharedPreferences.getLong(MainApp.sResources.getString(resourceID), defaultValue);
+            return sharedPreferences.getLong(MainApp.gs(resourceID), defaultValue);
         } catch (Exception e) {
-            return SafeParse.stringToLong(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+            return SafeParse.stringToLong(sharedPreferences.getString(MainApp.gs(resourceID), defaultValue.toString()));
         }
     }
 
@@ -92,7 +92,7 @@ public class SP {
 
     static public void putBoolean(int resourceID, boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(MainApp.sResources.getString(resourceID), value);
+        editor.putBoolean(MainApp.gs(resourceID), value);
         editor.apply();
     }
 
@@ -104,7 +104,7 @@ public class SP {
 
     static public void putLong(int resourceID, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(MainApp.sResources.getString(resourceID), value);
+        editor.putLong(MainApp.gs(resourceID), value);
         editor.apply();
     }
 
@@ -116,13 +116,13 @@ public class SP {
 
     static public void putInt(int resourceID, int value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(MainApp.sResources.getString(resourceID), value);
+        editor.putInt(MainApp.gs(resourceID), value);
         editor.apply();
     }
 
     static public void putString(int resourceID, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(MainApp.sResources.getString(resourceID), value);
+        editor.putString(MainApp.gs(resourceID), value);
         editor.apply();
     }
 
@@ -134,7 +134,7 @@ public class SP {
 
     static public void remove(int resourceID) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(MainApp.sResources.getString(resourceID));
+        editor.remove(MainApp.gs(resourceID));
         editor.apply();
     }
 

@@ -1,21 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory
         android:key="absorption"
         android:title="@string/absorptionsettings_title">
+
         <com.andreabaccega.widget.ValidatingEditTextPreference
-            validate:testType="floatNumericRange"
-            validate:floatminNumber="0.1"
-            validate:floatmaxNumber="12.0"
-            android:defaultValue="3.0"
+            android:defaultValue="8.0"
+            android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
+            android:inputType="numberDecimal"
+            android:key="@string/key_openapsama_min_5m_carbimpact"
+            android:maxLines="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:inputType="numberDecimal"
-            android:maxLines="20"
             android:title="@string/openapsama_min_5m_carbimpact"
-            android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
-            android:key="openapsama_min_5m_carbimpact" />
+            validate:floatmaxNumber="12.0"
+            validate:floatminNumber="0.1"
+            validate:testType="floatNumericRange" />
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:defaultValue="6"
+            android:dialogMessage="@string/absorption_cutoff_summary"
+            android:digits="0123456789.,"
+            android:inputType="number"
+            android:key="@string/key_absorption_cutoff"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:title="@string/absorption_cutoff_title"
+            validate:maxNumber="10"
+            validate:minNumber="4"
+            validate:testType="numericRange" />
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="1.2"
+                android:dialogMessage="@string/openapsama_autosens_max_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autosens_max"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autosens_max"
+                validate:floatmaxNumber="3"
+                validate:floatminNumber="0.5"
+                validate:testType="floatNumericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="0.7"
+                android:dialogMessage="@string/openapsama_autosens_min_summary"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autosens_min"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autosens_min"
+                validate:floatmaxNumber="1.0"
+                validate:floatminNumber="0.1"
+                validate:testType="floatNumericRange" />
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
+
 </PreferenceScreen>

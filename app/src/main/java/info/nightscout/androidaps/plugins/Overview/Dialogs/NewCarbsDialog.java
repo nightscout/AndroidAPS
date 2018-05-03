@@ -133,9 +133,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         editTime = view.findViewById(R.id.newcarbs_time);
         editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
 
-        LinearLayout durationLayout = view.findViewById(R.id.newcarbs_duration_layout);
-        durationLayout.setVisibility(MainApp.engineeringMode ? View.VISIBLE : View.GONE);
-
         editDuration = view.findViewById(R.id.new_carbs_duration);
         editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
 
@@ -406,7 +403,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                     long carbTime = time + i * 15 * 60 * 1000;
                                     long smallCarbAmount = Math.round((1d * remainingCarbs) / (ticks-i));  //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
                                     remainingCarbs -= smallCarbAmount;
-                                    createCarb(smallCarbAmount, carbTime, notes);
+                                    if (smallCarbAmount > 0)
+                                        createCarb(smallCarbAmount, carbTime, notes);
                                 }
                             }
                         }
@@ -431,7 +429,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         carbInfo.context = getContext();
         carbInfo.source = Source.USER;
         carbInfo.notes = notes;
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
             ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
                 @Override
                 public void run() {

@@ -65,7 +65,7 @@ public class LoopFragment extends SubscriberFragment {
 
     @OnClick(R.id.loop_run)
     void onRunClick() {
-        lastRunView.setText(MainApp.sResources.getString(R.string.executing));
+        lastRunView.setText(MainApp.gs(R.string.executing));
         new Thread(() -> LoopPlugin.getPlugin().invoke("Loop button", true)).start();
         FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run"));
     }

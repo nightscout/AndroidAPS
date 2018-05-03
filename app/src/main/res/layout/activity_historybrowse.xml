@@ -96,6 +96,13 @@
                         android:paddingTop="5dp"
                         app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
+                    <TextView
+                        android:id="@+id/overview_iobcalculationprogess"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textSize="15sp" />
+
                 </RelativeLayout>
 
                 <com.jjoe64.graphview.GraphView

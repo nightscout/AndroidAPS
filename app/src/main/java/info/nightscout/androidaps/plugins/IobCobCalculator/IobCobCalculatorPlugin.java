@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
@@ -34,8 +35,11 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+
+import static info.nightscout.utils.DateUtil.now;
 
 /**
  * Created by mike on 24.04.2017.
@@ -74,7 +78,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 .neverVisible(true)
                 .alwaysEnabled(true)
         );
-     }
+    }
 
     @Override
     protected void onStart() {
@@ -309,7 +313,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             //log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
         }
         IobTotal bolusIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time, profile).round();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time, profile, true, now).round();
         if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS)) {
             // Add expected zero temp basal for next 240 mins
             IobTotal basalIobWithZeroTemp = basalIob.copy();
@@ -322,7 +326,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 basalIobWithZeroTemp.plus(calc);
             }
 
-            basalIob.iobWithZeroTemp = basalIobWithZeroTemp;
+            basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round();
         }
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
@@ -401,6 +405,33 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
+
+    @NonNull
+    public CobInfo getCobInfo(boolean _synchronized, String reason) {
+        AutosensData autosensData = _synchronized ? getLastAutosensDataSynchronized(reason) : getLastAutosensData(reason);
+        Double displayCob = null;
+        double futureCarbs = 0;
+        long now = now();
+        List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+
+        if (autosensData != null) {
+            displayCob = autosensData.cob;
+            for (Treatment treatment : treatments) {
+                if (!treatment.isValid) continue;
+                if (IobCobCalculatorPlugin.roundUpTime(treatment.date) > IobCobCalculatorPlugin.roundUpTime(autosensData.time)
+                        && treatment.date <= now && treatment.carbs > 0) {
+                    displayCob += treatment.carbs;
+                }
+            }
+        }
+        for (Treatment treatment : treatments) {
+            if (!treatment.isValid) continue;
+            if (treatment.date > now && treatment.carbs > 0) {
+                futureCarbs += treatment.carbs;
+            }
+        }
+        return new CobInfo(displayCob, futureCarbs);
+    }
 
     @Nullable
     public AutosensData getLastAutosensData(String reason) {
@@ -548,7 +579,9 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
         if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
                 ev.isChanged(R.string.key_age) ||
-                ev.isChanged(R.string.key_absorption_maxtime)
+                ev.isChanged(R.string.key_absorption_maxtime) ||
+                ev.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
+                ev.isChanged(R.string.key_absorption_cutoff)
                 ) {
             stopCalculation("onEventPreferenceChange");
             synchronized (dataLock) {

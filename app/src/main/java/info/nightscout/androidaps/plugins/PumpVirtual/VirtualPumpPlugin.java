@@ -171,7 +171,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
-        Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+        Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
         MainApp.bus().post(new EventNewNotification(notification));
         return result;
     }
@@ -202,21 +202,21 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.enacted = result.bolusDelivered > 0 || result.carbsDelivered > 0;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
 
         Double delivering = 0d;
 
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200);
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivering);
+            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), delivering);
             bolusingEvent.percent = Math.min((int) (delivering / detailedBolusInfo.insulin * 100), 100);
             MainApp.bus().post(bolusingEvent);
             delivering += 0.1d;
         }
         SystemClock.sleep(200);
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
+        bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivered), detailedBolusInfo.insulin);
         bolusingEvent.percent = 100;
         MainApp.bus().post(bolusingEvent);
         SystemClock.sleep(1000);
@@ -246,7 +246,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.isTempCancel = false;
         result.absolute = absoluteRate;
         result.duration = durationInMinutes;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
@@ -274,7 +274,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.isPercent = true;
         result.isTempCancel = false;
         result.duration = durationInMinutes;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
@@ -298,7 +298,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.bolusDelivered = insulin;
         result.isTempCancel = false;
         result.duration = durationInMinutes;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
@@ -312,7 +312,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.isTempCancel = true;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
             result.enacted = true;
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
@@ -337,7 +337,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.success = true;
         result.enacted = true;
         result.isTempCancel = true;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
         if (Config.logPumpComm)
             log.debug("Canceling extended basal: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());

@@ -155,8 +155,7 @@ public class MainApp extends Application {
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.HWPUMPS && engineeringMode)
                 pluginsList.add(InsightPlugin.getPlugin()); // <-- Enable Insight plugin here
-            if (Config.HWPUMPS && engineeringMode)
-                pluginsList.add(ComboPlugin.getPlugin()); // <-- Enable Combo plugin here
+            if (Config.HWPUMPS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
@@ -246,10 +245,25 @@ public class MainApp extends Application {
         }
     }
 
-
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
             KeepAliveReceiver.cancelAlarm(this);
+    }
+
+    public static void subscribe(Object subscriber) {
+        try {
+            bus().register(subscriber);
+        } catch (IllegalArgumentException e) {
+            // already registered
+        }
+    }
+
+    public static void unsubscribe(Object subscriber) {
+        try {
+            bus().unregister(subscriber);
+        } catch (IllegalArgumentException e) {
+            // already unregistered
+        }
     }
 
     public static Bus bus() {
@@ -370,6 +384,10 @@ public class MainApp extends Application {
         if (!BuildConfig.APS)
             return true;
         return engineeringMode || !devBranch;
+    }
+
+    public static boolean isDev() {
+        return devBranch;
     }
 
     public String getLogDirectory() {

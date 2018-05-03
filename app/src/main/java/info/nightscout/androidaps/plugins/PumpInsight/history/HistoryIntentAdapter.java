@@ -161,17 +161,53 @@ class HistoryIntentAdapter {
             Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
             String alertType = intent.getStringExtra(HistoryBroadcast.EXTRA_ALERT_TYPE);
             if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
-            try {
-                JSONObject data = new JSONObject();
-                String enteredBy = SP.getString("careportal_enteredby", "");
-                if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
-                data.put("created_at", DateUtil.toISOString(date));
-                data.put("eventType", CareportalEvent.NOTE);
-                data.put("notes", MainApp.instance().getString(getAlertText(alertType)));
-                NSUpload.uploadCareportalEntryToNS(data);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            logNote(date, MainApp.gs(getAlertText(alertType)));
+        }
+    }
+
+    void processPumpStatusChangedIntent(Intent intent) {
+        Date newStatusTime = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
+        if (SP.getBoolean("insight_automatic_careportal_events", false)) {
+            String newStatus = intent.getStringExtra(HistoryBroadcast.EXTRA_NEW_STATUS);
+            switch (newStatus) {
+                case "STARTED":
+                    logNote(newStatusTime, MainApp.gs(R.string.pump_started));
+                    break;
+                case "STOPPED":
+                    logNote(newStatusTime, MainApp.gs(R.string.pump_stopped));
+                    break;
+                case "PAUSED":
+                    logNote(newStatusTime, MainApp.gs(R.string.pump_paused));
+                    break;
             }
+        }
+        if (intent.hasExtra(HistoryBroadcast.EXTRA_OLD_STATUS_TIME)) {
+            String oldStatus = intent.getStringExtra(HistoryBroadcast.EXTRA_OLD_STATUS);
+            if (oldStatus.equals("STOPPED")) {
+                Date oldStatusTime = getDateExtra(intent, HistoryBroadcast.EXTRA_OLD_STATUS_TIME);
+                int duration = (int) ((newStatusTime.getTime() - oldStatusTime.getTime()) / 60000);
+
+                long serialNumber = Long.parseLong(intent.getStringExtra(HistoryBroadcast.EXTRA_PUMP_SERIAL_NUMBER));
+                long recordId = intent.getLongExtra(HistoryBroadcast.EXTRA_EVENT_NUMBER, -1);
+                long uniqueRecordId = getRecordUniqueID(serialNumber, recordId);
+
+                logAdapter.createTBRrecord(oldStatusTime, 0, duration, uniqueRecordId);
+            }
+        }
+    }
+
+    private void logNote(Date date, String note) {
+        try {
+            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
+            JSONObject data = new JSONObject();
+            String enteredBy = SP.getString("careportal_enteredby", "");
+            if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
+            data.put("created_at", DateUtil.toISOString(date));
+            data.put("eventType", CareportalEvent.NOTE);
+            data.put("notes", note);
+            NSUpload.uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

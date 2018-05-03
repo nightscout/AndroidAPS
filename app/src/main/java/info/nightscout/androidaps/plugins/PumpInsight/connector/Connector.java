@@ -62,7 +62,7 @@ public class Connector {
     private int serviceReconnects = 0;
     private StatusCallback statusCallback = new StatusCallback() {
         @Override
-        public synchronized void onStatusChange(Status status) {
+        public synchronized void onStatusChange(Status status, long statusTime, long waitTime) {
 
             if ((status != lastStatus) || (Helpers.msSince(lastStatusTime) > 2000)) {
                 log("Status change: " + status);
@@ -94,15 +94,15 @@ public class Connector {
                     serviceConnector.connect();
                 } else {
                     log("PROTOCOL VERSION MISMATCH!  local: " + COMPATIBILITY_VERSION + " remote: " + remoteVersion);
-                    statusCallback.onStatusChange(Status.INCOMPATIBLE);
-                    compatabilityMessage = gs(R.string.insight_incompatible_compantion_app_we_need_version) + " " + getLocalVersion();
+                    statusCallback.onStatusChange(Status.INCOMPATIBLE, 0, 0);
+                    compatabilityMessage = MainApp.gs(R.string.insight_incompatible_compantion_app_we_need_version) + " " + getLocalVersion();
                     serviceConnector.disconnectFromService();
 
                 }
             } catch (NullPointerException e) {
                 log("ERROR: null pointer when trying to connect to pump");
             }
-            statusCallback.onStatusChange(safeGetStatus());
+            statusCallback.onStatusChange(safeGetStatus(), 0, 0);
         }
 
         @Override
@@ -179,31 +179,27 @@ public class Connector {
         switch (status) {
 
             case EXCHANGING_KEYS:
-                return gs(R.string.connecting).toUpperCase();
+                return MainApp.gs(R.string.connecting).toUpperCase();
             case WAITING_FOR_CODE_CONFIRMATION:
-                return gs(R.string.insight_waiting_for_code).toUpperCase();
+                return MainApp.gs(R.string.insight_waiting_for_code).toUpperCase();
             case CODE_REJECTED:
-                return gs(R.string.insight_code_rejected).toUpperCase();
+                return MainApp.gs(R.string.insight_code_rejected).toUpperCase();
             case APP_BINDING:
-                return gs(R.string.insight_app_binding).toUpperCase();
+                return MainApp.gs(R.string.insight_app_binding).toUpperCase();
             case CONNECTING:
-                return gs(R.string.connecting).toUpperCase();
+                return MainApp.gs(R.string.connecting).toUpperCase();
             case CONNECTED:
-                return gs(R.string.connected).toUpperCase();
+                return MainApp.gs(R.string.connected).toUpperCase();
             case DISCONNECTED:
-                return gs(R.string.disconnected).toUpperCase();
+                return MainApp.gs(R.string.disconnected).toUpperCase();
             case NOT_AUTHORIZED:
-                return gs(R.string.insight_not_authorized).toUpperCase();
+                return MainApp.gs(R.string.insight_not_authorized).toUpperCase();
             case INCOMPATIBLE:
-                return gs(R.string.insight_incompatible).toUpperCase();
+                return MainApp.gs(R.string.insight_incompatible).toUpperCase();
 
             default:
                 return status.toString();
         }
-    }
-
-    private static String gs(int id) {
-        return MainApp.instance().getString(id);
     }
 
     private static synchronized void extendKeepAliveIfActive() {
@@ -221,7 +217,7 @@ public class Connector {
 
     public static String getKeepAliveString() {
         if (keepAliveActive()) {
-            return MainApp.instance().getString(R.string.insight_keepalive_format_string,
+            return MainApp.gs(R.string.insight_keepalive_format_string,
                     stayConnectedTime / 1000, Helpers.hourMinuteSecondString(stayConnectedTill));
 
         } else {
@@ -384,7 +380,7 @@ public class Connector {
     public String getLastStatusMessage() {
 
         if (!companionAppInstalled) {
-            return gs(R.string.insight_companion_app_not_installed);
+            return MainApp.gs(R.string.insight_companion_app_not_installed);
         }
 
         if (!isConnected()) {
@@ -398,13 +394,13 @@ public class Connector {
                     // if disconnected but previous state was incompatible
                     return compatabilityMessage;
                 } else {
-                    return gs(R.string.insight_not_connected_to_companion_app);
+                    return MainApp.gs(R.string.insight_not_connected_to_companion_app);
                 }
             }
         }
 
         if (lastStatus == null) {
-            return gs(R.string.insight_unknown);
+            return MainApp.gs(R.string.insight_unknown);
         }
 
         switch (lastStatus) {
@@ -414,16 +410,16 @@ public class Connector {
                 }
                 break;
             case INCOMPATIBLE:
-                return statusToString(lastStatus) + " " + gs(R.string.insight_needs) + " " + getLocalVersion();
+                return statusToString(lastStatus) + " " + MainApp.gs(R.string.insight_needs) + " " + getLocalVersion();
         }
         return statusToString(lastStatus);
     }
 
     public String getNiceLastStatusTime() {
         if (lastStatusTime < 1) {
-            return gs(R.string.insight_startup_uppercase);
+            return MainApp.gs(R.string.insight_startup_uppercase);
         } else {
-            return Helpers.niceTimeScalar(Helpers.msSince(lastStatusTime)) + " " + gs(R.string.ago);
+            return Helpers.niceTimeScalar(Helpers.msSince(lastStatusTime)) + " " + MainApp.gs(R.string.ago);
         }
     }
 
@@ -516,7 +512,7 @@ public class Connector {
         }
         for (Map.Entry entry : statistics.entrySet()) {
             if ((long) entry.getValue() > 1000) {
-                l.add(new StatusItem(gs(R.string.statistics) + " " + Helpers.capitalize(entry.getKey().toString()),
+                l.add(new StatusItem(MainApp.gs(R.string.statistics) + " " + Helpers.capitalize(entry.getKey().toString()),
                         new Formatter().format("%4s %12s",
                                 percentage(getEntryTime(entry), total) + "%",
                                 Helpers.niceTimeScalar(getEntryTime(entry))).toString()));

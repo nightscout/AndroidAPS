@@ -163,19 +163,13 @@
                         android:id="@+id/overview_runningtemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textStyle="normal|bold" />
-
-                    <TextView
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/overview_basebasal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
@@ -193,8 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingTop="5dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -239,23 +232,30 @@
                 </LinearLayout>
 
                 <RelativeLayout
-                   android:layout_width="wrap_content"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1">
 
-                <com.jjoe64.graphview.GraphView
-                    android:id="@+id/overview_bggraph"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/overview_bggraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
 
-                <ImageButton
-                    android:id="@+id/overview_chartMenuButton"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:paddingTop="5dp"
-                    app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+                    <ImageButton
+                        android:id="@+id/overview_chartMenuButton"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:paddingTop="5dp"
+                        app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+
+                    <TextView
+                        android:id="@+id/overview_iobcalculationprogess"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textSize="15sp" />
 
                 </RelativeLayout>
 
@@ -299,8 +299,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingRight="5dp">
 
                 <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"

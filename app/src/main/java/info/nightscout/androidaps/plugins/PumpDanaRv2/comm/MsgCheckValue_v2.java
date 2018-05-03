@@ -39,7 +39,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         pump.productCode = intFromBuff(bytes, 2, 1);
         if (pump.model != DanaRPump.EXPORT_MODEL) {
             pump.lastConnection = 0;
-            Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.sResources.getString(R.string.pumpdrivercorrected), Notification.NORMAL);
+            Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
             MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to Korean DanaR");
@@ -64,7 +64,7 @@ public class MsgCheckValue_v2 extends MessageBase {
 
         if (pump.protocol != 2) {
             pump.lastConnection = 0;
-            Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.sResources.getString(R.string.pumpdrivercorrected), Notification.NORMAL);
+            Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to non APS DanaR");

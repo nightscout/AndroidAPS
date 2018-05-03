@@ -158,7 +158,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         if (activeExtendedBolus != null) {
                             extendedBolus.setVisibility(View.GONE);
                             extendedBolusCancel.setVisibility(View.VISIBLE);
-                            extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + activeExtendedBolus.toString());
+                            extendedBolusCancel.setText(MainApp.gs(R.string.cancel) + " " + activeExtendedBolus.toString());
                         } else {
                             extendedBolus.setVisibility(View.VISIBLE);
                             extendedBolusCancel.setVisibility(View.GONE);
@@ -174,7 +174,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         if (activeTemp != null) {
                             tempBasal.setVisibility(View.GONE);
                             tempBasalCancel.setVisibility(View.VISIBLE);
-                            tempBasalCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + activeTemp.toStringShort());
+                            tempBasalCancel.setText(MainApp.gs(R.string.cancel) + " " + activeTemp.toStringShort());
                         } else {
                             tempBasal.setVisibility(View.VISIBLE);
                             tempBasalCancel.setVisibility(View.GONE);

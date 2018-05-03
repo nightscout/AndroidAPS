@@ -417,6 +417,9 @@ public class ConfigBuilderPlugin extends PluginBase {
      */
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
         if (!request.tempBasalRequested) {
+            if (callback != null) {
+                callback.result(new PumpEnactResult().enacted(false).success(true).comment(MainApp.gs(R.string.nochangerequested))).run();
+            }
             return;
         }
 
@@ -426,17 +429,17 @@ public class ConfigBuilderPlugin extends PluginBase {
         request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
 
         if (!pump.isInitialized()) {
-            log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
+            log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpNotInitialized));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
             return;
         }
 
         if (pump.isSuspended()) {
-            log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpsuspended));
+            log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpsuspended));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpsuspended)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -496,17 +499,17 @@ public class ConfigBuilderPlugin extends PluginBase {
         PumpInterface pump = getActivePump();
 
         if (!pump.isInitialized()) {
-            log.debug("applySMBRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
+            log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpNotInitialized));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
             return;
         }
 
         if (pump.isSuspended()) {
-            log.debug("applySMBRequest: " + MainApp.sResources.getString(R.string.pumpsuspended));
+            log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpsuspended));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(MainApp.sResources.getString(R.string.pumpsuspended)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -535,7 +538,7 @@ public class ConfigBuilderPlugin extends PluginBase {
                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                     i.putExtra("soundid", R.raw.boluserror);
                     i.putExtra("status", result.comment);
-                    i.putExtra("title", MainApp.sResources.getString(R.string.failedupdatebasalprofile));
+                    i.putExtra("title", MainApp.gs(R.string.failedupdatebasalprofile));
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     MainApp.instance().startActivity(i);
                 }

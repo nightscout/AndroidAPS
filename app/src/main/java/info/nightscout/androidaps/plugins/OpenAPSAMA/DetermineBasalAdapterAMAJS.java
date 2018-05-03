@@ -212,9 +212,13 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("skip_neutral_temps", true);
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
-        mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
-        //TODO: align with max-absorption model in AMA sensitivity
-        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
+        mProfile.put("autosens_adjust_targets", SP.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true));
+        //align with max-absorption model in AMA sensitivity
+        if(mealData.usedMinCarbsImpact > 0){
+            mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
+        } else {
+            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
+        }
 
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
@@ -239,7 +243,7 @@ public class DetermineBasalAdapterAMAJS {
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
-        if (SP.getBoolean("always_use_shortavg", false)) {
+        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);
