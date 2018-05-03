@@ -31,6 +31,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -211,7 +212,14 @@ public class ActionStringHandler {
                 return;
             }
 
-            double cob = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear").displayCob;
+            double cob = 0;
+            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear");
+            if (cobInfo == null && useCOB) {
+                sendError("Unknown COB! BG reading missing or recent app restart?");
+                return;
+            } else {
+                cob = cobInfo.displayCob;
+            }
 
             DecimalFormat format = new DecimalFormat("0.00");
             DecimalFormat formatInt = new DecimalFormat("0");
