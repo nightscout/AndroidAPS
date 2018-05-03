@@ -192,11 +192,11 @@ public class ActionStringHandler {
                 return;
             }
 
-            boolean useBG = true;
-            boolean useBolusIOB = true;
-            boolean useBasalIOB = true;
-            boolean useCOB = true;
-            boolean useTrend = true;
+            boolean useBG = SP.getBoolean(R.string.key_wearwizard_bg, true);
+            boolean useBolusIOB = SP.getBoolean(R.string.key_wearwizard_bolusiob, true);
+            boolean useBasalIOB = SP.getBoolean(R.string.key_wearwizard_basaliob, true);
+            boolean useCOB = SP.getBoolean(R.string.key_wearwizard_cob, true);
+            boolean useTrend = SP.getBoolean(R.string.key_wearwizard_trend, false);
             int percentage = Integer.parseInt(act[2]);
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
