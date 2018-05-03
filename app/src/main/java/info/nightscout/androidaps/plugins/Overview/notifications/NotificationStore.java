@@ -37,6 +37,7 @@ public class NotificationStore {
     private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
     public long snoozedUntil = 0L;
+    private boolean usesChannels;
 
     public NotificationStore() {
         createNotificationChannel();
@@ -62,6 +63,12 @@ public class NotificationStore {
 
         if (SP.getBoolean(MainApp.gs(R.string.key_raise_notifications_as_android_notifications), false)) {
             raiseSystemNotification(n);
+            if (usesChannels && n.soundId != null) {
+                Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                alarm.putExtra("soundid", n.soundId);
+                MainApp.instance().startService(alarm);
+            }
+
         } else {
             if (n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
@@ -138,7 +145,7 @@ public class NotificationStore {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
+            usesChannels = true;
             NotificationManager mNotificationManager =
                     (NotificationManager) MainApp.instance().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
