@@ -767,4 +767,24 @@
     <string name="day">Tag</string>
     <string name="ns_wifi_allowedssids">Erlaubte SSIDs (Semikolon getrennt)</string>
     <string name="ns_allowroaming">Erlaube Verbindung bei Roaming</string>
+    <string name="openapsama_autosens_adjusttargets">Autosense passt Zielwerte an</string>
+    <string name="resistantadult">Insulin Resistenter Erwachsener</string>
+    <string name="enableuam">Aktiviere UAM</string>
+    <string name="enablesmb">Aktiviere SMB</string>
+    <string name="enableuam_summary">Erkennung von Unangekündigten Mahlzeiten</string>
+    <string name="hypo_duration">Hypo Dauer</string>
+    <string name="hypo_target">Hypo Zielwert</string>
+    <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
+    <string name="changed">Geändert</string>
+    <string name="pump_stopped_uppercase">PUMPE GESTOPPT</string>
+    <string name="insight_active_tbr">Aktive TBR</string>
+    <string name="statistics">Statistiken</string>
+    <string name="enablesmbalways">Aktiviere SMB immer</string>
+    <string name="enablesmbaftercarbs">Aktiviere SMB nach Mahlzeiten</string>
+    <string name="enablesmbwithcob">Aktiviere SMB bei COB</string>
+    <string name="enablesmbwithtemptarget">Aktiviere SMB mit Temporären Zielwerten</string>
+    <string name="wear_predictions_title">Vorhersagen</string>
+    <string name="data_choices">Daten Auswahl</string>
+    <string name="smbdisabledinpreferences">SMB in Einstellungen deaktiviert</string>
+    <string name="food_short">Mahlzeiten</string>
 </resources>
