@@ -12,11 +12,6 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
-import info.nightscout.utils.SP;
-
 public class SWUrl extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWUrl.class);
 
@@ -51,9 +46,7 @@ public class SWUrl extends SWItem {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                SP.putString(preferenceId, s.toString());
-                MainApp.bus().post(new EventPreferenceChange(preferenceId));
-                MainApp.bus().post(new EventSWUpdate());
+                save(s.toString());
             }
 
             @Override

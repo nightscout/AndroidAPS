@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.SP;
 
 public class SWRadioButton extends SWItem {
@@ -61,14 +59,8 @@ public class SWRadioButton extends SWItem {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int i = (int) group.findViewById(checkedId).getTag();
-            save(i);
+            save(values()[i]);
         });
         layout.addView(radioGroup);
-    }
-
-    public void save(int i) {
-        SP.putString(preferenceId, values()[i]);
-        MainApp.bus().post(new EventPreferenceChange(preferenceId));
-        MainApp.bus().post(new EventSWUpdate());
     }
 }
