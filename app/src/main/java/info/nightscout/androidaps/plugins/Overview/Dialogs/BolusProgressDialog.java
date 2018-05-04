@@ -70,6 +70,9 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
+        if(!ConfigBuilderPlugin.getCommandQueue().bolusInQueue()) {
+            bolusEnded = true;
+        }
         if (bolusEnded) {
             dismiss();
         } else {
