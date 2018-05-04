@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.HandlerThread;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -33,16 +31,13 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Treatments.CarbsGenerator;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.DefaultValueHelper;
@@ -396,7 +391,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
                         if (carbsAfterConstraints > 0) {
                             if (duration == 0) {
-                                CarbsGenerator.createCarb(carbsAfterConstraints, time, notes);
+                                CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes);
                             } else {
                                 CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes);
                             }

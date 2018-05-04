@@ -23,14 +23,14 @@ public class CarbsGenerator {
             int smallCarbAmount = (int) Math.round((1d * remainingCarbs) / (ticks-i));  //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
             remainingCarbs -= smallCarbAmount;
             if (smallCarbAmount > 0)
-                createCarb(smallCarbAmount, carbTime, notes);
+                createCarb(smallCarbAmount, carbTime, CareportalEvent.MEALBOLUS, notes);
         }
     }
 
-    public static void createCarb(int carbs, long time, @Nullable String notes) {
+    public static void createCarb(int carbs, long time, String eventType, @Nullable String notes) {
         DetailedBolusInfo carbInfo = new DetailedBolusInfo();
         carbInfo.date = time;
-        carbInfo.eventType = CareportalEvent.CARBCORRECTION;
+        carbInfo.eventType = eventType;
         carbInfo.carbs = carbs;
         carbInfo.context = MainApp.instance();
         carbInfo.source = Source.USER;

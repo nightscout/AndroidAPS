@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.Wear;
 
-import android.content.Intent;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -38,7 +36,6 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -56,8 +53,6 @@ import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
-
-import static info.nightscout.utils.DateUtil.now;
 
 /**
  * Created by adrian on 09/02/17.
@@ -634,7 +629,7 @@ public class ActionStringHandler {
     private static void doECarbs(int carbs, long time, int duration) {
         if (carbs > 0) {
             if (duration == 0) {
-                CarbsGenerator.createCarb(carbs, time, "watch");
+                CarbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch");
             } else {
                 CarbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs");
             }
