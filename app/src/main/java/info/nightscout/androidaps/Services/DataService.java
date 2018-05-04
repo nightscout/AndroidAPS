@@ -18,7 +18,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventNsFood;
+import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -33,13 +34,14 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
-import info.nightscout.androidaps.plugins.SourceDexcomG5.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
-import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.utils.BundleLogger;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
@@ -62,32 +64,37 @@ public class DataService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-
-        if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource() == null) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+            xDripEnabled = true;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = false;
+            dexcomG5Enabled = false;
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
             glimpEnabled = false;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = true;
             dexcomG5Enabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
@@ -95,7 +102,7 @@ public class DataService extends IntentService {
             dexcomG5Enabled = true;
         }
 
-        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
+        boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -123,8 +130,8 @@ public class DataService extends IntentService {
                     handleNewDataFromDexcomG5(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                // always backfill SGV from NS
-                handleNewDataFromNSClient(intent);
+                if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
+                    handleNewDataFromNSClient(intent);
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
@@ -190,7 +197,8 @@ public class DataService extends IntentService {
         bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
-
+        String source = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "no Source specified");
+        SourceXdripPlugin.getPlugin().setSource(source);
         MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
     }
 
@@ -222,7 +230,7 @@ public class DataService extends IntentService {
         try {
             JSONArray jsonArray = new JSONArray(data);
             log.debug("Received Dexcom Data size:" + jsonArray.length());
-            for(int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
                 bgReading.value = json.getInt("m_value");
                 bgReading.direction = json.getString("m_trend");
@@ -365,11 +373,8 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
-                NSProfilePlugin.storeNewProfile(profileStore);
+                NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
-                // if there are no profile switches this should lead to profile update
-                if (MainApp.getConfigBuilder().getProfileSwitchesFromHistory().size() == 0)
-                    MainApp.bus().post(new EventNewBasalProfile());
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
@@ -380,19 +385,18 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
                 if (bundles.containsKey("treatment")) {
-                    String trstring = bundles.getString("treatment");
-                    handleAddChangeDataFromNS(trstring);
+                    JSONObject json = new JSONObject(bundles.getString("treatment"));
+                    handleTreatmentFromNS(json, intent);
                 }
                 if (bundles.containsKey("treatments")) {
                     String trstring = bundles.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String trstr = trJson.toString();
-                        handleAddChangeDataFromNS(trstr);
+                        JSONObject json = jsonArray.getJSONObject(i);
+                        handleTreatmentFromNS(json, intent);
                     }
                 }
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
         }
@@ -401,21 +405,19 @@ public class DataService extends IntentService {
             try {
                 if (bundles.containsKey("treatment")) {
                     String trstring = bundles.getString("treatment");
-                    JSONObject trJson = new JSONObject(trstring);
-                    String _id = trJson.getString("_id");
-                    handleRemovedRecordFromNS(_id);
+                    JSONObject json = new JSONObject(trstring);
+                    handleTreatmentFromNS(json);
                 }
 
                 if (bundles.containsKey("treatments")) {
                     String trstring = bundles.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String _id = trJson.getString("_id");
-                        handleRemovedRecordFromNS(_id);
+                        JSONObject json = jsonArray.getJSONObject(i);
+                        handleTreatmentFromNS(json);
                     }
                 }
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
         }
@@ -474,59 +476,25 @@ public class DataService extends IntentService {
             }
         }
 
-        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD) || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
-            try {
-                if (bundles.containsKey("food")) {
-                    String trstring = bundles.getString("food");
-                    handleAddChangeFoodRecord(new JSONObject(trstring));
-                }
-                if (bundles.containsKey("foods")) {
-                    String trstring = bundles.getString("foods");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        handleAddChangeFoodRecord(trJson);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
+                || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
+            int mode = Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
+            EventNsFood evt = new EventNsFood(mode, bundles);
+            MainApp.bus().post(evt);
         }
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            try {
-                if (bundles.containsKey("food")) {
-                    String trstring = bundles.getString("food");
-                    JSONObject trJson = new JSONObject(trstring);
-                    String _id = trJson.getString("_id");
-                    handleRemovedFoodRecord(_id);
-                }
-
-                if (bundles.containsKey("foods")) {
-                    String trstring = bundles.getString("foods");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String _id = trJson.getString("_id");
-                        handleRemovedFoodRecord(_id);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
+            MainApp.bus().post(evt);
         }
     }
 
-    private void handleRemovedFoodRecord(String _id) {
-        MainApp.getDbHelper().foodHelper.deleteFoodById(_id);
-    }
-
-    public void handleAddChangeFoodRecord(JSONObject trJson) throws JSONException {
-        MainApp.getDbHelper().foodHelper.createFoodFromJsonIfNotExists(trJson);
-    }
-
-    private void handleRemovedRecordFromNS(String _id) {
-        MainApp.getDbHelper().deleteTreatmentById(_id);
+    private void handleTreatmentFromNS(JSONObject json) {
+        // new DB model
+        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.REMOVE, json);
+        MainApp.bus().post(evtTreatment);
+        // old DB model
+        String _id = JsonHelper.safeGetString(json, "_id");
         MainApp.getDbHelper().deleteTempTargetById(_id);
         MainApp.getDbHelper().deleteTempBasalById(_id);
         MainApp.getDbHelper().deleteExtendedBolusById(_id);
@@ -534,82 +502,50 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
-    private void handleAddChangeDataFromNS(String trstring) throws JSONException {
-        JSONObject trJson = new JSONObject(trstring);
-        handleDanaRHistoryRecords(trJson); // update record _id in history
-        handleAddChangeTempTargetRecord(trJson);
-        handleAddChangeTempBasalRecord(trJson);
-        handleAddChangeExtendedBolusRecord(trJson);
-        handleAddChangeCareportalEventRecord(trJson);
-        handleAddChangeTreatmentRecord(trJson);
-        handleAddChangeProfileSwitchRecord(trJson);
-    }
-
-    public void handleDanaRHistoryRecords(JSONObject trJson) {
-        if (trJson.has(DanaRNSHistorySync.DANARSIGNATURE)) {
-            MainApp.getDbHelper().updateDanaRHistoryRecordId(trJson);
-        }
-    }
-
-    public void handleAddChangeTreatmentRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("insulin") || trJson.has("carbs")) {
-            MainApp.getDbHelper().createTreatmentFromJsonIfNotExists(trJson);
-            return;
-        }
-    }
-
-    public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPORARYTARGET)) {
-            MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(trJson);
-        }
-    }
-
-    public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPBASAL)) {
-            MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(trJson);
-        }
-    }
-
-    public void handleAddChangeExtendedBolusRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.COMBOBOLUS)) {
-            MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(trJson);
-        }
-    }
-
-    public void handleAddChangeCareportalEventRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("insulin") && trJson.getDouble("insulin") > 0)
-            return;
-        if (trJson.has("carbs") && trJson.getDouble("carbs") > 0)
-            return;
-        if (trJson.has("eventType") && (
-                trJson.getString("eventType").equals(CareportalEvent.SITECHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.BGCHECK) ||
-                        trJson.getString("eventType").equals(CareportalEvent.NOTE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.NONE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT) ||
-                        trJson.getString("eventType").equals(CareportalEvent.QUESTION) ||
-                        trJson.getString("eventType").equals(CareportalEvent.EXERCISE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.OPENAPSOFFLINE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.PUMPBATTERYCHANGE)
-        )) {
-            MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
+    private void handleTreatmentFromNS(JSONObject json, Intent intent) throws JSONException {
+        // new DB model
+        int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
+        double insulin = JsonHelper.safeGetDouble(json, "insulin");
+        double carbs = JsonHelper.safeGetDouble(json, "carbs");
+        String eventType = JsonHelper.safeGetString(json, "eventType");
+        if (insulin > 0 || carbs > 0) {
+            EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
+            MainApp.bus().post(evtTreatment);
+        } else if (json.has(DanaRNSHistorySync.DANARSIGNATURE)) {
+            // old DB model
+            MainApp.getDbHelper().updateDanaRHistoryRecordId(json);
+        } else if (eventType.equals(CareportalEvent.TEMPORARYTARGET)) {
+            MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.TEMPBASAL)) {
+            MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
+            MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
+            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(json);
+        } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
+                eventType.equals(CareportalEvent.INSULINCHANGE) ||
+                eventType.equals(CareportalEvent.SENSORCHANGE) ||
+                eventType.equals(CareportalEvent.BGCHECK) ||
+                eventType.equals(CareportalEvent.NOTE) ||
+                eventType.equals(CareportalEvent.NONE) ||
+                eventType.equals(CareportalEvent.ANNOUNCEMENT) ||
+                eventType.equals(CareportalEvent.QUESTION) ||
+                eventType.equals(CareportalEvent.EXERCISE) ||
+                eventType.equals(CareportalEvent.OPENAPSOFFLINE) ||
+                eventType.equals(CareportalEvent.PUMPBATTERYCHANGE)) {
+            MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
         }
 
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
-            long date = trJson.getLong("mills");
+        if (eventType.equals(CareportalEvent.ANNOUNCEMENT)) {
+            long date = JsonHelper.safeGetLong(json,"mills");
             long now = System.currentTimeMillis();
-            if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
-                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, trJson.getString("notes"), Notification.ANNOUNCEMENT, 60);
+            String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
+            String notes = JsonHelper.safeGetString(json, "notes", "");
+            if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
+                    && !enteredBy.equals(SP.getString("careportal_enteredby", "AndroidAPS"))) {
+                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
-        }
-    }
-
-    public void handleAddChangeProfileSwitchRecord(JSONObject trJson) throws JSONException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.PROFILESWITCH)) {
-            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
         }
     }
 

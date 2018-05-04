@@ -15,13 +15,10 @@
     <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
     <string name="apsmode_title">режим APS</string>
     <string name="array_of_elements" formatted="false">массив %d элементов. актуальная величина:</string>
-    <string name="avgdelta">среднее изменение</string>
     <string name="basal">базал</string>
     <string name="basal_rate">скорость усвоения базала:</string>
     <string name="basal_step">шаг базала</string>
-    <string name="basalshortlabel">БАЗ</string>
     <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
-    <string name="base_profile_label">профиль базала</string>
     <string name="batterydischarged">батарея помпы разряжена</string>
     <string name="batteryoptimalizationerror">по-видимому устройство не поддерживается белым списком оптимизации батареи</string>
     <string name="bg_lang">болгарский</string>
@@ -79,8 +76,6 @@
     <string name="careportal_temporarytargetcancel">отмена времнной цели</string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="child">ребенок</string>
-    <string name="circadian_percentage_profile">суточный процентный профиль</string>
-    <string name="circadian_percentage_profile_shortname">СПП</string>
     <string name="clear_queue">очистка очереди</string>
     <string name="clearlog">очистка лога</string>
     <string name="closedloop">замкнутый цикл</string>
@@ -89,7 +84,7 @@
     <string name="configbuilder">конфигуратор</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">источник СК</string>
-    <string name="configbuilder_constraints">ограничения</string>
+    <string name="constraints">ограничения</string>
     <string name="configbuilder_general">общее</string>
     <string name="configbuilder_insulin">инсулин</string>
     <string name="configbuilder_loop">замкнутый цикл</string>
@@ -97,7 +92,6 @@
     <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_shortname">КОНФ</string>
-    <string name="configbuilder_tempbasals">временный базал</string>
     <string name="configbuilder_treatments">назначения</string>
     <string name="confirmation">подтверждение</string>
     <string name="connected">соединение установлено</string>
@@ -171,28 +165,22 @@
     <string name="de_lang">Немецкий</string>
     <string name="deliver_now">дать сейчас</string>
     <string name="delta">изменение</string>
-    <string name="dev">DEV</string>
     <string name="devicenotfound">выбранное устройство не найдено</string>
     <string name="dia">время действия инсулина:</string>
     <string name="disabledloop">цикличность неактивирована</string>
     <string name="disableloop">деактивировать циклы</string>
     <string name="disconnected">отсоединено</string>
     <string name="disconnecting">разъединение</string>
-    <string name="disconnectpumpfor10h">отсоединить помпу на 10 час</string>
     <string name="disconnectpumpfor1h">отсоединить помпу на 1 час</string>
     <string name="disconnectpumpfor2h">отсоединить помпу на 2 часа</string>
+    <string name="disconnectpumpfor15m">отсоединить помпу на 15 мин</string>
     <string name="disconnectpumpfor30m">отсоединить помпу на 30 мин</string>
     <string name="disconnectpumpfor3h">отсоединить помпу на 3 часа</string>
     <string name="dismiss">отклонить</string>
-    <string name="dont_show_again">не показывать снова</string>
     <string name="duration">продолжительность</string>
     <string name="eatingsoon">наступает время еды</string>
-    <string name="edit_base_basal">редактировать значение базала:</string>
-    <string name="edit_base_ic">редактировать инсулин/ВХ:</string>
-    <string name="edit_base_isf">редактировать чувствительность к инсулину:</string>
     <string name="el_lang">греческий</string>
     <string name="en_lang">English</string>
-    <string name="enabled">активировано</string>
     <string name="enableloop">активировать цикличность</string>
     <string name="enablesuperbolus">активировать суперболюс</string>
     <string name="enablesuperbolus_summary">активировать возможность суперболюса в мастере. не активируйте если не знаете что это. МОЖЕТ ВЫЗВАТЬ ПЕРЕДОЗИРОВКУ ИНСУЛИНА ЕСЛИ ИСПОЛЬЗУЕТСЯ ВСЛЕПУЮ</string>
@@ -221,7 +209,6 @@
     <string name="glucosetype_finger">палец</string>
     <string name="glucosetype_sensor">сенсор</string>
     <string name="high_mark">ВЕРХНЯЯ отметка</string>
-    <string name="hoursago">час. назад</string>
     <string name="import_from">импортировать настройки из</string>
     <string name="initializing">инициализация...</string>
     <string name="insulin_shortname">ИНС</string>
@@ -235,10 +222,8 @@
     <string name="loop">замкнутый цикл</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">после наложенных ограничений</string>
-    <string name="loop_setbypump_label">задано помпой</string>
     <string name="loop_shortname">ЗЦ</string>
     <string name="loopdisabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
-    <string name="loopmenu">меню ЗЦ</string>
     <string name="loopsuperbolusfor" formatted="false">суперболюс(%d m)</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
     <string name="loopsuspendedfor" formatted="false">остановлен на(%d m)</string>
@@ -252,7 +237,6 @@
     <string name="missing">отсутствует</string>
     <string name="mmol">mmol/l</string>
     <string name="nav_about">о приложении</string>
-    <string name="nav_backup">сохранение</string>
     <string name="nav_exit">выход</string>
     <string name="nav_export">экспорт настроек</string>
     <string name="nav_import">импорт настроек</string>
@@ -260,7 +244,6 @@
     <string name="nav_refreshtreatments">синхронисировать назначения с NS</string>
     <string name="nav_resetdb">обнулить базы</string>
     <string name="nav_show_logcat">показать лог</string>
-    <string name="nav_test_alert">проверка сигнала тревоги</string>
     <string name="needwhitelisting" formatted="false">%s необходимо включить в белый список для корректной работы</string>
     <string name="nightscout">Nightscout</string>
     <string name="noapsselected">APS не выбрана или не выдала результат</string>
@@ -278,12 +261,8 @@
     <string name="ns_sync_use_absolute_title">только абсолютные величины для базала</string>
     <string name="ns_upload_only">только передача в NS (синхронизация отсутствует)</string>
     <string name="ns_upload_only_summary">только передача в NS. работает в SGV только если выбран местный источник вроде xdrip. не работает в профилях при действующем профиле NS</string>
-    <string name="nsclient">NSClient</string>
-    <string name="nsclientinternal">внутренний клиент NS</string>
+    <string name="nsclientinternal">клиент NS</string>
     <string name="nsclientinternal_autoscroll">автоскроллинг</string>
-    <string name="nsclientinternal_devicename_dialogmessage">будет использоваться в поле \"кем введено\"</string>
-    <string name="nsclientinternal_devicename_dialogtitle">введите название устройства</string>
-    <string name="nsclientinternal_devicename_title">имя устройства</string>
     <string name="nsclientinternal_secret_dialogmessage">введите API secret для NS (мин 12 знаков)</string>
     <string name="nsclientinternal_secret_dialogtitle">API secret для NS</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
@@ -293,7 +272,6 @@
     <string name="nsclientinternal_url_dialogmessage">введите URL адрес Nightscout</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientnotinstalled">отключите \"только передача в NS\" чтобы активировать эту опцию</string>
-    <string name="nsprofileview_activeprofile_label">активный профиль</string>
     <string name="nsprofileview_basal_label">базал</string>
     <string name="nsprofileview_dia_label">DIA (время действия инсулина)</string>
     <string name="nsprofileview_ic_label">IC (инсулин/углеводы):</string>
@@ -335,7 +313,6 @@
     <string name="openapsama_autosens_min_summary">по умолчанию:0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">значение по умолчанию :2 bolus snoose активируется после введения болюса на еду чтобы цикл не взаимодействовал с временными низкими СК сразу после еды. так, трехчасовой DIA при величине 2 означает постыпенное затихание bolus snooze после 1.5 часов (3DIA/2)</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_min_5m_carbimpact_summary">значение по умолчанию :3  усвоение углеводов за 5 мин. то есть 3 мг/дл/ 5 мин. Влияет на расчет прогнозируемой гликемии, когда СК падает быстрее или не растет так как ожидается.</string>
@@ -355,20 +332,18 @@
     <string name="openapsma_maxiob_title">макс базал активн инс подаваемый с OpenAPS (ед)</string>
     <string name="openapsma_mealdata_label">данные приема пищи</string>
    <string name="openapsma_noglucosedata">данные гликемии недоступны</string>
-    <string name="openapsma_noprofile">профиль недоступен</string>
-    <string name="openapsma_nopump">помпа недоступна</string>
     <string name="openapsma_profile_label">профиль</string>
     <string name="openapsma_request_label">запрос</string>
     <string name="result">результат</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">величина %s недопустима</string>
+    <string name="valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
+    <string name="valueoutofrange" formatted="false">величина %s недопустима</string>
     <string name="openloop">открытый цикл</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="othersettings_title">другое</string>
     <string name="overview">начало</string>
-    <string name="overview_bolus_label">болюс</string>
+    <string name="overview_treatment_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2fU е инс</string>
     <string name="overview_bolusprogress_stop">стоп</string>
@@ -392,10 +367,7 @@
     <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
     <string name="paused">на паузе</string>
     <string name="percent">процент</string>
-    <string name="percentagefactor_hint">% на который будет умножен базовый профиль</string>
     <string name="pleaseallowpermission">предоставьте разрешение</string>
-    <string name="predictionshortlabel">PRE</string>
-    <string name="prefs_delta_title">настройки дельты СК</string>
     <string name="prefs_range_summary">нижняя и верхняя граница диаграммы в отчетах и Smartwatch (mmol/l)</string>
     <string name="prefs_range_title">диапазон для визуализации</string>
     <string name="primefill">прайм/заполнение</string>
@@ -410,7 +382,6 @@
     <string name="pumperror">ошибка помпы</string>
     <string name="pumpshutdown">помпа выключена</string>
     <string name="pumpsuspended">работа помпы приостановлена</string>
-    <string name="pumpsuspendedclicktorefresh">работа помпы приостановлена. нажмите для обновления состояния</string>
     <string name="queue">очередь</string>
     <string name="quickwizard">БыстрыйБолюс</string>
     <string name="quickwizardsettings">БыстрыйБолюс настройки</string>
@@ -425,7 +396,6 @@
     <string name="resume">возобновить</string>
     <string name="safety">безопасность</string>
     <string name="save">сохранить</string>
-    <string name="send">ОТПРАВИТЬ</string>
     <string name="send_calibration" formatted="false">отправить калибровку %.1f на xdrip?</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="setextendedbolusquestion">установить новый расширенн болюс:</string>
@@ -494,9 +464,6 @@
     <string name="tempbasals_netinsulin_label_string">инс:</string>
     <string name="tempbasals_netratio_label_string">соотношение:</string>
     <string name="tempbasals_realduration_label_string">длит:</string>
-    <string name="tempbasals_shortname">ВремБаз</string>
-    <string name="temptargetrange_shortname">ВремЦель</string>
-    <string name="timeshift_hint">Время в часах к которому профиль перейдет на след сутки</string>
     <string name="treatmentdeliveryerror">ошибка доставки болюса</string>
     <string name="treatments">назначения</string>
     <string name="treatments_activity_string">нагрузка:</string>
@@ -515,15 +482,13 @@
     <string name="treatments_wizard_carbs_label">углеводы</string>
     <string name="treatments_wizard_cob_label">активн углеводы</string>
     <string name="treatments_wizard_correction_label">коррекция</string>
-    <string name="treatments_wizard_total_label">ВСЕГО</string>
-    <string name="treatments_wizard_unit_label">ед</string>
+    <string name="insulin_unit_shortname">ед</string>
     <string name="treatmentssafety_maxbolus_title">макс разрешенный болюс</string>
     <string name="treatmentssafety_maxcarbs_title">макс разрешенные углеводы (г)</string>
     <string name="treatmentssafety_title">безопасность назначений</string>
     <string name="units">единицы измерения:</string>
     <string name="unlock_settings">разрешить внести изменения в настройки</string>
     <string name="unsupportedclientver">неподдерживаемая версия NSClient</string>
-    <string name="up">вверх</string>
     <string name="updatingbasalrates">обновление значений базала</string>
     <string name="uploading">передача данных</string>
     <string name="virtualpump">виртуальная помпа</string>
@@ -536,13 +501,10 @@
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>
-    <string name="virtualpump_sqlerror">ошибка SQL</string>
     <string name="pump_tempbasal_label">врем базал</string>
     <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
-    <string name="visible">виден</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
     <string name="waitingforpump">ожидание помпы</string>
-    <string name="waitingforpumpclicktorefresh">ожидание помпы. нажмите чтобы обновить</string>
     <string name="waitingforpumpresult">ожидание результата от помпы</string>
     <string name="wear">Wear</string>
     <string name="wear_detailedIOB_summary">разбивка IOB на болюсный и базальный IOB на циферблате смарт-часов</string>
@@ -565,7 +527,6 @@
     <string name="absorptionsettings_title">Настройки усваиваемости</string>
     <string name="activate_profile">АКТИВИРОВАТЬ ПРОФИЛЬ</string>
     <string name="basal_short">БАЗ</string>
-    <string name="basalmissing">Базал отсутствует в профиле. Применяются данные по умолчанию</string>
     <string name="careportal_activity_label">АКТИВНОСТЬ</string>
     <string name="careportal_canulaage_label">канюля проработала</string>
     <string name="careportal_canulaage_label_short">ВозрКан</string>
@@ -581,25 +542,19 @@
     <string name="careportal_sensorage_label">сенсор пропаботал</string>
     <string name="careportal_sensorage_label_short">ВОЗРСенс</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
-    <string name="cpp_notloadedplugins">не все профили загружены!</string>
-    <string name="cpp_sync_setting_missing">требует активации для отправки данных на помпу!</string>
-    <string name="cpp_valuesnotstored">Данные не сохранены!</string>
+    <string name="notloadedplugins">не все профили загружены!</string>
+    <string name="valuesnotstored">Данные не сохранены!</string>
     <string name="danar_visualizeextendedaspercentage_title">Просмотреть расширенный болюс %</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>
-    <string name="device">устройство</string>
-    <string name="dia_too_short" formatted="false">pначение длительности работы инс %s слишком мало - применено %s</string>
-    <string name="do_not_track_profile_switch">не отслеживать смены профиля</string>
-    <string name="do_not_track_profile_switch_summary">все смены профиля игнорируются; используется только активный профиль</string>
+    <string name="dia_too_short" formatted="false">pначение длительности работы инс %f слишком мало - применено %f</string>
     <string name="extendedbolus">расширенный болюс</string>
     <string name="free_peak_oref">Акуу-Зуфл Щкуа</string>
     <string name="hours">час</string>
-    <string name="icmissing">соотношение инс-углев отсутствует в профиле. применено соотн. по умолчанию</string>
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
-    <string name="isfmissing">фактор чувствительности к инс. отутствует в профиле. Применен фактор по умолчанию</string>
     <string name="lock_screen">блокировка экрана</string>
     <string name="lock_screen_short">блок</string>
     <string name="mdtp_cancel">отмена</string>
@@ -612,7 +567,6 @@
     <string name="nsalarm_low">Низкий</string>
     <string name="nsalarm_staledata">Нет данных</string>
     <string name="nsalarm_staledatavalue_label">Порог устаревших данных (мин)</string>
-    <string name="nsalarm_summary">сейчас установлен на %f</string>
     <string name="nsalarm_urgent_staledatavalue_label">Порог тревоги из-за устаревших данных (мин)</string>
     <string name="nsalarm_urgenthigh">Тревога выс</string>
     <string name="nsalarm_urgentlow">Тревога низкий</string>
@@ -625,7 +579,6 @@
     <string name="profileswitch">смена профиля</string>
     <string name="pump">помпа</string>
     <string name="rapid_acting_oref">быстро действующий Oref</string>
-    <string name="ratio_short">СООТН</string>
     <string name="refresheventsfromnightscout">обновить данные из NS</string>
     <string name="ru_lang">heccrbq</string>
     <string name="sensitivity_shortname">Xedcnd</string>
@@ -634,7 +587,6 @@
     <string name="sensitivityoref0">Чувствительность Oref0</string>
     <string name="sensitivityweightedaverage">средневзвешенная чувствительность</string>
     <string name="sv_lang">Шведский</string>
-    <string name="targetmissing">Целевое значение отсутствует в профиле. Применено значение по умолчанию</string>
     <string name="tempbasal">ВремБазал</string>
     <string name="temptarget">ВремЦель</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
@@ -643,8 +595,6 @@
     <string name="uploader">uploader</string>
     <string name="uploader_short">UPLD</string>
     <string name="virtualpump_extendedbolus_label_short">ПРОДЛ</string>
-    <string name="wear_overviewnotifications">Просмотр уведомлений</string>
-    <string name="wear_overviewnotifications_summary">Пропустить уведомления как потдтвержденные от Wear</string>
     <string name="openapsama_autosens_period">интервал для autosens (ч)</string>
     <string name="openapsama_autosens_period_summary">Время в часах в прошлом для определения чувствительности (время усвоения углеводов исключается)</string>
 </resources>

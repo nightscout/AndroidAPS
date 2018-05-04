@@ -28,19 +28,14 @@
     <string name="wear_showbgi_summary">Voeg BGI toe aan status lijn</string>
     <string name="wear_shortname">WEAR</string>
     <string name="wear_settings">Wear instellingen</string>
-    <string name="wear_overviewnotifications_summary">Geef de overzicht notificaties door als wear bevestigings berichten</string>
-    <string name="wear_overviewnotifications">Overzicht Notificaties</string>
     <string name="wear_detailedIOB_title">Toon gedetailleerde IOB</string>
     <string name="wear_detailedIOB_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="wear">Wear</string>
     <string name="waitingforpumpresult">Wacht op het resultaat</string>
-    <string name="waitingforpumpclicktorefresh">Wacht op pomp. Klik om te vernieuwen.</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
-    <string name="visible">Toon</string>
     <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
     <string name="pump_tempbasal_label">Tijdelijk basaal</string>
-    <string name="virtualpump_sqlerror">SQL Storing</string>
     <string name="virtualpump_shortname">VP</string>
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
     <string name="virtualpump_resultok">OK</string>
@@ -55,7 +50,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="uploader">Uploader</string>
     <string name="updatingbasalrates">Bijwerken basaal patroon</string>
-    <string name="up">Omhoog</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
     <string name="unsupportedclientver">Niet ondersteunde versie van NSClient</string>
     <string name="unlock_settings">Instellingen ontgrendelen</string>
@@ -63,9 +57,6 @@
     <string name="treatmentssafety_maxcarbs_title">Max toegestaane koolhydraten [g]</string>
     <string name="basal">Basaal</string>
     <string name="basal_short">BAS</string>
-    <string name="basalmissing">Basaal ontbreekt in profiel. Standaard actief</string>
-    <string name="basalshortlabel">BAS</string>
-    <string name="base_profile_label">Basis Profiel</string>
     <string name="batterydischarged">Pomp Batterij Leeg</string>
     <string name="batteryoptimalizationerror">Toestel ondersteund klaarblijkelijk geen baterij optimalisatie vrijschakeling!</string>
     <string name="bg_lang">български</string>
@@ -138,7 +129,7 @@
     <string name="configbuilder">Configurator</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BG bron</string>
-    <string name="configbuilder_constraints">Beperkingen</string>
+    <string name="constraints">Beperkingen</string>
     <string name="configbuilder_general">Algemeen</string>
     <string name="configbuilder_insulin">Insuline curve</string>
     <string name="clear_queue">Ledig wachtrij</string>
@@ -148,7 +139,6 @@
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="configbuilder_tempbasals">Tijdelijke basalen</string>
     <string name="configbuilder_treatments">Behandelingen</string>
     <string name="confirmation">Bevestiging</string>
     <string name="connected">Verbonden</string>
@@ -159,9 +149,8 @@
     <string name="copied_to_clipboard">Gekopieerd naar klembord</string>
     <string name="copy_to_clipboard">Kopieren naar klembord</string>
     <string name="correctionbous">Correctie</string>
-    <string name="cpp_notloadedplugins">Niet alle profielen zijn geladen!</string>
-    <string name="cpp_sync_setting_missing">Moet geactiveerd worden om waardes naat de pomp te verzenden!</string>
-    <string name="cpp_valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
+    <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="cs_lang">Čeština</string>
     <string name="danar_alarm">Alarm</string>
     <string name="danar_basalhour">Basaal uur</string>
@@ -180,7 +169,6 @@
     <string name="resume">Hervatten</string>
     <string name="save">Opslaan</string>
     <string name="safety">Veiligheid</string>
-    <string name="send">VERZEND</string>
     <string name="send_calibration" formatted="false">Verzend calibratie %.1f naar xDrip?</string>
     <string name="sensitivity_warning">Vergeet niet alle gegeten koolhydraten in te geven bij het activeren van de Autosens functie. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden!!</string>
     <string name="sensitivityaaps">Gevoeligheid AAPS</string>
@@ -219,19 +207,15 @@
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
-    <string name="loop_setbypump_label">Gedefinieerd door de pomp</string>
     <string name="loop_shortname">LOOP</string>
     <string name="it_lang">Italiano</string>
     <string name="nl_lang">Nederlands</string>
-    <string name="isfmissing">ISF ontbreekt in profiel. Standaard waarden toegepast.</string>
     <string name="glucosetype_finger">Vingerprik</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="high_mark">Hoog grens</string>
     <string name="hours">Uren</string>
-    <string name="icmissing">KH ratio ontbreekt in profieel. Standaard waarde toegepast</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="initializing">Initialisering</string>
-    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="danar_history_bolus">Bulossen</string>
     <string name="danar_history_carbohydrates">Koolhydraten</string>
     <string name="danar_history_errors">Storing</string>
@@ -242,19 +226,17 @@
     <string name="days">Dagen</string>
     <string name="de_lang">Deutsch</string>
     <string name="deliver_now">Toedienen</string>
-    <string name="device">Toestel</string>
     <string name="devicenotfound">Geselecteerd toestel niet gevonden</string>
     <string name="disabledloop">Loop gedeactiveerd</string>
     <string name="disableloop">Loop deactiveren</string>
     <string name="disconnected">Niet verbonden</string>
     <string name="disconnecting">Verbreken</string>
-    <string name="disconnectpumpfor10h">Verbreek verbinding 10u met pomp</string>
     <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
     <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
+    <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
     <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
     <string name="dismiss">NEGEER</string>
-    <string name="do_not_track_profile_switch">Negeer profiel wijzigingen</string>
     <string name="iob">IOB</string>
     <string name="invalidprofile">Ongeldig profiel !!!</string>
     <string name="insulin_shortname">INS</string>
@@ -265,10 +247,7 @@
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSISEN ZIJN MOGELIJK BIJ ONWETENDHEID</string>
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
-    <string name="enabled">Actief</string>
-    <string name="dont_show_again">Toon niet opnieuw</string>
     <string name="eatingsoon">Eet binnenkort</string>
-    <string name="edit_base_basal">Verander basaal patroon</string>
     <string name="old_data">Oude gegevens</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
@@ -308,7 +287,6 @@
     <string name="danar_invalidinput">Verkeerde ingave</string>
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="basal_rate">Basaal:</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_tbb">Totaal basaal</string>
@@ -325,7 +303,6 @@
     <string name="danarpump">DanaR</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="danarv2pump">DanaRv2</string>
-    <string name="dev">DEV</string>
     <string name="nobtadapter">Geen bluetooth adapter gevonden</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <string name="noprofile">Nog geen profiel geladen van NS</string>
@@ -338,7 +315,6 @@
     <string name="ok">Ok</string>
     <string name="danar_stats_basalrate">Basaal</string>
     <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
-    <string name="loopmenu">Loop menu</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor" formatted="false">Pauzeer (%d m)</string>
@@ -352,7 +328,6 @@
     <string name="missing">Te weinig</string>
     <string name="mmol">mmol/l</string>
     <string name="nav_about">Over</string>
-    <string name="nav_backup">Backup</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_export">Exporteer instellingen</string>
     <string name="nav_import">Importeer instellingen</string>
@@ -360,25 +335,19 @@
     <string name="nav_refreshtreatments">Haal wijzigingen op van NS</string>
     <string name="nav_resetdb">Reset databanken</string>
     <string name="nav_show_logcat">Toon logboek</string>
-    <string name="nav_test_alert">Test alarm</string>
     <string name="needwhitelisting" formatted="false">%s benodigd batterij omptimalistaie vrijwaring voor performate werking</string>
     <string name="ns_alarmoptions">Alarm opties</string>
     <string name="ns_noupload">Geen upload naar NS</string>
     <string name="ns_upload_only">Enkel NS upload (sync. gedeactiveerd)</string>
     <string name="nsalarm_high">Hoog</string>
     <string name="nsalarm_low">Laag</string>
-    <string name="nsalarm_summary" formatted="false">Ingesteld op %f</string>
     <string name="nsalarm_urgenthigh">Zeer hoog</string>
     <string name="nsalarm_urgentlow">Zeer laag</string>
-    <string name="nsclient">NSClient</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Toestelnaam ingeven</string>
-    <string name="nsclientinternal_devicename_title">Toestel naam</string>
     <string name="nsclientinternal_secret_dialogmessage">Geen NS API geheim op (min 12 kar.)</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
-    <string name="treatments_wizard_unit_label">E</string>
-    <string name="treatments_wizard_total_label">Totaal</string>
+    <string name="insulin_unit_shortname">E</string>
     <string name="treatments_wizard_correction_label">Correctie</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_carbs_label">Koolhydraten</string>
@@ -409,9 +378,8 @@
     <string name="openloop">Open loop</string>
     <string name="openloop_newsuggestion">Nieuw voorstel beschikbaar</string>
     <string name="othersettings_title">Andere</string>
-    <string name="openapsma_nopump">Geen pomp beschikbaar</string>
     <string name="overview">Overzicht</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_bolusprogress_delivered">Toegediend</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Er worden %.2fE toegediend</string>
     <string name="overview_bolusprogress_stop">Stop</string>
@@ -419,7 +387,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="overview_calibration">Kalibratie</string>
     <string name="danar_stats_olddata_Message">Oude gegevens druk \"VERNIEUW\" a.u.b.</string>
-    <string name="hoursago">u geleden</string>
     <string name="minago">%d min geleden</string>
     <string name="reason">Berekening</string>
     <string name="rate">Dosis</string>
@@ -448,10 +415,9 @@
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="openapsma_noglucosedata">Geen BG gegevens beschikbaar</string>
-    <string name="openapsma_noprofile">Geen profiel beschikbaar</string>
     <string name="openapsma_maxiob_title">Maximaal basaal IOB OpenAPS kan toedienen [E]</string>
     <string name="openapsma_profile_label">Profiel</string>
-    <string name="openapsma_valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
+    <string name="valueoutofrange">Waarde %s is buiten de toegestane limieten</string>
     <string name="pump_basebasalrate_label">Basis basale dosis</string>
     <string name="openapsma_lastrun_label">Laatse berekening</string>
     <string name="openapsma_lastenact_label">Laatste uitvoering</string>
@@ -476,9 +442,7 @@
     <string name="profile">Profiel</string>
     <string name="percent">Percent</string>
     <string name="patientage_summary">Kies leeftijd van de patient voor veiligheids limieten</string>
-    <string name="percentagefactor_hint">Percentage factor waarmee het basaal profiel mag vermenigvuldigd worden</string>
     <string name="pleaseallowpermission">Sta wijzigingen toe</string>
-    <string name="predictionshortlabel">PRE</string>
     <string name="target_range">Streefdoel:</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
@@ -501,7 +465,6 @@
     <string name="tempbasaldeliveryerror">Tijdelijk basaal toedien storing</string>
     <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
     <string name="ru_lang">русский</string>
-    <string name="avgdelta">Gemiddeld verschil</string>
     <string name="always_use_shortavg">Gebruik altijd kleine gemiddelde verschillen ipv gewone verschillen</string>
     <string name="array_of_elements">Tabel met %d elementen. Actuele waarde:</string>
     <string name="overview_quickwizard_item_remove_button">Verwijder</string>
@@ -521,7 +484,6 @@
     <string name="basal_step">Basaal stap</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
     <string name="carbsconstraintapplied">KH limiet ingesteld</string>
-    <string name="circadian_percentage_profile">CircadianPercentageProfiel</string>
     <string name="danar_sbolus">S Bolus</string>
     <string name="danar_stats">DanaR Statistiek</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
@@ -532,9 +494,6 @@
     <string name="danar_stats_warning_Message">Mogelijks inacuraat bij gebruik van bolussen om infusieset te vullen</string>
     <string name="delta">Verschil</string>
     <string name="dia">DIA:</string>
-    <string name="do_not_track_profile_switch_summary">Alle profiel wijzigingen worden genegeerd, aktief profiel wordt gebruikt</string>
-    <string name="edit_base_ic">Basis-IC aanpassen:</string>
-    <string name="edit_base_isf">Basis-ISF aanpassen:</string>
     <string name="enacted">Uitgevoerd</string>
     <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="long_avgdelta">Groot gemiddeld verschil</string>
@@ -546,7 +505,6 @@
     <string name="ns_noupload_summary">AAPS is verbonden met NS maar er worden geen wijzigingen uitgevoerd op NS</string>
     <string name="ns_sync_use_absolute_title">Gebruik altijd absolute basale waarden</string>
     <string name="nsclientnotinstalled">NSClient niet geïnstalleerd. Gegevens verloren!</string>
-    <string name="nsprofileview_activeprofile_label">Actief profiel</string>
     <string name="nsprofileview_basal_label">Basaal</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">KH ratio</string>
@@ -554,7 +512,6 @@
     <string name="nsalarm_staledatavalue_label">Oude gegevens sinds [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Alarm oude gegevens sinds [min]</string>
     <string name="nsalarm_urgentstaledata">Dringend oude gegevens vernieuwen</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Dit zal worden gebruikt in het Ingegeven door vak</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="objectives_6_objective">Activeren van extra functies tijdens de dag zoals AMA</string>
     <string name="objectives_manualenacts">Manuele correcties</string>
@@ -565,7 +522,6 @@
     <string name="ongoingnotificaction">Lopende berichten</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
     <string name="openapsma_maxbasal_title">Maximale E/u dat OpenAPS kan toedienen</string>
-    <string name="prefs_delta_title">Verschil instellingen</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="primefill">Ontlucht/vul</string>
     <string name="profile_set_failed">Instelln van basaal profiel mislukt</string>
@@ -574,11 +530,8 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_realduration_label_string">Tijdsduur:</string>
-    <string name="tempbasals_shortname">TB</string>
-    <string name="temptargetrange_shortname">TT</string>
     <string name="treatmentssafety_title">Behandeling veiligheden</string>
     <string name="pumperror">Pomp storing</string>
-    <string name="timeshift_hint">Tijd in uren waarbij het profiel cilindrische verschoven wordt</string>
     <string name="objectives_4_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat gelijdelijk het BG doel dalen</string>
     <string name="careportal_pbage_label_short">PBAGE</string>
     <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2 Dit betekent dat de verhoging voor autosense ratio (en autotune ratio) is ingesteld op max 20%. Maw. een limiet in hoever je basaal kan verhooght worden en hoeveel je ISF en BG doel verlaagd kan worden.</string>
@@ -588,10 +541,8 @@
     <string name="pumpbusy">Pomp is in gebruik</string>
     <string name="pumpshutdown">Pomp uitschakelen</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
-    <string name="pumpsuspendedclicktorefresh">Pomp onderbroken. Klik om de status te vernieuwen</string>
     <string name="quickwizard">Vaste maaltijd</string>
     <string name="quickwizardsettings">Vaste maaltijd instellingen</string>
-    <string name="ratio_short">SEN</string>
     <string name="removerecord">Verwijder gegeven:</string>
     <string name="resend_all_data">Verzend alle gegevens opnieuw</string>
     <string name="reset_db_confirm">Wil je echt de databank wissen?</string>
@@ -607,7 +558,6 @@
     <string name="smscommunicator_remotecommandnotallowed">Bevelen op astand zijn niet toegestaan</string>
     <string name="smscommunicator_tempbasalcanceled">Tijdelijk basaal afgebroken</string>
     <string name="smscommunicator_tempbasalcancelfailed">Afbreken van tijdelijk basaal mislukt</string>
-    <string name="targetmissing">Streefdoel ontbreekt in profiel. Standaard waarde wordt gebruikt</string>
     <string name="smscommunicator_tempbasalfailed">Start tijdelijk basaal mislukt</string>
     <string name="openapsma_maxiob_summary">Deze waarde wordt de MAx IOB in OpenAPS context genoemt. Dit is standaard 0. Na enkele dagen of weken naargelang uw vertrouwen kan je dit getal wijzigen.</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het overzicht en op Wear</string>
@@ -627,7 +577,7 @@
     <string name="danar_model" formatted="false">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="danar_history_connectingfor">Verbonden gedurende %d s</string>
     <string name="danar_totaluploaded">Totaal %d gegevens geupload</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
+    <string name="valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
     <string name="smscommunicator_suspendreplywithcode" formatted="false">Om de loop te onderbreken voor %d minuten antwoord met de code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Tijdelijk basaal %.2fE/u voor %d minuten succesvol gestart</string>
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
@@ -637,7 +587,7 @@
     <string name="activate_profile">Activeer profiel</string>
     <string name="date">Datum</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="dia_too_short" formatted="false">DIA van %s te kort -  %s wordt inplaats gebruikt!\"</string>
+    <string name="dia_too_short" formatted="false">DIA van %f te kort -  %f wordt inplaats gebruikt!\"</string>
     <string name="insulin_oref_peak">IOB curve piek tijd</string>
     <string name="insulin_peak_time">Piek tijd [min]</string>
     <string name="invalid">Ongeldig</string>
@@ -706,7 +656,6 @@
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notficaties voor waarchuwingen en notificaties</string>
     <string name="executingrightnow">Opdracht is nu uitgevoerd</string>
     <string name="enable_missed_bg_readings_alert">Alarm als er geen BG gegevens ontvangen zijn</string>
-    <string name="customapp">Aangepaste APK downloaden</string>
     <string name="dexcomg5_nsupload_title">Upload BG gegevens naar NS</string>
     <string name="dexcomg5_upload">G5 Upload instellingen</string>
     <string name="loopenabled">Loop Actief</string>
@@ -737,22 +686,16 @@
     <string name="combo_programming_bolus">"Bolus in pomp programmeren "</string>
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
-	<string name="combo_no_pump_connection">Geen verbinding</string><string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
-	<string name="combo_last_bolus">%.1f E (%s, %s)</string>
-	<string name="combo_pump_action_initializing">Initialiseren</string>
-	<string name="combo_pump_state_disconnected">Verbinding verbroken</string>
-	<string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
+    <string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
+    <string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
+    <string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
 	<string name="combo_warning">Waarschuwing</string>
 	<string name="combo_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
 	<string name="combo_reservoir_empty">Leeg</string>
 	<string name="combo_reservoir_low">Bijna leeg</string>
-	<string name="combo_tdd_maximum">Maximum: %3.1f E</string>
-	<string name="combo_reservoir_normal">Normaal</string>
-	<string name="combo_pump_never_connected">Nooit</string>
-	<string name="combo_pump_action_refreshing">Vernieuwen</string>
-	<string name="combo_history">Historiek</string>
-	<string name="combo_pump_alerts">Storingen</string>
-	<string name="combo_pump_battery_low_warrning">Batterij pomp is bijna leeg</string>
+    <string name="combo_reservoir_normal">Normaal</string>
+    <string name="combo_pump_action_refreshing">Vernieuwen</string>
+    <string name="combo_pump_battery_low_warrning">Batterij pomp is bijna leeg</string>
 	<string name="combo_pump_unsupported_operation">Gevraagde is niet momeglijk met de pomp</string>
 	<string name="combo_pump_connected_now">Zojuist</string>
 	<string name="combo_pump_tbr_cancelled_warrning">TB GEANNULEERD Waarschuwing is bevestigd</string>
@@ -761,24 +704,41 @@
 	<string name="combo_pump_state_suspended_by_user">Gestopt door de gebruiker</string>
 	<string name="combo_pump_state_running">Actief</string>
 	<string name="combo_pump_cartridge_low_warrning">Insuline ampul is bijna leeg</string>
-	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp</string>
+	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp: E%d %s</string>
 	<string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
-	<string name="combo_tdd_minimum">Minimum: %3.1f E</string>
-	<string name="combo_tdd_average">Gemiddelde: %3.1f E</string>
-	<string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
+    <string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
 	<string name="combo_activity_reading_pump_history">Lezen van pomp historiek</string>
-	<string name="combo_read_full_history_confirmation">Ben je zeker dat je alle data van de pomp wil ophalen en de consequenties hiervan wil dragen?</string>
-	<string name="combo_no_alert_data_note">Om de pomp fouthistoriek op te halen, druk lang op de Storingen knop OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden.</string>
-	<string name="combo_error_partial_bolus_delivered">Maar %.2f E van de gevraagde %.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
-	<string name="combo_no_tdd_data_note">"Om de TTD van de pomp op te halen, lang duwen op de TDDS knop OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden."</string>
-	<string name="combo_error_bolus_verification_failed">Toedienen en controleren van de bolus in de pomp historiek is mislukt, controleer de pomp en creëer een manuele bolus in het Careportal tabblad</string>
+    <string name="combo_error_partial_bolus_delivered">Maar %.2f E van de gevraagde %.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
+    <string name="combo_error_bolus_verification_failed">Toedienen en controleren van de bolus in de pomp historiek is mislukt, controleer de pomp en creëer een manuele bolus in het Careportal tabblad</string>
 	<string name="combo_error_no_bolus_delivered">Bolus toedienen mislukt. Waarschijnlijk is er geen bolus toegediend. Gelieve de pomp te controleren om een dubbele bolus te vermijden. Als bescherming tegen programmeerfouten worden bolussen niet automatisch opnieuw uitgevoerd.</string>
 	<string name="combo_pump_activity_label">Actie</string>
 	<string name="combo_pump_action_setting_tbr">Instellen TBR (%d%% / %d min)</string>
-	<string name="combo_read_full_history_warning">Dit zal de volledige hystoriek en status van de pomp ophalen. Alles in Mijn Gegevens en basale patronen. Bolussen en TBR zullen aan de behandelingen worden toegevoegd indien deze nog niet aanwezig zijn. Dit kan eveneens dubbele invoeren genereren als de pomp tijd niet synchroon is. Gebruik maken van deze functie tijdens looped wordt afgeraden enkel gebruiken in speciale gevallen. Als je dit echt wil doen, duw lang op deze knop. OPGELET: dit kan een bug veroorzaken waardoor de pomp alle verbindingen verbreekt en het vereist is op een knop op de pomp te duwen, dit wordt daarom afgeraden.</string>
-	<string name="combo_force_disabled_notification">Onvoorzichtig gebruik: Vertraagde of multi wave bolussen zijn toegediend in de afgelopen 6 uur op het geselecteerde basaal patroon is niet 1. Loop is onderbroken tot de 6 uur nadat deze bolussen of andere basale patronen zijn gedetecteerd. Alleen normale bolussen en basaal patroon 1 zijn mogelijk binnen basaal patroon 1</string>
-	<string name="combo_tdds">TDDS</string>
-	<string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wafe bolussen zijn actief. Loop is naar onderdruk lage waardes enkel overgeschakeld gedurende 6 uur. Alleen gewone bolussen worden onderdsteund in loop modus.</string>
+    <string name="combo_force_disabled_notification">Onvoorzichtig gebruik: Vertraagde of multi wave bolussen zijn toegediend in de afgelopen 6 uur op het geselecteerde basaal patroon is niet 1. Loop is onderbroken tot de 6 uur nadat deze bolussen of andere basale patronen zijn gedetecteerd. Alleen normale bolussen en basaal patroon 1 zijn mogelijk binnen basaal patroon 1</string>
+    <string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wafe bolussen zijn actief. Loop is naar onderdruk lage waardes enkel overgeschakeld gedurende 6 uur. Alleen gewone bolussen worden onderdsteund in loop modus.</string>
 	<string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="careportal_combobolus">Combinatie-Bolus</string>
+    <string name="pump_basebasalrate">%.2f E/u</string>
+    <string name="hoursago">%.1fu geleden</string>
+    <string name="bolusstopped">Bolus gestopt</string>
+    <string name="bolusstopping">Stoppen van bolus</string>
+    <string name="combo_actvity_reading_basal_profile">Basaal profiel wordt gelezen</string>
+    <string name="basalprofilenotaligned">Basale patroon niet geschikt op complete uren: %s</string>
+    <string name="zerovalueinprofile">Ongeldig profiel: %s</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Er kon geen verbinding met de pomp gemaakt worden. De Bolus is niet toegediend.</string>
+    <string name="extendedbolusdeliveryerror">Vertraagde bolus toedien storing</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig. Als dezelfde bolus hoeveelheid moet worden toegediend, gelieve 2 minuten te wachten. Gelijke bolussen worden geweigerd om veiligheidsredenen (toegediend of niet).</string>
+    <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegend van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Tijdelijk basaal geweigerd doordat de berekeningen geen rekening hielden met  de recente wijzigingen in de pomp historiek</string>
+    <string name="combo_activity_checking_pump_state">Vernieuwen van pomp status</string>
+    <string name="combo_warning_pump_basal_rate_changed">Het basaal patroon is op de pomp gewijzigd en zal binnenkort geupdate worden.</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Basaal patroon op de pomp is gewijzigd, maar konnen niet worden uitgelezen</string>
+    <string name="combo_activity_checking_for_history_changes">Controle van historiek op wijzigingen</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">"Verschillend bolussen met dezelfde hoeveelheid op hetzelfde tijdstip zijn  geïmporteerd. Er is er maar 1 toegevoegd aan de behandelingen lijst. Controleer op de pomp en voeg eventueel toe via het Careportal menu. Er mogen geen 2 bolussen op hetzelfde tijdstip aanwezig zijn! "</string>
+    <string name="mute">Geluid dempen</string>
+    <string name="combo_check_date">De laatste bolus is ouder dan 24 uren of bevind zich in de toekomst. Controleer de datum en tijd in de pomp aub.</string>
+    <string name="ns_create_announcements_from_errors_title">Creëer een melding bij storingen</string>
+    <string name="ns_create_announcements_from_errors_summary">Creëer een Nightscout melding voor storingen en lokale waarschuwingen (ook zichtbaar inder het Careportal en behandelingen)</string>
+    <string name="combo_suspious_bolus_time">Datum/tijd van de geleverde bolus op de pomp is niet correct, IOB is waarschijnlijk foutief. Controleer aub de datum/tijd op de pomp.</string>
+    <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
 </resources>
+

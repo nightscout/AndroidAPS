@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment">
+    tools:context="info.nightscout.androidaps.plugins.NSClientInternal.NSClientFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

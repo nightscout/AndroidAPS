@@ -21,10 +21,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAlarm;
@@ -77,6 +76,8 @@ public abstract class AbstractDanaRExecutionService extends Service {
     public abstract boolean bolus(double amount, int carbs, long carbtime, final Treatment t);
 
     public abstract boolean highTempBasal(int percent); // Rv2 only
+
+    public abstract boolean tempBasalShortDuration(int percent, int durationInMinutes); // Rv2 only
 
     public abstract boolean tempBasal(int percent, int durationInHours);
 

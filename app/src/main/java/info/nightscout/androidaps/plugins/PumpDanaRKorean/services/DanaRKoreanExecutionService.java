@@ -18,7 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -264,29 +264,31 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(new MsgSetCarbsEntry(carbtime, carbs));
         }
 
-        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-        long bolusStart = System.currentTimeMillis();
+        if (amount > 0) {
+            MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
+            long bolusStart = System.currentTimeMillis();
 
-        if (!stop.stopped) {
-            mSerialIOThread.sendMessage(start);
-        } else {
-            t.insulin = 0d;
-            return false;
-        }
-        while (!stop.stopped && !start.failed) {
-            SystemClock.sleep(100);
-            if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
-                stop.stopped = true;
-                stop.forced = true;
-                log.debug("Communication stopped");
+            if (!stop.stopped) {
+                mSerialIOThread.sendMessage(start);
+            } else {
+                t.insulin = 0d;
+                return false;
             }
+            while (!stop.stopped && !start.failed) {
+                SystemClock.sleep(100);
+                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
+                    stop.stopped = true;
+                    stop.forced = true;
+                    log.debug("Communication stopped");
+                }
+            }
+            SystemClock.sleep(300);
+
+            mBolusingTreatment = null;
+            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
         }
-        SystemClock.sleep(300);
 
-        mBolusingTreatment = null;
-        ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
-
-        return true;
+        return !start.failed;
     }
 
     public boolean carbsEntry(int amount) {
@@ -298,6 +300,11 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
     @Override
     public boolean highTempBasal(int percent) {
+        return false;
+    }
+
+    @Override
+    public boolean tempBasalShortDuration(int percent, int durationInMinutes) {
         return false;
     }
 

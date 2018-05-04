@@ -30,12 +30,10 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -44,17 +42,23 @@ import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PercentageSplitter;
+import info.nightscout.utils.ToastUtils;
 
+/**
+ * This Helper contains all resource to provide a central DB management functionality. Only methods handling
+ * data-structure (and not the DB content) should be contained in here (meaning DDL and not SQL).
+ * <p>
+ * This class can safely be called from Services, but should not call Services to avoid circular dependencies.
+ * One major issue with this (right now) are the scheduled events, which are put into the service. Therefor all
+ * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
+ */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
 
@@ -63,22 +67,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_TEMPORARYBASALS = "TemporaryBasals";
     public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
     public static final String DATABASE_TEMPTARGETS = "TempTargets";
-    public static final String DATABASE_TREATMENTS = "Treatments";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
-    public static final String DATABASE_FOODS = "Foods";
+    public static final String DATABASE_TDDS = "TDDs";
 
     private static final int DATABASE_VERSION = 8;
 
-    private static Long earliestDataChange = null;
+    public static Long earliestDataChange = null;
 
     private static final ScheduledExecutorService bgWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledBgPost = null;
-
-    private static final ScheduledExecutorService treatmentsWorker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledTratmentPost = null;
 
     private static final ScheduledExecutorService tempBasalsWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTemBasalsPost = null;
@@ -95,7 +95,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
 
-    public FoodHelper foodHelper = new FoodHelper(this);
+    private int oldVersion = 0;
+    private int newVersion = 0;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -108,7 +109,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             log.info("onCreate");
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
-            TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
@@ -116,7 +116,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            TableUtils.createTableIfNotExists(connectionSource, Food.class);
+            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -126,14 +126,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
+            this.oldVersion = oldVersion;
+            this.newVersion = newVersion;
+
             if (oldVersion == 7 && newVersion == 8) {
                 log.debug("Upgrading database from v7 to v8");
-                TableUtils.dropTable(connectionSource, Treatment.class, true);
-                TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             } else {
                 log.info(DatabaseHelper.class.getName(), "onUpgrade");
                 TableUtils.dropTable(connectionSource, TempTarget.class, true);
-                TableUtils.dropTable(connectionSource, Treatment.class, true);
                 TableUtils.dropTable(connectionSource, BgReading.class, true);
                 TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
                 TableUtils.dropTable(connectionSource, DbRequest.class, true);
@@ -141,13 +141,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
                 TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
                 TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
-                TableUtils.dropTable(connectionSource, Food.class, true);
                 onCreate(database, connectionSource);
             }
         } catch (SQLException e) {
             log.error("Can't drop databases", e);
             throw new RuntimeException(e);
         }
+    }
+
+    public int getOldVersion() {
+        return oldVersion;
+    }
+
+    public int getNewVersion() {
+        return newVersion;
     }
 
     /**
@@ -158,40 +165,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super.close();
     }
 
-    public void cleanUpDatabases() {
-        // TODO: call it somewhere
-        log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
-        getWritableDatabase().delete(DATABASE_BGREADINGS, "date" + " < '" + (System.currentTimeMillis() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
-
-        log.debug("Before TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
-        getWritableDatabase().delete(DATABASE_TEMPTARGETS, "date" + " < '" + (System.currentTimeMillis() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
-
-        log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
-        getWritableDatabase().delete(DATABASE_TREATMENTS, "date" + " < '" + (System.currentTimeMillis() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
-
-        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
-        getWritableDatabase().delete(DATABASE_DANARHISTORY, "recordDate" + " < '" + (System.currentTimeMillis() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
-
-        log.debug("Before TemporaryBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPORARYBASALS));
-        getWritableDatabase().delete(DATABASE_TEMPORARYBASALS, "recordDate" + " < '" + (System.currentTimeMillis() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After TemporaryBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPORARYBASALS));
-
-        log.debug("Before ExtendedBoluses size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_EXTENDEDBOLUSES));
-        getWritableDatabase().delete(DATABASE_EXTENDEDBOLUSES, "recordDate" + " < '" + (System.currentTimeMillis() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After ExtendedBoluses size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_EXTENDEDBOLUSES));
-
-        log.debug("Before CareportalEvent size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_CAREPORTALEVENTS));
-        getWritableDatabase().delete(DATABASE_CAREPORTALEVENTS, "recordDate" + " < '" + (System.currentTimeMillis() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After CareportalEvent size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_CAREPORTALEVENTS));
-
-        log.debug("Before ProfileSwitch size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_PROFILESWITCHES));
-        getWritableDatabase().delete(DATABASE_PROFILESWITCHES, "recordDate" + " < '" + (System.currentTimeMillis() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After ProfileSwitch size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_PROFILESWITCHES));
-    }
 
     public long size(String database) {
         return DatabaseUtils.queryNumEntries(getReadableDatabase(), database);
@@ -202,7 +175,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void resetDatabases() {
         try {
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
-            TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             TableUtils.dropTable(connectionSource, DbRequest.class, true);
@@ -210,8 +182,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
+            TableUtils.dropTable(connectionSource, TDD.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
-            TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
@@ -219,20 +191,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            foodHelper.resetFood();
+            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
         VirtualPumpPlugin.setFakingStatus(true);
-        scheduleBgChange(); // trigger refresh
+        scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
-        scheduleTreatmentChange();
         scheduleExtendedBolusChange();
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
         scheduleProfileSwitchChange();
-        foodHelper.scheduleFoodChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -242,17 +212,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 },
                 3000
         );
-    }
-
-    public void resetTreatments() {
-        try {
-            TableUtils.dropTable(connectionSource, Treatment.class, true);
-            TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
-            updateEarliestDataChange(0);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        scheduleTreatmentChange();
     }
 
     public void resetTempTargets() {
@@ -308,14 +267,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleProfileSwitchChange();
     }
 
+    public void resetTDDs() {
+        try {
+            TableUtils.dropTable(connectionSource, TDD.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
+
     // ------------------ getDao -------------------------------------------
 
     private Dao<TempTarget, Long> getDaoTempTargets() throws SQLException {
         return getDao(TempTarget.class);
-    }
-
-    private Dao<Treatment, Long> getDaoTreatments() throws SQLException {
-        return getDao(Treatment.class);
     }
 
     private Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
@@ -324,6 +288,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<DanaRHistoryRecord, String> getDaoDanaRHistory() throws SQLException {
         return getDao(DanaRHistoryRecord.class);
+    }
+
+    private Dao<TDD, String> getDaoTDD() throws SQLException {
+        return getDao(TDD.class);
     }
 
     private Dao<DbRequest, String> getDaoDbRequest() throws SQLException {
@@ -346,7 +314,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(ProfileSwitch.class);
     }
 
-    public long roundDateToSec(long date) {
+    public static long roundDateToSec(long date) {
         return date - date % 1000;
     }
     // -------------------  BgReading handling -----------------------
@@ -358,7 +326,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
                 log.debug("BG: New record from: " + from + " " + bgReading.toString());
-                scheduleBgChange();
+                scheduleBgChange(bgReading);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
@@ -366,7 +334,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
                 log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
-                scheduleBgChange();
+                scheduleBgChange(bgReading);
                 return false;
             }
         } catch (SQLException e) {
@@ -380,15 +348,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             getDaoBgReadings().update(bgReading);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
-    private static void scheduleBgChange() {
+    private static void scheduleBgChange(@Nullable final BgReading bgReading) {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG());
+                MainApp.bus().post(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }
@@ -403,8 +371,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /*
-         * Return last BgReading from database or null if db is empty
-         */
+     * Return last BgReading from database or null if db is empty
+     */
     @Nullable
     public static BgReading lastBg() {
         List<BgReading> bgList = null;
@@ -428,9 +396,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /*
-         * Return bg reading if not old ( <9 min )
-         * or null if older
-         */
+     * Return bg reading if not old ( <9 min )
+     * or null if older
+     */
     @Nullable
     public static BgReading actualBg() {
         BgReading lastBg = lastBg();
@@ -479,6 +447,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
+    // -------------------  TDD handling -----------------------
+    public void createOrUpdateTDD(TDD tdd) {
+        try {
+            Dao<TDD, String> dao = getDaoTDD();
+            dao.createOrUpdate(tdd);
+        } catch (SQLException e) {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "createOrUpdate-Exception");
+            log.error("Unhandled exception", e);
+        }
+    }
+
+    public List<TDD> getTDDs() {
+        List<TDD> tddList;
+        try {
+            QueryBuilder<TDD, String> queryBuilder = getDaoTDD().queryBuilder();
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(10L);
+            PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
+            tddList = getDaoTDD().query(preparedQuery);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+            tddList = new ArrayList<>();
+        }
+        return tddList;
+    }
+
+
     // ------------- DbRequests handling -------------------
 
     public void create(DbRequest dbr) {
@@ -515,7 +510,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.limit(10L);
             PreparedQuery<DbRequest> preparedQuery = queryBuilder.prepare();
             List<DbRequest> dbList = getDaoDbRequest().query(preparedQuery);
-            log.error("deleteDbRequestbyMongoId query size: " + dbList.size());
             for (DbRequest r : dbList) {
                 delete(r);
             }
@@ -543,219 +537,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     //  -------------------- TREATMENT HANDLING -------------------
 
-    // return true if new record is created
-    public boolean createOrUpdate(Treatment treatment) {
-        try {
-            Treatment old;
-            treatment.date = roundDateToSec(treatment.date);
-
-            if (treatment.source == Source.PUMP) {
-                // check for changed from pump change in NS
-                QueryBuilder<Treatment, Long> queryBuilder = getDaoTreatments().queryBuilder();
-                Where where = queryBuilder.where();
-                where.eq("pumpId", treatment.pumpId);
-                PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-                List<Treatment> trList = getDaoTreatments().query(preparedQuery);
-                if (trList.size() > 0) {
-                    // do nothing, pump history record cannot be changed
-                    return false;
-                }
-                getDaoTreatments().create(treatment);
-                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
-                updateEarliestDataChange(treatment.date);
-                scheduleTreatmentChange();
-                return true;
-            }
-            if (treatment.source == Source.NIGHTSCOUT) {
-                old = getDaoTreatments().queryForId(treatment.date);
-                if (old != null) {
-                    if (!old.isEqual(treatment)) {
-                        boolean historyChange = old.isDataChanging(treatment);
-                        long oldDate = old.date;
-                        getDaoTreatments().delete(old); // need to delete/create because date may change too
-                        old.copyFrom(treatment);
-                        getDaoTreatments().create(old);
-                        log.debug("TREATMENT: Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
-                        if (historyChange) {
-                            updateEarliestDataChange(oldDate);
-                            updateEarliestDataChange(old.date);
-                        }
-                        scheduleTreatmentChange();
-                        return true;
-                    }
-                    return false;
-                }
-                // find by NS _id
-                if (treatment._id != null) {
-                    QueryBuilder<Treatment, Long> queryBuilder = getDaoTreatments().queryBuilder();
-                    Where where = queryBuilder.where();
-                    where.eq("_id", treatment._id);
-                    PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-                    List<Treatment> trList = getDaoTreatments().query(preparedQuery);
-                    if (trList.size() > 0) {
-                        old = trList.get(0);
-                        if (!old.isEqual(treatment)) {
-                            boolean historyChange = old.isDataChanging(treatment);
-                            long oldDate = old.date;
-                            getDaoTreatments().delete(old); // need to delete/create because date may change too
-                            old.copyFrom(treatment);
-                            getDaoTreatments().create(old);
-                            log.debug("TREATMENT: Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
-                            if (historyChange) {
-                                updateEarliestDataChange(oldDate);
-                                updateEarliestDataChange(old.date);
-                            }
-                            scheduleTreatmentChange();
-                            return true;
-                        }
-                    }
-                }
-                getDaoTreatments().create(treatment);
-                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
-                updateEarliestDataChange(treatment.date);
-                scheduleTreatmentChange();
-                return true;
-            }
-            if (treatment.source == Source.USER) {
-                getDaoTreatments().create(treatment);
-                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
-                updateEarliestDataChange(treatment.date);
-                scheduleTreatmentChange();
-                return true;
-            }
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        return false;
-    }
-
-    public void delete(Treatment treatment) {
-        try {
-            getDaoTreatments().delete(treatment);
-            updateEarliestDataChange(treatment.date);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        scheduleTreatmentChange();
-    }
-
-    public void update(Treatment treatment) {
-        try {
-            getDaoTreatments().update(treatment);
-            updateEarliestDataChange(treatment.date);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        scheduleTreatmentChange();
-    }
-
-    public void deleteTreatmentById(String _id) {
-        Treatment stored = findTreatmentById(_id);
-        if (stored != null) {
-            log.debug("TREATMENT: Removing Treatment record from database: " + stored.toString());
-            delete(stored);
-            updateEarliestDataChange(stored.date);
-            scheduleTreatmentChange();
-        }
-    }
-
-    @Nullable
-    public Treatment findTreatmentById(String _id) {
-        try {
-            Dao<Treatment, Long> daoTreatments = getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", _id);
-            queryBuilder.limit(10L);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            List<Treatment> trList = daoTreatments.query(preparedQuery);
-            if (trList.size() != 1) {
-                //log.debug("Treatment findTreatmentById query size: " + trList.size());
-                return null;
-            } else {
-                //log.debug("Treatment findTreatmentById found: " + trList.get(0).log());
-                return trList.get(0);
-            }
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        return null;
-    }
-
-    private void updateEarliestDataChange(long newDate) {
+    public static void updateEarliestDataChange(long newDate) {
         if (earliestDataChange == null) {
             earliestDataChange = newDate;
             return;
         }
         if (newDate < earliestDataChange) {
             earliestDataChange = newDate;
-        }
-    }
-
-    private static void scheduleTreatmentChange() {
-        class PostRunnable implements Runnable {
-            public void run() {
-                log.debug("Firing EventTreatmentChange");
-                MainApp.bus().post(new EventReloadTreatmentData(new EventTreatmentChange()));
-                if (earliestDataChange != null)
-                    MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
-                earliestDataChange = null;
-                scheduledTratmentPost = null;
-            }
-        }
-        // prepare task for execution in 1 sec
-        // cancel waiting task to prevent sending multiple posts
-        if (scheduledTratmentPost != null)
-            scheduledTratmentPost.cancel(false);
-        Runnable task = new PostRunnable();
-        final int sec = 1;
-        scheduledTratmentPost = treatmentsWorker.schedule(task, sec, TimeUnit.SECONDS);
-
-    }
-
-    public List<Treatment> getTreatmentDataFromTime(long mills, boolean ascending) {
-        try {
-            Dao<Treatment, Long> daoTreatments = getDaoTreatments();
-            List<Treatment> treatments;
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.ge("date", mills);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = daoTreatments.query(preparedQuery);
-            return treatments;
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
-        return new ArrayList<Treatment>();
-    }
-
-    public void createTreatmentFromJsonIfNotExists(JSONObject trJson) {
-        try {
-            Treatment treatment = new Treatment();
-            treatment.source = Source.NIGHTSCOUT;
-            treatment.date = roundDateToSec(trJson.getLong("mills"));
-            treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
-            treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
-            treatment.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
-            treatment._id = trJson.getString("_id");
-            if (trJson.has("isSMB"))
-                treatment.isSMB = trJson.getBoolean("isSMB");
-            if (trJson.has("eventType")) {
-                treatment.mealBolus = !trJson.get("eventType").equals("Correction Bolus");
-                double carbs = treatment.carbs;
-                if (trJson.has("boluscalc")) {
-                    JSONObject boluscalc = trJson.getJSONObject("boluscalc");
-                    if (boluscalc.has("carbs")) {
-                        carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
-                    }
-                }
-                if (carbs <= 0)
-                    treatment.mealBolus = false;
-            }
-            createOrUpdate(treatment);
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
         }
     }
 
@@ -876,15 +664,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
-            String units = MainApp.getConfigBuilder().getProfileUnits();
-            TempTarget tempTarget = new TempTarget();
-            tempTarget.date = trJson.getLong("mills");
-            tempTarget.durationInMinutes = trJson.getInt("duration");
-            tempTarget.low = Profile.toMgdl(trJson.getDouble("targetBottom"), units);
-            tempTarget.high = Profile.toMgdl(trJson.getDouble("targetTop"), units);
-            tempTarget.reason = trJson.getString("reason");
-            tempTarget._id = trJson.getString("_id");
-            tempTarget.source = Source.NIGHTSCOUT;
+            String units = JsonHelper.safeGetString(trJson, "units", MainApp.getConfigBuilder().getProfileUnits());
+            TempTarget tempTarget = new TempTarget()
+                    .date(trJson.getLong("mills"))
+                    .duration(trJson.getInt("duration"))
+                    .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
+                    .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
+                    .reason(trJson.getString("reason"))
+                    ._id(trJson.getString("_id"))
+                    .source(Source.NIGHTSCOUT);
             createOrUpdate(tempTarget);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -924,6 +712,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createOrUpdate(DanaRHistoryRecord record) {
         try {
             getDaoDanaRHistory().createOrUpdate(record);
+
+            //If it is a TDD, store it for stats also.
+            if (record.recordCode == RecordTypes.RECORD_TYPE_DAILY) {
+                createOrUpdateTDD(new TDD(record.recordDate, record.recordDailyBolus, record.recordDailyBasal, 0));
+            }
+
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
@@ -1153,10 +947,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 createOrUpdate(extendedBolus);
             } else {
-                TemporaryBasal tempBasal = new TemporaryBasal();
-                tempBasal.date = trJson.getLong("mills");
-                tempBasal.source = Source.NIGHTSCOUT;
-                tempBasal.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
+                TemporaryBasal tempBasal = new TemporaryBasal()
+                        .date(trJson.getLong("mills"))
+                        .source(Source.NIGHTSCOUT)
+                        .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0);
                 if (trJson.has("duration")) {
                     tempBasal.durationInMinutes = trJson.getInt("duration");
                 }
@@ -1360,37 +1154,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
      */
 
-    public void createExtendedBolusFromJsonIfNotExists(JSONObject trJson) {
-        try {
-            QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
-            queryBuilder = getDaoExtendedBolus().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
-            List<ExtendedBolus> list = getDaoExtendedBolus().query(preparedQuery);
-            ExtendedBolus extendedBolus;
-            if (list.size() == 0) {
-                extendedBolus = new ExtendedBolus();
-                extendedBolus.source = Source.NIGHTSCOUT;
-                if (Config.logIncommingData)
-                    log.debug("Adding ExtendedBolus record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                extendedBolus = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Updating ExtendedBolus record in database: " + trJson.toString());
-            } else {
-                log.error("Something went wrong");
-                return;
-            }
-            extendedBolus.date = trJson.getLong("mills");
-            extendedBolus.durationInMinutes = trJson.has("duration") ? trJson.getInt("duration") : 0;
-            extendedBolus.insulin = trJson.getDouble("relative");
-            extendedBolus._id = trJson.getString("_id");
+    public void createExtendedBolusFromJsonIfNotExists(JSONObject json) {
+        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(json);
+        if (extendedBolus != null)
             createOrUpdate(extendedBolus);
-        } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception", e);
-        }
     }
 
     private static void scheduleExtendedBolusChange() {
@@ -1434,6 +1201,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         scheduleCareportalEventChange();
+    }
+
+    public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
+        try {
+            return getDaoCareportalEvents().queryForId(timestamp);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
     }
 
     @Nullable
@@ -1489,7 +1265,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void deleteCareportalEventById(String _id) {
         try {
-            QueryBuilder<CareportalEvent, Long> queryBuilder = null;
+            QueryBuilder<CareportalEvent, Long> queryBuilder;
             queryBuilder = getDaoCareportalEvents().queryBuilder();
             Where where = queryBuilder.where();
             where.eq("_id", _id);
@@ -1512,7 +1288,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createCareportalEventFromJsonIfNotExists(JSONObject trJson) {
         try {
-            QueryBuilder<CareportalEvent, Long> queryBuilder = null;
+            QueryBuilder<CareportalEvent, Long> queryBuilder;
             queryBuilder = getDaoCareportalEvents().queryBuilder();
             Where where = queryBuilder.where();
             where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
@@ -1569,14 +1345,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<ProfileSwitch> profileSwitches;
             QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
             queryBuilder.orderBy("date", ascending);
-            queryBuilder.limit(20L);
+            queryBuilder.limit(100L);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<ProfileSwitch>();
+        return new ArrayList<>();
     }
 
     public boolean createOrUpdate(ProfileSwitch profileSwitch) {
@@ -1693,7 +1469,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileStore store = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+                ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
                 Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                 if (profile != null) {
                     profileSwitch.profileJson = profile.getData().toString();

@@ -2,7 +2,7 @@ language: android
 jdk: oraclejdk8
 env:
   matrix:
-    - ANDROID_TARGET=android-23 ANDROID_ABI=x86
+    - ANDROID_TARGET=android-23 ANDROID_ABI=x86 org.gradle.jvmargs=-XX:-OmitStackTraceInFastThrow
 android:
   components:
   - platform-tools
@@ -18,7 +18,17 @@ before_install:
 
 script:
   # Unit Test
-  - ./gradlew test jacocoTestReport
+  - ./gradlew -Pcoverage testFullDebugUnitTest jacocoTestFullDebugUnitTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache

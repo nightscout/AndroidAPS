@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
 import info.nightscout.utils.DateUtil;
@@ -94,7 +94,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                     UploadQueue.add(dbr);
                 }
                 if (collection.equals("treatments")) {
-                    genereateTreatmentOfflineBroadcast(dbr);
+                    generateTreatmentOfflineBroadcast(dbr);
                 }
             }
 
@@ -105,11 +105,11 @@ public class DBAccessReceiver extends BroadcastReceiver {
     }
 
     public boolean shouldUpload() {
-        NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
-        return nsClientInternalPlugin.isEnabled(PluginBase.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
+        NSClientPlugin nsClientPlugin = MainApp.getSpecificPlugin(NSClientPlugin.class);
+        return nsClientPlugin.isEnabled(PluginType.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
     }
 
-    public void genereateTreatmentOfflineBroadcast(DbRequest request) {
+    public void generateTreatmentOfflineBroadcast(DbRequest request) {
         if (request.action.equals("dbAdd")) {
             try {
                 JSONObject data = new JSONObject(request.data);

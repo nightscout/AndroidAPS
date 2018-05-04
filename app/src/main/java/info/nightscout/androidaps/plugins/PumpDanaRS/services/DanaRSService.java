@@ -19,7 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
@@ -71,8 +71,10 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_D
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 
 public class DanaRSService extends Service {
     private static Logger log = LoggerFactory.getLogger(DanaRSService.class);
@@ -145,8 +147,10 @@ public class DanaRSService extends Service {
                 bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
                 long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
-                if (Math.abs(timeDiff) > 10) {
-                    bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date()));
+                if (Math.abs(timeDiff) > 3) {
+                    waitForWholeMinute(); // Dana can set only whole minute
+                    // add 10sec to be sure we are over minute (will be cutted off anyway)
+                    bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date(DateUtil.now() + T.secs(10).msecs())));
                     bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
                     timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                     log.debug("Pump time difference: " + timeDiff + " seconds");
@@ -156,7 +160,6 @@ public class DanaRSService extends Service {
 
             loadEvents();
 
-            danaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
@@ -190,6 +193,7 @@ public class DanaRSService extends Service {
         else
             lastHistoryFetched = 0;
         log.debug("Events loaded");
+        danaRPump.lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
     }
 
@@ -269,7 +273,7 @@ public class DanaRSService extends Service {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
             }
         });
-        return true;
+        return !start.failed;
     }
 
     public void bolusStop() {
@@ -312,6 +316,25 @@ public class DanaRSService extends Service {
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(percent));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        loadEvents();
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        return true;
+    }
+
+    public boolean tempBasalShortDuration(Integer percent, int durationInMinutes) {
+        if (durationInMinutes != 15 && durationInMinutes != 30) {
+            log.error("Wrong duration param");
+            return false;
+        }
+
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
+            SystemClock.sleep(500);
+        }
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.settingtempbasal)));
+        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(percent, durationInMinutes == 15, durationInMinutes == 30));
         bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
         loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
@@ -439,4 +462,14 @@ public class DanaRSService extends Service {
             log.debug("EventAppExit finished");
     }
 
+    void waitForWholeMinute() {
+        while (true) {
+            long time = DateUtil.now();
+            long timeToWholeMinute = (60000 - time % 60000);
+            if (timeToWholeMinute > 59800 || timeToWholeMinute < 300)
+                break;
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int)(timeToWholeMinute / 1000))));
+            SystemClock.sleep(Math.min(timeToWholeMinute, 100));
+        }
+    }
 }

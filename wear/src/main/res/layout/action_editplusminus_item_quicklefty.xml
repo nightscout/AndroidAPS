@@ -27,28 +27,31 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center">
-        <EditText
-            android:id="@+id/amountfield"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="numberDecimal"
-            android:minWidth="100dp"
-            android:paddingTop="10dp"
-            android:text="112"
-            android:textSize="45sp"
-            android:cursorVisible="false"
-            android:gravity="center_horizontal" />
 
-        <TextView
-            android:id="@+id/label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:gravity="center"
-            android:textSize="25sp" />
+            <EditText
+                android:id="@+id/amountfield"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:cursorVisible="false"
+                android:gravity="center_horizontal"
+                android:inputType="numberDecimal"
+                android:minWidth="100dp"
+                android:paddingTop="10dp"
+                android:text="112"
+                android:textColor="@color/white"
+                android:textSize="45sp" />
+
+            <TextView
+                android:id="@+id/label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="label"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
 
             <ImageView
                 android:id="@+id/minusbutton"

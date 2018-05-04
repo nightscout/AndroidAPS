@@ -7,6 +7,16 @@ public class Iob {
     public double iobContrib = 0d;
     public double activityContrib = 0d;
 
+    public Iob iobContrib(double iobContrib) {
+        this.iobContrib = iobContrib;
+        return this;
+    }
+
+    public Iob activityContrib(double activityContrib) {
+        this.activityContrib = activityContrib;
+        return this;
+    }
+
     public Iob plus(Iob iob) {
         iobContrib += iob.iobContrib;
         activityContrib += iob.activityContrib;

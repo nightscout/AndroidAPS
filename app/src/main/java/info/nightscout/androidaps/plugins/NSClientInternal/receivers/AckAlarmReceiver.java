@@ -6,19 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 import info.nightscout.utils.SP;
@@ -32,8 +27,8 @@ public class AckAlarmReceiver extends BroadcastReceiver {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 AckAlarmReceiver.class.getSimpleName());
-        NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
-        if (!nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
+        NSClientPlugin nsClientPlugin = MainApp.getSpecificPlugin(NSClientPlugin.class);
+        if (!nsClientPlugin.isEnabled(PluginType.GENERAL)) {
             return;
         }
         if (SP.getBoolean(R.string.key_ns_noupload, false)) {
@@ -53,7 +48,7 @@ public class AckAlarmReceiver extends BroadcastReceiver {
             ack.group = bundles.getString("group");
             ack.silenceTime = bundles.getLong("silenceTime");
 
-            NSClientService nsClientService = nsClientInternalPlugin.nsClientService;
+            NSClientService nsClientService = nsClientPlugin.nsClientService;
             if (nsClientService != null)
                 nsClientService.sendAlarmAck(ack);
 

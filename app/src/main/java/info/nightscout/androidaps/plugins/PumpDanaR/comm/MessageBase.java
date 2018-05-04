@@ -23,7 +23,7 @@ import info.nightscout.utils.CRC;
 
 public class MessageBase {
     private static Logger log = LoggerFactory.getLogger(MessageBase.class);
-    private byte[] buffer = new byte[512];
+    protected byte[] buffer = new byte[512];
     private int position = 6;
 
     public boolean received = false;
@@ -32,6 +32,10 @@ public class MessageBase {
     public void SetCommand(int cmd) {
         this.buffer[4] = (byte) (cmd >> 8 & 0xFF);
         this.buffer[5] = (byte) (cmd & 0xFF);
+    }
+
+    public void resetBuffer() {
+        position = 6;
     }
 
     public void AddParamByte(byte data) {

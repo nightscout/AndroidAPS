@@ -18,7 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -64,8 +64,10 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetHistoryEntry_v2
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusBolusExtended_v2;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusTempBasal_v2;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 import info.nightscout.utils.ToastUtils;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
@@ -198,8 +200,10 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
-                if (Math.abs(timeDiff) > 10) {
-                    mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
+                if (Math.abs(timeDiff) > 3) {
+                    waitForWholeMinute(); // Dana can set only whole minute
+                    // add 10sec to be sure we are over minute (will be cutted off anyway)
+                    mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                     timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                     log.debug("Pump time difference: " + timeDiff + " seconds");
@@ -209,7 +213,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             loadEvents();
 
-            mDanaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
@@ -249,6 +252,26 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent));
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
+        loadEvents();
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        return true;
+    }
+
+    public boolean tempBasalShortDuration(int percent, int durationInMinutes) {
+        if (durationInMinutes != 15 && durationInMinutes != 30) {
+            log.error("Wrong duration param");
+            return false;
+        }
+
+        if (!isConnected()) return false;
+        if (mDanaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            SystemClock.sleep(500);
+        }
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.settingtempbasal)));
+        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent,  durationInMinutes == 15, durationInMinutes == 30));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
         loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
@@ -363,7 +386,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.disconnecting)));
             }
         });
-        return true;
+        return !start.failed;
     }
 
     public void bolusStop() {
@@ -413,6 +436,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - 45 * 60 * 1000L; //always load last 45 min;
         else
             lastHistoryFetched = 0;
+        mDanaRPump.lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
     }
 
@@ -430,4 +454,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         return true;
     }
 
+    void waitForWholeMinute() {
+        while (true) {
+            long time = DateUtil.now();
+            long timeToWholeMinute = (60000 - time % 60000);
+            if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
+                break;
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int)(timeToWholeMinute / 1000))));
+            SystemClock.sleep(Math.min(timeToWholeMinute, 100));
+        }
+    }
 }

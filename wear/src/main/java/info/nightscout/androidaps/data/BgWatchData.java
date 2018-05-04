@@ -16,6 +16,10 @@ public class BgWatchData implements Comparable<BgWatchData>{
         this.timestamp = aTimestamp;
     }
 
+    public BgWatchData(){
+
+    }
+
     @Override
     public boolean equals(Object that){
         if(! (that instanceof BgWatchData)){
