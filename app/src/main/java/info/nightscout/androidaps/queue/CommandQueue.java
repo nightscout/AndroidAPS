@@ -162,8 +162,18 @@ public class CommandQueue {
         tempCommandQueue.readStatus(reason, callback);
     }
 
+    public synchronized boolean bolusInQueue(){
+        if(isRunning(Command.CommandType.BOLUS)) return true;
+        for (int i = 0; i < queue.size(); i++) {
+            if (queue.get(i).commandType == Command.CommandType.BOLUS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // returns true if command is queued
-    public boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
+    public synchronized boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
 
         if(type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0){
