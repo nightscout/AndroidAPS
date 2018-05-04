@@ -124,6 +124,10 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(14);
                 activityView.setText(activity);
+            } else if (ConfigBuilderPlugin.getCommandQueue().size() > 0) {
+                activityView.setTextColor(Color.WHITE);
+                activityView.setTextSize(14);
+                activityView.setText("");
             } else if (plugin.isInitialized()){
                 activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(20);
