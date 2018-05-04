@@ -39,6 +39,7 @@ public class SWString extends SWItem {
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setMaxLines(1);
         layout.addView(editText);
+        super.generateDialog(view, layout);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override

@@ -67,5 +67,6 @@ public class SWPlugin extends SWItem {
             MainApp.bus().post(new EventSWUpdate());
         });
         layout.addView(radioGroup);
+        super.generateDialog(view, layout);
     }
 }

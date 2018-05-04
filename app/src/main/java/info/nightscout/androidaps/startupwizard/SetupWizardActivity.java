@@ -48,12 +48,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             screenName.setText(currentScreen.getHeader());
 
             //Generate layout first
-            LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.sw_content_fields));
-            for (int i = 0; i < currentScreen.items.size(); i++) {
-                SWItem currentItem = currentScreen.items.get(i);
-                currentItem.generateDialog(this.findViewById(R.id.sw_content_fields), layout);
-            }
-
+            generateLayout();
             updateButtons();
         }
     }
@@ -72,12 +67,23 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     @Subscribe
     public void onContentUpdate(EventSWUpdate ev) {
+        if (ev.redraw)
+            generateLayout();
         updateButtons();
     }
 
     @Subscribe
     public void onContentUpdate(EventNSClientStatus ev) {
         updateButtons();
+    }
+
+    private void generateLayout() {
+        SWScreen currentScreen = screens.get(currentWizardPage);
+        LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.sw_content_fields));
+        for (int i = 0; i < currentScreen.items.size(); i++) {
+            SWItem currentItem = currentScreen.items.get(i);
+            currentItem.generateDialog(this.findViewById(R.id.sw_content_fields), layout);
+        }
     }
 
     private void updateButtons() {

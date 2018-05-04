@@ -62,5 +62,6 @@ public class SWRadioButton extends SWItem {
             save(values()[i]);
         });
         layout.addView(radioGroup);
+        super.generateDialog(view, layout);
     }
 }

@@ -1057,5 +1057,6 @@
     <string name="wear_general_settings">General Settings</string>
 
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="enable_nsclient">Enable NSClient</string>
 
 </resources>

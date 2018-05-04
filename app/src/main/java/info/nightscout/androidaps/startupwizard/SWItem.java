@@ -22,7 +22,8 @@ public class SWItem {
         DECIMALNUMBER,
         CHECKBOX,
         RADIOBUTTON,
-        PLUGIN
+        PLUGIN,
+        BUTTON
     }
 
     Type type;
@@ -79,4 +80,5 @@ public class SWItem {
 
     public void generateDialog(View view, LinearLayout layout) {
     }
+
 }
