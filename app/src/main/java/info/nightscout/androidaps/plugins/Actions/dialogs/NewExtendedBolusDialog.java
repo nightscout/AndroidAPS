@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.crashlytics.android.answers.CustomEvent;
 
+import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle(getString(R.string.overview_extendedbolus_button));
+        getDialog().setTitle(MainApp.gs(R.string.overview_extendedbolus_button));
 
         View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
 
@@ -68,13 +69,13 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     int durationInMinutes = SafeParse.stringToInt(editDuration.getText());
 
-                    String confirmMessage = getString(R.string.setextendedbolusquestion);
+                    String confirmMessage = MainApp.gs(R.string.setextendedbolusquestion);
 
                     Double insulinAfterConstraint = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
-                    confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
+                    confirmMessage += MainApp.gs(R.string.duration) + " " + durationInMinutes + "min ?";
                     if (insulinAfterConstraint - insulin != 0d)
-                        confirmMessage += "\n" + getString(R.string.constraintapllied);
+                        confirmMessage += "\n" + MainApp.gs(R.string.constraintapllied);
                     insulin = insulinAfterConstraint;
 
                     final Double finalInsulin = insulin;
@@ -82,9 +83,9 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
                     final Context context = getContext();
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(context.getString(R.string.confirmation));
+                    builder.setTitle(MainApp.gs(R.string.confirmation));
                     builder.setMessage(confirmMessage);
-                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             ConfigBuilderPlugin.getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
                                 @Override
@@ -93,7 +94,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                         i.putExtra("soundid", R.raw.boluserror);
                                         i.putExtra("status", result.comment);
-                                        i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         MainApp.instance().startActivity(i);
                                     }
@@ -102,7 +103,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("ExtendedBolus"));
                         }
                     });
-                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                     builder.show();
                     dismiss();
 

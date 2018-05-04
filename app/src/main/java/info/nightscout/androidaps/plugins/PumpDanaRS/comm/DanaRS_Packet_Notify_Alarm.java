@@ -30,23 +30,23 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
         switch (alarmCode) {
             case 0x01:
                 // Battery 0% Alarm
-                errorString = MainApp.sResources.getString(R.string.batterydischarged);
+                errorString = MainApp.gs(R.string.batterydischarged);
                 break;
             case 0x02:
                 // Pump Error
-                errorString = MainApp.sResources.getString(R.string.pumperror) + " " + alarmCode;
+                errorString = MainApp.gs(R.string.pumperror) + " " + alarmCode;
                 break;
             case 0x03:
                 // Occlusion
-                errorString = MainApp.sResources.getString(R.string.occlusion);
+                errorString = MainApp.gs(R.string.occlusion);
                 break;
             case 0x04:
                 // LOW BATTERY
-                errorString = MainApp.sResources.getString(R.string.lowbattery);
+                errorString = MainApp.gs(R.string.lowbattery);
                 break;
             case 0x05:
                 // Shutdown
-                errorString = MainApp.sResources.getString(R.string.lowbattery);
+                errorString = MainApp.gs(R.string.lowbattery);
                 break;
             case 0x06:
                 // Basal Compare
@@ -54,20 +54,20 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
                 break;
             case 0x09:
                 // Empty Reservoir
-                errorString = MainApp.sResources.getString(R.string.emptyreservoir);
+                errorString = MainApp.gs(R.string.emptyreservoir);
                 break;
 
             // BT
             case 0x07:
             case 0xFF:
                 // Blood sugar measurement alert
-                errorString = MainApp.sResources.getString(R.string.bloodsugarmeasurementalert);
+                errorString = MainApp.gs(R.string.bloodsugarmeasurementalert);
                 break;
 
             case 0x08:
             case 0xFE:
                 // Remaining insulin level
-                errorString = MainApp.sResources.getString(R.string.remaininsulinalert);
+                errorString = MainApp.gs(R.string.remaininsulinalert);
                 break;
 
             case 0xFD:

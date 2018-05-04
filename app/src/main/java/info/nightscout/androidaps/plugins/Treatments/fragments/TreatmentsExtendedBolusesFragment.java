@@ -67,7 +67,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
             holder.ns.setVisibility(NSUpload.isIdValid(extendedBolus._id) ? View.VISIBLE : View.GONE);
             if (extendedBolus.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date));
-                holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
+                holder.duration.setText(MainApp.gs(R.string.cancel));
                 holder.insulin.setText("");
                 holder.realDuration.setText("");
                 holder.iob.setText("");
@@ -144,9 +144,9 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
                 switch (v.getId()) {
                     case R.id.extendedboluses_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(extendedBolus.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(extendedBolus.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = extendedBolus._id;
                                 if (NSUpload.isIdValid(_id)) {
@@ -158,7 +158,7 @@ public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
                                 FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveExtendedBolus"));
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                 }

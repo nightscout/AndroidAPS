@@ -19,6 +19,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -31,6 +32,8 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -40,6 +43,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.Treatments.CarbsGenerator;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
@@ -95,9 +99,9 @@ public class ActionStringHandler {
                 return;
             }
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
-            rMessage += MainApp.instance().getString(R.string.primefill) + ": " + insulinAfterConstraints + "U";
+            rMessage += MainApp.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U";
             if (insulinAfterConstraints - amount != 0)
-                rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
+                rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
 
             rAction += "fill " + insulinAfterConstraints;
 
@@ -106,9 +110,9 @@ public class ActionStringHandler {
             double amount = SafeParse.stringToDouble(act[1]);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
-            rMessage += MainApp.instance().getString(R.string.primefill) + ": " + insulinAfterConstraints + "U";
+            rMessage += MainApp.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U";
             if (insulinAfterConstraints - amount != 0)
-                rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
+                rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
 
             rAction += "fill " + insulinAfterConstraints;
 
@@ -118,11 +122,11 @@ public class ActionStringHandler {
             int carbs = SafeParse.stringToInt(act[2]);
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
-            rMessage += MainApp.instance().getString(R.string.bolus) + ": " + insulinAfterConstraints + "U\n";
-            rMessage += MainApp.instance().getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+            rMessage += MainApp.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n";
+            rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
             if ((insulinAfterConstraints - insulin != 0) || (carbsAfterConstraints - carbs != 0)) {
-                rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
+                rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
             }
             rAction += "bolus " + insulinAfterConstraints + " " + carbsAfterConstraints;
 
@@ -179,6 +183,9 @@ public class ActionStringHandler {
             }
 
         } else if ("wizard".equals(act[0])) {
+            sendError("Update APP on Watch!");
+            return;
+        } else if ("wizard2".equals(act[0])) {
             ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbsBeforeConstraints)).value();
@@ -188,10 +195,12 @@ public class ActionStringHandler {
                 return;
             }
 
-            boolean useBG = Boolean.parseBoolean(act[2]);
-            boolean useBolusIOB = Boolean.parseBoolean(act[3]);
-            boolean useBasalIOB = Boolean.parseBoolean(act[4]);
-            int percentage = Integer.parseInt(act[5]);
+            boolean useBG = SP.getBoolean(R.string.key_wearwizard_bg, true);
+            boolean useBolusIOB = SP.getBoolean(R.string.key_wearwizard_bolusiob, true);
+            boolean useBasalIOB = SP.getBoolean(R.string.key_wearwizard_basaliob, true);
+            boolean useCOB = SP.getBoolean(R.string.key_wearwizard_cob, true);
+            boolean useTrend = SP.getBoolean(R.string.key_wearwizard_trend, false);
+            int percentage = Integer.parseInt(act[2]);
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) {
@@ -205,9 +214,16 @@ public class ActionStringHandler {
                 return;
             }
 
+            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear");
+            if (useCOB && (cobInfo == null ||  cobInfo.displayCob == null)) {
+                sendError("Unknown COB! BG reading missing or recent app restart?");
+                return;
+            }
+
             DecimalFormat format = new DecimalFormat("0.00");
+            DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, null, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
+            bolusWizard.doCalc(profile, null, carbsAfterConstraints, useCOB?cobInfo.displayCob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
@@ -232,11 +248,15 @@ public class ActionStringHandler {
             rMessage += "\n_____________";
             rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) + "): ";
             rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U";
+            if (useCOB)
+                rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U";
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U";
             if (useBolusIOB)
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
             if (useBasalIOB)
                 rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
+            if (useTrend)
+                rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.insulinFromTrend) + "U";
             if (percentage != 100) {
                 rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U";
             }
@@ -283,7 +303,7 @@ public class ActionStringHandler {
                     //if pump is not busy: try to fetch data
                     final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                     if (pump.isBusy()) {
-                        rMessage += MainApp.instance().getString(R.string.pumpbusy);
+                        rMessage += MainApp.gs(R.string.pumpbusy);
                     } else {
                         rMessage += "trying to fetch data from pump.";
 
@@ -307,6 +327,27 @@ public class ActionStringHandler {
                     rMessage = generateTDDMessage(historyList, dummies);
                 }
             }
+
+        } else if ("ecarbs".equals(act[0])) {
+            ////////////////////////////////////////////// ECARBS
+            int carbs = SafeParse.stringToInt(act[1]);
+            int starttime = SafeParse.stringToInt(act[2]);
+            int duration = SafeParse.stringToInt(act[3]);
+            long starttimestamp = System.currentTimeMillis() + starttime*60*1000;
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
+            rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+            rMessage += "\n" + MainApp.gs(R.string.time) + ": " +  DateUtil.timeString(starttimestamp);
+            rMessage += "\n" + MainApp.gs(R.string.duration) + ": " + duration + "h";
+
+
+            if ( (carbsAfterConstraints - carbs != 0)) {
+                rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
+            }
+            if(carbsAfterConstraints <= 0){
+                sendError("Carbs = 0! No action taken!");
+                return;
+            }
+            rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
 
         } else return;
 
@@ -513,15 +554,15 @@ public class ActionStringHandler {
         }
 
         if (!result.isChangeRequested()) {
-            ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
+            ret += MainApp.gs(R.string.nochangerequested) + "\n";
         } else if (result.rate == 0 && result.duration == 0) {
-            ret += MainApp.sResources.getString(R.string.canceltemp) + "\n";
+            ret += MainApp.gs(R.string.canceltemp) + "\n";
         } else {
-            ret += MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
+            ret += MainApp.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
                     "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getActivePump().getBaseBasalRate() * 100) + "%)\n" +
-                    MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
+                    MainApp.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
         }
-        ret += "\n" + MainApp.sResources.getString(R.string.reason) + ": " + result.reason;
+        ret += "\n" + MainApp.gs(R.string.reason) + ": " + result.reason;
 
         return ret;
     }
@@ -560,7 +601,7 @@ public class ActionStringHandler {
                 high *= Constants.MMOLL_TO_MGDL;
             }
             generateTempTarget(duration, low, high);
-        } else if ("wizard".equals(act[0])) {
+        } else if ("wizard2".equals(act[0])) {
             //use last calculation as confirmed string matches
 
             doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
@@ -573,10 +614,26 @@ public class ActionStringHandler {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
             setCPP(timeshift, percentage);
+        }  else if ("ecarbs".equals(act[0])) {
+            int carbs = SafeParse.stringToInt(act[1]);
+            long starttime = SafeParse.stringToLong(act[2]);
+            int duration = SafeParse.stringToInt(act[3]);
+
+            doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         }
         lastBolusWizard = null;
+    }
+
+    private static void doECarbs(int carbs, long time, int duration) {
+        if (carbs > 0) {
+            if (duration == 0) {
+                CarbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch");
+            } else {
+                CarbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs");
+            }
+        }
     }
 
     private static void setCPP(int timeshift, int percentage) {
@@ -586,18 +643,18 @@ public class ActionStringHandler {
 
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
-            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Percentage") + "\n";
+            msg += String.format(MainApp.gs(R.string.valueoutofrange), "Profile-Percentage") + "\n";
         }
         if (timeshift < 0 || timeshift > 23) {
-            msg += String.format(MainApp.sResources.getString(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
+            msg += String.format(MainApp.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
         }
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null) {
-            msg += MainApp.sResources.getString(R.string.notloadedplugins) + "\n";
+            msg += MainApp.gs(R.string.notloadedplugins) + "\n";
         }
         if (!"".equals(msg)) {
-            msg += MainApp.sResources.getString(R.string.valuesnotstored);
+            msg += MainApp.gs(R.string.valuesnotstored);
             String rTitle = "STATUS";
             String rAction = "statusmessage";
             WearPlugin.getPlugin().requestActionConfirmation(rTitle, msg, rAction);
@@ -634,7 +691,7 @@ public class ActionStringHandler {
             @Override
             public void run() {
                 if (!result.success) {
-                    sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
+                    sendError(MainApp.gs(R.string.treatmentdeliveryerror) +
                             "\n" +
                             result.comment);
                 }
@@ -652,7 +709,7 @@ public class ActionStringHandler {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror) +
+                        sendError(MainApp.gs(R.string.treatmentdeliveryerror) +
                                 "\n" +
                                 result.comment);
                     }

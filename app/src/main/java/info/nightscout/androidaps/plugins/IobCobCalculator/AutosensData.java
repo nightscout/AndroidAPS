@@ -164,9 +164,4 @@ public class AutosensData implements DataPointWithLabelInterface {
         return MainApp.gc(R.color.cob);
     }
 
-    @Override
-    public int getSecondColor() {
-        return 0;
-    }
-
 }

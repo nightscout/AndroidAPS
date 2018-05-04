@@ -7,10 +7,10 @@ import android.preference.PreferenceManager;
 
 import java.util.Vector;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
+import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 import info.nightscout.androidaps.interaction.actions.WizardActivity;
@@ -46,8 +46,9 @@ public class MainMenuActivity extends MenuListActivity {
 
         Vector<String> menuitems = new Vector<String>();
         menuitems.add("TempT");
-        menuitems.add("Bolus");
         if(showWizard) menuitems.add("Wizard");
+        menuitems.add("eCarb");
+        menuitems.add("Bolus");
         menuitems.add("Settings");
         menuitems.add("Status");
         if (showPrimeFill) menuitems.add("Prime/Fill");
@@ -86,6 +87,10 @@ public class MainMenuActivity extends MenuListActivity {
             intent = new Intent(this, FillMenuActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
-        }
+        } else if ("eCarb".equals(action)) {
+        intent = new Intent(this, ECarbActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+    }
     }
 }

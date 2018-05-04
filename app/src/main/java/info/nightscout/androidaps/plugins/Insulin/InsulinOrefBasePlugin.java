@@ -56,7 +56,7 @@ public abstract class InsulinOrefBasePlugin extends PluginBase implements Insuli
     }
 
     public String getNotificationPattern() {
-        return MainApp.sResources.getString(R.string.dia_too_short);
+        return MainApp.gs(R.string.dia_too_short);
     }
 
     public double getUserDefinedDia() {
@@ -98,7 +98,7 @@ public abstract class InsulinOrefBasePlugin extends PluginBase implements Insuli
         String comment = commentStandardText();
         double userDia = getUserDefinedDia();
         if (userDia < MIN_DIA) {
-            comment += "\n" + String.format(MainApp.sResources.getString(R.string.dia_too_short), userDia, MIN_DIA);
+            comment += "\n" + String.format(MainApp.gs(R.string.dia_too_short), userDia, MIN_DIA);
         }
         return comment;
     }

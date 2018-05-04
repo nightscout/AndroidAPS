@@ -161,7 +161,7 @@ class HistoryIntentAdapter {
             Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
             String alertType = intent.getStringExtra(HistoryBroadcast.EXTRA_ALERT_TYPE);
             if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
-            logNote(date, MainApp.instance().getString(getAlertText(alertType)));
+            logNote(date, MainApp.gs(getAlertText(alertType)));
         }
     }
 
@@ -171,13 +171,13 @@ class HistoryIntentAdapter {
             String newStatus = intent.getStringExtra(HistoryBroadcast.EXTRA_NEW_STATUS);
             switch (newStatus) {
                 case "STARTED":
-                    logNote(newStatusTime, MainApp.instance().getString(R.string.pump_started));
+                    logNote(newStatusTime, MainApp.gs(R.string.pump_started));
                     break;
                 case "STOPPED":
-                    logNote(newStatusTime, MainApp.instance().getString(R.string.pump_stopped));
+                    logNote(newStatusTime, MainApp.gs(R.string.pump_stopped));
                     break;
                 case "PAUSED":
-                    logNote(newStatusTime, MainApp.instance().getString(R.string.pump_paused));
+                    logNote(newStatusTime, MainApp.gs(R.string.pump_paused));
                     break;
             }
         }

@@ -200,7 +200,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         if (datetime.getTime() > lastEventTimeLoaded)
             lastEventTimeLoaded = datetime.getTime();
 
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.processinghistory) + ": " + status));
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
     }
 
     @Override

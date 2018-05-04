@@ -179,10 +179,10 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             }
 
             if (pumpSiteChangeCheckbox.isChecked())
-                confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + getString(R.string.record_pump_site_change) +  "</font>");
+                confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + MainApp.gs(R.string.record_pump_site_change) +  "</font>");
 
             if (insulinCartridgeChangeCheckbox.isChecked())
-                confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + getString(R.string.record_insulin_cartridge_change) + "</font>");
+                confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + MainApp.gs(R.string.record_insulin_cartridge_change) + "</font>");
 
             final String notes = notesEdit.getText().toString();
             if (!notes.isEmpty()) {
@@ -197,7 +197,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setTitle(MainApp.gs(R.string.confirmation));
             if (insulinAfterConstraints > 0 || pumpSiteChangeCheckbox.isChecked() || insulinCartridgeChangeCheckbox.isChecked()) {
                 builder.setMessage(Html.fromHtml(Joiner.on("<br/>").join(confirmMessage)));
-                builder.setPositiveButton(getString(R.string.primefill), (dialog, id) -> {
+                builder.setPositiveButton(MainApp.gs(R.string.primefill), (dialog, id) -> {
                     if (finalInsulinAfterConstraints > 0) {
                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                         detailedBolusInfo.insulin = finalInsulinAfterConstraints;
@@ -212,7 +212,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                     i.putExtra("soundid", R.raw.boluserror);
                                     i.putExtra("status", result.comment);
-                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     MainApp.instance().startActivity(i);
                                 }
@@ -228,7 +228,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             } else {
                 builder.setMessage(MainApp.gs(R.string.no_action_selected));
             }
-            builder.setNegativeButton(getString(R.string.cancel), null);
+            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
             dismiss();
         } catch (RuntimeException e) {

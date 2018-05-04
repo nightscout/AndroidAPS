@@ -284,6 +284,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         long last = 0;
         synchronized (treatments) {
             for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
                 if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now)
                     last = t.date;
             }

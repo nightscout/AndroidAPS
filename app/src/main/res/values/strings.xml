@@ -710,7 +710,7 @@
     <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
     <string name="gettingbolusstatus">Getting bolus status</string>
     <string name="gettingtempbasalstatus">Getting temporary basal status</string>
-    <string name="gettingpumpsettings">Gettings pump settings</string>
+    <string name="gettingpumpsettings">Getting pump settings</string>
     <string name="gettingpumptime">Getting pump time</string>
     <string name="reuse">reuse</string>
     <string name="wearcontrol_title">Controls from Watch</string>
@@ -926,7 +926,7 @@
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
     <string name="bolusrecordedonly">Bolus will be recorded only</string>
-    <string name="ns_autobackfill">Autobackfill missig BGs from NS</string>
+    <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
     <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
     <string name="overview_show_sensitivity">Sensitivity</string>
@@ -982,7 +982,7 @@
     <string name="limitingiob" formatted="false">Limiting IOB to %.1f U because of %s</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
-    <string name="key_treatmentssafety_maxcarbs">treatmentssafety_maxcarbs</string>
+    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
     <string name="unsafeusage">unsafe usage</string>
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
     <string name="readstatusfailed">Read status failed</string>
@@ -1006,7 +1006,7 @@
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
     <string name="time">Time</string>
-    <string name="key_show_notes_entry_dialogs">show_notes_entry_dialogs</string>
+    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
@@ -1020,8 +1020,10 @@
     <string name="key_ns_wifionly" translatable="false">ns_wifionly</string>
     <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
     <string name="key_ns_allowroaming" translatable="false">ns_allowroaming</string>
+    <string name="key_ns_chargingonly" translatable="false">ns_chargingonly</string>
     <string name="ns_wifionly">Use WiFi connection only</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_chargingonly">Only if charging</string>
     <string name="connectionsettings_title">Connection settings</string>
     <string name="ns_wifi_allowedssids">Allowed SSIDs (semicolon separated)</string>
     <string name="ns_allowroaming">Allow connection in roaming</string>
@@ -1032,4 +1034,14 @@
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
+    <string name="ns_autobackfill_title">Autobackfill BG</string>
+    <string name="wear_wizard_settings">Wizard Settings</string>
+    <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
+    <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
+    <string translatable="false" name="key_wearwizard_cob">wearwizard_cob</string>
+    <string translatable="false" name="key_wearwizard_bolusiob">wearwizard_bolusiob</string>
+    <string translatable="false" name="key_wearwizard_basaliob">wearwizard_basaliob</string>
+    <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
+    <string name="wear_display_settings">Display Settings</string>
+    <string name="wear_general_settings">General Settings</string>
 </resources>

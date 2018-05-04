@@ -457,6 +457,5 @@
     <string name="profileviewer">Profilo NS</string>
     <string name="profile_set_ok">Profilo Basale aggiornato nel Micro</string>
     <string name="profile_set_failed">Impostazione Profilo Basale fallito</string>
-    <string name="app_name">AndroidAPS</string>
 </resources>
 

@@ -258,7 +258,7 @@ public class LoopPlugin extends PluginBase {
             Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
 
             if (!loopEnabled.value()) {
-                String message = MainApp.sResources.getString(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
+                String message = MainApp.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
                 log.debug(message);
                 MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
@@ -272,8 +272,8 @@ public class LoopPlugin extends PluginBase {
             Profile profile = MainApp.getConfigBuilder().getProfile();
 
             if (!MainApp.getConfigBuilder().isProfileValid("Loop")) {
-                log.debug(MainApp.sResources.getString(R.string.noprofileselected));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noprofileselected)));
+                log.debug(MainApp.gs(R.string.noprofileselected));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
                 return;
             }
 
@@ -288,7 +288,7 @@ public class LoopPlugin extends PluginBase {
 
             // Check if we have any result
             if (result == null) {
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noapsselected)));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.noapsselected)));
                 return;
             }
 
@@ -317,14 +317,14 @@ public class LoopPlugin extends PluginBase {
             NSUpload.uploadDeviceStatus();
 
             if (isSuspended()) {
-                log.debug(MainApp.sResources.getString(R.string.loopsuspended));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopsuspended)));
+                log.debug(MainApp.gs(R.string.loopsuspended));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.loopsuspended)));
                 return;
             }
 
             if (pump.isSuspended()) {
-                log.debug(MainApp.sResources.getString(R.string.pumpsuspended));
-                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.pumpsuspended)));
+                log.debug(MainApp.gs(R.string.pumpsuspended));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.pumpsuspended)));
                 return;
             }
 
@@ -376,7 +376,7 @@ public class LoopPlugin extends PluginBase {
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(MainApp.instance().getApplicationContext(), CHANNEL_ID);
                     builder.setSmallIcon(R.drawable.notif_icon)
-                            .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
+                            .setContentTitle(MainApp.gs(R.string.openloop_newsuggestion))
                             .setContentText(resultAfterConstraints.toString())
                             .setAutoCancel(true)
                             .setPriority(Notification.PRIORITY_HIGH)

@@ -174,8 +174,8 @@
     <string name="absolute">Absolut</string>
     <string name="smscommunicator_bolusfailed">Bolus fehlgeschlagen</string>
     <string name="canceltemp">TBR abbrechen</string>
-    <string name="careportal_temporarytarget">Temoräres Ziel</string>
-    <string name="careportal_temporarytargetcancel">Temoräres Ziel abbrechen</string>
+    <string name="careportal_temporarytarget">Temporäres Ziel</string>
+    <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="comment">Kommentar</string>
     <string name="connected">Verbunden</string>
     <string name="connecting">Verbinden</string>
@@ -331,7 +331,6 @@
     <string name="activity">Aktivität</string>
     <string name="adult">Erwachsener</string>
     <string name="advancedsettings_title">Erweiterte Einstellungen</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="basal_short">BAS</string>
     <string name="basal_step">Basal-Schritt</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>

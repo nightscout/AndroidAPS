@@ -32,12 +32,12 @@ public class MsgSetSingleBasalProfile extends MessageBase {
         if (result != 1) {
             failed = true;
             log.debug("Set basal profile result: " + result + " FAILED!!!");
-            Notification reportFail = new Notification(Notification.PROFILE_SET_FAILED, MainApp.sResources.getString(R.string.profile_set_failed), Notification.URGENT);
+            Notification reportFail = new Notification(Notification.PROFILE_SET_FAILED, MainApp.gs(R.string.profile_set_failed), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(reportFail));
         } else {
             if (Config.logDanaMessageDetail)
                 log.debug("Set basal profile result: " + result);
-            Notification reportOK = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+            Notification reportOK = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
             MainApp.bus().post(new EventNewNotification(reportOK));
         }
     }

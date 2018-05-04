@@ -6,7 +6,7 @@
     <color name="bolus">#FFFFCC03</color>
     <color name="cob">#FFFB8C00</color>
     <color name="uam">#ffea00</color>
-    <color name="zt">#ff9500</color>
+    <color name="zt">#00ffff</color>
     <color name="ratio">#FFFFFF</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
@@ -52,7 +52,7 @@
     <color name="colorProfileSwitchButton">#ca77dd</color>
 
     <color name="colorScheduled">#de7550</color>
-    <color name="colorActive">#1b5e20</color>
+    <color name="colorActive">#25912e</color>
 
     <color name="loopenabled">#47c8ff</color>
     <color name="loopdisabled">#FFDD7792</color>
@@ -63,5 +63,10 @@
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
+
+    <color name="deviationgrey">#c8666666</color>
+    <color name="deviationgreen">#7200FF00</color>
+    <color name="deviationred">#72FF0000</color>
+    <color name="deviationblack">#72000000</color>
 
 </resources>

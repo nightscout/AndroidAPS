@@ -98,7 +98,8 @@ public class IobCobThread extends Thread {
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
-                    MainApp.bus().post(new EventIobCalculationProgress(i + "/" + bucketed_data.size()));
+                    String progress = i + (MainApp.isDev() ? " (" + from + ")" : "");
+                    MainApp.bus().post(new EventIobCalculationProgress(progress));
 
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                         iobCobCalculatorPlugin.stopCalculationTrigger = false;

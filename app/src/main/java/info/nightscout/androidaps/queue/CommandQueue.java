@@ -81,7 +81,7 @@ public class CommandQueue {
     private QueueThread thread = null;
 
     private PumpEnactResult executingNowError() {
-        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
+        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.executingrightnow));
     }
 
     public boolean isRunning(Command.CommandType type) {
@@ -162,8 +162,18 @@ public class CommandQueue {
         tempCommandQueue.readStatus(reason, callback);
     }
 
+    public synchronized boolean bolusInQueue(){
+        if(isRunning(Command.CommandType.BOLUS)) return true;
+        for (int i = 0; i < queue.size(); i++) {
+            if (queue.get(i).commandType == Command.CommandType.BOLUS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // returns true if command is queued
-    public boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
+    public synchronized boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
 
         if(type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0){
@@ -314,10 +324,10 @@ public class CommandQueue {
         }
 
         if (!MainApp.isEngineeringModeOrRelease()) {
-            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.sResources.getString(R.string.not_eng_mode_or_release), Notification.URGENT);
+            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.gs(R.string.not_eng_mode_or_release), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             if (callback != null)
-                callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.not_eng_mode_or_release))).run();
+                callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
             return false;
         }
 
@@ -327,10 +337,10 @@ public class CommandQueue {
 
         for (Profile.BasalValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
-                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
+                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
-                    callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.basalvaluebelowminimum))).run();
+                    callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
                 return false;
             }
         }

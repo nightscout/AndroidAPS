@@ -28,17 +28,17 @@ public class XdripCalibrations {
 
     public static void confirmAndSendCalibration(final Double bg, Context parentContext) {
         if (parentContext != null) {
-            String confirmMessage = String.format(MainApp.sResources.getString(R.string.send_calibration), bg);
+            String confirmMessage = String.format(MainApp.gs(R.string.send_calibration), bg);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
-            builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
+            builder.setTitle(MainApp.gs(R.string.confirmation));
             builder.setMessage(confirmMessage);
-            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     sendIntent(bg);
                 }
             });
-            builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
         }
     }
@@ -55,12 +55,12 @@ public class XdripCalibrations {
         context.sendBroadcast(intent);
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.xdripnotinstalled));
-            log.debug(MainApp.sResources.getString(R.string.xdripnotinstalled));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.xdripnotinstalled));
+            log.debug(MainApp.gs(R.string.xdripnotinstalled));
             return false;
         } else {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.calibrationsent));
-            log.debug(MainApp.sResources.getString(R.string.calibrationsent));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.calibrationsent));
+            log.debug(MainApp.gs(R.string.calibrationsent));
             return true;
         }
     }

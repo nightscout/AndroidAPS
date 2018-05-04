@@ -39,7 +39,7 @@ public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
             lastReceive = System.currentTimeMillis();
             t.insulin = deliveredInsulin;
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), deliveredInsulin);
+            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), deliveredInsulin);
             bolusingEvent.t = t;
             bolusingEvent.percent = Math.min((int) (deliveredInsulin / amount * 100), 100);
             MainApp.bus().post(bolusingEvent);

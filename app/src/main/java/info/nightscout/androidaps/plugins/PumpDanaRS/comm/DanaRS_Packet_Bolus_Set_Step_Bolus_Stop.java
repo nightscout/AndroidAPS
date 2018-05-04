@@ -47,10 +47,10 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop extends DanaRS_Packet {
         stopped = true;
         if (!forced) {
             t.insulin = amount;
-            bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_delivered);
+            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_delivered);
             bolusingEvent.percent = 100;
         } else {
-            bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_stoped);
+            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_stoped);
         }
         MainApp.bus().post(bolusingEvent);
     }

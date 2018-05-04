@@ -578,7 +578,6 @@
     <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="careportal_activity_label">АКТИВНОСТ И ОБРАТНА ВРЪЗКА</string>
     <string name="careportal_carbsandbolus_label">ХРАНА И БОЛУС</string>
@@ -683,4 +682,77 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
     <string name="combo_reservoir_empty">Празен</string>
     <string name="combo_refresh">Обнови</string>
+    <string name="bloodsugarmeasurementalert">И</string>
+    <string name="hoursago">един</string>
+    <string name="pump_basebasalrate">вддв</string>
+    <string name="insight_needs">шжо</string>
+    <string name="objectives_7_objective">Добавяне на допълнителни функции за използване през деня, като SMB</string>
+    <string name="danar_history_prime">Пълнене</string>
+    <string name="apsselected">Избран APS</string>
+    <string name="basalprofilenotaligned" formatted="false">Няма базални стойности за някои часове: %s</string>
+    <string name="alert_w31">Предупреждение W31: Ниско ниво в резервоара</string>
+    <string name="alert_w32">Предупреждение W32: Слаба батерия</string>
+    <string name="alert_w33">Предупреждение W33: Невалидно време/дата</string>
+    <string name="alert_w34">Предупреждение W34: Край на гаранцията</string>
+    <string name="alert_w36">Предупреждение W36: Временният базал е прекъснат</string>
+    <string name="alert_w38">Предупреждение W38: Болусът е прекъснат</string>
+    <string name="loop_tbrsetbypump_label">Временният базал е зададен от помпата</string>
+    <string name="ro_lang">Румънски</string>
+    <string name="fr_lang">Френски</string>
+    <string name="zh_lang">Китайски</string>
+    <string name="bolusstopped">Болусът е спрян</string>
+    <string name="bolusstopping">Спиране на болус</string>
+    <string name="hypo">Хипоглекимия</string>
+    <string name="openapsama_autosens_adjusttargets">Настройка на целевата КЗ чрез аутосенс</string>
+    <string name="resistantadult">Възрастни с по-голяма инсулинова резистентност</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="smb_shortname">SMB</string>
+    <string name="enableuam">Разреши UAM</string>
+    <string name="enablesmb">Разреши SMB</string>
+    <string name="enablesmb_summary">Използвай супер микро болуси вместо временен базал за по бързо действие</string>
+    <string name="enableuam_summary">Детекция на необявено хранене (UAM)</string>
+    <string name="hypo_duration">Продължителност на вр. цел при хипоглекимия</string>
+    <string name="hypo_target">Временна цел при хипоглекимия</string>
+    <string name="shortminute">мин.</string>
+    <string name="shorthour">ч.</string>
+    <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
+    <string name="combo_programming_bolus">Програмиране на помпа за болус</string>
+    <string name="combo_pump_state_label">Състояние</string>
+    <string name="combo_pump_activity_label">Активност</string>
+    <string name="combo_no_pump_connection" formatted="false">Няма връзка от %d мин.</string>
+    <string name="combo_tbr_remaining" formatted="false">%d%% (%d мин. остават)</string>
+    <string name="combo_pump_state_initializing">Инициализация</string>
+    <string name="combo_pump_state_suspended_due_to_error">Прекратен поради грешка</string>
+    <string name="combo_pump_state_suspended_by_user">Прекратен от потребителя</string>
+    <string name="combo_pump_state_running">Изпълнява</string>
+    <string name="combo_pump_action_cancelling_tbr">Отказва временен базал</string>
+    <string name="combo_pump_action_setting_tbr" formatted="false">Задава временен базал (%d%% / %d min)</string>
+    <string name="combo_pump_action_bolusing" formatted="false">Болус (%.1f U)</string>
+    <string name="combo_pump_action_refreshing">Обновява</string>
+    <string name="combo_pump_unsupported_operation">Исканата операция не се поддържа от помпата</string>
+    <string name="combo_low_suspend_forced_notification">Опасно използване: удължени или многовълнови болуси са активни. Помпата  е изключена за само 6 часа. Само нормални болуси се поддържат.</string>
+    <string name="combo_force_disabled_notification">Опасно използване: помпата използва различни базални нива от първоначалния профил. Loop е спрян. Изберете първоначалния профил и обновете.</string>
+    <string name="bolus_frequency_exceeded">Болуси с едно и също количество бяха поискани в последните две минути. За да се предотврати дублиране вече доставен болус, операцията е забранена.</string>
+    <string name="combo_pump_connected_now">Сега</string>
+    <string name="combo_pump_cartridge_low_warrning">Ниско ниво на резервоар на помпа</string>
+    <string name="combo_pump_battery_low_warrning">Батерията на помпата е слаба</string>
+    <string name="combo_is_in_error_state" formatted="false">Помпата отчита грешка E%d: %s</string>
+    <string name="combo_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
+    <string name="combo_pump_tbr_cancelled_warrning">Отказването на временният базал беше потвърдено</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">Помпата е недостъпна. Не беше доставен болус.</string>
+    <string name="combo_error_no_bolus_delivered">Болусът беше неуспешен.  За да сте сигурни, моля, проверете помпата, за да избегнете повторение на вече доставен болус. За да се избегнат бъгове болусите не се повтарят автоматично.</string>
+    <string name="combo_error_partial_bolus_delivered" formatted="false">Само %.2f U от искания болус от %.2f U е доставен поради грешка. Моля, проверете помпата, за да потвърдите това и да предприемете съответните действия.</string>
+    <string name="insightpump_shortname">Insight</string>
+    <string name="insightpump">Insight помпа</string>
+    <string name="status_no_colon">Статус</string>
+    <string name="changed">Променено</string>
+    <string name="pump_stopped_uppercase">ПОМПАТА Е СПРЯНА</string>
+    <string name="status_updated">Статуса е актуализиран</string>
+    <string name="ago">преди</string>
+    <string name="with">с</string>
+    <string name="insight_active_tbr">Активен временен базал</string>
+    <string name="insight_min_left">мин. остават</string>
+    <string name="log_book">История</string>
+    <string name="insight_last_completed_action">Последно извършено действие</string>
+    <string name="insight_min">мин.</string>
 </resources>

@@ -12,6 +12,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -61,7 +62,7 @@ public class GraphData {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
-    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, APSResult apsResult) {
+    public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, List<BgReading> predictions) {
         double maxBgValue = 0d;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
@@ -74,9 +75,12 @@ public class GraphData {
             if (bg.value > maxBgValue) maxBgValue = bg.value;
             bgListArray.add(bg);
         }
-        if (apsResult != null) {
-            List<BgReading> predArray = apsResult.getPredictions();
-            bgListArray.addAll(predArray);
+        if (predictions != null) {
+            Collections.sort(predictions, (o1, o2) -> Double.compare(o1.getX(), o2.getX()));
+            for (BgReading prediction : predictions) {
+                if (prediction.value >= 40)
+                    bgListArray.add(prediction);
+            }
         }
 
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
@@ -273,6 +277,7 @@ public class GraphData {
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
             if (t.getX() < fromTime || t.getX() > endTime) continue;
+            if (t.isSMB && !t.isValid) continue;
             t.setY(getNearestBg((long) t.getX()));
             filteredTreatments.add(t);
         }
@@ -431,10 +436,10 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
-                int color = Color.BLACK; // "="
-                if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
-                if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
-                if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
+                int color = MainApp.gc(R.color.deviationblack); // "="
+                if (autosensData.pastSensitivity.equals("C")) color = MainApp.gc(R.color.deviationgrey);
+                if (autosensData.pastSensitivity.equals("+")) color = MainApp.gc(R.color.deviationgreen);
+                if (autosensData.pastSensitivity.equals("-")) color = MainApp.gc(R.color.deviationred);
                 devArray.add(new DeviationDataPoint(time, autosensData.deviation, color, devScale));
                 maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
             }

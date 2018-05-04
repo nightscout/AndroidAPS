@@ -677,7 +677,6 @@
     <string name="overview_editquickwizard_usecob">COB berekening</string>
     <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="none"><![CDATA[<geen>]]></string>
-    <string name="app_name">AndroidAPS</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
     <string name="positiveonly">Enkel positief</string>
     <string name="negativeonly">Enkel negatief</string>

@@ -107,7 +107,7 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
                         currentTempView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getCurrentTempParam()));
                         try {
                             JSONArray iobArray = new JSONArray(determineBasalAdapterAMAJS.getIobDataParam());
-                            iobDataView.setText(String.format(MainApp.sResources.getString(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0)));
+                            iobDataView.setText(String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0)));
                         } catch (JSONException e) {
                             log.error("Unhandled exception", e);
                             iobDataView.setText("JSONException");
