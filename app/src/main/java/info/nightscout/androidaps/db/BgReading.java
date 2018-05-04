@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.db;
 
+import android.content.res.Resources;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -211,7 +213,7 @@ public class BgReading implements DataPointWithLabelInterface {
         }
         int color = MainApp.sResources.getColor(R.color.inrange);
         if (isPrediction())
-            color = MainApp.sResources.getColor(R.color.prediction);
+            return getPredectionColor();
         else if (valueToUnits(units) < lowLine)
             color = MainApp.sResources.getColor(R.color.low);
         else if (valueToUnits(units) > highLine)
@@ -219,8 +221,7 @@ public class BgReading implements DataPointWithLabelInterface {
         return color;
     }
 
-    @Override
-    public int getSecondColor() {
+    public int getPredectionColor() {
         if (isIOBPrediction)
             return MainApp.sResources.getColor(R.color.iob);
         if (isCOBPrediction)

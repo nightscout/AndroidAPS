@@ -55,7 +55,7 @@ public class NSUpload {
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
             data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
             Bundle bundle = new Bundle();
@@ -93,7 +93,7 @@ public class NSUpload {
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
                 data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-                data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+                data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
@@ -115,7 +115,7 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
             if (pumpId != 0)
@@ -147,7 +147,7 @@ public class NSUpload {
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
-            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -173,7 +173,7 @@ public class NSUpload {
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
             Bundle bundle = new Bundle();
@@ -301,7 +301,7 @@ public class NSUpload {
                 data.put("percentage", profileSwitch.percentage);
             }
             data.put("created_at", DateUtil.toISOString(profileSwitch.date));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", MainApp.gs(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -325,7 +325,7 @@ public class NSUpload {
             data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()));
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
             data.put("units", profile.getUnits());
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", MainApp.gs(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -346,7 +346,7 @@ public class NSUpload {
                 data.put("percentage", profileSwitch.percentage);
             }
             data.put("created_at", DateUtil.toISOString(profileSwitch.date));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", MainApp.gs(R.string.app_name));
             if (profileSwitch._id != null) {
                 Context context = MainApp.instance().getApplicationContext();
                 Bundle bundle = new Bundle();
@@ -420,7 +420,7 @@ public class NSUpload {
             data.put("eventType", "OpenAPS Offline");
             data.put("duration", durationInMinutes);
             data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -496,7 +496,7 @@ public class NSUpload {
             try {
                 data.put("eventType", "Note");
                 data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
+                data.put("notes", MainApp.gs(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

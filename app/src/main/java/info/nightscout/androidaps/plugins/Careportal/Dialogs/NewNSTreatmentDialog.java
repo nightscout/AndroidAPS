@@ -715,14 +715,26 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("TempTarget"));
             }
         } else {
-            NSUpload.uploadCareportalEntryToNS(data);
+            if (JsonHelper.safeGetString(data, "eventType").equals(CareportalEvent.PROFILESWITCH)) {
+                ProfileSwitch profileSwitch = prepareProfileSwitch(
+                        profileStore,
+                        JsonHelper.safeGetString(data, "profile"),
+                        JsonHelper.safeGetInt(data, "duration"),
+                        JsonHelper.safeGetInt(data, "percentage"),
+                        JsonHelper.safeGetInt(data, "timeshift"),
+                        eventTime.getTime()
+                );
+                NSUpload.uploadProfileSwitch(profileSwitch);
+            } else {
+                NSUpload.uploadCareportalEntryToNS(data);
+            }
             FabricPrivacy.getInstance().logCustom(new CustomEvent("NSTreatment"));
         }
     }
 
-    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
+    public static ProfileSwitch prepareProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift, long date) {
         ProfileSwitch profileSwitch = new ProfileSwitch();
-        profileSwitch.date = System.currentTimeMillis();
+        profileSwitch.date = date;
         profileSwitch.source = Source.USER;
         profileSwitch.profileName = profileName;
         profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
@@ -731,6 +743,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.isCPP = percentage != 100 || timeshift != 0;
         profileSwitch.timeshift = timeshift;
         profileSwitch.percentage = percentage;
+        return profileSwitch;
+    }
+
+    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
+        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, System.currentTimeMillis());
         TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
         FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }

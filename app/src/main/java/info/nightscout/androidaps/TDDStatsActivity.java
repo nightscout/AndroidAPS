@@ -141,27 +141,27 @@ public class TDDStatsActivity extends Activity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_date = new TextView(this);
-        label_date.setText(getString(R.string.danar_stats_date));
+        label_date.setText(MainApp.gs(R.string.danar_stats_date));
         label_date.setTextColor(Color.WHITE);
         tr_head.addView(label_date);
 
         TextView label_basalrate = new TextView(this);
-        label_basalrate.setText(getString(R.string.danar_stats_basalrate));
+        label_basalrate.setText(MainApp.gs(R.string.danar_stats_basalrate));
         label_basalrate.setTextColor(Color.WHITE);
         tr_head.addView(label_basalrate);
 
         TextView label_bolus = new TextView(this);
-        label_bolus.setText(getString(R.string.danar_stats_bolus));
+        label_bolus.setText(MainApp.gs(R.string.danar_stats_bolus));
         label_bolus.setTextColor(Color.WHITE);
         tr_head.addView(label_bolus);
 
         TextView label_tdd = new TextView(this);
-        label_tdd.setText(getString(R.string.danar_stats_tdd));
+        label_tdd.setText(MainApp.gs(R.string.danar_stats_tdd));
         label_tdd.setTextColor(Color.WHITE);
         tr_head.addView(label_tdd);
 
         TextView label_ratio = new TextView(this);
-        label_ratio.setText(getString(R.string.danar_stats_ratio));
+        label_ratio.setText(MainApp.gs(R.string.danar_stats_ratio));
         label_ratio.setTextColor(Color.WHITE);
         tr_head.addView(label_ratio);
 
@@ -179,17 +179,17 @@ public class TDDStatsActivity extends Activity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_cum_amount_days = new TextView(this);
-        label_cum_amount_days.setText(getString(R.string.danar_stats_amount_days));
+        label_cum_amount_days.setText(MainApp.gs(R.string.danar_stats_amount_days));
         label_cum_amount_days.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_amount_days);
 
         TextView label_cum_tdd = new TextView(this);
-        label_cum_tdd.setText(getString(R.string.danar_stats_tdd));
+        label_cum_tdd.setText(MainApp.gs(R.string.danar_stats_tdd));
         label_cum_tdd.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_tdd);
 
         TextView label_cum_ratio = new TextView(this);
-        label_cum_ratio.setText(getString(R.string.danar_stats_ratio));
+        label_cum_ratio.setText(MainApp.gs(R.string.danar_stats_ratio));
         label_cum_ratio.setTextColor(Color.WHITE);
         ctr_head.addView(label_cum_ratio);
 
@@ -207,17 +207,17 @@ public class TDDStatsActivity extends Activity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_exp_weight = new TextView(this);
-        label_exp_weight.setText(getString(R.string.danar_stats_weight));
+        label_exp_weight.setText(MainApp.gs(R.string.danar_stats_weight));
         label_exp_weight.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_weight);
 
         TextView label_exp_tdd = new TextView(this);
-        label_exp_tdd.setText(getString(R.string.danar_stats_tdd));
+        label_exp_tdd.setText(MainApp.gs(R.string.danar_stats_tdd));
         label_exp_tdd.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_tdd);
 
         TextView label_exp_ratio = new TextView(this);
-        label_exp_ratio.setText(getString(R.string.danar_stats_ratio));
+        label_exp_ratio.setText(MainApp.gs(R.string.danar_stats_ratio));
         label_exp_ratio.setTextColor(Color.WHITE);
         etr_head.addView(label_exp_ratio);
 
@@ -235,7 +235,7 @@ public class TDDStatsActivity extends Activity {
                         reloadButton.setVisibility(View.GONE);
                         statusView.setVisibility(View.VISIBLE);
                         statsMessage.setVisibility(View.VISIBLE);
-                        statsMessage.setText(getString(R.string.danar_stats_warning_Message));
+                        statsMessage.setText(MainApp.gs(R.string.danar_stats_warning_Message));
                     }
                 });
                 ConfigBuilderPlugin.getCommandQueue().loadTDDs( new Callback() {
@@ -441,7 +441,7 @@ public class TDDStatsActivity extends Activity {
 
                 if (isOldData(historyList) && ConfigBuilderPlugin.getActivePump().getPumpDescription().needsManualTDDLoad) {
                     statsMessage.setVisibility(View.VISIBLE);
-                    statsMessage.setText(getString(R.string.danar_stats_olddata_Message));
+                    statsMessage.setText(MainApp.gs(R.string.danar_stats_olddata_Message));
 
                 } else {
                     tl.setBackgroundColor(Color.TRANSPARENT);

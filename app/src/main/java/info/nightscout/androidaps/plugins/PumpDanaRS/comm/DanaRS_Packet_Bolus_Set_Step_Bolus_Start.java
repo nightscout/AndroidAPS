@@ -53,9 +53,10 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
     public void handleMessage(byte[] data) {
         errorCode = intFromBuff(data, 0, 1);
         if (Config.logDanaMessageDetail) {
-            if (errorCode == 0)
+            if (errorCode == 0) {
                 log.debug("Result OK");
-            else {
+                failed = false;
+            } else {
                 failed = true;
                 log.error("Result Error: " + errorCode);
             }

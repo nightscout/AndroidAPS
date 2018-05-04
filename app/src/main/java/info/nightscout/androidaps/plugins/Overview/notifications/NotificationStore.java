@@ -37,6 +37,7 @@ public class NotificationStore {
     private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
     public long snoozedUntil = 0L;
+    private boolean usesChannels;
 
     public NotificationStore() {
         createNotificationChannel();
@@ -60,8 +61,14 @@ public class NotificationStore {
         }
         store.add(n);
 
-        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_raise_notifications_as_android_notifications), false)) {
+        if (SP.getBoolean(MainApp.gs(R.string.key_raise_notifications_as_android_notifications), false)) {
             raiseSystemNotification(n);
+            if (usesChannels && n.soundId != null) {
+                Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                alarm.putExtra("soundid", n.soundId);
+                MainApp.instance().startService(alarm);
+            }
+
         } else {
             if (n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
@@ -105,7 +112,7 @@ public class NotificationStore {
 
     public void unSnooze() {
         if (Notification.isAlarmForStaleData()) {
-            Notification notification = new Notification(Notification.NSALARM, MainApp.sResources.getString(R.string.nsalarm_staledata), Notification.URGENT);
+            Notification notification = new Notification(Notification.NSALARM, MainApp.gs(R.string.nsalarm_staledata), Notification.URGENT);
             SP.putLong("snoozedTo", System.currentTimeMillis());
             add(notification);
             log.debug("Snoozed to current time and added back notification!");
@@ -126,11 +133,11 @@ public class NotificationStore {
                         .setDeleteIntent(DismissNotificationService.deleteIntent(n.id));
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000})
-                    .setContentTitle(MainApp.sResources.getString(R.string.urgent_alarm))
+                    .setContentTitle(MainApp.gs(R.string.urgent_alarm))
                     .setSound(sound, AudioAttributes.USAGE_ALARM);
         } else {
             notificationBuilder.setVibrate(new long[]{0, 100, 50, 100, 50})
-                    .setContentTitle(MainApp.sResources.getString(R.string.info))
+                    .setContentTitle(MainApp.gs(R.string.info))
             ;
         }
         mgr.notify(n.id, notificationBuilder.build());
@@ -138,7 +145,7 @@ public class NotificationStore {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
+            usesChannels = true;
             NotificationManager mNotificationManager =
                     (NotificationManager) MainApp.instance().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,

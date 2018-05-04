@@ -47,7 +47,7 @@ public class CommandSetProfile extends Command {
         if (r.enacted && profileSwitch.source == Source.NIGHTSCOUT) {
             SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
             if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {
-                smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
+                smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.gs(R.string.profile_set_ok));
             }
         }
     }

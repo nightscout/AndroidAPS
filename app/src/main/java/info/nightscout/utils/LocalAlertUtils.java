@@ -26,21 +26,21 @@ public class LocalAlertUtils {
     private static Logger log = LoggerFactory.getLogger(LocalAlertUtils.class);
 
     public static long missedReadingsThreshold() {
-        return T.mins(SP.getInt(MainApp.sResources.getString(R.string.key_missed_bg_readings_threshold), 30)).msecs();
+        return T.mins(SP.getInt(MainApp.gs(R.string.key_missed_bg_readings_threshold), 30)).msecs();
     }
 
     private static long pumpUnreachableThreshold() {
-        return T.mins(SP.getInt(MainApp.sResources.getString(R.string.key_pump_unreachable_threshold), 30)).msecs();
+        return T.mins(SP.getInt(MainApp.gs(R.string.key_pump_unreachable_threshold), 30)).msecs();
     }
 
     public static void checkPumpUnreachableAlarm(Date lastConnection, boolean isStatusOutdated) {
         boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
         boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis();
 
-        if (Config.APS && SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_pump_unreachable_alert), true)
+        if (Config.APS && SP.getBoolean(MainApp.gs(R.string.key_enable_pump_unreachable_alert), true)
                 && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !LoopPlugin.getPlugin().isDisconnected()) {
             log.debug("Generating pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated);
-            Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.sResources.getString(R.string.pump_unreachable), Notification.URGENT);
+            Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.gs(R.string.pump_unreachable), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
             MainApp.bus().post(new EventNewNotification(n));
@@ -91,10 +91,10 @@ public class LocalAlertUtils {
 
     public static void checkStaleBGAlert() {
         BgReading bgReading = DatabaseHelper.lastBg();
-        if (SP.getBoolean(MainApp.sResources.getString(R.string.key_enable_missed_bg_readings_alert), false)
+        if (SP.getBoolean(MainApp.gs(R.string.key_enable_missed_bg_readings_alert), false)
                 && bgReading != null && bgReading.date + missedReadingsThreshold() < System.currentTimeMillis()
                 && SP.getLong("nextMissedReadingsAlarm", 0l) < System.currentTimeMillis()) {
-            Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.sResources.getString(R.string.missed_bg_readings), Notification.URGENT);
+            Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.gs(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
             MainApp.bus().post(new EventNewNotification(n));

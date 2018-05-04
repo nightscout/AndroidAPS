@@ -19,13 +19,13 @@ public class DetailedBolusInfoStorage {
     private static Logger log = LoggerFactory.getLogger(DetailedBolusInfoStorage.class);
     private static List<DetailedBolusInfo> store = new ArrayList<>();
 
-    public static void add(DetailedBolusInfo detailedBolusInfo) {
+    public static synchronized void add(DetailedBolusInfo detailedBolusInfo) {
         log.debug("Stored bolus info: " + detailedBolusInfo);
         store.add(detailedBolusInfo);
     }
 
     @Nullable
-    public static DetailedBolusInfo findDetailedBolusInfo(long bolustime) {
+    public static synchronized DetailedBolusInfo findDetailedBolusInfo(long bolustime) {
         DetailedBolusInfo found = null;
         for (int i = 0; i < store.size(); i++) {
             long infoTime = store.get(i).date;
@@ -38,7 +38,7 @@ public class DetailedBolusInfoStorage {
         return found;
     }
 
-    public static void remove(long bolustime) {
+    public static synchronized void remove(long bolustime) {
         for (int i = 0; i < store.size(); i++) {
             long infoTime = store.get(i).date;
             if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {

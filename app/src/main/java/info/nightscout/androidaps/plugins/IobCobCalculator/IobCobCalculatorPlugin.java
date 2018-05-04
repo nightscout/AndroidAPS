@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
@@ -325,7 +326,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 basalIobWithZeroTemp.plus(calc);
             }
 
-            basalIob.iobWithZeroTemp = basalIobWithZeroTemp;
+            basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round();
         }
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
@@ -404,6 +405,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
+
+    @NonNull
     public CobInfo getCobInfo(boolean _synchronized, String reason) {
         AutosensData autosensData = _synchronized ? getLastAutosensDataSynchronized(reason) : getLastAutosensData(reason);
         Double displayCob = null;
@@ -414,6 +417,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         if (autosensData != null) {
             displayCob = autosensData.cob;
             for (Treatment treatment : treatments) {
+                if (!treatment.isValid) continue;
                 if (IobCobCalculatorPlugin.roundUpTime(treatment.date) > IobCobCalculatorPlugin.roundUpTime(autosensData.time)
                         && treatment.date <= now && treatment.carbs > 0) {
                     displayCob += treatment.carbs;
@@ -421,6 +425,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             }
         }
         for (Treatment treatment : treatments) {
+            if (!treatment.isValid) continue;
             if (treatment.date > now && treatment.carbs > 0) {
                 futureCarbs += treatment.carbs;
             }

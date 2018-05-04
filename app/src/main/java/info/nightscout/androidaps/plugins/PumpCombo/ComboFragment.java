@@ -120,12 +120,18 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
 
             // activity
             String activity = plugin.getPump().activity;
-            if (StringUtils.isNotEmpty(activity)) {
+            if (activity != null) {
+                activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(14);
                 activityView.setText(activity);
-            } else {
+            } else if (plugin.isInitialized()){
+                activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(20);
                 activityView.setText("{fa-bed}");
+            } else {
+                activityView.setTextColor(Color.RED);
+                activityView.setTextSize(14);
+                activityView.setText(MainApp.gs(R.string.pump_unreachable));
             }
 
             if (plugin.isInitialized()) {
@@ -145,7 +151,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 // reservoir
                 int reservoirLevel = plugin.getPump().reservoirLevel;
                 if (reservoirLevel != -1) {
-                    reservoirView.setText(reservoirLevel + " " + MainApp.sResources.getString(R.string.insulin_unit_shortname));
+                    reservoirView.setText(reservoirLevel + " " + MainApp.gs(R.string.insulin_unit_shortname));
                 } else if (ps.insulinState == PumpState.LOW) {
                     reservoirView.setText(MainApp.gs(R.string.combo_reservoir_low));
                 } else if (ps.insulinState == PumpState.EMPTY) {

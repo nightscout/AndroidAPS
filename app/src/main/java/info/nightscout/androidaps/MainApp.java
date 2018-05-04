@@ -245,10 +245,25 @@ public class MainApp extends Application {
         }
     }
 
-
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
             KeepAliveReceiver.cancelAlarm(this);
+    }
+
+    public static void subscribe(Object subscriber) {
+        try {
+            bus().register(subscriber);
+        } catch (IllegalArgumentException e) {
+            // already registered
+        }
+    }
+
+    public static void unsubscribe(Object subscriber) {
+        try {
+            bus().unregister(subscriber);
+        } catch (IllegalArgumentException e) {
+            // already unregistered
+        }
     }
 
     public static Bus bus() {
@@ -369,6 +384,10 @@ public class MainApp extends Application {
         if (!BuildConfig.APS)
             return true;
         return engineeringMode || !devBranch;
+    }
+
+    public static boolean isDev() {
+        return devBranch;
     }
 
     public String getLogDirectory() {

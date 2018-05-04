@@ -110,16 +110,16 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
                 final Context context = getContext();
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
+                builder.setTitle(MainApp.gs(R.string.confirmation));
                 builder.setMessage("Clear queue? All data in queue will be lost!");
-                builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         UploadQueue.clearQueue();
                         updateGUI();
                         FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
                     }
                 });
-                builder.setNegativeButton(getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
             case R.id.nsclientinternal_showqueue:
@@ -165,7 +165,7 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
                     urlTextView.setText(NSClientPlugin.getPlugin().url());
-                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
+                    Spanned queuetext = Html.fromHtml(MainApp.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
                     queueTextView.setText(queuetext);
                     statusTextView.setText(NSClientPlugin.getPlugin().status);
                 }

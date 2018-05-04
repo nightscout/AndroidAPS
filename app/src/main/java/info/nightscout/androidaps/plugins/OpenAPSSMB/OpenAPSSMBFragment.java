@@ -99,7 +99,7 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
                         currentTempView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getCurrentTempParam()).toString().trim());
                         try {
                             JSONArray iobArray = new JSONArray(determineBasalAdapterSMBJS.getIobDataParam());
-                            iobDataView.setText((String.format(MainApp.sResources.getString(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0))).trim());
+                            iobDataView.setText((String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0))).trim());
                         } catch (JSONException e) {
                             log.error("Unhandled exception", e);
                             iobDataView.setText("JSONException see log for details");

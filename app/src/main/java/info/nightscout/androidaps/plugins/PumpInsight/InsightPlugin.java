@@ -320,9 +320,9 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         PumpEnactResult result = new PumpEnactResult();
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
-            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            result.comment = MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet);
+            result.comment = MainApp.gs(R.string.pumpNotInitializedProfileNotSet);
             return result;
         }
         MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
@@ -339,16 +339,16 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         final Mstatus ms = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
         if (ms.success()) {
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.sResources.getString(R.string.profile_set_ok), Notification.INFO, 60);
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
             MainApp.bus().post(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
             this.profileBlocks = profileBlocks;
         } else {
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            result.comment = MainApp.sResources.getString(R.string.failedupdatebasalprofile);
+            result.comment = MainApp.gs(R.string.failedupdatebasalprofile);
         }
         return result;
     }
@@ -395,7 +395,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.enacted = result.bolusDelivered > 0 || result.carbsDelivered > 0;
-        result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.comment = MainApp.gs(R.string.virtualpump_resultok);
 
         result.percent = 100;
 
@@ -425,7 +425,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             t.isSMB = detailedBolusInfo.isSMB;
             final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
             bolusingEvent.t = t;
-            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), 0F);
+            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), 0F);
             bolusingEvent.bolusId = bolusId;
             bolusingEvent.percent = 0;
             MainApp.bus().post(bolusingEvent);
@@ -464,7 +464,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 if (activeBolus == null) break;
                 else {
                     bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount()));
-                    bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount());
+                    bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount());
                     MainApp.bus().post(bolusingEvent);
                 }
             } else break;
@@ -796,7 +796,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     private String gs(int id) {
-        return MainApp.instance().getString(id);
+        return MainApp.gs(id);
     }
 
     private boolean isPumpRunning() {
