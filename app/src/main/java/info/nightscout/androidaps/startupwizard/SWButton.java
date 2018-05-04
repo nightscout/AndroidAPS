@@ -19,7 +19,7 @@ public class SWButton extends SWItem {
         super(Type.BUTTON);
     }
 
-    public SWButton option(int buttonText) {
+    public SWButton text(int buttonText) {
         this.buttonText = buttonText;
         return this;
     }

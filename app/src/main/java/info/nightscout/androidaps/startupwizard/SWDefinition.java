@@ -65,7 +65,7 @@ public class SWDefinition {
                         .label(R.string.nsclientinternal_secret_dialogtitle)
                         .comment(R.string.nsclientinternal_secret_dialogmessage))
                 .add(new SWButton()
-                        .option(R.string.enable_nsclient)
+                        .text(R.string.enable_nsclient)
                         .action(() -> {
                             NSClientPlugin.getPlugin().setPluginEnabled(PluginType.GENERAL, true);
                             NSClientPlugin.getPlugin().setFragmentVisible(PluginType.GENERAL, true);
