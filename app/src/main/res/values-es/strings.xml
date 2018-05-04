@@ -44,7 +44,7 @@
     <string name="treatments_wizard_bolusiob_label">Bolo IOB</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
-    <string name="pump_basebasalrate_label">Dosis Basal Temporal</string>
+    <string name="pump_basebasalrate_label">Dosis Basal Base</string>
     <string name="pump_tempbasal_label">Basal Temporal</string>
     <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
     <string name="pump_battery_label">Batería</string>
