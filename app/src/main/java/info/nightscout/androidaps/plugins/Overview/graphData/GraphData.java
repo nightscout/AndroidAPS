@@ -436,7 +436,7 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
-                int color = Color.BLACK; // "="
+                int color = MainApp.gc(R.color.deviationblack); // "="
                 if (autosensData.pastSensitivity.equals("C")) color = MainApp.gc(R.color.deviationgrey);
                 if (autosensData.pastSensitivity.equals("+")) color = MainApp.gc(R.color.deviationgreen);
                 if (autosensData.pastSensitivity.equals("-")) color = MainApp.gc(R.color.deviationred);
