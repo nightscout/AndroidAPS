@@ -426,7 +426,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         // reset
         pumpDescription.resetSettings();
 
-        PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew, true);
+        PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew);
 
         this.pumpType = pumpTypeNew;
 

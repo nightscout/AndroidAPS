@@ -11,14 +11,10 @@ import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 
 public class PumpUtil {
 
+
     public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType)
     {
-        setPumpDescription(pumpDescription, pumpType, false);
-    }
-
-    public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType, boolean isVirtualPump)
-    {
-        PumpCapability pumpCapability = isVirtualPump ? PumpCapability.VirtualPump : pumpType.getPumpCapability();
+        PumpCapability pumpCapability = pumpType.getPumpCapability();
 
         pumpDescription.isBolusCapable = pumpCapability.hasCapability(PumpCapability.Bolus);
         pumpDescription.bolusStep = pumpType.getBolusSize();
@@ -28,7 +24,7 @@ public class PumpUtil {
         pumpDescription.extendedBolusDurationStep = pumpType.getExtendedBolusSettings().getDurationStep();
         pumpDescription.extendedBolusMaxDuration = pumpType.getExtendedBolusSettings().getMaxDuration();
 
-        pumpDescription.isTempBasalCapable = pumpCapability.hasCapability(PumpCapability.TBR);
+        pumpDescription.isTempBasalCapable = pumpCapability.hasCapability(PumpCapability.TempBasal);
 
         if (pumpType.getPumpTempBasalType()==PumpTempBasalType.Percent)
         {
@@ -46,6 +42,8 @@ public class PumpUtil {
         pumpDescription.tempDurationStep = pumpType.getTbrSettings().getDurationStep();
         pumpDescription.tempMaxDuration = pumpType.getTbrSettings().getMaxDuration();
 
+        pumpDescription.tempDurationStep15mAllowed = pumpType.getSpecialBasalDurations().hasCapability(PumpCapability.BasalRate_Duration15minAllowed);
+        pumpDescription.tempDurationStep30mAllowed = pumpType.getSpecialBasalDurations().hasCapability(PumpCapability.BasalRate_Duration30minAllowed);
 
         pumpDescription.isSetBasalProfileCapable = pumpCapability.hasCapability(PumpCapability.BasalProfileSet);
         pumpDescription.basalStep = pumpType.getBaseBasalStep();
@@ -53,6 +51,12 @@ public class PumpUtil {
 
         pumpDescription.isRefillingCapable = pumpCapability.hasCapability(PumpCapability.Refill);
         pumpDescription.storesCarbInfo = pumpCapability.hasCapability(PumpCapability.StoreCarbInfo);
+
+        pumpDescription.supportsTDDs = pumpCapability.hasCapability(PumpCapability.TDD);
+        pumpDescription.needsManualTDDLoad = pumpCapability.hasCapability(PumpCapability.ManualTDDLoad);
+
+        pumpDescription.is30minBasalRatesCapable = pumpCapability.hasCapability(PumpCapability.BasalRate30min);
+
     }
 
 

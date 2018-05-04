@@ -6,19 +6,30 @@ package info.nightscout.androidaps.plugins.PumpCommon.defs;
 
 public enum PumpCapability {
 
-    Bolus, //
-    ExtendedBolus, //
-    TBR, //
-    BasalProfileSet, //
-    Refill, //
-    StoreCarbInfo, //
+    Bolus, // isBolusCapable
+    ExtendedBolus, // isExtendedBolusCapable
+    TempBasal, // isTempBasalCapable
+    BasalProfileSet, // isSetBasalProfileCapable
+    Refill, // isRefillingCapable
+    StoreCarbInfo, // storesCarbInfo
+    TDD, // supportsTDDs
+    ManualTDDLoad, // needsManualTDDLoad
+    BasalRate30min, // is30minBasalRatesCapable
 
-    // grouped
-    VirtualPump(Bolus, ExtendedBolus, TBR, BasalProfileSet, StoreCarbInfo), //
+    // grouped by pump
+    VirtualPumpCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill), //
+    ComboCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
+    DanaCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
+    InsightCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill,TDD,BasalRate30min), //
 
-    Bolus_TBR_Basal_Refill_Carb(Bolus, TBR, BasalProfileSet, Refill, StoreCarbInfo), //
-    Bolus_Extended_TBR_Basal_Carb(Bolus, ExtendedBolus, TBR, BasalProfileSet, StoreCarbInfo), //
-    Bolus_Extended_TBR_Basal_Refill_Carb(Bolus, ExtendedBolus, TBR, BasalProfileSet, Refill, StoreCarbInfo), //
+
+    // BasalRates (separately grouped)
+    BasalRate_Duration15minAllowed, //
+    BasalRate_Duration30minAllowed, //
+    BasalRate_Duration15and30minAllowed(BasalRate_Duration15minAllowed, BasalRate_Duration30minAllowed), //
+    BasalRate_Duration15and30minNotAllowed, //
+
+
 
     ;
 

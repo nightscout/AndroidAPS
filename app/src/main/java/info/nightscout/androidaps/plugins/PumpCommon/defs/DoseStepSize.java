@@ -12,6 +12,12 @@ public enum DoseStepSize
             new DoseStepSizeEntry(1f, 10f, 0.05f), //
             new DoseStepSizeEntry(10f, Float.MAX_VALUE, 0.1f)), //
 
+    InsightBolus(
+            new DoseStepSizeEntry(0f, 2f, 0.05f), //
+            new DoseStepSizeEntry(2f, 5f, 0.1f), //
+            new DoseStepSizeEntry(5f, 10f, 0.2f), //
+            new DoseStepSizeEntry(10f, Float.MAX_VALUE, 0.5f)),
+
     MedtronicVeoBasal( //
             new DoseStepSizeEntry(0f, 1f, 0.025f), //
             new DoseStepSizeEntry(1f, 10f, 0.05f), //

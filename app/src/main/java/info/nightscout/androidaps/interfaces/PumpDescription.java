@@ -58,24 +58,25 @@ public class PumpDescription {
 
         isTempBasalCapable = true;
         tempBasalStyle = PERCENT;
-
         maxTempPercent = 200;
         tempPercentStep = 10;
-
         maxTempAbsolute = 10;
         tempAbsoluteStep = 0.05d;
-
         tempDurationStep = 60;
         tempMaxDuration = 12 * 60;
-
+        tempDurationStep15mAllowed = false;
+        tempDurationStep30mAllowed = false;
 
         isSetBasalProfileCapable = true;
         basalStep = 0.01d;
         basalMinimumRate = 0.04d;
+        is30minBasalRatesCapable = false;
 
         isRefillingCapable = false;
-
         storesCarbInfo = true;
+
+        supportsTDDs = false;
+        needsManualTDDLoad = true;
 
     }
 }
