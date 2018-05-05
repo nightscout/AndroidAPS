@@ -64,8 +64,11 @@ public abstract class AbstractDanaRExecutionService extends Service {
     protected IBinder mBinder;
 
     protected final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-    
-    protected long lastWrongPumpPassword;
+
+    protected long lastWrongPumpPassword = 0;
+
+    protected long lastApproachingDailyLimit = 0;
+
 
     public abstract boolean updateBasalsInPump(final Profile profile);
 
