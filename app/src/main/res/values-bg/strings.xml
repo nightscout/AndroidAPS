@@ -828,4 +828,3 @@
     <string name="combo_bolus_rejected_due_to_pump_history_change">"Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус. Ако се изисква същото болусно количество, моля, изчакайте две минути, тъй за това време болусите с едно и също количество са блокирани от съображения за  безопасност "</string>
     <string name="about_link_urls">" http://www.androidaps.org  facebook: http://facebook.androidaps.org"</string>
 </resources>
-</resources>
