@@ -19,6 +19,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,6 +30,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -35,14 +39,16 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -82,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CASE_STORAGE);
         }
         askForBatteryOptimizationPermission();
-        checkUpgradeToProfileTarget();
+        doMigrations();
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
@@ -112,12 +118,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                recreate();
-                try { // activity may be destroyed
-                    setUpTabs(true);
-                } catch (IllegalStateException e) {
-                    log.error("Unhandled exception", e);
+                if (ev.recreate) {
+                    recreate();
+                } else {
+                    try { // activity may be destroyed
+                        setUpTabs(true);
+                    } catch (IllegalStateException e) {
+                        log.error("Unhandled exception", e);
+                    }
                 }
+
                 boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
                 if (lockScreen)
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -158,6 +168,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }
     }
+
+    private void doMigrations() {
+
+        checkUpgradeToProfileTarget();
+
+        // guarantee that the unreachable threshold is at least 30 and of type String
+        // Added in 1.57 at 21.01.2018
+        Integer unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
+        SP.remove(R.string.key_pump_unreachable_threshold);
+        if (unreachable_threshold < 30) unreachable_threshold = 30;
+        SP.putString(R.string.key_pump_unreachable_threshold, unreachable_threshold.toString());
+    }
+
 
     private void checkUpgradeToProfileTarget() { // TODO: can be removed in the future
         boolean oldKeyExists = SP.contains("openapsma_min_bg");
@@ -205,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         askForSMSPermissions();
         askForLocationPermissions();
+        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
     }
 
     @Override
@@ -223,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 log.debug("Requesting ignore battery optimization");
 
-                OKDialog.show(this, getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
+                OKDialog.show(this, MainApp.gs(R.string.pleaseallowpermission), String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name)), new Runnable() {
 
                     @Override
                     public void run() {
@@ -236,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             startActivity(intent);
 
                         } catch (ActivityNotFoundException e) {
-                            final String msg = getString(R.string.batteryoptimalizationerror);
+                            final String msg = MainApp.gs(R.string.batteryoptimalizationerror);
                             ToastUtils.showToastInUiThread(getApplicationContext(), msg);
                             log.error(msg);
                         }
@@ -341,6 +365,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }, null);
                                 break;
+                            case R.id.nav_historybrowser:
+                                startActivity(new Intent(v.getContext(), HistoryBrowseActivity.class));
+                                break;
                             case R.id.nav_resetdb:
                                 new AlertDialog.Builder(v.getContext())
                                         .setTitle(R.string.nav_resetdb)
@@ -350,6 +377,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 MainApp.getDbHelper().resetDatabases();
+                                                // should be handled by Plugin-Interface and
+                                                // additional service interface and plugin registry
+                                                FoodPlugin.getPlugin().getService().resetFood();
+                                                TreatmentsPlugin.getPlugin().getService().resetTreatments();
                                             }
                                         })
                                         .create()
@@ -368,17 +399,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 break;
                             case R.id.nav_about:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                                builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
-                                if (Config.NSCLIENT|| Config.G5UPLOADER)
+                                builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);
+                                if (Config.NSCLIENT || Config.G5UPLOADER)
                                     builder.setIcon(R.mipmap.yellowowl);
                                 else
                                     builder.setIcon(R.mipmap.blueowl);
                                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
-                                message += MainApp.sResources.getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
-                                builder.setMessage(message);
-                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
+                                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                                if (MainApp.engineeringMode)
+                                    message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
+                                message += MainApp.gs(R.string.about_link_urls);
+                                final SpannableString messageSpanned =  new SpannableString(message);
+                                Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
+                                builder.setMessage(messageSpanned);
+                                builder.setPositiveButton(MainApp.gs(R.string.ok), null);
                                 AlertDialog alertDialog = builder.create();
                                 alertDialog.show();
+                                ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
                                 break;
                             case R.id.nav_exit:
                                 log.debug("Exiting");

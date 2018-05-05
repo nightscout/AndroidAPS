@@ -13,27 +13,26 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
+public class SimpleProfilePlugin extends PluginBase implements ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(SimpleProfilePlugin.class);
 
     private static SimpleProfilePlugin simpleProfilePlugin;
 
     public static SimpleProfilePlugin getPlugin() {
         if (simpleProfilePlugin == null)
-            simpleProfilePlugin  = new SimpleProfilePlugin();
+            simpleProfilePlugin = new SimpleProfilePlugin();
         return simpleProfilePlugin;
     }
-
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
 
     private static ProfileStore convertedProfile = null;
 
@@ -47,73 +46,13 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     Double targetHigh;
 
     private SimpleProfilePlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.PROFILE)
+                .fragmentClass(SimpleProfileFragment.class.getName())
+                .pluginName(R.string.simpleprofile)
+                .shortName(R.string.simpleprofile_shortname)
+        );
         loadSettings();
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return SimpleProfileFragment.class.getName();
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.PROFILE;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.simpleprofile);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.simpleprofile_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == PROFILE && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == PROFILE) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == PROFILE) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
     }
 
     public void storeSettings() {
@@ -132,6 +71,8 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
         editor.apply();
         createConvertedProfile();
+        if (Config.logPrefsChange)
+            log.debug("Storing settings: " + getRawProfile().getData().toString());
     }
 
     private void loadSettings() {
@@ -141,12 +82,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         mgdl = SP.getBoolean("SimpleProfile" + "mgdl", true);
         mmol = SP.getBoolean("SimpleProfile" + "mmol", false);
         dia = SP.getDouble("SimpleProfile" + "dia", Constants.defaultDIA);
-        ic = SP.getDouble("SimpleProfile" + "ic", 20d);
-        isf = SP.getDouble("SimpleProfile" + "isf", 200d);
-        basal = SP.getDouble("SimpleProfile" + "basal", 1d);
-        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 80d);
-        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 120d);
-        createConvertedProfile();
+        ic = SP.getDouble("SimpleProfile" + "ic", 0d);
+        isf = SP.getDouble("SimpleProfile" + "isf", 0d);
+        basal = SP.getDouble("SimpleProfile" + "basal", 0d);
+        targetLow = SP.getDouble("SimpleProfile" + "targetlow", 0d);
+        targetHigh = SP.getDouble("SimpleProfile" + "targethigh", 0d);
     }
 
     /*
@@ -211,6 +151,16 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public ProfileStore getProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
+        if (!convertedProfile.getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile)))
+            return null;
+        return convertedProfile;
+    }
+
+    public ProfileStore getRawProfile() {
+        if (convertedProfile == null)
+            createConvertedProfile();
         return convertedProfile;
     }
 

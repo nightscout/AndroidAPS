@@ -11,11 +11,13 @@ import info.nightscout.androidaps.queue.Callback;
 public abstract class Command {
     public enum CommandType {
         BOLUS,
+        SMB_BOLUS,
+        CARBS_ONLY_TREATMENT,
         TEMPBASAL,
         EXTENDEDBOLUS,
         BASALPROFILE,
         READSTATUS,
-        LOADHISTORY, // so far only Dana specific
+        LOADHISTORY, // TDDs and so far only Dana specific
         LOADEVENTS // so far only Dana specific
     }
 
@@ -29,7 +31,7 @@ public abstract class Command {
     public void cancel() {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
-        result.comment = MainApp.sResources.getString(R.string.connectiontimedout);
+        result.comment = MainApp.gs(R.string.connectiontimedout);
         if (callback != null)
             callback.result(result).run();
     }

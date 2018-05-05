@@ -14,6 +14,16 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/invalidprofile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/invalidprofile"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/holo_red_light"
+                android:textStyle="bold" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/units"

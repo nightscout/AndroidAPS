@@ -20,6 +20,18 @@
         <item>5</item>
     </string-array>
 
+    <string-array name="delta_granularity">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+    <string-array name="delta_granularity_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <string-array name="input_design">
         <item>Default</item>
         <item>Quick righty</item>

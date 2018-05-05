@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.FabricPrivacy;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +47,7 @@ public class SmsCommunicatorFragment extends SubscriberFragment {
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;

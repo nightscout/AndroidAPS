@@ -16,8 +16,8 @@ import info.nightscout.utils.DecimalFormatter;
 public class CommandBolus extends Command {
     DetailedBolusInfo detailedBolusInfo;
 
-    public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
-        commandType = CommandType.BOLUS;
+    public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback, CommandType type) {
+        commandType = type;
         this.detailedBolusInfo = detailedBolusInfo;
         this.callback = callback;
     }
@@ -34,6 +34,7 @@ public class CommandBolus extends Command {
     }
 
     public String status() {
-        return "BOLUS " + DecimalFormatter.to1Decimal(detailedBolusInfo.insulin) + "U";
+        return (detailedBolusInfo.insulin > 0 ? "BOLUS " + DecimalFormatter.to1Decimal(detailedBolusInfo.insulin) + "U " : "") +
+                (detailedBolusInfo.carbs > 0 ? "CARBS " + DecimalFormatter.to0Decimal(detailedBolusInfo.carbs) + "g" : "" );
     }
 }

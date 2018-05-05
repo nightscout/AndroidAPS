@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.Careportal;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -10,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
-import info.nightscout.androidaps.BuildConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -22,10 +24,12 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
+import info.nightscout.utils.FabricPrivacy;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(CareportalFragment.class);
 
     TextView iage;
     TextView cage;
@@ -96,7 +100,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
             noProfileView = view.findViewById(R.id.profileview_noprofile);
             butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
 
-            ProfileStore profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+            ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
             if (profileStore == null) {
                 noProfileView.setVisibility(View.VISIBLE);
                 butonsLayout.setVisibility(View.GONE);
@@ -111,7 +115,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
             updateGUI();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -208,26 +212,54 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     public static void updateAge(Activity activity, final TextView sage, final TextView iage, final TextView cage, final TextView pbage) {
         if (activity != null) {
             activity.runOnUiThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            CareportalEvent careportalEvent;
-                            String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.sResources.getString(R.string.notavailable);
-                            if (sage != null) {
-                                careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
-                                sage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
+                    () -> {
+                        CareportalEvent careportalEvent;
+                        NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+
+                        double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 96);
+                        double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 72);
+                        double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 72);
+                        double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 48);
+                        double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 166);
+                        double sageWarn = nsSettings.getExtendedWarnValue("sage", "warn", 164);
+                        double pbageUrgent = nsSettings.getExtendedWarnValue("pgage", "urgent", 360);
+                        double pbageWarn = nsSettings.getExtendedWarnValue("pgage", "warn", 240);
+
+                        String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.gs(R.string.notavailable);
+                        if (sage != null) {
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
+                            if (careportalEvent != null) {
+                                sage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, sageWarn, sageUrgent));
+                                sage.setText(careportalEvent.age());
+                            } else {
+                                sage.setText(notavailable);
                             }
-                            if (iage != null) {
-                                careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
-                                iage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
+                        }
+                        if (iage != null) {
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
+                            if (careportalEvent != null) {
+                                iage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, iageWarn, iageUrgent));
+                                iage.setText(careportalEvent.age());
+                            } else {
+                                iage.setText(notavailable);
                             }
-                            if (cage != null) {
-                                careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
-                                cage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
+                        }
+                        if (cage != null) {
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
+                            if (careportalEvent != null) {
+                                cage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, cageWarn, cageUrgent));
+                                cage.setText(careportalEvent.age());
+                            } else {
+                                cage.setText(notavailable);
                             }
-                            if (pbage != null) {
-                                careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
-                                pbage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
+                        }
+                        if (pbage != null) {
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
+                            if (careportalEvent != null) {
+                                pbage.setTextColor(CareportalFragment.determineTextColor(careportalEvent, pbageWarn, pbageUrgent));
+                                pbage.setText(careportalEvent.age());
+                            } else {
+                                pbage.setText(notavailable);
                             }
                         }
                     }
@@ -235,4 +267,15 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
         }
     }
 
+    public static int determineTextColor(CareportalEvent careportalEvent, double warnThreshold, double urgentThreshold) {
+        if (careportalEvent.isOlderThan(urgentThreshold)) {
+            return MainApp.sResources.getColor(R.color.low);
+        } else if (careportalEvent.isOlderThan(warnThreshold)) {
+            return MainApp.sResources.getColor(R.color.high);
+        } else {
+            return Color.WHITE;
+        }
+
+    }
 }
+

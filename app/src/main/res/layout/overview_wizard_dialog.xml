@@ -108,7 +108,7 @@
                 android:gravity="left"
                 android:minWidth="45dp"
                 android:paddingLeft="5dp"
-                android:text="@string/treatments_wizard_unit_label"
+                android:text="@string/insulin_unit_shortname"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
@@ -196,6 +196,33 @@
                 android:paddingRight="10dp"
                 android:text="2.35U 28g"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/treatments_wizard_notes_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/careportal_newnstreatment_notes_label"
+                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/treatment_wizard_notes"
+                android:layout_width="155dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="left"
+                android:inputType="text|textCapSentences"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
 

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <string name="treatmentssafety_maxbolus_title">Μέγιστο Επιτρεπτό bolus[U]</string>
     <string name="treatmentssafety_maxcarbs_title">Μέγιστο Επιτρεπτό υδατ.[g]</string>
     <string name="nav_preferences">Επιλογές</string>
     <string name="nav_refreshtreatments">Αναννέωση Θεραπειών από NS</string>
-    <string name="nav_backup">Backup</string>
-    <string name="nav_test_alert">Έλεγχος Συναγερμού</string>
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων?</string>
     <string name="nav_exit">Έξοδος</string>
@@ -21,7 +18,6 @@
     <string name="objectives_button_verify">Επικύρωση</string>
     <string name="nsprofileview_units_label">Μονάδες</string>
     <string name="nsprofileview_dia_label">DIA (Διάρκεια Ενεργής Ινσουλίνης)</string>
-    <string name="nsprofileview_activeprofile_label">Ενεργό προφίλ</string>
     <string name="nsprofileview_ic_label">IC (αναλογία υδατ.)</string>
     <string name="nsprofileview_isf_label">Δ.Π. (Διορθωτικός Παραγοντας)</string>
     <string name="nsprofileview_basal_label">Βασικός ρυθμός</string>
@@ -45,18 +41,16 @@
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Υδατάνθρακες</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
-    <string name="treatments_wizard_unit_label">U</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
-    <string name="treatments_wizard_total_label">Σύνολο</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
-    <string name="virtualpump_basebasalrate_label">Βάση Βασικού Ρυθμού</string>
-    <string name="virtualpump_tempbasal_label">Προσωρ. Ρυθμός</string>
+    <string name="pump_basebasalrate_label">Βάση Βασικού Ρυθμού</string>
+    <string name="pump_tempbasal_label">Προσωρ. Ρυθμός</string>
     <string name="virtualpump_extendedbolus_label">Εκτετεμμένο bolus</string>
-    <string name="virtualpump_battery_label">Μπαταρία</string>
-    <string name="virtualpump_reservoir_label">Ρεζερβουάρ</string>
+    <string name="pump_battery_label">Μπαταρία</string>
+    <string name="pump_reservoir_label">Ρεζερβουάρ</string>
     <string name="virtualpump_resultok">ΟΚ</string>
-    <string name="virtualpump_sqlerror">Λάθος SQL</string>
     <string name="openapsma_lastrun_label">Τελευταίος Υπολογισμός</string>
     <string name="openapsma_inputparameters_label">Εισαγωγή Παραμέτρων</string>
     <string name="openapsma_glucosestatus_label">Κατάσταση Γλυκόζης</string>
@@ -66,8 +60,6 @@
     <string name="openapsma_mealdata_label">Δεδομένα Γεύματος</string>
     <string name="result">Αποτέλεσμα</string>
     <string name="openapsma_noglucosedata">Μη διαθέσιμα δεδομένα γλυκόζης</string>
-    <string name="openapsma_noprofile">Μη διαθέσιμο προφίλ</string>
-    <string name="openapsma_nopump">Μη διαθέσιμη αντλία</string>
     <string name="nochangerequested">Δεν απαιτείται αλλαγή</string>
     <string name="openapsma_request_label">Αίτημα</string>
     <string name="rate">Αξία</string>
@@ -76,7 +68,6 @@
     <string name="reason">Υπολογισμός</string>
     <string name="delta">Διαφορά</string>
     <string name="sms_delta">Διαφορά:</string>
-    <string name="avgdelta">Μέση Διαφορά</string>
     <string name="configbuilder">Διαμόρφωση</string>
     <string name="objectives">Στόχοι</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -89,18 +80,16 @@
     <string name="careportal">Φροντίδα</string>
     <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_treatments">Θεραπείες</string>
-    <string name="configbuilder_tempbasals">Προσ.Ρυθμός</string>
     <string name="configbuilder_profile">Προφίλ</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Γενικά</string>
     <string name="days">ημέρες</string>
     <string name="objectives_minimalduration">Ελάχ.Διάρκεια</string>
-    <string name="configbuilder_constraints">Περιορισμοί</string>
+    <string name="constraints">Περιορισμοί</string>
     <string name="loop">Κύκλωμα</string>
     <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Μετά από επεξεργασία περιορισμών</string>
-    <string name="loop_setbypump_label">Ρυθμίστε με αντλία</string>
     <string name="openapsma_lastenact_label">Τελευταία Εφαρμογή</string>
     <string name="ok">ΟΚ</string>
     <string name="cancel">Ακύρωση</string>
@@ -113,7 +102,7 @@
     <string name="overview_newtempbasal_basalpercent">Αξία Βασικού[%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = τρέχον)</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ.Ρυθμ:</string>
-    <string name="overview_bolus_label">Bolus</string>
+    <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
     <string name="constraintapllied">Εφαρμοσμένοι Περιορισμοί!</string>
     <string name="confirmation">Αποδοχή</string>
@@ -127,7 +116,6 @@
     <string name="setextendedbolusquestion">Θέστε νέο εκτεταμμένο bolus:</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="xdrip">xDrip</string>
-    <string name="nsclient">NSClient</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="closedloop">Κλειστό Κύκλωμα</string>
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
@@ -185,11 +173,7 @@
     <string name="overview_tempbasal_button">Προσ.Ρυθμ.</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout Έκδοση:</string>
-    <string name="send">ΑΠΟΣΤΟΛΗ</string>
     <string name="missing">Λείπει</string>
-    <string name="enabled">Ενεργοποίηση</string>
-    <string name="visible">Ορατό</string>
-    <string name="up">Επάνω</string>
     <string name="exported">Επιλογές εξήχθησαν</string>
     <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
     <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
@@ -208,7 +192,6 @@
     <string name="connecting">Σύνδεση</string>
     <string name="connected">Συνδέθηκε</string>
     <string name="disconnected">Αποσύνδεση</string>
-    <string name="syncprofiletopump_title">Συγχρονισμός προφίλ στην αντλία</string>
     <string name="danar_pump_settings">Ρυθμίσεις αντλίας DanaR</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Άδεια χρήσης τελικού χρήστη</string>
@@ -220,8 +203,7 @@
     <string name="connectionerror">Λάθος σύνδεσης αντλίας</string>
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="danar_dailyunits">"Μονάδες ανά ημέρα "</string>
-    <string name="danar_lastbolus">Τελευταίο Bolus:</string>
-    <string name="hoursago">ώρες πριν</string>
+    <string name="pump_lastbolus_label">Τελευταίο Bolus:</string>
     <string name="danar_invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
@@ -287,7 +269,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP Πιέζεται</string>
     <string name="waitingforpump">Αναμονή για αντλία</string>
-    <string name="waitingforpumpclicktorefresh">"Αναμονή για αντλία. Πατήστε για ανανέωση "</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Προς έγχυση %.2fU</string>
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της DanaR φορτώθηκαν</string>
@@ -308,8 +289,8 @@
     <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
     <string name="smscommunicator_loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
-    <string name="openapsma_valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
+    <string name="valuelimitedto" formatted="false">%.2f limited to %.2f</string>
+    <string name="valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
     <string name="smscommunicator_remotebasalnotallowed">"Δεν επιτρέπεται η απομακρυσμένη ρύθμιση βασικού ρυθμού "</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Για έναρξη βασικού %.2fU/h SMS με κωσικό %s</string>
@@ -344,18 +325,11 @@
     <string name="button1">Πλήκτρο 1</string>
     <string name="button2">Πλήκτρο 2</string>
     <string name="button3">Πλήκτρο 3</string>
-    <string name="percentagefactor_hint">Το ποσοστό στο οποίο πολλαπλασιάζεται το βασικό προφίλ.</string>
-    <string name="timeshift_hint">Ο χρόνος σε ώρες με τον οποίο ο βασικός ρυθμός θα μετατοπιστεί</string>
     <string name="units">Μονάδες:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
     <string name="target_range">Εύρος στόχου:</string>
-    <string name="edit_base_basal">Ρύθμιση Βασικού:</string>
-    <string name="edit_base_isf">Ρύθμιση Βασικού-ISF:</string>
-    <string name="edit_base_ic">Ρύθμιση Βασικού-IC:</string>
-    <string name="base_profile_label">Βασικό Προφίλ:</string>
-    <string name="circadian_percentage_profile">Ποσοστό προφίλ κυκλώματος</string>
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
     <string name="prefs_range_summary">Υψηλό και Χαμηλό σημείο για την γραφική στην Επισκόπηση και Smartwatch</string>
     <string name="low_mark">ΧΑΜΗΛΟ σημείο</string>
@@ -415,11 +389,8 @@
     <string name="configbuilder_shortname">ΕΠΙΛ</string>
     <string name="simpleprofile_shortname">SP</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="temptargetrange_shortname">TT</string>
     <string name="localprofile_shortname">LP</string>
     <string name="danarpump_shortname">DANA</string>
-    <string name="circadian_percentage_profile_shortname">CPP</string>
-    <string name="tempbasals_shortname">TB</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="profileviewer_shortname">NSPROFILE</string>
@@ -429,7 +400,6 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Σύντομα ονόματα ενοτήτων</string>
-    <string name="prefs_delta_title">Ρύθμιση παραμέτρου Delta BG</string>
     <string name="always_use_shortavg">Χρησιμοποιείτε πάντα τη βραχυπρόθεσμη μέση γλυκεμική διαφορά αντί της διαφοράς των δύο τελευταίων τιμών</string>
     <string name="always_use_shortavg_summary">Χρήσιμο όταν δεδομένα από μη φιλτραρισμένες πηγές όπως το xDrip αποκτούν θόρυβο</string>
     <string name="advancedsettings_title">Ρυθμίσεις για Προχωρημένους</string>
@@ -452,8 +422,6 @@
     <string name="smscommunicator_remotecalibrationnotallowed">Απομακρυσμένη βαθμονόμηση δεν επιτρέπεται</string>
     <string name="smscommunicator_calibrationsent">Η Βαθμονόμηση στάλθηκε.Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip.</string>
     <string name="smscommunicator_calibrationfailed">Το xDrip δεν λαμβάνει βαθμονομήσεις</string>
-    <string name="dont_show_again">Μην εμφανιστεί ξανά</string>
-    <string name="pumpsuspendedclicktorefresh">"Η αντλία σε παύση. Πιέστε για επαναφορά κατάστασης "</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="gettingpumpstatus">Φόρτωση κατάστασης αντλίας</string>
     <string name="settingtempbasal">Ρύθμιση Προσ.Ρυθμ.</string>
@@ -480,9 +448,6 @@
     <string name="nsclientinternal_secret_title">Μυστικός κωδικός API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">12ψήφιος μυστικός κωδικός</string>
     <string name="nsclientinternal_secret_dialogmessage">Βάλτε 12ψήφιο μυστικό κωδικό</string>
-    <string name="nsclientinternal_devicename_title">Όνομα συσκευής</string>
-    <string name="nsclientinternal_devicename_dialogtitle">Βάλτε το όνομα συσκευής</string>
-    <string name="nsclientinternal_devicename_dialogmessage">Θα χρησιμοποιηθεί στο πεδίο που έχει εισαχθεί</string>
     <string name="deliver_now">Έγχυση τώρα</string>
     <string name="clear_queue">Διαγραφή σειράς</string>
     <string name="show_queue">Δείξε σειρά</string>
@@ -508,16 +473,15 @@
     <string name="loopsuspended">Κύκλωμα σε παύση</string>
     <string name="loopsuspendedfor" formatted="false">Παύση (%d m)</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
-    <string name="loopmenu">Μενού Κυκλώματος</string>
     <string name="suspendloopfor1h">Κύκλωμα σε παύση για 1h</string>
     <string name="suspendloopfor2h">Κύκλωμα σε παύση για 2h</string>
     <string name="suspendloopfor3h">Κύκλωμα σε παύση για 3h</string>
     <string name="suspendloopfor10h">Κύκλωμα σε παύση για 10h</string>
+    <string name="disconnectpumpfor15m">Αποσύνδεση αντλίας για 15 λεπτά</string>
     <string name="disconnectpumpfor30m">Αποσύνδεση αντλίας για 30 λεπτά</string>
     <string name="disconnectpumpfor1h">Αποσύνδεση αντλίας για 1h</string>
     <string name="disconnectpumpfor2h">Αποσύνδεση αντλίας για 2h</string>
     <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
-    <string name="disconnectpumpfor10h">Αποσύνδεση αντλίας για 10h</string>
     <string name="resume">Επαναφορά</string>
     <string name="smscommunicator_wrongduration">Λάθος διάρκεια</string>
     <string name="smscommunicator_loopsuspended">Κύκλωμα σε παύση</string>
@@ -538,14 +502,11 @@
     <string name="enablesuperbolus_summary">"Ενεργοποιήστε το superbolus.Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ! "</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
-    <string name="predictionshortlabel">PRE</string>
-    <string name="basalshortlabel">Β.Ρ.</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="virtualpump_lastconnection_label">Τελευταία σύνδεση</string>
+    <string name="pump_lastconnection_label">Τελευταία σύνδεση</string>
     <string name="danar_bluetooth_status">Κατάσταση Bluetooth</string>
     <string name="nav_about">Σχετικά με</string>
     <string name="smscommunicator_missingsmspermission">Λείπει εξουσιοδότηση SMS</string>
-    <string name="dev">DEV</string>
     <string name="xdripstatus_settings">Κατάσταση xDrip (ρολόι)</string>
     <string name="xdripstatus">Γραμμή Κατάστασης xDrip (ρολόι)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -563,10 +524,6 @@
     <string name="careportal_insulinage_label">Χρόνος ζωής Ινσουλίνης</string>
     <string name="hours">ώρες</string>
     <string name="overview_newtempbasal_basaltype_label">Τύπος Βασικού</string>
-    <string name="isfmissing">"Λείπει ο ISF στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
-    <string name="icmissing">"Λείπει ο IC στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
-    <string name="basalmissing">"Λείπει ο Βασικός στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
-    <string name="targetmissing">"Λείπει ο στόχος στο προφίλ.Χρησιμοποιείται το προκαθορισμένο  "</string>
     <string name="invalidprofile">Μη έγκυρο προφίλ!!!</string>
     <string name="profileswitch">ΜΕταβείτε στο προφίλ</string>
     <string name="careportal_pbage_label">Χρόνος ζωής μπαταρίας αντλίας</string>
@@ -576,19 +533,14 @@
     <string name="nsalarm_high">Υψηλό</string>
     <string name="nsalarm_low">Χαμηλό</string>
     <string name="nsalarm_urgentlow">Επείγον χαμηλό</string>
-    <string name="nsalarm_summary" formatted="false">Τώρα έχει οριστεί στο %f</string>
     <string name="nsalarm_staledata">Ανεπεξέργαστα δεδομένα</string>
     <string name="nsalarm_urgentstaledata">Επειγον ανεπεξέργαστα δεδομένα</string>
     <string name="nsalarm_staledatavalue_label">Οριακή τιμή για ανεπεξέργαστα δεδομένα [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Επείγουσα οριακή τιμή για ανεπεξέργαστα δεδομένα [min]</string>
     <string name="openapsama_autosens_period">"Εσωτερικά διαστήματα για autosense [h] "</string>
     <string name="openapsama_autosens_period_summary">Ποσότητα ωρών κατά το παρελθόν για ανίχνευση ευαισθησίας (εξαιρείται ο χρόνος απορρόφησης υδατανθράκων)</string>
-    <string name="ratio_short">SEN</string>
-    <string name="do_not_track_profile_switch">Αγνοήστε τα συμβάντα αλλαγής προφίλ</string>
-    <string name="do_not_track_profile_switch_summary">;Ola τα συμβάντα αλλαγής προφίλ αγνοήθηκαν και χρησιμοποιείτε πάντα το ενεργό προφίλ</string>
     <string name="pump">Αντλία</string>
     <string name="openaps">OpenAPS</string>
-    <string name="device">Συσκευή</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Ανίχνευση ευασισθησίας</string>
     <string name="sensitivity_shortname">SENS</string>
@@ -612,11 +564,8 @@
     <string name="sensitivityweightedaverage">Σταθμισμένος μέσος όρος ευαισθησίας</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Ακύρωση</string>
-    <string name="cpp_sync_setting_missing">Χρειάζεται να ενεργοποιηθεί για να στείλει τιμές στην αντλία!</string>
-    <string name="cpp_notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ</string>
-    <string name="cpp_valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
-    <string name="wear_overviewnotifications">Επισκόπηση ειδοποιήσεων</string>
-    <string name="wear_overviewnotifications_summary">Αποστολή ειδοποιήσεων ως ειδήσεων για τα ρολόγια</string>
+    <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ</string>
+    <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
     <string name="ns_localbroadcasts">Ενεργοποιήστε την αποστολή σε άλλες εφαρμογές (όπως xDrip)</string>
     <string name="ns_localbroadcasts_title">Ενεργοποιήστε τις αποστολές</string>
     <string name="careportal_activity_label">ΔΡΑΣΤΗΡΙΟΤΗΤΑ &amp; FEEDBACK</string>
@@ -630,7 +579,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
     <string name="ultrarapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
-    <string name="dia_too_short" formatted="false">"DIA για %s πολύ μικρή - χρησιμοποιήστε %s! "</string>
+    <string name="dia_too_short" formatted="false">"DIA για %f πολύ μικρή - χρησιμοποιήστε %f! "</string>
     <string name="activate_profile">ΕΝΕΡΓΟΠΟΙΗΣΗ ΠΡΟΦΙΛ</string>
     <string name="date">Ημερομηνία</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>

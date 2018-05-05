@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -23,14 +22,16 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -67,7 +68,7 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
             String units = MainApp.getConfigBuilder().getProfileUnits();
             TempTarget tempTarget = tempTargetList.getReversed(position);
             holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
-            holder.ns.setVisibility(tempTarget._id != null ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(NSUpload.isIdValid(tempTarget._id) ? View.VISIBLE : View.GONE);
             if (!tempTarget.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
@@ -83,16 +84,11 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
                 holder.reasonLabel.setText("");
                 holder.reasonColon.setText("");
             }
-            if (tempTarget.isInProgress()) {
-                if(tempTarget == currentlyActiveTarget){
-                    // active as newest
-                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
-                } else {
-                    // other's that might become active again after the latest (overlapping) is over
-                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-                }
-            }
-            else {
+            if (tempTarget.isInProgress() && tempTarget == currentlyActiveTarget) {
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+            } else if (tempTarget.date > DateUtil.now()) {
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorScheduled));
+            } else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
             }
             holder.remove.setTag(tempTarget);
@@ -144,18 +140,20 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
                 switch (v.getId()) {
                     case R.id.temptargetrange_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempTarget.date));
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempTarget.date));
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = tempTarget._id;
-                                if (_id != null && !_id.equals("")) {
+                                if (NSUpload.isIdValid(_id)) {
                                     NSUpload.removeCareportalEntryFromNS(_id);
+                                } else {
+                                    UploadQueue.removeID("dbAdd", _id);
                                 }
                                 MainApp.getDbHelper().delete(tempTarget);
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
                 }
@@ -173,7 +171,7 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getTempTargetsFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTempTargetsFromHistory());
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.temptargetrange_refreshfromnightscout);
@@ -194,16 +192,16 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
         switch (view.getId()) {
             case R.id.temptargetrange_refreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + " ?");
-                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                builder.setTitle(MainApp.gs(R.string.confirmation));
+                builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + " ?");
+                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetTempTargets();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     }
                 });
-                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
         }
@@ -222,7 +220,7 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getTempTargetsFromHistory()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTempTargetsFromHistory()), false);
                 }
             });
     }

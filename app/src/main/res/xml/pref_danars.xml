@@ -1,33 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/danarspump">
+
+    <PreferenceCategory android:title="@string/danarspump">
 
         <Preference
             android:key="blescannner"
             android:title="@string/pairpump">
-             <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity"/>
+            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
         </Preference>
 
         <EditTextPreference
             android:key="@string/key_danars_name"
-            android:selectable="false"
             android:persistent="false"
-            android:title="@string/selectedpump"
-            android:summary=""/>
+            android:selectable="false"
+            android:summary=""
+            android:title="@string/selectedpump" />
 
         <EditTextPreference
-            android:title="@string/danar_password_title"
+            android:inputType="textCapCharacters"
             android:key="@string/key_danar_password"
-            android:inputType="textCapCharacters">
-        </EditTextPreference>
+            android:title="@string/danar_password_title"/>
 
         <ListPreference
-            android:title="@string/bolusspeed"
-            android:key="@string/key_danars_bolusspeed"
             android:defaultValue="0"
             android:entries="@array/danaSpeedArray"
-            android:entryValues="@array/danaSpeedValues"/>
+            android:entryValues="@array/danaSpeedValues"
+            android:key="@string/key_danars_bolusspeed"
+            android:title="@string/bolusspeed" />
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <PreferenceCategory android:title="@string/bluetooth">
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_btwatchdog"
+                    android:summary="@string/btwatchdog_summary"
+                    android:title="@string/btwatchdog_title" />
+
+            </PreferenceCategory>
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
+
 </PreferenceScreen>

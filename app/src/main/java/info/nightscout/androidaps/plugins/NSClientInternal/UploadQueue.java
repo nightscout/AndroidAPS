@@ -48,7 +48,7 @@ public class UploadQueue {
                 public void run() {
                     log.debug("QUEUE adding: " + dbr.data);
                     MainApp.getDbHelper().create(dbr);
-                    NSClientInternalPlugin plugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+                    NSClientPlugin plugin = NSClientPlugin.getPlugin();
                     if (plugin != null) {
                         plugin.resend("newdata");
                     }
@@ -96,6 +96,8 @@ public class UploadQueue {
     }
 
     public static void removeID(final String action, final String _id) {
+        if (_id == null || _id.equals(""))
+            return;
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(new Runnable() {
