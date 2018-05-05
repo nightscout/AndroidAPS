@@ -97,8 +97,11 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
 
     public void connect() {
         if (mDanaRPump.password != -1 && mDanaRPump.password != SP.getInt(R.string.key_danar_password, -1)) {
-            Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
-            notification.soundId = R.raw.error;
+            if(System.currentTimeMillis() > lastWrongPumpPassword + 30 * 1000) {
+                Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
+                notification.soundId = R.raw.error;
+                lastWrongPumpPassword = System.currentTimeMillis();
+            }
             return;
         }
 
