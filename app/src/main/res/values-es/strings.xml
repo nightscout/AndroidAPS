@@ -577,7 +577,7 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Bloqueo de Pantalla</string>
+    <string name="lock_screen">Bloqueo de pantalla</string>
     <string name="lock_screen_short">Bloqueo</string>
     <string name="sensitivity_warning">Al activar autosens recuerda editar todos carbohidratos comidos. Si no, sensibilidad será calculada incorrectamente !!!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
@@ -670,7 +670,7 @@
     <string name="minimalbasalvaluereplaced">Valor base remplazado por valor mínimo</string>
     <string name="overview_editquickwizard_usebg">Cálculo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo bolo IOB</string>
-    <string name="overview_editquickwizard_usebasaliob">Cálculo base IOB</string>
+    <string name="overview_editquickwizard_usebasaliob">Cálculo basal IOB</string>
     <string name="overview_editquickwizard_usetrend">Cálculo tendencia</string>
     <string name="overview_editquickwizard_usesuperbolus">Cálculo superbolo</string>
     <string name="yes">Si</string>
@@ -804,7 +804,7 @@
     <string name="insight_companion_app_not_installed">Companion app parece no instalada!</string>
     <string name="insight_not_connected_to_companion_app">¡La aplicación Companion no parece estar instalada!</string>
     <string name="insight_stay_always_connected">Permanecer siempre conectado</string>
-    <string name="insight_use_real_tbr_cancels">Usar cancelación Basal Temporal TBR real</string>
+    <string name="insight_use_real_tbr_cancels">Usar cancelación Basal Temporal (TBR) real</string>
     <string name="insight_actually_cancel_tbr_summary">Actualmente, cancelar una Basal Temporal TBR (crea una alarma de bomba) en su lugar  establecer el 90% durante 1 minuto</string>
     <string name="alert_w31">Advertencia W31: Cartucho insulina bajo</string>
     <string name="alert_w32">Advertencia W32: Bateria baja</string>
