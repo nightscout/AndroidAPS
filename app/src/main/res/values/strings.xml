@@ -200,6 +200,7 @@
     <string name="sv_lang">Swedish</string>
     <string name="fr_lang">French</string>
     <string name="zh_lang">Chinese</string>
+    <string name="pl_lang">Polski</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
