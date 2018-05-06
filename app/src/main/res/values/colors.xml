@@ -64,4 +64,9 @@
     <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
 
+    <color name="deviationgrey">#c8666666</color>
+    <color name="deviationgreen">#7200FF00</color>
+    <color name="deviationred">#72FF0000</color>
+    <color name="deviationblack">#72000000</color>
+
 </resources>

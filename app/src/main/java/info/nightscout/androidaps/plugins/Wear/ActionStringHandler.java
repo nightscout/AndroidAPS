@@ -19,6 +19,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -42,6 +43,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.Treatments.CarbsGenerator;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
@@ -326,6 +328,27 @@ public class ActionStringHandler {
                 }
             }
 
+        } else if ("ecarbs".equals(act[0])) {
+            ////////////////////////////////////////////// ECARBS
+            int carbs = SafeParse.stringToInt(act[1]);
+            int starttime = SafeParse.stringToInt(act[2]);
+            int duration = SafeParse.stringToInt(act[3]);
+            long starttimestamp = System.currentTimeMillis() + starttime*60*1000;
+            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
+            rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+            rMessage += "\n" + MainApp.gs(R.string.time) + ": " +  DateUtil.timeString(starttimestamp);
+            rMessage += "\n" + MainApp.gs(R.string.duration) + ": " + duration + "h";
+
+
+            if ( (carbsAfterConstraints - carbs != 0)) {
+                rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
+            }
+            if(carbsAfterConstraints <= 0){
+                sendError("Carbs = 0! No action taken!");
+                return;
+            }
+            rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
+
         } else return;
 
 
@@ -578,7 +601,7 @@ public class ActionStringHandler {
                 high *= Constants.MMOLL_TO_MGDL;
             }
             generateTempTarget(duration, low, high);
-        } else if ("wizard".equals(act[0])) {
+        } else if ("wizard2".equals(act[0])) {
             //use last calculation as confirmed string matches
 
             doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
@@ -591,10 +614,26 @@ public class ActionStringHandler {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
             setCPP(timeshift, percentage);
+        }  else if ("ecarbs".equals(act[0])) {
+            int carbs = SafeParse.stringToInt(act[1]);
+            long starttime = SafeParse.stringToLong(act[2]);
+            int duration = SafeParse.stringToInt(act[3]);
+
+            doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         }
         lastBolusWizard = null;
+    }
+
+    private static void doECarbs(int carbs, long time, int duration) {
+        if (carbs > 0) {
+            if (duration == 0) {
+                CarbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch");
+            } else {
+                CarbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs");
+            }
+        }
     }
 
     private static void setCPP(int timeshift, int percentage) {

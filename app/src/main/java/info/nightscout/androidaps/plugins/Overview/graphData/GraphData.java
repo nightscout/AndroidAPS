@@ -436,10 +436,10 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
-                int color = Color.BLACK; // "="
-                if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
-                if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
-                if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
+                int color = MainApp.gc(R.color.deviationblack); // "="
+                if (autosensData.pastSensitivity.equals("C")) color = MainApp.gc(R.color.deviationgrey);
+                if (autosensData.pastSensitivity.equals("+")) color = MainApp.gc(R.color.deviationgreen);
+                if (autosensData.pastSensitivity.equals("-")) color = MainApp.gc(R.color.deviationred);
                 devArray.add(new DeviationDataPoint(time, autosensData.deviation, color, devScale));
                 maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
             }
