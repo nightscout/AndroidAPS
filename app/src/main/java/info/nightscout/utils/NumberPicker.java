@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -148,6 +149,9 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     }
 
     public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, TextWatcher textWatcher) {
+        if (this.textWatcher != null) {
+            editText.removeTextChangedListener(this.textWatcher);
+        }
         setParams(initValue, minValue, maxValue, step, formater, allowZero);
         this.textWatcher = textWatcher;
         editText.addTextChangedListener(textWatcher);
@@ -160,6 +164,8 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         this.step = step;
         this.formater = formater;
         this.allowZero = allowZero;
+
+        editText.setKeyListener(DigitsKeyListener.getInstance(minValue < 0, step != Math.rint(step)));
 
         if (textWatcher != null)
             editText.removeTextChangedListener(textWatcher);
@@ -193,17 +199,17 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         value += step * multiplier;
         if (value > maxValue) {
             value = maxValue;
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.youareonallowedlimit));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
             stopUpdating();
         }
         updateEditText();
     }
 
-    private void dec( int multiplier) {
+    private void dec(int multiplier) {
         value -= step * multiplier;
         if (value < minValue) {
             value = minValue;
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.youareonallowedlimit));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
             stopUpdating();
         }
         updateEditText();

@@ -16,6 +16,8 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.SP;
 
@@ -26,42 +28,42 @@ import info.nightscout.utils.SP;
 public class QueueThread extends Thread {
     private static Logger log = LoggerFactory.getLogger(QueueThread.class);
 
-    CommandQueue queue;
+    private CommandQueue queue;
 
-    private long connectionStartTime = 0;
     private long lastCommandTime = 0;
     private boolean connectLogged = false;
+    public boolean waitingForDisconnect = false;
 
     private PowerManager.WakeLock mWakeLock;
 
     public QueueThread(CommandQueue queue) {
-        super(QueueThread.class.toString());
+        super();
 
         this.queue = queue;
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "QueueThread");
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
     }
 
     @Override
     public final void run() {
         mWakeLock.acquire();
         MainApp.bus().post(new EventQueueChanged());
-        connectionStartTime = lastCommandTime = System.currentTimeMillis();
+        long connectionStartTime = lastCommandTime = System.currentTimeMillis();
 
         try {
             while (true) {
                 PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-                long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
-                if (pump.isConnecting()) {
-                    log.debug("QUEUE: connecting " + secondsElapsed);
-                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
+                if (pump == null) {
+                    log.debug("QUEUE: pump == null");
+                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.pumpNotInitialized)));
                     SystemClock.sleep(1000);
                     continue;
                 }
+                long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     MainApp.bus().post(new EventDismissBolusprogressIfRunning(null));
-                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.connectiontimedout)));
+                    MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.connectiontimedout)));
                     log.debug("QUEUE: timed out");
                     pump.stopConnecting();
 
@@ -74,18 +76,36 @@ public class QueueThread extends Thread {
                         //write time
                         SP.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis());
                         //toggle BT
+                        pump.stopConnecting();
+                        pump.disconnect("watchdog");
+                        SystemClock.sleep(1000);
                         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                         mBluetoothAdapter.disable();
                         SystemClock.sleep(1000);
                         mBluetoothAdapter.enable();
                         SystemClock.sleep(1000);
                         //start over again once after watchdog barked
+                        //Notification notification = new Notification(Notification.OLD_NSCLIENT, "Watchdog", Notification.URGENT);
+                        //MainApp.bus().post(new EventNewNotification(notification));
                         connectionStartTime = lastCommandTime = System.currentTimeMillis();
+                        pump.connect("watchdog");
                     } else {
                         queue.clear();
+                        log.debug("QUEUE: no connection possible");
+                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+                        pump.disconnect("Queue empty");
+                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
                         return;
                     }
                 }
+
+                if (pump.isConnecting()) {
+                    log.debug("QUEUE: connecting " + secondsElapsed);
+                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
+                    SystemClock.sleep(1000);
+                    continue;
+                }
+
 
                 if (!pump.isConnected()) {
                     log.debug("QUEUE: connect");
@@ -117,10 +137,12 @@ public class QueueThread extends Thread {
                 if (queue.size() == 0 && queue.performing() == null) {
                     long secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000;
                     if (secondsFromLastCommand >= 5) {
+                        waitingForDisconnect = true;
                         log.debug("QUEUE: queue empty. disconnect");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
                         pump.disconnect("Queue empty");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+                        log.debug("QUEUE: disconnected");
                         return;
                     } else {
                         log.debug("QUEUE: waiting for disconnect");

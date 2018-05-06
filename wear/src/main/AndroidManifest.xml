@@ -209,6 +209,10 @@
             android:label="Fill">
         </activity>
         <activity
+            android:name=".interaction.actions.ECarbActivity"
+            android:label="Fill">
+        </activity>
+        <activity
             android:name=".interaction.actions.TempTargetActivity"
             android:label="TempTarget">
         </activity>

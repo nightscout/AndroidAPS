@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -20,10 +19,12 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsCareportalFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsProfileSwitchFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTemporaryBasalsFragment;
+import info.nightscout.utils.FabricPrivacy;
 
 public class TreatmentsFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
@@ -33,6 +34,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
     TextView tempBasalsTab;
     TextView tempTargetTab;
     TextView profileSwitchTab;
+    TextView careportalTab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,18 +47,20 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
             tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
             tempTargetTab = (TextView) view.findViewById(R.id.treatments_temptargets);
             profileSwitchTab = (TextView) view.findViewById(R.id.treatments_profileswitches);
+            careportalTab = (TextView) view.findViewById(R.id.treatments_careportal);
             treatmentsTab.setOnClickListener(this);
             extendedBolusesTab.setOnClickListener(this);
             tempBasalsTab.setOnClickListener(this);
             tempTargetTab.setOnClickListener(this);
             profileSwitchTab.setOnClickListener(this);
+            careportalTab.setOnClickListener(this);
 
             setFragment(new TreatmentsBolusFragment());
             setBackgroundColorOnSelected(treatmentsTab);
 
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -87,6 +91,10 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
                 setFragment(new TreatmentsProfileSwitchFragment());
                 setBackgroundColorOnSelected(profileSwitchTab);
                 break;
+            case R.id.treatments_careportal:
+                setFragment(new TreatmentsCareportalFragment());
+                setBackgroundColorOnSelected(careportalTab);
+                break;
         }
     }
 
@@ -99,12 +107,13 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
     }
 
     private void setBackgroundColorOnSelected(TextView selected) {
-        treatmentsTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
-        extendedBolusesTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
-        tempBasalsTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
-        tempTargetTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
-        profileSwitchTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
-        selected.setBackgroundColor(MainApp.sResources.getColor(R.color.tabBgColorSelected));
+        treatmentsTab.setBackgroundColor(MainApp.gc(R.color.defaultbackground));
+        extendedBolusesTab.setBackgroundColor(MainApp.gc(R.color.defaultbackground));
+        tempBasalsTab.setBackgroundColor(MainApp.gc(R.color.defaultbackground));
+        tempTargetTab.setBackgroundColor(MainApp.gc(R.color.defaultbackground));
+        profileSwitchTab.setBackgroundColor(MainApp.gc(R.color.defaultbackground));
+        careportalTab.setBackgroundColor(MainApp.gc(R.color.defaultbackground));
+        selected.setBackgroundColor(MainApp.gc(R.color.tabBgColorSelected));
     }
 
     @Subscribe
@@ -115,7 +124,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
     @Override
     protected void updateGUI() {
         if (ConfigBuilderPlugin.getActivePump().getPumpDescription().isExtendedBolusCapable
-                || MainApp.getConfigBuilder().getExtendedBolusesFromHistory().size() > 0) {
+                || TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().size() > 0) {
             extendedBolusesTab.setVisibility(View.VISIBLE);
         } else {
             extendedBolusesTab.setVisibility(View.GONE);

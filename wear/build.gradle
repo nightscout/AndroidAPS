@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+ext {
+    wearableVersion = "2.0.1"
+}
+
 def generateGitBuild = { ->
 
     StringBuilder stringBuilder = new StringBuilder();
@@ -22,12 +26,11 @@ def generateGitBuild = { ->
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0.2"
@@ -40,8 +43,10 @@ android {
         }
     }
 
-    publishNonDefault true
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 allprojects {
@@ -55,13 +60,13 @@ allprojects {
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    //compile 'com.ustwo.android:clockwise-wearable:1.0.2'
-    provided 'com.google.android.wearable:wearable:2.0.1'
-    compile 'com.google.android.support:wearable:2.0.1'
-    compile 'com.google.android.gms:play-services-wearable:7.3.0'
-    compile files('libs/hellocharts-library-1.5.5.jar')
-    compile(name:'ustwo-clockwise-debug', ext:'aar')
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files("libs/hellocharts-library-1.5.5.jar")
+    //compile "com.ustwo.android:clockwise-wearable:1.0.2"
+    compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
+    implementation "com.google.android.support:wearable:${wearableVersion}"
+    implementation "com.google.android.gms:play-services-wearable:7.3.0"
+    implementation(name:"ustwo-clockwise-debug", ext:"aar")
+    implementation "com.android.support:support-v4:23.0.1"
+    implementation "me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0"
 }

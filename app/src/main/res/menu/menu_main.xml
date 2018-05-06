@@ -5,6 +5,9 @@
         android:id="@+id/nav_preferences"
         android:title="@string/nav_preferences" />
     <item
+        android:id="@+id/nav_historybrowser"
+        android:title="@string/nav_historybrowser" />
+    <item
         android:id="@+id/nav_resetdb"
         android:title="@string/nav_resetdb" />
     <item

@@ -6,7 +6,6 @@ import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 
 public class DetermineBasalResultMA extends APSResult {
@@ -16,13 +15,12 @@ public class DetermineBasalResultMA extends APSResult {
     public double eventualBG;
     public double snoozeBG;
     public String mealAssist;
-    public IobTotal iob;
 
     public DetermineBasalResultMA(NativeObject result, JSONObject j) {
         json = j;
         if (result.containsKey("error")) {
             reason = (String) result.get("error");
-            changeRequested = false;
+            tempBasalRequested = false;
             rate = -1;
             duration = -1;
             mealAssist = "";
@@ -33,17 +31,17 @@ public class DetermineBasalResultMA extends APSResult {
             if (result.containsKey("rate")) {
                 rate = (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
-                changeRequested = true;
+                tempBasalRequested = true;
             } else {
                 rate = -1;
-                changeRequested = false;
+                tempBasalRequested = false;
             }
             if (result.containsKey("duration")) {
                 duration = ((Double) result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;
-                changeRequested = false;
+                tempBasalRequested = false;
             }
             if (result.containsKey("mealAssist")) {
                 mealAssist = result.get("mealAssist").toString();
@@ -60,10 +58,10 @@ public class DetermineBasalResultMA extends APSResult {
         newResult.reason = new String(reason);
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
+        newResult.tempBasalRequested = isChangeRequested();
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
+        newResult.tempBasalRequested = isChangeRequested();
 
         try {
             newResult.json = new JSONObject(json.toString());
@@ -72,7 +70,7 @@ public class DetermineBasalResultMA extends APSResult {
         }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
-        newResult.mealAssist = new String(mealAssist);
+        newResult.mealAssist = mealAssist;
         return newResult;
     }
 

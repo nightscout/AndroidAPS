@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -94,7 +95,15 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         if (OverviewFragment.shorttextmode)
             return diff.get(TimeUnit.DAYS) +"d" + diff.get(TimeUnit.HOURS) + "h";
         else
-            return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
+            return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
+    }
+
+    public boolean isOlderThan(double hours) {
+        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
+            if(diff.get(TimeUnit.DAYS)*24 + diff.get(TimeUnit.HOURS) > hours)
+                return true;
+            else
+                return false;
     }
 
     public String log() {
@@ -184,11 +193,22 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         try {
             JSONObject object = new JSONObject(json);
             if (object.has("notes"))
-                return object.getString("notes");
+                return StringUtils.abbreviate(object.getString("notes"), 40);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
         return Translator.translate(eventType);
+    }
+
+    public String getNotes() {
+        try {
+            JSONObject object = new JSONObject(json);
+            if (object.has("notes"))
+                return object.getString("notes");
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        return "";
     }
 
     @Override
@@ -231,7 +251,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     @Override
     public int getColor() {
         if (eventType.equals(ANNOUNCEMENT))
-            return MainApp.sResources.getColor(R.color.notificationAnnouncement);
+            return MainApp.gc(R.color.notificationAnnouncement);
         if (eventType.equals(MBG))
             return Color.RED;
         if (eventType.equals(BGCHECK))
@@ -242,4 +262,5 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             return Color.GRAY;
         return Color.GRAY;
     }
+
 }

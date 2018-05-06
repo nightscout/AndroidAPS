@@ -149,13 +149,13 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
 
     int getSelection(Spinner spinner) {
         String value = spinner.getSelectedItem().toString();
-        if (value.equals(MainApp.sResources.getString(R.string.yes)))
+        if (value.equals(MainApp.gs(R.string.yes)))
             return QuickWizardEntry.YES;
-        if (value.equals(MainApp.sResources.getString(R.string.no)))
+        if (value.equals(MainApp.gs(R.string.no)))
             return QuickWizardEntry.NO;
-        if (value.equals(MainApp.sResources.getString(R.string.positiveonly)))
+        if (value.equals(MainApp.gs(R.string.positiveonly)))
             return QuickWizardEntry.POSITIVE_ONLY;
-        if (value.equals(MainApp.sResources.getString(R.string.negativeonly)))
+        if (value.equals(MainApp.gs(R.string.negativeonly)))
             return QuickWizardEntry.NEGATIVE_ONLY;
         return QuickWizardEntry.NO;
     }
@@ -164,19 +164,19 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
         String selection;
         switch (value) {
             case QuickWizardEntry.YES:
-                selection = MainApp.sResources.getString(R.string.yes);
+                selection = MainApp.gs(R.string.yes);
                 break;
             case QuickWizardEntry.NO:
-                selection = MainApp.sResources.getString(R.string.no);
+                selection = MainApp.gs(R.string.no);
                 break;
             case QuickWizardEntry.POSITIVE_ONLY:
-                selection = MainApp.sResources.getString(R.string.positiveonly);
+                selection = MainApp.gs(R.string.positiveonly);
                 break;
             case QuickWizardEntry.NEGATIVE_ONLY:
-                selection = MainApp.sResources.getString(R.string.negativeonly);
+                selection = MainApp.gs(R.string.negativeonly);
                 break;
             default:
-                selection = MainApp.sResources.getString(R.string.no);
+                selection = MainApp.gs(R.string.no);
                 break;
         }
 

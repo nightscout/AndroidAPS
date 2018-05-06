@@ -18,6 +18,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
 public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
@@ -85,10 +86,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         int param1 = ((intFromBuff(data, 7, 1) << 8) & 0xFF00) + (intFromBuff(data, 8, 1) & 0xFF);
         int param2 = ((intFromBuff(data, 9, 1) << 8) & 0xFF00) + (intFromBuff(data, 10, 1) & 0xFF);
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
-        temporaryBasal.date = datetime.getTime();
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = datetime.getTime();
+        TemporaryBasal temporaryBasal = new TemporaryBasal().date(datetime.getTime()).source(Source.PUMP).pumpId(datetime.getTime());
 
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = datetime.getTime();
@@ -113,36 +111,36 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
                 log.debug("EVENT TEMPSTART (" + recordCode + ") " + datetime.toLocaleString() + " Ratio: " + param1 + "% Duration: " + param2 + "min");
                 temporaryBasal.percentRate = param1;
                 temporaryBasal.durationInMinutes = param2;
-                MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
+                TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
                 status = "TEMPSTART " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.TEMPSTOP:
                 log.debug("EVENT TEMPSTOP (" + recordCode + ") " + datetime.toLocaleString());
-                MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
+                TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
                 status = "TEMPSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.EXTENDEDSTART:
                 log.debug("EVENT EXTENDEDSTART (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 extendedBolus.insulin = param1 / 100d;
                 extendedBolus.durationInMinutes = param2;
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "EXTENDEDSTART " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.EXTENDEDSTOP:
                 log.debug("EVENT EXTENDEDSTOP (" + recordCode + ") " + datetime.toLocaleString() + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "EXTENDEDSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.BOLUS:
                 detailedBolusInfo.insulin = param1 / 100d;
-                boolean newRecord = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
                 log.debug((newRecord ? "**NEW** " : "") + "EVENT BOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 DetailedBolusInfoStorage.remove(detailedBolusInfo.date);
                 status = "BOLUS " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALBOLUS:
                 detailedBolusInfo.insulin = param1 / 100d;
-                newRecord = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
                 log.debug((newRecord ? "**NEW** " : "") + "EVENT DUALBOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 DetailedBolusInfoStorage.remove(detailedBolusInfo.date);
                 status = "DUALBOLUS " + DateUtil.timeString(datetime);
@@ -151,12 +149,12 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
                 log.debug("EVENT DUALEXTENDEDSTART (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 extendedBolus.insulin = param1 / 100d;
                 extendedBolus.durationInMinutes = param2;
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "DUALEXTENDEDSTART " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALEXTENDEDSTOP:
                 log.debug("EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + datetime.toLocaleString() + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "DUALEXTENDEDSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.SUSPENDON:
@@ -185,7 +183,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
                 emptyCarbsInfo.date = datetime.getTime();
                 emptyCarbsInfo.source = Source.PUMP;
                 emptyCarbsInfo.pumpId = datetime.getTime();
-                newRecord = MainApp.getConfigBuilder().addToHistoryTreatment(emptyCarbsInfo);
+                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(emptyCarbsInfo);
                 log.debug((newRecord ? "**NEW** " : "") + "EVENT CARBS (" + recordCode + ") " + datetime.toLocaleString() + " Carbs: " + param1 + "g");
                 status = "CARBS " + DateUtil.timeString(datetime);
                 break;
@@ -202,7 +200,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         if (datetime.getTime() > lastEventTimeLoaded)
             lastEventTimeLoaded = datetime.getTime();
 
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.processinghistory) + ": " + status));
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
     }
 
     @Override
