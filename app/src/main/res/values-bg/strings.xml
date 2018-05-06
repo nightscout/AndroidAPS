@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="treatmentssafety_title">Настройки на сигурността</string>
+		<string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
     <string name="nav_preferences">Опции</string>
@@ -10,7 +10,7 @@
     <string name="nav_exit">Изход</string>
     <string name="danar_useextended_title">Използвай удължен болус за над 200%</string>
     <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
-	<string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
+    <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
     <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки или Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
     <string name="objectives_objective_label_string">Цел:</string>
     <string name="objectives_gate_label_string">Действие:</string>
@@ -35,12 +35,12 @@
     <string name="tempbasals_netinsulin_label_string">Инс:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_newtreatment_carbsamount_label">Количество въглехидрати</string>
-    <string name="treatments_newtreatment_insulinamount_label">Количество инсулин</string>
+    <string name="treatments_newtreatment_carbsamount_label">Въглехидрати (гр.):</string>
+    <string name="treatments_newtreatment_insulinamount_label">Ед. инсулин:</string>
     <string name="treatments_wizard_bg_label">КЗ</string>
     <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
-    <string name="insulin_unit_shortname">Ед</string>
+    <string name="insulin_unit_shortname">Ед.</string>
     <string name="treatments_wizard_bolusiob_label">IOB от болуси</string>
     <string name="openapsma_run">Старт сега</string>
     <string name="pump_basebasalrate_label">Базова базална стойност</string>
@@ -157,7 +157,7 @@
     <string name="careportal_newnstreatment_other">Друго</string>
     <string name="careportal_newnstreatment_meter">Глюкомер</string>
     <string name="careportal_newnstreatment_sensor">Сензор</string>
-    <string name="careportal_newnstreatment_carbs_label">ВХ</string>
+    <string name="careportal_newnstreatment_carbs_label">Въглехидрати</string>
     <string name="careportal_newnstreatment_insulin_label">Инсулин</string>
     <string name="careportal_newnstreatment_carbtime_label">ВХ след</string>
     <string name="careportal_newnstreatment_split_label">Разделяне</string>
@@ -235,7 +235,7 @@
     <string name="glucosetype_finger">Пръст</string>
     <string name="glucosetype_sensor">Сензор</string>
     <string name="manual">Ръчно</string>
-    <string name="careportal_temporarytarget">Времена цел</string>
+    <string name="careportal_temporarytarget">Временна цел</string>
     <string name="careportal_temporarytargetcancel">Откажи временна цел</string>
     <string name="danarprofile">DanaR профил</string>
     <string name="danarprofile_dia">DIA (Време на действие на инсулина) ч.:</string>
@@ -248,7 +248,7 @@
     <string name="danar_dsbolus">DS болус</string>
     <string name="danar_debolus">DE болус</string>
     <string name="danar_error">грешка</string>
-    <string name="danar_refill">пълнене</string>
+    <string name="danar_refill">презареждане</string>
     <string name="danar_basalhour">базал по часове</string>
     <string name="danar_glucose">КЗ</string>
     <string name="danar_carbohydrate">въглехидрати</string>
@@ -262,7 +262,7 @@
     <string name="danar_history_dailyinsulin">Инсулин за деня</string>
     <string name="danar_history_errors">Грешки</string>
     <string name="danar_history_glucose">КЗ</string>
-    <string name="danar_history_refill">Пълнене</string>
+    <string name="danar_history_refill">Презареждане</string>
     <string name="danar_history_syspend">Спиране</string>
     <string name="danar_history_connectingfor" formatted="false">Свързва се с помпата за %d сек.</string>
     <string name="danar_password_title">Парола за помпата</string>
@@ -784,7 +784,7 @@
     <string name="enablesmbalways">Разреши SMB постоянно</string>
     <string name="enablesmbalways_summary">"Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  "</string>
     <string name="enablesmbaftercarbs">Разреши SMB след въглехидрати</string>
-    <string name="enablesmbaftercarbs_summary">Разрешава SMB 6 часа след въглехидрати, дори при COB=0. Възможно само с източник на КЗ с добра филтрация като G5</string>
+    <string name="enablesmbaftercarbs_summary">"Разрешава SMB 6 часа след въглехидрати, дори при COB=0. Възможно само с източник на КЗ с добра филтрация като G5 приложение "</string>
     <string name="enablesmbwithcob">Разреши SMB с COB</string>
     <string name="enablesmbwithcob_summary">Разрешава SMB, когато има активни COB</string>
     <string name="enablesmbwithtemptarget">Разреши SMB с временни цели</string>
@@ -801,7 +801,7 @@
     <string name="insulin_increment_button_message">Количество инсулин за добавяне при натискане на бутона</string>
     <string name="error_starting_cgm">Не може да се използва CGM приложението. Уверете се, че е инсталирано.</string>
     <string name="overview_cgm">CGM</string>
-    <string name="nav_historybrowser">Браузър за исторя</string>
+    <string name="nav_historybrowser">История</string>
     <string name="wear_notifysmb_title">Уведомяване при SMB</string>
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
     <string name="ns_create_announcements_from_errors_title">Създаване на известие при грешки</string>
@@ -827,4 +827,46 @@
     <string name="combo_actvity_reading_basal_profile">Прочита базалният профил</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">"Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус. Ако се изисква същото болусно количество, моля, изчакайте две минути, тъй за това време болусите с едно и също количество са блокирани от съображения за  безопасност "</string>
     <string name="about_link_urls">" http://www.androidaps.org  facebook: http://facebook.androidaps.org"</string>
+    <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
+    <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
+    <string name="temptargetshort">Вр.цел</string>
+    <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
+    <string name="objectivenotstarted" formatted="false">ЦЕЛ %d не е стартирана</string>
+    <string name="objectivenotfinished" formatted="false">ЦЕЛ %d не е завършена</string>
+    <string name="pumpisnottempbasalcapable">Помпата не може да подава временен базал</string>
+    <string name="novalidbasalrate">Няма валидна базална прочетена от помпата</string>
+    <string name="closedmodedisabledinpreferences">Closed loop е забранен в настройките</string>
+    <string name="autosensdisabledinpreferences">Аутосенс е забранен в настройките</string>
+    <string name="smbdisabledinpreferences">SMB е забранен в настройките</string>
+    <string name="limitingbasalratio" formatted="false">Ограничаване на макс. базална стойност до %.2f Е/ч поради %s</string>
+    <string name="pumplimit">лимит на помпата</string>
+    <string name="itmustbepositivevalue">трябва да бъде положително число</string>
+    <string name="maxbasalmultiplier">множител на макс. базал</string>
+    <string name="maxdailybasalmultiplier">множител на макс. дневен базал</string>
+    <string name="smb_frequency_exceeded">Болус беше доставен през последните 3 мин, пропуска SMB</string>
+    <string name="basal_set_correctly">Базалът е зададен коректно</string>
+    <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %d%% поради %s</string>
+    <string name="limitingbolus" formatted="false">Ограничаване на болус до %.1f Е поради %s</string>
+    <string name="limitingmaxiob" formatted="false">Ограничаване на макс. IOB до %.1f Е поради %s</string>
+    <string name="limitingcarbs" formatted="false">Ограничаване на въглехидрати до %d гр. поради %s</string>
+    <string name="limitingiob" formatted="false">Ограничаване на IOB до %.1f Е поради %s</string>
+    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
+    <string name="unsafeusage">опасно използване</string>
+    <string name="readstatusfailed">Прочитането на статуса се провали</string>
+    <string name="record_pump_site_change">Записано смяна на сет</string>
+    <string name="record_insulin_cartridge_change">Записано смяна на резервоар</string>
+    <string name="smbalwaysdisabled">SMB \"винаги\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
+    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим open loop</string>
+    <string name="food_short">Храна</string>
+    <string name="waitingfortimesynchronization" formatted="false">Очаква време за синхронизация (%d sec)</string>
+    <string name="loopdisconnectedfor" formatted="false">Прекъснат (%d m)</string>
+    <string name="automatic_careportal_events">Автоматично careportal събитие</string>
+    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Автоматично изпраща смяна на резервоар, сет и аларми на помпата към Nightscout</string>
+    <string name="openapssmb_maxiob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>
+    <string name="pump_stopped">Помпата е спряна</string>
+    <string name="pump_started">Помпата е стартирана</string>
+    <string name="pump_paused">Помпата е на пауза</string>
+    <string name="absorption_cutoff_title">Макс. време за усвояване на храна (часа)</string>
+    <string name="absorption_cutoff_summary">Време за което всяко хранене се счита за усвоено. Оставащите въглехидрати ще бъдат изчиствани.</string>
+    <string name="time">Време</string>
 </resources>
