@@ -186,7 +186,7 @@ public class Treatment implements DataPointWithLabelInterface {
     @Override
     public int getColor() {
         if (isSMB)
-            return MainApp.sResources.getColor(R.color.tempbasal);
+            return MainApp.gc(R.color.tempbasal);
         else if (isValid)
             return Color.CYAN;
         else

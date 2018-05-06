@@ -208,7 +208,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
             }
 
             if (!insulinAfterConstraints.equals(insulin))
-                actions.add("<font color='" + MainApp.sResources.getColor(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
+                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
 
             int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
             eatingSoonTTDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : Constants.defaultEatingSoonTTDuration;
