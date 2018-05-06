@@ -175,14 +175,14 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                 confirmMessage.add("");
                 confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>");
                 if (!insulinAfterConstraints.equals(insulin))
-                    confirmMessage.add("<font color='" + MainApp.sResources.getColor(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
+                    confirmMessage.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
             }
 
             if (pumpSiteChangeCheckbox.isChecked())
-                confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + MainApp.gs(R.string.record_pump_site_change) +  "</font>");
+                confirmMessage.add("" + "<font color='" + MainApp.gc(R.color.high) + "'>" + MainApp.gs(R.string.record_pump_site_change) +  "</font>");
 
             if (insulinCartridgeChangeCheckbox.isChecked())
-                confirmMessage.add("" + "<font color='" + MainApp.sResources.getColor(R.color.high) + "'>" + MainApp.gs(R.string.record_insulin_cartridge_change) + "</font>");
+                confirmMessage.add("" + "<font color='" + MainApp.gc(R.color.high) + "'>" + MainApp.gs(R.string.record_insulin_cartridge_change) + "</font>");
 
             final String notes = notesEdit.getText().toString();
             if (!notes.isEmpty()) {
