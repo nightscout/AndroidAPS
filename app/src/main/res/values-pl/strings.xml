@@ -356,7 +356,7 @@
     <string name="dia">DIA:</string>
     <string name="target_range">Zakres docelowy:</string>
     <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
-    <string name="prefs_range_summary">Oznaczenia wysokiego i niskiego cukru na wykresie w oknie przegląd i na smartwatch'u</string>
+    <string name="prefs_range_summary">Oznaczenia wysokiego i niskiego cukru na wykresie w oknie przegląd i na smartwatch\'u</string>
     <string name="low_mark">Znacznik NISKI</string>
     <string name="high_mark">Znacznik WYSOKI</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
@@ -451,7 +451,7 @@
     <string name="overview_calibration">Kalibracja</string>
     <string name="overview_calibration_bg_label">Kalibracja</string>
     <string name="send_calibration" formatted="false">Wysłać kalibrację %.1f do xDrip?</string>
-    <string name="xdripnotinstalled">xDrip+ nie zainstalowany/string>
+    <string name="xdripnotinstalled">xDrip+ nie zainstalowany</string>
     <string name="calibrationsent">Kalibracja przesłana do xDrip</string>
     <string name="smscommunicator_remotecalibrationnotallowed">Zdalna kalibracja nie dozwolona</string>
     <string name="smscommunicator_calibrationsent">Kalibracja wysłana. Odbiór musi być dozwolony w xDrip.</string>
