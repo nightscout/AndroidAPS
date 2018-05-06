@@ -57,7 +57,7 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isSMB = false;
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN; // currently unused, will be used in the future
+    public int insulinInterfaceID = InsulinInterface.OREF_RAPID_ACTING; // currently unused, will be used in the future
     @DatabaseField
     public double dia = Constants.defaultDIA; // currently unused, will be used in the future
 

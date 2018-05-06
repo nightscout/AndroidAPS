@@ -8,8 +8,8 @@ import info.nightscout.androidaps.plugins.Treatments.Treatment;
  */
 
 public interface InsulinInterface {
-    int FASTACTINGINSULIN = 0;
-    int FASTACTINGINSULINPROLONGED = 1;
+    // int FASTACTINGINSULIN = 0; // old model no longer available
+    // int FASTACTINGINSULINPROLONGED = 1; // old model no longer available
     int OREF_RAPID_ACTING = 2;
     int OREF_ULTRA_RAPID_ACTING = 3;
     int OREF_FREE_PEAK = 4;
