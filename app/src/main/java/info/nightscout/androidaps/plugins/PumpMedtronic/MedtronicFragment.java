@@ -33,8 +33,9 @@ import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
-import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRStatsActivity;
+
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -133,10 +134,10 @@ public class MedtronicFragment extends SubscriberFragment {
         profileViewDialog.show(manager, "ProfileViewDialog");
     }
 
-    @OnClick(R.id.medtronic_stats)
-    void onStatsClick() {
-        startActivity(new Intent(getContext(), DanaRStatsActivity.class));
-    }
+    //@OnClick(R.id.medtronic_stats)
+    //void onStatsClick() {
+    //    startActivity(new Intent(getContext(), DanaRStatsActivity.class));
+    //}
 
     @OnClick(R.id.medtronic_btconnection)
     void onBtConnectionClick() {
@@ -226,19 +227,23 @@ public class MedtronicFragment extends SubscriberFragment {
                     basaBasalRateView.setText("(" + (pump.activeProfileName) + ")  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h");
 
                     if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
-                        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-                            tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                        if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
+                            tempBasalView.setText(TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                         } else {
                             tempBasalView.setText("");
                         }
                     } else {
                         // v2 plugin
-                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                            tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
+                            tempBasalView.setText(TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                         } else {
                             tempBasalView.setText("");
                         }
                     }
+
+
+
+
 
                     reservoirView.setText(DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + " / " + pump.reservoirFullUnits + " U");
                     SetWarnColor.setColorInverse(reservoirView, pump.reservoirRemainingUnits, 50d, 20d);

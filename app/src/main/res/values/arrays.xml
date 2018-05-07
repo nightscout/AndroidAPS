@@ -131,7 +131,7 @@
         <item>Tandem t:slim X2</item>
     </string-array>
 
- <string-array name="medtronicPumpTypeArray">
+    <string-array name="medtronicPumpTypeArray">
         <item>Other (unsupported)</item>
         <item>512</item>
         <item>712</item>

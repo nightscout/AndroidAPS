@@ -53,6 +53,8 @@ public class PumpUtil {
 
         pumpDescription.isRefillingCapable = pumpCapability.hasCapability(PumpCapability.Refill);
         pumpDescription.storesCarbInfo = pumpCapability.hasCapability(PumpCapability.StoreCarbInfo);
+
+        setPumpDescription(pumpDescription, PumpType.AccuChekCombo);
     }
 
 

@@ -12,6 +12,7 @@ import java.util.Date;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -20,6 +21,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.PumpMedtronic.medtronic.MedtronicPumpDriver;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpDriver;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
@@ -48,7 +50,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public MedtronicPumpPlugin()
     {
         super(new MedtronicPumpDriver(), //
-                "MedtronicPump"//
+                "MedtronicPump", //
+                MedtronicFragment.class.getName(), //
+                R.string.medtronic_name, //
+                R.string.medtronic_name_short //
         );
     }
 
@@ -73,14 +78,18 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-
-
-
-
-
+    @Override
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+        return null;
+    }
 
     @Override
-    public JSONObject getJSONStatus() {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+        return null;
+    }
+
+    @Override
+    public JSONObject getJSONStatus(Profile profile, String profileName) {
         //if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
         //    return null;
         //}
@@ -96,18 +105,21 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+
+            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis()));
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+
+            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
+
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
             pump.put("battery", battery);
@@ -138,32 +150,21 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return false;
     }
 
-
     @Override
-    public String getFragmentClass()
-    {
-        return MedtronicFragment.class.getName();
+    public PumpEnactResult loadTDDs() {
+        return null;
     }
 
-    @Override
-    public String getName() {
-        return "Medtronic";
-    }
 
-    @Override
-    public String getNameShort() {
-        return "MEDT";
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        // TODO might need tweaking
-        if (type == PluginBase.PUMP)
-            return fragmentEnabled;
-        else if (type == PluginBase.CONSTRAINTS)
-            return fragmentEnabled;
-        return false;
-    }
+//    @Override
+//    public boolean isEnabled(int type) {
+//        // TODO might need tweaking
+//        if (type == PluginBase.PUMP)
+//            return fragmentEnabled;
+//        else if (type == PluginBase.CONSTRAINTS)
+//            return fragmentEnabled;
+//        return false;
+//    }
 
 
     @Override
@@ -172,10 +173,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    @Override
-    public boolean isLoopEnabled() {
-        // FIXME check if we need to override
-        return getPumpStatusData().validBasalRateProfileSelectedOnPump;
-    }
+//    @Override
+//    public boolean isLoopEnabled() {
+//        // FIXME check if we need to override
+//        return getPumpStatusData().validBasalRateProfileSelectedOnPump;
+//    }
 
 }
