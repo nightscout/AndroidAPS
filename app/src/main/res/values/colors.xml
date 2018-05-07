@@ -3,8 +3,9 @@
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
     <color name="iob">#1e88e5</color>
-    <color name="bolus">#FFFFCC03</color>
+    <color name="bolus">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
+    <color name="carbs">#FFFB8C00</color>
     <color name="uam">#ffea00</color>
     <color name="zt">#00ffff</color>
     <color name="ratio">#FFFFFF</color>
@@ -22,6 +23,7 @@
     <color name="tempbasal">#C803A9F4</color>
     <color name="graphgrid">#757575</color>
     <color name="colorLightGray">#d8d8d8</color>
+    <color name="warning">#ff1a1a</color>
 
     <color name="defaultbackground">#424242</color>
 
@@ -63,5 +65,10 @@
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
+
+    <color name="deviationgrey">#c8666666</color>
+    <color name="deviationgreen">#7200FF00</color>
+    <color name="deviationred">#72FF0000</color>
+    <color name="deviationblack">#72000000</color>
 
 </resources>

@@ -240,7 +240,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
             pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
-            pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
+            pumpStatusView.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder));
 
             iobView = (TextView) view.findViewById(R.id.overview_iob);
             cobView = (TextView) view.findViewById(R.id.overview_cob);
@@ -300,9 +300,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             else
                 axisWidth = 80;
 
-            bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
+            bgGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
             bgGraph.getGridLabelRenderer().reloadStyles();
-            iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
+            iobGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
             iobGraph.getGridLabelRenderer().reloadStyles();
             iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
             bgGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
@@ -1006,11 +1006,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
         if (lastBG != null) {
-            int color = MainApp.sResources.getColor(R.color.inrange);
+            int color = MainApp.gc(R.color.inrange);
             if (lastBG.valueToUnits(units) < lowLine)
-                color = MainApp.sResources.getColor(R.color.low);
+                color = MainApp.gc(R.color.low);
             else if (lastBG.valueToUnits(units) > highLine)
-                color = MainApp.sResources.getColor(R.color.high);
+                color = MainApp.gc(R.color.high);
             bgView.setText(lastBG.valueToUnitsToString(units));
             arrowView.setText(lastBG.directionToSymbol());
             bgView.setTextColor(color);
@@ -1034,23 +1034,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
-            apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
+            apsModeView.setBackgroundColor(MainApp.gc(R.color.loopenabled));
             apsModeView.setTextColor(Color.BLACK);
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
             if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuperBolus()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isDisconnected()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuspended()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (pump.isSuspended()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(MainApp.gs(R.string.pumpsuspended));
                 apsModeView.setTextColor(Color.WHITE);
             } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
@@ -1060,7 +1060,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     apsModeView.setText(MainApp.gs(R.string.openloop));
                 }
             } else {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopdisabled));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.loopdisabled));
                 apsModeView.setText(MainApp.gs(R.string.disabledloop));
                 apsModeView.setTextColor(Color.WHITE);
             }
@@ -1072,12 +1072,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
-            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
+            tempTargetView.setBackgroundColor(MainApp.gc(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
             tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
         } else {
             tempTargetView.setTextColor(Color.WHITE);
-            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
+            tempTargetView.setBackgroundColor(MainApp.gc(R.color.tempTargetDisabledBackground));
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
@@ -1148,7 +1148,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
         if (activeTemp != null) {
-            baseBasalView.setTextColor(MainApp.sResources.getColor(R.color.basal));
+            baseBasalView.setTextColor(MainApp.gc(R.color.basal));
         } else {
             baseBasalView.setTextColor(Color.WHITE);
 

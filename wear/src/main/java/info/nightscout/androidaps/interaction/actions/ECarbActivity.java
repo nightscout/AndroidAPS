@@ -1,11 +1,8 @@
 package info.nightscout.androidaps.interaction.actions;
 
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
@@ -13,26 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
 
 /**
- * Created by adrian on 09/02/17.
+ * Created by adrian on 04/08/18.
  */
 
 
-public class WizardActivity extends ViewSelectorActivity {
+public class ECarbActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editCarbs;
-    PlusMinusEditText editPercentage;
-
-    boolean hasPercentage;
+    PlusMinusEditText editStartTime;
+    PlusMinusEditText editDuration;
 
 
     @Override
@@ -45,8 +40,6 @@ public class WizardActivity extends ViewSelectorActivity {
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        hasPercentage =  sp.getBoolean("wizardpercentage", false);
     }
 
 
@@ -60,7 +53,7 @@ public class WizardActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return hasPercentage?3:2;
+            return 4;
         }
 
         @Override
@@ -73,25 +66,32 @@ public class WizardActivity extends ViewSelectorActivity {
 
             if(col == 0){
                 final View view = getInflatedPlusMinusView(container);
-                if (editCarbs == null) {
-                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 150d, 1d, new DecimalFormat("0"), false);
-                } else {
-                    double def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
-                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
-
+                double def = 0;
+                if (editCarbs != null){
+                    def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
+                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), true);
                 setLabelToPlusMinusView(view, "carbs");
                 container.addView(view);
                 return view;
-            } else if(col == 1 && hasPercentage){
+            } else if(col == 1){
                 final View view = getInflatedPlusMinusView(container);
-                if (editPercentage == null) {
-                    editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 50d, 150d, 1d, new DecimalFormat("0"), false);
-                } else {
-                    double def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
-                    editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
+                double def = 0;
+                if (editStartTime != null){
+                    def = SafeParse.stringToDouble(editStartTime.editText.getText().toString());
                 }
-                setLabelToPlusMinusView(view, "percentage");
+                editStartTime = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 300d, 15d, new DecimalFormat("0"), false);
+                setLabelToPlusMinusView(view, "start [min]");
+                container.addView(view);
+                return view;
+            } else if(col == 2){
+                final View view = getInflatedPlusMinusView(container);
+                double def = 0;
+                if (editDuration != null){
+                    def = SafeParse.stringToDouble(editDuration.editText.getText().toString());
+                }
+                editDuration = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 8d, 1d, new DecimalFormat("0"), false);
+                setLabelToPlusMinusView(view, "duration [h]");
                 container.addView(view);
                 return view;
             } else {
@@ -105,13 +105,10 @@ public class WizardActivity extends ViewSelectorActivity {
                         //check if it can happen that the fagment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
 
-                        int percentage = 100;
-
-                        if (editPercentage != null) percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
-
-                        String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                                + " " + percentage;
-                        ListenerService.initiateAction(WizardActivity.this, actionstring);
+                        String actionstring = "ecarbs " +SafeParse.stringToInt(editCarbs.editText.getText().toString())
+                                + " " + SafeParse.stringToInt(editStartTime.editText.getText().toString())
+                                + " " + SafeParse.stringToInt(editDuration.editText.getText().toString());
+                        ListenerService.initiateAction(ECarbActivity.this, actionstring);
                         finish();
                     }
                 });
