@@ -304,16 +304,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 final Profile profile = MainApp.getConfigBuilder().getProfile();
 
                 if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
-                    DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(calculatedTotalInsulin)).value();
                     Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(calculatedCarbs)).value();
 
-                    confirmMessage += "<br/>" + MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
-                    confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-
+                    if (insulinAfterConstraints > 0)
+                        confirmMessage += "<br/>" + MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>";
+                    if (carbsAfterConstraints > 0)
+                        confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);

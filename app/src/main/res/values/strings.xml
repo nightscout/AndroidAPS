@@ -1,5 +1,5 @@
 ﻿<resources>
-    <string name="treatmentssafety_title">Tratments safety</string>
+    <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
 
@@ -710,7 +710,7 @@
     <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
     <string name="gettingbolusstatus">Getting bolus status</string>
     <string name="gettingtempbasalstatus">Getting temporary basal status</string>
-    <string name="gettingpumpsettings">Gettings pump settings</string>
+    <string name="gettingpumpsettings">Getting pump settings</string>
     <string name="gettingpumptime">Getting pump time</string>
     <string name="reuse">reuse</string>
     <string name="wearcontrol_title">Controls from Watch</string>
@@ -1035,4 +1035,13 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
+    <string name="wear_wizard_settings">Wizard Settings</string>
+    <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
+    <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
+    <string translatable="false" name="key_wearwizard_cob">wearwizard_cob</string>
+    <string translatable="false" name="key_wearwizard_bolusiob">wearwizard_bolusiob</string>
+    <string translatable="false" name="key_wearwizard_basaliob">wearwizard_basaliob</string>
+    <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
+    <string name="wear_display_settings">Display Settings</string>
+    <string name="wear_general_settings">General Settings</string>
 </resources>

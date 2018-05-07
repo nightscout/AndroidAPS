@@ -180,6 +180,10 @@ public class Profile {
     }
 
     public synchronized boolean isValid(String from) {
+        return isValid(from, true);
+    }
+
+    public synchronized boolean isValid(String from, boolean notify) {
         if (!isValid)
             return false;
         if (!isValidated) {
@@ -207,7 +211,7 @@ public class Profile {
             if (pump != null && !pump.getPumpDescription().is30minBasalRatesCapable) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
-                    if (secondsFromMidnight % 3600 != 0) {
+                    if (notify && secondsFromMidnight % 3600 != 0) {
                         Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
                         MainApp.bus().post(new EventNewNotification(notification));
                     }
@@ -220,7 +224,8 @@ public class Profile {
                 for (int i = 0; i < basal_v.size(); i++) {
                     if (basal_v.valueAt(i) < description.basalMinimumRate) {
                         basal_v.setValueAt(i, description.basalMinimumRate);
-                        sendBelowMinimumNotification(from);
+                        if (notify)
+                            sendBelowMinimumNotification(from);
                     }
                 }
             } else {

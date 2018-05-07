@@ -80,9 +80,9 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
+        bgGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
         bgGraph.getGridLabelRenderer().reloadStyles();
-        iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
+        iobGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
         iobGraph.getGridLabelRenderer().reloadStyles();
         iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
         bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);

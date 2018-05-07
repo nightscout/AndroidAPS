@@ -111,7 +111,7 @@ public class DanaRFragment extends SubscriberFragment {
             View view = inflater.inflate(R.layout.danar_fragment, container, false);
             unbinder = ButterKnife.bind(this, view);
 
-            pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
+            pumpStatusView.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder));
 
             return view;
         } catch (Exception e) {
