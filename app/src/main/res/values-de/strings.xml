@@ -787,4 +787,14 @@
     <string name="data_choices">Daten Auswahl</string>
     <string name="smbdisabledinpreferences">SMB in Einstellungen deaktiviert</string>
     <string name="food_short">Mahlzeiten</string>
+    <string name="hardlimit">Hartes Limit</string>
+    <string name="readstatusfailed">Lesen des Status fehlgeschlagen</string>
+    <string name="loopdisconnectedfor">Nicht Verbunden (%d m)</string>
+    <string name="automatic_careportal_events">Automatische Careportal Ereignisse</string>
+    <string name="firstinsulinincrement">Erstes Insulin Inkrement</string>
+    <string name="firstcarbsincrement">Erstes KH Inkrement</string>
+    <string name="ns_chargingonly">Nur wenn geladen wird</string>
+    <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
+    <string name="objectivenotstarted">Zielsetzung %d nicht gestartet</string>
+    <string name="objectivenotfinished">Zielsetzung %d nicht abgeschlossen</string>
 </resources>
