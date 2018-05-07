@@ -65,7 +65,7 @@
     <string name="nochangerequested">Zmiana nie wymagana</string>
     <string name="openapsma_request_label">Żądanie</string>
     <string name="rate">Wartość</string>
-    <string name="duration">Czas</string>
+    <string name="duration">Czas trwania</string>
     <string name="reason">Powód</string>
     <string name="glucose">Glukoza</string>
     <string name="delta">Delta</string>
@@ -148,7 +148,7 @@
     <string name="careportal_announcement">Powiadomienie</string>
     <string name="careportal_note">Notatka</string>
     <string name="careportal_question">Pytanie</string>
-    <string name="careportal_exercise">Cwiczenia</string>
+    <string name="careportal_exercise">Ćwiczenia</string>
     <string name="careportal_pumpsitechange">Zmiana wkłucia</string>
     <string name="careportal_cgmsensorinsert">Założenie sensora CGM</string>
     <string name="careportal_cgmsensorstart">Uruchomienie sensora CGM</string>
@@ -171,7 +171,7 @@
     <string name="careportal_newnstreatment_insulin_label">Insulina</string>
     <string name="careportal_newnstreatment_carbtime_label">Czas węglow.</string>
     <string name="careportal_newnstreatment_split_label">Podział</string>
-    <string name="careportal_newnstreatment_duration_label">Czas</string>
+    <string name="careportal_newnstreatment_duration_label">Czas trwania</string>
     <string name="careportal_newnstreatment_percent_label">Procent</string>
     <string name="careportal_newnstreatment_absolute_label">Całkowity</string>
     <string name="careportal_newnstreatment_notes_label">Notatki</string>
@@ -189,7 +189,7 @@
     <string name="import_from">Importuj ustawienia z</string>
     <string name="setting_imported">Ustawienia zaimportowane</string>
     <string name="filenotfound">Nie znaleziono pliku</string>
-    <string name="nav_export">Exportuj ustawienia</string>
+    <string name="nav_export">Eksportuj ustawienia</string>
     <string name="nav_import">Importuj ustawienia</string>
     <string name="nl_lang">Dutch</string>
     <string name="de_lang">German</string>
@@ -382,7 +382,7 @@
     <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="minago">%d min temu</string>
     <string name="sms_minago">%dmin temu</string>
-    <string name="localprofile">Profil lokalny</string>
+    <string name="localprofile">Lokalny Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Krótka średnia delta</string>
     <string name="long_avgdelta">Długa średnia delta</string>
@@ -392,7 +392,7 @@
     <string name="openapsama_useautosens">Używaj funkcji AMA autosens</string>
     <string name="refresheventsfromnightscout">Odśwież zdarzenia z NS</string>
     <string name="eatingsoon">Wkrótce posiłek</string>
-    <string name="hypo">Hypo</string>
+    <string name="hypo">Hipo</string>
     <string name="activity">Ćwiczenia</string>
     <string name="removerecord">Usuń rekord:</string>
     <string name="danar_stats">DanaR Statystyki</string>
@@ -540,7 +540,7 @@
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Ostatnie połączenie</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
-    <string name="nav_about">O</string>
+    <string name="nav_about">O programie</string>
     <string name="smscommunicator_missingsmspermission">Utracone pozwolenie SMS</string>
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">LiniaStatusu xDrip (watch)</string>
@@ -597,14 +597,14 @@
     <string name="lock_screen">Zablokuj obraz</string>
     <string name="lock_screen_short">Zablokuj</string>
     <string name="sensitivity_warning">Przy włączonej funkcji Autosens pamiętaj, żeby wprowadzać wszystkie węglowodany. W innym wypadku odchylenia węglowodanów będą błędnie identyfikowane jako zmiany wrażliwości !!</string>
-    <string name="sensitivityweightedaverage">Sensitivity ŚredniaWażona</string>
+    <string name="sensitivityweightedaverage">Wrażliwość ŚredniaWażona</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Anuluj</string>
     <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
     <string name="valuesnotstored">Wartości nie są przechowywane!</string>
     <string name="ns_localbroadcasts">Włącz transmisje do innych aplikacji (jak xDrip).</string>
     <string name="ns_localbroadcasts_title">Włącz transmisję lokalnie.</string>
-    <string name="careportal_activity_label">AKTYWNOŚ &amp; REAKCJA</string>
+    <string name="careportal_activity_label">AKTYWNOŚĆ &amp; REAKCJA</string>
     <string name="careportal_carbsandbolus_label">WĘGLOW. &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">POMPA</string>
@@ -647,8 +647,8 @@
     <string name="eatingsoon_target">WkrótcePosiłek cel</string>
     <string name="activity_duration">Ćwiczenia czas trwania</string>
     <string name="activity_target">Ćwiczenia cel</string>
-    <string name="hypo_duration">Hypo czas trwania</string>
-    <string name="hypo_target">Hypo cel</string>
+    <string name="hypo_duration">Hipo czas trwania</string>
+    <string name="hypo_target">Hipo cel</string>
     <string name="danar_history_prime">Wypełnianie</string>
     <string name="gettingextendedbolusstatus">Status otrzymywania bolusa przedłużonego</string>
     <string name="gettingbolusstatus">Status otrzymywania bolusa</string>
@@ -813,7 +813,7 @@
     <string name="let_temp_basal_run">Pozwól na działanie bazy tymczasowej</string>
     <string name="mute">Wycisz</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Węglowodany</string>
+    <string name="overview_carbs_label">Węglowod.</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwartego okna kalibracji G5</string>
     <string name="show_cgm_button_summary">Otwiera xDrip+, przycisk "cofnij" przywraca do AAPS</string>
@@ -821,7 +821,7 @@
     <string name="insulin_increment_button_message">Ilość insuliny do dodania po wciśnięciu przycisku</string>
     <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
     <string name="overview_cgm">CGM</string>
-    <string name="nav_historybrowser">Przeglądarka historii</string>
+    <string name="nav_historybrowser">Przegląd historii</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
     <string name="ns_create_announcements_from_errors_title">Twórz powiadomienia o błędach</string>
@@ -847,7 +847,7 @@
     <string name="overview_show_iob">IOB (Aktywna Insulina)</string>
     <string name="overview_show_basals">Dawki Bazowe</string>
     <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
-    <string name="start_hypo_tt">Rozpocznij Hypo TT</string>
+    <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Uruchamiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
     <string name="engineering_mode_enabled">Tryb Inżynierski włączony</string>
     <string name="not_eng_mode_or_release">Tryb inżynierski nie włączony i nie pracuje wersja "kandydat do wydania" (RC)</string>
