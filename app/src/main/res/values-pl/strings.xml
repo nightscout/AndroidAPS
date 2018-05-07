@@ -92,14 +92,14 @@
     <string name="objectives_minimalduration">Minimalny czas</string>
     <string name="constraints">Ograniczenia</string>
 
-    <string name="loop">Loop</string>
-    <string name="configbuilder_loop">Loop</string>
+    <string name="loop">Pętla</string>
+    <string name="configbuilder_loop">Pętla</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Po ograniczeniach</string>
     <string name="loop_tbrsetbypump_label">Baza tymczasowa ustawiona przez pompę</string>
     <string name="openapsma_lastenact_label">Ostatnie działanie</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Anuluj</string>
     <string name="noapsselected">NIE WYBRANO APS LUB NIE UZYSKANO WYNIKU</string>
     <string name="safety">Zabezpieczenia</string>
     <string name="openapsma_disabled">Plugin jest wyłączony</string>
