@@ -1035,4 +1035,5 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
+    <string name="ga_lang">Irish</string>
 </resources>
