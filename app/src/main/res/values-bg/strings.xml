@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-		<string name="treatmentssafety_title">Настройки на сигурността</string>
+<string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
     <string name="nav_preferences">Опции</string>
@@ -36,7 +36,7 @@
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
     <string name="treatments_newtreatment_carbsamount_label">Въглехидрати (гр.):</string>
-    <string name="treatments_newtreatment_insulinamount_label">Ед. инсулин:</string>
+    <string name="treatments_newtreatment_insulinamount_label">Инсулин (ед.):</string>
     <string name="treatments_wizard_bg_label">КЗ</string>
     <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
@@ -116,7 +116,6 @@
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS режим</string>
-
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="disabledloop">Loop изключен</string>
@@ -689,8 +688,8 @@
     <string name="apsselected">Избран APS</string>
     <string name="basalprofilenotaligned" formatted="false">Няма базални стойности за някои часове: %s</string>
     <string name="loop_tbrsetbypump_label">Временният базал е зададен от помпата</string>
-    <string name="ro_lang">Румънски</string>
-    <string name="fr_lang">Френски</string>
+    <string name="ro_lang">Romanian</string>
+    <string name="fr_lang">French</string>
     <string name="zh_lang">Китайски</string>
     <string name="bolusstopped">Болусът е спрян</string>
     <string name="bolusstopping">Спиране на болус</string>
@@ -821,7 +820,7 @@
     <string name="overview_show_deviations">Отклонение</string>
     <string name="overview_show_cob">Активни въглехидрати</string>
     <string name="overview_show_basals">Базали</string>
-    <string name="no_action_selected">Няма избрано действие, нищо няма да се случи</string>
+    <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Closed loop е деактивиран.</string>
     <string name="not_eng_mode_or_release">Engineering mode не е активиран и не е release версия</string>
     <string name="combo_actvity_reading_basal_profile">Прочита базалният профил</string>
@@ -852,13 +851,13 @@
     <string name="limitingiob" formatted="false">Ограничаване на IOB до %.1f Е поради %s</string>
     <string name="maxvalueinpreferences">макс. стойност в настройките</string>
     <string name="unsafeusage">опасно използване</string>
-    <string name="readstatusfailed">Прочитането на статуса се провали</string>
-    <string name="record_pump_site_change">Записано смяна на сет</string>
-    <string name="record_insulin_cartridge_change">Записано смяна на резервоар</string>
+    <string name="readstatusfailed">Четенето на статуса се провали</string>
+    <string name="record_pump_site_change">Записва смяна на сет</string>
+    <string name="record_insulin_cartridge_change">Записва смяна на резервоар</string>
     <string name="smbalwaysdisabled">SMB \"винаги\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
     <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим open loop</string>
     <string name="food_short">Храна</string>
-    <string name="waitingfortimesynchronization" formatted="false">Очаква време за синхронизация (%d sec)</string>
+    <string name="waitingfortimesynchronization" formatted="false">Очаква синхронизация (%d sec)</string>
     <string name="loopdisconnectedfor" formatted="false">Прекъснат (%d m)</string>
     <string name="automatic_careportal_events">Автоматично careportal събитие</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Автоматично изпраща смяна на резервоар, сет и аларми на помпата към Nightscout</string>
@@ -869,4 +868,16 @@
     <string name="absorption_cutoff_title">Макс. време за усвояване на храна (часа)</string>
     <string name="absorption_cutoff_summary">Време за което всяко хранене се счита за усвоено. Оставащите въглехидрати ще бъдат изчиствани.</string>
     <string name="time">Време</string>
+    <string name="reset">нулиране</string>
+    <string name="openapssmb_maxiob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
+    <string name="boluserrorcode">Поискано: %.2fU Доставено: %.2fU Error code: %d</string>
+    <string name="firstinsulinincrement">Първо добавяне за инсулин</string>
+    <string name="secondinsulinincrement">Второ добавяне за инсулин</string>
+    <string name="thirdinsulinincrement">Трето добавяне за инсулин</string>
+    <string name="firstcarbsincrement">Първо добавяне за въглехидрати</string>
+    <string name="secondcarbsincrement">Второ добавяне за въглехидрати</string>
+    <string name="thirdcarbsincrement">Трето добавяне за въглехидрати</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_wifi_allowedssids">Разрешени WiFi мрежи(разделени с запетая)</string>
+    <string name="insight_keep_alive_status">Keep-alive status</string>
 </resources>
