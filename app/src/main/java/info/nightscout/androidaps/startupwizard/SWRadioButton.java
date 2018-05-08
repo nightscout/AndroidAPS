@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.utils.SP;
 
 public class SWRadioButton extends SWItem {
@@ -41,7 +42,13 @@ public class SWRadioButton extends SWItem {
     public void generateDialog(View view, LinearLayout layout) {
         Context context = view.getContext();
         // Get if there is already value in SP
-        String previousValue = SP.getString(preferenceId, "none");
+        String previousValue = "none";
+        if(preferenceId == R.string.key_virtualpump_uploadstatus) {
+            Boolean booleanValue = SP.getBoolean(preferenceId, false);
+            previousValue = booleanValue.toString();
+        } else {
+            previousValue = SP.getString(preferenceId, "none");
+        }
         radioGroup = new RadioGroup(context);
         radioGroup.clearCheck();
         radioGroup.setOrientation(LinearLayout.VERTICAL);

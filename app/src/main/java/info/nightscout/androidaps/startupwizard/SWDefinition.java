@@ -14,9 +14,12 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.SP;
+//Needed for pump validation
 
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
@@ -77,6 +80,39 @@ public class SWDefinition {
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
         )
+        .add(new SWScreen(R.string.configbuilder_pump)
+                .skippable(true)
+
+                .add(new SWPlugin()
+                        .option(PluginType.PUMP)
+                        .label(R.string.configbuilder_pump)
+                        .comment(R.string.configbuilder_pump))
+                .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null)
+        )
+        .add(new SWScreen(R.string.setupwizard_pump_test)
+                    .skippable(true)
+                // Adding DanaR specific fields
+                    .add(DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP)?new SWString()
+                            .preferenceId(R.string.key_danar_bt_name)
+                            .label(R.string.danar_bt_name_title)
+                            .comment(R.string.danar_bt_name_title) : new SWItem(SWItem.Type.STRING)
+                    )
+                    .add(DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP)?new SWString()
+                        .preferenceId(R.string.key_danar_password)
+                        .label(R.string.danar_password_title)
+                        .comment(R.string.danar_password_title): new SWItem(SWItem.Type.STRING)
+                    )
+                // Virtual pump
+                    .add(VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP)?
+                            new SWRadioButton()
+                                .option(R.array.trueFalseArray, R.array.trueFalseValues)
+                                .preferenceId(R.string.key_virtualpump_uploadstatus)
+                                .label(R.string.virtualpump_uploadstatus_title)
+                                .comment(R.string.virtualpump_uploadstatus_title): new SWItem(SWItem.Type.STRING)
+                    )
+                .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null)
+            )
+
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)
                 .add(new SWRadioButton()
