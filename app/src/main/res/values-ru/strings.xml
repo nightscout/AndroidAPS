@@ -521,7 +521,6 @@
     <string name="xdripstatus_settings">состояние xdrip (часы)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="youareonallowedlimit">разрешенный предел достигнут</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="absorption_maxtime_summary">Ожидаемое время усваивания всех углеводов пищи в часах</string>
     <string name="absorption_maxtime_title">Максимальное время усваимости пищи</string>
     <string name="absorptionsettings_title">Настройки усваиваемости</string>

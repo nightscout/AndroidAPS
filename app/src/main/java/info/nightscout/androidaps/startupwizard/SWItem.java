@@ -1,20 +1,19 @@
 package info.nightscout.androidaps.startupwizard;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.SP;
 
 public class SWItem {
     private static Logger log = LoggerFactory.getLogger(SWItem.class);
+
     enum Type {
         NONE,
         URL,
@@ -22,15 +21,15 @@ public class SWItem {
         NUMBER,
         DECIMALNUMBER,
         CHECKBOX,
-        RADIOBUTTON
+        RADIOBUTTON,
+        PLUGIN,
+        BUTTON
     }
 
     Type type;
     Integer label;
     Integer comment;
     int preferenceId;
-    private List<String> labels;
-    private List<String> values;
 
 
     public SWItem(Type type) {
@@ -70,11 +69,7 @@ public class SWItem {
     public void save(String value) {
         SP.putString(preferenceId, value);
         MainApp.bus().post(new EventPreferenceChange(preferenceId));
-    }
-
-    public void setOptions(List<String> labels, List<String> values){
-        this.labels = labels;
-        this.values = values;
+        MainApp.bus().post(new EventSWUpdate());
     }
 
     public static LinearLayout generateLayout(View view) {
@@ -83,6 +78,7 @@ public class SWItem {
         return layout;
     }
 
-    public void generateDialog(View view, LinearLayout layout){
+    public void generateDialog(View view, LinearLayout layout) {
     }
+
 }

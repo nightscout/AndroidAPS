@@ -3,41 +3,45 @@ package info.nightscout.androidaps.plugins.Overview.graphExtensions;
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
+ * <p>
+ * Added by mike
  */
 
 /**
  * Added by mike
  */
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.util.TypedValue;
-// Added by Rumen for scalable text 
-import android.content.Context;
-import info.nightscout.androidaps.MainApp;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BaseSeries;
 
 import java.util.Iterator;
+
+import info.nightscout.androidaps.MainApp;
+
+// Added by Rumen for scalable text
 
 /**
  * Series that plots the data as points.
@@ -74,7 +78,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         OPENAPSOFFLINE,
         EXERCISE,
         GENERAL,
-        GENERALWITHDURATION
+        GENERALWITHDURATION,
+        COBFAILOVER
     }
 
     /**
@@ -148,7 +153,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
 
         float scaleX = (float) (graphWidth / diffX);
 
-        int i=0;
+        int i = 0;
         while (values.hasNext()) {
             E value = values.next();
 
@@ -182,7 +187,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             }
 
             /* Fix a bug that continue to show the DOT after Y axis */
-            if(x < 0) {
+            if (x < 0) {
                 overdraw = true;
             }
 
@@ -197,34 +202,33 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
 
             // draw data point
             if (!overdraw) {
-                if (value.getShape() == Shape.BG) {
+                if (value.getShape() == Shape.BG || value.getShape() == Shape.COBFAILOVER) {
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
-                    canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
+                    canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.PREDICTION) {
                     mPaint.setColor(value.getColor());
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
-                    mPaint.setColor(value.getSecondColor());
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize / 3, mPaint);
                 } else if (value.getShape() == Shape.RECTANGLE) {
-                    canvas.drawRect(endX-scaledPxSize, endY-scaledPxSize, endX+scaledPxSize, endY+scaledPxSize, mPaint);
+                    canvas.drawRect(endX - scaledPxSize, endY - scaledPxSize, endX + scaledPxSize, endY + scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.TRIANGLE) {
                     mPaint.setStrokeWidth(0);
                     Point[] points = new Point[3];
-                    points[0] = new Point((int)endX, (int)(endY-scaledPxSize));
-                    points[1] = new Point((int)(endX+scaledPxSize), (int)(endY+scaledPxSize*0.67));
-                    points[2] = new Point((int)(endX-scaledPxSize), (int)(endY+scaledPxSize*0.67));
+                    points[0] = new Point((int) endX, (int) (endY - scaledPxSize));
+                    points[1] = new Point((int) (endX + scaledPxSize), (int) (endY + scaledPxSize * 0.67));
+                    points[2] = new Point((int) (endX - scaledPxSize), (int) (endY + scaledPxSize * 0.67));
                     drawArrows(points, canvas, mPaint);
                 } else if (value.getShape() == Shape.BOLUS) {
                     mPaint.setStrokeWidth(0);
                     Point[] points = new Point[3];
-                    points[0] = new Point((int)endX, (int)(endY-scaledPxSize));
-                    points[1] = new Point((int)(endX+scaledPxSize), (int)(endY+scaledPxSize*0.67));
-                    points[2] = new Point((int)(endX-scaledPxSize), (int)(endY+scaledPxSize*0.67));
+                    points[0] = new Point((int) endX, (int) (endY - scaledPxSize));
+                    points[1] = new Point((int) (endX + scaledPxSize), (int) (endY + scaledPxSize * 0.67));
+                    points[2] = new Point((int) (endX - scaledPxSize), (int) (endY + scaledPxSize * 0.67));
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     drawArrows(points, canvas, mPaint);
                     if (value.getLabel() != null) {
@@ -234,15 +238,15 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStrokeWidth(2);
                     Point[] points = new Point[3];
                     float size = value.getSize() * scaledPxSize;
-                    points[0] = new Point((int)endX, (int)(endY-size));
-                    points[1] = new Point((int)(endX+size), (int)(endY+size*0.67));
-                    points[2] = new Point((int)(endX-size), (int)(endY+size*0.67));
+                    points[0] = new Point((int) endX, (int) (endY - size));
+                    points[1] = new Point((int) (endX + size), (int) (endY + size * 0.67));
+                    points[2] = new Point((int) (endX - size), (int) (endY + size * 0.67));
                     mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                     drawArrows(points, canvas, mPaint);
                 } else if (value.getShape() == Shape.EXTENDEDBOLUS) {
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
-                        Rect bounds = new Rect((int)endX, (int)endY + 3, (int) (xpluslength), (int) endY + 8);
+                        Rect bounds = new Rect((int) endX, (int) endY + 3, (int) (xpluslength), (int) endY + 8);
                         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         canvas.drawRect(bounds, mPaint);
                         mPaint.setTextSize((float) (scaledTextSize));
@@ -254,7 +258,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
                         //mPaint.setTextSize((int) (scaledPxSize * 3));
-                        mPaint.setTextSize((float) (scaledTextSize*1.2));
+                        mPaint.setTextSize((float) (scaledTextSize * 1.2));
                         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
                         mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
@@ -355,7 +359,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
      * @param paint paint object
      */
     private void drawArrows(Point[] point, Canvas canvas, Paint paint) {
-        float [] points  = new float[8];
+        float[] points = new float[8];
         points[0] = point[0].x;
         points[1] = point[0].y;
         points[2] = point[1].x;
@@ -368,10 +372,10 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         canvas.save();
         canvas.drawVertices(Canvas.VertexMode.TRIANGLES, 8, points, 0, null, 0, null, 0, null, 0, 0, paint);
         Path path = new Path();
-        path.moveTo(point[0].x , point[0].y);
-        path.lineTo(point[1].x,point[1].y);
-        path.lineTo(point[2].x,point[2].y);
-        canvas.drawPath(path,paint);
+        path.moveTo(point[0].x, point[0].y);
+        path.lineTo(point[1].x, point[1].y);
+        path.lineTo(point[2].x, point[2].y);
+        canvas.drawPath(path, paint);
         canvas.restore();
     }
 
@@ -381,7 +385,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             float py = endY + scaledPxSize;
             canvas.save();
             canvas.rotate(-45, px, py);
-            mPaint.setTextSize((float) (scaledTextSize*0.8));
+            mPaint.setTextSize((float) (scaledTextSize * 0.8));
             mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
             mPaint.setFakeBoldText(true);
             mPaint.setTextAlign(Paint.Align.RIGHT);
@@ -393,7 +397,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             float py = endY - scaledPxSize;
             canvas.save();
             canvas.rotate(-45, px, py);
-            mPaint.setTextSize((float) (scaledTextSize*0.8));
+            mPaint.setTextSize((float) (scaledTextSize * 0.8));
             mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
             mPaint.setFakeBoldText(true);
             canvas.drawText(value.getLabel(), px + scaledPxSize, py, mPaint);

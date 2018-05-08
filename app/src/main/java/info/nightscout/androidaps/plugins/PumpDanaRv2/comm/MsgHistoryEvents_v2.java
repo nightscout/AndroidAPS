@@ -170,6 +170,6 @@ public class MsgHistoryEvents_v2 extends MessageBase {
         if (datetime.getTime() > lastEventTimeLoaded)
             lastEventTimeLoaded = datetime.getTime();
 
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.processinghistory) + ": " + status));
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
     }
 }

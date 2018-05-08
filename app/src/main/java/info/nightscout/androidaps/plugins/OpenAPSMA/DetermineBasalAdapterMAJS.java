@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -197,7 +198,7 @@ public class DetermineBasalAdapterMAJS {
 
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
-        if (SP.getBoolean("always_use_shortavg", false)) {
+        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);

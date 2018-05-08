@@ -46,13 +46,13 @@ public class EventPumpStatusChanged extends Event {
 
     public String textStatus() {
         if (sStatus == CONNECTING)
-            return String.format(MainApp.sResources.getString(R.string.danar_history_connectingfor), sSecondsElapsed);
+            return String.format(MainApp.gs(R.string.danar_history_connectingfor), sSecondsElapsed);
         else if (sStatus == CONNECTED)
-            return MainApp.sResources.getString(R.string.connected);
+            return MainApp.gs(R.string.connected);
         else if (sStatus == PERFORMING)
             return sPerfomingAction;
         else if (sStatus == DISCONNECTING)
-            return MainApp.sResources.getString(R.string.disconnecting);
+            return MainApp.gs(R.string.disconnecting);
         else if (sStatus == DISCONNECTED)
             return "";
         return "";

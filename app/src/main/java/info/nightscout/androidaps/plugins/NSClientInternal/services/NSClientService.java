@@ -33,7 +33,6 @@ import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
@@ -203,7 +202,10 @@ public class NSClientService extends Service {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         MainApp.bus().post(new EventNSClientStatus("Initializing"));
-        if (MainApp.getSpecificPlugin(NSClientPlugin.class).paused) {
+        if (!MainApp.getSpecificPlugin(NSClientPlugin.class).isAllowed()) {
+            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "not allowed"));
+            MainApp.bus().post(new EventNSClientStatus("Not allowed"));
+        } else if (MainApp.getSpecificPlugin(NSClientPlugin.class).paused) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "paused"));
             MainApp.bus().post(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
@@ -248,6 +250,7 @@ public class NSClientService extends Service {
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            log.debug("disconnect reason: {}", args);
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
     };
@@ -306,7 +309,7 @@ public class NSClientService extends Service {
             MainApp.bus().post(new EventNSClientNewLog("ERROR", "Write treatment permission not granted !!!!"));
         }
         if (!hasWriteAuth) {
-            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.sResources.getString(R.string.nowritepermission), Notification.URGENT);
+            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.gs(R.string.nowritepermission), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(noperm));
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
@@ -652,7 +655,7 @@ public class NSClientService extends Service {
                         }
                         //MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
                     } finally {
-                       if (wakeLock.isHeld()) wakeLock.release();
+                        if (wakeLock.isHeld()) wakeLock.release();
                     }
                 }
 

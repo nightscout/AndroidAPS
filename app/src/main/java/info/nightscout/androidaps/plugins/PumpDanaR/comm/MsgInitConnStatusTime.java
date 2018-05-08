@@ -27,7 +27,7 @@ public class MsgInitConnStatusTime extends MessageBase {
     @Override
     public void handleMessage(byte[] bytes) {
         if (bytes.length - 10 > 7) {
-            Notification notification = new Notification(Notification.WRONG_DRIVER,  MainApp.sResources.getString(R.string.pumpdrivercorrected), Notification.NORMAL);
+            Notification notification = new Notification(Notification.WRONG_DRIVER,  MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
             MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to Korean DanaR");

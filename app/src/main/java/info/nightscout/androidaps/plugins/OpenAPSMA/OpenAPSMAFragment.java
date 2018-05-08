@@ -66,7 +66,7 @@ public class OpenAPSMAFragment extends SubscriberFragment implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                OpenAPSMAPlugin.getPlugin().invoke("OpenAPSMA button");
+                OpenAPSMAPlugin.getPlugin().invoke("OpenAPSMA button", false);
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("OpenAPS_MA_Run"));
                 break;
         }

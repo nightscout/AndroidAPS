@@ -214,7 +214,7 @@ public class DetermineBasalAdapterSMBJS {
                         double autosensDataRatio,
                         boolean tempTargetSet,
                         boolean microBolusAllowed,
-                        boolean smbAlwaysAllowed
+                        boolean advancedFiltering
     ) throws JSONException {
 
         String units = profile.getUnits();
@@ -243,23 +243,26 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
-        //TODO: align with max-absorption model in AMA sensitivity
-        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", SMBDefaults.min_5m_carbimpact));
-        ;
+        //align with max-absorption model in AMA sensitivity
+        if(mealData.usedMinCarbsImpact > 0){
+            mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
+        } else {
+            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
+        }
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
-        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
+        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false)&& advancedFiltering);
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
-        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_enableSMB_always, false) && smbAlwaysAllowed);
-        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && smbAlwaysAllowed);
+        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering);
+        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
-        mProfile.put("autosens_max", SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
+        mProfile.put("autosens_max", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
 
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
@@ -285,7 +288,7 @@ public class DetermineBasalAdapterSMBJS {
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
-        if (SP.getBoolean("always_use_shortavg", false)) {
+        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);
@@ -312,7 +315,7 @@ public class DetermineBasalAdapterSMBJS {
             mAutosensData.put("ratio", 1.0);
         }
         mMicrobolusAllowed = microBolusAllowed;
-        mSMBAlwaysAllowed = smbAlwaysAllowed;
+        mSMBAlwaysAllowed = advancedFiltering;
 
     }
 

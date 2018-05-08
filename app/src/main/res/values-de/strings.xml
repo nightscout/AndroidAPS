@@ -174,8 +174,8 @@
     <string name="absolute">Absolut</string>
     <string name="smscommunicator_bolusfailed">Bolus fehlgeschlagen</string>
     <string name="canceltemp">TBR abbrechen</string>
-    <string name="careportal_temporarytarget">Temoräres Ziel</string>
-    <string name="careportal_temporarytargetcancel">Temoräres Ziel abbrechen</string>
+    <string name="careportal_temporarytarget">Temporäres Ziel</string>
+    <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="comment">Kommentar</string>
     <string name="connected">Verbunden</string>
     <string name="connecting">Verbinden</string>
@@ -331,7 +331,6 @@
     <string name="activity">Aktivität</string>
     <string name="adult">Erwachsener</string>
     <string name="advancedsettings_title">Erweiterte Einstellungen</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="basal_short">BAS</string>
     <string name="basal_step">Basal-Schritt</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
@@ -552,7 +551,7 @@
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, ist nicht berücksichtigt)</string>
     <string name="objectives_2_gate">Entscheide anhand von dieser Erfahrung, wie hoch max Basal sein sollte, und übernehme den Wert in die Pumpen- und AAPS-Einstellungen</string>
     <string name="objectives_3_gate">Erprobe den Closed Loop Modus mit max IOB = 0 für ein paar Tage, ohne zu viele Unterzuckerungen zu haben</string>
-    <string name="objectives_3_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werte</string>
+    <string name="objectives_3_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
     <string name="objectives_4_gate">Verwende es ein paar Tage und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst</string>
     <string name="objectives_4_objective">Fein-Einstellung des Closed-Loops, Erhöhen von max IOB über 0 und langsames Heruntersetzen des Zielbereichs</string>
     <string name="objectives_5_gate">Eine Woche erfolgreiches Loopen am Tag mit regelmäßiger Kohlenhydrat-Eingabe</string>
@@ -735,4 +734,7 @@
     <string name="combo_suspious_bolus_time">Zeit/Datum des abgegebenen Boluses auf der Pumpe erscheint falsch, IOB ist wahrscheinlich nicht korrekt. Bitte prüfe Zeit/Datum der Pumpe.</string>
     <string name="combo_tbr_count">Anzahl TBRs</string>
     <string name="combo_bolus_count">Anzahl Boluse</string>
+    <string name="pump_stopped">Pumpe gestoppt</string>
+    <string name="pump_started">Pumpe gestartet</string>
+    <string name="pump_paused">Pumpe pausiert</string>
 </resources>

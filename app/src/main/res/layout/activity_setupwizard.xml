@@ -6,27 +6,22 @@
     android:background="#0099cc"
     tools:context=".startupwizard.SetupWizardActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
     <TextView
-        android:id="@+id/fullscreen_content"
+        android:id="@+id/sw_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
         android:text="@string/dummy_content"
         android:textColor="#33b5e5"
-        android:textSize="50sp"
+        android:textSize="20dp"
         android:textStyle="bold" />
 
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_fields"
+            android:id="@+id/sw_content_fields"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
@@ -35,7 +30,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
+            android:id="@+id/sw_content_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"

@@ -25,7 +25,7 @@ public class LogDialog {
         String logCat = "no logs";
         final String processId = Integer.toString(android.os.Process.myPid());
         try {
-            Process process = Runtime.getRuntime().exec("logcat -d " + MainApp.sResources.getString(R.string.app_name) + ":D");
+            Process process = Runtime.getRuntime().exec("logcat -d " + MainApp.gs(R.string.app_name) + ":D");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder log = new StringBuilder();
             String line;
@@ -46,11 +46,11 @@ public class LogDialog {
         try {
             AlertDialog alertDialog = new AlertDialog.Builder(context)
                     .setMessage(msg)
-                    .setPositiveButton(MainApp.sResources.getString(R.string.copy_to_clipboard), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(MainApp.gs(R.string.copy_to_clipboard), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                             clipboard.setPrimaryClip(ClipData.newPlainText(null, msg));
-                            ToastUtils.showToastInUiThread(context, MainApp.sResources.getString(R.string.copied_to_clipboard));
+                            ToastUtils.showToastInUiThread(context, MainApp.gs(R.string.copied_to_clipboard));
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, null)

@@ -22,7 +22,7 @@ public class DbLogger {
     public static void dbAdd(Intent intent, String data) {
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.nsclientnotinstalled));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.gs(R.string.nsclientnotinstalled));
             log.error("DBADD No receivers");
         } else if (Config.logNSUpload)
             log.debug("DBADD dbAdd " + q.size() + " receivers " + data);
@@ -31,7 +31,7 @@ public class DbLogger {
    public static void dbRemove(Intent intent, String data) {
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.nsclientnotinstalled));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.gs(R.string.nsclientnotinstalled));
             log.error("DBREMOVE No receivers");
         } else if (Config.logNSUpload)
             log.debug("DBREMOVE dbRemove " + q.size() + " receivers " + data);

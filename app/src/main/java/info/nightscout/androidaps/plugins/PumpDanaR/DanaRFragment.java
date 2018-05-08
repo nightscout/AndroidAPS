@@ -206,7 +206,7 @@ public class DanaRFragment extends SubscriberFragment {
                     if (pump.lastConnection != 0) {
                         Long agoMsec = System.currentTimeMillis() - pump.lastConnection;
                         int agoMin = (int) (agoMsec / 60d / 1000d);
-                        lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
+                        lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.gs(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
                     if (pump.lastBolusTime.getTime() != 0) {
@@ -247,7 +247,7 @@ public class DanaRFragment extends SubscriberFragment {
                     SetWarnColor.setColorInverse(batteryView, pump.batteryRemaining, 51d, 26d);
                     iobView.setText(pump.iob + " U");
                     if (pump.model != 0 || pump.protocol != 0 || pump.productCode != 0) {
-                        firmwareView.setText(String.format(MainApp.sResources.getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
+                        firmwareView.setText(String.format(MainApp.gs(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
                     } else {
                         firmwareView.setText("OLD");
                     }

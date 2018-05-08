@@ -52,9 +52,9 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
 
         String age = SP.getString(R.string.key_age, "");
         int defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(MainApp.sResources.getString(R.string.key_child))) defaultHours = 4;
+        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
+        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 4;
+        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
@@ -159,8 +159,8 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
             log.debug(sensResult);
 
         double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
+        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
+        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
 
         if (ratio != rawRatio) {
             ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;

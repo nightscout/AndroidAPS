@@ -12,51 +12,51 @@ public class Translator {
         switch (text) {
 
             case "BG Check":
-                return MainApp.sResources.getString(R.string.careportal_bgcheck);
+                return MainApp.gs(R.string.careportal_bgcheck);
             case "Snack Bolus":
-                return MainApp.sResources.getString(R.string.careportal_snackbolus);
+                return MainApp.gs(R.string.careportal_snackbolus);
             case "Meal Bolus":
-                return MainApp.sResources.getString(R.string.careportal_mealbolus);
+                return MainApp.gs(R.string.careportal_mealbolus);
             case "Correction Bolus":
-                return MainApp.sResources.getString(R.string.careportal_correctionbolus);
+                return MainApp.gs(R.string.careportal_correctionbolus);
             case "Carb Correction":
-                return MainApp.sResources.getString(R.string.careportal_carbscorrection);
+                return MainApp.gs(R.string.careportal_carbscorrection);
             case "Combo Bolus":
-                return MainApp.sResources.getString(R.string.careportal_combobolus);
+                return MainApp.gs(R.string.careportal_combobolus);
             case "Announcement":
-                return MainApp.sResources.getString(R.string.careportal_announcement);
+                return MainApp.gs(R.string.careportal_announcement);
             case "Note":
-                return MainApp.sResources.getString(R.string.careportal_note);
+                return MainApp.gs(R.string.careportal_note);
             case "Question":
-                return MainApp.sResources.getString(R.string.careportal_question);
+                return MainApp.gs(R.string.careportal_question);
             case "Exercise":
-                return MainApp.sResources.getString(R.string.careportal_exercise);
+                return MainApp.gs(R.string.careportal_exercise);
             case "Site Change":
-                return MainApp.sResources.getString(R.string.careportal_pumpsitechange);
+                return MainApp.gs(R.string.careportal_pumpsitechange);
             case "Sensor Start":
-                return MainApp.sResources.getString(R.string.careportal_cgmsensorstart);
+                return MainApp.gs(R.string.careportal_cgmsensorstart);
             case "Sensor Change":
-                return MainApp.sResources.getString(R.string.careportal_cgmsensorinsert);
+                return MainApp.gs(R.string.careportal_cgmsensorinsert);
             case "Insulin Change":
-                return MainApp.sResources.getString(R.string.careportal_insulincartridgechange);
+                return MainApp.gs(R.string.careportal_insulincartridgechange);
             case "Temp Basal Start":
-                return MainApp.sResources.getString(R.string.careportal_tempbasalstart);
+                return MainApp.gs(R.string.careportal_tempbasalstart);
             case "Temp Basal End":
-                return MainApp.sResources.getString(R.string.careportal_tempbasalend);
+                return MainApp.gs(R.string.careportal_tempbasalend);
             case "Profile Switch":
-                return MainApp.sResources.getString(R.string.careportal_profileswitch);
+                return MainApp.gs(R.string.careportal_profileswitch);
             case "Temporary Target":
-                return MainApp.sResources.getString(R.string.careportal_temporarytarget);
+                return MainApp.gs(R.string.careportal_temporarytarget);
             case "Temporary Target Cancel":
-                return MainApp.sResources.getString(R.string.careportal_temporarytargetcancel);
+                return MainApp.gs(R.string.careportal_temporarytargetcancel);
             case "OpenAPS Offline":
-                return MainApp.sResources.getString(R.string.careportal_openapsoffline);
+                return MainApp.gs(R.string.careportal_openapsoffline);
             case "Finger":
-                return MainApp.sResources.getString(R.string.glucosetype_finger);
+                return MainApp.gs(R.string.glucosetype_finger);
             case "Sensor":
-                return MainApp.sResources.getString(R.string.glucosetype_sensor);
+                return MainApp.gs(R.string.glucosetype_sensor);
             case "Manual":
-                return MainApp.sResources.getString(R.string.manual);
+                return MainApp.gs(R.string.manual);
         }
         return text;
     }

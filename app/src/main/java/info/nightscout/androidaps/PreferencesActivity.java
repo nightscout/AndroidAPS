@@ -23,10 +23,12 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
@@ -67,7 +69,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             MainApp.bus().post(new EventRefreshGui());
         }
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
-            OKDialog.show(this, MainApp.sResources.getString(R.string.configbuilder_sensitivity), MainApp.sResources.getString(R.string.sensitivity_warning), null);
+            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
@@ -81,13 +83,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             EditTextPreference editTextPref = (EditTextPreference) pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
-            } else if (pref.getKey().equals(MainApp.sResources.getString(R.string.key_danars_name))) {
+            } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
                 pref.setSummary(SP.getString(R.string.key_danars_name, ""));
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {
-                pref.setSummary(MainApp.sResources.getString(R.string.smscommunicator_allowednumbers_summary));
+                pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }
     }
@@ -127,9 +129,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
             if (id != -1) {
                 addPreferencesFromResource(id);
-                addPreferencesFromResource(R.xml.pref_advanced);
             } else {
-                addPreferencesFromResource(R.xml.pref_overview);
 
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_password);
@@ -137,9 +137,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_age);
                 addPreferencesFromResource(R.xml.pref_language);
 
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
-                    addPreferencesFromResource(R.xml.pref_quickwizard);
-                }
+                addPreferencesFromResource(R.xml.pref_overview);
+
                 addPreferencesFromResourceIfEnabled(SourceDexcomG5Plugin.getPlugin(), PluginType.BGSOURCE);
                 addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginType.CONSTRAINTS);
@@ -159,6 +158,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(DanaRKoreanPlugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(DanaRv2Plugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(DanaRSPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(InsightPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginType.PUMP);
 
                     if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
                             || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
@@ -180,7 +181,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (!Config.NSCLIENT && !Config.G5UPLOADER) {
                     addPreferencesFromResource(R.xml.pref_others);
                 }
-                addPreferencesFromResource(R.xml.pref_advanced);
+                addPreferencesFromResource(R.xml.pref_datachoices);
 
                 addPreferencesFromResourceIfEnabled(WearPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
