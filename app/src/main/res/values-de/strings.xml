@@ -789,7 +789,7 @@
     <string name="food_short">Mahlzeiten</string>
     <string name="hardlimit">Hartes Limit</string>
     <string name="readstatusfailed">Lesen des Status fehlgeschlagen</string>
-    <string name="loopdisconnectedfor">Nicht Verbunden (%d m)</string>
+    <string name="loopdisconnectedfor">Getrennt (%d m)</string>
     <string name="automatic_careportal_events">Automatische Careportal Ereignisse</string>
     <string name="firstinsulinincrement">Erstes Insulin Inkrement</string>
     <string name="firstcarbsincrement">Erstes KH Inkrement</string>
