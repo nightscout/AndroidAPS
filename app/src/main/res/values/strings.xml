@@ -1037,6 +1037,7 @@
     <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
+    <string translatable="false" name="key_wearwizard_tt">wearwizard_tt</string>
     <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
     <string translatable="false" name="key_wearwizard_cob">wearwizard_cob</string>
     <string translatable="false" name="key_wearwizard_bolusiob">wearwizard_bolusiob</string>
