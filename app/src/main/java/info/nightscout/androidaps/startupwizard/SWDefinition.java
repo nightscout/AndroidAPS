@@ -113,9 +113,8 @@ public class SWDefinition {
                 )
                 // Virtual pump
                 .add(VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP)?
-                        // TODO: Replace with checkbox
-                        new SWRadioButton()
-                            .option(MainApp.instance().getApplicationContext().getResources().getString(R.string.virtualpump_uploadstatus_title), R.array.trueFalseArray, R.array.trueFalseValues)
+                        new SWCheckbox()
+                            .option(MainApp.instance().getApplicationContext().getResources().getString(R.string.virtualpump_uploadstatus_title), R.string.key_virtualpump_uploadstatus)
                             .preferenceId(R.string.key_virtualpump_uploadstatus)
                             .label(R.string.virtualpump_uploadstatus_title)
                             .comment(R.string.virtualpump_uploadstatus_title): new SWItem(SWItem.Type.STRING)

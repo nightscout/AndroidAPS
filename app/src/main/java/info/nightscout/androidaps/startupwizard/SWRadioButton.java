@@ -81,10 +81,6 @@ public class SWRadioButton extends SWItem {
                 p.setPluginEnabled(PluginType.PUMP, false);
             }
         }
-        log.debug("Pump selected: DanaR:"+DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP));
-        log.debug("Pump selected: Virtual:"+VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP));
-        log.debug("Pump selected: Combo:"+ ComboPlugin.getPlugin().isEnabled(PluginType.PUMP));
-        log.debug("Pump selected: "+ found.getNameShort());
         for (int i = 0; i < labels().length; i++) {
             RadioButton rdbtn = new RadioButton(context);
             rdbtn.setId(View.generateViewId());
