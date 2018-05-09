@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
@@ -205,7 +206,22 @@ public class SWDefinition {
                 .add(new SWPlugin()
                         .option(PluginType.APS)
                         .label(R.string.configbuilder_aps))
-                .validator(() ->MainApp.getConfigBuilder().getActiveAPS() != null)
+                .validator(() -> MainApp.getConfigBuilder().getActiveAPS() != null)
+        )
+        .add(new SWScreen(R.string.configbuilder_loop)
+                .skippable(false)
+                .add(new SWButton()
+                        .text(R.string.enableloop)
+                        .action(() -> {
+                            LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, true);
+                            LoopPlugin.getPlugin().setFragmentVisible(PluginType.LOOP, true);
+                            ConfigBuilderFragment.processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP);
+                            ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
+                            MainApp.bus().post(new EventConfigBuilderChange());
+                            MainApp.bus().post(new EventSWUpdate(true));
+                        }))
+                .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+                .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
         )
         ;
     }
