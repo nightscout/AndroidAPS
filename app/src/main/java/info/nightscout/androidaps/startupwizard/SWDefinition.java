@@ -89,6 +89,22 @@ public class SWDefinition {
                                 .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                         .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
                 )
+                .add(NSClientPlugin.getPlugin().nsClientService != null ? new SWScreen(R.string.nsclientinternal_title)
+                        .skippable(true)
+                        .add(new SWButton()
+                            .text(R.string.nsclient_prefs)
+                            .action(() -> {
+                                final PluginBase plugin = (PluginBase) NSClientPlugin.getPlugin();
+                                PasswordProtection.QueryPassword(context, R.string.settings_password, "settings_password", () -> {
+                                    Intent i = new Intent(context, PreferencesActivity.class);
+                                    i.putExtra("id", plugin.getPreferencesId());
+                                    context.startActivity(i);
+                                }, null);
+                            })
+                        .visibility(() -> ((PluginBase) MainApp.getConfigBuilder().getActivePump()).getPreferencesId() > 0)): new SWScreen(R.string.nav_setupwizard)
+                                .add(new SWInfotext()
+                                        .label(R.string.settings_incorrect) )
+                )
                 .add(new SWScreen(R.string.patientage)
                         .skippable(false)
                         .add(new SWRadioButton()
@@ -139,7 +155,7 @@ public class SWDefinition {
                         .add(new SWPlugin()
                                 .option(PluginType.APS)
                                 .label(R.string.configbuilder_aps))
-                        .validator(() -> MainApp.getSpecificPluginsList(PluginType.APS) != null)
+                        .validator(() -> MainApp.getSpecificPluginsList(PluginType.APS) != null )
                 )
         ;
     }

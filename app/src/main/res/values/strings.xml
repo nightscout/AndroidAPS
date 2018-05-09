@@ -1061,9 +1061,11 @@
     <string name="wear_general_settings">General Settings</string>
 
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="enable_nsclient">Enable NSClient</string>
+    <string name="enable_nsclient">Connect to NightScout</string>
+    <string name="nsclient_prefs">Additional NSClient options</string>
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process</string>
     <string name="pumpsetup">Pump setup</string>
     <string name="readstatus">Read status</string>
+    <string name="settings_incorrect">Incorrect settings! Press \'BACK\' and try again</string>
 
 </resources>
