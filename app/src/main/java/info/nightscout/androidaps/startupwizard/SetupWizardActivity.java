@@ -17,6 +17,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
@@ -27,7 +28,7 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     private TextView screenName;
 
-    SWDefinition swDefinition = SWDefinition.getInstance();
+    SWDefinition swDefinition = new SWDefinition();
     List<SWScreen> screens = swDefinition.getScreens();
     private int currentWizardPage = 0;
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
@@ -63,6 +64,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        swDefinition.setContext(this);
     }
 
     @Subscribe
@@ -73,7 +75,12 @@ public class SetupWizardActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onContentUpdate(EventNSClientStatus ev) {
+    public void onEventNSClientStatus(EventNSClientStatus ignored) {
+        updateButtons();
+    }
+
+    @Subscribe
+    public void onEventPumpStatusChanged(EventPumpStatusChanged ignored) {
         updateButtons();
     }
 
@@ -104,6 +111,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             findViewById(R.id.previous_button).setVisibility(View.GONE);
         else
             findViewById(R.id.previous_button).setVisibility(View.VISIBLE);
+        currentScreen.processVisibility();
     }
 
     public void showNextPage(View view) {

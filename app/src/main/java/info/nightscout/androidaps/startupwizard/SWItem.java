@@ -82,4 +82,6 @@ public class SWItem {
     public void generateDialog(View view, LinearLayout layout) {
     }
 
+    public void processVisibility() {
+    }
 }

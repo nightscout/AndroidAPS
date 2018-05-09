@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.startupwizard;
 
+import android.content.Context;
+import android.content.Intent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,28 +10,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
 
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
-    private static SWDefinition swDefinition = null;
 
-    public static SWDefinition getInstance() {
-        if (swDefinition == null)
-            swDefinition = new SWDefinition();
-        return swDefinition;
-    }
-
+    private Context context;
     static List<SWScreen> screens = new ArrayList<>();
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public static List<SWScreen> getScreens() {
         return screens;
@@ -94,24 +99,43 @@ public class SWDefinition {
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
-                        .label(R.string.configbuilder_insulin)
-                        .comment(R.string.configbuilder_insulin))
+                        .label(R.string.configbuilder_insulin))
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.INSULIN) != null)
         )
         .add(new SWScreen(R.string.configbuilder_bgsource)
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.BGSOURCE)
-                        .label(R.string.configbuilder_bgsource)
-                        .comment(R.string.configbuilder_bgsource))
+                        .label(R.string.configbuilder_bgsource))
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.BGSOURCE) != null)
+        )
+        .add(new SWScreen(R.string.configbuilder_pump)
+                .skippable(false)
+                .add(new SWPlugin()
+                        .option(PluginType.PUMP)
+                        .label(R.string.configbuilder_pump))
+                .add(new SWButton()
+                        .text(R.string.pumpsetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActivePump();
+                            PasswordProtection.QueryPassword(context, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(context, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                context.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> ((PluginBase) MainApp.getConfigBuilder().getActivePump()).getPreferencesId() > 0))
+                .add(new SWButton()
+                        .text(R.string.readstatus)
+                        .action(() -> ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null))
+                        .visibility(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null))
+                .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null && MainApp.getConfigBuilder().getActivePump().isInitialized())
         )
         .add(new SWScreen(R.string.configbuilder_aps)
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.APS)
-                        .label(R.string.configbuilder_aps)
-                        .comment(R.string.configbuilder_aps))
+                        .label(R.string.configbuilder_aps))
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.APS) != null)
         )
         ;

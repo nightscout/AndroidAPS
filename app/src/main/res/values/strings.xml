@@ -1061,5 +1061,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="enable_nsclient">Enable NSClient</string>
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process</string>
+    <string name="pumpsetup">Pump setup</string>
+    <string name="readstatus">Read status</string>
 
 </resources>
