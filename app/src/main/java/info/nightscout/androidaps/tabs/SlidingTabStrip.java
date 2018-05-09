@@ -62,7 +62,7 @@ class SlidingTabStrip extends LinearLayout {
                 DEFAULT_BOTTOM_BORDER_COLOR_ALPHA);
 
         mDefaultTabColorizer = new SimpleTabColorizer();
-        mDefaultTabColorizer.setIndicatorColors(MainApp.sResources.getColor(R.color.tabBgColorSelected));
+        mDefaultTabColorizer.setIndicatorColors(MainApp.gc(R.color.tabBgColorSelected));
 
         mBottomBorderThickness = (int) (DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS * density);
         mBottomBorderPaint = new Paint();

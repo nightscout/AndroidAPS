@@ -330,7 +330,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             }
 
             if (plugin.isEnabled(type)) {
-                view.setBackgroundColor(MainApp.sResources.getColor(R.color.configBuilderSelectedBackground));
+                view.setBackgroundColor(MainApp.gc(R.color.configBuilderSelectedBackground));
             }
 
             return view;

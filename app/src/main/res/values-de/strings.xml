@@ -582,7 +582,7 @@
     <string name="danar_setbasalstep001">Setzte Basalschritt zu 0.01 IE/h</string>
     <string name="danar_stats_tbb">Tägl. Basalmenge</string>
     <string name="danar_stats_tbb2">Tägl. Basalmenge * 2</string>
-    <string name="danar_stats_tdd">Tägl. Gesamtdosis</string>
+    <string name="danar_stats_tdd">TDD</string>
     <string name="danars_nodeviceavailable">Gerät noch nicht gefunden</string>
     <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
