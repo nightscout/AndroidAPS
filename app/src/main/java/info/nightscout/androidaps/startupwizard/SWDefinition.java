@@ -47,6 +47,8 @@ public class SWDefinition {
 
     SWDefinition() {
         // List all the screens here
+        if(screens.size() >0)
+            return;
         add(new SWScreen(R.string.nav_setupwizard)
                 .add(new SWInfotext()
                         .label(R.string.welcometosetupwizard) )
