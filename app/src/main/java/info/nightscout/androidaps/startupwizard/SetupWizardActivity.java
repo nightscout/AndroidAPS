@@ -22,6 +22,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.OKDialog;
 
 public class SetupWizardActivity extends AppCompatActivity {
     //logging
@@ -52,6 +53,11 @@ public class SetupWizardActivity extends AppCompatActivity {
             generateLayout();
             updateButtons();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
     @Override

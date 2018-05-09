@@ -18,6 +18,9 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
@@ -150,6 +153,22 @@ public class SWDefinition {
                                 .add(new SimpleProfileFragment()))
                         .validator(() -> SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
                         .visibility(() -> SimpleProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE))
+                )
+        .add(new SWScreen(R.string.profileswitch)
+                        .skippable(false)
+                        .add(new SWInfotext()
+                                .label(R.string.profileswitch_ismissing))
+                        .add(new SWButton()
+                                .text(R.string.profileswitch)
+                                .action(() -> {
+                                    NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                                    final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
+                                    profileswitch.executeProfileSwitch = true;
+                                    newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
+                                    newDialog.show(getActivity().getSupportFragmentManager(), "NewNSTreatmentDialog");
+                                }))
+                        .validator(() -> MainApp.getConfigBuilder().getProfile() != null)
+                        .visibility(() -> MainApp.getConfigBuilder().getProfile() == null)
                 )
         .add(new SWScreen(R.string.configbuilder_pump)
                 .skippable(false)

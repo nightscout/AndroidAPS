@@ -1062,5 +1062,6 @@
     <string name="pumpsetup">Pump setup</string>
     <string name="readstatus">Read status</string>
     <string name="adjustprofileinns">Changes must be done in NS</string>
+    <string name="exitwizard">Exit setup wizard?</string>
 
 </resources>
