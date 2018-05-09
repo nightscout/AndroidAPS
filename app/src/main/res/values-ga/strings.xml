@@ -122,11 +122,11 @@
     <string name="configbuilder_aps">APS</string>
     <string name="loop_aps_label">APS</string>
     <string name="androidaps_start">AndroidAPS thosaigh</string>
-    <string name="sms_minago">%dnóim ó shin</string>
-    <string name="minago">%d nóim ó shin</string>
-    <string name="hoursago">%.1fu ó shin</string>
-    <string name="pump_basebasalrate">%.2f A/u</string>
-    <string name="combo_tbr_remaining">%d%% (%d nóim fágtha)</string>
+    <string formated="false" name="sms_minago">%dnóim ó shin</string>
+    <string formated="false" name="minago">%d nóim ó shin</string>
+    <string formated="false" name="hoursago">%.1fu ó shin</string>
+    <string formated="false" name="pump_basebasalrate">%.2f A/u</string>
+    <string formated="false" name="combo_tbr_remaining">%d%% (%d nóim fágtha)</string>
     <string name="actions">Gníomhartha</string>
     <string name="actions_shortname">GNÍ</string>
     <string name="overview_editquickwizardlistactivity_add">Cuir</string>
@@ -139,7 +139,7 @@
     <string name="treatments_wizard_correction_label">Cear</string>
     <string name="correctionbous">Cear</string>
     <string name="overview_bolusprogress_delivered">Seachadta</string>
-    <string name="bolusdelivering">Seachadadh %.2fA</string>
+    <string formated="false" name="bolusdelivering">Seachadadh %.2fA</string>
     <string name="deliver_now">Seachadadh anois</string>
     <string name="disconnectpumpfor10h">Dhícheangal Caidéil do 10 u</string>
     <string name="disconnectpumpfor1h">Dhícheangal Caidéil do 1 u</string>
@@ -184,7 +184,7 @@
     <string name="visible">Infheicthe</string>
     <string name="overview_editquickwizard_valid">Bailí:</string>
     <string name="objectives_button_verify">Fhíorú</string>
-    <string name="loopsuspendedfor">Ar fionraí (%d n)</string>
+    <string formated="false" name="loopsuspendedfor">Ar fionraí (%d n)</string>
     <string name="combo_pump_state_suspended_by_user">Ar fionraí ag úsáideoir</string>
     <string name="objectives_1_objective">Tosaigh ag lúb oscailte</string>
     <string name="status">Stádas:</string>
@@ -196,20 +196,20 @@
     <string name="combo_pump_never_connected">Riamh</string>
     <string name="combo_pump_state_initializing">Tosaithe</string>
     <string name="combo_reservoir_normal">Gnáth</string>
-    <string name="combo_tdd_average">Meán: %3.1f A</string>
-    <string name="combo_tdd_maximum">Uasmhéid: %3.1f A</string>
-    <string name="combo_tdd_minimum">Íosmhéid: %3.1f A</string>
+    <string formated="false" name="combo_tdd_average">Meán: %3.1f A</string>
+    <string formated="false" name="combo_tdd_maximum">Uasmhéid: %3.1f A</string>
+    <string formated="false" name="combo_tdd_minimum">Íosmhéid: %3.1f A</string>
     <string name="combo_pump_state_suspended_due_to_error">Ar fionraí ag earráid</string>
     <string name="initializing">Tosaithe ...</string>
     <string name="combo_actvity_reading_basal_profile">Léigh próifíl bunaidh</string>
     <string name="combo_activity_reading_pump_history">Léigh stair caidéil</string>
     <string name="enabled">Cumasaithe</string>
-    <string name="combo_pump_action_setting_tbr">Socrú BRS (%d%% / %d nóim)</string>
+    <string formated="false" name="combo_pump_action_setting_tbr">Socrú BRS (%d%% / %d nóim)</string>
     <string name="combo_pump_action_initializing">Tosaithe</string>
     <string name="combo_pump_action_cancelling_tbr">Cealú BRS</string>
     <string name="combo_pump_battery_low_warrning">Is ceallraí Caidéil íseal</string>
     <string name="combo_pump_cartridge_low_warrning">Is leibhéal cartús íseal</string>
-    <string name="combo_pump_action_bolusing">Ag bólas (%.1f A)</string>
+    <string formated="false" name="combo_pump_action_bolusing">Ag bólas (%.1f A)</string>
     <string name="carbs">Carbí</string>
     <string name="careportal_newnstreatment_carbs_label">Carbí</string>
     <string name="treatments_newtreatment_carbsamount_label">Carbí</string>
@@ -217,7 +217,7 @@
     <string name="overview_editquickwizard_carbs">Carbí:</string>
     <string name="treatments_carbs_label_string">Carbí:</string>
     <string name="careportal_carbsandbolus_label">CARBÍ &amp; BÓLAS</string>
-    <string name="danar_history_connectingfor">Ag nascadh le %d s</string>
+    <string formated="false" name="danar_history_connectingfor">Ag nascadh le %d s</string>
     <string name="circadian_percentage_profile_shortname">CPP</string>
     <string name="comment">Tuairim</string>
     <string name="danar_bt_name_title">DanaR Bluetooth gléas</string>
@@ -247,7 +247,7 @@
     <string name="careportal_newnstreatment_glucosetype">Glúcóis cineál</string>
     <string name="careportal_insulincartridgechange">Athrú Cartús Inslin</string>
     <string name="invalidprofile">Próifíl neamhbhailí !!!</string>
-    <string name="zerovalueinprofile">Próifíl neamhbhailí: %s</string>
+    <string formated="false" name="zerovalueinprofile">Próifíl neamhbhailí: %s</string>
     <string name="pump_lastbolus_label">Bólas deiridh</string>
     <string name="openapsma_lastrun_label">Reáchtáil deiridh</string>
     <string name="openapsma_lastenact_label">Achtaíodh deiridh</string>
@@ -265,10 +265,10 @@
     <string name="bolus">Bólas</string>
     <string name="bolusstopped">Bólas stopadh</string>
     <string name="bolusstopping">Ag stopadh bólas</string>
-    <string name="bolusrequested">Ag dul a sheachadadh %.2fA</string>
+    <string formated="false" name="bolusrequested">Ag dul a sheachadadh %.2fA</string>
     <string name="combo_activity_setting_basal_profile">Socrú próifíl bunaidh</string>
     <string name="combo_activity_checking_for_history_changes">Ag féachaint d\'athruithe stair</string>
-    <string name="combo_no_pump_connection">Níl nasc le haghaidh %d nóim</string>
+    <string formated="false" name="combo_no_pump_connection">Níl nasc le haghaidh %d nóim</string>
     <string name="combo_notification_check_time_date">Is nuashonrú gá clog Caidéil</string>
     <string name="combo_programming_bolus">Cláir Caidéil bólas</string>
     <string name="combo_pump_alerts">Foláirimh</string>
@@ -301,7 +301,7 @@
     <string name="danar_stats_bolus">Bólas</string>
     <string name="overview_bolus_label">Bólas</string>
     <string name="danar_ebolus">Bólas E</string>
-    <string name="overview_bolusprogress_goingtodeliver">Ag dul a sheachadadh %.2fA</string>
+    <string formated="false" name="overview_bolusprogress_goingtodeliver">Ag dul a sheachadadh %.2fA</string>
     <string name="danar_dsbolus">Bólas DS</string>
     <string name="danar_debolus">Bólas DE</string>
     <string name="danar_sbolus">Bólas S</string>
@@ -314,8 +314,8 @@
     <string name="overview_newtempbasal_basalabsolute">Bunaidh luach [A/u]</string>
     <string name="pump_basebasalrate_label">Bunaidh ráta bonn</string>
     <string name="base_profile_label">Próifíl bonn</string>
-    <string name="bolusdelivered">Seachadta %.2fA Bólas go rathúil</string>
-    <string name="smscommunicator_bolusdelivered">Seachadta %.2fA Bólas go rathúil</string>
+    <string formated="false" name="bolusdelivered">Seachadta %.2fA Bólas go rathúil</string>
+    <string formated="false" name="smscommunicator_bolusdelivered">Seachadta %.2fA Bólas go rathúil</string>
     <string name="bolus_step">Bólas Céim</string>
     <string name="danar_history_bolus">Bólasi</string>
     <string name="canceltemp">Cealú BRS</string>
