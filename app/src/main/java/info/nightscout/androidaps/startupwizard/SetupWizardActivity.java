@@ -126,9 +126,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         this.finish();
         Intent intent = new Intent(this, SetupWizardActivity.class);
         intent.putExtra(INTENT_MESSAGE, currentWizardPage + 1);
-
-//        screens = SWDefinition.getInstance().getScreens();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -139,7 +137,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             intent.putExtra(INTENT_MESSAGE, currentWizardPage - 1);
         else
             intent.putExtra(INTENT_MESSAGE, 0);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

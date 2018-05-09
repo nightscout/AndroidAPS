@@ -9,6 +9,12 @@ import android.widget.CheckBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
 /**
@@ -47,6 +53,18 @@ public class SWCheckbox extends SWItem {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ArrayList<PluginBase> pluginsInCategory;
+                pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.PUMP);
+                PluginBase found = null;
+                for (PluginBase p : pluginsInCategory) {
+                    if (p.isEnabled(PluginType.PUMP) && found == null) {
+                        found = p;
+                    } else if (p.isEnabled(PluginType.PUMP)) {
+                        // set others disabled
+                        p.setPluginEnabled(PluginType.PUMP, false);
+                    }
+                }
+                log.debug("Enabled pump plugin:"+found.getClass());
                 save(checkBox.isChecked());
             }
         });
