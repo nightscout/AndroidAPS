@@ -88,7 +88,7 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     private void updateButtons() {
         SWScreen currentScreen = screens.get(currentWizardPage);
-        if (currentScreen.validator.isValid() || currentScreen.skippable) {
+        if (currentScreen.validator == null || currentScreen.validator.isValid() || currentScreen.skippable) {
             if (currentWizardPage == screens.size() - 1) {
                 findViewById(R.id.finish_button).setVisibility(View.VISIBLE);
                 findViewById(R.id.next_button).setVisibility(View.GONE);

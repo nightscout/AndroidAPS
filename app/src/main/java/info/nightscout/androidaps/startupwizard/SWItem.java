@@ -16,6 +16,7 @@ public class SWItem {
 
     enum Type {
         NONE,
+        TEXT,
         URL,
         STRING,
         NUMBER,

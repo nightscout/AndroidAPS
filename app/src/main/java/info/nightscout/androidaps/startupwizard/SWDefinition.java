@@ -42,7 +42,11 @@ public class SWDefinition {
 
     SWDefinition() {
         // List all the screens here
-        add(new SWScreen(R.string.language)
+        add(new SWScreen(R.string.nav_setupwizard)
+                .add(new SWInfotext()
+                        .label(R.string.welcometosetupwizard) )
+        )
+        .add(new SWScreen(R.string.language)
                 .skippable(false)
                 .add(new SWRadioButton()
                         .option(R.array.languagesArray, R.array.languagesValues)
