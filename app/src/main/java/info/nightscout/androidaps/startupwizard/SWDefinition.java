@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.startupwizard;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
+
+import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +15,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
+import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
@@ -28,14 +30,18 @@ import info.nightscout.utils.SP;
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
 
-    private Context context;
-    static List<SWScreen> screens = new ArrayList<>();
+    private Activity activity;
+    private List<SWScreen> screens = new ArrayList<>();
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
-    public static List<SWScreen> getScreens() {
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public List<SWScreen> getScreens() {
         return screens;
     }
 
@@ -118,10 +124,10 @@ public class SWDefinition {
                         .text(R.string.pumpsetup)
                         .action(() -> {
                             final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActivePump();
-                            PasswordProtection.QueryPassword(context, R.string.settings_password, "settings_password", () -> {
-                                Intent i = new Intent(context, PreferencesActivity.class);
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
-                                context.startActivity(i);
+                                activity.startActivity(i);
                             }, null);
                         })
                         .visibility(() -> ((PluginBase) MainApp.getConfigBuilder().getActivePump()).getPreferencesId() > 0))
@@ -129,6 +135,14 @@ public class SWDefinition {
                         .text(R.string.readstatus)
                         .action(() -> ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null))
                         .visibility(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null))
+                .add(new SWEventListener(this)
+                        .listener(new Object() {
+                            @Subscribe
+                            public void onEventPumpStatusChanged(EventPumpStatusChanged event) {
+                                MainApp.bus().post(new EventSWLabel(event.textStatus()));
+                            }
+                        })
+                )
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null && MainApp.getConfigBuilder().getActivePump().isInitialized())
         )
         .add(new SWScreen(R.string.configbuilder_aps)

@@ -26,10 +26,8 @@ public class SetupWizardActivity extends AppCompatActivity {
     //logging
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
 
-    private TextView screenName;
-
-    SWDefinition swDefinition = new SWDefinition();
-    List<SWScreen> screens = swDefinition.getScreens();
+    private SWDefinition swDefinition = new SWDefinition();
+    private List<SWScreen> screens = swDefinition.getScreens();
     private int currentWizardPage = 0;
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
 
@@ -45,7 +43,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWScreen currentScreen = screens.get(currentWizardPage);
 
             //Set screen name
-            screenName = (TextView) findViewById(R.id.sw_content);
+            TextView screenName = (TextView) findViewById(R.id.sw_content);
             screenName.setText(currentScreen.getHeader());
 
             //Generate layout first
@@ -64,7 +62,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
-        swDefinition.setContext(this);
+        swDefinition.setActivity(this);
     }
 
     @Subscribe
