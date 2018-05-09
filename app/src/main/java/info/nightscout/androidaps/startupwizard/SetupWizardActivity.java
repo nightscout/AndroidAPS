@@ -30,14 +30,14 @@ public class SetupWizardActivity extends AppCompatActivity {
     SWDefinition swDefinition = SWDefinition.getInstance();
     List<SWScreen> screens = swDefinition.getScreens();
     private int currentWizardPage = 0;
-    public static final String INTENT_MESSAGE = "WIZZARDPAGE";
 
+    public static final String INTENT_MESSAGE = "WIZZARDPAGE";
+    public static final String RESTART = "RESTART";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_setupwizard);
-
         Intent intent = getIntent();
         currentWizardPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE, 0);
         if (screens.size() > 0 && currentWizardPage < screens.size()) {
@@ -61,6 +61,14 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
+        Intent intent = new Intent(this, SetupWizardActivity.class);
+        intent.putExtra(INTENT_MESSAGE, 0);
+        if(intent.getBooleanExtra(RESTART, false)) {
+            intent.putExtra(RESTART, false);
+            this.finish();
+            startActivity(intent);
+        }
         super.onResume();
         MainApp.bus().register(this);
     }
@@ -110,6 +118,9 @@ public class SetupWizardActivity extends AppCompatActivity {
         this.finish();
         Intent intent = new Intent(this, SetupWizardActivity.class);
         intent.putExtra(INTENT_MESSAGE, currentWizardPage + 1);
+
+//        screens = SWDefinition.getInstance().getScreens();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -120,6 +131,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             intent.putExtra(INTENT_MESSAGE, currentWizardPage - 1);
         else
             intent.putExtra(INTENT_MESSAGE, 0);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

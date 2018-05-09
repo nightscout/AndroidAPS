@@ -91,6 +91,15 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.setupwizard_pump_test)
                 .skippable(false)
+                // add refresh button
+                .add(new SWButton()
+                        .text(R.string.combo_refresh)
+                        .action(() -> {
+                            log.debug("Tryng to get the current pump selected: "+ConfigBuilderPlugin.getActivePump());
+                            MainApp.bus().post(new EventConfigBuilderChange());
+                            MainApp.bus().post(new EventSWUpdate(true));
+                        })
+                        .visibility(() -> true))
                 // Adding DanaR specific fields
                 .add(DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP)?new SWString()
                         .preferenceId(R.string.key_danar_bt_name)
