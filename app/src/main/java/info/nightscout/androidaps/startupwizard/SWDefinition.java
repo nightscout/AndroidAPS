@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.startupwizard;
 
+import android.content.Context;
+import android.content.Intent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,31 +10,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
+import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
-import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
-//Needed for pump validation
 
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
-    private static SWDefinition swDefinition = null;
 
-    public static SWDefinition getInstance() {
-        if (swDefinition == null)
-            swDefinition = new SWDefinition();
-        return swDefinition;
-    }
-
+    private Context context;
     static List<SWScreen> screens = new ArrayList<>();
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public static List<SWScreen> getScreens() {
         return screens;
@@ -45,10 +47,14 @@ public class SWDefinition {
 
     SWDefinition() {
         // List all the screens here
-        add(new SWScreen(R.string.language)
+        add(new SWScreen(R.string.nav_setupwizard)
+                .add(new SWInfotext()
+                        .label(R.string.welcometosetupwizard) )
+        )
+        .add(new SWScreen(R.string.language)
                 .skippable(false)
                 .add(new SWRadioButton()
-                        .option("", R.array.languagesArray, R.array.languagesValues)
+                        .option(R.array.languagesArray, R.array.languagesValues)
                         .preferenceId(R.string.key_language).label(R.string.language)
                         .comment(R.string.setupwizard_language_prompt))
                 .validator(() -> {
@@ -80,59 +86,10 @@ public class SWDefinition {
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
         )
-        .add(new SWScreen(R.string.configbuilder_pump)
-                .skippable(true)
-
-                .add(new SWPlugin()
-                        .option(PluginType.PUMP)
-                        .label(R.string.configbuilder_pump)
-                        .comment(R.string.configbuilder_pump))
-                .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null)
-        )
-        .add(new SWScreen(R.string.setupwizard_pump_test)
-                .skippable(false)
-                // add refresh button
-                .add(new SWButton()
-                        .text(R.string.combo_refresh)
-                        .action(() -> {
-                            log.debug("Tryng to get the current pump selected: "+ConfigBuilderPlugin.getActivePump());
-                            MainApp.bus().post(new EventConfigBuilderChange());
-                            MainApp.bus().post(new EventSWUpdate(true));
-                        })
-                        .visibility(() -> true))
-                // Adding DanaR specific fields
-                .add(DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP)?new SWString()
-                        .preferenceId(R.string.key_danar_bt_name)
-                        .label(R.string.danar_bt_name_title)
-                        .comment(R.string.danar_bt_name_title) : new SWItem(SWItem.Type.STRING)
-                )
-                .add(DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP)?new SWString()
-                    .preferenceId(R.string.key_danar_password)
-                    .label(R.string.danar_password_title)
-                    .comment(R.string.danar_password_title): new SWItem(SWItem.Type.STRING)
-                )
-                // Virtual pump
-                .add(VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP)?
-                        new SWCheckbox()
-                            .option(MainApp.instance().getApplicationContext().getResources().getString(R.string.virtualpump_uploadstatus_title), R.string.key_virtualpump_uploadstatus)
-                            .preferenceId(R.string.key_virtualpump_uploadstatus)
-                            .label(R.string.virtualpump_uploadstatus_title)
-                            .comment(R.string.virtualpump_uploadstatus_title): new SWItem(SWItem.Type.STRING)
-                )
-                // Combo pump
-                .add(ComboPlugin.getPlugin().isEnabled(PluginType.PUMP)?
-                        new SWString()
-                                .preferenceId(R.string.combo_pump_alerts)
-                                .label(R.string.combo_pump_state_label)
-                                .comment(R.string.combo_pump_state_label): new SWItem(SWItem.Type.STRING)
-                )
-                .validator(() -> ConfigBuilderPlugin.getActivePump() != null)
-            )
-
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)
                 .add(new SWRadioButton()
-                        .option("", R.array.ageArray, R.array.ageValues)
+                        .option(R.array.ageArray, R.array.ageValues)
                         .preferenceId(R.string.key_age)
                         .label(R.string.patientage)
                         .comment(R.string.patientage_summary))
@@ -142,24 +99,43 @@ public class SWDefinition {
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
-                        .label(R.string.configbuilder_insulin)
-                        .comment(R.string.configbuilder_insulin))
+                        .label(R.string.configbuilder_insulin))
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.INSULIN) != null)
         )
         .add(new SWScreen(R.string.configbuilder_bgsource)
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.BGSOURCE)
-                        .label(R.string.configbuilder_bgsource)
-                        .comment(R.string.configbuilder_bgsource))
+                        .label(R.string.configbuilder_bgsource))
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.BGSOURCE) != null)
+        )
+        .add(new SWScreen(R.string.configbuilder_pump)
+                .skippable(false)
+                .add(new SWPlugin()
+                        .option(PluginType.PUMP)
+                        .label(R.string.configbuilder_pump))
+                .add(new SWButton()
+                        .text(R.string.pumpsetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActivePump();
+                            PasswordProtection.QueryPassword(context, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(context, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                context.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> ((PluginBase) MainApp.getConfigBuilder().getActivePump()).getPreferencesId() > 0))
+                .add(new SWButton()
+                        .text(R.string.readstatus)
+                        .action(() -> ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null))
+                        .visibility(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null))
+                .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null && MainApp.getConfigBuilder().getActivePump().isInitialized())
         )
         .add(new SWScreen(R.string.configbuilder_aps)
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.APS)
-                        .label(R.string.configbuilder_aps)
-                        .comment(R.string.configbuilder_aps))
+                        .label(R.string.configbuilder_aps))
                 .validator(() -> MainApp.getSpecificPluginsList(PluginType.APS) != null)
         )
         ;
