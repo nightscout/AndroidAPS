@@ -269,9 +269,9 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
 
     public static int determineTextColor(CareportalEvent careportalEvent, double warnThreshold, double urgentThreshold) {
         if (careportalEvent.isOlderThan(urgentThreshold)) {
-            return MainApp.sResources.getColor(R.color.low);
+            return MainApp.gc(R.color.low);
         } else if (careportalEvent.isOlderThan(warnThreshold)) {
-            return MainApp.sResources.getColor(R.color.high);
+            return MainApp.gc(R.color.high);
         } else {
             return Color.WHITE;
         }

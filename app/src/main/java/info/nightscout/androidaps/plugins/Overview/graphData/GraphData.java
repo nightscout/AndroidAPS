@@ -320,14 +320,13 @@ public class GraphData {
     }
 
     private double getNearestBg(long date) {
-        double bg = 0;
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
             if (reading.date > date) continue;
-            bg = Profile.fromMgdlToUnits(reading.value, units);
-            break;
+            return Profile.fromMgdlToUnits(reading.value, units);
         }
-        return bg;
+        return bgReadingsArray.size() > 0
+                ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : 0;
     }
 
     // scale in % of vertical size (like 0.3)
@@ -436,10 +435,10 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
-                int color = Color.BLACK; // "="
-                if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
-                if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
-                if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
+                int color = MainApp.gc(R.color.deviationblack); // "="
+                if (autosensData.pastSensitivity.equals("C")) color = MainApp.gc(R.color.deviationgrey);
+                if (autosensData.pastSensitivity.equals("+")) color = MainApp.gc(R.color.deviationgreen);
+                if (autosensData.pastSensitivity.equals("-")) color = MainApp.gc(R.color.deviationred);
                 devArray.add(new DeviationDataPoint(time, autosensData.deviation, color, devScale));
                 maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
             }
