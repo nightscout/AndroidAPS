@@ -1036,6 +1036,7 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
+    <string name="ga_lang">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
     <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
