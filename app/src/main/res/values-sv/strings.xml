@@ -430,7 +430,7 @@
     <string name="pumpNotInitialized">Pump inte initierad</string>
     <string name="pump">Pump</string>
     <string name="profileviewer_shortname">NSProfil</string>
-    <string name="profileviewer">NS-profil</string>
+    <string name="nsprofile">NS-profil</string>
     <string name="profileswitch">Profilbyte</string>
     <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
     <string name="profile_set_failed">Lyckades inte sätta basalprofilen</string>

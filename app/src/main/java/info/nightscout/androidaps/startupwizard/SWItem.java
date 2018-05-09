@@ -25,7 +25,8 @@ public class SWItem {
         CHECKBOX,
         RADIOBUTTON,
         PLUGIN,
-        BUTTON
+        BUTTON,
+        FRAGMENT
     }
 
     Type type;

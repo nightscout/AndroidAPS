@@ -4,7 +4,6 @@ package info.nightscout.androidaps.plugins.ProfileLocal;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -109,34 +107,25 @@ public class LocalProfileFragment extends SubscriberFragment {
             mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
             mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
 
-            mgdlView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LocalProfilePlugin.getPlugin().mgdl = mgdlView.isChecked();
-                    LocalProfilePlugin.getPlugin().mmol = !LocalProfilePlugin.getPlugin().mgdl;
-                    mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
-                    doEdit();
-                }
+            mgdlView.setOnClickListener(v -> {
+                LocalProfilePlugin.getPlugin().mgdl = mgdlView.isChecked();
+                LocalProfilePlugin.getPlugin().mmol = !LocalProfilePlugin.getPlugin().mgdl;
+                mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
+                doEdit();
             });
-            mmolView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LocalProfilePlugin.getPlugin().mmol = mmolView.isChecked();
-                    LocalProfilePlugin.getPlugin().mgdl = !LocalProfilePlugin.getPlugin().mmol;
-                    mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
-                    doEdit();
-                }
+            mmolView.setOnClickListener(v -> {
+                LocalProfilePlugin.getPlugin().mmol = mmolView.isChecked();
+                LocalProfilePlugin.getPlugin().mgdl = !LocalProfilePlugin.getPlugin().mmol;
+                mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
+                doEdit();
             });
 
-            profileswitchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                    final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
-                    profileswitch.executeProfileSwitch = true;
-                    newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
-                    newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-                }
+            profileswitchButton.setOnClickListener(view -> {
+                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
+                profileswitch.executeProfileSwitch = true;
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
+                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
             });
 
             resetButton.setOnClickListener(view -> {

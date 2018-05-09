@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 
 import com.squareup.otto.Subscribe;
 
@@ -21,6 +21,12 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
+import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
 import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
@@ -30,14 +36,14 @@ import info.nightscout.utils.SP;
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
 
-    private Activity activity;
+    private AppCompatActivity activity;
     private List<SWScreen> screens = new ArrayList<>();
 
-    public void setActivity(Activity activity) {
+    public void setActivity(AppCompatActivity activity) {
         this.activity = activity;
     }
 
-    public Activity getActivity() {
+    public AppCompatActivity getActivity() {
         return activity;
     }
 
@@ -106,15 +112,45 @@ public class SWDefinition {
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
                         .label(R.string.configbuilder_insulin))
-                .validator(() -> MainApp.getSpecificPluginsList(PluginType.INSULIN) != null)
+                .validator(() -> MainApp.getConfigBuilder().getActiveInsulin() != null)
         )
         .add(new SWScreen(R.string.configbuilder_bgsource)
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.BGSOURCE)
                         .label(R.string.configbuilder_bgsource))
-                .validator(() -> MainApp.getSpecificPluginsList(PluginType.BGSOURCE) != null)
+                .validator(() -> MainApp.getConfigBuilder().getActiveBgSource() != null)
         )
+        .add(new SWScreen(R.string.configbuilder_profile)
+                        .skippable(false)
+                        .add(new SWPlugin()
+                                .option(PluginType.PROFILE)
+                                .label(R.string.configbuilder_profile))
+                        .validator(() -> MainApp.getConfigBuilder().getActiveProfileInterface() != null)
+                )
+        .add(new SWScreen(R.string.nsprofile)
+                        .skippable(false)
+                        .add(new SWInfotext()
+                                .label(R.string.adjustprofileinns))
+                        .add(new SWFragment(this)
+                                .add(new NSProfileFragment()))
+                        .validator(() -> NSProfilePlugin.getPlugin().getProfile() != null && NSProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
+                        .visibility(() -> NSProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE))
+                )
+        .add(new SWScreen(R.string.localprofile)
+                        .skippable(false)
+                        .add(new SWFragment(this)
+                                .add(new LocalProfileFragment()))
+                        .validator(() -> LocalProfilePlugin.getPlugin().getProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
+                        .visibility(() -> LocalProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE))
+                )
+        .add(new SWScreen(R.string.simpleprofile)
+                        .skippable(false)
+                        .add(new SWFragment(this)
+                                .add(new SimpleProfileFragment()))
+                        .validator(() -> SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
+                        .visibility(() -> SimpleProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE))
+                )
         .add(new SWScreen(R.string.configbuilder_pump)
                 .skippable(false)
                 .add(new SWPlugin()
@@ -134,7 +170,7 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.readstatus)
                         .action(() -> ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null))
-                        .visibility(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null))
+                        .visibility(() -> MainApp.getConfigBuilder().getActivePump() != null))
                 .add(new SWEventListener(this)
                         .listener(new Object() {
                             @Subscribe
@@ -143,14 +179,14 @@ public class SWDefinition {
                             }
                         })
                 )
-                .validator(() -> MainApp.getSpecificPluginsList(PluginType.PUMP) != null && MainApp.getConfigBuilder().getActivePump().isInitialized())
+                .validator(() -> MainApp.getConfigBuilder().getActivePump() != null && MainApp.getConfigBuilder().getActivePump().isInitialized())
         )
         .add(new SWScreen(R.string.configbuilder_aps)
                 .skippable(false)
                 .add(new SWPlugin()
                         .option(PluginType.APS)
                         .label(R.string.configbuilder_aps))
-                .validator(() -> MainApp.getSpecificPluginsList(PluginType.APS) != null)
+                .validator(() ->MainApp.getConfigBuilder().getActiveAPS() != null)
         )
         ;
     }

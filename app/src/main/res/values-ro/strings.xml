@@ -69,7 +69,7 @@
     <string name="objectives">Obiective</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Privire ansamblu</string>
-    <string name="profileviewer">Profil NS</string>
+    <string name="nsprofile">Profil NS</string>
     <string name="simpleprofile">Profil simplu</string>
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>

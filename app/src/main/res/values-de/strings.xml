@@ -16,7 +16,7 @@
     <string name="days">Tage</string>
     <string name="ok">OK</string>
     <string name="openapsma_profile_label">Profil</string>
-    <string name="profileviewer">Nightscout-Profil</string>
+    <string name="nsprofile">Nightscout-Profil</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Gesamt-IOB:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>

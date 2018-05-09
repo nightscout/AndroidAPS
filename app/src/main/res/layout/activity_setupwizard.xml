@@ -1,79 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:orientation="vertical"
     tools:context=".startupwizard.SetupWizardActivity">
 
     <TextView
         android:id="@+id/sw_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:keepScreenOn="true"
-        android:text="@string/dummy_content"
         android:textColor="#33b5e5"
         android:textSize="20dp"
         android:textStyle="bold" />
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/sw_content_fields"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/sw_content_fields"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical">
+    </LinearLayout>
 
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/sw_content_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/black_overlay"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/sw_content_controls"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/previous_button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:onClick="showPreviousPage"
+            android:text="@string/setupwizard_previous" />
 
-            <Button
-                android:id="@+id/previous_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="showPreviousPage"
-                android:text="@string/setupwizard_previous" />
+        <Button
+            android:id="@+id/skip_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="showNextPage"
+            android:text="@string/setupwizard_skip"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/skip_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="showNextPage"
-                android:text="@string/setupwizard_skip"
-                android:visibility="invisible" />
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="showNextPage"
+            android:text="@string/setupwizard_next"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/next_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="showNextPage"
-                android:text="@string/setupwizard_next"
-                android:visibility="gone" />
+        <Button
+            android:id="@+id/finish_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="finishSetupWizard"
+            android:text="@string/setupwizard_finish"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/finish_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="finishSetupWizard"
-                android:text="@string/setupwizard_finish"
-                android:visibility="gone" />
+    </LinearLayout>
 
-
-        </LinearLayout>
-    </FrameLayout>
-
-</FrameLayout>
+</LinearLayout>

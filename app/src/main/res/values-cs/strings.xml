@@ -110,7 +110,7 @@
     <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = současný)</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="profileviewer">NS profil</string>
+    <string name="nsprofile">NS profil</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota</string>
     <string name="reason">Zdůvodnění</string>

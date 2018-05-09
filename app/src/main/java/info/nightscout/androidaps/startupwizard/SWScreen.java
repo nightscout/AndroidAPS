@@ -10,6 +10,7 @@ public class SWScreen {
     int header;
     List<SWItem> items = new ArrayList<>();
     SWValidator validator;
+    SWValidator visibility;
     boolean skippable = false;
 
     public SWScreen(int header) {
@@ -32,6 +33,11 @@ public class SWScreen {
 
     public SWScreen validator(SWValidator validator) {
         this.validator = validator;
+        return this;
+    }
+
+    public SWScreen visibility(SWValidator visibility) {
+        this.visibility = visibility;
         return this;
     }
 

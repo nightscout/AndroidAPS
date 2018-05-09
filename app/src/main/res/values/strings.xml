@@ -74,7 +74,7 @@
     <string name="objectives">Objectives</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Overview</string>
-    <string name="profileviewer">NS Profile</string>
+    <string name="nsprofile">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
     <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
@@ -1057,11 +1057,10 @@
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
-
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="enable_nsclient">Enable NSClient</string>
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process</string>
     <string name="pumpsetup">Pump setup</string>
     <string name="readstatus">Read status</string>
+    <string name="adjustprofileinns">Changes must be done in NS</string>
 
 </resources>
