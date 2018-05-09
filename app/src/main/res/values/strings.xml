@@ -1,5 +1,5 @@
 ﻿<resources>
-    <string name="treatmentssafety_title">Tratments safety</string>
+    <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
 
@@ -200,6 +200,7 @@
     <string name="sv_lang">Swedish</string>
     <string name="fr_lang">French</string>
     <string name="zh_lang">Chinese</string>
+    <string name="pl_lang">Polski</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
@@ -1048,6 +1049,7 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
+    <string name="ga_lang">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
     <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
@@ -1060,5 +1062,8 @@
 
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="enable_nsclient">Enable NSClient</string>
+    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process</string>
+    <string name="pumpsetup">Pump setup</string>
+    <string name="readstatus">Read status</string>
 
 </resources>

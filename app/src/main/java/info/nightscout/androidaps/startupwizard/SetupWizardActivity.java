@@ -17,6 +17,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
@@ -27,7 +28,7 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     private TextView screenName;
 
-    SWDefinition swDefinition = SWDefinition.getInstance();
+    SWDefinition swDefinition = new SWDefinition();
     List<SWScreen> screens = swDefinition.getScreens();
     private int currentWizardPage = 0;
 
@@ -71,6 +72,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         }
         super.onResume();
         MainApp.bus().register(this);
+        swDefinition.setContext(this);
     }
 
     @Subscribe
@@ -81,7 +83,12 @@ public class SetupWizardActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onContentUpdate(EventNSClientStatus ev) {
+    public void onEventNSClientStatus(EventNSClientStatus ignored) {
+        updateButtons();
+    }
+
+    @Subscribe
+    public void onEventPumpStatusChanged(EventPumpStatusChanged ignored) {
         updateButtons();
     }
 
@@ -96,7 +103,7 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     private void updateButtons() {
         SWScreen currentScreen = screens.get(currentWizardPage);
-        if (currentScreen.validator.isValid() || currentScreen.skippable) {
+        if (currentScreen.validator == null || currentScreen.validator.isValid() || currentScreen.skippable) {
             if (currentWizardPage == screens.size() - 1) {
                 findViewById(R.id.finish_button).setVisibility(View.VISIBLE);
                 findViewById(R.id.next_button).setVisibility(View.GONE);
@@ -112,6 +119,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             findViewById(R.id.previous_button).setVisibility(View.GONE);
         else
             findViewById(R.id.previous_button).setVisibility(View.VISIBLE);
+        currentScreen.processVisibility();
     }
 
     public void showNextPage(View view) {

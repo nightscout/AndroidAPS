@@ -34,4 +34,9 @@ public class SWScreen {
         this.validator = validator;
         return this;
     }
+
+    public void processVisibility() {
+        for (SWItem i : items)
+            i.processVisibility();
+    }
 }

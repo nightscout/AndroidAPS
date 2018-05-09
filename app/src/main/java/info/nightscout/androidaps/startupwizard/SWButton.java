@@ -15,6 +15,8 @@ public class SWButton extends SWItem {
     int buttonText;
     SWValidator buttonValidator;
 
+    Button button;
+
     public SWButton() {
         super(Type.BUTTON);
     }
@@ -38,15 +40,22 @@ public class SWButton extends SWItem {
     public void generateDialog(View view, LinearLayout layout) {
         Context context = view.getContext();
 
-        Button button = new Button(context);
+        button = new Button(context);
         button.setText(buttonText);
         button.setOnClickListener((v) -> {
             if (buttonRunnable != null)
                 buttonRunnable.run();
         });
-        if (buttonValidator != null && !buttonValidator.isValid())
-            return;
+        processVisibility();
         layout.addView(button);
         super.generateDialog(view, layout);
+    }
+
+    @Override
+    public void processVisibility() {
+        if (buttonValidator != null && !buttonValidator.isValid())
+            button.setVisibility(View.GONE);
+        else
+            button.setVisibility(View.VISIBLE);
     }
 }
