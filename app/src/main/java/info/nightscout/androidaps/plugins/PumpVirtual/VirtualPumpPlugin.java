@@ -420,8 +420,12 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
         PumpType pumpTypeNew = PumpType.getByDescription(pumptype);
 
+        log.debug("Pump in configuration: {}, PumpType object: {}", pumptype, pumpTypeNew);
+
         if (pumpType == pumpTypeNew)
             return;
+
+        log.debug("New pump configuration found ({}), changing from previous ({})", pumpTypeNew, pumpType);
 
         // reset
         pumpDescription.resetSettings();

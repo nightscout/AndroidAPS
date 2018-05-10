@@ -311,6 +311,15 @@ public enum PumpType {
 
 
     public PumpCapability getSpecialBasalDurations() {
-        return specialBasalDurations;
+
+        if (isParentSet())
+        {
+            return parent.getSpecialBasalDurations();
+        }
+        else
+        {
+            return specialBasalDurations == null ? //
+                    PumpCapability.BasalRate_Duration15and30minNotAllowed : specialBasalDurations;
+        }
     }
 }
