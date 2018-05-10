@@ -1064,5 +1064,8 @@
     <string name="readstatus">Read status</string>
     <string name="adjustprofileinns">Changes must be done in NS</string>
     <string name="exitwizard">Exit setup wizard?</string>
+    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be comming from ?</string>
+    <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
+    <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.</string>
 
 </resources>
