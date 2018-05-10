@@ -177,7 +177,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     }
 
     public synchronized boolean isValidEditState() {
-        return createProfileStore().getDefaultProfile().isValid(MainApp.gs(R.string.localprofile));
+        return createProfileStore().getDefaultProfile().isValid(MainApp.gs(R.string.localprofile), false);
     }
 
     @NonNull

@@ -281,7 +281,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
             notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
-            notificationsView.setHasFixedSize(true);
+            notificationsView.setHasFixedSize(false);
             llm = new LinearLayoutManager(view.getContext());
             notificationsView.setLayoutManager(llm);
 

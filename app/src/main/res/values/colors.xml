@@ -6,8 +6,8 @@
     <color name="bolus">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
     <color name="carbs">#FFFB8C00</color>
-    <color name="uam">#ffea00</color>
-    <color name="zt">#00ffff</color>
+    <color name="uam">#c9bd60</color>
+    <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
