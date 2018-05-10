@@ -62,9 +62,6 @@ public class SWDefinition {
 
 
     SWDefinition() {
-        // Don't allow for screens to add up
-        if(screens.size() >0)
-            screens = new ArrayList<>();
         // List all the screens here
         add(new SWScreen(R.string.nav_setupwizard)
                 .add(new SWInfotext()

@@ -1022,7 +1022,6 @@
     <string name="setupwizard_skip">Skip</string>
     <string name="setupwizard_finish">FINISH</string>
     <string name="setupwizard_language_prompt">Select your language</string>
-    <string name="setupwizard_pump_test">Test pump connection</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
@@ -1061,9 +1060,6 @@
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="nsclient_prefs">Additional NSClient options</string>
-    <string name="settings_incorrect">Incorrect settings! Press \'BACK\' and try again</string>
     <string name="enable_nsclient">Enable NSClient</string>
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process</string>
     <string name="pumpsetup">Pump setup</string>

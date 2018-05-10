@@ -38,6 +38,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_setupwizard);
+
         Intent intent = getIntent();
         currentWizardPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE, 0);
         if (screens.size() > 0 && currentWizardPage < screens.size()) {
