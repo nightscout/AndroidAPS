@@ -59,6 +59,8 @@ public class Notification {
     public static final int ZERO_VALUE_IN_PROFILE = 31;
     public static final int PROFILE_SWITCH_MISSING = 32;
     public static final int NOT_ENG_MODE_OR_RELEASE = 33;
+    public static final int WRONG_PUMP_PASSWORD = 34;
+
 
     public int id;
     public Date date;
