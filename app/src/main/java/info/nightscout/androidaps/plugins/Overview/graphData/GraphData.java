@@ -320,14 +320,13 @@ public class GraphData {
     }
 
     private double getNearestBg(long date) {
-        double bg = 0;
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
             if (reading.date > date) continue;
-            bg = Profile.fromMgdlToUnits(reading.value, units);
-            break;
+            return Profile.fromMgdlToUnits(reading.value, units);
         }
-        return bg;
+        return bgReadingsArray.size() > 0
+                ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : 0;
     }
 
     // scale in % of vertical size (like 0.3)

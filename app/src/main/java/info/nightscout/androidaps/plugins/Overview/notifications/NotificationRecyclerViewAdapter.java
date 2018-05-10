@@ -44,7 +44,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         holder.dismiss.setTag(notification);
         if (Objects.equals(notification.text, MainApp.gs(R.string.nsalarm_staledata)))
             holder.dismiss.setText("snooze");
-        holder.text.setText(notification.text);
+        holder.text.setText(notification.text+'\n');
         holder.time.setText(DateUtil.timeString(notification.date));
         if (notification.level == Notification.URGENT)
             holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationUrgent));
