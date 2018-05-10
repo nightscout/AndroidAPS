@@ -667,6 +667,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="free_peak_oref_description">Custom insulin</string>
     <string name="dia_too_short" formatted="false">DIA of %f too short - using %f instead!</string>
     <string name="activate_profile">Activate profile</string>
     <string name="date">Date</string>
@@ -1063,5 +1064,8 @@
     <string name="readstatus">Read status</string>
     <string name="adjustprofileinns">Changes must be done in NS</string>
     <string name="exitwizard">Exit setup wizard?</string>
+    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be comming from ?</string>
+    <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
+    <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.</string>
 
 </resources>

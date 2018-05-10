@@ -15,9 +15,15 @@ import org.slf4j.LoggerFactory;
 
 public class SWInfotext extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWInfotext.class);
+    private String textLabel = null;
 
     public SWInfotext() {
         super(Type.TEXT);
+    }
+
+    public SWInfotext label(String newLabel){
+        this.textLabel = newLabel;
+        return this;
     }
 
     @Override
@@ -26,7 +32,10 @@ public class SWInfotext extends SWItem {
 
         TextView l = new TextView(context);
         l.setId(view.generateViewId());
-        l.setText(label);
+        if(textLabel != null)
+            l.setText(textLabel);
+        else
+            l.setText(label);
         layout.addView(l);
 
     }

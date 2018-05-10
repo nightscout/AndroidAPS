@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
@@ -113,6 +114,12 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.configbuilder_insulin)
                 .skippable(false)
+                .add(new SWInfotext()
+                        .label(MainApp.gs(R.string.fastactinginsulincomment)+" = "+MainApp.gs(R.string.rapid_acting_oref)))
+                .add(new SWInfotext()
+                        .label(MainApp.gs(R.string.ultrafastactinginsulincomment)+" = "+MainApp.gs(R.string.ultrarapid_oref)))
+                .add(new SWInfotext()
+                        .label(MainApp.gs(R.string.free_peak_oref_description)+" = "+MainApp.gs(R.string.free_peak_oref)))
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
                         .label(R.string.configbuilder_insulin))
@@ -120,6 +127,8 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.configbuilder_bgsource)
                 .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.setupwizard_bgsource_description))
                 .add(new SWPlugin()
                         .option(PluginType.BGSOURCE)
                         .label(R.string.configbuilder_bgsource))
@@ -210,6 +219,8 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.configbuilder_loop)
                 .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.setupwizard_loop_description))
                 .add(new SWButton()
                         .text(R.string.enableloop)
                         .action(() -> {
@@ -222,6 +233,23 @@ public class SWDefinition {
                         }))
                 .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
                 .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+        )
+        .add(new SWScreen(R.string.objectives)
+                .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.setupwizard_objectives_description))
+                .add(new SWButton()
+                        .text(R.string.objectives_button_start)
+                        .action(() -> {
+                            ObjectivesPlugin.getPlugin().setPluginEnabled(PluginType.CONSTRAINTS, true);
+                            ObjectivesPlugin.getPlugin().setFragmentVisible(PluginType.CONSTRAINTS, true);
+                            ConfigBuilderFragment.processOnEnabledCategoryChanged(ObjectivesPlugin.getPlugin(), PluginType.CONSTRAINTS);
+                            ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
+                            MainApp.bus().post(new EventConfigBuilderChange());
+                            MainApp.bus().post(new EventSWUpdate(true));
+                        }))
+                .validator(() -> ObjectivesPlugin.getPlugin().isEnabled(PluginType.CONSTRAINTS))
+                .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible())
         )
         ;
     }
