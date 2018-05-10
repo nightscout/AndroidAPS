@@ -224,6 +224,17 @@ public class SWDefinition {
                 .add(new SWPlugin()
                         .option(PluginType.APS)
                         .label(R.string.configbuilder_aps))
+                .add(new SWButton()
+                        .text(R.string.apssetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveAPS();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveAPS() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveAPS()).getPreferencesId() > 0))
                 .validator(() -> MainApp.getConfigBuilder().getActiveAPS() != null)
         )
         .add(new SWScreen(R.string.configbuilder_loop)
