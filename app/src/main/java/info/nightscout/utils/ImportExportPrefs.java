@@ -33,7 +33,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 public class ImportExportPrefs {
     private static Logger log = LoggerFactory.getLogger(ImportExportPrefs.class);
     static File path = new File(Environment.getExternalStorageDirectory().toString());
-    static final File file = new File(path, MainApp.gs(R.string.app_name) + "Preferences");
+    static public final File file = new File(path, MainApp.gs(R.string.app_name) + "Preferences");
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {

@@ -545,7 +545,7 @@
     <string name="overview_extendedbolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="overview_newtempbasal_basalabsolute">Hodnota bazálu [U/h]</string>
     <string name="overview_newtempbasal_basaltype_label">Typ bazálu</string>
-    <string name="profileswitch">PřepnutíProfilu</string>
+    <string name="profileswitch">Přepnutí profilu</string>
     <string name="pump">Pumpa</string>
     <string name="xdripstatus">Statusový řádek xDripu (hodinky)</string>
     <string name="xdripstatus_settings">Status z xDripu (hodinky)</string>

@@ -8,6 +8,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
 import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
@@ -66,7 +68,14 @@ public class SWDefinition {
         // List all the screens here
         add(new SWScreen(R.string.nav_setupwizard)
                 .add(new SWInfotext()
-                        .label(R.string.welcometosetupwizard) )
+                        .label(R.string.welcometosetupwizard))
+                .add(new SWButton()
+                        .text(R.string.nav_import)
+                        .action(() -> ImportExportPrefs.importSharedPreferences(getActivity()))
+                        .visibility(ImportExportPrefs.file::exists))
+               .add(new SWButton()
+                        .text(R.string.exitwizard)
+                        .action(() -> getActivity().finish()))
         )
         .add(new SWScreen(R.string.language)
                 .skippable(false)
@@ -239,7 +248,7 @@ public class SWDefinition {
                 .add(new SWInfotext()
                         .label(R.string.setupwizard_objectives_description))
                 .add(new SWButton()
-                        .text(R.string.objectives_button_start)
+                        .text(R.string.enableobjectives)
                         .action(() -> {
                             ObjectivesPlugin.getPlugin().setPluginEnabled(PluginType.CONSTRAINTS, true);
                             ObjectivesPlugin.getPlugin().setFragmentVisible(PluginType.CONSTRAINTS, true);
