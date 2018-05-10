@@ -524,7 +524,6 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
-    <string name="key_virtualpump_uploadstatus" translatable="false">virtualpump_uploadstatus</string>
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
     <string name="pleaseallowpermission">Please Allow Permission</string>
