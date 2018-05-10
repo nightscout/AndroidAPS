@@ -17,19 +17,19 @@ import java.util.List;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.OKDialog;
 
 public class SetupWizardActivity extends AppCompatActivity {
     //logging
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
 
-    private TextView screenName;
-
-    SWDefinition swDefinition = new SWDefinition();
-    List<SWScreen> screens = swDefinition.getScreens();
+    private SWDefinition swDefinition = new SWDefinition();
+    private List<SWScreen> screens = swDefinition.getScreens();
     private int currentWizardPage = 0;
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
 
@@ -44,13 +44,19 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWScreen currentScreen = screens.get(currentWizardPage);
 
             //Set screen name
-            screenName = (TextView) findViewById(R.id.sw_content);
+            TextView screenName = (TextView) findViewById(R.id.sw_content);
             screenName.setText(currentScreen.getHeader());
 
+            swDefinition.setActivity(this);
             //Generate layout first
             generateLayout();
             updateButtons();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
     @Override
@@ -63,7 +69,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
-        swDefinition.setContext(this);
+        swDefinition.setActivity(this);
     }
 
     @Subscribe
@@ -83,6 +89,11 @@ public class SetupWizardActivity extends AppCompatActivity {
         updateButtons();
     }
 
+    @Subscribe
+    public void onEventProfileStoreChanged(EventProfileStoreChanged ignored) {
+        updateButtons();
+    }
+
     private void generateLayout() {
         SWScreen currentScreen = screens.get(currentWizardPage);
         LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.sw_content_fields));
@@ -93,40 +104,39 @@ public class SetupWizardActivity extends AppCompatActivity {
     }
 
     private void updateButtons() {
-        SWScreen currentScreen = screens.get(currentWizardPage);
-        if (currentScreen.validator == null || currentScreen.validator.isValid() || currentScreen.skippable) {
-            if (currentWizardPage == screens.size() - 1) {
-                findViewById(R.id.finish_button).setVisibility(View.VISIBLE);
-                findViewById(R.id.next_button).setVisibility(View.GONE);
+        runOnUiThread(() -> {
+            SWScreen currentScreen = screens.get(currentWizardPage);
+            if (currentScreen.validator == null || currentScreen.validator.isValid() || currentScreen.skippable) {
+                if (currentWizardPage == nextPage()) {
+                    findViewById(R.id.finish_button).setVisibility(View.VISIBLE);
+                    findViewById(R.id.next_button).setVisibility(View.GONE);
+                } else {
+                    findViewById(R.id.finish_button).setVisibility(View.GONE);
+                    findViewById(R.id.next_button).setVisibility(View.VISIBLE);
+                }
             } else {
                 findViewById(R.id.finish_button).setVisibility(View.GONE);
-                findViewById(R.id.next_button).setVisibility(View.VISIBLE);
+                findViewById(R.id.next_button).setVisibility(View.GONE);
             }
-        } else {
-            findViewById(R.id.finish_button).setVisibility(View.GONE);
-            findViewById(R.id.next_button).setVisibility(View.GONE);
-        }
-        if (currentWizardPage == 0)
-            findViewById(R.id.previous_button).setVisibility(View.GONE);
-        else
-            findViewById(R.id.previous_button).setVisibility(View.VISIBLE);
-        currentScreen.processVisibility();
+            if (currentWizardPage == 0)
+                findViewById(R.id.previous_button).setVisibility(View.GONE);
+            else
+                findViewById(R.id.previous_button).setVisibility(View.VISIBLE);
+            currentScreen.processVisibility();
+        });
     }
 
     public void showNextPage(View view) {
         this.finish();
         Intent intent = new Intent(this, SetupWizardActivity.class);
-        intent.putExtra(INTENT_MESSAGE, currentWizardPage + 1);
+        intent.putExtra(INTENT_MESSAGE, nextPage());
         startActivity(intent);
     }
 
     public void showPreviousPage(View view) {
         this.finish();
         Intent intent = new Intent(this, SetupWizardActivity.class);
-        if (currentWizardPage > 0)
-            intent.putExtra(INTENT_MESSAGE, currentWizardPage - 1);
-        else
-            intent.putExtra(INTENT_MESSAGE, 0);
+        intent.putExtra(INTENT_MESSAGE, previousPage());
         startActivity(intent);
     }
 
@@ -136,4 +146,23 @@ public class SetupWizardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private int nextPage() {
+        int page = currentWizardPage + 1;
+        while (page < screens.size()) {
+            if (screens.get(page).visibility == null || screens.get(page).visibility.isValid())
+                return page;
+            page++;
+        }
+        return currentWizardPage;
+    }
+
+    private int previousPage() {
+        int page = currentWizardPage - 1;
+        while (page > 0) {
+            if (screens.get(page).visibility == null || screens.get(page).visibility.isValid())
+                return page;
+            page--;
+        }
+        return currentWizardPage;
+    }
 }

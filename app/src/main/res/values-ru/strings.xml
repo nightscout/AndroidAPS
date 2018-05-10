@@ -374,7 +374,7 @@
     <string name="profile">профиль</string>
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="profile_set_ok">базальный профиль помпы обновлен</string>
-    <string name="profileviewer">профиль NS</string>
+    <string name="nsprofile">профиль NS</string>
     <string name="profileviewer_shortname">профильNS</string>
     <string name="pumpNotInitialized">помпа не инициализирована</string>
     <string name="pumpNotInitializedProfileNotSet">помпа не инициализирована, профиль не установлен</string>

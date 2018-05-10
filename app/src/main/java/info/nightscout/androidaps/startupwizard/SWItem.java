@@ -17,6 +17,7 @@ public class SWItem {
     enum Type {
         NONE,
         TEXT,
+        LISTENER,
         URL,
         STRING,
         NUMBER,
@@ -24,7 +25,8 @@ public class SWItem {
         CHECKBOX,
         RADIOBUTTON,
         PLUGIN,
-        BUTTON
+        BUTTON,
+        FRAGMENT
     }
 
     Type type;
