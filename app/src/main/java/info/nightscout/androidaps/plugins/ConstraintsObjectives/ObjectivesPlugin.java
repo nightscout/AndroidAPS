@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
@@ -87,7 +88,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
             this.started = started;
         }
 
-        boolean isStarted() {
+        public boolean isStarted() {
             return started.getTime() > 0;
         }
 
@@ -233,6 +234,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
             editor.apply();
             if (Config.logPrefsChange)
                 log.debug("Objectives stored");
+            MainApp.bus().post(new EventObjectivesSaved());
         }
     }
 

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
@@ -271,6 +272,13 @@ public class SWDefinition {
                 .validator(() -> ObjectivesPlugin.getPlugin().isEnabled(PluginType.CONSTRAINTS))
                 .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible())
         )
+        .add(new SWScreen(R.string.objectives)
+                        .skippable(false)
+                        .add(new SWFragment(this)
+                                .add(new ObjectivesFragment()))
+                        .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
+                        .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
+                )
         ;
     }
 
