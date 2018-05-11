@@ -90,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         askForBatteryOptimizationPermission();
         doMigrations();
+
+        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
+            Intent intent = new Intent(this, SetupWizardActivity.class);
+            startActivity(intent);
+        }
+
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 

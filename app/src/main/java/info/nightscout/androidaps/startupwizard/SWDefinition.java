@@ -8,7 +8,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +78,10 @@ public class SWDefinition {
                         .visibility(() -> !ImportExportPrefs.file.exists()))
                .add(new SWButton()
                         .text(R.string.exitwizard)
-                        .action(() -> getActivity().finish()))
+                        .action(() -> {
+                            SP.putBoolean(R.string.key_setupwizard_processed, true);
+                            getActivity().finish();
+                        }))
         )
         .add(new SWScreen(R.string.language)
                 .skippable(false)

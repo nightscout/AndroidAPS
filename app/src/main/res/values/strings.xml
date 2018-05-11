@@ -1070,5 +1070,5 @@
     <string name="enableobjectives">Enable Objectives</string>
     <string name="apssetup">Configure APS plugin</string>
     <string name="backupismissing">Exported configuration is missing thus import configuration is not possible.\n</string>
-
+    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
 </resources>

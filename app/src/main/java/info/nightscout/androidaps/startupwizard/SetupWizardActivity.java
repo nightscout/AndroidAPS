@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientS
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.SP;
 
 public class SetupWizardActivity extends AppCompatActivity {
     //logging
@@ -155,6 +156,7 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     // Go back to overview
     public void finishSetupWizard(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
