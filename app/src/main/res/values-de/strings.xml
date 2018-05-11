@@ -659,7 +659,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="combo_pump_activity_label">Aktivität</string>
-    <string name="combo_tbr_remaining">%%1$d%% (%2$d Min. verbleibend)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d Min. verbleibend)</string>
     <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %1$d Min.</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_state_suspended_by_user">Gestoppt (Benutzer)</string>
