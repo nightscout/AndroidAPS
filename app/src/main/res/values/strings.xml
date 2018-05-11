@@ -1059,15 +1059,16 @@
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
     <string name="enable_nsclient">Enable NSClient</string>
-    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process</string>
+    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
     <string name="pumpsetup">Pump setup</string>
     <string name="readstatus">Read status</string>
     <string name="adjustprofileinns">Changes must be done in NS</string>
     <string name="exitwizard">Skip setup wizard</string>
-    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be comming from ?</string>
-    <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
-    <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.</string>
+    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be comming from ?\n</string>
+    <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes\n</string>
+    <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.\n</string>
     <string name="enableobjectives">Enable Objectives</string>
     <string name="apssetup">Configure APS plugin</string>
+    <string name="backupismissing">Exported configuration is missing thus import configuration is not possible.\n</string>
 
 </resources>

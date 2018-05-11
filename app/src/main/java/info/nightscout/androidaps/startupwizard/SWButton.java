@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
 public class SWButton extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWButton.class);
 
-    Runnable buttonRunnable;
-    int buttonText;
-    SWValidator buttonValidator;
+    private Runnable buttonRunnable;
+    private int buttonText;
+    private SWValidator buttonValidator;
 
-    Button button;
+    private Button button;
 
-    public SWButton() {
+    SWButton() {
         super(Type.BUTTON);
     }
 
