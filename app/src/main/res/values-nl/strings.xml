@@ -921,5 +921,28 @@
     <string name="record_pump_site_change">Markeer een infuuwissel in NS</string>
     <string name="readstatusfailed">Leezen van status mislukt</string>
     <string name="record_insulin_cartridge_change">Markeer een insuline ampull wissel in NS</string>
+    <string name="automatic_careportal_events">Automatische Careportal gebeurtenissen</string>
+    <string name="insight_remaining_over">resterende van</string>
+    <string name="insight_upfront_with">op voorhand met</string>
+    <string name="insight_keepalive_format_string">%ds verloopt %s</string>
+    <string name="about_link_urls">" http://www.androidaps.org  facebook: http://facebook.androidaps.org"</string>
+    <string name="firstinsulinincrement">"Eerste insuline increment"</string>
+    <string name="secondinsulinincrement">Tweede insuline increment</string>
+    <string name="thirdinsulinincrement">Derde  insuline increment</string>
+    <string name="firstcarbsincrement">Eerste koolhydraten increment</string>
+    <string name="secondcarbsincrement">Tweede koolhydraten increment</string>
+    <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
+    <string name="limitingbolus">Bolus beperkt tot %.1f E doordat %s</string>
+    <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
+    <string name="limitingmaxiob">Max IOB wordt beperkt tot %1.f E doordat %s</string>
+    <string name="limitingcarbs">Koolhydraten worden beperkt tot %d gr doordat %s</string>
+    <string name="maxvalueinpreferences">Maximum waarde in voorkeuren</string>
+    <string name="limitingiob">IOB gelimmiteerd tot %.1f E doordat %s</string>
+    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatische Insuline, infusieset wissels, batterij wissels en pomp alarmen naar NS uploaden</string>
+    <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd vollezig is opgenomen. Resterende KH worden niet mee gerekend.</string>
+    <string name="openapssmb_maxiob_title">Max yoyzlr IOB OpenAPS niet kan overschrijden (E)</string>
+    <string name="maxbasalmultiplier">Max basaal vermenigvuldiger</string>
+    <string name="maxdailybasalmultiplier">Max dagelijks basaal vermenigvuldiger</string>
+    <string name="openapssmb_maxiob_summary">Deze waarde is MAX IOB genoemd in OpenAPS context, OpenAPS zal geen insuline toedenen in de actuele IOB groter is dan deze waarde</string>
 </resources>
 
