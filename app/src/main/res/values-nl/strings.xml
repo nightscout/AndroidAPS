@@ -740,7 +740,7 @@
     <string name="combo_suspious_bolus_time">Datum/tijd van de geleverde bolus op de pomp is niet correct, IOB is waarschijnlijk foutief. Controleer aub de datum/tijd op de pomp.</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="loop_tbrsetbypump_label">tijdelijk basaal gezet door pomp</string>
-    <string name="resistantadult">line resistente volwassene</string>
+    <string name="resistantadult">insuline resistente volwassene</string>
     <string name="smb_shortname">SMB</string>
     <string name="enableuam">Activeer UAM</string>
     <string name="enablesmb">Activeer SMB</string>
