@@ -22,4 +22,9 @@ public class VirtualPumpStatus extends PumpStatus {
     public String getErrorInfo() {
         return null;
     }
+
+    @Override
+    public void refreshConfiguration() {
+
+    }
 }

@@ -1062,6 +1062,8 @@
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
     <string name="medtronic_pump_frequency">Pump Frequency</string>
+    <string name="medtronic_pump_max_bolus">Max Bolus on Pump</string>
+    <string name="medtronic_pump_max_basal">Max Basal on Pump</string>
     <string name="medtronic_rileylink_mac_address">RileyLink MAC Address</string>
     <string name="medtronic_errors">Errors</string>
     <string name="medtronic_error_serial_not_set">Serial # not set.</string>
@@ -1071,6 +1073,8 @@
     <string name="medtronic_error_pump_frequency_not_set">Pump Frequency not set.</string>
     <string name="medtronic_error_pump_frequency_invalid">Pump Frequency unsupported.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Address invalid.</string>
+    <string name="medtronic_pump_frequency_us">US (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
 
 
 </resources>

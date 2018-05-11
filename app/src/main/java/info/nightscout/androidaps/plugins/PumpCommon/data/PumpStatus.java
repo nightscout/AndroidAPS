@@ -54,6 +54,6 @@ public abstract class PumpStatus {
     public abstract String getErrorInfo();
 
 
-
+    public abstract void refreshConfiguration();
 
 }

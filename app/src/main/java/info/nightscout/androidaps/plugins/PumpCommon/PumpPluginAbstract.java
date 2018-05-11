@@ -28,12 +28,13 @@ import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
  * Created by andy on 23.04.18.
  */
 
-public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface, ProfileInterface {
+public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
-    protected boolean fragmentVisible = false;
-    protected boolean fragmentEnabled = false;
+    // , ProfileInterface
+    //protected boolean fragmentVisible = false;
+    //protected boolean fragmentEnabled = false;
     protected boolean pumpServiceRunning = false;
-    private static final String TAG = "PumpPluginAbstract";
+    //private static final String TAG = "PumpPluginAbstract";
     //protected PumpStatus pumpStatus;
 
 
@@ -75,11 +76,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 //        return true;
 //    }
 //
-//
-//    @Override
-//    public boolean hasFragment() {
-//        return true;
-//    }
+
 //
 //
 //    @Override
@@ -88,25 +85,6 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 //    }
 
 
-//    @Override
-//    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-//        if (type == PUMP) {
-//            this.fragmentEnabled = fragmentEnabled;
-//
-//            if (fragmentEnabled) {
-//                if (!pumpServiceRunning)
-//                    startPumpService();
-//                else
-//                    Log.d(TAG, "Can't start, Pump service (" + getInternalName() + "is already running.");
-//            }
-//            else {
-//                if (pumpServiceRunning)
-//                    stopPumpService();
-//                else
-//                    Log.d(TAG, "Can't stop, Pump service (" + getInternalName() + "is already stopped.");
-//            }
-//        }
-//    }
 
 
 //    @Override
@@ -204,17 +182,15 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew){
-        //return pumpDriver.setTempBasalAbsolute(absoluteRate, durationInMinutes, enforceNew);
-        // FIXME
-        return null;
+
+    @Override
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+        return pumpDriver.setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
     }
 
-
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, boolean enforceNew){
-        //return pumpDriver.setTempBasalPercent(percent, durationInMinutes, enforceNew);
-        // FIXME
-        return null;
+    @Override
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+        return pumpDriver.setTempBasalPercent(percent, durationInMinutes, profile, enforceNew);
     }
 
 
@@ -340,6 +316,12 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     public String getProfileName()
     {
         return this.pumpStatus.activeProfileName;
+    }
+
+
+    @Override
+    public PumpEnactResult loadTDDs() {
+        return this.pumpDriver.loadTDDs();
     }
 
 }

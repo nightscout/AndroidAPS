@@ -148,8 +148,8 @@
     </string-array>
 
     <string-array name="medtronicPumpFreqArray">
-        <item>US</item>
-        <item>EU</item>
+        <item>@string/medtronic_pump_frequency_us</item>
+        <item>@string/medtronic_pump_frequency_worldwide</item>
     </string-array>
 
 

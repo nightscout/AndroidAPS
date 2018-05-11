@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic;
 
-import com.gxwtech.roundtrip2.ServiceClientConnection;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,17 +11,13 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.PumpMedtronic.medtronic.MedtronicPumpDriver;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpDriver;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
 
 /**
  * Created by andy on 23.04.18.
@@ -33,7 +27,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpPlugin.class);
 
-    private ServiceClientConnection serviceClientConnection;
+    //private ServiceClientConnection serviceClientConnection;
 
 
     public static PumpPluginAbstract getPlugin() {
@@ -44,11 +38,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-
-
-
-    public MedtronicPumpPlugin()
-    {
+    private MedtronicPumpPlugin() {
         super(new MedtronicPumpDriver(), //
                 "MedtronicPump", //
                 MedtronicFragment.class.getName(), //
@@ -58,13 +48,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-
-
-
     @Override
     protected String getInternalName() {
         return "MedtronicPump";
     }
+
 
     @Override
     protected void startPumpService() {
@@ -72,21 +60,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         //serviceClientConnection = new ServiceClientConnection();
     }
 
+
     @Override
     protected void stopPumpService() {
 
     }
 
-
-    @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        return null;
-    }
-
-    @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        return null;
-    }
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
@@ -139,32 +118,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-
-    @Override
-    public String shortStatus(boolean veryShort) {
-        return "Medtronic Pump";
-    }
+    //@Override
+    //public String shortStatus(boolean veryShort) {
+    //    return "Medtronic Pump";
+    //}
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
     }
-
-    @Override
-    public PumpEnactResult loadTDDs() {
-        return null;
-    }
-
-
-//    @Override
-//    public boolean isEnabled(int type) {
-//        // TODO might need tweaking
-//        if (type == PluginBase.PUMP)
-//            return fragmentEnabled;
-//        else if (type == PluginBase.CONSTRAINTS)
-//            return fragmentEnabled;
-//        return false;
-//    }
 
 
     @Override
@@ -172,11 +134,5 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return R.xml.pref_medtronic;
     }
 
-
-//    @Override
-//    public boolean isLoopEnabled() {
-//        // FIXME check if we need to override
-//        return getPumpStatusData().validBasalRateProfileSelectedOnPump;
-//    }
 
 }

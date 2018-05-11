@@ -4,13 +4,6 @@
     <PreferenceCategory
         android:title="@string/medtronic_name">
 
-        <Preference
-            android:enabled="false"
-            android:key="blescannner"
-            android:title="RileyLink Configuration (maybe)">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
-        </Preference>
-
 
         <EditTextPreference
             android:defaultValue="000000"
@@ -34,6 +27,29 @@
             android:key="pref_medtronic_frequency"
             android:selectable="true"
             android:title="@string/medtronic_pump_frequency" />
+
+        <EditTextPreference
+            android:defaultValue="35"
+            android:key="pref_medtronic_max_basal"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="number"
+            android:title="@string/medtronic_pump_max_basal" />
+
+        <EditTextPreference
+            android:defaultValue="25"
+            android:key="pref_medtronic_max_bolus"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="number"
+            android:title="@string/medtronic_pump_max_bolus" />
+
+        <Preference
+            android:enabled="false"
+            android:key="rileylink_scanner"
+            android:title="RileyLink Configuration">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+        </Preference>
 
         <EditTextPreference
             android:defaultValue="xx:xx:xx:xx:xx:xx"
