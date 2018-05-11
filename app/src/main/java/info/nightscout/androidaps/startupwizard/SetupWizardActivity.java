@@ -18,7 +18,9 @@ import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
@@ -92,6 +94,16 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEventProfileStoreChanged(EventProfileStoreChanged ignored) {
+        updateButtons();
+    }
+
+    @Subscribe
+    public void onEventProfileSwitchChange(EventProfileSwitchChange ignored) {
+        updateButtons();
+    }
+
+    @Subscribe
+    public void onEventObjectivesSaved(EventObjectivesSaved ignored) {
         updateButtons();
     }
 

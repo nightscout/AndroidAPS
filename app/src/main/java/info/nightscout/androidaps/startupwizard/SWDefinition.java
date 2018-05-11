@@ -8,6 +8,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
@@ -34,6 +36,7 @@ import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
 import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
@@ -66,7 +69,14 @@ public class SWDefinition {
         // List all the screens here
         add(new SWScreen(R.string.nav_setupwizard)
                 .add(new SWInfotext()
-                        .label(R.string.welcometosetupwizard) )
+                        .label(R.string.welcometosetupwizard))
+                .add(new SWButton()
+                        .text(R.string.nav_import)
+                        .action(() -> ImportExportPrefs.importSharedPreferences(getActivity()))
+                        .visibility(ImportExportPrefs.file::exists))
+               .add(new SWButton()
+                        .text(R.string.exitwizard)
+                        .action(() -> getActivity().finish()))
         )
         .add(new SWScreen(R.string.language)
                 .skippable(false)
@@ -215,6 +225,17 @@ public class SWDefinition {
                 .add(new SWPlugin()
                         .option(PluginType.APS)
                         .label(R.string.configbuilder_aps))
+                .add(new SWButton()
+                        .text(R.string.apssetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveAPS();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveAPS() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveAPS()).getPreferencesId() > 0))
                 .validator(() -> MainApp.getConfigBuilder().getActiveAPS() != null)
         )
         .add(new SWScreen(R.string.configbuilder_loop)
@@ -239,7 +260,7 @@ public class SWDefinition {
                 .add(new SWInfotext()
                         .label(R.string.setupwizard_objectives_description))
                 .add(new SWButton()
-                        .text(R.string.objectives_button_start)
+                        .text(R.string.enableobjectives)
                         .action(() -> {
                             ObjectivesPlugin.getPlugin().setPluginEnabled(PluginType.CONSTRAINTS, true);
                             ObjectivesPlugin.getPlugin().setFragmentVisible(PluginType.CONSTRAINTS, true);
@@ -251,6 +272,13 @@ public class SWDefinition {
                 .validator(() -> ObjectivesPlugin.getPlugin().isEnabled(PluginType.CONSTRAINTS))
                 .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible())
         )
+        .add(new SWScreen(R.string.objectives)
+                        .skippable(false)
+                        .add(new SWFragment(this)
+                                .add(new ObjectivesFragment()))
+                        .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
+                        .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
+                )
         ;
     }
 
