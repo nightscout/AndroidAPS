@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.medtronic;
+package info.nightscout.androidaps.plugins.PumpMedtronic.driver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpMedtronic.medtronic.defs.MedtronicPumpType;
 import info.nightscout.utils.SP;
 
 /**
@@ -23,14 +22,6 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     //private static MedtronicPumpStatus medtronicPumpStatus = new MedtronicPumpStatus();
     private static Logger LOG = LoggerFactory.getLogger(MedtronicPumpStatus.class);
-
-    //public Date lastDataTime;
-    //public long lastConnection = 0L;
-    //public Date lastBolusTime;
-    //public String activeProfileName = "A";
-    //public double reservoirRemainingUnits = 50d;
-    //public double batteryRemaining = 75d;
-    //public String iob = "0";
 
     public String errorDescription = null;
     public String serialNumber;
@@ -45,11 +36,10 @@ public class MedtronicPumpStatus extends PumpStatus {
     String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
     String regexSN = "[0-9]{6}";
 
-    private Map<String,PumpType> medtronicPumpMap = null;
+    private Map<String, PumpType> medtronicPumpMap = null;
 
 
-    public MedtronicPumpStatus(PumpDescription pumpDescription)
-    {
+    public MedtronicPumpStatus(PumpDescription pumpDescription) {
         super(pumpDescription);
     }
 
@@ -59,9 +49,9 @@ public class MedtronicPumpStatus extends PumpStatus {
 
         this.activeProfileName = "STD";
         this.reservoirRemainingUnits = 75d;
-        this.batteryRemaining = 75d;
+        this.batteryRemaining = 75;
 
-        if (this.medtronicPumpMap==null)
+        if (this.medtronicPumpMap == null)
             createMedtronicPumpMap();
     }
 
@@ -86,11 +76,10 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    public void verifyConfiguration()
-    {
+    public void verifyConfiguration() {
         try {
 
-            if (this.medtronicPumpMap==null)
+            if (this.medtronicPumpMap == null)
                 createMedtronicPumpMap();
 
 
@@ -174,8 +163,7 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             maxBolus = Integer.parseInt(value);
 
-            if (maxBolus> 25)
-            {
+            if (maxBolus > 25) {
                 SP.putString("pref_medtronic_max_bolus", "25");
             }
 
@@ -183,25 +171,21 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             maxBasal = Integer.parseInt(value);
 
-            if (maxBasal> 35)
-            {
+            if (maxBasal > 35) {
                 SP.putString("pref_medtronic_max_basal", "35");
             }
 
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             this.errorDescription = ex.getMessage();
             LOG.error("Error on Verification: " + ex.getMessage(), ex);
         }
     }
 
 
-    public String getErrorInfo()
-    {
+    public String getErrorInfo() {
         verifyConfiguration();
 
-        return (this.errorDescription==null) ? "-" : this.errorDescription;
+        return (this.errorDescription == null) ? "-" : this.errorDescription;
     }
 
 

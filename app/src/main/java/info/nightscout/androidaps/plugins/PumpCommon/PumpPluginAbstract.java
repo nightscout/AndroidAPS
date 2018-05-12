@@ -1,28 +1,32 @@
 package info.nightscout.androidaps.plugins.PumpCommon;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.PumpCombo.ComboFragment;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.DateUtil;
 
 /**
  * Created by andy on 23.04.18.
@@ -30,26 +34,21 @@ import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
 
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
-    // , ProfileInterface
-    //protected boolean fragmentVisible = false;
-    //protected boolean fragmentEnabled = false;
+    private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
     protected boolean pumpServiceRunning = false;
-    //private static final String TAG = "PumpPluginAbstract";
-    //protected PumpStatus pumpStatus;
-
 
 
     protected static PumpPluginAbstract plugin = null;
     protected PumpDriverInterface pumpDriver;
     protected PumpStatus pumpStatus;
+    protected String internalName;
 
 
     protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
                                  String internalName, //
                                  String fragmentClassName, //
                                  int pluginName, //
-                                 int pluginShortName)
-    {
+                                 int pluginShortName) {
         super(new PluginDescription()
                 .mainType(PluginType.PUMP)
                 .fragmentClass(fragmentClassName)
@@ -59,128 +58,96 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
         this.pumpDriver = pumpDriverInterface;
         this.pumpStatus = this.pumpDriver.getPumpStatusData();
+        this.internalName = internalName;
     }
 
 
-
-
-
-//    @Override
-//    public boolean isVisibleInTabs(int type) {
-//        return type == PUMP && fragmentVisible;
-//    }
-//
-//
-//    @Override
-//    public boolean canBeHidden(int type) {
-//        return true;
-//    }
-//
-
-//
-//
-//    @Override
-//    public boolean showInList(int type) {
-//        return type == PUMP;
-//    }
-
-
-
-
-//    @Override
-//    public void setFragmentVisible(int type, boolean fragmentVisible) {
-//        if (type == PUMP)
-//            this.fragmentVisible = fragmentVisible;
-//    }
-
-    protected abstract String getInternalName();
+    protected String getInternalName() {
+        return this.internalName;
+    }
 
     protected abstract void startPumpService();
 
     protected abstract void stopPumpService();
 
 
-    public PumpStatus getPumpStatusData()
-    {
+    public PumpStatus getPumpStatusData() {
         return pumpDriver.getPumpStatusData();
     }
 
 
-    public boolean isInitialized()
-    {
+    public boolean isInitialized() {
         return pumpDriver.isInitialized();
     }
 
-    public boolean isSuspended(){
+    public boolean isSuspended() {
         return pumpDriver.isSuspended();
     }
 
-    public boolean isBusy(){
+    public boolean isBusy() {
         return pumpDriver.isBusy();
     }
 
 
-    public boolean isConnected(){
+    public boolean isConnected() {
         return pumpDriver.isConnected();
     }
 
 
-    public boolean isConnecting(){
+    public boolean isConnecting() {
         return pumpDriver.isConnecting();
     }
 
 
-    public void connect(String reason){
+    public void connect(String reason) {
         pumpDriver.connect(reason);
     }
 
 
-    public void disconnect(String reason){
+    public void disconnect(String reason) {
         pumpDriver.disconnect(reason);
     }
 
 
-    public void stopConnecting(){
+    public void stopConnecting() {
         pumpDriver.stopConnecting();
     }
 
 
-    public void getPumpStatus(){
+    public void getPumpStatus() {
         pumpDriver.getPumpStatus();
     }
 
 
     // Upload to pump new basal profile
-    public PumpEnactResult setNewBasalProfile(Profile profile){
+    public PumpEnactResult setNewBasalProfile(Profile profile) {
         return pumpDriver.setNewBasalProfile(profile);
     }
 
 
-    public boolean isThisProfileSet(Profile profile){
+    public boolean isThisProfileSet(Profile profile) {
         return pumpDriver.isThisProfileSet(profile);
     }
 
 
-    public Date lastDataTime(){
+    public Date lastDataTime() {
         return pumpDriver.lastDataTime();
     }
 
 
-    public double getBaseBasalRate(){
+    public double getBaseBasalRate() {
         return pumpDriver.getBaseBasalRate();
     } // base basal rate, not temp basal
 
 
-
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo){
+    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         return pumpDriver.deliverTreatment(detailedBolusInfo);
     }
 
 
-    public void stopBolusDelivering(){
+    public void stopBolusDelivering() {
         pumpDriver.stopBolusDelivering();
     }
-
 
 
     @Override
@@ -194,54 +161,58 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes){
+    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         return pumpDriver.setExtendedBolus(insulin, durationInMinutes);
     }
     //some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
     //when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
 
-    public PumpEnactResult cancelTempBasal(boolean enforceNew){
+    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         return pumpDriver.cancelTempBasal(enforceNew);
     }
 
 
-    public PumpEnactResult cancelExtendedBolus(){
+    public PumpEnactResult cancelExtendedBolus() {
         return pumpDriver.cancelExtendedBolus();
     }
 
     // Status to be passed to NS
 
 
-    public JSONObject getJSONStatus(Profile profile, String profileName){
-        return pumpDriver.getJSONStatus( profile,  profileName);
-    }
+//    public JSONObject getJSONStatus(Profile profile, String profileName) {
+//        return pumpDriver.getJSONStatus(profile, profileName);
+//    }
 
 
-    public String deviceID(){
+    public String deviceID() {
         return pumpDriver.deviceID();
     }
 
     // Pump capabilities
 
 
-    public PumpDescription getPumpDescription(){
+    public PumpDescription getPumpDescription() {
         return pumpDriver.getPumpDescription();
     }
 
     // Short info for SMS, Wear etc
 
 
-    public String shortStatus(boolean veryShort){
+    public String shortStatus(boolean veryShort) {
         return pumpDriver.shortStatus(veryShort);
     }
 
 
-
-    public boolean isFakingTempsByExtendedBoluses(){
+    public boolean isFakingTempsByExtendedBoluses() {
         return pumpDriver.isInitialized();
     }
 
+
+    @Override
+    public PumpEnactResult loadTDDs() {
+        return this.pumpDriver.loadTDDs();
+    }
 
     // Constraints interface
 
@@ -300,28 +271,73 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 //        return maxIob;
 //    }
 
+
+    @Override
+    public JSONObject getJSONStatus(Profile profile, String profileName) {
+        //if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
+        //    return null;
+        //}
+
+        long now = System.currentTimeMillis();
+        if ((pumpStatus.lastConnection + 5 * 60 * 1000L) < System.currentTimeMillis()) {
+            return null;
+        }
+
+        JSONObject pump = new JSONObject();
+        JSONObject battery = new JSONObject();
+        JSONObject status = new JSONObject();
+        JSONObject extended = new JSONObject();
+        try {
+            battery.put("percent", pumpStatus.batteryRemaining);
+            status.put("status", pumpStatus.pumpStatusType != null ? pumpStatus.pumpStatusType.getStatus() : "normal");
+            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            try {
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+            } catch (Exception e) {
+            }
+
+            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+            if (tb != null) {
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+            }
+
+            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
+            if (eb != null) {
+                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
+                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+            }
+
+            status.put("timestamp", DateUtil.toISOString(new Date()));
+
+            pump.put("battery", battery);
+            pump.put("status", status);
+            pump.put("extended", extended);
+            pump.put("reservoir", pumpStatus.reservoirRemainingUnits);
+            pump.put("clock", DateUtil.toISOString(new Date()));
+        } catch (JSONException e) {
+            LOG.error("Unhandled exception", e);
+        }
+        return pump;
+    }
+
+
     // Profile interface
 
     @Nullable
-    public ProfileStore getProfile()
-    {
+    public ProfileStore getProfile() {
         return this.pumpStatus.profileStore;
     }
 
-    public String getUnits()
-    {
+    public String getUnits() {
         return this.pumpStatus.units;
     }
 
-    public String getProfileName()
-    {
+    public String getProfileName() {
         return this.pumpStatus.activeProfileName;
     }
 
-
-    @Override
-    public PumpEnactResult loadTDDs() {
-        return this.pumpDriver.loadTDDs();
-    }
 
 }

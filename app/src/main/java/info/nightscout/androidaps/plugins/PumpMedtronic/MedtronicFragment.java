@@ -33,7 +33,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
-
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
@@ -81,14 +80,14 @@ public class MedtronicFragment extends SubscriberFragment {
     TextView errorsView;
 
 
-
     @BindView(R.id.medtronic_queue)
     TextView queueView;
 
     @BindView(R.id.overview_pumpstatuslayout)
     LinearLayout pumpStatusLayout;
 
-    @BindView(R.id.overview_pumpstatus) TextView pumpStatusView;
+    @BindView(R.id.overview_pumpstatus)
+    TextView pumpStatusView;
 
     public MedtronicFragment() {
     }
@@ -204,7 +203,7 @@ public class MedtronicFragment extends SubscriberFragment {
                 @Override
                 public void run() {
 
-                    MedtronicPumpPlugin plugin = (MedtronicPumpPlugin)MedtronicPumpPlugin.getPlugin();
+                    MedtronicPumpPlugin plugin = (MedtronicPumpPlugin) MedtronicPumpPlugin.getPlugin();
                     PumpStatus pump = plugin.getPumpStatusData();
 
                     if (pump.lastConnection != 0) {
@@ -213,7 +212,7 @@ public class MedtronicFragment extends SubscriberFragment {
                         lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
-                    if (pump.lastBolusTime!=null && pump.lastBolusTime.getTime() != 0) {
+                    if (pump.lastBolusTime != null && pump.lastBolusTime.getTime() != 0) {
                         Long agoMsec = System.currentTimeMillis() - pump.lastBolusTime.getTime();
                         double agoHours = agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
@@ -240,10 +239,6 @@ public class MedtronicFragment extends SubscriberFragment {
                             tempBasalView.setText("");
                         }
                     }
-
-
-
-
 
                     reservoirView.setText(DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + " / " + pump.reservoirFullUnits + " U");
                     SetWarnColor.setColorInverse(reservoirView, pump.reservoirRemainingUnits, 50d, 20d);

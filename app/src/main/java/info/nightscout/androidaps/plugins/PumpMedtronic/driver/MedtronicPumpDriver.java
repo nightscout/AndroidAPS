@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.medtronic;
+package info.nightscout.androidaps.plugins.PumpMedtronic.driver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +10,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpDriver;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
@@ -26,18 +24,17 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpDriver.class);
     MedtronicPumpStatus pumpStatusLocal;
 
-    public MedtronicPumpDriver()
-    {
+    public MedtronicPumpDriver() {
         pumpStatusLocal = new MedtronicPumpStatus(pumpDescription);
         pumpStatusLocal.verifyConfiguration();
 
         this.pumpStatusData = pumpStatusLocal;
 
-        if (pumpStatusLocal.pumpType!=null)
+        if (pumpStatusLocal.pumpType != null)
             PumpUtil.setPumpDescription(pumpDescription, pumpStatusLocal.pumpType);
 
-        if (pumpStatusLocal.maxBasal!=null)
-            pumpDescription.maxTempAbsolute = (pumpStatusLocal.maxBasal!=null) ? pumpStatusLocal.maxBasal : 35.0d;
+        if (pumpStatusLocal.maxBasal != null)
+            pumpDescription.maxTempAbsolute = (pumpStatusLocal.maxBasal != null) ? pumpStatusLocal.maxBasal : 35.0d;
 
         // needs to be changed in configuration, after all functionalities are done
         pumpDescription.isBolusCapable = true;
@@ -71,8 +68,7 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
 
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean enforceNew)
-    {
+    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
 
         // FIXME
         // send Cancel Temp Basal
@@ -102,12 +98,6 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         pumpStatusData.setLastDataTimeToNow();
         return result;
     }
-
-
-
-
-
-
 
 
 }

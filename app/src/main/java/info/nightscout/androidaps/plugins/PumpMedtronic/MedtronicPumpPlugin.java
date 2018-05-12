@@ -15,7 +15,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.PumpPluginAbstract;
-import info.nightscout.androidaps.plugins.PumpMedtronic.medtronic.MedtronicPumpDriver;
+import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpDriver;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
@@ -45,12 +45,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 R.string.medtronic_name, //
                 R.string.medtronic_name_short //
         );
-    }
-
-
-    @Override
-    protected String getInternalName() {
-        return "MedtronicPump";
     }
 
 
