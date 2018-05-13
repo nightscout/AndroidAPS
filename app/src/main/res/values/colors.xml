@@ -72,4 +72,10 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
+
+    <color name="swColorPrimary">#303030</color>
+    <color name="swColorPrimaryDark">#303030</color>
+    <color name="swColorAccent">#FFEB3B</color>
+    <color name="swColorBackground">#303030</color>
+
 </resources>
