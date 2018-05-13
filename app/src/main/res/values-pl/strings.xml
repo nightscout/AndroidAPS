@@ -835,7 +835,7 @@
     <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
     <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
     <string name="temptargetshort">TT</string>
-    <string name="don_t_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
+    <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
     <string name="bolusrecordedonly">Bolus zostanie tylko zapisany w rekordach</string>
