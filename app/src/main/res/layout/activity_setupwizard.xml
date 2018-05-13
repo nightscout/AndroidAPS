@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".startupwizard.SetupWizardActivity">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:onClick="exitPressed"
+        app:srcCompat="@drawable/ic_exit_to_app" />
+
     <TextView
         android:id="@+id/sw_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:keepScreenOn="true"
-        android:textColor="#33b5e5"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        tools:text="Title" />
 
-    <LinearLayout
-        android:id="@+id/sw_content_fields"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/sw_content_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp" />
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/sw_content_controls"
@@ -31,42 +46,41 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:background="@color/black_overlay"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <Button
             android:id="@+id/previous_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:onClick="showPreviousPage"
-            android:text="@string/setupwizard_previous" />
+            android:text="@string/setupwizard_previous"
+            android:textColor="#FFFFFF" />
 
-        <Button
-            android:id="@+id/skip_button"
+        <View
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="showNextPage"
-            android:text="@string/setupwizard_skip"
-            android:visibility="invisible" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/next_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:onClick="showNextPage"
             android:text="@string/setupwizard_next"
-            android:visibility="gone" />
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/finish_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:onClick="finishSetupWizard"
             android:text="@string/setupwizard_finish"
-            android:visibility="gone" />
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 

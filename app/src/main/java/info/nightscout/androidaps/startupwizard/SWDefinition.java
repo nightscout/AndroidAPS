@@ -76,12 +76,6 @@ public class SWDefinition {
                 .add(new SWInfotext()
                         .label(R.string.backupismissing)
                         .visibility(() -> !ImportExportPrefs.file.exists()))
-               .add(new SWButton()
-                        .text(R.string.exitwizard)
-                        .action(() -> {
-                            SP.putBoolean(R.string.key_setupwizard_processed, true);
-                            getActivity().finish();
-                        }))
         )
         .add(new SWScreen(R.string.language)
                 .skippable(false)

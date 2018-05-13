@@ -60,6 +60,11 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (currentWizardPage == 0) OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        else showPreviousPage(null);
+    }
+
+    public void exitPressed(View view) {
         OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
