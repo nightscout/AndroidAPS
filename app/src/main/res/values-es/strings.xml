@@ -744,7 +744,7 @@
     <string name="bolusrecordedonly">El Bolo solo será anotado</string>
     <string name="category">Categoría</string>
     <string name="subcategory">Subcategoría</string>
-    <string name="don_t_bolus_record_only">No administrar Bolo, solo anotar</string>
+    <string name="do_not_bolus_record_only">No administrar Bolo, solo anotar</string>
     <string name="insight_min">min</string>
     <string name="temptargetshort">TT</string>
     <string name="start_activity_tt">Inicio TT Actividad</string>

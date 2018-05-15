@@ -797,4 +797,6 @@
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
     <string formatted="false" name="objectivenotstarted">Zielsetzung %d nicht gestartet</string>
     <string formatted="false" name="objectivenotfinished">Zielsetzung %d nicht abgeschlossen</string>
+    <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
+    <string name="bolusrecordedonly">Bolus wird nur erfasst</string>
 </resources>

@@ -813,7 +813,7 @@
     <string name="g5appnotdetected">Vänligen uppdatera din G5-app till en supportad version</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
-    <string name="don_t_bolus_record_only">Ge ingen bolus, logga bara</string>
+    <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolusen sparas bara i loggboken</string>

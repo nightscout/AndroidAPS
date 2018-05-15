@@ -810,7 +810,7 @@
     <string name="start_eating_soon_tt">Spustit Dočasný cíl Blížící se jídlo</string>
     <string name="temptargetshort">DoCíl</string>
     <string name="insight_min">min</string>
-    <string name="don_t_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
+    <string name="do_not_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
     <string name="subcategory">Podkategorie</string>
     <string name="category">Kategorie</string>
     <string name="bolusrecordedonly">Bolus bude pouze zaznamenán</string>

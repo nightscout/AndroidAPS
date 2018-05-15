@@ -29,7 +29,7 @@
                 android:id="@+id/newtreatment_record_only"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/don_t_bolus_record_only" />
+                android:text="@string/do_not_bolus_record_only" />
 
             <TextView
                 android:layout_width="wrap_content"
