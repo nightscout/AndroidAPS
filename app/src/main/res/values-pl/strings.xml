@@ -557,7 +557,7 @@
     <string name="careportal_sensorage_label">Czas sensora</string>
     <string name="careportal_canulaage_label">Czas wkłucia</string>
     <string name="careportal_insulinage_label">Czas insuliny</string>
-    <string name="hours">godziny</string>
+    <string name="hours">godzin</string>
     <string name="overview_newtempbasal_basaltype_label">Typ bazy</string>
     <string name="invalidprofile">Nieważny profil !!!</string>
     <string name="profileswitch">ZmieńProfil</string>
