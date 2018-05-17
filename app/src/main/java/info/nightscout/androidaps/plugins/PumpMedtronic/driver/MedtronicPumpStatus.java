@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.utils.SP;
 
 /**
@@ -92,7 +93,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             this.maxBasal = null;
 
 
-            String serialNr = SP.getString("pref_medtronic_serial", null);
+            String serialNr = SP.getString(MedtronicConst.Prefs.PumpSerial, null);
 
             if (serialNr == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_serial_not_set);
@@ -107,7 +108,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             }
 
 
-            String pumpType = SP.getString("pref_medtronic_pump_type", null);
+            String pumpType = SP.getString(MedtronicConst.Prefs.PumpType, null);
 
             if (pumpType == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_type_not_set);
@@ -129,7 +130,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             }
 
 
-            String pumpFrequency = SP.getString("pref_medtronic_frequency", null);
+            String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
 
             if (pumpFrequency == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_frequency_not_set);
@@ -145,7 +146,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             }
 
 
-            String rileyLinkAddress = SP.getString("pref_medtronic_rileylink_mac", null);
+            String rileyLinkAddress = SP.getString(MedtronicConst.Prefs.RileyLinkAddress, null);
 
             if (rileyLinkAddress == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
@@ -159,20 +160,20 @@ public class MedtronicPumpStatus extends PumpStatus {
             }
 
 
-            String value = SP.getString("pref_medtronic_max_bolus", "25");
+            String value = SP.getString(MedtronicConst.Prefs.MaxBolus, "25");
 
             maxBolus = Integer.parseInt(value);
 
             if (maxBolus > 25) {
-                SP.putString("pref_medtronic_max_bolus", "25");
+                SP.putString(MedtronicConst.Prefs.MaxBolus, "25");
             }
 
-            value = SP.getString("pref_medtronic_max_basal", "35");
+            value = SP.getString(MedtronicConst.Prefs.MaxBasal, "35");
 
             maxBasal = Integer.parseInt(value);
 
             if (maxBasal > 35) {
-                SP.putString("pref_medtronic_max_basal", "35");
+                SP.putString(MedtronicConst.Prefs.MaxBasal, "35");
             }
 
         } catch (Exception ex) {
