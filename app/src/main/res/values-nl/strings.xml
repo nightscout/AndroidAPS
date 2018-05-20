@@ -170,7 +170,7 @@
     <string name="save">Opslaan</string>
     <string name="safety">Veiligheid</string>
     <string name="send_calibration" formatted="false">Verzend calibratie %.1f naar xDrip?</string>
-    <string name="sensitivity_warning">Vergeet niet alle gegeten koolhydraten in te geven bij het activeren van de Autosens functie. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden!!</string>
+    <string name="sensitivity_warning">Vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden!!</string>
     <string name="sensitivityaaps">Gevoeligheid AAPS</string>
     <string name="sensitivityoref0">Gevoeligheid Oref0</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
@@ -410,7 +410,7 @@
     <string name="openapsama_autosens_adjusttargets_summary">Standaardwaarde: waar Dit wordt gebruikt om autosens de bevoegdheid te geven BG doelen aan te passen alsook ISF en basalen</string>
     <string name="openapsama_autosens_period">Interval voor autosens [u]</string>
     <string name="openapsama_autosens_period_summary">Aantal uren in het verleden voor gevoeligheids detectie (koolhy. absorbtie tijd niet meegerekend)</string>
-    <string name="openapsama_useautosens">Gebruik de AMA autosens functie</string>
+    <string name="openapsama_useautosens">Activeer AMA autosens</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
@@ -544,7 +544,7 @@
     <string name="quickwizard">Vaste maaltijd</string>
     <string name="quickwizardsettings">Vaste maaltijd instellingen</string>
     <string name="removerecord">Verwijder gegeven:</string>
-    <string name="resend_all_data">Verzend alle gegevens opnieuw</string>
+    <string name="resend_all_data">Update Wear gegevens</string>
     <string name="reset_db_confirm">Wil je echt de databank wissen?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="short_avgdelta">Klein gemiddeld verschil</string>
@@ -752,7 +752,7 @@
     <string name="fr_lang">Français</string>
     <string name="hypo">Hypo</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="enablesmb_summary">Gebruik SMB in plaats van tijdelijke basalen voor snellere reactie</string>
+    <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
     <string name="enableuam_summary">Detectie van niet aangekondigde maaltijden</string>
     <string name="shortminute">m</string>
     <string name="shorthour">u</string>
@@ -782,9 +782,9 @@
     <string name="insight_code_rejected">Code geweigerd</string>
     <string name="not_recommended_due_to_battery_drain">Niet aangewezen door hoog batterij verbuik</string>
     <string name="enablesmbalways">Activeer SMB altijd</string>
-    <string name="enablesmbalways_summary">Activeer SMB altijd onafhangkelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde gevens zoals de G5</string>
+    <string name="enablesmbalways_summary">SMB altijd onafhangkelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5</string>
     <string name="enablesmbaftercarbs">Activeer SMB na koolhydraten</string>
-    <string name="enablesmbaftercarbs_summary">Activeer SMB voor 6u, eveneens met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde gevens zoals de G5</string>
+    <string name="enablesmbaftercarbs_summary">SMB actief gedurende 6u, zelfs met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="overview_carbs_label">Koolhydraten</string>
     <string name="overview_buttons_selection">Knoppen</string>
@@ -853,11 +853,11 @@
     <string name="insight_last_completed_action">Laatst afgewerkte actie</string>
     <string name="insight_total_with">totaal</string>
     <string name="enablesmbwithcob">Activeer SMB met Koolhydraten</string>
-    <string name="enablesmbwithcob_summary">Activeer SMB met actieve koolhydraten</string>
+    <string name="enablesmbwithcob_summary">SMB actief tijdens actieve koolhydraten</string>
     <string name="enablesmbwithtemptarget">Gebruik SMB met tijdelijke doelen</string>
-    <string name="enablesmbwithtemptarget_summary">Gebruik SMB wanneer er een tiijdelijk bassaal actief is (binnenkort eten, inspanningen)</string>
+    <string name="enablesmbwithtemptarget_summary">Gebruik SMB bij een actief tijdelijk basaal (binnenkort eten, inspanningen)</string>
     <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk doel</string>
-    <string name="enablesmbwithhightemptarget_summary">Gebruik SMB wanneer er een hoog tijdelijk doen actief is (Inspanningen)</string>
+    <string name="enablesmbwithhightemptarget_summary">Gebruik SMB tijdens een verhoogd tijdelijk doel (Inspanningen)</string>
     <string name="start_activity_tt">Start inspanning TT</string>
     <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
     <string name="temptargetshort">TT</string>
@@ -900,7 +900,7 @@
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
     <string name="smbdisabledinpreferences">SMB gedeactiveerd in de voorkeuren</string>
     <string name="insight_unknown">Ongekend</string>
-    <string name="limitingbasalratio">Begrezen van max basaal tot %.2f E/U want de %s</string>
+    <string name="limitingbasalratio">Beperken van basaal tot max %.2f E/U aangezien de %s</string>
     <string name="pumplimit">Pomp limiet</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="basal_set_correctly">Basaal correct ingesteld</string>
@@ -940,9 +940,9 @@
     <string name="limitingiob">IOB gelimmiteerd tot %.1f E doordat %s</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatische Insuline, infusieset wissels, batterij wissels en pomp alarmen naar NS uploaden</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd vollezig is opgenomen. Resterende KH worden niet mee gerekend.</string>
-    <string name="openapssmb_maxiob_title">Max yoyzlr IOB OpenAPS niet kan overschrijden (E)</string>
+    <string name="openapssmb_maxiob_title">Max totaal IOB dat OpenAPS niet kan overschrijden (E)</string>
     <string name="maxbasalmultiplier">Max basaal vermenigvuldiger</string>
     <string name="maxdailybasalmultiplier">Max dagelijks basaal vermenigvuldiger</string>
-    <string name="openapssmb_maxiob_summary">Deze waarde is MAX IOB genoemd in OpenAPS context, OpenAPS zal geen insuline toedenen in de actuele IOB groter is dan deze waarde</string>
+    <string name="openapssmb_maxiob_summary">MAX IOB in OpenAPS context, OpenAPS zal geen extra insuline toedenen als de actuele IOB onderstaande waarde overschreden heeft</string>
 </resources>
 
