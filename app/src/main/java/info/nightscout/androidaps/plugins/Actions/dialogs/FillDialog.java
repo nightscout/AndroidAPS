@@ -179,10 +179,10 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             }
 
             if (pumpSiteChangeCheckbox.isChecked())
-                confirmMessage.add("" + "<font color='" + MainApp.gc(R.color.high) + "'>" + MainApp.gs(R.string.record_pump_site_change) +  "</font>");
+                confirmMessage.add("" + "<font color='" + MainApp.gc(R.color.actionsConfirm) + "'>" + MainApp.gs(R.string.record_pump_site_change) +  "</font>");
 
             if (insulinCartridgeChangeCheckbox.isChecked())
-                confirmMessage.add("" + "<font color='" + MainApp.gc(R.color.high) + "'>" + MainApp.gs(R.string.record_insulin_cartridge_change) + "</font>");
+                confirmMessage.add("" + "<font color='" + MainApp.gc(R.color.actionsConfirm) + "'>" + MainApp.gs(R.string.record_insulin_cartridge_change) + "</font>");
 
             final String notes = notesEdit.getText().toString();
             if (!notes.isEmpty()) {

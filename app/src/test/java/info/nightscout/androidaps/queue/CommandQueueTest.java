@@ -156,4 +156,24 @@ public class CommandQueueTest extends CommandQueue {
     public boolean isThisProfileSet(Profile profile) {
         return false;
     }
+
+    @Test
+    public void callingCancelAllBolusesClearsQueue() throws Exception {
+        prepareMock(0d, 0);
+
+        // add normal and SMB-bolus to queue
+        Assert.assertEquals(0, size());
+
+        bolus(new DetailedBolusInfo(), null);
+
+        DetailedBolusInfo smb = new DetailedBolusInfo();
+        smb.isSMB = true;
+        bolus(smb, null);
+
+        Assert.assertEquals(2, size());
+
+        // cancelling all boluses clear all boluses from the queue
+        cancelAllBoluses();
+        Assert.assertEquals(0, size());
+    }
 }

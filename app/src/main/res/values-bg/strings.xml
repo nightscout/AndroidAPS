@@ -810,7 +810,7 @@
     <string name="data_choices">Избор на данни</string>
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез fabric.io service.</string>
     <string name="g5appnotdetected">Моля обновете G5 приложението до поддържана версия.</string>
-    <string name="don_t_bolus_record_only">Не доставяй болус, само запис</string>
+    <string name="do_not_bolus_record_only">Не доставяй болус, само запис</string>
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
     <string name="bolusrecordedonly">Болусът ще бъде само записан</string>

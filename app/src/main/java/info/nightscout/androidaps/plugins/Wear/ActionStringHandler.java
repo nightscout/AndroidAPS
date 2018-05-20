@@ -196,6 +196,7 @@ public class ActionStringHandler {
             }
 
             boolean useBG = SP.getBoolean(R.string.key_wearwizard_bg, true);
+            boolean useTT = SP.getBoolean(R.string.key_wearwizard_tt, false);
             boolean useBolusIOB = SP.getBoolean(R.string.key_wearwizard_bolusiob, true);
             boolean useBasalIOB = SP.getBoolean(R.string.key_wearwizard_basaliob, true);
             boolean useCOB = SP.getBoolean(R.string.key_wearwizard_cob, true);
@@ -223,7 +224,9 @@ public class ActionStringHandler {
             DecimalFormat format = new DecimalFormat("0.00");
             DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, null, carbsAfterConstraints, useCOB?cobInfo.displayCob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
+            bolusWizard.doCalc(profile, useTT ? TreatmentsPlugin.getPlugin().getTempTargetFromHistory() : null,
+                    carbsAfterConstraints, useCOB?cobInfo.displayCob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d,
+                    0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
