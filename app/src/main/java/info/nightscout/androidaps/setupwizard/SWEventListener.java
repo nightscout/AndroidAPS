@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard;
 
 import android.content.Context;
 import android.view.View;
@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.startupwizard.elements.SWItem;
-import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
+import info.nightscout.androidaps.setupwizard.elements.SWItem;
+import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 
 
 public class SWEventListener extends SWItem {

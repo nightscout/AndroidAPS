@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard.elements;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.startupwizard.SWTextValidator;
+import info.nightscout.androidaps.setupwizard.SWTextValidator;
 import info.nightscout.utils.SP;
 
 

@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.startupwizard.elements;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,31 +8,31 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.startupwizard.SWValidator;
+import info.nightscout.androidaps.setupwizard.SWValidator;
 
 
-public class SWHtmlLink extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWHtmlLink.class);
+public class SWInfotext extends SWItem {
+    private static Logger log = LoggerFactory.getLogger(SWInfotext.class);
     private String textLabel = null;
 
     private TextView l;
     private SWValidator visibilityValidator;
 
-    public SWHtmlLink() {
-        super(Type.HTMLLINK);
+    public SWInfotext() {
+        super(Type.TEXT);
     }
 
-    public SWHtmlLink label(int label) {
+    public SWInfotext label(int label) {
         this.label = label;
         return this;
     }
 
-    public SWHtmlLink label(String newLabel){
+    public SWInfotext label(String newLabel){
         this.textLabel = newLabel;
         return this;
     }
 
-    public SWHtmlLink visibility(SWValidator visibilityValidator) {
+    public SWInfotext visibility(SWValidator visibilityValidator) {
         this.visibilityValidator = visibilityValidator;
         return this;
     }
@@ -44,7 +43,6 @@ public class SWHtmlLink extends SWItem {
 
         l = new TextView(context);
         l.setId(View.generateViewId());
-        l.setAutoLinkMask(Linkify.ALL);
         if(textLabel != null)
             l.setText(textLabel);
         else

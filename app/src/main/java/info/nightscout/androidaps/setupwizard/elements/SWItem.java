@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard.elements;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.SP;
 
 public class SWItem {

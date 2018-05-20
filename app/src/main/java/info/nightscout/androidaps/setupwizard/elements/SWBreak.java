@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard.elements;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
@@ -8,31 +8,20 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.startupwizard.SWValidator;
+import info.nightscout.androidaps.setupwizard.SWValidator;
 
 
-public class SWInfotext extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWInfotext.class);
-    private String textLabel = null;
+public class SWBreak extends SWItem {
+    private static Logger log = LoggerFactory.getLogger(SWBreak.class);
 
     private TextView l;
     private SWValidator visibilityValidator;
 
-    public SWInfotext() {
+    public SWBreak() {
         super(Type.TEXT);
     }
 
-    public SWInfotext label(int label) {
-        this.label = label;
-        return this;
-    }
-
-    public SWInfotext label(String newLabel){
-        this.textLabel = newLabel;
-        return this;
-    }
-
-    public SWInfotext visibility(SWValidator visibilityValidator) {
+    public SWBreak visibility(SWValidator visibilityValidator) {
         this.visibilityValidator = visibilityValidator;
         return this;
     }
@@ -43,10 +32,7 @@ public class SWInfotext extends SWItem {
 
         l = new TextView(context);
         l.setId(View.generateViewId());
-        if(textLabel != null)
-            l.setText(textLabel);
-        else
-            l.setText(label);
+        l.setText("\n");
         layout.addView(l);
 
     }

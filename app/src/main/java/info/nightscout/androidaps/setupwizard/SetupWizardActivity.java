@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,8 +22,8 @@ import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
-import info.nightscout.androidaps.startupwizard.elements.SWItem;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.androidaps.setupwizard.elements.SWItem;
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;

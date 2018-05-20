@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard.elements;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
+import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.utils.SP;
 
 public class SWEditUrl extends SWItem {

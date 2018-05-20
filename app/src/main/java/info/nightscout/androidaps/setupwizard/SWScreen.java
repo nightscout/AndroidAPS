@@ -1,10 +1,10 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.startupwizard.elements.SWItem;
+import info.nightscout.androidaps.setupwizard.elements.SWItem;
 
 public class SWScreen {
 

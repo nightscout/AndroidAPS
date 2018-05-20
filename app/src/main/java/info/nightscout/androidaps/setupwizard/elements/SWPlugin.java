@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard.elements;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 
 public class SWPlugin extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWPlugin.class);
