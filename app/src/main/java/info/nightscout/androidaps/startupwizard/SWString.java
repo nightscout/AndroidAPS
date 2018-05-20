@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.startupwizard;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -27,11 +28,13 @@ public class SWString extends SWItem {
         TextView l = new TextView(context);
         l.setId(view.generateViewId());
         l.setText(label);
+        l.setTypeface(l.getTypeface(), Typeface.BOLD);
         layout.addView(l);
 
         TextView c = new TextView(context);
         c.setId(view.generateViewId());
-        c.setText(label);
+        c.setText(comment);
+        c.setTypeface(c.getTypeface(), Typeface.ITALIC);
         layout.addView(c);
 
         EditText editText = new EditText(context);
