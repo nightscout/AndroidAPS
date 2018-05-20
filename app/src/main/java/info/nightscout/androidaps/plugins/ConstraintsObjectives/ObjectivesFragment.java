@@ -255,6 +255,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             ObjectivesPlugin.objectives.get(3).gate = MainApp.gs(R.string.objectives_3_gate);
             ObjectivesPlugin.objectives.get(4).gate = MainApp.gs(R.string.objectives_4_gate);
             ObjectivesPlugin.objectives.get(5).gate = MainApp.gs(R.string.objectives_5_gate);
+            ObjectivesPlugin.objectives.get(7).gate = MainApp.gs(R.string.objectives_7_gate);
 
             updateGUI();
 
