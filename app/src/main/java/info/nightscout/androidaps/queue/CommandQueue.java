@@ -213,6 +213,12 @@ public class CommandQueue {
         return true;
     }
 
+    public synchronized void cancelAllBoluses() {
+        removeAll(Command.CommandType.BOLUS);
+        removeAll(Command.CommandType.SMB_BOLUS);
+        ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
+    }
+
     // returns true if command is queued
     public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
