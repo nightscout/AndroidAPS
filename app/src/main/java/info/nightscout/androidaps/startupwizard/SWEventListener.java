@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.startupwizard.elements.SWItem;
 import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 
 

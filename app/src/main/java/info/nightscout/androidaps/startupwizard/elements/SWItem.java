@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.startupwizard.elements;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,7 +14,7 @@ import info.nightscout.utils.SP;
 public class SWItem {
     private static Logger log = LoggerFactory.getLogger(SWItem.class);
 
-    enum Type {
+    public enum Type {
         NONE,
         TEXT,
         LISTENER,
@@ -64,7 +64,7 @@ public class SWItem {
         return this;
     }
 
-    SWItem preferenceId(int preferenceId) {
+    public SWItem preferenceId(int preferenceId) {
         this.preferenceId = preferenceId;
         return this;
     }

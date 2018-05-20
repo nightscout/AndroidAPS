@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.startupwizard.elements.SWItem;
 
 public class SWScreen {
 

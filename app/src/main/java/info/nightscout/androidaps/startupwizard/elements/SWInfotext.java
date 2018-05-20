@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.startupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.startupwizard.SWValidator;
+
 
 public class SWInfotext extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWInfotext.class);
@@ -16,7 +18,7 @@ public class SWInfotext extends SWItem {
     private TextView l;
     private SWValidator visibilityValidator;
 
-    SWInfotext() {
+    public SWInfotext() {
         super(Type.TEXT);
     }
 

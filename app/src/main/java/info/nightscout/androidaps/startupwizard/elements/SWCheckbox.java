@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.startupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
 /**

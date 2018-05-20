@@ -22,6 +22,7 @@ import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
+import info.nightscout.androidaps.startupwizard.elements.SWItem;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;

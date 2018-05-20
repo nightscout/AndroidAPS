@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.startupwizard.elements;
 
 import android.content.Context;
 import android.view.View;

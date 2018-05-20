@@ -33,6 +33,13 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
+import info.nightscout.androidaps.startupwizard.elements.SWButton;
+import info.nightscout.androidaps.startupwizard.elements.SWFragment;
+import info.nightscout.androidaps.startupwizard.elements.SWInfotext;
+import info.nightscout.androidaps.startupwizard.elements.SWPlugin;
+import info.nightscout.androidaps.startupwizard.elements.SWRadioButton;
+import info.nightscout.androidaps.startupwizard.elements.SWEditString;
+import info.nightscout.androidaps.startupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
 import info.nightscout.utils.ImportExportPrefs;
@@ -91,11 +98,11 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.nsclientinternal_title)
                 .skippable(true)
-                .add(new SWUrl()
+                .add(new SWEditUrl()
                         .preferenceId(R.string.key_nsclientinternal_url)
                         .label(R.string.nsclientinternal_url_title)
                         .comment(R.string.nsclientinternal_url_dialogmessage))
-                .add(new SWString()
+                .add(new SWEditString()
                         .preferenceId(R.string.key_nsclientinternal_api_secret)
                         .label(R.string.nsclientinternal_secret_dialogtitle)
                         .comment(R.string.nsclientinternal_secret_dialogmessage))

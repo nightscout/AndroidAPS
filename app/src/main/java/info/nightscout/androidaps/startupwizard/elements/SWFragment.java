@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.startupwizard.elements;
 
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.widget.LinearLayout;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.startupwizard.SWDefinition;
 
 
 public class SWFragment extends SWItem {

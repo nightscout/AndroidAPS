@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.startupwizard.elements;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -13,10 +13,10 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SWUrl extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWUrl.class);
+public class SWEditUrl extends SWItem {
+    private static Logger log = LoggerFactory.getLogger(SWEditUrl.class);
 
-    public SWUrl() {
+    public SWEditUrl() {
         super(Type.URL);
     }
 
