@@ -888,12 +888,12 @@
     <string name="overview_show_iob">Opgenomen Insuline</string>
     <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
     <string name="insight_keep_alive_status">Keep-alive status</string>
-    <string name="g5appnotdetected">Update juoq G5 app naar de ondersteunde versie</string>
+    <string name="g5appnotdetected">Update dexcom G5 app naar de ondersteunde versie</string>
     <string name="ns_autobackfill_summary">automatische ontbenkende BGs aanvullen van NS</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
     <string name="not_eng_mode_or_release">Engineering modus is niet geactiveerd en dit is niet de relaese branche</string>
-    <string name="objectivenotfinished">Doel %d niet afgewerkt</string>
+    <string name="objectivenotfinished" formatted="false">Doel %d niet afgewerkt</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="novalidbasalrate">Geen plausibel basale snelheid van pomp kunnen lezen</string>
     <string name="autosensdisabledinpreferences">Autosens gedeactiveerd in de voorkeuren</string>
@@ -904,7 +904,7 @@
     <string name="pumplimit">Pomp limiet</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="basal_set_correctly">Basaal correct ingesteld</string>
-    <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %d%% want de %s</string>
+    <string name="limitingpercentrate" formatted="false">Begrezen van max procentuele wijzigen tot %d%% want de %s</string>
     <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
     <string name="loopdisconnectedfor">Niet verbonden (%d m)</string>
@@ -932,12 +932,12 @@
     <string name="firstcarbsincrement">Eerste koolhydraten increment</string>
     <string name="secondcarbsincrement">Tweede koolhydraten increment</string>
     <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
-    <string name="limitingbolus">Bolus beperkt tot %.1f E doordat %s</string>
+    <string name="limitingbolus" formatted="false">Bolus beperkt tot %.1f E doordat %s</string>
     <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
-    <string name="limitingmaxiob">Max IOB wordt beperkt tot %1.f E doordat %s</string>
-    <string name="limitingcarbs">Koolhydraten worden beperkt tot %d gr doordat %s</string>
+    <string name="limitingmaxiob" formatted="false">Max IOB wordt beperkt tot %1.f E doordat %s</string>
+    <string name="limitingcarbs" formatted="false">Koolhydraten worden beperkt tot %d gr doordat %s</string>
     <string name="maxvalueinpreferences">Maximum waarde in voorkeuren</string>
-    <string name="limitingiob">IOB gelimmiteerd tot %.1f E doordat %s</string>
+    <string name="limitingiob" formatted="false">IOB gelimmiteerd tot %.1f E doordat %s</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatische Insuline, infusieset wissels, batterij wissels en pomp alarmen naar NS uploaden</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd vollezig is opgenomen. Resterende KH worden niet mee gerekend.</string>
     <string name="openapssmb_maxiob_title">Max totaal IOB dat OpenAPS niet kan overschrijden (E)</string>
