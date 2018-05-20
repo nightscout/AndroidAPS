@@ -18,6 +18,8 @@ import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
 public class SWEventListener extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWEventListener.class);
 
+    private int textLabel = 0;
+    private String status = "";
     TextView textView;
     Object listener;
     SWDefinition definition;
@@ -26,6 +28,16 @@ public class SWEventListener extends SWItem {
         super(Type.LISTENER);
         this.definition = definition;
         MainApp.bus().register(this);
+    }
+
+    public SWEventListener label(int newLabel) {
+        this.textLabel = newLabel;
+        return this;
+    }
+
+    public SWEventListener initialStatus(String status) {
+        this.status = status;
+        return this;
     }
 
     public SWEventListener listener(Object listener) {
@@ -39,17 +51,21 @@ public class SWEventListener extends SWItem {
 
         textView = new TextView(context);
         textView.setId(view.generateViewId());
+        textView.setText((textLabel != 0 ? MainApp.gs(textLabel) : "") + " " + status);
         layout.addView(textView);
         if (listener != null)
-            MainApp.bus().register(listener);
+            try {
+                MainApp.bus().register(listener);
+            } catch (Exception ignored) {}
     }
 
     @Subscribe
     public void onEventSWLabel(final EventSWLabel l) {
+        status = l.label;
         if (definition != null && definition.getActivity() != null)
             definition.getActivity().runOnUiThread(() -> {
                 if (textView != null)
-                    textView.setText(l.label);
+                    textView.setText((textLabel != 0 ? MainApp.gs(textLabel) : "") + " " + status);
             });
     }
 

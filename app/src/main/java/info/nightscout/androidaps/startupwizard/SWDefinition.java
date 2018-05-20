@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragme
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
@@ -100,14 +101,9 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.nsclientinternal_title)
                 .skippable(true)
-                .add(new SWEditUrl()
-                        .preferenceId(R.string.key_nsclientinternal_url)
-                        .label(R.string.nsclientinternal_url_title)
-                        .comment(R.string.nsclientinternal_url_dialogmessage))
-                .add(new SWEditString()
-                        .preferenceId(R.string.key_nsclientinternal_api_secret)
-                        .label(R.string.nsclientinternal_secret_dialogtitle)
-                        .comment(R.string.nsclientinternal_secret_dialogmessage))
+                .add(new SWInfotext()
+                        .label(R.string.nsclientinfotext))
+                .add(new SWBreak())
                 .add(new SWButton()
                         .text(R.string.enable_nsclient)
                         .action(() -> {
@@ -119,7 +115,29 @@ public class SWDefinition {
                             MainApp.bus().post(new EventSWUpdate(true));
                         })
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
+                .add(new SWEditUrl()
+                        .preferenceId(R.string.key_nsclientinternal_url)
+                        .label(R.string.nsclientinternal_url_title)
+                        .comment(R.string.nsclientinternal_url_dialogmessage))
+                .add(new SWEditString()
+                        .validator(text -> text.length() >= 12)
+                        .preferenceId(R.string.key_nsclientinternal_api_secret)
+                        .label(R.string.nsclientinternal_secret_dialogtitle)
+                        .comment(R.string.nsclientinternal_secret_dialogmessage))
+                .add(new SWBreak())
+                .add(new SWEventListener(this)
+                        .label(R.string.status)
+                        .initialStatus(NSClientPlugin.getPlugin().status)
+                        .listener(new Object() {
+                            @Subscribe
+                            public void onEventNSClientStatus(EventNSClientStatus event) {
+                                MainApp.bus().post(new EventSWLabel(event.status));
+                            }
+                        })
+                )
+                .add(new SWBreak())
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
+                .visibility(() -> !(NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth))
         )
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)

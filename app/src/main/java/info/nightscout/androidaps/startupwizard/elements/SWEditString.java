@@ -13,9 +13,14 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.startupwizard.SWTextValidator;
+import info.nightscout.utils.SP;
+
 
 public class SWEditString extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWEditString.class);
+
+    private SWTextValidator validator = null;
 
     public SWEditString() {
         super(Type.STRING);
@@ -41,6 +46,7 @@ public class SWEditString extends SWItem {
         editText.setId(view.generateViewId());
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setMaxLines(1);
+        editText.setText(SP.getString(preferenceId, ""));
         layout.addView(editText);
         super.generateDialog(view, layout);
 
@@ -51,7 +57,8 @@ public class SWEditString extends SWItem {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                save(s.toString());
+                if (validator != null && validator.isValid(s.toString()))
+                    save(s.toString());
             }
 
             @Override
@@ -60,4 +67,13 @@ public class SWEditString extends SWItem {
         });
     }
 
+    public SWEditString preferenceId(int preferenceId) {
+        this.preferenceId = preferenceId;
+        return this;
+    }
+
+    public SWEditString validator(SWTextValidator validator) {
+        this.validator = validator;
+        return this;
+    }
 }

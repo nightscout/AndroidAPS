@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -12,6 +13,11 @@ import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
+import info.nightscout.utils.SP;
 
 public class SWEditUrl extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWEditUrl.class);
@@ -40,6 +46,7 @@ public class SWEditUrl extends SWItem {
         editText.setId(View.generateViewId());
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setMaxLines(1);
+        editText.setText(SP.getString(preferenceId, ""));
         layout.addView(editText);
         super.generateDialog(view, layout);
 
@@ -50,7 +57,10 @@ public class SWEditUrl extends SWItem {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                save(s.toString());
+                if (Patterns.WEB_URL.matcher(s).matches())
+                    save(s.toString());
+                else
+                    MainApp.bus().post(new EventSWLabel(MainApp.gs(R.string.error_url_not_valid)));
             }
 
             @Override
@@ -58,4 +68,10 @@ public class SWEditUrl extends SWItem {
             }
         });
     }
+
+    public SWEditUrl preferenceId(int preferenceId) {
+        this.preferenceId = preferenceId;
+        return this;
+    }
+
 }

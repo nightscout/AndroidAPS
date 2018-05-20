@@ -66,12 +66,7 @@ public class SWItem {
         return this;
     }
 
-    public SWItem preferenceId(int preferenceId) {
-        this.preferenceId = preferenceId;
-        return this;
-    }
-
-    public void save(String value) {
+     public void save(String value) {
         SP.putString(preferenceId, value);
         MainApp.bus().post(new EventPreferenceChange(preferenceId));
         MainApp.bus().post(new EventSWUpdate());
