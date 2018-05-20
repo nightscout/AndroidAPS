@@ -17,6 +17,8 @@ public class SWItem {
     public enum Type {
         NONE,
         TEXT,
+        HTMLLINK,
+        BREAK,
         LISTENER,
         URL,
         STRING,

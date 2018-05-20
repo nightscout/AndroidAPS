@@ -33,8 +33,10 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
+import info.nightscout.androidaps.startupwizard.elements.SWBreak;
 import info.nightscout.androidaps.startupwizard.elements.SWButton;
 import info.nightscout.androidaps.startupwizard.elements.SWFragment;
+import info.nightscout.androidaps.startupwizard.elements.SWHtmlLink;
 import info.nightscout.androidaps.startupwizard.elements.SWInfotext;
 import info.nightscout.androidaps.startupwizard.elements.SWPlugin;
 import info.nightscout.androidaps.startupwizard.elements.SWRadioButton;
@@ -260,6 +262,30 @@ public class SWDefinition {
                         }))
                 .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
                 .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+        )
+        .add(new SWScreen(R.string.configbuilder_sensitivity)
+                .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.setupwizard_sensitivity_description))
+                .add(new SWHtmlLink()
+                        .label(R.string.setupwizard_sensitivity_url))
+                .add(new SWBreak())
+                .add(new SWPlugin()
+                        .option(PluginType.SENSITIVITY)
+                        .label(R.string.configbuilder_sensitivity))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.sensitivitysetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveSensitivity();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveSensitivity()).getPreferencesId() > 0))
+                .validator(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null)
         )
         .add(new SWScreen(R.string.objectives)
                 .skippable(false)

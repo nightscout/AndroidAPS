@@ -1071,4 +1071,7 @@
     <string name="apssetup">Configure APS plugin</string>
     <string name="backupismissing">Exported configuration is missing thus import configuration is not possible.\n</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
+    <string name="sensitivitysetup">Configure Sensitivity plugin</string>
+    <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
+    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
 </resources>
