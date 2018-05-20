@@ -53,19 +53,19 @@
     <string name="careportal_newnstreatment_carbs_label">KH</string>
     <string name="careportal_newnstreatment_carbtime_label">KH-tid</string>
     <string name="careportal_newnstreatment_duration_label">Duration</string>
-    <string name="careportal_newnstreatment_enteredby_title">Infört av</string>
+    <string name="careportal_newnstreatment_enteredby_title">Loggat av</string>
     <string name="careportal_newnstreatment_eventtime_label">Tid</string>
     <string name="careportal_newnstreatment_eventtype">Händelsetyp</string>
     <string name="careportal_newnstreatment_insulin_label">Insulin</string>
     <string name="careportal_newnstreatment_meter">Mätare</string>
-    <string name="careportal_newnstreatment_notes_label">Notering</string>
+    <string name="careportal_newnstreatment_notes_label">Anteckning</string>
     <string name="careportal_newnstreatment_other">Annat</string>
     <string name="careportal_newnstreatment_percent_label">Procent</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="careportal_newnstreatment_split_label">Delad</string>
-    <string name="careportal_note">Notering</string>
-    <string name="careportal_openapsoffline">Offline</string>
+    <string name="careportal_note">Anteckning</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
     <string name="careportal_pbage_label">Pumpbatteri ålder</string>
     <string name="careportal_profileswitch">Byt profil</string>
     <string name="careportal_pumpsitechange">Byte pumpkanyl</string>
@@ -89,7 +89,7 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="configbuilder_constraints">Begränsningar</string>
-    <string name="configbuilder_general">Generell</string>
+    <string name="configbuilder_general">Generella inställningar</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
@@ -229,7 +229,7 @@
     <string name="nav_export">Exportera inställningar</string>
     <string name="nav_import">Importera inställningar</string>
     <string name="nav_preferences">Inställningar</string>
-    <string name="nav_refreshtreatments">Uppdatera behandlingar från NS</string>
+    <string name="nav_refreshtreatments">Uppdatera från Nightscout</string>
     <string name="nav_resetdb">Återställ databaserna</string>
     <string name="nav_show_logcat">Visa logg</string>
     <string name="nav_test_alert">Testa alarm</string>
@@ -243,10 +243,10 @@
     <string name="nosuccess">misslyckat - kontrollera telefonen</string>
     <string name="notavailable">Ej tillgängligt</string>
     <string name="nowritepermission">NS Client har inga skrivrättigheter. Fel API secret?</string>
-    <string name="ns_alarmoptions">Alarm inställningar</string>
+    <string name="ns_alarmoptions">Larminställningar</string>
     <string name="ns_localbroadcasts">Slå på sändning av data till alla appar i telefonen (ex xDrip).</string>
     <string name="ns_localbroadcasts_title">Aktivera lokala broadcasts</string>
-    <string name="ns_logappstartedevent">Markera app start till Nightscout</string>
+    <string name="ns_logappstartedevent">Markera appstart till Nightscout</string>
     <string name="ns_noupload">Ingen uppladdning till Nightscout</string>
     <string name="ns_noupload_summary">Ingen data sänds till Nightscout. AAPS ansluter till Nightscout men inga ändringar görs i Nightscout.</string>
     <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
@@ -254,19 +254,19 @@
     <string name="ns_upload_only_summary">Endast uppladdning till Nightscout. Kommer inte få BG-data om inte lokal källa som xDrip används. Kommer heller inte att kunna hämta basalprofiler från Nightscout.</string>
     <string name="nsalarm_high">Hög</string>
     <string name="nsalarm_low">Låg</string>
-    <string name="nsalarm_staledata">Gammal data</string>
+    <string name="nsalarm_staledata">BG-data saknas</string>
     <string name="nsclient">NSClient</string>
     <string name="nsclientinternal_devicename_dialogtitle">Ange enhetens namn</string>
     <string name="nsclientinternal_devicename_title">Enhetens namn</string>
-    <string name="nsclientinternal_secret_dialogmessage">Ange NS API secret (min 12 tecken)</string>
-    <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogmessage">Ange Nightscout API secret (min 12 tecken)</string>
+    <string name="nsclientinternal_secret_dialogtitle">Nightscout API secret</string>
     <string name="nsclientnotinstalled">NSClient är inte installerad. Data förlorad!</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientinternal_url_dialogmessage">Ange Nightscout URL</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
-    <string name="nsclientinternal_secret_title">NS API secret</string>
+    <string name="nsclientinternal_secret_title">Nightscout API secret</string>
     <string name="nsprofileview_activeprofile_label">Aktiv profil</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_dia_label">DIA</string>
@@ -318,7 +318,7 @@
     <string name="unsupportedclientver">Osupportad version av NSClient</string>
     <string name="unlock_settings">Lås upp inställningar</string>
     <string name="units">Enheter:</string>
-    <string name="treatmentssafety_title">Säkerhet vid behandling</string>
+    <string name="treatmentssafety_title">Säkerhetsbegränsingar</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH [g]</string>
     <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [E]</string>
     <string name="treatments_wizard_unit_label">E</string>
@@ -333,21 +333,21 @@
     <string name="treatments_shortname">Beh</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
     <string name="treatments_newtreatment_carbsamount_label">KH</string>
-    <string name="treatments_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Totalt aktiverat IOB:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB (bolus):</string>
+    <string name="treatments_iobactivitytotal_label_string">Total aktivitet (5m):</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">KH:</string>
-    <string name="treatments_activity_string">Redan aktiverat:</string>
+    <string name="treatments_activity_string">5m:</string>
     <string name="treatments">Behandlingar</string>
     <string name="treatmentdeliveryerror">Fel vid bolusleverans</string>
     <string name="temptargetrange_shortname">TT</string>
     <string name="temptarget">Temp mål</string>
     <string name="tempbasals_shortname">TB</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Kvot:</string>
+    <string name="tempbasals_netratio_label_string">Tot:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB (basal):</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasaldeliveryerror">Fel vid justering av tempbasal</string>
     <string name="tempbasal">Temp basal</string>
@@ -409,19 +409,19 @@
     <string name="resume">Återuppta</string>
     <string name="result">Resultat</string>
     <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
-    <string name="restart">Omstart</string>
+    <string name="restart">Starta om</string>
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="resend_all_data">Uppdatera klockans data</string>
     <string name="removerecord">Ta bort sparad data:</string>
     <string name="reloadprofile">Ladda om profil</string>
-    <string name="refresheventsfromnightscout">Uppdatera händelser från Nightscout</string>
+    <string name="refresheventsfromnightscout">Uppdatera från Nightscout</string>
     <string name="reason">Orsak</string>
     <string name="ratio_short">RAT</string>
     <string name="rate">Hastighet</string>
     <string name="quickwizardsettings">Kalkylatorinställningar</string>
     <string name="quickwizard">Kalkylator</string>
     <string name="queue">Kö:</string>
-    <string name="pumpsuspendedclicktorefresh">Pump pausad. Klicka för ladda om status.</string>
+    <string name="pumpsuspendedclicktorefresh">Pump pausad. Klicka för att ladda om status.</string>
     <string name="pumpsuspended">Pump pausad</string>
     <string name="pumpshutdown">Pump avstängd</string>
     <string name="pumperror">Pumpfel</string>
@@ -457,7 +457,7 @@
     <string name="overview_calibration_bg_label">Kalibrering</string>
     <string name="overview_calibration">Kalibrering</string>
     <string name="overview_calculator_label">Kalkylator</string>
-    <string name="overview_bolusprogress_stoppressed">STOPP NEDTRYCKT</string>
+    <string name="overview_bolusprogress_stoppressed">Stopp nedtryckt</string>
     <string name="overview_bolusprogress_stoped">Stoppad</string>
     <string name="overview_bolusprogress_stop">Stopp</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Kommer tillföra %.2f enheter</string>
@@ -496,12 +496,13 @@
     <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (Absorptionstid för KH är exkluderad).</string>
     <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
     <string name="openapsama_autosens_max_summary">Standardvärde: 1.2  Med standarvärdet 1.2 kan autosens justera upp dina basaler, kvoter etc med upp till 20% för att kompensera för t ex tillfällig insulinresistens.</string>
-    <string name="openapsama_autosens_adjusttargets_summary">Standardvärde: sant  Detta för att tillåta autosens justera BG målvärden, ISF och basaler.</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Standardvärde: sant. Detta för att tillåta autosens justera mål-BG utöver ISF och basaler.</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens justerar även mål-BG</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="openaps">OpenAPS</string>
     <string name="open_settings_on_wear">Öppna inställningar på klockan</string>
-    <string name="ongoingnotificaction">Konstant infonotis i telefonen</string>
-    <string name="old_data">GAMMAL DATA</string>
+    <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
+    <string name="old_data">Aktuellt BG saknas!</string>
     <string name="ok">OK</string>
     <string name="occlusion">Ocklusion</string>
     <string name="objectives_shortname">Mål</string>
@@ -525,7 +526,7 @@
     <string name="objectives_1_objective">Starta med open loop</string>
     <string name="objectives_1_gate">Starta med open loop och använd det några dagar. Försök att ge många föreslagna temp basaler.</string>
     <string name="absorption_maxtime_summary">Tid i timmar när alla kolhydradet förväntas vara absorberade</string>
-    <string name="absorption_maxtime_title">Max absorptions tid för en måltid [tim]</string>
+    <string name="absorption_maxtime_title">Max absorptionstid för en måltid [tim]</string>
     <string name="absorptionsettings_title">Absorptionsinställningar</string>
     <string name="careportal_pump_label">PUMP</string>
     <string name="careportal_pumpbatterychange">Byte pumpbatteri</string>
@@ -540,7 +541,7 @@
     <string name="lock_screen">Lås skärm</string>
     <string name="lock_screen_short">Lås</string>
     <string name="mmol">mmol/l</string>
-    <string name="minago" formatted="false">%d min sedan</string>
+    <string name="minago" formatted="false">%d&#160;m</string>
     <string name="mgdl">mg/dl</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdi">MDI</string>
@@ -550,9 +551,9 @@
     <string name="overview_newtempbasal_basaltype_label">Basaltyp</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
-    <string name="sensitivityaaps">Känslighetsavkänning AAPS</string>
-    <string name="sensitivityoref0">Känslighetsavkänning Oref0</string>
-    <string name="sensitivityweightedaverage">Känslighetsavkänning WeightedAverage</string>
+    <string name="sensitivityaaps">AAPS</string>
+    <string name="sensitivityoref0">Oref0</string>
+    <string name="sensitivityweightedaverage">WeightedAverage</string>
     <string name="settingtempbasal">Ställer in temp basal</string>
     <string name="simpleprofile_shortname">SP</string>
     <string name="sms_actualbg">BG:</string>
@@ -560,12 +561,12 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="sms_minago" formatted="false">%d min sedan</string>
-    <string name="nsalarm_staledatavalue_label">Tröskelvärde för \"Gammal data\" [min]</string>
-    <string name="nsalarm_urgent_staledatavalue_label">Tröskelvärde för \"Väldigt gammal data\" [min]</string>
+    <string name="sms_minago" formatted="false">%d min</string>
+    <string name="nsalarm_staledatavalue_label">Första varning efter [min]</string>
+    <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
     <string name="nsalarm_urgenthigh">Akut hög</string>
     <string name="nsalarm_urgentlow">Akut låg</string>
-    <string name="nsalarm_urgentstaledata">Väldigt gammal data</string>
+    <string name="nsalarm_urgentstaledata">BG-data saknas (akut larm)</string>
     <string name="app_name">AndroidAPS</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="overview_newtempbasal_basalpercent">Basal [%]</string>
@@ -586,7 +587,7 @@
     <string name="danar_model">Modell: %02X Protokoll: %02X Kod: %02X</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">"Standardvärde: 4  Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina tempbasaler till maximalt 4x din nuvarande basal, oberoende av din max basalhastighet. Detta för att undvika att man av misstag gör farliga inställningar. Om man når taket i denna inställning så kanske ändringar i andra inställningar behövs. De flesta behöver inte ändra denna inställning. "</string>
     <string name="openapsama_autosens_min_summary">Standardvärde: 0.7  Med standardvärdet 0.7 kan autosens justera ner dina basaler, kvoter etc med upp till 30% för att kompensera för t ex tillfällig hög insulinkänslighet.</string>
-    <string name="nsclientinternal_devicename_dialogmessage">"Det kommer att användas för att ange \"Inmatat av: \". "</string>
+    <string name="nsclientinternal_devicename_dialogmessage">"Det kommer att användas för att ange \"Loggat av: \". "</string>
     <string name="batteryoptimalizationerror">Enheten verkar inte stöda vitlistning av appar för batteriförbrukning</string>
     <string name="pleaseallowpermission">Tillåt</string>
     <string name="needwhitelisting">%s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
@@ -638,7 +639,7 @@
     <string name="wearcontrol_title">Kontroller från klockan</string>
     <string name="wearcontrol_summary">Sätt tempmål och ange behandlingar från klockan.</string>
     <string name="connectiontimedout">Anslutningen tog för lång tid</string>
-    <string name="food">Mat</string>
+    <string name="food">Matdatabas</string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
@@ -676,7 +677,7 @@
     <string name="positiveonly">Endast positiva</string>
     <string name="negativeonly">Endast negativa</string>
     <string name="overview_editquickwizard_usecob">Använd COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Använd tempmål</string>
+    <string name="overview_editquickwizard_usetemptarget">Använd temp mål</string>
     <string name="loopenabled">Loop aktiverad</string>
     <string name="apsselected">APS vald</string>
     <string name="nsclienthaswritepermission">NSClient har skrivrättigheter</string>
@@ -813,7 +814,7 @@
     <string name="g5appnotdetected">Vänligen uppdatera din G5-app till en supportad version</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
-    <string name="don_t_bolus_record_only">Ge ingen bolus, logga bara</string>
+    <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolusen sparas bara i loggboken</string>
@@ -868,7 +869,7 @@
     <string name="unsafeusage">osäker användning</string>
     <string name="readstatusfailed">Statuskontroll misslyckad</string>
     <string name="record_pump_site_change">Logga byte av kanyl</string>
-    <string name="record_insulin_cartridge_change">Logga byte a insulinreservoar</string>
+    <string name="record_insulin_cartridge_change">Logga byte av insulinreservoar</string>
     <string name="smbalwaysdisabled">SMB Alltid På och SMB Efter Kolhydrater är inaktiverat pga att den aktiva BG-källan inte stöder avancerad filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i Open Loop</string>
     <string name="food_short">Mat</string>
@@ -885,7 +886,7 @@
     <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
     <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
     <string name="time">Tid</string>
-    <string name="overview_show_notes_field_in_dialogs_title">Visa noteringsrutan i behandlingsdialogerna</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Visa anteckningar i behandlingsdialogerna</string>
     <string name="boluserrorcode">Angivet: %.2f enheter. Levererat: %.2f enheter. Felkod: %d</string>
     <string name="firstinsulinincrement">Första snabbknabben för insulin</string>
     <string name="secondinsulinincrement">Andra snabbknabben för insulin</string>
@@ -925,4 +926,9 @@
     <string name="careportal_carbsandbolus_label">KOLHYDRATER &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; LOGGNING</string>
     <string name="othersettings_title">Övrigt</string>
+    <string name="combo_pump_state_initializing">Initierar</string>
+    <string name="smbmaxminutes_summary">Max antal minuter som kan bli SMB</string>
+    <string name="shorthour">t</string>
+    <string name="shortminute">m</string>
+    <string name="danarv2pump">DanaR v2</string>
 </resources>

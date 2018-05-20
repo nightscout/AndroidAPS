@@ -549,7 +549,6 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
-    <string name="key_ns_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
@@ -923,7 +922,7 @@
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
-    <string name="don_t_bolus_record_only">Don\'t bolus, record only</string>
+    <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
     <string name="bolusrecordedonly">Bolus will be recorded only</string>

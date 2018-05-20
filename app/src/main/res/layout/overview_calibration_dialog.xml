@@ -11,8 +11,8 @@
         android:layout_height="match_parent">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -20,9 +20,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="@string/overview_calibration_bg_label"
+                android:text="@string/overview_calibration"
+                android:textColor="@color/colorCalibrationButton"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:src="@drawable/icon_calibration" />
 
             <TextView
                 android:id="@+id/overview_calibration_units"

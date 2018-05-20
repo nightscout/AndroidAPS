@@ -112,7 +112,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 stopPressed = true;
                 stopPressedView.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.INVISIBLE);
-                ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
+                ConfigBuilderPlugin.getCommandQueue().cancelAllBoluses();
                 break;
         }
     }
