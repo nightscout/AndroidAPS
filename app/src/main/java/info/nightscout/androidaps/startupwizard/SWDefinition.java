@@ -250,6 +250,7 @@ public class SWDefinition {
                 .skippable(false)
                 .add(new SWInfotext()
                         .label(R.string.setupwizard_loop_description))
+                .add(new SWBreak())
                 .add(new SWButton()
                         .text(R.string.enableloop)
                         .action(() -> {
@@ -259,7 +260,8 @@ public class SWDefinition {
                             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                             MainApp.bus().post(new EventConfigBuilderChange());
                             MainApp.bus().post(new EventSWUpdate(true));
-                        }))
+                        })
+                        .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
                 .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
                 .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
         )
