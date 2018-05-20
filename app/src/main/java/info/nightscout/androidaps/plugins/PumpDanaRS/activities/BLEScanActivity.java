@@ -62,13 +62,15 @@ public class BLEScanActivity extends AppCompatActivity {
         super.onResume();
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-
-        if (mBluetoothLeScanner == null) {
-            mBluetoothAdapter.enable();
+        if (mBluetoothAdapter != null) {
             mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+
+            if (mBluetoothLeScanner == null) {
+                mBluetoothAdapter.enable();
+                mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+            }
+            startScan();
         }
-        startScan();
     }
 
     @Override
@@ -79,11 +81,13 @@ public class BLEScanActivity extends AppCompatActivity {
     }
 
     private void startScan() {
-        mBluetoothLeScanner.startScan(mBleScanCallback);
+        if (mBluetoothLeScanner != null)
+            mBluetoothLeScanner.startScan(mBleScanCallback);
     }
 
     private void stopScan() {
-        mBluetoothLeScanner.stopScan(mBleScanCallback);
+        if (mBluetoothLeScanner != null)
+            mBluetoothLeScanner.stopScan(mBleScanCallback);
     }
 
     private void addBleDevice(BluetoothDevice device) {
