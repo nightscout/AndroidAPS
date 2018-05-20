@@ -30,10 +30,11 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
+import info.nightscout.androidaps.plugins.PumpCommon.dialog.RileylinkSettingsActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
-import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicNewStatus;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
@@ -98,6 +99,7 @@ public class MedtronicFragment extends SubscriberFragment {
         loopHandler.postDelayed(refreshLoop, 60 * 1000L);
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -133,10 +135,10 @@ public class MedtronicFragment extends SubscriberFragment {
         profileViewDialog.show(manager, "ProfileViewDialog");
     }
 
-    //@OnClick(R.id.medtronic_stats)
-    //void onStatsClick() {
-    //    startActivity(new Intent(getContext(), DanaRStatsActivity.class));
-    //}
+    @OnClick(R.id.medtronic_stats)
+    void onStatsClick() {
+        startActivity(new Intent(getContext(), RileylinkSettingsActivity.class));
+    }
 
     @OnClick(R.id.medtronic_btconnection)
     void onBtConnectionClick() {
@@ -174,7 +176,7 @@ public class MedtronicFragment extends SubscriberFragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventDanaRNewStatus s) {
+    public void onStatusEvent(final EventMedtronicNewStatus s) {
         updateGUI();
     }
 
@@ -245,12 +247,6 @@ public class MedtronicFragment extends SubscriberFragment {
                     batteryView.setText("{fa-battery-" + (pump.batteryRemaining / 25) + "}");
                     SetWarnColor.setColorInverse(batteryView, pump.batteryRemaining, 51d, 26d);
                     iobView.setText(pump.iob + " U");
-
-                    //if (pump.isNewPump) {
-                    //    firmwareView.setText(String.format(MainApp.sResources.getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
-                    //} else {
-                    //    firmwareView.setText("OLD");
-                    //}
 
 
                     if (queueView != null) {

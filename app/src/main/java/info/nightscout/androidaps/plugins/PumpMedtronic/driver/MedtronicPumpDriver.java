@@ -10,7 +10,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpDriver;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -22,27 +21,11 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInterface*/ {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpDriver.class);
-    MedtronicPumpStatus pumpStatusLocal;
+    //MedtronicPumpStatus pumpStatusLocal;
 
     public MedtronicPumpDriver() {
-        pumpStatusLocal = new MedtronicPumpStatus(pumpDescription);
-        pumpStatusLocal.verifyConfiguration();
 
-        this.pumpStatusData = pumpStatusLocal;
 
-        if (pumpStatusLocal.pumpType != null)
-            PumpUtil.setPumpDescription(pumpDescription, pumpStatusLocal.pumpType);
-
-        if (pumpStatusLocal.maxBasal != null)
-            pumpDescription.maxTempAbsolute = (pumpStatusLocal.maxBasal != null) ? pumpStatusLocal.maxBasal : 35.0d;
-
-        // needs to be changed in configuration, after all functionalities are done
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.isRefillingCapable = false;
-        pumpDescription.storesCarbInfo = false;
     }
 
 
@@ -95,7 +78,7 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         if (Config.logPumpComm)
             LOG.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        pumpStatusData.setLastDataTimeToNow();
+        getPumpStatusData().setLastDataTimeToNow();
         return result;
     }
 

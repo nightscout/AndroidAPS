@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.utils.SP;
 
@@ -38,6 +40,36 @@ public class MedtronicPumpStatus extends PumpStatus {
     String regexSN = "[0-9]{6}";
 
     private Map<String, PumpType> medtronicPumpMap = null;
+
+    // fixme
+
+    public long getTimeIndex() {
+        return (long) Math.ceil(time.getTime() / 60000d);
+    }
+
+    public void setTimeIndex(long timeIndex) {
+        this.timeIndex = timeIndex;
+    }
+
+    public long timeIndex;
+
+    public Date time;
+
+    public double remainUnits = 0;
+    public int remainBattery = 0;
+
+    public double currentBasal = 0;
+
+    public int tempBasalInProgress = 0;
+    public int tempBasalRatio = 0;
+    public int tempBasalRemainMin = 0;
+    public Date tempBasalStart;
+
+    public Date last_bolus_time;
+    public double last_bolus_amount = 0;
+
+
+    // fixme
 
 
     public MedtronicPumpStatus(PumpDescription pumpDescription) {
@@ -80,6 +112,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     public void verifyConfiguration() {
         try {
 
+            // FIXME don't reload information several times
             if (this.medtronicPumpMap == null)
                 createMedtronicPumpMap();
 
@@ -121,6 +154,8 @@ public class MedtronicPumpStatus extends PumpStatus {
                     return;
                 } else {
                     this.pumpType = medtronicPumpMap.get(pumpTypePart);
+
+                    RileyLinkUtil.setPumpStatus(this);
 
                     if (pumpTypePart.startsWith("7"))
                         this.reservoirFullUnits = "300";

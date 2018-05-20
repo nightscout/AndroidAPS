@@ -1,6 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpCommon;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.support.annotation.Nullable;
+
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +22,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -24,41 +30,68 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 
 /**
  * Created by andy on 23.04.18.
  */
 
+// When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
+
+
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
-    protected boolean pumpServiceRunning = false;
+    //protected boolean pumpServiceRunning = false;
 
+    protected PumpDescription pumpDescription = new PumpDescription();
+    protected PumpStatus pumpStatusData;
 
-    protected static PumpPluginAbstract plugin = null;
     protected PumpDriverInterface pumpDriver;
     protected PumpStatus pumpStatus;
     protected String internalName;
+
+    protected ServiceConnection serviceConnection = null;
 
 
     protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
                                  String internalName, //
                                  String fragmentClassName, //
                                  int pluginName, //
-                                 int pluginShortName) {
-        super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .fragmentClass(fragmentClassName)
-                .pluginName(pluginName)
-                .shortName(pluginShortName)
+                                 int pluginShortName, //
+                                 PumpType pumpType) {
+        this(pumpDriverInterface, //
+                internalName, //
+                new PluginDescription() //
+                        .mainType(PluginType.PUMP) //
+                        .fragmentClass(fragmentClassName) //
+                        .pluginName(pluginName) //
+                        .shortName(pluginShortName), //
+                pumpType //
         );
+    }
+
+
+    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
+                                 String internalName, //
+                                 PluginDescription pluginDescription,
+                                 PumpType pumpType //
+    ) {
+        super(pluginDescription);
 
         this.pumpDriver = pumpDriverInterface;
-        this.pumpStatus = this.pumpDriver.getPumpStatusData();
         this.internalName = internalName;
+
+        initPumpStatusData();
+
+        PumpUtil.setPumpDescription(getPumpDescription(), pumpType);
+
+        this.pumpDriver.initDriver(this.pumpStatus, this.pumpDescription);
     }
 
 
@@ -66,9 +99,49 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         return this.internalName;
     }
 
-    protected abstract void startPumpService();
 
-    protected abstract void stopPumpService();
+    public abstract void initPumpStatusData();
+
+
+    @Override
+    protected void onStart() {
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, getServiceClass());
+        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        MainApp.bus().register(this);
+        onStartCustomActions();
+        super.onStart();
+    }
+
+
+    @Override
+    protected void onStop() {
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(serviceConnection);
+
+        MainApp.bus().unregister(this);
+    }
+
+
+    /**
+     * If we need to run any custom actions in onStart (triggering events, etc)
+     */
+    public abstract void onStartCustomActions();
+
+    /**
+     * Service class (same one you did serviceConnection for)
+     *
+     * @return
+     */
+    public abstract Class getServiceClass();
+
+
+    @SuppressWarnings("UnusedParameters")
+    @Subscribe
+    public void onStatusEvent(final EventAppExit e) {
+        MainApp.instance().getApplicationContext().unbindService(serviceConnection);
+    }
 
 
     public PumpStatus getPumpStatusData() {
@@ -193,15 +266,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public PumpDescription getPumpDescription() {
-        return pumpDriver.getPumpDescription();
+        return pumpDescription;
     }
 
     // Short info for SMS, Wear etc
-
-
-    public String shortStatus(boolean veryShort) {
-        return pumpDriver.shortStatus(veryShort);
-    }
 
 
     public boolean isFakingTempsByExtendedBoluses() {
@@ -274,9 +342,6 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
-        //if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
-        //    return null;
-        //}
 
         long now = System.currentTimeMillis();
         if ((pumpStatus.lastConnection + 5 * 60 * 1000L) < System.currentTimeMillis()) {
@@ -321,6 +386,36 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
             LOG.error("Unhandled exception", e);
         }
         return pump;
+    }
+
+    // FIXME i18n, null checks: iob, TDD
+    @Override
+    public String shortStatus(boolean veryShort) {
+        String ret = "";
+        if (pumpStatus.lastConnection != 0) {
+            Long agoMsec = System.currentTimeMillis() - pumpStatus.lastConnection;
+            int agoMin = (int) (agoMsec / 60d / 1000d);
+            ret += "LastConn: " + agoMin + " min ago\n";
+        }
+        if (pumpStatus.lastBolusTime.getTime() != 0) {
+            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pumpStatus.lastBolusAmount) + "U @" + //
+                    android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
+        }
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
+            ret += "Temp: " + activeTemp.toStringFull() + "\n";
+        }
+        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (activeExtendedBolus != null) {
+            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
+        }
+        if (!veryShort) {
+            ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / " + pumpStatus.maxDailyTotalUnits + " U\n";
+        }
+        ret += "IOB: " + pumpStatus.iob + "U\n";
+        ret += "Reserv: " + DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + "U\n";
+        ret += "Batt: " + pumpStatus.batteryRemaining + "\n";
+        return ret;
     }
 
 

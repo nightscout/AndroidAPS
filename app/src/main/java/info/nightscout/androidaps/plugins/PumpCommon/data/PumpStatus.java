@@ -5,6 +5,7 @@ import java.util.Date;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpStatusType;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 
 /**
  * Created by andy on 4/28/18.
@@ -12,16 +13,33 @@ import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpStatusType;
 
 public abstract class PumpStatus {
 
+    // connection
     public Date lastDataTime;
     public long lastConnection = 0L;
+
+    // last bolus
     public Date lastBolusTime;
+    public double lastBolusAmount;
+
+    // other pump settings
     public String activeProfileName = "0";
     public double reservoirRemainingUnits = 0d;
     public String reservoirFullUnits = "???";
     public int batteryRemaining = 0; // percent, so 0-100
-    public String iob = "0";
+
+    // iob
+    public String iob = null;
+
+    // TDD
+    public Double dailyTotalUnits;
+    public String maxDailyTotalUnits;
+
+
     protected PumpDescription pumpDescription;
     public boolean validBasalRateProfileSelectedOnPump = true;
+
+    public PumpType pumpType = PumpType.GenericAAPS;
+
 
     public ProfileStore profileStore;
     public String units; // Constants.MGDL or Constants.MMOL
@@ -56,4 +74,12 @@ public abstract class PumpStatus {
 
     public abstract void refreshConfiguration();
 
+
+    public PumpType getPumpType() {
+        return pumpType;
+    }
+
+    public void setPumpType(PumpType pumpType) {
+        this.pumpType = pumpType;
+    }
 }

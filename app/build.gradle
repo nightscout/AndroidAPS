@@ -214,6 +214,8 @@ dependencies {
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation(name: "sightparser-release", ext: "aar")
 
+    implementation "com.android.support:support-core-utils:${supportLibraryVersion}"
+
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"
     }

@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 
 public abstract class PumpDriverAbstract implements PumpDriverInterface {
 
-    protected PumpDescription pumpDescription = new PumpDescription();
+    protected PumpDescription pumpDescription;
     protected PumpStatus pumpStatusData;
 
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
@@ -23,15 +23,23 @@ public abstract class PumpDriverAbstract implements PumpDriverInterface {
     protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult()
             .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
 
+    protected PumpDriverAbstract() {
+    }
+
+    public void initDriver(PumpStatus pumpStatus, PumpDescription pumpDescription) {
+        this.pumpDescription = pumpDescription;
+        this.pumpStatusData = pumpStatus;
+    }
+
 
     @Override
     public String deviceID() {
         return null;
     }
 
+
     @Override
-    public PumpStatus getPumpStatusData()
-    {
+    public PumpStatus getPumpStatusData() {
         return this.pumpStatusData;
     }
 

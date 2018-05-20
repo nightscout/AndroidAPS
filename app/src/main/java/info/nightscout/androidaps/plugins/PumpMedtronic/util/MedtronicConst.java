@@ -6,7 +6,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.util;
 
 public class MedtronicConst {
 
-    static String Prefix = "AAPS.Medtronic.";
+    public static final String Prefix = "AAPS.Medtronic.";
 
     public class Prefs {
 
@@ -18,6 +18,8 @@ public class MedtronicConst {
         public static final String MaxBolus = PrefPrefix + "max_bolus";
         public static final String MaxBasal = PrefPrefix + "max_basal";
 
+        public static final String LastGoodPumpCommunicationTime = Prefix + "lastGoodReceiverCommunicationTime";
+        public static final String LastGoodPumpFrequency = Prefix + "LastGoodPumpFrequency";
 
     }
 

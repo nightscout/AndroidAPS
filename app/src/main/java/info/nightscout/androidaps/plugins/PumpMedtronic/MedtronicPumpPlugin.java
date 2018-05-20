@@ -1,23 +1,21 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.ComponentName;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
-import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpDriver;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
+import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtronicService;
 
 /**
  * Created by andy on 23.04.18.
@@ -29,8 +27,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     //private ServiceClientConnection serviceClientConnection;
 
+    private RileyLinkMedtronicService medtronicService;
+    protected static MedtronicPumpPlugin plugin = null;
+    protected MedtronicPumpStatus pumpStatusLocal = null;
 
-    public static PumpPluginAbstract getPlugin() {
+    public static MedtronicPumpPlugin getPlugin() {
 
         if (plugin == null)
             plugin = new MedtronicPumpPlugin();
@@ -41,70 +42,60 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private MedtronicPumpPlugin() {
         super(new MedtronicPumpDriver(), //
                 "MedtronicPump", //
-                MedtronicFragment.class.getName(), //
-                R.string.medtronic_name, //
-                R.string.medtronic_name_short //
+                new PluginDescription() //
+                        .mainType(PluginType.PUMP) //
+                        .fragmentClass(MedtronicFragment.class.getName()) //
+                        .pluginName(R.string.medtronic_name) //
+                        .shortName(R.string.medtronic_name_short) //
+                        .preferencesId(R.xml.pref_medtronic), //
+                PumpType.Minimed_512_712 // we default to most basic model, correct model from config is loaded later
         );
+
+        serviceConnection = new ServiceConnection() {
+
+            public void onServiceDisconnected(ComponentName name) {
+                LOG.debug("Service is disconnected");
+                medtronicService = null;
+            }
+
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                LOG.debug("Service is connected");
+                RileyLinkMedtronicService.LocalBinder mLocalBinder = (RileyLinkMedtronicService.LocalBinder) service;
+                medtronicService = mLocalBinder.getServiceInstance();
+            }
+        };
+
+
     }
 
 
     @Override
-    protected void startPumpService() {
+    public void initPumpStatusData() {
+        pumpStatusLocal = new MedtronicPumpStatus(pumpDescription);
+        pumpStatusLocal.refreshConfiguration();
 
-        //serviceClientConnection = new ServiceClientConnection();
+        this.pumpStatus = pumpStatusLocal;
+
+        if (pumpStatusLocal.maxBasal != null)
+            pumpDescription.maxTempAbsolute = (pumpStatusLocal.maxBasal != null) ? pumpStatusLocal.maxBasal : 35.0d;
+
+        // needs to be changed in configuration, after all functionalities are done
+        pumpDescription.isBolusCapable = false;
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.isExtendedBolusCapable = false;
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.isRefillingCapable = false;
+        pumpDescription.storesCarbInfo = false;
+
     }
 
-
-    @Override
-    protected void stopPumpService() {
-
+    public void onStartCustomActions() {
     }
 
-
-    @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName) {
-        //if (!SP.getBoolean("virtualpump_uploadstatus", false)) {
-        //    return null;
-        //}
-        JSONObject pump = new JSONObject();
-        JSONObject battery = new JSONObject();
-        JSONObject status = new JSONObject();
-        JSONObject extended = new JSONObject();
-        try {
-            battery.put("percent", 90);
-            status.put("status", "normal");
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
-            try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
-            } catch (Exception e) {
-            }
-
-            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
-            if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
-                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
-            }
-
-            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
-            if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
-                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
-            }
-
-            status.put("timestamp", DateUtil.toISOString(new Date()));
-
-            pump.put("battery", battery);
-            pump.put("status", status);
-            pump.put("extended", extended);
-            pump.put("reservoir", 66);
-            pump.put("clock", DateUtil.toISOString(new Date()));
-        } catch (JSONException e) {
-            LOG.error("Unhandled exception", e);
-        }
-        return pump;
+    public Class getServiceClass() {
+        return RileyLinkMedtronicService.class;
     }
+
 
     @Override
     public String deviceID() {
@@ -120,12 +111,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
-    }
-
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_medtronic;
     }
 
 

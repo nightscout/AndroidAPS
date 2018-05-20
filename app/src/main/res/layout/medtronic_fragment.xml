@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment">
+    tools:context="info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicFragment">
 
 
     <RelativeLayout
@@ -39,7 +39,6 @@
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
-
 
 
                 <View
@@ -233,9 +232,6 @@
                 </LinearLayout>
 
 
-
-
-
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
@@ -336,9 +332,6 @@
                     android:background="@color/listdelimiter" />
 
 
-
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -419,8 +412,6 @@
                         android:textSize="14sp" />
 
                 </LinearLayout>
-
-
 
 
                 <View
@@ -525,7 +516,7 @@
                     android:drawableTop="@drawable/icon_danarstats"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/danar_stats" />
+                    android:text="RL Stats" />
 
             </LinearLayout>
 

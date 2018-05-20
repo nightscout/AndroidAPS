@@ -19,13 +19,10 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverAbstract;
-import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -43,36 +40,11 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     public static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
 
-    public VirtualPumpDriver()
-    {
+    public VirtualPumpDriver() {
         setFakingStatus(true);
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
-
-        pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d;
-        pumpDescription.extendedBolusDurationStep = 30;
-        pumpDescription.extendedBolusMaxDuration = 8 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT | PumpDescription.ABSOLUTE;
-
-        pumpDescription.maxTempPercent = 500;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 30;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.01d;
-
-        pumpDescription.isRefillingCapable = false;
-
-        pumpStatusData = new VirtualPumpStatus(pumpDescription);
+        this.pumpDescription = VirtualPumpPlugin.getPlugin().getPumpDescription();
+        this.pumpStatusData = new VirtualPumpStatus(this.pumpDescription);
     }
-
 
 
     private static void loadFakingStatus() {
@@ -91,9 +63,6 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     }
 
 
-
-
-
     @Override
     public String deviceID() {
         return null;
@@ -110,7 +79,6 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     public boolean isFakingTempsByExtendedBoluses() {
         return (Config.NSCLIENT || Config.G5UPLOADER) && fromNSAreCommingFakedExtendedBoluses;
     }
-
 
 
     @Override
@@ -223,8 +191,6 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     }
 
 
-
-
     @Override
     public void stopBolusDelivering() {
 
@@ -283,7 +249,6 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     }
 
 
-
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolus();
@@ -327,11 +292,6 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         pumpStatusData.setLastDataTimeToNow();
         return result;
     }
-
-
-
-
-
 
 
     @Override

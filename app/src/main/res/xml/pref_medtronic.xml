@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/medtronic_name">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/medtronic_name">
 
 
         <EditTextPreference
@@ -45,10 +43,10 @@
             android:title="@string/medtronic_pump_max_bolus" />
 
         <Preference
-            android:enabled="false"
+            android:enabled="true"
             android:key="rileylink_scanner"
             android:title="RileyLink Configuration">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
         </Preference>
 
         <EditTextPreference
@@ -58,7 +56,7 @@
             android:key="pref_medtronic_rileylink_mac"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/medtronic_rileylink_mac_address" />
+            android:title="@string/rileylink_mac_address" />
 
 
     </PreferenceCategory>

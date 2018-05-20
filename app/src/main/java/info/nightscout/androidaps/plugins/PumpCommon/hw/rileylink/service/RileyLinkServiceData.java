@@ -1,0 +1,33 @@
+package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service;
+
+import info.nightscout.androidaps.plugins.PumpCommon.defs.RileyLinkTargetDevice;
+
+/**
+ * Created by andy on 16/05/2018.
+ */
+
+public class RileyLinkServiceData {
+
+    public boolean tuneUpDone = false;
+    public RileyLinkErrorCode errorCode;
+    public RileyLinkServiceState serviceState = RileyLinkServiceState.NotStarted;
+    public String rileylinkAddress;
+    public long lastTuneUpTime = 0L;
+    public Double lastGoodFrequency;
+
+    public RileyLinkTargetDevice targetDevice;
+
+    // Medtronic Pump
+    public String pumpID;
+    public byte[] pumpIDBytes;
+
+    public RileyLinkServiceData(RileyLinkTargetDevice targetDevice) {
+        this.targetDevice = targetDevice;
+    }
+
+
+    public void setPumpID(String pumpId, byte[] pumpIdBytes) {
+        this.pumpID = pumpId;
+        this.pumpIDBytes = pumpIdBytes;
+    }
+}

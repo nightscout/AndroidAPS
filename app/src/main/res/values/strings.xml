@@ -1036,11 +1036,11 @@
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
-    <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
-    <string translatable="false" name="key_wearwizard_trend">wearwizard_trend</string>
-    <string translatable="false" name="key_wearwizard_cob">wearwizard_cob</string>
-    <string translatable="false" name="key_wearwizard_bolusiob">wearwizard_bolusiob</string>
-    <string translatable="false" name="key_wearwizard_basaliob">wearwizard_basaliob</string>
+    <string name="key_wearwizard_bg" translatable="false">wearwizard_bg</string>
+    <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
+    <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
+    <string name="key_wearwizard_bolusiob" translatable="false">wearwizard_bolusiob</string>
+    <string name="key_wearwizard_basaliob" translatable="false">wearwizard_basaliob</string>
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
@@ -1058,13 +1058,13 @@
 
     <!-- Medtronic -->
     <string name="medtronic_name" translatable="false">Medtronic</string>
-    <string name="medtronic_name_short" translatable="false">MT</string>
+    <string name="medtronic_name_short" translatable="false">MDT</string>
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
     <string name="medtronic_pump_frequency">Pump Frequency</string>
     <string name="medtronic_pump_max_bolus">Max Bolus on Pump</string>
     <string name="medtronic_pump_max_basal">Max Basal on Pump</string>
-    <string name="medtronic_rileylink_mac_address">RileyLink MAC Address</string>
+
     <string name="medtronic_errors">Errors</string>
     <string name="medtronic_error_serial_not_set">Serial # not set.</string>
     <string name="medtronic_error_serial_invalid">Serial # invalid.</string>
@@ -1075,6 +1075,31 @@
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Address invalid.</string>
     <string name="medtronic_pump_frequency_us">US (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
+
+    <string name="rileylink_mac_address">RileyLink MAC Address</string>
+    <string name="rileylink_scanner_selected_device">Selected</string>
+    <string name="rileylink_scanner_scan">Scan</string>
+    <string name="rileylink_scanner_title">RileyLink BLE Scan</string>
+    <string name="rileylink_scanner_scan_menu">Scan for RileyLink</string>
+
+    <string name="rileylink_settings_title">RileyLink Settings</string>
+    <string name="title_activity_rileylink_settings">RileyLink Settings</string>
+    <string name="rileylink_title">Riley Link</string>
+
+    <string name="rileylink_configured_address">Configured Address</string>
+    <string name="rileylink_connected_device">Connected Device</string>
+    <string name="rileylink_connection_status">Connection Status</string>
+    <string name="rileylink_connection_error">Connection Error</string>
+
+    <string name="rileylink_device">Device</string>
+    <string name="rileylink_device_type">Device Type</string>
+    <string name="rileylink_device_model">Device Model</string>
+    <string name="rileylink_last_used_frequency">Last used frequency</string>
+    <string name="rileylink_last_device_contact">Last device contact</string>
+
+
+    <string name="rileylink_settings_tab1">Settings</string>
+    <string name="rileylink_settings_tab2">History</string>
 
 
 </resources>
