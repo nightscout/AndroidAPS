@@ -900,7 +900,7 @@
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
     <string name="smbdisabledinpreferences">SMB gedeactiveerd in de voorkeuren</string>
     <string name="insight_unknown">Ongekend</string>
-    <string name="limitingbasalratio">Beperken van basaal tot max %.2f E/U aangezien de %s</string>
+    <string name="limitingbasalratio">Beperken van basaal tot max %.2f E/U wegens de %s</string>
     <string name="pumplimit">Pomp limiet</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="basal_set_correctly">Basaal correct ingesteld</string>
@@ -944,5 +944,6 @@
     <string name="maxbasalmultiplier">Max basaal vermenigvuldiger</string>
     <string name="maxdailybasalmultiplier">Max dagelijks basaal vermenigvuldiger</string>
     <string name="openapssmb_maxiob_summary">MAX IOB in OpenAPS context, OpenAPS zal geen extra insuline toedenen als de actuele IOB onderstaande waarde overschreden heeft</string>
+    <string name="do_not_bolus_record_only">"Geen bolus toedienen enkel in behandeleingen zetten"</string>
 </resources>
 
