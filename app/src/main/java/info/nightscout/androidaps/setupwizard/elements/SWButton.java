@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
@@ -8,14 +8,16 @@ import android.widget.LinearLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.setupwizard.SWValidator;
+
 public class SWButton extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWButton.class);
 
-    Runnable buttonRunnable;
-    int buttonText;
-    SWValidator buttonValidator;
+    private Runnable buttonRunnable;
+    private int buttonText;
+    private SWValidator buttonValidator;
 
-    Button button;
+    private Button button;
 
     public SWButton() {
         super(Type.BUTTON);

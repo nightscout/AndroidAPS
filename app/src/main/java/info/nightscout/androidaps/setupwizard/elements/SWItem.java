@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -8,15 +8,17 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.SP;
 
 public class SWItem {
     private static Logger log = LoggerFactory.getLogger(SWItem.class);
 
-    enum Type {
+    public enum Type {
         NONE,
         TEXT,
+        HTMLLINK,
+        BREAK,
         LISTENER,
         URL,
         STRING,
@@ -64,12 +66,7 @@ public class SWItem {
         return this;
     }
 
-    SWItem preferenceId(int preferenceId) {
-        this.preferenceId = preferenceId;
-        return this;
-    }
-
-    public void save(String value) {
+     public void save(String value) {
         SP.putString(preferenceId, value);
         MainApp.bus().post(new EventPreferenceChange(preferenceId));
         MainApp.bus().post(new EventSWUpdate());

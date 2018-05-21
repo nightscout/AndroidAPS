@@ -24,5 +24,12 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="AppTheme.SetupWizard" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/swColorPrimary</item>
+        <item name="colorPrimaryDark">@color/swColorPrimaryDark</item>
+        <item name="colorAccent">@color/swColorAccent</item>
+        <item name="android:windowBackground">@color/swColorBackground</item>
+    </style>
+
      <!-- Preferences -->
 </resources>
