@@ -241,7 +241,7 @@
     <string name="overview_editquickwizardlistactivity_add">Hinzufügen</string>
     <string name="overview_quickwizard_item_edit_button">Bearbeiten</string>
     <string name="danar_history_basalhours">Basal-Stunden</string>
-    <string name="danar_history_connectingfor">Verbindungsaufbau %d s</string>
+    <string name="danar_history_connectingfor">Verbindungsaufbau %1$d s</string>
     <string name="overview_editquickwizard_valid">Gültigkeit:</string>
     <string name="overview_editquickwizard_carbs">Kohlenhydrate:</string>
     <string name="quickwizardsettings">QuickWizard-Einstellungen</string>
@@ -255,7 +255,7 @@
     <string name="othersettings_title">Andere</string>
     <string name="occlusion">Verstopfung</string>
     <string name="overview_bolusprogress_delivered">Abgegeben</string>
-    <string name="overview_bolusprogress_goingtodeliver">Es werden %.2f IE abgegeben</string>
+    <string name="overview_bolusprogress_goingtodeliver">Es werden %1$.2f IE abgegeben</string>
     <string name="primefill">Vorfüllen/Füllen</string>
     <string name="uploading">Hochladen</string>
     <string name="es_lang">Spanish</string>
@@ -404,9 +404,9 @@
     <string name="iob">IOB</string>
     <string name="localprofile">Lokales Profil</string>
     <string name="lock_screen">Sperrbildschirm</string>
-    <string name="loopsuperbolusfor">Superbolus (%d Min.)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d Min.)</string>
     <string name="loopsuspended">Loop pausiert</string>
-    <string name="loopsuspendedfor">Pausiert (%d Min.)</string>
+    <string name="loopsuspendedfor">Pausiert (%1$d Min.)</string>
     <string name="mdtp_cancel">Abbrechen</string>
     <string name="mdtp_ok">OK</string>
     <string name="mgdl">mg/dl</string>
@@ -444,7 +444,7 @@
     <string name="openaps_short">OAPS</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="openapsma_scriptdebugdata_label">Skript Debug</string>
-    <string name="valueoutofrange">Wert %s ist außerhalb des festen Limits</string>
+    <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits</string>
     <string name="overview_calibration">Kalibrierung</string>
     <string name="overview_calibration_bg_label">Kalibrierung</string>
     <string name="overview_editquickwizard_buttontext">Button-Text:</string>
@@ -469,7 +469,7 @@
     <string name="restartingapp">App wird beendet, um neue Einstellungen zu laden.</string>
     <string name="resume">Fortsetzen</string>
     <string name="ru_lang">Russisch</string>
-    <string name="send_calibration">Kalibrierung %.1f an xDrip+ senden?</string>
+    <string name="send_calibration">Kalibrierung %1$.1f an xDrip+ senden?</string>
     <string name="settings_password">Passwort für die Einstellungen</string>
     <string name="settingtempbasal">TBR wird gesetzt</string>
     <string name="short_tabtitles">Kurze Tab-Überschriften</string>
@@ -490,11 +490,11 @@
     <string name="updatingbasalrates">Basalraten werden aktualisiert</string>
     <string name="careportal_sensorage_label">Sensoralter</string>
     <string name="danar_switchtouhmode">Wechsle Modus von IE/d zu IE/h in der Pumpe</string>
-    <string name="danar_totaluploaded">Insgesamt %d Einträge erfolgreich hochgeladen</string>
+    <string name="danar_totaluploaded">Insgesamt %1$d Einträge erfolgreich hochgeladen</string>
     <string name="danarprofile_dia_summary">Dauer der Insulinwirkung</string>
     <string name="insulin_shortname">INS</string>
     <string name="lock_screen_short">Sperr</string>
-    <string name="needwhitelisting">%s benötigt Batterie-Optimierungs-Whitelisting, um korrekt arbeiten zu können</string>
+    <string name="needwhitelisting">%1$s benötigt Batterie-Optimierungs-Whitelisting, um korrekt arbeiten zu können</string>
     <string name="nsalarm_staledata">Veraltete Daten</string>
     <string name="nsalarm_staledatavalue_label">Veraltete Daten seit [Min.]</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
@@ -508,7 +508,7 @@
     <string name="sensitivityoref0">Sensitivität Oref0</string>
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
     <string name="settingextendedbolus">Verlängerter Bolus wird gesetzt</string>
-    <string name="sms_minago">vor %d Min.</string>
+    <string name="sms_minago">vor %1$d Min.</string>
     <string formatted="false" name="smscommunicator_basalstopreplywithcode">Um die TBR abzubrechen, antworte mit dem Code %s</string>
     <string formatted="false" name="smscommunicator_bolusdelivered">Bolus %.2f IE erfolgreich abgegeben</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ hat die Kalbrierung nicht erhalten</string>
@@ -628,7 +628,7 @@
     <string name="gettingbolusstatus">Status des Bolus wird ermittelt</string>
     <string name="pairing">PAIRING</string>
     <string name="startingbolus">Bolus-Abgabe gestartet</string>
-    <string name="waitingforestimatedbolusend">Warte auf Ende der Bolus-Abgabe. %d Sek. verbleiben.</string>
+    <string name="waitingforestimatedbolusend">Warte auf Ende der Bolus-Abgabe. %1$d Sek. verbleiben.</string>
     <string name="executingrightnow">Befehl wird zurzeit ausgeführt.</string>
     <string name="missed_bg_readings">BZ-Werte fehlen</string>
     <string name="btwatchdog_summary">Deaktiviert Bluetooth kurzzeitig, falls keine Verbindung zur Pumpe besteht. Dies kann für Smartphones mit Verbindungsproblemen nützlich sein.</string>
@@ -659,16 +659,16 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="combo_pump_activity_label">Aktivität</string>
-    <string name="combo_tbr_remaining">%d%% (%d Min. verbleibend)</string>
-    <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %d Min.</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d Min. verbleibend)</string>
+    <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %1$d Min.</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_state_suspended_by_user">Gestoppt (Benutzer)</string>
     <string name="combo_pump_state_suspended_due_to_error">Gestoppt (Fehler)</string>
     <string name="combo_pump_state_running">In Betrieb</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
     <string name="combo_pump_action_cancelling_tbr">TBR wird abgebrochen</string>
-    <string name="combo_pump_action_setting_tbr">TBR wird gesetzt (%d%% / %d Min.)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f IE) wird abgegeben</string>
+    <string name="combo_pump_action_setting_tbr">TBR wird gesetzt (%1$d%% / %2$d Min.)</string>
+    <string name="combo_pump_action_bolusing">Bolus (%1$.1f IE) wird abgegeben</string>
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu. Andernfalls wird AndroidAPS nicht protokolliert (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)</string>
     <string name="pump_tempbasal_label">TBR</string>
     <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in den letzten zwei Minuten angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
@@ -677,7 +677,7 @@
     <string name="combo_error_bolus_recovery_progress">Verbindung wird wieder hergestellt</string>
     <string name="combo_error_bolus_verification_failed">Der abgegebene Bolus konnte nicht bestätigt werden. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde und erstelle einen Eintrag im Careportal falls nötig.</string>
     <string name="combo_error_no_bolus_delivered">Die Bolusabgabe ist fehlgeschlagen: Es wurde scheinbar kein Bolus abgegeben. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde. Um doppelte Boli durch Programmfehler zu vermeiden, werden Boli nicht automatisch wiederholt.</string>
-    <string name="combo_error_partial_bolus_delivered">Wegen eines Fehlers wurden nur %.2f IE von den angeforderten %.2f IE abgegeben. Bitte prüfe den abgegebenen Bolus auf der Pumpe.</string>
+    <string name="combo_error_partial_bolus_delivered">Wegen eines Fehlers wurden nur %1$.2f IE von den angeforderten %2$.2f IE abgegeben. Bitte prüfe den abgegebenen Bolus auf der Pumpe.</string>
     <string name="combo_pump_action_refreshing">Status wird aktualisiert</string>
     <string name="combo_pump_state_initializing">Die Pumpe wird initialisiert</string>
     <string name="combo_pump_connected_now">Jetzt</string>
@@ -689,7 +689,7 @@
     <string name="combo_pump_unsupported_operation">Diese Aktion wird von der Pumpe nicht unterstützt</string>
     <string name="combo_pump_battery_low_warrning">Die Batterie in der Pumpe ist fast leer</string>
     <string name="combo_pump_cartridge_low_warrning">Das Reservoir in der Pumpe ist fast leer</string>
-    <string name="combo_is_in_error_state">Die Pumpe zeigt einen Fehler an E%d: %s</string>
+    <string formatted="false" name="combo_is_in_error_state">Die Pumpe zeigt einen Fehler an E%d: %s</string>
     <string name="combo_force_disabled_notification">Unsichere Verwendung: In der Pumpe ist nicht das erste Basalratenprofil gewählt. Der Loop wird deaktiviert bis dies korrigiert ist.</string>
     <string name="combo_low_suspend_forced_notification">Unsichere Verwendung: Ein erweiterter oder Multiwave-Bolus ist aktiv. Der Loop wird für die nächsten 6 Stunden kein zusätzliches Insulin abgeben.</string>
     <string name="combo_notification_check_time_date">Bitte aktualisiere die Uhrzeit der Pumpe</string>
@@ -713,7 +713,7 @@
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3mg/dl/5min. Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung! Normalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
     <string name="combo_actvity_reading_basal_profile">Basalratenprofil wird gelesen</string>
-    <string name="pump_basebasalrate">%.2f IE/h</string>
+    <string formatted="false" name="pump_basebasalrate">%.2f IE/h</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Keine Verbindung zur Pumpe: Es wurde kein Bolus abgegeben.</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verlängerten Bolus</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Nach der Berechnung des Bolus hat sich die Pumpenhistorie geändert. Daher wurde kein Bolus abgegeben. Bitte prüfe, ob überhaupt noch ein Bolus benötigt wird. Wenn die gleiche Bolusmenge erforderlich ist, warte zwei Minuten ab, denn es werden aus Sicherheitsgründen keine gleich großen Boli abgegeben, wenn sie innerhalb von zwei Minuten angefordert wurden (unabhängig davon, ob sie verabreicht wurden oder nicht).</string>
@@ -726,9 +726,9 @@
     <string name="mute">Alarm stoppen</string>
     <string name="bolusstopped">Bolus gestoppt</string>
     <string name="bolusstopping">Bolus wird gestoppt</string>
-    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %s</string>
-    <string name="zerovalueinprofile">Ungültiges Profil: %s</string>
-    <string name="hoursago">vor %.1f h</string>
+    <string formatted="false" name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %s</string>
+    <string formatted="false" name="zerovalueinprofile">Ungültiges Profil: %s</string>
+    <string formatted="false" name="hoursago">vor %.1f h</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
     <string name="combo_check_date">Der letzte Bolus liegt mehr als 24 Stunden zurück oder liegt in der Zukunft. Prüfe bitte das Datum auf der Pumpe.</string>
     <string name="combo_suspious_bolus_time">Zeit/Datum des abgegebenen Boluses auf der Pumpe erscheint falsch, IOB ist wahrscheinlich nicht korrekt. Bitte prüfe Zeit/Datum der Pumpe.</string>
@@ -737,4 +737,66 @@
     <string name="pump_stopped">Pumpe gestoppt</string>
     <string name="pump_started">Pumpe gestartet</string>
     <string name="pump_paused">Pumpe pausiert</string>
+    <string name="with">mit</string>
+    <string name="ns_wifi_ssids">Wlan SSID</string>
+    <string name="week">Woche</string>
+    <string formatted="false" name="waitingfortimesynchronization">Warte auf Zeitsynchronisierung (%d Sek.)</string>
+    <string name="insight_waiting_for_code">Warte auf Code-Bestätigung</string>
+    <string name="ns_wifionly">Benutze nur WLAN Verbindung</string>
+    <string name="enablesmb_summary">Benutze Super Micro Bolus anstelle von Temporären Basal für Schnellere Aktion</string>
+    <string name="unsafeusage">Unsichere Benutzung</string>
+    <string name="time">Zeit</string>
+    <string name="thirdcarbsincrement">Dritte KH Inkrement</string>
+    <string name="thirdinsulinincrement">Dritte Insulin Inkrement</string>
+    <string name="loop_tbrsetbypump_label">Temp. Basal der Pumpe</string>
+    <string name="subcategory">Unterkategorie</string>
+    <string name="insight_stay_always_connected">Bleibe immer verbunden</string>
+    <string name="start_hypo_tt">Starte Hypo TT</string>
+    <string name="start_eating_soon_tt">Starte Essen TT</string>
+    <string name="start_activity_tt">Starte Aktivität TT</string>
+    <string name="overview_show_sensitivity">Sensitivität</string>
+    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den G5 Kalibrierungs-Dialog</string>
+    <string name="secondinsulinincrement">Zweites Insulin Inkrement</string>
+    <string name="secondcarbsincrement">Zweites KH Inkrement</string>
+    <string name="second">Sekunde</string>
+    <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version. Closed Loop ist nicht verfügbar.</string>
+    <string name="record_pump_site_change">Erfasse Katheter-Wechsel</string>
+    <string name="record_insulin_cartridge_change">Erfasse Resoirvoir-Wechsel</string>
+    <string name="insight_needs">benötigt</string>
+    <string name="overview_show_deviations">Abweichungen</string>
+    <string name="day">Tag</string>
+    <string name="ns_wifi_allowedssids">Erlaubte SSIDs (Semikolon getrennt)</string>
+    <string name="ns_allowroaming">Erlaube Verbindung bei Roaming</string>
+    <string name="openapsama_autosens_adjusttargets">Autosense passt Zielwerte an</string>
+    <string name="resistantadult">Insulin Resistenter Erwachsener</string>
+    <string name="enableuam">Aktiviere UAM</string>
+    <string name="enablesmb">Aktiviere SMB</string>
+    <string name="enableuam_summary">Erkennung von Unangekündigten Mahlzeiten</string>
+    <string name="hypo_duration">Hypo Dauer</string>
+    <string name="hypo_target">Hypo Zielwert</string>
+    <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
+    <string name="changed">Geändert</string>
+    <string name="pump_stopped_uppercase">PUMPE GESTOPPT</string>
+    <string name="insight_active_tbr">Aktive TBR</string>
+    <string name="statistics">Statistiken</string>
+    <string name="enablesmbalways">Aktiviere SMB immer</string>
+    <string name="enablesmbaftercarbs">Aktiviere SMB nach Mahlzeiten</string>
+    <string name="enablesmbwithcob">Aktiviere SMB bei COB</string>
+    <string name="enablesmbwithtemptarget">Aktiviere SMB mit Temporären Zielwerten</string>
+    <string name="wear_predictions_title">Vorhersagen</string>
+    <string name="data_choices">Daten Auswahl</string>
+    <string name="smbdisabledinpreferences">SMB in Einstellungen deaktiviert</string>
+    <string name="food_short">Mahlzeiten</string>
+    <string name="hardlimit">Hartes Limit</string>
+    <string name="readstatusfailed">Lesen des Status fehlgeschlagen</string>
+    <string name="loopdisconnectedfor">Getrennt (%1$d m)</string>
+    <string name="automatic_careportal_events">Automatische Careportal Ereignisse</string>
+    <string name="firstinsulinincrement">Erstes Insulin Inkrement</string>
+    <string name="firstcarbsincrement">Erstes KH Inkrement</string>
+    <string name="ns_chargingonly">Nur wenn geladen wird</string>
+    <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
+    <string formatted="false" name="objectivenotstarted">Zielsetzung %d nicht gestartet</string>
+    <string formatted="false" name="objectivenotfinished">Zielsetzung %d nicht abgeschlossen</string>
+    <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
+    <string name="bolusrecordedonly">Bolus wird nur erfasst</string>
 </resources>

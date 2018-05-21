@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,9 +22,11 @@ import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.androidaps.setupwizard.elements.SWItem;
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.SP;
 
 public class SetupWizardActivity extends AppCompatActivity {
     //logging
@@ -59,6 +61,11 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (currentWizardPage == 0) OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        else showPreviousPage(null);
+    }
+
+    public void exitPressed(View view) {
         OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
@@ -155,7 +162,9 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     // Go back to overview
     public void finishSetupWizard(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

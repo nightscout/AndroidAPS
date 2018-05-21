@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
@@ -421,9 +422,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return pump.basalProfile.hourlyRates[currentHour];
     }
 
-    private static BolusProgressReporter nullBolusProgressReporter = (state, percent, delivered) -> {
-    };
-
     private static BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
         switch (state) {
@@ -549,12 +547,14 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 return new PumpEnactResult().success(true).enacted(false);
             }
 
-            BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter;
+            Treatment treatment = new Treatment();
+            treatment.isSMB = detailedBolusInfo.isSMB;
+            EventOverviewBolusProgress.getInstance().t = treatment;
 
             // start bolus delivery
             scripterIsBolusing = true;
             runCommand(null, 0,
-                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
+                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, bolusProgressReporter));
             scripterIsBolusing = false;
 
             // Note that the result of the issued bolus command is not checked. If there was

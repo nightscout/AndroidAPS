@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +8,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +27,24 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragme
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
-import info.nightscout.androidaps.startupwizard.events.EventSWLabel;
-import info.nightscout.androidaps.startupwizard.events.EventSWUpdate;
+import info.nightscout.androidaps.setupwizard.elements.SWBreak;
+import info.nightscout.androidaps.setupwizard.elements.SWButton;
+import info.nightscout.androidaps.setupwizard.elements.SWFragment;
+import info.nightscout.androidaps.setupwizard.elements.SWHtmlLink;
+import info.nightscout.androidaps.setupwizard.elements.SWInfotext;
+import info.nightscout.androidaps.setupwizard.elements.SWPlugin;
+import info.nightscout.androidaps.setupwizard.elements.SWRadioButton;
+import info.nightscout.androidaps.setupwizard.elements.SWEditString;
+import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
+import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
@@ -74,9 +83,9 @@ public class SWDefinition {
                         .text(R.string.nav_import)
                         .action(() -> ImportExportPrefs.importSharedPreferences(getActivity()))
                         .visibility(ImportExportPrefs.file::exists))
-               .add(new SWButton()
-                        .text(R.string.exitwizard)
-                        .action(() -> getActivity().finish()))
+                .add(new SWInfotext()
+                        .label(R.string.backupismissing)
+                        .visibility(() -> !ImportExportPrefs.file.exists()))
         )
         .add(new SWScreen(R.string.language)
                 .skippable(false)
@@ -92,14 +101,9 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.nsclientinternal_title)
                 .skippable(true)
-                .add(new SWUrl()
-                        .preferenceId(R.string.key_nsclientinternal_url)
-                        .label(R.string.nsclientinternal_url_title)
-                        .comment(R.string.nsclientinternal_url_dialogmessage))
-                .add(new SWString()
-                        .preferenceId(R.string.key_nsclientinternal_api_secret)
-                        .label(R.string.nsclientinternal_secret_dialogtitle)
-                        .comment(R.string.nsclientinternal_secret_dialogmessage))
+                .add(new SWInfotext()
+                        .label(R.string.nsclientinfotext))
+                .add(new SWBreak())
                 .add(new SWButton()
                         .text(R.string.enable_nsclient)
                         .action(() -> {
@@ -111,10 +115,35 @@ public class SWDefinition {
                             MainApp.bus().post(new EventSWUpdate(true));
                         })
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
+                .add(new SWEditUrl()
+                        .preferenceId(R.string.key_nsclientinternal_url)
+                        .label(R.string.nsclientinternal_url_title)
+                        .comment(R.string.nsclientinternal_url_dialogmessage))
+                .add(new SWEditString()
+                        .validator(text -> text.length() >= 12)
+                        .preferenceId(R.string.key_nsclientinternal_api_secret)
+                        .label(R.string.nsclientinternal_secret_dialogtitle)
+                        .comment(R.string.nsclientinternal_secret_dialogmessage))
+                .add(new SWBreak())
+                .add(new SWEventListener(this)
+                        .label(R.string.status)
+                        .initialStatus(NSClientPlugin.getPlugin().status)
+                        .listener(new Object() {
+                            @Subscribe
+                            public void onEventNSClientStatus(EventNSClientStatus event) {
+                                MainApp.bus().post(new EventSWLabel(event.status));
+                            }
+                        })
+                )
+                .add(new SWBreak())
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
+                .visibility(() -> !(NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth))
         )
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.patientage_summary))
+                .add(new SWBreak())
                 .add(new SWRadioButton()
                         .option(R.array.ageArray, R.array.ageValues)
                         .preferenceId(R.string.key_age)
@@ -125,11 +154,15 @@ public class SWDefinition {
         .add(new SWScreen(R.string.configbuilder_insulin)
                 .skippable(false)
                 .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.fastactinginsulincomment)+" = "+MainApp.gs(R.string.rapid_acting_oref)))
+                        .label(MainApp.gs(R.string.fastactinginsulincomment) + " = " + MainApp.gs(R.string.rapid_acting_oref)))
                 .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.ultrafastactinginsulincomment)+" = "+MainApp.gs(R.string.ultrarapid_oref)))
+                        .label(MainApp.gs(R.string.ultrafastactinginsulincomment) + " = " + MainApp.gs(R.string.ultrarapid_oref)))
                 .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.free_peak_oref_description)+" = "+MainApp.gs(R.string.free_peak_oref)))
+                        .label(MainApp.gs(R.string.free_peak_oref_description) + " = " + MainApp.gs(R.string.free_peak_oref)))
+                .add(new SWBreak())
+                .add(new SWInfotext()
+                        .label(R.string.diawarning))
+                .add(new SWBreak())
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
                         .label(R.string.configbuilder_insulin))
@@ -142,10 +175,25 @@ public class SWDefinition {
                 .add(new SWPlugin()
                         .option(PluginType.BGSOURCE)
                         .label(R.string.configbuilder_bgsource))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.bgsourcesetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveBgSource();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveBgSource()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveBgSource()).getPreferencesId() > 0))
                 .validator(() -> MainApp.getConfigBuilder().getActiveBgSource() != null)
         )
         .add(new SWScreen(R.string.configbuilder_profile)
                         .skippable(false)
+                        .add(new SWInfotext()
+                                .label(R.string.setupwizard_profile_description))
+                        .add(new SWBreak())
                         .add(new SWPlugin()
                                 .option(PluginType.PROFILE)
                                 .label(R.string.configbuilder_profile))
@@ -222,6 +270,12 @@ public class SWDefinition {
         )
         .add(new SWScreen(R.string.configbuilder_aps)
                 .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.setupwizard_aps_description))
+                .add(new SWBreak())
+                .add(new SWHtmlLink()
+                        .label("https://openaps.readthedocs.io/en/latest/"))
+                .add(new SWBreak())
                 .add(new SWPlugin()
                         .option(PluginType.APS)
                         .label(R.string.configbuilder_aps))
@@ -242,6 +296,7 @@ public class SWDefinition {
                 .skippable(false)
                 .add(new SWInfotext()
                         .label(R.string.setupwizard_loop_description))
+                .add(new SWBreak())
                 .add(new SWButton()
                         .text(R.string.enableloop)
                         .action(() -> {
@@ -251,9 +306,34 @@ public class SWDefinition {
                             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                             MainApp.bus().post(new EventConfigBuilderChange());
                             MainApp.bus().post(new EventSWUpdate(true));
-                        }))
+                        })
+                        .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
                 .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
                 .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+        )
+        .add(new SWScreen(R.string.configbuilder_sensitivity)
+                .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.setupwizard_sensitivity_description))
+                .add(new SWHtmlLink()
+                        .label(R.string.setupwizard_sensitivity_url))
+                .add(new SWBreak())
+                .add(new SWPlugin()
+                        .option(PluginType.SENSITIVITY)
+                        .label(R.string.configbuilder_sensitivity))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.sensitivitysetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveSensitivity();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveSensitivity()).getPreferencesId() > 0))
+                .validator(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null)
         )
         .add(new SWScreen(R.string.objectives)
                 .skippable(false)
@@ -268,12 +348,16 @@ public class SWDefinition {
                             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                             MainApp.bus().post(new EventConfigBuilderChange());
                             MainApp.bus().post(new EventSWUpdate(true));
-                        }))
+                        })
+                        .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible()))
                 .validator(() -> ObjectivesPlugin.getPlugin().isEnabled(PluginType.CONSTRAINTS))
                 .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible())
         )
         .add(new SWScreen(R.string.objectives)
                         .skippable(false)
+                        .add(new SWInfotext()
+                                .label(R.string.startobjective))
+                        .add(new SWBreak())
                         .add(new SWFragment(this)
                                 .add(new ObjectivesFragment()))
                         .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())

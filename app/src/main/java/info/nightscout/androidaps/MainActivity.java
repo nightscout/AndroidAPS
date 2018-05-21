@@ -49,7 +49,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.startupwizard.SetupWizardActivity;
+import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -90,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         askForBatteryOptimizationPermission();
         doMigrations();
+
+        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
+            Intent intent = new Intent(this, SetupWizardActivity.class);
+            startActivity(intent);
+        }
+
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 

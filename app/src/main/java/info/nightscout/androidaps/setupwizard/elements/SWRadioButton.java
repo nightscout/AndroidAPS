@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
@@ -64,4 +64,10 @@ public class SWRadioButton extends SWItem {
         layout.addView(radioGroup);
         super.generateDialog(view, layout);
     }
+
+    public SWRadioButton preferenceId(int preferenceId) {
+        this.preferenceId = preferenceId;
+        return this;
+    }
+
 }

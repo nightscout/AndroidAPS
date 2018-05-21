@@ -1,6 +1,7 @@
-package info.nightscout.androidaps.startupwizard;
+package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -12,11 +13,17 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SWUrl extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWUrl.class);
+import info.nightscout.androidaps.setupwizard.SWTextValidator;
+import info.nightscout.utils.SP;
 
-    public SWUrl() {
-        super(Type.URL);
+
+public class SWEditString extends SWItem {
+    private static Logger log = LoggerFactory.getLogger(SWEditString.class);
+
+    private SWTextValidator validator = null;
+
+    public SWEditString() {
+        super(Type.STRING);
     }
 
     @Override
@@ -24,19 +31,22 @@ public class SWUrl extends SWItem {
         Context context = view.getContext();
 
         TextView l = new TextView(context);
-        l.setId(View.generateViewId());
+        l.setId(view.generateViewId());
         l.setText(label);
+        l.setTypeface(l.getTypeface(), Typeface.BOLD);
         layout.addView(l);
 
         TextView c = new TextView(context);
-        c.setId(View.generateViewId());
+        c.setId(view.generateViewId());
         c.setText(comment);
+        c.setTypeface(c.getTypeface(), Typeface.ITALIC);
         layout.addView(c);
 
         EditText editText = new EditText(context);
-        editText.setId(View.generateViewId());
+        editText.setId(view.generateViewId());
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setMaxLines(1);
+        editText.setText(SP.getString(preferenceId, ""));
         layout.addView(editText);
         super.generateDialog(view, layout);
 
@@ -47,12 +57,23 @@ public class SWUrl extends SWItem {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                save(s.toString());
+                if (validator != null && validator.isValid(s.toString()))
+                    save(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
+    }
+
+    public SWEditString preferenceId(int preferenceId) {
+        this.preferenceId = preferenceId;
+        return this;
+    }
+
+    public SWEditString validator(SWTextValidator validator) {
+        this.validator = validator;
+        return this;
     }
 }

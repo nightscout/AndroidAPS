@@ -557,7 +557,7 @@
     <string name="careportal_sensorage_label">Czas sensora</string>
     <string name="careportal_canulaage_label">Czas wkłucia</string>
     <string name="careportal_insulinage_label">Czas insuliny</string>
-    <string name="hours">godziny</string>
+    <string name="hours">godzin</string>
     <string name="overview_newtempbasal_basaltype_label">Typ bazy</string>
     <string name="invalidprofile">Nieważny profil !!!</string>
     <string name="profileswitch">ZmieńProfil</string>
@@ -835,7 +835,7 @@
     <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
     <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
     <string name="temptargetshort">TT</string>
-    <string name="don_t_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
+    <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
     <string name="bolusrecordedonly">Bolus zostanie tylko zapisany w rekordach</string>
