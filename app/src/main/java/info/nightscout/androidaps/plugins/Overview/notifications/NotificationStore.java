@@ -61,7 +61,7 @@ public class NotificationStore {
         }
         store.add(n);
 
-        if (SP.getBoolean(MainApp.gs(R.string.key_raise_notifications_as_android_notifications), false)) {
+        if (SP.getBoolean(MainApp.gs(R.string.key_raise_notifications_as_android_notifications), false) && !(n instanceof NotificationWithAction)) {
             raiseSystemNotification(n);
             if (usesChannels && n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);

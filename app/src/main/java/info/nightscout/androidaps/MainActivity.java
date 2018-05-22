@@ -75,16 +75,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menuButton = (ImageButton) findViewById(R.id.overview_menuButton);
         menuButton.setOnClickListener(this);
 
-        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
-            Intent intent = new Intent(this, SetupWizardActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
         onStatusEvent(new EventSetWakeLock(SP.getBoolean("lockscreen", false)));
+
+        doMigrations();
 
         registerBus();
         setUpTabs(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
+            Intent intent = new Intent(this, SetupWizardActivity.class);
+            startActivity(intent);
+        } else {
+            checkEula();
+        }
+
+        AndroidPermission.notifyForStoragePermission(this);
+        AndroidPermission.notifyForBatteryOptimizationPermission(this);
+        AndroidPermission.notifyForLocationPermissions(this);
+        AndroidPermission.notifyForSMSPermissions(this);
+
+        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mWakeLock != null)
+            if (mWakeLock.isHeld())
+                mWakeLock.release();
+        super.onDestroy();
     }
 
     @Subscribe
@@ -192,42 +215,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
-    }
-
-    //check for sms permission if enable in prefernces
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_smscommunicator_remotecommandsallowed)) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                synchronized (this) {
-                    if (SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)) {
-                        AndroidPermission.setAskForSMS();
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        checkEula();
-        AndroidPermission.askForStoragePermission(this);
-        AndroidPermission.askForBatteryOptimizationPermission(this);
-        doMigrations();
-
-        AndroidPermission.askForSMSPermissions(this);
-        AndroidPermission.askForLocationPermissions(this);
-        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mWakeLock != null)
-            if (mWakeLock.isHeld())
-                mWakeLock.release();
-        super.onDestroy();
     }
 
     @Override

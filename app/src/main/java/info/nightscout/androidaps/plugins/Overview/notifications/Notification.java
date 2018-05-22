@@ -60,6 +60,10 @@ public class Notification {
     public static final int PROFILE_SWITCH_MISSING = 32;
     public static final int NOT_ENG_MODE_OR_RELEASE = 33;
     public static final int WRONG_PUMP_PASSWORD = 34;
+    public static final int PERMISSION_STORAGE = 35;
+    public static final int PERMISSION_LOCATION = 36;
+    public static final int PERMISSION_BATTERY = 37;
+    public static final int PERMISSION_SMS = 38;
 
 
     public int id;

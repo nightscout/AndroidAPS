@@ -981,16 +981,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
+
+        updateNotifications();
+
+        pumpStatusLayout.setVisibility(View.GONE);
+        loopStatusLayout.setVisibility(View.GONE);
+
         if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
-            loopStatusLayout.setVisibility(View.GONE);
             return;
         }
-        pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.VISIBLE);
 
-        updateNotifications();
         CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();

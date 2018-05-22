@@ -1084,4 +1084,5 @@
     <string name="askforpermission">Ask for permission</string>
     <string name="needlocationpermission">Application needs location permission for BT scan</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="request">Request</string>
 </resources>
