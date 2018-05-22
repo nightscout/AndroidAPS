@@ -1,6 +1,5 @@
 package info.nightscout.androidaps;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,18 +71,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menuButton = (ImageButton) findViewById(R.id.overview_menuButton);
         menuButton.setOnClickListener(this);
 
-        checkEula();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            AndroidPermission.askForPermission(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, AndroidPermission.CASE_STORAGE);
-        }
-        AndroidPermission.askForBatteryOptimizationPermission(this);
-        doMigrations();
-
         if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
         }
+
+        checkEula();
+        AndroidPermission.askForStoragePermission(this);
+        AndroidPermission.askForBatteryOptimizationPermission(this);
+        doMigrations();
 
         if (Config.logFunctionCalls)
             log.debug("onCreate");

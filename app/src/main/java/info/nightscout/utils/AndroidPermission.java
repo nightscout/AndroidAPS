@@ -60,6 +60,13 @@ public class AndroidPermission {
         }
     }
 
+    public static synchronized void askForStoragePermission(Activity activity) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, AndroidPermission.CASE_STORAGE);
+        }
+    }
+
     public static synchronized void askForLocationPermissions(Activity activity) {
         if (askForLocation) { //only when settings were changed an MainActivity resumes.
             askForLocation = false;
