@@ -71,7 +71,7 @@
     <string name="objectives">Objetivos</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Sinopsis</string>
-    <string name="profileviewer">Perfil NS</string>
+    <string name="nsprofile">Perfil NS</string>
     <string name="simpleprofile">Perfil simple</string>
     <string name="tempbasal">Basal temporal</string>
     <string name="treatments">Tratamientos</string>

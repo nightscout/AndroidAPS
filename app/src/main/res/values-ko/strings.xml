@@ -71,7 +71,7 @@
     <string name="objectives">목표</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">개요</string>
-    <string name="profileviewer">NS 프로파일</string>
+    <string name="nsprofile">NS 프로파일</string>
     <string name="simpleprofile">Simple 프로파일</string>
     <string name="tempbasal">임시기초</string>
     <string name="treatments">관리</string>

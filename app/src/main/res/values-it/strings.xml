@@ -454,7 +454,7 @@
     <string name="simpleprofile_shortname">SP</string>
     <string name="quickwizard">QuickWizard</string>
     <string name="quickwizardsettings">Impostazioni QuickWizard</string>
-    <string name="profileviewer">Profilo NS</string>
+    <string name="nsprofile">Profilo NS</string>
     <string name="profile_set_ok">Profilo Basale aggiornato nel Micro</string>
     <string name="profile_set_failed">Impostazione Profilo Basale fallito</string>
 </resources>

@@ -71,7 +71,7 @@
     <string name="objectives">Цели</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Общ</string>
-    <string name="profileviewer">NS Профил</string>
+    <string name="nsprofile">NS Профил</string>
     <string name="simpleprofile">Обикновен профил</string>
     <string name="tempbasal">TempBasal</string>
     <string name="treatments">Лечения</string>

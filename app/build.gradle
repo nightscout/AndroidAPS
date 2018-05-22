@@ -49,7 +49,7 @@ def generateGitBuild = { ->
     return stringBuilder.toString()
 }
 
-tasks.matching {it instanceof Test}.all {
+tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "skipped", "started"]
     testLogging.exceptionFormat = "full"
 }
@@ -89,7 +89,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled (project.hasProperty('coverage') ? true : false)
+            testCoverageEnabled(project.hasProperty('coverage') ? true : false)
         }
     }
     productFlavors {
@@ -156,7 +156,7 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
- }
+}
 
 allprojects {
     repositories {
@@ -242,7 +242,7 @@ dependencies {
 }
 
 task unzip(type: Copy) {
-    def zipPath = configurations.libs.find {it.name.startsWith("danars") }
+    def zipPath = configurations.libs.find { it.name.startsWith("danars") }
     def zipFile = file(zipPath)
     def outputDir = file("${buildDir}/unpacked/dist")
 

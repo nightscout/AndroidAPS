@@ -72,7 +72,7 @@
     <string name="objectives">Στόχοι</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Επισκόπηση</string>
-    <string name="profileviewer">Προφίλ NS</string>
+    <string name="nsprofile">Προφίλ NS</string>
     <string name="simpleprofile">Απλό Προφίλ</string>
     <string name="tempbasal">Προσ.Ρυθμός</string>
     <string name="treatments">Θεραπείες</string>

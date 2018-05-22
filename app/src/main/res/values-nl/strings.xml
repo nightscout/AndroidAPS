@@ -426,7 +426,7 @@
     <string name="openapsma_inputparameters_label">Berekende gegevens</string>
     <string name="openapsma_iobdata_label">IOB gegevens</string>
     <string name="openapsma_maxbasal_summary">DIt is de maximale waarde waarop het basaal door OpenAPS ingesteld kan worden</string>
-    <string name="profileviewer">NS Profiel</string>
+    <string name="nsprofile">NS Profiel</string>
     <string name="profileviewer_shortname">NSPROFIEL</string>
     <string name="pump">Pomp</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>

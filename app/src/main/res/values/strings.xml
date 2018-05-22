@@ -74,7 +74,7 @@
     <string name="objectives">Objectives</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Overview</string>
-    <string name="profileviewer">NS Profile</string>
+    <string name="nsprofile">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
     <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
@@ -485,7 +485,7 @@
     <string name="restart">Restart</string>
     <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
-    <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
+    <string name="nsclientinternal_url_dialogmessage">Enter Your Nightscout URL</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
@@ -667,6 +667,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="free_peak_oref_description">Custom insulin</string>
     <string name="dia_too_short" formatted="false">DIA of %f too short - using %f instead!</string>
     <string name="activate_profile">Activate profile</string>
     <string name="date">Date</string>
@@ -1009,6 +1010,17 @@
     <string name="time">Time</string>
     <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
+    <string name="title_activity_setup_wizard">SetupWizardActivity</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Prev</string>
+    <string name="skip_button">Skip</string>
+    <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="setupwizard_next">Next</string>
+    <string name="setupwizard_previous">Prev</string>
+    <string name="setupwizard_skip">Skip</string>
+    <string name="setupwizard_finish">FINISH</string>
+    <string name="setupwizard_language_prompt">Select your language</string>
+    <string name="key_language" translatable="false">language</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
     <string name="firstinsulinincrement">First insulin increment</string>
@@ -1047,4 +1059,31 @@
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
+    <string name="enable_nsclient">Enable NSClient</string>
+    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
+    <string name="pumpsetup">Pump setup</string>
+    <string name="readstatus">Read status</string>
+    <string name="adjustprofileinns">Changes must be done in NS</string>
+    <string name="exitwizard">Skip setup wizard</string>
+    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be comming from ?\n</string>
+    <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
+    <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.\n</string>
+    <string name="enableobjectives">Enable Objectives</string>
+    <string name="apssetup">Configure APS plugin</string>
+    <string name="backupismissing">Exported configuration is missing thus import configuration is not possible.\n</string>
+    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
+    <string name="sensitivitysetup">Configure Sensitivity plugin</string>
+    <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
+    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSClient handles connection to Nightscout. You can skip this part now but you will not be able to pass objectives until you setup it.</string>
+    <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5-6h on new profile is equal to DIA 3h on old insulin profiles.</string>
+    <string name="bgsourcesetup">Configure BG source</string>
+    <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
+    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usualy more powerfull and more aggresive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
+    <string name="startobjective">Start your first objective</string>
+    <string name="permission">Permission</string>
+    <string name="askforpermission">Ask for permission</string>
+    <string name="needlocationpermission">Application needs location permission for BT scan</string>
+    <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="request">Request</string>
 </resources>
