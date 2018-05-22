@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Config.logFunctionCalls)
+            log.debug("onCreate");
+
         Iconify.with(new FontAwesomeModule());
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_main);
@@ -74,15 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
+            finish();
         }
-
-        checkEula();
-        AndroidPermission.askForStoragePermission(this);
-        AndroidPermission.askForBatteryOptimizationPermission(this);
-        doMigrations();
-
-        if (Config.logFunctionCalls)
-            log.debug("onCreate");
 
         onStatusEvent(new EventSetWakeLock(SP.getBoolean("lockscreen", false)));
 
@@ -214,6 +211,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+
+        checkEula();
+        AndroidPermission.askForStoragePermission(this);
+        AndroidPermission.askForBatteryOptimizationPermission(this);
+        doMigrations();
+
         AndroidPermission.askForSMSPermissions(this);
         AndroidPermission.askForLocationPermissions(this);
         MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));

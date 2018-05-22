@@ -70,6 +70,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     }
 
     public void exitPressed(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
         OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
@@ -170,6 +171,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
 
     private int nextPage() {
@@ -212,6 +214,7 @@ public class SetupWizardActivity extends AppCompatActivity {
                 }
             }
         }
+        updateButtons();
     }
 
 }
