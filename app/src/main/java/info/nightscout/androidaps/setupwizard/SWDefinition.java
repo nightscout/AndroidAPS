@@ -1,6 +1,13 @@
 package info.nightscout.androidaps.setupwizard;
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 
 import com.squareup.otto.Subscribe;
@@ -45,19 +52,24 @@ import info.nightscout.androidaps.setupwizard.elements.SWEditString;
 import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
+import info.nightscout.utils.AndroidPermission;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
+
+    private String packageName;
 
     private AppCompatActivity activity;
     private List<SWScreen> screens = new ArrayList<>();
 
     public void setActivity(AppCompatActivity activity) {
         this.activity = activity;
+        packageName = activity.getPackageName();
     }
 
     public AppCompatActivity getActivity() {
@@ -98,6 +110,36 @@ public class SWDefinition {
                     LocaleHelper.setLocale(MainApp.instance().getApplicationContext(), lang);
                     return SP.contains(R.string.key_language);
                 })
+        )
+        .add(new SWScreen(R.string.permission)
+                .skippable(true)
+                .add(new SWInfotext()
+                        .label(String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name))))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.askforpermission)
+                        .action(() -> AndroidPermission.askForPermission(getActivity(), Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, AndroidPermission.CASE_BATTERY)))
+                .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS))
+        )
+        .add(new SWScreen(R.string.permission)
+                .skippable(true)
+                .add(new SWInfotext()
+                        .label(MainApp.gs(R.string.needlocationpermission)))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.askforpermission)
+                        .action(() -> AndroidPermission.askForPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION, AndroidPermission.CASE_LOCATION)))
+                .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
+        )
+        .add(new SWScreen(R.string.permission)
+                .skippable(true)
+                .add(new SWInfotext()
+                        .label(MainApp.gs(R.string.needstoragepermission)))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.askforpermission)
+                        .action(() -> AndroidPermission.askForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, AndroidPermission.CASE_STORAGE)))
+                .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
         )
         .add(new SWScreen(R.string.nsclientinternal_title)
                 .skippable(true)

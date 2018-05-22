@@ -1,7 +1,10 @@
 package info.nightscout.androidaps.setupwizard;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,6 +27,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObje
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
+import info.nightscout.utils.AndroidPermission;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
@@ -187,4 +191,27 @@ public class SetupWizardActivity extends AppCompatActivity {
         }
         return currentWizardPage;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissions.length != 0) {
+            if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+                switch (requestCode) {
+                    case AndroidPermission.CASE_STORAGE:
+                        //show dialog after permission is granted
+                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                        alert.setMessage(R.string.alert_dialog_storage_permission_text);
+                        alert.setPositiveButton(R.string.ok, null);
+                        alert.show();
+                        break;
+                    case AndroidPermission.CASE_LOCATION:
+                    case AndroidPermission.CASE_SMS:
+                    case AndroidPermission.CASE_BATTERY:
+                        break;
+                }
+            }
+        }
+    }
+
 }
