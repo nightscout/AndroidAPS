@@ -217,11 +217,11 @@ public class SWDefinition {
         .add(new SWScreen(R.string.configbuilder_insulin)
                 .skippable(false)
                 .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.fastactinginsulincomment) + " = " + MainApp.gs(R.string.rapid_acting_oref)))
+                        .label(MainApp.gs(R.string.rapid_acting_oref) + ": " + MainApp.gs(R.string.fastactinginsulincomment)))
                 .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.ultrafastactinginsulincomment) + " = " + MainApp.gs(R.string.ultrarapid_oref)))
+                        .label(MainApp.gs(R.string.ultrarapid_oref) + ": " + MainApp.gs(R.string.ultrafastactinginsulincomment)))
                 .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.free_peak_oref_description) + " = " + MainApp.gs(R.string.free_peak_oref)))
+                        .label(MainApp.gs(R.string.free_peak_oref) + ": " + MainApp.gs(R.string.free_peak_oref_description)))
                 .add(new SWBreak())
                 .add(new SWInfotext()
                         .label(R.string.diawarning))
@@ -229,6 +229,18 @@ public class SWDefinition {
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
                         .label(R.string.configbuilder_insulin))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.insulinsourcesetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveInsulin();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveInsulin()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveInsulin()).getPreferencesId() > 0))
                 .validator(() -> MainApp.getConfigBuilder().getActiveInsulin() != null)
         )
         .add(new SWScreen(R.string.configbuilder_bgsource)
