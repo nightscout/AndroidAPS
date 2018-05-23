@@ -27,6 +27,7 @@
         tools:text="Title" />
 
     <ScrollView
+        android:id="@+id/sw_scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">

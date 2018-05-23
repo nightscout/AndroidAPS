@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -36,6 +37,8 @@ public class SetupWizardActivity extends AppCompatActivity {
     //logging
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
 
+    ScrollView scrollView;
+
     private SWDefinition swDefinition = new SWDefinition();
     private List<SWScreen> screens = swDefinition.getScreens();
     private int currentWizardPage = 0;
@@ -46,6 +49,8 @@ public class SetupWizardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_setupwizard);
+
+        scrollView = (ScrollView) findViewById(R.id.sw_scrollview);
 
         Intent intent = getIntent();
         currentWizardPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE, 0);
@@ -126,6 +131,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWItem currentItem = currentScreen.items.get(i);
             currentItem.generateDialog(this.findViewById(R.id.sw_content_fields), layout);
         }
+        scrollView.smoothScrollTo(0,0);
     }
 
     private void updateButtons() {
