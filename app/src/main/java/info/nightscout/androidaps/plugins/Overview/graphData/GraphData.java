@@ -136,7 +136,9 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            BasalData basalData = IobCobCalculatorPlugin.getPlugin().getBasalData(time);
+            Profile profile = MainApp.getConfigBuilder().getProfile(time);
+            if (profile == null) continue;
+            BasalData basalData = IobCobCalculatorPlugin.getPlugin().getBasalData(profile, time);
             double baseBasalValue = basalData.basal;
             double absoluteLineValue = baseBasalValue;
             double tempBasalValue = 0;
