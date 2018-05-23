@@ -186,7 +186,7 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     private int previousPage() {
         int page = currentWizardPage - 1;
-        while (page > 0) {
+        while (page >= 0) {
             if (screens.get(page).visibility == null || screens.get(page).visibility.isValid())
                 return page;
             page--;
