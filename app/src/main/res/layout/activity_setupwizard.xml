@@ -7,14 +7,32 @@
     android:orientation="vertical"
     tools:context=".setupwizard.SetupWizardActivity">
 
-    <ImageButton
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:onClick="exitPressed"
-        app:srcCompat="@drawable/ic_exit_to_app" />
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:onClick="exitPressed"
+            app:srcCompat="@drawable/ic_exit_to_app" />
+
+        <TextView
+            android:id="@+id/sw_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="@string/exit"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/sw_content"
@@ -35,7 +53,6 @@
             android:id="@+id/sw_content_fields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical"
             android:padding="16dp" />
