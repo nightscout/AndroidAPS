@@ -427,9 +427,7 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("sgv")) {
                     String sgvstring = bundles.getString("sgv");
                     JSONObject sgvJson = new JSONObject(sgvstring);
-                    NSSgv nsSgv = new NSSgv(sgvJson);
-                    BgReading bgReading = new BgReading(nsSgv);
-                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                    storeSgv(sgvJson);
                 }
 
                 if (bundles.containsKey("sgvs")) {
@@ -437,9 +435,7 @@ public class DataService extends IntentService {
                     JSONArray jsonArray = new JSONArray(sgvstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
-                        NSSgv nsSgv = new NSSgv(sgvJson);
-                        BgReading bgReading = new BgReading(nsSgv);
-                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                        storeSgv(sgvJson);
                     }
                 }
             } catch (Exception e) {
@@ -452,11 +448,7 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("mbg")) {
                     String mbgstring = bundles.getString("mbg");
                     JSONObject mbgJson = new JSONObject(mbgstring);
-                    NSMbg nsMbg = new NSMbg(mbgJson);
-                    CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-                    MainApp.getDbHelper().createOrUpdate(careportalEvent);
-                    if (Config.logIncommingData)
-                        log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+                    storeMbg(mbgJson);
                 }
 
                 if (bundles.containsKey("mbgs")) {
@@ -464,11 +456,7 @@ public class DataService extends IntentService {
                     JSONArray jsonArray = new JSONArray(sgvstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject mbgJson = jsonArray.getJSONObject(i);
-                        NSMbg nsMbg = new NSMbg(mbgJson);
-                        CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-                        MainApp.getDbHelper().createOrUpdate(careportalEvent);
-                        if (Config.logIncommingData)
-                            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+                        storeMbg(mbgJson);
                     }
                 }
             } catch (Exception e) {
@@ -547,6 +535,20 @@ public class DataService extends IntentService {
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
         }
+    }
+
+    private void storeMbg(JSONObject mbgJson) {
+        NSMbg nsMbg = new NSMbg(mbgJson);
+        CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
+        MainApp.getDbHelper().createOrUpdate(careportalEvent);
+        if (Config.logIncommingData)
+            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+    }
+
+    private void storeSgv(JSONObject sgvJson) {
+        NSSgv nsSgv = new NSSgv(sgvJson);
+        BgReading bgReading = new BgReading(nsSgv);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
     }
 
     private void handleNewSMS(Intent intent) {
