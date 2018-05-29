@@ -26,14 +26,24 @@ public class BroadcastStatus {
     private static Logger log = LoggerFactory.getLogger(BroadcastStatus.class);
 
     public static void handleNewStatus(NSSettingsStatus status, Context context, boolean isDelta) {
+        LocalBroadcastManager.getInstance(MainApp.instance())
+                .sendBroadcast(createIntent(status, isDelta));
 
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+            context.sendBroadcast(createIntent(status, isDelta));
+        }
+    }
+
+    private static Intent createIntent(NSSettingsStatus status, boolean isDelta) {
         Bundle bundle = new Bundle();
+
         try {
             bundle.putString("nsclientversionname", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionName);
             bundle.putInt("nsclientversioncode", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode);
         } catch (PackageManager.NameNotFoundException e) {
             log.error("Unhandled exception", e);
         }
+
         bundle.putString("nightscoutversionname", NSClientService.nightscoutVersionName);
         bundle.putInt("nightscoutversioncode", NSClientService.nightscoutVersionCode);
         bundle.putString("status", status.getData().toString());
@@ -41,24 +51,7 @@ public class BroadcastStatus {
         Intent intent = new Intent(Intents.ACTION_NEW_STATUS);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
-            bundle = new Bundle();
-            try {
-                bundle.putString("nsclientversionname", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionName);
-                bundle.putInt("nsclientversioncode", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode);
-            } catch (PackageManager.NameNotFoundException e) {
-                log.error("Unhandled exception", e);
-            }
-            bundle.putString("nightscoutversionname", NSClientService.nightscoutVersionName);
-            bundle.putInt("nightscoutversioncode", NSClientService.nightscoutVersionCode);
-            bundle.putString("status", status.getData().toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_NEW_STATUS);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-        }
+        return intent;
     }
 }
