@@ -26,8 +26,8 @@ public class BroadcastStatus {
     private static Logger log = LoggerFactory.getLogger(BroadcastStatus.class);
 
     public static void handleNewStatus(NSSettingsStatus status, Context context, boolean isDelta) {
-        Intent intent = createIntent(status, isDelta);
-        LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(MainApp.instance())
+                .sendBroadcast(createIntent(status, isDelta));
 
         if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             context.sendBroadcast(createIntent(status, isDelta));
