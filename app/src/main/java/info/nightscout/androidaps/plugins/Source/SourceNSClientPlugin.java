@@ -32,6 +32,6 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
 
     @Override
     public boolean advancedFilteringSupported() {
-        return true;
+        return false;
     }
 }
