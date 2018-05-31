@@ -1084,9 +1084,13 @@
     <string name="danar_buttonscroll">Button scroll</string>
     <string name="danar_beep">Beep on button press</string>
     <string name="danar_pumpalarm">Alarm</string>
+    <string name="danar_pumpalarm_sound">Sound</string>
+    <string name="danar_pumpalarm_vibrate">Vibrate</string>
+    <string name="danar_pumpalarm_both">both</string>
     <string name="danar_screentimeout">LCD on time</string>
     <string name="danar_backlight">Backlight on time</string>
     <string name="danar_glucoseunits">Glucose units</string>
     <string name="danar_shutdown">Shutdown</string>
     <string name="danar_lowreservoir">Low reservoir</string>
+    <string name="danar_saveuseroptions">Save options to pump</string>
 </resources>
