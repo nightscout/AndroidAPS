@@ -10,12 +10,14 @@
         android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/danar_user_options_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/danar_buttons"
             android:fillViewport="true">
 
             <LinearLayout
+                android:id="@+id/danar_user_options_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -43,26 +45,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/danar_timedisplay"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
 
                     <Switch
                         android:id="@+id/danar_timeformat"
@@ -70,6 +59,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:showText="true"
+                        android:text="@string/danar_timedisplay"
                         android:textOff="12h"
                         android:textOn="24h" />
 
@@ -88,32 +78,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/danar_buttonscroll"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
 
                     <Switch
                         android:id="@+id/danar_buttonscroll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@string/danar_buttonscroll"
+                        android:textOff="@string/option_off"
+                        android:textOn="@string/option_on" />
 
 
                 </LinearLayout>
@@ -130,32 +110,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/danar_beep"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
 
                     <Switch
                         android:id="@+id/danar_beep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@string/danar_beep"
+                        android:textOff="@string/option_off"
+                        android:textOn="@string/option_on" />
 
 
                 </LinearLayout>
@@ -172,13 +142,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
+                        android:gravity="left"
                         android:paddingRight="5dp"
                         android:text="@string/danar_pumpalarm"
                         android:textSize="14sp" />
@@ -194,9 +170,11 @@
                         android:textSize="14sp" />
 
                     <RadioGroup
+                        android:id="@+id/danar_pumpalarm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:checkedButton="@+id/danar_pumpalarm_sound">
 
                         <RadioButton
                             android:id="@+id/danar_pumpalarm_sound"
@@ -234,13 +212,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
+                        android:gravity="top"
                         android:paddingRight="5dp"
                         android:text="@string/danar_screentimeout"
                         android:textSize="14sp" />
@@ -277,13 +261,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
+                        android:gravity="top"
                         android:paddingRight="5dp"
                         android:text="@string/danar_backlight"
                         android:textSize="14sp" />
@@ -320,33 +310,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/danar_glucoseunits"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
 
                     <Switch
                         android:id="@+id/danar_units"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textOff="mg/dl"
+                        android:showText="true"
+                        android:splitTrack="false"
+                        android:text="@string/danar_glucoseunits"
+                        android:textOff="@string/mgdl"
                         android:textOn="@string/mmol" />
 
                 </LinearLayout>
@@ -363,13 +343,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
+                        android:gravity="left"
                         android:paddingRight="5dp"
                         android:text="@string/danar_shutdown"
                         android:textSize="14sp" />
@@ -406,13 +392,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
+                        android:gravity="left"
                         android:paddingRight="5dp"
                         android:text="@string/danar_lowreservoir"
                         android:textSize="14sp" />

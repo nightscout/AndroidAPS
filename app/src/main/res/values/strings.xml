@@ -1081,7 +1081,7 @@
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usualy more powerfull and more aggresive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="startobjective">Start your first objective</string>
     <string name="danar_useroptions">Additional options</string>
-    <string name="danar_timedisplay">Display time in 24h time format( not 12hr )</string>
+    <string name="danar_timedisplay">Display time format( not 12hr )</string>
     <string name="danar_buttonscroll">Button scroll</string>
     <string name="danar_beep">Beep on button press</string>
     <string name="danar_pumpalarm">Alarm</string>
@@ -1094,4 +1094,6 @@
     <string name="danar_shutdown">Shutdown</string>
     <string name="danar_lowreservoir">Low reservoir</string>
     <string name="danar_saveuseroptions">Save options to pump</string>
+    <string name="option_on">On</string>
+    <string name="option_off">Off</string>
 </resources>
