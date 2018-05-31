@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
+import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRUserOptionsActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
@@ -137,6 +138,9 @@ public class DanaRFragment extends SubscriberFragment {
     void onStatsClick() {
         startActivity(new Intent(getContext(), TDDStatsActivity.class));
     }
+
+    @OnClick(R.id.danar_user_options)
+    void onUserOptionsClick() {        startActivity(new Intent(getContext(), DanaRUserOptionsActivity.class));  }
 
     @OnClick(R.id.danar_btconnection)
     void onBtConnectionClick() {

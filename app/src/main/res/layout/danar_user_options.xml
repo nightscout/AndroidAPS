@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment">
+    tools:context="info.nightscout.androidaps.plugins.PumpDanaR.DanaRUserOptions">
 
 
     <RelativeLayout
@@ -51,7 +51,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/serialnumber"
+                        android:text="@string/danar_timedisplay"
                         android:textSize="14sp" />
 
                     <TextView
@@ -64,15 +64,14 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_serialnumber"
+                    <Switch
+                        android:id="@+id/danar_timeformat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:showText="true"
+                        android:textOff="12h"
+                        android:textOn="24h" />
 
 
                 </LinearLayout>
@@ -97,7 +96,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/danar_bluetooth_status"
+                        android:text="@string/danar_buttonscroll"
                         android:textSize="14sp" />
 
                     <TextView
@@ -110,69 +109,11 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/danar_btconnection"
+                    <Switch
+                        android:id="@+id/danar_buttonscroll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:text="{fa-bluetooth-b}"
-                        android:textColor="@android:color/white"
-                        android:textSize="20dp" />
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/danar_queue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="content"
-                    android:textAlignment="center" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/pump_battery_label"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
-                    <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/danar_battery"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="20dp" />
+                        android:layout_weight="1" />
 
 
                 </LinearLayout>
@@ -197,7 +138,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_lastconnection_label"
+                        android:text="@string/danar_beep"
                         android:textSize="14sp" />
 
                     <TextView
@@ -210,15 +151,12 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_lastconnection"
+                    <Switch
+                        android:id="@+id/danar_beep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:layout_weight="1" />
+
 
                 </LinearLayout>
 
@@ -242,7 +180,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_lastbolus_label"
+                        android:text="@string/danar_pumpalarm"
                         android:textSize="14sp" />
 
                     <TextView
@@ -255,15 +193,32 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_lastbolus"
+                    <RadioGroup
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:layout_weight="1">
+
+                        <RadioButton
+                            android:id="@+id/danar_pumpalarm_sound"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/danar_pumpalarm_sound" />
+
+                        <RadioButton
+                            android:id="@+id/danar_pumpalarm_vibrate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/danar_pumpalarm_vibrate" />
+
+                        <RadioButton
+                            android:id="@+id/danar_pumpalarm_both"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/danar_pumpalarm_both" />
+                    </RadioGroup>
 
                 </LinearLayout>
 
@@ -287,7 +242,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/danar_dailyunits"
+                        android:text="@string/danar_screentimeout"
                         android:textSize="14sp" />
 
                     <TextView
@@ -300,15 +255,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_dailyunits"
+                    <EditText
+                        android:id="@+id/danar_screentimeout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:ems="10"
+                        android:inputType="number" />
 
                 </LinearLayout>
 
@@ -332,7 +285,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_basebasalrate_label"
+                        android:text="@string/danar_backlight"
                         android:textSize="14sp" />
 
                     <TextView
@@ -345,15 +298,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_basabasalrate"
+                    <EditText
+                        android:id="@+id/danar_backlight"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:ems="10"
+                        android:inputType="number" />
 
                 </LinearLayout>
 
@@ -377,7 +328,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_tempbasal_label"
+                        android:text="@string/danar_glucoseunits"
                         android:textSize="14sp" />
 
                     <TextView
@@ -390,15 +341,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_tempbasal"
+                    <Switch
+                        android:id="@+id/danar_units"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:textOff="mg/dl"
+                        android:textOn="@string/mmol" />
 
                 </LinearLayout>
 
@@ -422,7 +371,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/virtualpump_extendedbolus_label"
+                        android:text="@string/danar_shutdown"
                         android:textSize="14sp" />
 
                     <TextView
@@ -435,15 +384,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_extendedbolus"
+                    <EditText
+                        android:id="@+id/danar_shutdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:ems="10"
+                        android:inputType="number" />
 
                 </LinearLayout>
 
@@ -467,7 +414,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/pump_reservoir_label"
+                        android:text="@string/danar_lowreservoir"
                         android:textSize="14sp" />
 
                     <TextView
@@ -480,15 +427,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/danar_reservoir"
+                    <EditText
+                        android:id="@+id/danar_lowreservoir"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
+                        android:ems="10"
+                        android:inputType="number" />
 
                 </LinearLayout>
 
@@ -501,176 +446,11 @@
                     android:layout_marginTop="5dp"
                     android:background="@color/listdelimiter" />
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/save_user_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/danar_iob_label"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/danar_iob"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/basal_step"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/danar_basalstep"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/bolus_step"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/danar_bolusstep"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/virtualpump_firmware_label"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/danar_firmware"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
+                    android:text="@string/danar_saveuseroptions" />
 
                 <View
                     android:layout_width="fill_parent"
@@ -685,65 +465,7 @@
 
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/danar_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/danar_viewprofile"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarprofile"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/danar_viewprofile" />
-
-
-                <Button
-                    android:id="@+id/danar_history"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarhistory"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/danar_history" />
-
-                <Button
-                    android:id="@+id/danar_stats"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/danar_stats" />
-                <Button
-                    android:id="@+id/danar_user_options"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/danar_useroptions" />
-
-            </LinearLayout>
-
-        </LinearLayout>
 
     </RelativeLayout>
 
