@@ -109,9 +109,15 @@ public class DanaRUserOptionsActivity extends Activity {
                         timeFormat.setChecked(true);
                     }
 
+                    if(pump.buttonScrollOnOff != 0) {
+                        buttonScroll.setChecked(true);
+                    }
+                    screenTimeout.setText(pump.lcdOnTimeSec);
+                    backlightTimeout.setText(pump.backlightOnTimeSec);
+                    shutdown.setText(pump.shutdownHour);
+                    lowReservoir.setText(pump.lowReservoirRate);
                 }
             });
     }
 
-    }
 }
