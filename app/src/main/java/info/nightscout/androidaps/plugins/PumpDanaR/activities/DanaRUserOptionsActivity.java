@@ -95,6 +95,16 @@ public class DanaRUserOptionsActivity extends Activity {
                 @Override
                 public void run() {
                     DanaRPump pump = DanaRPump.getInstance();
+                    //used for debugging
+                    log.debug("UserOptionsLoadedd:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
+                            +"\ntimeDisplayType:"+pump.timeDisplayType
+                            +"\nbuttonScroll:"+pump.buttonScrollOnOff
+                            +"\ntimeDisplayType:"+pump.timeDisplayType
+                            +"\nlcdOnTimeSec:"+pump.lcdOnTimeSec
+                            +"\nbacklight:"+pump.backlightOnTimeSec
+                            +"\npumpUnits:"+pump.units
+                            +"\nlowReservoir:"+pump.lowReservoirRate);
+
 
                     if (pump.timeDisplayType != 0) {
                         timeFormat.setChecked(true);

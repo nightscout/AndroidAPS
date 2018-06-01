@@ -87,7 +87,7 @@ public class DanaRS_Packet_Option_Get_User_Option extends DanaRS_Packet {
 		dataSize = 1;
 		int selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
-		if (Config.logDanaMessageDetail) {
+		if (true) {
 			log.debug("timeDisplayType: " + pump.timeDisplayType);
 			log.debug("buttonScrollOnOff: " + pump.buttonScrollOnOff);
 			log.debug("beepAndAlarm: " + pump.beepAndAlarm);
