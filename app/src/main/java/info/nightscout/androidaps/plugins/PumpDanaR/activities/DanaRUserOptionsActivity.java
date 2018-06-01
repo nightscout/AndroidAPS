@@ -21,18 +21,13 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SetWarnColor;
 
 /**
  * Created by Rumen Georgiev on 5/31/2018.
@@ -97,15 +92,10 @@ public class DanaRUserOptionsActivity extends Activity {
         Activity activity = this;
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
-                @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
                     DanaRPump pump = DanaRPump.getInstance();
-                    if (pump.getUnits() != null) {
-                        if(pump.getUnits() == "mmol") {
-                            pumpUnits.setChecked(true);
-                        }
-                    }
+
                     if (pump.timeDisplayType != 0) {
                         timeFormat.setChecked(true);
                     }
@@ -113,8 +103,19 @@ public class DanaRUserOptionsActivity extends Activity {
                     if(pump.buttonScrollOnOff != 0) {
                         buttonScroll.setChecked(true);
                     }
+                    if (pump.beepAndAlarm != 0) {
+                        beep.setChecked(true);
+                    }
+
                     screenTimeout.setText(String.valueOf(pump.lcdOnTimeSec));
                     backlightTimeout.setText(String.valueOf(pump.backlightOnTimeSec));
+                    if(pump.lastSettingsRead == 0)
+                        backlightTimeout.setText(String.valueOf(666));
+                    if (pump.getUnits() != null) {
+                        if(pump.getUnits().equals(Constants.MMOL)) {
+                            pumpUnits.setChecked(true);
+                        }
+                    }
                     shutdown.setText(String.valueOf(pump.shutdownHour));
                     lowReservoir.setText(String.valueOf(pump.lowReservoirRate));
                 }
