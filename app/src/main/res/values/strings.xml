@@ -307,6 +307,7 @@
     <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
     <string name="objectives_7_objective">Enabling additional features for daytime use, such as SMB</string>
+    <string name="objectives_7_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -1080,6 +1081,13 @@
     <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usualy more powerfull and more aggresive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="startobjective">Start your first objective</string>
+    <string name="permission">Permission</string>
+    <string name="askforpermission">Ask for permission</string>
+    <string name="needlocationpermission">Application needs location permission for BT scan</string>
+    <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
+    <string name="request">Request</string>
+    <string name="insulinsourcesetup">Configure Insulin plugin</string>
+    <string name="exit">Exit</string>
     <string name="danar_useroptions">Additional options</string>
     <string name="danar_timedisplay">Display time format</string>
     <string name="danar_buttonscroll">Button scroll</string>
