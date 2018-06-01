@@ -93,6 +93,7 @@ public class DanaRUserOptionsActivity extends Activity {
         boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
         boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
 
+
         Activity activity = this;
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
@@ -112,10 +113,10 @@ public class DanaRUserOptionsActivity extends Activity {
                     if(pump.buttonScrollOnOff != 0) {
                         buttonScroll.setChecked(true);
                     }
-                    screenTimeout.setText(pump.lcdOnTimeSec);
-                    backlightTimeout.setText(pump.backlightOnTimeSec);
-                    shutdown.setText(pump.shutdownHour);
-                    lowReservoir.setText(pump.lowReservoirRate);
+                    screenTimeout.setText(String.valueOf(pump.lcdOnTimeSec));
+                    backlightTimeout.setText(String.valueOf(pump.backlightOnTimeSec));
+                    shutdown.setText(String.valueOf(pump.shutdownHour));
+                    lowReservoir.setText(String.valueOf(pump.lowReservoirRate));
                 }
             });
     }
