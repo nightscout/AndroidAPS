@@ -250,7 +250,7 @@ public class DetermineBasalAdapterSMBJS {
             mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
         }
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
-        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false)&& advancedFiltering);
+        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));

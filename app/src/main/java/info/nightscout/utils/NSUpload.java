@@ -289,19 +289,7 @@ public class NSUpload {
 
     public static void uploadProfileSwitch(ProfileSwitch profileSwitch) {
         try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.PROFILESWITCH);
-            data.put("duration", profileSwitch.durationInMinutes);
-            data.put("profile", profileSwitch.getCustomizedName());
-            data.put("profileJson", profileSwitch.profileJson);
-            data.put("profilePlugin", profileSwitch.profilePlugin);
-            if (profileSwitch.isCPP) {
-                data.put("CircadianPercentageProfile", true);
-                data.put("timeshift", profileSwitch.timeshift);
-                data.put("percentage", profileSwitch.percentage);
-            }
-            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
-            data.put("enteredBy", MainApp.gs(R.string.app_name));
+            JSONObject data = getJson(profileSwitch);
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -334,19 +322,7 @@ public class NSUpload {
 
     public static void updateProfileSwitch(ProfileSwitch profileSwitch) {
         try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.PROFILESWITCH);
-            data.put("duration", profileSwitch.durationInMinutes);
-            data.put("profile", profileSwitch.getCustomizedName());
-            data.put("profileJson", profileSwitch.profileJson);
-            data.put("profilePlugin", profileSwitch.profilePlugin);
-            if (profileSwitch.isCPP) {
-                data.put("CircadianPercentageProfile", true);
-                data.put("timeshift", profileSwitch.timeshift);
-                data.put("percentage", profileSwitch.percentage);
-            }
-            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
-            data.put("enteredBy", MainApp.gs(R.string.app_name));
+            JSONObject data = getJson(profileSwitch);
             if (profileSwitch._id != null) {
                 Context context = MainApp.instance().getApplicationContext();
                 Bundle bundle = new Bundle();
@@ -363,6 +339,24 @@ public class NSUpload {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+    }
+
+    private static JSONObject getJson(ProfileSwitch profileSwitch) throws JSONException {
+        JSONObject data = new JSONObject();
+        data.put("eventType", CareportalEvent.PROFILESWITCH);
+        data.put("duration", profileSwitch.durationInMinutes);
+        data.put("profile", profileSwitch.getCustomizedName());
+        data.put("profileJson", profileSwitch.profileJson);
+        data.put("profilePlugin", profileSwitch.profilePlugin);
+        if (profileSwitch.isCPP) {
+            data.put("CircadianPercentageProfile", true);
+            data.put("timeshift", profileSwitch.timeshift);
+            data.put("percentage", profileSwitch.percentage);
+        }
+        data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+        data.put("enteredBy", MainApp.gs(R.string.app_name));
+
+        return data;
     }
 
     public static void uploadCareportalEntryToNS(JSONObject data) {

@@ -42,9 +42,12 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     public void onBindViewHolder(NotificationsViewHolder holder, int position) {
         Notification notification = notificationsList.get(position);
         holder.dismiss.setTag(notification);
-        if (Objects.equals(notification.text, MainApp.gs(R.string.nsalarm_staledata)))
+        if (notification instanceof NotificationWithAction)
+            holder.dismiss.setText(((NotificationWithAction) notification).buttonText);
+        else if (Objects.equals(notification.text, MainApp.gs(R.string.nsalarm_staledata)))
             holder.dismiss.setText("snooze");
-        holder.text.setText(notification.text+'\n');
+
+        holder.text.setText(notification.text + '\n');
         holder.time.setText(DateUtil.timeString(notification.date));
         if (notification.level == Notification.URGENT)
             holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationUrgent));
@@ -99,6 +102,9 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
                         log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
                         nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
+                    }
+                    if (notification instanceof NotificationWithAction) {
+                        ((NotificationWithAction) notification).action.run();
                     }
                     break;
             }
