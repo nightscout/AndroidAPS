@@ -1,10 +1,14 @@
 package info.nightscout.androidaps.setupwizard;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -24,6 +28,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObje
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
+import info.nightscout.utils.AndroidPermission;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
@@ -31,6 +36,8 @@ import info.nightscout.utils.SP;
 public class SetupWizardActivity extends AppCompatActivity {
     //logging
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
+
+    ScrollView scrollView;
 
     private SWDefinition swDefinition = new SWDefinition();
     private List<SWScreen> screens = swDefinition.getScreens();
@@ -42,6 +49,8 @@ public class SetupWizardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_setupwizard);
+
+        scrollView = (ScrollView) findViewById(R.id.sw_scrollview);
 
         Intent intent = getIntent();
         currentWizardPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE, 0);
@@ -66,6 +75,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     }
 
     public void exitPressed(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
         OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
@@ -121,6 +131,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWItem currentItem = currentScreen.items.get(i);
             currentItem.generateDialog(this.findViewById(R.id.sw_content_fields), layout);
         }
+        scrollView.smoothScrollTo(0,0);
     }
 
     private void updateButtons() {
@@ -166,6 +177,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
 
     private int nextPage() {
@@ -180,11 +192,35 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     private int previousPage() {
         int page = currentWizardPage - 1;
-        while (page > 0) {
+        while (page >= 0) {
             if (screens.get(page).visibility == null || screens.get(page).visibility.isValid())
                 return page;
             page--;
         }
         return currentWizardPage;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissions.length != 0) {
+            if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+                switch (requestCode) {
+                    case AndroidPermission.CASE_STORAGE:
+                        //show dialog after permission is granted
+                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                        alert.setMessage(R.string.alert_dialog_storage_permission_text);
+                        alert.setPositiveButton(R.string.ok, null);
+                        alert.show();
+                        break;
+                    case AndroidPermission.CASE_LOCATION:
+                    case AndroidPermission.CASE_SMS:
+                    case AndroidPermission.CASE_BATTERY:
+                        break;
+                }
+            }
+        }
+        updateButtons();
+    }
+
 }

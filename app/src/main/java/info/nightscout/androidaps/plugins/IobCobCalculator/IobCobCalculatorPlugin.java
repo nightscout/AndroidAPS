@@ -347,13 +347,12 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return null;
     }
 
-    public BasalData getBasalData(long time) {
+    public BasalData getBasalData(Profile profile, long time) {
         long now = System.currentTimeMillis();
         time = roundUpTime(time);
         BasalData retval = basalDataTable.get(time);
         if (retval == null) {
             retval = new BasalData();
-            Profile profile = MainApp.getConfigBuilder().getProfile(time);
             TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(time);
             retval.basal = profile.getBasal(time);
             if (tb != null) {
