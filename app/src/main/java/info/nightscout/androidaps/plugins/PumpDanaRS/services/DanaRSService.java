@@ -71,6 +71,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_D
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_User_Option;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
@@ -179,6 +180,24 @@ public class DanaRSService extends Service {
             log.error("Unhandled exception", e);
         }
         log.debug("Pump status loaded");
+    }
+
+    public void updateUserOptions() {
+        try {
+            DanaRPump pump = DanaRPump.getInstance();
+            log.debug("UserOptionsLoadedd3:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
+                    +"\ntimeDisplayType:"+pump.timeDisplayType
+                    +"\nbuttonScroll:"+pump.buttonScrollOnOff
+                    +"\ntimeDisplayType:"+pump.timeDisplayType
+                    +"\nlcdOnTimeSec:"+pump.lcdOnTimeSec
+                    +"\nbacklight:"+pump.backlightOnTimeSec
+                    +"\npumpUnits:"+pump.units
+                    +"\nlowReservoir:"+pump.lowReservoirRate);
+            //bleComm.sendMessage(new DanaRS_Packet_Option_Set_User_Option());
+        } catch (Exception e) {
+            log.error("Unhandled exception", e);
+        }
+        log.debug("User options updates");
     }
 
     public PumpEnactResult loadEvents() {

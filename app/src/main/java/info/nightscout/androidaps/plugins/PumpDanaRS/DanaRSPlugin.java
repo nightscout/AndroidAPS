@@ -26,6 +26,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Start;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -757,5 +758,21 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     @Override
     public PumpEnactResult loadTDDs() {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+    }
+
+    public void updateUserOptions() {
+        if (danaRSService == null) {
+            log.error("updateUserOptions sExecutionService is null");
+            return;
+        }
+        log.debug("UserOptionsLoadedd2:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
+                +"\ntimeDisplayType:"+pump.timeDisplayType
+                +"\nbuttonScroll:"+pump.buttonScrollOnOff
+                +"\ntimeDisplayType:"+pump.timeDisplayType
+                +"\nlcdOnTimeSec:"+pump.lcdOnTimeSec
+                +"\nbacklight:"+pump.backlightOnTimeSec
+                +"\npumpUnits:"+pump.units
+                +"\nlowReservoir:"+pump.lowReservoirRate);
+        danaRSService.updateUserOptions();
     }
 }

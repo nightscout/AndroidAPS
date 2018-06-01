@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -14,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -28,6 +24,8 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
+import info.nightscout.utils.SP;
 
 /**
  * Created by Rumen Georgiev on 5/31/2018.
@@ -35,11 +33,6 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 
 public class DanaRUserOptionsActivity extends Activity {
     private static Logger log = LoggerFactory.getLogger(DanaRUserOptionsActivity.class);
-
-    private Handler mHandler;
-    private static HandlerThread mHandlerThread;
-    LinearLayoutManager llm;
-    RecyclerView recyclerView;
 
     Switch timeFormat;
     Switch buttonScroll;
@@ -53,7 +46,7 @@ public class DanaRUserOptionsActivity extends Activity {
     EditText backlightTimeout;
     EditText shutdown;
     EditText lowReservoir;
-
+    Button saveToPumpButton;
 
     @Override
     protected void onResume() {
@@ -84,6 +77,14 @@ public class DanaRUserOptionsActivity extends Activity {
         pumpUnits = (Switch) findViewById(R.id.danar_units);
         shutdown = (EditText) findViewById(R.id.danar_shutdown);
         lowReservoir = (EditText) findViewById(R.id.danar_lowreservoir);
+        saveToPumpButton = (Button) findViewById(R.id.save_user_options);
+
+        saveToPumpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSaveClick();
+            }
+        });
 
         boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
         boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
@@ -130,6 +131,58 @@ public class DanaRUserOptionsActivity extends Activity {
                     lowReservoir.setText(String.valueOf(pump.lowReservoirRate));
                 }
             });
+    }
+
+    public void onSaveClick(){
+        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
+        if(!isRS){
+            //exit if pump is not DanaRS
+            return;
+        }
+        DanaRPump pump = DanaRPump.getInstance();
+
+        if(timeFormat.isChecked())
+            pump.timeDisplayType = 1;
+        else
+            pump.timeDisplayType = 0;
+        if(buttonScroll.isChecked())
+            pump.buttonScrollOnOff = 1;
+        else
+            pump.buttonScrollOnOff = 0;
+        // step is 5 seconds
+        int screenTimeoutValue = (Integer.parseInt(screenTimeout.getText().toString()) / 5) * 5;
+        if(screenTimeoutValue > 4 && screenTimeoutValue < 241){
+            pump.lcdOnTimeSec = screenTimeoutValue;
+        } else {
+            pump.lcdOnTimeSec = 5;
+        }
+        int backlightTimeoutValue = Integer.parseInt(backlightTimeout.getText().toString());
+        if(backlightTimeoutValue > 0 && backlightTimeoutValue < 61){
+            pump.backlightOnTimeSec = backlightTimeoutValue;
+        }
+        if(pumpUnits.isChecked()){
+            pump.units = 1;
+        } else {
+            pump.units = 0;
+        }
+        int shutDownValue = Integer.parseInt(shutdown.getText().toString());
+        if(shutDownValue > -1 && shutDownValue < 25 ){
+            pump.shutdownHour = shutDownValue;
+        } else {
+            pump.shutdownHour = 0;
+        }
+        int lowReservoirValue = ( Integer.parseInt(lowReservoir.getText().toString()) *10 )/10;
+        if(lowReservoirValue > 9 && lowReservoirValue <51){
+            pump.lowReservoirRate = lowReservoirValue;
+        } else
+            pump.lowReservoirRate = 10;
+
+        // push new settings to pump
+        DanaRSPlugin pumpPlugin = MainApp.getSpecificPlugin(DanaRSPlugin.class);
+        if(!pumpPlugin.isConnected())
+            pumpPlugin.connect("UpdateUserOptions");
+        pumpPlugin.updateUserOptions();
+        pumpPlugin.disconnect("UpdateUserOprions");
     }
 
 }
