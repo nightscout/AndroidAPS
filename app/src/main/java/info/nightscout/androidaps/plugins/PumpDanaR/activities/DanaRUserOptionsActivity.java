@@ -107,7 +107,7 @@ public class DanaRUserOptionsActivity extends Activity {
 
 
                     if (pump.timeDisplayType != 0) {
-                        timeFormat.setChecked(true);
+                        timeFormat.setChecked(false);
                     }
 
                     if(pump.buttonScrollOnOff != 0) {
