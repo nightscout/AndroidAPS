@@ -766,6 +766,7 @@
     <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value</string>
+    <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value</string>
     <string name="overview_editquickwizard_usebg">BG calculation</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB calculation</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
