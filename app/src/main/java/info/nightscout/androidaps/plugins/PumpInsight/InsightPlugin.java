@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusSilentlyTaskRunner;
+import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelTBRSilentlyTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.SetTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
@@ -553,10 +554,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     private void realTBRCancel() throws Exception {
-        fauxTBRcancel = !SP.getBoolean("insight_real_tbr_cancel", false);
-        if (fauxTBRcancel) fetchTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1));
-        else fetchSingleMessage(new CancelTBRMessage());
-        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
+        if (fetchTaskRunner(new CancelTBRSilentlyTaskRunner(connector.getServiceConnector()), Boolean.class) && TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
         }

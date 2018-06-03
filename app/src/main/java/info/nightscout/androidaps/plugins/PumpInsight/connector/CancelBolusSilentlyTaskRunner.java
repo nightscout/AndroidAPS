@@ -47,13 +47,13 @@ public class CancelBolusSilentlyTaskRunner extends TaskRunner {
         } else if (message instanceof ActiveAlertMessage) {
             ActiveAlertMessage activeAlertMessage = (ActiveAlertMessage) message;
             if (activeAlertMessage.getAlert() == null) {
-                if (System.currentTimeMillis() - cancelledAt >= 10000) finish(null);
+                if (System.currentTimeMillis() - cancelledAt >= 10000) finish(bolusId);
                 else {
                     ActiveAlertMessage activeAlertMessage2 = new ActiveAlertMessage();
                     activeAlertMessage2.setMessagePriority(MessagePriority.HIGHER);
                     return activeAlertMessage2;
                 }
-            } else if (!(activeAlertMessage.getAlert() instanceof Warning38BolusCancelled)) finish(null);
+            } else if (!(activeAlertMessage.getAlert() instanceof Warning38BolusCancelled)) finish(bolusId);
             else {
                 DismissAlertMessage dismissAlertMessage = new DismissAlertMessage();
                 dismissAlertMessage.setAlertID(activeAlertMessage.getAlertID());
