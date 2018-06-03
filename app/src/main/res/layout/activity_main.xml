@@ -17,18 +17,18 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             android:elevation="4dp"
-            app:contentInsetEnd="0dp"
-            app:contentInsetEndWithActions="0dp"
-            app:contentInsetStart="0dp"
-            app:contentInsetStartWithNavigation="0dp">
+            app:contentInsetEnd="64dp"
+            app:contentInsetStart="64dp"
+            app:contentInsetLeft="64dp"
+            app:contentInsetRight="64dp"
+            app:contentInsetEndWithActions="64dp"
+            app:contentInsetStartWithNavigation="64dp">
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
-                android:paddingRight="64dp"
-                android:paddingLeft="64dp"
                 app:tabIndicatorColor="@color/colorAccent"
                 app:tabMode="scrollable" />
         </android.support.v7.widget.Toolbar>
