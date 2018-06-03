@@ -87,9 +87,9 @@ public class ConfigBuilderPlugin extends PluginBase {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(ConfigBuilderFragment.class.getName())
-                .showInList(false)
+                .showInList(true)
                 .alwaysEnabled(true)
-                .alwayVisible(true)
+                .alwayVisible(false)
                 .pluginName(R.string.configbuilder)
                 .shortName(R.string.configbuilder_shortname)
         );
