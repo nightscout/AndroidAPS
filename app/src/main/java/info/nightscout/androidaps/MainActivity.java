@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         TabPageAdapter pageAdapter = new TabPageAdapter(getSupportFragmentManager(), this);
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
-            Log.d("asdasdasdsada", "ASFASFASFSFASF");
             return true;
         });
         Menu menu = navigationView.getMenu();
