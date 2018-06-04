@@ -17,6 +17,8 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -24,9 +26,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
-import info.nightscout.utils.SP;
-
+import info.nightscout.utils.NumberPicker;
 /**
  * Created by Rumen Georgiev on 5/31/2018.
  */
@@ -42,10 +42,10 @@ public class DanaRUserOptionsActivity extends Activity {
     RadioButton pumpAlarmVibrate;
     RadioButton pumpAlarmBoth;
     Switch pumpUnits;
-    EditText screenTimeout;
-    EditText backlightTimeout;
-    EditText shutdown;
-    EditText lowReservoir;
+    NumberPicker screenTimeout;
+    NumberPicker backlightTimeout;
+    NumberPicker shutdown;
+    NumberPicker lowReservoir;
     Button saveToPumpButton;
 
     @Override
@@ -72,11 +72,11 @@ public class DanaRUserOptionsActivity extends Activity {
         pumpAlarmSound = (RadioButton) findViewById(R.id.danar_pumpalarm_sound);
         pumpAlarmVibrate = (RadioButton) findViewById(R.id.danar_pumpalarm_vibrate);
         pumpAlarmBoth = (RadioButton) findViewById(R.id.danar_pumpalarm_both);
-        screenTimeout = (EditText) findViewById(R.id.danar_screentimeout);
-        backlightTimeout = (EditText) findViewById(R.id.danar_backlight);
+        screenTimeout = (NumberPicker) findViewById(R.id.danar_screentimeout);
+        backlightTimeout = (NumberPicker) findViewById(R.id.danar_backlight);
         pumpUnits = (Switch) findViewById(R.id.danar_units);
-        shutdown = (EditText) findViewById(R.id.danar_shutdown);
-        lowReservoir = (EditText) findViewById(R.id.danar_lowreservoir);
+        shutdown = (NumberPicker) findViewById(R.id.danar_shutdown);
+        lowReservoir = (NumberPicker) findViewById(R.id.danar_lowreservoir);
         saveToPumpButton = (Button) findViewById(R.id.save_user_options);
 
         saveToPumpButton.setOnClickListener(new View.OnClickListener() {
@@ -118,17 +118,23 @@ public class DanaRUserOptionsActivity extends Activity {
                         beep.setChecked(true);
                     }
 
-                    screenTimeout.setText(String.valueOf(pump.lcdOnTimeSec));
-                    backlightTimeout.setText(String.valueOf(pump.backlightOnTimeSec));
+                    screenTimeout.setValue((double) pump.lcdOnTimeSec);
+                    screenTimeout.setStep(5d);
+                    screenTimeout.setParams(5d,5d,240d,5d,new DecimalFormat("1"), false);
+                    backlightTimeout.setValue((double) pump.backlightOnTimeSec);
+                    backlightTimeout.setParams(0d,0d,60d,1d,new DecimalFormat("1"), false);
                     if(pump.lastSettingsRead == 0)
-                        backlightTimeout.setText(String.valueOf(666));
+                        log.debug("No settings loaded from pump!");
                     if (pump.getUnits() != null) {
                         if(pump.getUnits().equals(Constants.MMOL)) {
                             pumpUnits.setChecked(true);
                         }
                     }
-                    shutdown.setText(String.valueOf(pump.shutdownHour));
-                    lowReservoir.setText(String.valueOf(pump.lowReservoirRate));
+                    shutdown.setValue((double) pump.shutdownHour);
+                    shutdown.setParams(0d,0d,24d,1d,new DecimalFormat("1"), false);
+                    lowReservoir.setValue((double) pump.lowReservoirRate);
+                    lowReservoir.setStep(10D);
+                    lowReservoir.setParams(10d,10d,60d,10d,new DecimalFormat("10"), false);
                 }
             });
     }

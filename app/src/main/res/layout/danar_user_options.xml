@@ -239,13 +239,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <info.nightscout.utils.NumberPicker
                         android:id="@+id/danar_screentimeout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="number" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp" />
 
                 </LinearLayout>
 
@@ -288,13 +288,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <info.nightscout.utils.NumberPicker
                         android:id="@+id/danar_backlight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="number" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp" />
 
                 </LinearLayout>
 
@@ -370,13 +370,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <info.nightscout.utils.NumberPicker
                         android:id="@+id/danar_shutdown"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="number" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp" />
 
                 </LinearLayout>
 
@@ -419,13 +419,13 @@
                         android:text=":"
                         android:textSize="14sp" />
 
-                    <EditText
+                    <info.nightscout.utils.NumberPicker
                         android:id="@+id/danar_lowreservoir"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="number" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp" />
 
                 </LinearLayout>
 
