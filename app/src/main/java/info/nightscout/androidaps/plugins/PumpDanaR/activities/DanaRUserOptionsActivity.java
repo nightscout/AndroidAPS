@@ -2,17 +2,11 @@ package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
-import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +125,7 @@ public class DanaRUserOptionsActivity extends Activity {
                         }
                     }
                     shutdown.setValue((double) pump.shutdownHour);
-                    shutdown.setParams(0d,0d,24d,1d,new DecimalFormat("1"), false);
+                    shutdown.setParams(0d,0d,24d,1d,new DecimalFormat("1"), true);
                     lowReservoir.setValue((double) pump.lowReservoirRate);
                     lowReservoir.setStep(10D);
                     lowReservoir.setParams(10d,10d,60d,10d,new DecimalFormat("10"), false);
