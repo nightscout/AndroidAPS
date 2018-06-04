@@ -39,6 +39,10 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
         return Fragment.instantiate(context, visibleFragmentList.get(position).pluginDescription.getFragmentClass());
     }
 
+    public PluginBase getPluginAt(int position) {
+        return visibleFragmentList.get(position);
+    }
+
     @Override
     public void finishUpdate(ViewGroup container) {
         try{
