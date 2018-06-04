@@ -4,42 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <FrameLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:clipChildren="false"
-        android:clipToPadding="false">
+        android:background="@color/colorPrimary"
+        app:contentInsetEndWithActions="48dp"
+        app:contentInsetStartWithNavigation="48dp"
+        android:elevation="4dp">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            app:contentInsetEnd="64dp"
-            app:contentInsetStart="64dp"
-            app:contentInsetLeft="64dp"
-            app:contentInsetRight="64dp"
-            app:contentInsetEndWithActions="64dp"
-            app:contentInsetStartWithNavigation="64dp">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                app:tabIndicatorColor="@color/colorAccent"
-                app:tabMode="scrollable" />
-        </android.support.v7.widget.Toolbar>
-
-        <info.nightscout.androidaps.tabs.NonConsumingToolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs_normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:translationZ="4dp" />
-    </FrameLayout>
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabMode="scrollable" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs_compact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            app:tabMinWidth="0dp"
+            app:tabPadding="0dp"
+            app:tabIndicatorColor="#FFFFFF"
+            app:tabMode="scrollable" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -56,7 +51,7 @@
             android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:itemBackground="@android:color/transparent"
+            app:itemBackground="?selectableItemBackground"
             app:itemTextColor="#FFFFFF"
             android:layout_gravity="start" />
     </android.support.v4.widget.DrawerLayout>

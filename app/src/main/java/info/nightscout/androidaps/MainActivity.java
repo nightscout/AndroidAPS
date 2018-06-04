@@ -1,40 +1,35 @@
 package info.nightscout.androidaps;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.PowerManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.Iconify;
@@ -43,11 +38,6 @@ import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -101,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
         doMigrations();
 
         registerBus();
-        setUpTabs(false);
+        setupTabs();
+        setupViews(false);
     }
 
     @Override
@@ -154,29 +145,27 @@ public class MainActivity extends AppCompatActivity {
     public void onStatusEvent(final EventRefreshGui ev) {
         String lang = SP.getString("language", "en");
         LocaleHelper.setLocale(getApplicationContext(), lang);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (ev.recreate) {
-                    recreate();
-                } else {
-                    try { // activity may be destroyed
-                        setUpTabs(true);
-                    } catch (IllegalStateException e) {
-                        log.error("Unhandled exception", e);
-                    }
+        runOnUiThread(() -> {
+            if (ev.recreate) {
+                recreate();
+            } else {
+                try { // activity may be destroyed
+                    setupTabs();
+                    setupViews(true);
+                } catch (IllegalStateException e) {
+                    log.error("Unhandled exception", e);
                 }
-
-                boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
-                if (lockScreen)
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                else
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
+
+            boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
+            if (lockScreen)
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            else
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
     }
 
-    private void setUpTabs(boolean switchToLast) {
+    private void setupViews(boolean switchToLast) {
         TabPageAdapter pageAdapter = new TabPageAdapter(getSupportFragmentManager(), this);
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
@@ -200,10 +189,30 @@ public class MainActivity extends AppCompatActivity {
         }
         ViewPager mPager = findViewById(R.id.pager);
         mPager.setAdapter(pageAdapter);
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mPager, true);
         if (switchToLast)
             mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
+    }
+
+    private void setupTabs() {
+        ViewPager viewPager = findViewById(R.id.pager);
+        TabLayout normalTabs = findViewById(R.id.tabs_normal);
+        normalTabs.setupWithViewPager(viewPager, true);
+        TabLayout compactTabs = findViewById(R.id.tabs_compact);
+        compactTabs.setupWithViewPager(viewPager, true);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (SP.getBoolean("short_tabtitles", false)) {
+            normalTabs.setVisibility(View.GONE);
+            compactTabs.setVisibility(View.VISIBLE);
+            toolbar.setLayoutParams(new LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.compact_height)));
+        } else {
+            normalTabs.setVisibility(View.VISIBLE);
+            compactTabs.setVisibility(View.GONE);
+            TypedValue typedValue = new TypedValue();
+            if (getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
+                toolbar.setLayoutParams(new LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
+                        TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics())));
+            }
+        }
     }
 
     private void registerBus() {
