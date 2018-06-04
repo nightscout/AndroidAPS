@@ -7,6 +7,10 @@
         app:showAsAction="never"
         android:title="@string/nav_preferences" />
     <item
+        android:id="@+id/nav_plugin_preferences"
+        app:showAsAction="never"
+        android:title="@string/nav_plugin_preferences" />
+    <item
         android:id="@+id/nav_historybrowser"
         app:showAsAction="never"
         android:title="@string/nav_historybrowser" />

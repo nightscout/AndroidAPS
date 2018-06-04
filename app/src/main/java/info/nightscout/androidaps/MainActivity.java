@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
+    private MenuItem pluginPreferencesMenuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,29 @@ public class MainActivity extends AppCompatActivity {
         registerBus();
         setupTabs();
         setupViews(false);
+
+        final ViewPager viewPager = findViewById(R.id.pager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                checkPluginPreferences(viewPager);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void checkPluginPreferences(ViewPager viewPager) {
+        if (pluginPreferencesMenuItem == null) return;
+        if (((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem()).getPreferencesId() != -1)
+            pluginPreferencesMenuItem.setEnabled(true);
+        else pluginPreferencesMenuItem.setEnabled(false);
     }
 
     @Override
@@ -191,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         mPager.setAdapter(pageAdapter);
         if (switchToLast)
             mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
+        checkPluginPreferences(mPager);
     }
 
     private void setupTabs() {
@@ -312,6 +338,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences);
+        checkPluginPreferences(findViewById(R.id.pager));
         return true;
     }
 
@@ -387,6 +415,15 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 System.runFinalization();
                 System.exit(0);
+                return true;
+            case R.id.nav_plugin_preferences:
+                ViewPager viewPager = findViewById(R.id.pager);
+                final PluginBase plugin = ((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem());
+                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
+                    Intent i = new Intent(this, PreferencesActivity.class);
+                    i.putExtra("id", plugin.getPreferencesId());
+                    startActivity(i);
+                }, null);
                 return true;
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item);
