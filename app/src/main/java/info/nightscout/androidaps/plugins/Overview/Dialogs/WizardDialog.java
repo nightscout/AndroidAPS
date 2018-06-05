@@ -408,9 +408,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void initDialog() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
 
-        if (profile == null) {
+        if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
             dismiss();
             return;
