@@ -24,7 +24,7 @@
             <LinearLayout
                 android:id="@+id/overview_looplayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
 
@@ -35,7 +35,10 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:text="Open Loop"
+
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -47,6 +50,8 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:text="Profile"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -58,6 +63,8 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="TempTarget"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/mdtp_white" />
 
