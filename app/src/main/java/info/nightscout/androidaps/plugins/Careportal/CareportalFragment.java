@@ -222,7 +222,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
 
                         double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 72);
                         double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 48);
-                        handleAge(sage, CareportalEvent.SITECHANGE, cageWarn, cageUrgent);
+                        handleAge(cage, CareportalEvent.SITECHANGE, cageWarn, cageUrgent);
 
                         double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 166);
                         double sageWarn = nsSettings.getExtendedWarnValue("sage", "warn", 164);

@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
@@ -21,7 +20,6 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -33,7 +31,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusTaskRunner;
+import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusSilentlyTaskRunner;
+import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelTBRSilentlyTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.SetTBRTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
@@ -44,12 +43,14 @@ import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolus;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
+import sugar.free.sightparser.applayer.descriptors.MessagePriority;
 import sugar.free.sightparser.applayer.descriptors.PumpStatus;
 import sugar.free.sightparser.applayer.descriptors.configuration_blocks.BRProfileBlock;
 import sugar.free.sightparser.applayer.messages.AppLayerMessage;
@@ -94,7 +95,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     private static boolean initialized = false;
     private static volatile boolean update_pending = false;
     private static Logger log = LoggerFactory.getLogger(InsightPlugin.class);
-    private final InsightAsyncAdapter async = new InsightAsyncAdapter();
     private StatusTaskRunner.Result statusResult;
     private long statusResultTime = -1;
     private Date lastDataTime = new Date(0);
@@ -115,10 +115,10 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         );
         log("InsightPlugin instantiated");
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.05d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions?)
+        pumpDescription.bolusStep = 0.01d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions? Yes, they are!)
 
         pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d; // specification probably same as above
+        pumpDescription.extendedBolusStep = 0.01d; // specification probably same as above
         pumpDescription.extendedBolusDurationStep = 15; // 15 minutes up to 24 hours
         pumpDescription.extendedBolusMaxDuration = 24 * 60;
 
@@ -138,6 +138,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         pumpDescription.is30minBasalRatesCapable = true;
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.02d;
+        pumpDescription.basalMaximumRate = 25d;
 
         pumpDescription.isRefillingCapable = true;
 
@@ -191,7 +192,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return false;
+        return true;
     }
 
     @Override
@@ -287,17 +288,15 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         log("getPumpStatus");
         if (Connector.get().isPumpConnected()) {
             log("is connected.. requesting status");
-            final UUID uuid = aSyncTaskRunner(new StatusTaskRunner(connector.getServiceConnector()), "Status");
-            Mstatus mstatus = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
-            if (mstatus.success()) {
+            try {
+                setStatusResult(fetchTaskRunner(new StatusTaskRunner(connector.getServiceConnector()), StatusTaskRunner.Result.class));
                 log("GOT STATUS RESULT!!! PARTY WOOHOO!!!");
-                setStatusResult((StatusTaskRunner.Result) mstatus.getResponseObject());
                 statusResultTime = Helpers.tsl();
                 processStatusResult();
                 updateGui();
                 connector.requestHistoryReSync();
                 connector.requestHistorySync();
-            } else {
+            } catch (Exception e) {
                 log("StatusTaskRunner wasn't successful.");
                 if (connector.getServiceConnector().isConnectedToService() && connector.getServiceConnector().getStatus() != Status.CONNECTED) {
                     if (Helpers.ratelimit("insight-reconnect", 2)) {
@@ -313,6 +312,8 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
     public void setStatusResult(StatusTaskRunner.Result result) {
         this.statusResult = result;
+        this.pumpDescription.basalMinimumRate = result.minimumBasalAmount;
+        this.pumpDescription.basalMaximumRate = result.maximumBasalAmount;
     }
 
     @Override
@@ -335,9 +336,8 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             profileBlocks.add(new BRProfileBlock.ProfileBlock((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60), Helpers.roundDouble(basalValue.value, 2)));
             log("setNewBasalProfile: " + basalValue.value + " for " + Integer.toString(((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
         }
-        final UUID uuid = aSyncTaskRunner(new WriteBasalProfileTaskRunner(connector.getServiceConnector(), profileBlocks), "Write basal profile");
-        final Mstatus ms = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
-        if (ms.success()) {
+        try {
+            fetchTaskRunner(new WriteBasalProfileTaskRunner(connector.getServiceConnector(), profileBlocks));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
             MainApp.bus().post(new EventNewNotification(notification));
@@ -345,7 +345,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             result.enacted = true;
             result.comment = "OK";
             this.profileBlocks = profileBlocks;
-        } else {
+        } catch (Exception e) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.failedupdatebasalprofile);
@@ -403,16 +403,12 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
         // is there an insulin component to the treatment?
         if (detailedBolusInfo.insulin > 0) {
-            final UUID cmd = deliverBolus(detailedBolusInfo.insulin); // actually request delivery
-            if (cmd == null) {
+            try {
+                bolusId = deliverBolus(detailedBolusInfo.insulin);
+                result.success = true;
+                detailedBolusInfo.pumpId = getRecordUniqueID(bolusId);
+            } catch (Exception e) {
                 return pumpEnactFailure();
-            }
-            final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-
-            result.success = ms.success();
-            if (ms.success()) {
-                detailedBolusInfo.pumpId = getRecordUniqueID(ms.getResponseID());
-                bolusId = ms.getResponseID();
             }
         } else {
             result.success = true; // always true with carb only treatments
@@ -440,20 +436,11 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         updateGui();
         connector.tryToGetPumpStatusAgain();
 
-        connector.requestHistorySync(30000);
-
         if (result.success) while (true) {
             try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
-            }
-            final UUID uuid = aSyncSingleCommand(new ActiveBolusesMessage(), "Active boluses");
-            Mstatus mstatus = async.busyWaitForCommandResult(uuid, BUSY_WAIT_TIME);
-            if (mstatus.success()) {
+                Thread.sleep(500);
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                ActiveBolusesMessage activeBolusesMessage = (ActiveBolusesMessage) mstatus.getResponseObject();
+                ActiveBolusesMessage activeBolusesMessage = fetchSingleMessage(new ActiveBolusesMessage(), ActiveBolusesMessage.class);
                 ActiveBolus activeBolus = null;
                 if (activeBolusesMessage.getBolus1() != null && activeBolusesMessage.getBolus1().getBolusID() == bolusingEvent.bolusId)
                     activeBolus = activeBolusesMessage.getBolus1();
@@ -463,87 +450,60 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     activeBolus = activeBolusesMessage.getBolus3();
                 if (activeBolus == null) break;
                 else {
+                    int percentBefore = bolusingEvent.percent;
                     bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount()));
                     bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), activeBolus.getInitialAmount() - activeBolus.getLeftoverAmount());
-                    MainApp.bus().post(bolusingEvent);
+                    if (percentBefore != bolusingEvent.percent) MainApp.bus().post(bolusingEvent);
                 }
-            } else break;
+            } catch (Exception e) {
+                break;
+            }
         }
+
+        connector.requestHistorySync(2000);
         return result;
     }
 
     @Override
     public void stopBolusDelivering() {
         CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
+        cancelBolusMessage.setMessagePriority(MessagePriority.HIGHEST);
         cancelBolusMessage.setBolusId(EventOverviewBolusProgress.getInstance().bolusId);
-        final UUID cmd = aSyncSingleCommand(cancelBolusMessage, "Cancel standard bolus");
-
-        if (cmd == null) {
-            return;
+        try {
+            fetchSingleMessage(cancelBolusMessage);
+        } catch (Exception e) {
         }
-
-        final Mstatus cs = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + cs);
     }
 
     // Temporary Basals
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        absoluteRate = Helpers.roundDouble(absoluteRate, 3);
         log("Set TBR absolute: " + absoluteRate);
-        final double base_basal = getBaseBasalRate();
-        if (base_basal == 0) {
+        if (getBaseBasalRate() == 0) {
             log("Base basal rate appears to be zero!");
             return pumpEnactFailure();
         }
-        int percent_amount = (int) Math.round(100d / base_basal * absoluteRate);
-        log("Calculated requested rate: " + absoluteRate + " base rate: " + base_basal + " percentage: " + percent_amount + "%");
-        percent_amount = (int) Math.round(((double) percent_amount) / 10d) * 10;
-        log("Calculated final rate: " + percent_amount + "%");
-
-        if (percent_amount == 100) {
-            return cancelTempBasal(false);
-        }
-
-        if (percent_amount > 250) percent_amount = 250;
-
-
-        final SetTBRTaskRunner task = new SetTBRTaskRunner(connector.getServiceConnector(), percent_amount, durationInMinutes);
-        final UUID cmd = aSyncTaskRunner(task, "Set TBR abs: " + absoluteRate + " " + durationInMinutes + "m");
-
-        if (cmd == null) {
+        double percent = 100D / getBaseBasalRate() * absoluteRate;
+        log("Calculated requested rate: " + absoluteRate + " base rate: " + getBaseBasalRate() + " percentage: " + percent + "%");
+        try {
+            if (percent > 250) {
+                log ("Calculated rate is above 250%, switching to emulation using extended boluses");
+                cancelTempBasal(true);
+                if (!setExtendedBolus((absoluteRate - getBaseBasalRate()) / 60D * ((double) durationInMinutes), durationInMinutes).success) {
+                    //Fallback to TBR if setting an extended bolus didn't work
+                    log ("Setting an extended bolus didn't work, falling back to normal TBR");
+                    return setTempBasalPercent((int) percent, durationInMinutes, profile, true);
+                }
+                return new PumpEnactResult().success(true).enacted(true).absolute(absoluteRate).duration(durationInMinutes);
+            } else {
+                log ("Calculated rate is below or equal to 250%, using normal TBRs");
+                cancelExtendedBolus();
+                return setTempBasalPercent((int) percent, durationInMinutes, profile, true);
+            }
+        } catch (Exception e) {
             return pumpEnactFailure();
         }
-
-        Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + ms);
-
-        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
-        pumpEnactResult.percent = percent_amount;
-        pumpEnactResult.success = ms.success();
-        pumpEnactResult.comment = ms.getCommandComment();
-
-
-        if (pumpEnactResult.success) {
-            // create log entry
-            final TemporaryBasal tempBasal = new TemporaryBasal()
-                    .date(System.currentTimeMillis())
-                    .percent(percent_amount)
-                    .duration(durationInMinutes)
-                    .source(Source.USER);
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-        }
-
-        if (Config.logPumpComm)
-            log.debug("Setting temp basal absolute: " + pumpEnactResult.success);
-
-        updateGui();
-
-        connector.requestHistorySync(5000);
-        connector.tryToGetPumpStatusAgain();
-
-        return pumpEnactResult;
     }
 
 
@@ -555,42 +515,24 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         if (percent == 100) {
             // This would cause a cancel if a tbr is in progress so treat as a cancel
             return cancelTempBasal(false);
-        }
+        } else if (percent > 250) percent = 250;
 
-
-        final UUID cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes), "Set TBR " + percent + "%" + " " + durationInMinutes + "m");
-
-        if (cmd == null) {
-            return pumpEnactFailure();
-        }
-
-        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + ms);
-
-        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).isPercent(true).duration(durationInMinutes);
-        pumpEnactResult.percent = percent;
-        pumpEnactResult.success = ms.success();
-        pumpEnactResult.comment = ms.getCommandComment();
-
-        if (pumpEnactResult.success) {
-            // create log entry
+        try {
+            fetchTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), percent, durationInMinutes));
             final TemporaryBasal tempBasal = new TemporaryBasal()
                     .date(System.currentTimeMillis())
                     .percent(percent)
                     .duration(durationInMinutes)
-                    .source(Source.USER); // TODO check this is correct
+                    .source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
+            updateGui();
+            if (Config.logPumpComm) log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
+            connector.requestHistorySync(5000);
+            connector.tryToGetPumpStatusAgain();
+            return new PumpEnactResult().success(true).enacted(true).percent(percent);
+        } catch (Exception e) {
+            return pumpEnactFailure();
         }
-
-        updateGui();
-
-        if (Config.logPumpComm)
-            log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
-
-        connector.requestHistorySync(5000);
-        connector.tryToGetPumpStatusAgain();
-
-        return pumpEnactResult;
     }
 
 
@@ -598,35 +540,24 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         log("Cancel TBR");
 
-
-        fauxTBRcancel = !SP.getBoolean("insight_real_tbr_cancel", false);
-
-        final UUID cmd;
-
-        if (fauxTBRcancel) {
-            cmd = aSyncTaskRunner(new SetTBRTaskRunner(connector.getServiceConnector(), 100, 1), "Faux Cancel TBR - setting " + "90%" + " 1m");
-        } else {
-            cmd = aSyncSingleCommand(new CancelTBRMessage(), "Cancel Temp Basal");
-        }
-        if (cmd == null) {
+        try {
+            cancelExtendedBolus();
+            realTBRCancel();
+            updateGui();
+            if (Config.logPumpComm) log.debug("Canceling temp basal");
+            connector.requestHistorySync(5000);
+            connector.tryToGetPumpStatusAgain();
+            return new PumpEnactResult().success(true).enacted(true).isTempCancel(true);
+        } catch (Exception e) {
             return pumpEnactFailure();
         }
+    }
 
-        // TODO isn't conditional on one apparently being in progress only the history change
-        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-
-        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
+    private void realTBRCancel() throws Exception {
+        if (fetchTaskRunner(new CancelTBRSilentlyTaskRunner(connector.getServiceConnector()), Boolean.class) && TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
         }
-        updateGui();
-        if (Config.logPumpComm)
-            log.debug("Canceling temp basal: "); // TODO get more info
-
-        connector.requestHistorySync(5000);
-        connector.tryToGetPumpStatusAgain();
-
-        return new PumpEnactResult().success(ms.success()).enacted(true).isTempCancel(true);
     }
 
 
@@ -635,88 +566,60 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         log("Set Extended bolus " + insulin + " " + durationInMinutes);
-        ExtendedBolusMessage extendedBolusMessage = new ExtendedBolusMessage();
-        extendedBolusMessage.setAmount(insulin);
-        extendedBolusMessage.setDuration(durationInMinutes);
-        final UUID cmd = aSyncSingleCommand(extendedBolusMessage, "Extended bolus U" + insulin + " mins:" + durationInMinutes);
-        if (cmd == null) {
-            return pumpEnactFailure();
-        }
-
-        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-        log("Got command status: " + ms);
-
-        PumpEnactResult pumpEnactResult = new PumpEnactResult().enacted(true).bolusDelivered(insulin).duration(durationInMinutes);
-        pumpEnactResult.success = ms.success();
-        pumpEnactResult.comment = ms.getCommandComment();
-
-        if (pumpEnactResult.success) {
-            // create log entry
+        try {
+            ExtendedBolusMessage extendedBolusMessage = new ExtendedBolusMessage();
+            extendedBolusMessage.setAmount(insulin);
+            extendedBolusMessage.setDuration(durationInMinutes);
+            BolusMessage bolusMessage = fetchSingleMessage(extendedBolusMessage, BolusMessage.class);
             final ExtendedBolus extendedBolus = new ExtendedBolus();
             extendedBolus.date = System.currentTimeMillis();
             extendedBolus.insulin = insulin;
             extendedBolus.durationInMinutes = durationInMinutes;
             extendedBolus.source = Source.USER;
-            extendedBolus.pumpId = getRecordUniqueID(ms.getResponseID());
+            extendedBolus.pumpId = getRecordUniqueID(bolusMessage.getBolusId());
             TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+            updateGui();
+            connector.requestHistorySync(30000);
+            connector.tryToGetPumpStatusAgain();
+            if (Config.logPumpComm)
+                log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes);
+            return new PumpEnactResult().success(true).enacted(true).duration(durationInMinutes).bolusDelivered(insulin);
+        } catch (Exception e) {
+            return pumpEnactFailure();
         }
-
-        if (Config.logPumpComm)
-            log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes + " " + pumpEnactResult.comment);
-
-        updateGui();
-
-        connector.requestHistorySync(30000);
-        connector.tryToGetPumpStatusAgain();
-
-        return pumpEnactResult;
     }
 
     @Override
     public PumpEnactResult cancelExtendedBolus() {
-
         log("Cancel Extended bolus");
 
-        // TODO note always sends cancel to pump but only changes history if present
+        Integer bolusId = null;
 
-        final UUID cmd = aSyncTaskRunner(new CancelBolusTaskRunner(connector.getServiceConnector(), ActiveBolusType.EXTENDED), "Cancel extended bolus");
-
-        if (cmd == null) {
+        try {
+            bolusId = fetchTaskRunner(new CancelBolusSilentlyTaskRunner(connector.getServiceConnector(), ActiveBolusType.EXTENDED), Integer.class);
+            if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
+                ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
+                exStop.source = Source.USER;
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(exStop);
+            }
+            if (Config.logPumpComm) log.debug("Cancel extended bolus:");
+            if (bolusId != null) connector.requestHistorySync(5000);
+            connector.tryToGetPumpStatusAgain();
+            updateGui();
+            return new PumpEnactResult().success(true).enacted(bolusId != null);
+        } catch (Exception e) {
             return pumpEnactFailure();
         }
-
-        final Mstatus ms = async.busyWaitForCommandResult(cmd, BUSY_WAIT_TIME);
-
-        if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
-            ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
-            exStop.source = Source.USER;
-            TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(exStop);
-        }
-
-        if (Config.logPumpComm)
-            log.debug("Cancel extended bolus:");
-
-        updateGui();
-
-        connector.requestHistorySync(5000);
-        connector.tryToGetPumpStatusAgain();
-
-        return new PumpEnactResult().success(ms.success()).enacted(true);
     }
 
 
-    private synchronized UUID deliverBolus(double bolusValue) {
+    private int deliverBolus(double bolusValue) throws Exception {
         log("DeliverBolus: " + bolusValue);
-
-        if (bolusValue == 0) return null;
-        if (bolusValue < 0) return null;
-
-        // TODO check limits here or they already occur via a previous constraint interface?
 
         final StandardBolusMessage message = new StandardBolusMessage();
         message.setAmount(bolusValue);
 
-        return aSyncSingleCommand(message, "Deliver Bolus " + bolusValue);
+        return fetchSingleMessage(message, BolusMessage.class).getBolusId();
     }
 
     @Override
@@ -931,82 +834,34 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         }
     }
 
-    // Utility
-
-    private synchronized UUID aSyncSingleCommand(final AppLayerMessage msg, final String name) {
-        // if (!isConnected()) return false;
-        //if (isBusy()) return false;
-        log("asyncSinglecommand called: " + name);
-        final EventInsightCallback event = new EventInsightCallback();
-        new Thread() {
-            @Override
-            public void run() {
-                log("asyncSingleCommand thread");
-                final SingleMessageTaskRunner singleMessageTaskRunner = new SingleMessageTaskRunner(connector.getServiceConnector(), msg);
-                try {
-                    singleMessageTaskRunner.fetch(new TaskRunner.ResultCallback() {
-                        @Override
-                        public void onResult(Object o) {
-                            lastDataTime = new Date();
-                            log(name + " success");
-                            event.response_object = o;
-                            if (o instanceof BolusMessage) {
-                                event.response_id = ((BolusMessage) o).getBolusId();
-                            }
-                            event.success = true;
-                            pushCallbackEvent(event);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            log(name + " error");
-                            event.message = e.getMessage();
-                            pushCallbackEvent(event);
-                        }
-                    });
-
-                } catch (Exception e) {
-                    log("EXCEPTION" + e.toString());
-                }
-            }
-        }.start();
-        return event.request_uuid;
+    private void fetchTaskRunner(TaskRunner taskRunner) throws Exception {
+        fetchTaskRunner(taskRunner, Object.class);
     }
 
-    private synchronized UUID aSyncTaskRunner(final TaskRunner task, final String name) {
-        // if (!isConnected()) return false;
-        //if (isBusy()) return false;
-        log("asyncTaskRunner called: " + name);
-        final EventInsightCallback event = new EventInsightCallback();
-        new Thread() {
-            @Override
-            public void run() {
-                log("asyncTaskRunner thread");
-                try {
-                    task.fetch(new TaskRunner.ResultCallback() {
-                        @Override
-                        public void onResult(Object o) {
-                            lastDataTime = new Date();
-                            log(name + " success");
-                            event.response_object = o;
-                            event.success = true;
-                            pushCallbackEvent(event);
-                        }
+    private void fetchSingleMessage(AppLayerMessage message) throws Exception {
+        fetchSingleMessage(message, AppLayerMessage.class);
+    }
 
-                        @Override
-                        public void onError(Exception e) {
-                            log(name + " error");
-                            event.message = e.getMessage();
-                            pushCallbackEvent(event);
-                        }
-                    });
+    private <T> T fetchTaskRunner(TaskRunner taskRunner, Class<T> resultType) throws Exception {
+        try {
+            T result = (T) taskRunner.fetchAndWaitUsingLatch(BUSY_WAIT_TIME);
+            lastDataTime = new Date();
+            return result;
+        } catch (Exception e) {
+            log("Error while fetching " + taskRunner.getClass().getSimpleName() + ": " + e.getClass().getSimpleName());
+            throw e;
+        }
+    }
 
-                } catch (Exception e) {
-                    log("EXCEPTION" + e.toString());
-                }
-            }
-        }.start();
-        return event.request_uuid;
+    private <T extends AppLayerMessage> T fetchSingleMessage(AppLayerMessage message, Class<T> resultType) throws Exception {
+        try {
+            T result = (T) new SingleMessageTaskRunner(connector.getServiceConnector(), message).fetchAndWaitUsingLatch(BUSY_WAIT_TIME);
+            lastDataTime = new Date();
+            return result;
+        } catch (Exception e) {
+            log("Error while fetching " + message.getClass().getSimpleName() + ": " + e.getClass().getSimpleName());
+            throw e;
+        }
     }
 
 
@@ -1015,14 +870,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     // Constraints
-
-    @Override
-    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
-        if (statusResult != null) {
-            absoluteRate.setIfSmaller(statusResult.maximumBasalAmount, String.format(MainApp.gs(R.string.limitingbasalratio), statusResult.maximumBasalAmount, MainApp.gs(R.string.pumplimit)), this);
-        }
-        return absoluteRate;
-    }
 
     @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
@@ -1034,8 +881,10 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
     @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        if (statusResult != null)
+        if (statusResult != null) {
             insulin.setIfSmaller(statusResult.maximumBolusAmount, String.format(MainApp.gs(R.string.limitingbolus), statusResult.maximumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
+            insulin.setIfGreater(statusResult.minimumBolusAmount, String.format(MainApp.gs(R.string.limitingbolus), statusResult.maximumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
+        }
         return insulin;
     }
 

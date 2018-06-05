@@ -226,6 +226,10 @@ public class Profile {
                         basal_v.setValueAt(i, description.basalMinimumRate);
                         if (notify)
                             sendBelowMinimumNotification(from);
+                    } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
+                        basal_v.setValueAt(i, description.basalMaximumRate);
+                        if (notify)
+                            sendAboveMaximumNotification(from);
                     }
                 }
             } else {
@@ -241,6 +245,10 @@ public class Profile {
 
     protected void sendBelowMinimumNotification(String from) {
         MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+    }
+
+    protected void sendAboveMaximumNotification(String from) {
+        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     private void validate(LongSparseArray array) {

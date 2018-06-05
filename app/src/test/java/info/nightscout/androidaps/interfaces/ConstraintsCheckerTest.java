@@ -156,7 +156,7 @@ public class ConstraintsCheckerTest {
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxBasalAllowed(AAPSMocker.getValidProfile());
         Assert.assertEquals(0.8d, d.value());
-        Assert.assertEquals(true, d.getReasonList().size() == 7); // 4x Safety & RS & R & Insight
+        Assert.assertEquals(true, d.getReasonList().size() == 6);
         Assert.assertEquals("DanaR: Limiting basal rate to 0.80 U/h because of pump limit", d.getMostLimitedReasons());
 
     }
