@@ -736,7 +736,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/icon_danarstats"
+                    android:drawableTop="@drawable/icon_danar_useropt"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/danar_useroptions" />

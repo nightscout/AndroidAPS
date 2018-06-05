@@ -116,7 +116,7 @@ public class DanaRUserOptionsActivity extends Activity {
                     screenTimeout.setStep(5d);
                     screenTimeout.setParams(5d,5d,240d,5d,new DecimalFormat("1"), false);
                     backlightTimeout.setValue((double) pump.backlightOnTimeSec);
-                    backlightTimeout.setParams(0d,0d,60d,1d,new DecimalFormat("1"), false);
+                    backlightTimeout.setParams(1d,1d,60d,1d,new DecimalFormat("1"), false);
                     if(pump.lastSettingsRead == 0)
                         log.debug("No settings loaded from pump!");
                     if (pump.getUnits() != null) {

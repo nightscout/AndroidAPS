@@ -218,6 +218,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -227,16 +228,6 @@
                         android:gravity="top"
                         android:paddingRight="5dp"
                         android:text="@string/danar_screentimeout"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
                         android:textSize="14sp" />
 
                     <info.nightscout.utils.NumberPicker
@@ -267,6 +258,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -276,16 +268,6 @@
                         android:gravity="top"
                         android:paddingRight="5dp"
                         android:text="@string/danar_backlight"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
                         android:textSize="14sp" />
 
                     <info.nightscout.utils.NumberPicker
@@ -349,6 +331,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -360,15 +343,7 @@
                         android:text="@string/danar_shutdown"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
+
 
                     <info.nightscout.utils.NumberPicker
                         android:id="@+id/danar_shutdown"
@@ -398,6 +373,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -407,16 +383,6 @@
                         android:gravity="left"
                         android:paddingRight="5dp"
                         android:text="@string/danar_lowreservoir"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
                         android:textSize="14sp" />
 
                     <info.nightscout.utils.NumberPicker
