@@ -2,16 +2,12 @@
 <resources>
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
-
-    <!-- IOB, bolus, COB, carbs, UAM and ZT are synchronised with NS,
-         see lib/plugins/openaps.js, function getForecastPoints in NS -->
     <color name="iob">#1e88e5</color>
     <color name="bolus">#1ea3e5</color>
-    <color name="cob">#FB8C00</color>
-    <color name="carbs">#fb8c00</color>
-    <color name="uam">#ff89ff</color>
-    <color name="zt">#b601b6</color>
-
+    <color name="cob">#FFFB8C00</color>
+    <color name="carbs">#FFFB8C00</color>
+    <color name="uam">#c9bd60</color>
+    <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
@@ -37,9 +33,9 @@
     <color name="tempTargetDisabledBackground">#303F9F</color>
 
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#009688</color>
     <color name="colorInitializingBorder">#00695c</color>
 
     <color name="cardColorBackground">#121212</color>
