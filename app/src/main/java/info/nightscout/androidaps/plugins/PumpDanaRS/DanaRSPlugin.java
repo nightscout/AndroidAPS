@@ -223,6 +223,11 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return danaRSService.loadEvents();
     }
 
+    @Override
+    public PumpEnactResult setUserSettings() {
+        return danaRSService.setUserSettings();
+    }
+
     // Constraints interface
 
     @Override
@@ -759,19 +764,4 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
     }
 
-    public void updateUserOptions() {
-        if (danaRSService == null) {
-            log.error("updateUserOptions sExecutionService is null");
-            return;
-        }
-        log.debug("UserOptionsLoadedd2:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
-                +"\ntimeDisplayType:"+pump.timeDisplayType
-                +"\nbuttonScroll:"+pump.buttonScrollOnOff
-                +"\ntimeDisplayType:"+pump.timeDisplayType
-                +"\nlcdOnTimeSec:"+pump.lcdOnTimeSec
-                +"\nbacklight:"+pump.backlightOnTimeSec
-                +"\npumpUnits:"+pump.units
-                +"\nlowReservoir:"+pump.lowReservoirRate);
-        danaRSService.updateUserOptions();
-    }
 }

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,9 +20,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NumberPicker;
 
 /**
@@ -168,12 +170,8 @@ public class DanaRUserOptionsActivity extends Activity {
         } else
             pump.lowReservoirRate = 10;
 
-        // push new settings to pump
-        DanaRSPlugin pumpPlugin = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-        if (!pumpPlugin.isConnected())
-            pumpPlugin.connect("UpdateUserOptions");
-        pumpPlugin.updateUserOptions();
-        pumpPlugin.disconnect("UpdateUserOprions");
+        MainApp.getConfigBuilder().getCommandQueue().setUserSettings(null);
+        finish();
     }
 
 }
