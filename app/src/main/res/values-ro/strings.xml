@@ -920,7 +920,7 @@
     <string name="time">Timp</string>
     <string name="reset">reset</string>
     <string name="openapssmb_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS, OpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
-    <string name="boluserrorcode formatted="false">Solicitat: %.2fU Livrat: %.2fU Cod eroare: %d</string>
+    <string name="boluserrorcode" formatted="false">Solicitat: %.2fU Livrat: %.2fU Cod eroare: %d</string>
     <string name="firstinsulinincrement">Primul increment de insulină</string>
     <string name="secondinsulinincrement">Al doilea increment de insulină</string>
     <string name="thirdinsulinincrement">Al treilea increment de insulină</string>
