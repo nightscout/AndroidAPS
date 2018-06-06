@@ -539,8 +539,8 @@
     <string name="bolusstopping">Se oprește bolusul</string>
     <string name="objectives_7_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
     <string name="objectives_7_gate">Trebuie sa citiți wiki și măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
-    <string name="valuelimitedto">%.2f este limitată la %.2f</string>
-    <string name="valueoutofrange">Valarea %s este mai mare decât limita fizică</string>
+    <string name="valuelimitedto" formatted="false">%.2f este limitată la %.2f</string>
+    <string name="valueoutofrange" formatted="false">Valarea %s este mai mare decât limita fizică</string>
     <string name="refresheventsfromnightscout">Sincronizează cu NS</string>
     <string name="hypo">Hipo</string>
     <string name="openapsama_autosens_adjusttargets">Autosens ajustează țintele la</string>
@@ -617,7 +617,7 @@
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
     <string name="ultrarapid_oref">Oref Insulină-UltraRapidă</string>
     <string name="free_peak_oref_description">Insulină personalizată</string>
-    <string name="dia_too_short">DIA din %f prea scurtă - se folosește %f în schimb!</string>
+    <string name="dia_too_short" formatted="false">DIA din %f prea scurtă - se folosește %f în schimb!</string>
     <string name="activate_profile">Activează profil</string>
     <string name="date">Data</string>
     <string name="invalid">INVALID</string>
@@ -665,7 +665,7 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grăsime</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend">Se așteaptă finalul bolusării. Mai sunt %d sec.</string>
+    <string name="waitingforestimatedbolusend" formatted="false">Se așteaptă finalul bolusării. Mai sunt %d sec.</string>
     <string name="processinghistory">Se procesează activitatea</string>
     <string name="startingbolus">Pornire livrare bolus</string>
     <string name="executingrightnow">Se execută comanda chiar acum</string>
@@ -710,21 +710,21 @@
     <string name="closedmodeenabled">Mod buclă închisă activat</string>
     <string name="maxiobset">IOB maxim configurat corect</string>
     <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
-    <string name="basalprofilenotaligned">Valori bazale nealiniate la ore: %s</string>
+    <string name="basalprofilenotaligned" formatted="false">Valori bazale nealiniate la ore: %s</string>
     <string name="zerovalueinprofile">Profil invalid</string>
     <string name="combo_programming_bolus">Se programează pompa pentru livrare bolus</string>
     <string name="combo_refresh">Reîncarcă</string>
     <string name="combo_pump_state_label">Stare</string>
     <string name="combo_pump_activity_label">Activitate</string>
-    <string name="combo_no_pump_connection">Fără conexiune de %d min</string>
-    <string name="combo_tbr_remaining">%d%% (%d min rămase)</string>
+    <string name="combo_no_pump_connection" formatted="false">Fără conexiune de %d min</string>
+    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min rămase)</string>
     <string name="combo_pump_state_initializing">Inițializare</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspendat din cauza unei erori</string>
     <string name="combo_pump_state_suspended_by_user">Suspendat de utilizator</string>
     <string name="combo_pump_state_running">Funcționează</string>
     <string name="combo_pump_action_cancelling_tbr">Se oprește TBR</string>
-    <string name="combo_pump_action_setting_tbr">Se setează TBR (%d%% / %d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusare (%.1f U)</string>
+    <string name="combo_pump_action_setting_tbr" formatted="false">Se setează TBR (%d%% / %d min)</string>
+    <string name="combo_pump_action_bolusing" formatted="false">Bolusare (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Reîncărcare</string>
     <string name="combo_pump_unsupported_operation">Operațiunea nu este suportată de pompă</string>
     <string name="combo_low_suspend_forced_notification">Folosire nesigură: un bolus extins sau multiwave este activ. Modul buclă este setat să funcționeze în low-suspend pentru 6 ore. Doar bolusurile normale sunt posibile.</string>
@@ -735,7 +735,7 @@
     <string name="combo_activity_setting_basal_profile">Se setează profilul bazalei</string>
     <string name="combo_pump_cartridge_low_warrning">Nivelul insulinei din pompă este scăzut</string>
     <string name="combo_pump_battery_low_warrning">Nivelul bateriei pompei este scăzut</string>
-    <string name="combo_is_in_error_state">Pompa are eroarea: E%d: %s</string>
+    <string name="combo_is_in_error_state" formatted="false">Pompa are eroarea: E%d: %s</string>
     <string name="combo_reservoir_low">Scăzut</string>
     <string name="combo_reservoir_empty">Gol</string>
     <string name="combo_reservoir_normal">Normal</string>
@@ -744,7 +744,7 @@
     <string name="combo_pump_tbr_cancelled_warrning">Alerta RBT ANULATĂ a fost confirmată</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Pompa nu poate fi contactată. Nu s-a livrat niciun bolus</string>
     <string name="combo_error_no_bolus_delivered">Livrare eșuată. Se pare că nu a fost livrat bolusul. Pentru siguranță, verificați în pompă pentru a evita bolusarea dublă. Pentru evitarea greșelilor, bolusurile nu sunt retrimise automat.</string>
-    <string name="combo_error_partial_bolus_delivered">Doar %.2f U din totalul cerut de %.2f U a fost livrat din cauza unei erori. Verificați pompa pentru confirmare și acționați corespunzător.</string>
+    <string name="combo_error_partial_bolus_delivered" formatted="false">Doar %.2f U din totalul cerut de %.2f U a fost livrat din cauza unei erori. Verificați pompa pentru confirmare și acționați corespunzător.</string>
     <string name="combo_error_bolus_verification_failed">Livrarea bolusului și verificarea istoricului pompei a eșuat, verificați pompa și creați manual un bolus folosind Careportal, dacă a fost livrat un bolus.</string>
     <string name="combo_error_bolus_recovery_progress">Revenire după pierderea conexiunii</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
@@ -789,7 +789,7 @@
     <string name="day">z</string>
     <string name="week">săptămână</string>
     <string name="time_plural">e</string>
-    <string name="insight_keepalive_format_string">%ds expiră %s</string>
+    <string name="insight_keepalive_format_string" formatted="false">%ds expiră %s</string>
     <string name="insight_keep_alive_status">Stare de menținere</string>
     <string name="statistics">Statistici</string>
     <string name="connect_preemptively">Conectare preventivă</string>
@@ -846,7 +846,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
     <string name="engineering_mode_enabled">Mod inginer activat</string>
     <string name="not_eng_mode_or_release">Modul inginer nu este activat și nu este în versiunea lansată</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
+    <string name="pump_basebasalrate" formatted="false">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Se citește profilul bazal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Istoricul pompei s-a schimbat după calcularea bolusului. Bolusul nu a fost livrat. Recalculați dacă mai este necesar un bolus. Dacă aceeași cantitate de bolus este necesară, așteptați două minute deoarece două bolusuri cu aceeași valoare nu sunt permise într-un  interval mai mic de două minute, din rațiuni de siguranță (indiferent dacă au fost livrate sau nu).</string>
     <string name="combo_error_updating_treatment_record">Bolus livrat, dar nu s-a reușit înregistrarea evenimentului. Aceasta se poate întâmpla când două bolusuri mici de aceeași valoare sunt livrate în mai puțin de două minute. Verificați istoricul pompei și înregistrările tratamentelor și folosiți Careportal pentru adăugarea intrărilor lipsă. Asigurați-vă că nu adăugați intrări duble.</string>
@@ -887,18 +887,18 @@
     <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
     <string name="autosensdisabledinpreferences">Autosens dezactivat în preferințe</string>
     <string name="smbdisabledinpreferences">SMB dezactivat în preferințe</string>
-    <string name="limitingbasalratio">Se limitează maximul ratei bazale la %.2f U/o datorită %s</string>
+    <string name="limitingbasalratio" formatted="false">Se limitează maximul ratei bazale la %.2f U/o datorită %s</string>
     <string name="pumplimit">limită pompă</string>
     <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
     <string name="maxbasalmultiplier">maximul multiplicatorului bazalei</string>
     <string name="maxdailybasalmultiplier">maximul zilnic al multiplicatorului bazalei</string>
     <string name="smb_frequency_exceeded">S-a livrat un bolus în ultimile 3 minute, nu se livrează SMB</string>
     <string name="basal_set_correctly">Bazala setată corect</string>
-    <string name="limitingpercentrate">Se limitează procentul ratei maxime la %d%% datorită %s</string>
-    <string name="limitingbolus">Se limitează bolusul la %.1f U datorită %s</string>
-    <string name="limitingmaxiob">Se limitează max IOB la %.1f U datorită %s</string>
-    <string name="limitingcarbs">Se limitează carbohidrații %d g datorită %s</string>
-    <string name="limitingiob">Se limitează IOB la %.1f U datorită %s</string>
+    <string name="limitingpercentrate" formatted="false">Se limitează procentul ratei maxime la %d%% datorită %s</string>
+    <string name="limitingbolus" formatted="false">Se limitează bolusul la %.1f U datorită %s</string>
+    <string name="limitingmaxiob" formatted="false">Se limitează max IOB la %.1f U datorită %s</string>
+    <string name="limitingcarbs" formatted="false">Se limitează carbohidrații %d g datorită %s</string>
+    <string name="limitingiob" formatted="false">Se limitează IOB la %.1f U datorită %s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="unsafeusage">folosire nesigură</string>
     <string name="readstatusfailed">Citire eșuată a stării</string>
@@ -907,8 +907,8 @@
     <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbo deoarece sursa glicemiei nu suportă filtrare avansată</string>
     <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
     <string name="food_short">Mâncare</string>
-    <string name="waitingfortimesynchronization">Se așteaptă sincronizarea (%d s)</string>
-    <string name="loopdisconnectedfor">Deconectat (%d min)</string>
+    <string name="waitingfortimesynchronization" formatted="false">Se așteaptă sincronizarea (%d s)</string>
+    <string name="loopdisconnectedfor" formatted="false">Deconectat (%d min)</string>
     <string name="automatic_careportal_events">Evenimente Careportal automate</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Încărcare automată a schimbărilor de insulină, rezervor, baterie și alarme de pompă în Nightscout</string>
     <string name="openapssmb_maxiob_title">Maximul total IOB peste care OpenAPS nu poate trece [U]</string>
@@ -920,7 +920,7 @@
     <string name="time">Timp</string>
     <string name="reset">reset</string>
     <string name="openapssmb_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS, OpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
-    <string name="boluserrorcode">Solicitat: %.2fU Livrat: %.2fU Cod eroare: %d</string>
+    <string name="boluserrorcode" formatted="false">Solicitat: %.2fU Livrat: %.2fU Cod eroare: %d</string>
     <string name="firstinsulinincrement">Primul increment de insulină</string>
     <string name="secondinsulinincrement">Al doilea increment de insulină</string>
     <string name="thirdinsulinincrement">Al treilea increment de insulină</string>
