@@ -23,7 +23,7 @@ public class DanaRS_Packet_Option_Set_User_Option extends DanaRS_Packet {
     @Override
     public byte[] getRequestParams() {
         DanaRPump pump = DanaRPump.getInstance();
-        log.debug("UserOptionsLoadedd4:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
+        log.debug("UserOptions:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
                 +"\ntimeDisplayType:"+pump.timeDisplayType
                 +"\nbuttonScroll:"+pump.buttonScrollOnOff
                 +"\ntimeDisplayType:"+pump.timeDisplayType

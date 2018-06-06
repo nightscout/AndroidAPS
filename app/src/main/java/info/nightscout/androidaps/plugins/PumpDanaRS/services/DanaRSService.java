@@ -206,15 +206,6 @@ public class DanaRSService extends Service {
 
 
     public PumpEnactResult setUserSettings() {
-        DanaRPump pump = DanaRPump.getInstance();
-        log.debug("setUserSettings:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
-                +"\ntimeDisplayType:"+pump.timeDisplayType
-                +"\nbuttonScroll:"+pump.buttonScrollOnOff
-                +"\ntimeDisplayType:"+pump.timeDisplayType
-                +"\nlcdOnTimeSec:"+pump.lcdOnTimeSec
-                +"\nbacklight:"+pump.backlightOnTimeSec
-                +"\npumpUnits:"+pump.units
-                +"\nlowReservoir:"+pump.lowReservoirRate);
         bleComm.sendMessage(new DanaRS_Packet_Option_Set_User_Option());
         bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option());
         return new PumpEnactResult().success(true);
