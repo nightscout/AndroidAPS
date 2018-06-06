@@ -1,30 +1,35 @@
 package info.nightscout.androidaps;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.os.PowerManager;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.view.MenuInflater;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.Iconify;
@@ -37,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventFeatureRunning;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -45,7 +49,6 @@ import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
-import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.AndroidPermission;
 import info.nightscout.utils.ImportExportPrefs;
@@ -55,12 +58,14 @@ import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
-    ImageButton menuButton;
-
     protected PowerManager.WakeLock mWakeLock;
+
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+
+    private MenuItem pluginPreferencesMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +76,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Iconify.with(new FontAwesomeModule());
         LocaleHelper.onCreate(this, "en");
+
         setContentView(R.layout.activity_main);
-        menuButton = (ImageButton) findViewById(R.id.overview_menuButton);
-        menuButton.setOnClickListener(this);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_navigation, R.string.close_navigation);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
 
         onStatusEvent(new EventSetWakeLock(SP.getBoolean("lockscreen", false)));
 
         doMigrations();
 
         registerBus();
-        setUpTabs(false);
+        setupTabs();
+        setupViews(false);
+
+        final ViewPager viewPager = findViewById(R.id.pager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                checkPluginPreferences(viewPager);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void checkPluginPreferences(ViewPager viewPager) {
+        if (pluginPreferencesMenuItem == null) return;
+        if (((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem()).getPreferencesId() != -1)
+            pluginPreferencesMenuItem.setEnabled(true);
+        else pluginPreferencesMenuItem.setEnabled(false);
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        actionBarDrawerToggle.syncState();
     }
 
     @Override
@@ -127,39 +170,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onStatusEvent(final EventRefreshGui ev) {
         String lang = SP.getString("language", "en");
         LocaleHelper.setLocale(getApplicationContext(), lang);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (ev.recreate) {
-                    recreate();
-                } else {
-                    try { // activity may be destroyed
-                        setUpTabs(true);
-                    } catch (IllegalStateException e) {
-                        log.error("Unhandled exception", e);
-                    }
+        runOnUiThread(() -> {
+            if (ev.recreate) {
+                recreate();
+            } else {
+                try { // activity may be destroyed
+                    setupTabs();
+                    setupViews(true);
+                } catch (IllegalStateException e) {
+                    log.error("Unhandled exception", e);
                 }
-
-                boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
-                if (lockScreen)
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                else
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
+
+            boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
+            if (lockScreen)
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            else
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
     }
 
-    private void setUpTabs(boolean switchToLast) {
+    private void setupViews(boolean switchToLast) {
         TabPageAdapter pageAdapter = new TabPageAdapter(getSupportFragmentManager(), this);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            return true;
+        });
+        Menu menu = navigationView.getMenu();
+        menu.clear();
         for (PluginBase p : MainApp.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
+            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.getType())) {
+                MenuItem menuItem = menu.add(p.getName());
+                menuItem.setCheckable(true);
+                menuItem.setOnMenuItemClickListener(item -> {
+                    Intent intent = new Intent(this, SingleFragmentActivity.class);
+                    intent.putExtra("plugin", MainApp.getPluginsList().indexOf(p));
+                    startActivity(intent);
+                    return true;
+                });
+            }
         }
-        ViewPager mPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mPager = findViewById(R.id.pager);
         mPager.setAdapter(pageAdapter);
-        SlidingTabLayout mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mTabs.setViewPager(mPager);
         if (switchToLast)
             mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
+        checkPluginPreferences(mPager);
+    }
+
+    private void setupTabs() {
+        ViewPager viewPager = findViewById(R.id.pager);
+        TabLayout normalTabs = findViewById(R.id.tabs_normal);
+        normalTabs.setupWithViewPager(viewPager, true);
+        TabLayout compactTabs = findViewById(R.id.tabs_compact);
+        compactTabs.setupWithViewPager(viewPager, true);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (SP.getBoolean("short_tabtitles", false)) {
+            normalTabs.setVisibility(View.GONE);
+            compactTabs.setVisibility(View.VISIBLE);
+            toolbar.setLayoutParams(new LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.compact_height)));
+        } else {
+            normalTabs.setVisibility(View.VISIBLE);
+            compactTabs.setVisibility(View.GONE);
+            TypedValue typedValue = new TypedValue();
+            if (getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
+                toolbar.setLayoutParams(new LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
+                        TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics())));
+            }
+        }
     }
 
     private void registerBus() {
@@ -257,99 +335,96 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(final View v) {
-        final Activity activity = this;
-        switch (v.getId()) {
-            case R.id.overview_menuButton:
-                PopupMenu popup = new PopupMenu(v.getContext(), v);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.menu_main, popup.getMenu());
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id = item.getItemId();
-                        switch (id) {
-                            case R.id.nav_preferences:
-                                PasswordProtection.QueryPassword(v.getContext(), R.string.settings_password, "settings_password", new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent i = new Intent(v.getContext(), PreferencesActivity.class);
-                                        i.putExtra("id", -1);
-                                        startActivity(i);
-                                    }
-                                }, null);
-                                break;
-                            case R.id.nav_historybrowser:
-                                startActivity(new Intent(v.getContext(), HistoryBrowseActivity.class));
-                                break;
-                            case R.id.nav_setupwizard:
-                                startActivity(new Intent(v.getContext(), SetupWizardActivity.class));
-                                break;
-                            case R.id.nav_resetdb:
-                                new AlertDialog.Builder(v.getContext())
-                                        .setTitle(R.string.nav_resetdb)
-                                        .setMessage(R.string.reset_db_confirm)
-                                        .setNegativeButton(android.R.string.cancel, null)
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                MainApp.getDbHelper().resetDatabases();
-                                                // should be handled by Plugin-Interface and
-                                                // additional service interface and plugin registry
-                                                FoodPlugin.getPlugin().getService().resetFood();
-                                                TreatmentsPlugin.getPlugin().getService().resetTreatments();
-                                            }
-                                        })
-                                        .create()
-                                        .show();
-                                break;
-                            case R.id.nav_export:
-                                ImportExportPrefs.verifyStoragePermissions(activity);
-                                ImportExportPrefs.exportSharedPreferences(activity);
-                                break;
-                            case R.id.nav_import:
-                                ImportExportPrefs.verifyStoragePermissions(activity);
-                                ImportExportPrefs.importSharedPreferences(activity);
-                                break;
-                            case R.id.nav_show_logcat:
-                                LogDialog.showLogcat(v.getContext());
-                                break;
-                            case R.id.nav_about:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                                builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);
-                                if (Config.NSCLIENT || Config.G5UPLOADER)
-                                    builder.setIcon(R.mipmap.yellowowl);
-                                else
-                                    builder.setIcon(R.mipmap.blueowl);
-                                String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
-                                message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
-                                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
-                                if (MainApp.engineeringMode)
-                                    message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
-                                message += MainApp.gs(R.string.about_link_urls);
-                                final SpannableString messageSpanned = new SpannableString(message);
-                                Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
-                                builder.setMessage(messageSpanned);
-                                builder.setPositiveButton(MainApp.gs(R.string.ok), null);
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                                ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-                                break;
-                            case R.id.nav_exit:
-                                log.debug("Exiting");
-                                MainApp.instance().stopKeepAliveService();
-                                MainApp.bus().post(new EventAppExit());
-                                MainApp.closeDbHelper();
-                                finish();
-                                System.runFinalization();
-                                System.exit(0);
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                popup.show();
-                break;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences);
+        checkPluginPreferences(findViewById(R.id.pager));
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_preferences:
+                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
+                    Intent i = new Intent(this, PreferencesActivity.class);
+                    i.putExtra("id", -1);
+                    startActivity(i);
+                }, null);
+                return true;
+            case R.id.nav_historybrowser:
+                startActivity(new Intent(this, HistoryBrowseActivity.class));
+                return true;
+            case R.id.nav_setupwizard:
+                startActivity(new Intent(this, SetupWizardActivity.class));
+                return true;
+            case R.id.nav_resetdb:
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.nav_resetdb)
+                        .setMessage(R.string.reset_db_confirm)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            MainApp.getDbHelper().resetDatabases();
+                            // should be handled by Plugin-Interface and
+                            // additional service interface and plugin registry
+                            FoodPlugin.getPlugin().getService().resetFood();
+                            TreatmentsPlugin.getPlugin().getService().resetTreatments();
+                        })
+                        .create()
+                        .show();
+                return true;
+            case R.id.nav_export:
+                ImportExportPrefs.verifyStoragePermissions(this);
+                ImportExportPrefs.exportSharedPreferences(this);
+                return true;
+            case R.id.nav_import:
+                ImportExportPrefs.verifyStoragePermissions(this);
+                ImportExportPrefs.importSharedPreferences(this);
+                return true;
+            case R.id.nav_show_logcat:
+                LogDialog.showLogcat(this);
+                return true;
+            case R.id.nav_about:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);
+                if (Config.NSCLIENT || Config.G5UPLOADER)
+                    builder.setIcon(R.mipmap.yellowowl);
+                else
+                    builder.setIcon(R.mipmap.blueowl);
+                String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
+                message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
+                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                if (MainApp.engineeringMode)
+                    message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
+                message += MainApp.gs(R.string.about_link_urls);
+                final SpannableString messageSpanned = new SpannableString(message);
+                Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
+                builder.setMessage(messageSpanned);
+                builder.setPositiveButton(MainApp.gs(R.string.ok), null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+                return true;
+            case R.id.nav_exit:
+                log.debug("Exiting");
+                MainApp.instance().stopKeepAliveService();
+                MainApp.bus().post(new EventAppExit());
+                MainApp.closeDbHelper();
+                finish();
+                System.runFinalization();
+                System.exit(0);
+                return true;
+            case R.id.nav_plugin_preferences:
+                ViewPager viewPager = findViewById(R.id.pager);
+                final PluginBase plugin = ((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem());
+                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
+                    Intent i = new Intent(this, PreferencesActivity.class);
+                    i.putExtra("id", plugin.getPreferencesId());
+                    startActivity(i);
+                }, null);
+                return true;
         }
+        return actionBarDrawerToggle.onOptionsItemSelected(item);
     }
 }

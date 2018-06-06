@@ -15,6 +15,6 @@ public class SourceNSClientPluginTest {
 
     @Test
     public void advancedFilteringSupported() {
-        Assert.assertEquals(true, SourceNSClientPlugin.getPlugin().advancedFilteringSupported());
+        Assert.assertEquals(false, SourceNSClientPlugin.getPlugin().advancedFilteringSupported());
     }
 }

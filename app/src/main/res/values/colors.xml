@@ -33,9 +33,9 @@
     <color name="tempTargetDisabledBackground">#303F9F</color>
 
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#009688</color>
     <color name="colorInitializingBorder">#00695c</color>
 
     <color name="cardColorBackground">#121212</color>
