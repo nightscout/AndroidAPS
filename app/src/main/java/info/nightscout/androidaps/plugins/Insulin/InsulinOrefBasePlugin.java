@@ -29,6 +29,7 @@ public abstract class InsulinOrefBasePlugin extends PluginBase implements Insuli
                 .fragmentClass(InsulinFragment.class.getName())
                 .pluginName(R.string.fastactinginsulin)
                 .shortName(R.string.insulin_shortname)
+                .visibleByDefault(false)
         );
     }
 

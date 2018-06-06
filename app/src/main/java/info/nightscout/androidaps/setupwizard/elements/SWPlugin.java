@@ -25,12 +25,19 @@ public class SWPlugin extends SWItem {
     private PluginType pType;
     private RadioGroup radioGroup;
 
+    private boolean makeVisible = true;
+
     public SWPlugin() {
         super(Type.PLUGIN);
     }
 
     public SWPlugin option(PluginType pType) {
         this.pType = pType;
+        return this;
+    }
+
+    public SWPlugin makeVisible(boolean makeVisible) {
+        this.makeVisible = makeVisible;
         return this;
     }
 
@@ -58,10 +65,10 @@ public class SWPlugin extends SWItem {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton rb = group.findViewById(checkedId);
-            PluginBase plugin1 = (PluginBase) rb.getTag();
-            plugin1.setPluginEnabled(pType, rb.isChecked());
-            plugin1.setFragmentVisible(pType, rb.isChecked());
-            ConfigBuilderFragment.processOnEnabledCategoryChanged(plugin1, pType);
+            PluginBase plugin = (PluginBase) rb.getTag();
+            plugin.setPluginEnabled(pType, rb.isChecked());
+            plugin.setFragmentVisible(pType, rb.isChecked() && makeVisible);
+            ConfigBuilderFragment.processOnEnabledCategoryChanged(plugin, pType);
             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
             MainApp.bus().post(new EventConfigBuilderChange());
             MainApp.bus().post(new EventSWUpdate());
