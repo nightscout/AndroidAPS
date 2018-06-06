@@ -8,6 +8,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -74,12 +77,7 @@ public class DanaRUserOptionsActivity extends Activity {
         lowReservoir = (NumberPicker) findViewById(R.id.danar_lowreservoir);
         saveToPumpButton = (Button) findViewById(R.id.save_user_options);
 
-        saveToPumpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSaveClick();
-            }
-        });
+        saveToPumpButton.setOnClickListener(v -> onSaveClick());
 
         boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
         boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
@@ -87,7 +85,7 @@ public class DanaRUserOptionsActivity extends Activity {
 
         DanaRPump pump = DanaRPump.getInstance();
         //used for debugging
-        log.debug("UserOptionsLoadedd:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
+        log.debug("UserOptionsLoaded:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
                 + "\ntimeDisplayType:" + pump.timeDisplayType
                 + "\nbuttonScroll:" + pump.buttonScrollOnOff
                 + "\ntimeDisplayType:" + pump.timeDisplayType
@@ -97,28 +95,33 @@ public class DanaRUserOptionsActivity extends Activity {
                 + "\nlowReservoir:" + pump.lowReservoirRate);
 
 
-        if (pump.timeDisplayType != 0) {
-            timeFormat.setChecked(false);
-        }
-
-        if (pump.buttonScrollOnOff != 0) {
-            buttonScroll.setChecked(true);
-        }
-        if (pump.beepAndAlarm != 0) {
-            beep.setChecked(true);
-        }
-
         screenTimeout.setParams((double) pump.lcdOnTimeSec, 5d, 240d, 5d, new DecimalFormat("1"), false);
         backlightTimeout.setParams((double) pump.backlightOnTimeSec, 1d, 60d, 1d, new DecimalFormat("1"), false);
-        if (pump.lastSettingsRead == 0)
-            log.debug("No settings loaded from pump!");
-        if (pump.getUnits() != null) {
-            if (pump.getUnits().equals(Constants.MMOL)) {
-                pumpUnits.setChecked(true);
-            }
-        }
         shutdown.setParams((double) pump.shutdownHour, 0d, 24d, 1d, new DecimalFormat("1"), true);
         lowReservoir.setParams((double) pump.lowReservoirRate, 10d, 60d, 10d, new DecimalFormat("10"), false);
+
+        if (pump.lastSettingsRead == 0)
+            log.debug("No settings loaded from pump!");
+        else
+            setData();
+    }
+
+    public void setData() {
+        DanaRPump pump = DanaRPump.getInstance();
+
+        timeFormat.setChecked(pump.timeDisplayType == 0);
+        buttonScroll.setChecked(pump.buttonScrollOnOff != 0);
+        beep.setChecked(pump.beepAndAlarm != 0);
+        screenTimeout.setValue((double) pump.lcdOnTimeSec);
+        backlightTimeout.setValue((double) pump.backlightOnTimeSec);
+        pumpUnits.setChecked(pump.getUnits() != null && pump.getUnits().equals(Constants.MMOL));
+        shutdown.setValue((double) pump.shutdownHour);
+        lowReservoir.setValue((double) pump.lowReservoirRate);
+    }
+
+    @Subscribe
+    public void onEventInitializationChanged(EventInitializationChanged ignored) {
+        runOnUiThread(this::setData);
     }
 
     public void onSaveClick() {
