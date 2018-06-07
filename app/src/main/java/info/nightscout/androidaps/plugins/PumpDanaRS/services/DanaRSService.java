@@ -182,24 +182,6 @@ public class DanaRSService extends Service {
         log.debug("Pump status loaded");
     }
 
-    public void updateUserOptions() {
-        try {
-            DanaRPump pump = DanaRPump.getInstance();
-            log.debug("UserOptionsLoadedd3:"+(System.currentTimeMillis() - pump.lastConnection)/1000+" s ago"
-                    +"\ntimeDisplayType:"+pump.timeDisplayType
-                    +"\nbuttonScroll:"+pump.buttonScrollOnOff
-                    +"\ntimeDisplayType:"+pump.timeDisplayType
-                    +"\nlcdOnTimeSec:"+pump.lcdOnTimeSec
-                    +"\nbacklight:"+pump.backlightOnTimeSec
-                    +"\npumpUnits:"+pump.units
-                    +"\nlowReservoir:"+pump.lowReservoirRate);
-            //bleComm.sendMessage(new DanaRS_Packet_Option_Set_User_Option());
-        } catch (Exception e) {
-            log.error("Unhandled exception", e);
-        }
-        log.debug("User options updates");
-    }
-
     public PumpEnactResult loadEvents() {
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
@@ -219,6 +201,13 @@ public class DanaRSService extends Service {
             lastHistoryFetched = 0;
         log.debug("Events loaded");
         danaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
+    }
+
+
+    public PumpEnactResult setUserSettings() {
+        bleComm.sendMessage(new DanaRS_Packet_Option_Set_User_Option());
+        bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option());
         return new PumpEnactResult().success(true);
     }
 

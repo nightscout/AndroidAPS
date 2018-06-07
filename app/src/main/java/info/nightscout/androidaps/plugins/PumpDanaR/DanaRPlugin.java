@@ -379,4 +379,9 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult loadEvents() {
         return null; // no history, not needed
     }
+
+    @Override
+    public PumpEnactResult setUserSettings() {
+        return null;
+    }
 }

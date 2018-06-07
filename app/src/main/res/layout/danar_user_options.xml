@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.PumpDanaR.DanaRUserOptions">
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRUserOptionsActivity">
 
 
     <RelativeLayout
@@ -21,6 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:text="@string/danar_pump_settings"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <LinearLayout
                     android:id="@+id/overview_pumpstatuslayout"
@@ -159,42 +169,28 @@
                         android:text="@string/danar_pumpalarm"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
                     <RadioGroup
                         android:id="@+id/danar_pumpalarm"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:checkedButton="@+id/danar_pumpalarm_sound">
 
                         <RadioButton
                             android:id="@+id/danar_pumpalarm_sound"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="@string/danar_pumpalarm_sound" />
 
                         <RadioButton
                             android:id="@+id/danar_pumpalarm_vibrate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="@string/danar_pumpalarm_vibrate" />
 
                         <RadioButton
                             android:id="@+id/danar_pumpalarm_both"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="@string/danar_pumpalarm_both" />
                     </RadioGroup>
 
@@ -344,7 +340,6 @@
                         android:textSize="14sp" />
 
 
-
                     <info.nightscout.utils.NumberPicker
                         android:id="@+id/danar_shutdown"
                         android:layout_width="wrap_content"
@@ -395,35 +390,16 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
                 <Button
                     android:id="@+id/save_user_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="@string/danar_saveuseroptions" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
 
             </LinearLayout>
 
         </ScrollView>
-
-
 
     </RelativeLayout>
 
