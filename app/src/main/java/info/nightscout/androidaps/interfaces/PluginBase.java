@@ -57,6 +57,12 @@ public abstract class PluginBase {
         return getName();
     }
 
+    public String getDescription() {
+        return "This is an example description.";
+        /*if (pluginDescription.description == -1) return null;
+        else return MainApp.gs(pluginDescription.description);*/
+    }
+
     public PluginType getType() {
         return pluginDescription.mainType;
     }

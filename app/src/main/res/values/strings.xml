@@ -83,16 +83,23 @@
 
 
     <string name="configbuilder_pump">Pump</string>
+    <string name="configbuilder_pump_description">Which pump would you like to use with AndroidAPS?</string>
     <string name="configbuilder_treatments">Treatments</string>
+    <string name="configbuilder_treatments_description">Which plugin should be used for treatment handling?</string>
     <string name="configbuilder_profile">Profile</string>
+    <string name="configbuilder_profile_description">Which profile should AndroidAPS use?</string>
     <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
     <string name="configbuilder_general">General</string>
+    <string name="configbuilder_general_description">These are some general plugins you might find useful to use.</string>
+    <string name="configbuilder_constraints_description">Which constraints should be applied?</string>
     <string name="days">days</string>
     <string name="objectives_minimalduration">Minimal duration</string>
     <string name="constraints">Constraints</string>
 
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Use this to activate AndroidAPS\\' loop integration.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_tbrsetbypump_label">Temp basal set by pump</string>
@@ -121,6 +128,7 @@
     <string name="changeyourinput">Change your input!</string>
     <string name="setextendedbolusquestion">Set new extended bolus:</string>
     <string name="configbuilder_bgsource">BG Source</string>
+    <string name="configbuilder_bgsource_description">Where should AndroidAPS gain  it\'s data from?</string>
     <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS Mode</string>
 
@@ -553,6 +561,7 @@
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
+    <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
@@ -616,6 +625,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
+    <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref0">Sensitivity Oref0</string>
     <string name="sensitivityaaps">Sensitivity AAPS</string>
