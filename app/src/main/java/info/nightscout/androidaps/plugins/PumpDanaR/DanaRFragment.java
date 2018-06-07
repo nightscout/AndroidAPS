@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,12 +30,14 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRUserOptionsActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
@@ -89,6 +92,8 @@ public class DanaRFragment extends SubscriberFragment {
     LinearLayout pumpStatusLayout;
     @BindView(R.id.overview_pumpstatus)
     TextView pumpStatusView;
+    @BindView(R.id.danar_user_options)
+    Button danar_user_options;
 
     public DanaRFragment() {
     }
@@ -266,6 +271,11 @@ public class DanaRFragment extends SubscriberFragment {
                             queueView.setVisibility(View.VISIBLE);
                             queueView.setText(status);
                         }
+                    }
+                    //hide user options button if not an RS pump
+                    boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
+                    if(isKorean){
+                        danar_user_options.setVisibility(View.GONE);
                     }
                 }
             });
