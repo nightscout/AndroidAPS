@@ -99,7 +99,7 @@
 
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Use this to activate AndroidAPS\\' loop integration.</string>
+    <string name="configbuilder_loop_description">Use this to activate AndroidAPS\' loop integration.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_tbrsetbypump_label">Temp basal set by pump</string>

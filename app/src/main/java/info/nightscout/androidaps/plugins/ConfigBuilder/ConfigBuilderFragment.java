@@ -112,6 +112,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     public void onDestroyView() {
         super.onDestroyView();
         for (PluginView pluginView : pluginViews) pluginView.unbind();
+        pluginViews.clear();
     }
 
     @Override
@@ -203,7 +204,6 @@ public class ConfigBuilderFragment extends SubscriberFragment {
 
         private Unbinder unbinder;
         private PluginBase plugin;
-        private boolean updating = false;
 
         LinearLayout baseView;
         @BindView(R.id.plugin_enabled_exclusive)
@@ -231,7 +231,6 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
 
         public void update() {
-            updating = true;
             enabledExclusive.setVisibility(areMultipleSelectionsAllowed(plugin.getType()) ? View.GONE : View.VISIBLE);
             enabledInclusive.setVisibility(areMultipleSelectionsAllowed(plugin.getType()) ? View.VISIBLE : View.GONE);
             enabledExclusive.setChecked(plugin.isEnabled(plugin.getType()));
@@ -248,21 +247,18 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             pluginVisibility.setVisibility(plugin.hasFragment() ? View.VISIBLE : View.INVISIBLE);
             pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(plugin.getType()));
             pluginVisibility.setChecked(plugin.isFragmentVisible());
-            updating = false;
         }
 
-        @OnCheckedChanged(R.id.plugin_visibility)
+        @OnClick(R.id.plugin_visibility)
         void onVisibilityChanged() {
-            if (updating) return;
             plugin.setFragmentVisible(plugin.getType(), pluginVisibility.isChecked());
             ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible");
             MainApp.bus().post(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().logPluginStatus();
         }
 
-        @OnCheckedChanged({R.id.plugin_enabled_exclusive, R.id.plugin_enabled_inclusive})
+        @OnClick({R.id.plugin_enabled_exclusive, R.id.plugin_enabled_inclusive})
         void onEnabledChanged() {
-            if (updating) return;
             boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
             plugin.setPluginEnabled(plugin.getType(), enabled);
             plugin.setFragmentVisible(plugin.getType(), enabled);
