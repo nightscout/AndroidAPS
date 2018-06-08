@@ -33,7 +33,7 @@
     <string name="description_profile_simple">Define a profile with only one time block.</string>
     <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed.</string>
     <string name="description_pump_dana_r">Pump integration for DANA Diabecare R pumps</string>
-    <string name="description_pump_dana_rs">Pump integration for korean DANA Diabecare RS pumps</string>
+    <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS pumps</string>
     <string name="description_pump_insight">Pump integration for Accu-Chek Insight pumps, requires having SightRemote installed</string>
     <string name="description_pump_mdi">Pump integration for people who use syringes for their diabetes therapy</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
