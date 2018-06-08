@@ -20,7 +20,7 @@
     <string name="description_food">Displays the food presets defined in Nightscout</string>
     <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
-    <string name="description_insulin_free_peak">Allows you define the peak of the insulin activity and should only be used by advanced users</string>
+    <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
     <string name="description_loop">Activate or deactivate the loop implementation.</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ma">State of the algorithm in 2016</string>
