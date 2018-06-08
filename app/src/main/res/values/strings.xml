@@ -46,7 +46,7 @@
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
     <string name="description_source_xdrip">Receive BG values from xDrip.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
-    <string name="description_wear">Monitor and control AndroidAPS using your Android wear watch.</string>
+    <string name="description_wear">Monitor and control AndroidAPS using your WearOS watch.</string>
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
