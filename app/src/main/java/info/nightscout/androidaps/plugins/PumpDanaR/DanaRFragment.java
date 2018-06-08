@@ -153,19 +153,24 @@ public class DanaRFragment extends SubscriberFragment {
             activity.runOnUiThread(
                     new Runnable() {
                         @Override
-                        public void run() {
-                            if (c.sStatus == EventPumpStatusChanged.CONNECTING)
-                                btConnectionView.setText("{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s");
-                            else if (c.sStatus == EventPumpStatusChanged.CONNECTED)
-                                btConnectionView.setText("{fa-bluetooth}");
-                            else if (c.sStatus == EventPumpStatusChanged.DISCONNECTED)
-                                btConnectionView.setText("{fa-bluetooth-b}");
+                        public  void run() {
+                            synchronized(DanaRFragment.this){
 
-                            if (!status.equals("")) {
-                                pumpStatusView.setText(status);
-                                pumpStatusLayout.setVisibility(View.VISIBLE);
-                            } else {
-                                pumpStatusLayout.setVisibility(View.GONE);
+                                if(btConnectionView == null || pumpStatusView == null || pumpStatusLayout == null ) return;
+
+                                if (c.sStatus == EventPumpStatusChanged.CONNECTING)
+                                    btConnectionView.setText("{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s");
+                                else if (c.sStatus == EventPumpStatusChanged.CONNECTED)
+                                    btConnectionView.setText("{fa-bluetooth}");
+                                else if (c.sStatus == EventPumpStatusChanged.DISCONNECTED)
+                                    btConnectionView.setText("{fa-bluetooth-b}");
+
+                                if (!status.equals("")) {
+                                    pumpStatusView.setText(status);
+                                    pumpStatusLayout.setVisibility(View.VISIBLE);
+                                } else {
+                                    pumpStatusLayout.setVisibility(View.GONE);
+                                }
                             }
                         }
                     }

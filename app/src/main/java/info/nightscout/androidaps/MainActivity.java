@@ -139,8 +139,10 @@ public class MainActivity extends AppCompatActivity {
 
         AndroidPermission.notifyForStoragePermission(this);
         AndroidPermission.notifyForBatteryOptimizationPermission(this);
-        AndroidPermission.notifyForLocationPermissions(this);
-        AndroidPermission.notifyForSMSPermissions(this);
+        if (BuildConfig.APS || BuildConfig.PUMPCONTROL) {
+            AndroidPermission.notifyForLocationPermissions(this);
+            AndroidPermission.notifyForSMSPermissions(this);
+        }
 
         MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
     }
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         menu.clear();
         for (PluginBase p : MainApp.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
-            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.getType())) {
+            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.getType()) && !p.pluginDescription.neverVisible) {
                 MenuItem menuItem = menu.add(p.getName());
                 menuItem.setCheckable(true);
                 menuItem.setOnMenuItemClickListener(item -> {
