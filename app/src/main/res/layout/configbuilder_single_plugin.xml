@@ -9,12 +9,14 @@
 
     <RadioButton
         android:id="@+id/plugin_enabled_exclusive"
+        android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp" />
 
     <CheckBox
         android:id="@+id/plugin_enabled_inclusive"
+        android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp" />
@@ -55,6 +57,7 @@
 
     <CheckBox
         android:id="@+id/plugin_visibility"
+        android:saveEnabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
