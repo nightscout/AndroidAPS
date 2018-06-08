@@ -21,7 +21,7 @@
     <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
     <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
-    <string name="description_loop">Activate or deactivate the loop implementation.</string>
+    <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ma">State of the algorithm in 2016</string>
     <string name="description_ama">State of the algorithm in 2017</string>
@@ -37,8 +37,8 @@
     <string name="description_pump_insight">Pump integration for Accu-Chek Insight pumps, requires having SightRemote installed</string>
     <string name="description_pump_mdi">Pump integration for people who use syringes for their diabetes therapy</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
-    <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0 but you can specify time to the past. Minimal carb absorption is calculated from max carbs absorption time from preferences.</string>
-    <string name="description_sensitivity_oref0">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cutted after time specified in preferences.</string>
+    <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
+    <string name="description_sensitivity_oref0">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences.</string>
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_dexcom_g5">Receive BG values from the patched Dexcom G5 app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
@@ -128,8 +128,8 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
     <string name="configbuilder_general">General</string>
-    <string name="configbuilder_general_description">These are some general plugins you might find useful to use.</string>
-    <string name="configbuilder_constraints_description">Which constraints should be applied?</string>
+    <string name="configbuilder_general_description">These are some general plugins you might find useful.</string>
+    <string name="configbuilder_constraints_description">Which constraints are applied?</string>
     <string name="days">days</string>
     <string name="objectives_minimalduration">Minimal duration</string>
     <string name="constraints">Constraints</string>
