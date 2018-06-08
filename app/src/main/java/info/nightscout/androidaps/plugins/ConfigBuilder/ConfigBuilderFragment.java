@@ -243,7 +243,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                 pluginDescription.setVisibility(View.VISIBLE);
                 pluginDescription.setText(plugin.getDescription());
             }
-            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(plugin.getType()) ? View.GONE : View.VISIBLE);
+            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(plugin.getType()) ? View.INVISIBLE : View.VISIBLE);
             pluginVisibility.setVisibility(plugin.hasFragment() ? View.VISIBLE : View.INVISIBLE);
             pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(plugin.getType()));
             pluginVisibility.setChecked(plugin.isFragmentVisible());

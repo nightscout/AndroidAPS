@@ -83,6 +83,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                 .pluginName(R.string.danarspump)
                 .shortName(R.string.danarspump_shortname)
                 .preferencesId(R.xml.pref_danars)
+                .description(R.string.description_pump_dana_rs)
         );
 
         pumpDescription.isBolusCapable = true;

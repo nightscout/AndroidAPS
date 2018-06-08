@@ -94,6 +94,7 @@ public class LoopPlugin extends PluginBase {
                 .pluginName(R.string.loop)
                 .shortName(R.string.loop_shortname)
                 .preferencesId(R.xml.pref_closedmode)
+                .description(R.string.description_loop)
         );
         loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);
         isSuperBolus = SP.getBoolean("isSuperBolus", false);

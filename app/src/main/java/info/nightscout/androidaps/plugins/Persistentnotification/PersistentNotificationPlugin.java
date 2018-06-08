@@ -57,6 +57,7 @@ public class PersistentNotificationPlugin extends PluginBase {
                 .neverVisible(true)
                 .pluginName(R.string.ongoingnotificaction)
                 .enableByDefault(true)
+                .description(R.string.description_persistent_notification)
         );
         this.ctx = ctx;
     }

@@ -77,6 +77,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 .pluginName(R.string.virtualpump)
                 .shortName(R.string.virtualpump_shortname)
                 .preferencesId(R.xml.pref_virtualpump)
+                .description(R.string.description_pump_virtual)
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
