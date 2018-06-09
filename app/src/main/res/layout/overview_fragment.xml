@@ -89,6 +89,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
