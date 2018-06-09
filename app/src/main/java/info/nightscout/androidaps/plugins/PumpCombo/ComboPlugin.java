@@ -167,6 +167,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 .fragmentClass(ComboFragment.class.getName())
                 .pluginName(R.string.combopump)
                 .shortName(R.string.combopump_shortname)
+                .description(R.string.description_pump_combo)
         );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
     }

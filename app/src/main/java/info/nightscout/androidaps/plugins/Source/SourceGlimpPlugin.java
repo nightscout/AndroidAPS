@@ -24,6 +24,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.Glimp)
+                .description(R.string.description_source_glimp)
         );
     }
 

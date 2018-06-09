@@ -25,6 +25,7 @@ public class CareportalPlugin extends PluginBase {
                 .shortName(R.string.careportal_shortname)
                 .visibleByDefault(true)
                 .enableByDefault(true)
+                .description(R.string.description_careportal)
         );
     }
 

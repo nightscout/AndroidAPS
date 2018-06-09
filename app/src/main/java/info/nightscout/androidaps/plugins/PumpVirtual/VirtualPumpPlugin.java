@@ -78,6 +78,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 .shortName(R.string.virtualpump_shortname)
                 .preferencesId(R.xml.pref_virtualpump)
                 .neverVisible(BuildConfig.NSCLIENTOLNY || BuildConfig.G5UPLOADER)
+                .description(R.string.description_pump_virtual)
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
