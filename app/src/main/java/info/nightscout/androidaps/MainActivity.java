@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, SingleFragmentActivity.class);
                     intent.putExtra("plugin", MainApp.getPluginsList().indexOf(p));
                     startActivity(intent);
+                    ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
                     return true;
                 });
             }
