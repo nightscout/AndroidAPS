@@ -82,7 +82,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.gate.setVisibility(View.VISIBLE);
                 holder.gate.setText(MainApp.gs(objective.getGate()));
             } else holder.gate.setVisibility(View.GONE);
-            if (!objective.isStarted() && !objective.isAccomplished()) {
+            if (!objective.isStarted()) {
                 holder.gate.setTextColor(0xFFFFFFFF);
                 holder.verify.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.GONE);

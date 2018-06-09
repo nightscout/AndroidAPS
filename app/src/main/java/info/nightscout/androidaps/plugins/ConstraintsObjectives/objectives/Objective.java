@@ -45,7 +45,7 @@ public abstract class Objective {
     }
 
     public boolean isStarted() {
-        return startedOn != null && accomplishedOn == null;
+        return startedOn != null;
     }
 
     public Date getStartedOn() {
