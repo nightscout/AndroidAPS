@@ -123,13 +123,17 @@ public abstract class Objective {
         @Override
         public String getProgress() {
             long timeLeftover = minimumDuration - (System.currentTimeMillis() - getObjective().getStartedOn().getTime());
-            int days = (int) (minimumDuration / (24L * 60L * 60L * 1000L));
-            int hours = (int) (minimumDuration / (60L * 60L * 1000L));
-            int minutes = (int) (minimumDuration / (60L * 1000L));
+            return getDurationText(timeLeftover) + " / " + getDurationText(minimumDuration);
+        }
+
+        private String getDurationText(long duration) {
+            int days = (int) (duration / (24L * 60L * 60L * 1000L));
+            int hours = (int) (duration / (60L * 60L * 1000L));
+            int minutes = (int) (duration / (60L * 1000L));
             if (days > 0) return MainApp.gq(R.plurals.objective_days, days, days);
             else if (hours > 0) return MainApp.gq(R.plurals.objective_hours, hours, hours);
             else if (minutes > 0) return MainApp.gq(R.plurals.objective_minutes, minutes, minutes);
-            else if (timeLeftover > 0) return MainApp.gq(R.plurals.objective_minutes, 1, 1);
+            else if (duration > 0) return MainApp.gq(R.plurals.objective_minutes, 1, 1);
             else return MainApp.gs(R.string.time_none);
         }
     }
