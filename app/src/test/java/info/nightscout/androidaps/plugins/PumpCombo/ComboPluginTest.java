@@ -32,7 +32,7 @@ public class ComboPluginTest {
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
         Constraint<Boolean> c = new Constraint<>(true);
-        c = comboPlugin.isLoopInvokationAllowed(c);
+        c = comboPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Combo: No valid basal rate read from pump", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
         comboPlugin.setPluginEnabled(PluginType.PUMP, false);

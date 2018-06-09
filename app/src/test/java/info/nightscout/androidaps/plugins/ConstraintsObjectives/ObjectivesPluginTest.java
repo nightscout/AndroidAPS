@@ -13,7 +13,6 @@ import java.util.Date;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
@@ -32,7 +31,7 @@ public class ObjectivesPluginTest {
         objectivesPlugin.objectives.get(0).setStarted(new Date(0));
 
         Constraint<Boolean> c = new Constraint<>(true);
-        c = objectivesPlugin.isLoopInvokationAllowed(c);
+        c = objectivesPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
         objectivesPlugin.objectives.get(0).setStarted(new Date());

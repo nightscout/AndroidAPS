@@ -1139,4 +1139,24 @@
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="nav_plugin_preferences">Plugin preferences</string>
+    <string name="completed_well_done">Completed, well done!</string>
+    <string name="not_completed_yet">Not completed yet</string>
+    <string name="time_leftover">Time leftover</string>
+    <string name="time_none">None</string>
+    <string name="nth_objective">%1$d. Objective</string>
+
+    <plurals name="objective_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
+    <plurals name="objective_hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+
+    <plurals name="objective_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>

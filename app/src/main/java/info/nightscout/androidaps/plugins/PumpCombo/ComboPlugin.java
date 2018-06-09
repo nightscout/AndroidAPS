@@ -1357,7 +1357,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Override
-    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
             value.set(false, MainApp.gs(R.string.novalidbasalrate), this);
         return value;
