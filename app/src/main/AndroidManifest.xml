@@ -169,7 +169,7 @@
         <activity
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/AppTheme.SetupWizard"
+            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_setup_wizard" />
 
         <activity android:name=".SingleFragmentActivity"
