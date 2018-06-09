@@ -40,7 +40,7 @@ public class HardLimits {
     public static final double MAXISF = 720; // mgdl
 
     public static final double[] MAXIOB_AMA = {3, 5, 7, 12};
-    public static final double[] MAXIOB_SMB = {3, 7, 20, 25};
+    public static final double[] MAXIOB_SMB = {3, 7, 12, 25};
 
     public static final double[] MAXBASAL = {2, 5, 10, 12};
 
