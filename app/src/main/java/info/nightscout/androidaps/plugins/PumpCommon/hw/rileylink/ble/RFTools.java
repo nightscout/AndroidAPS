@@ -57,17 +57,19 @@ public class RFTools {
         return rval;
     }
 
+
     public static ArrayList<Byte> fromBytes(byte[] data) {
         ArrayList<Byte> rval = new ArrayList<>();
-        for (int i = 0; i < data.length; i++) {
+        for(int i = 0; i < data.length; i++) {
             rval.add(data[i]);
         }
         return rval;
     }
 
+
     public static byte[] toBytes(ArrayList<Byte> data) {
         byte[] rval = new byte[data.size()];
-        for (int i = 0; i < data.size(); i++) {
+        for(int i = 0; i < data.size(); i++) {
             rval[i] = data.get(i);
         }
         return rval;
@@ -110,15 +112,17 @@ public class RFTools {
 
     public static final byte[] codes = new byte[]{21, 49, 50, 35, 52, 37, 38, 22, 26, 25, 42, 11, 44, 13, 14, 28};
 
+
     /* O(n) lookup.  Run on an O(n) translation of a byte-stream, gives O(n**2) performance. Sigh. */
     public static int codeIndex(byte b) {
-        for (int i = 0; i < codes.length; i++) {
+        for(int i = 0; i < codes.length; i++) {
             if (b == codes[i]) {
                 return i;
             }
         }
         return -1;
     }
+
 
     public static byte[] encode4b6b(byte[] data) {
         if ((data.length % 2) != 0) {
@@ -131,7 +135,7 @@ public class RFTools {
         int acc = 0;
         int bitcount = 0;
         int i;
-        for (i = 0; i < inData.size(); i++) {
+        for(i = 0; i < inData.size(); i++) {
             acc <<= 6;
             acc |= codes[(inData.get(i) >> 4) & 0x0f];
             bitcount += 6;
@@ -170,6 +174,7 @@ public class RFTools {
         return rval;
 
     }
+
 
     public static void test() {
         /*
@@ -212,6 +217,7 @@ public class RFTools {
         return;
     }
 
+
     public static byte[] decode4b6b(byte[] raw) throws NumberFormatException {
         /*
         if ((raw.length % 2) != 0) {
@@ -224,7 +230,7 @@ public class RFTools {
         int x = 0;
         //Log.w(TAG,"decode4b6b: untested code");
         //Log.w(TAG,String.format("Decoding %d bytes: %s",raw.length,ByteUtil.shortHexString(raw)));
-        for (int i = 0; i < raw.length; i++) {
+        for(int i = 0; i < raw.length; i++) {
             int unsignedValue = raw[i];
             if (unsignedValue < 0) {
                 unsignedValue += 256;
@@ -273,6 +279,7 @@ public class RFTools {
         }
         return rval;
     }
+
 
     public static String toHexString(byte[] array) {
         return toHexString(array, 0, array.length);

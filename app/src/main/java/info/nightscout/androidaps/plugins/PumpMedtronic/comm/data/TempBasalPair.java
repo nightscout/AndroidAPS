@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,77 +14,111 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  * Just need a class to keep the pair together, for parcel transport.
  */
 public class TempBasalPair {
-    private double mInsulinRate = 0.0;
-    private int mDurationMinutes = 0;
-    private boolean mIsPercent = false;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TempBasalPair.class);
+
+    private double insulinRate = 0.0;
+    private int durationMinutes = 0;
+    private boolean isPercent = false;
+
 
     public double getInsulinRate() {
-        return mInsulinRate;
+        return insulinRate;
     }
+
 
     public void setInsulinRate(double insulinRate) {
-        this.mInsulinRate = insulinRate;
+        this.insulinRate = insulinRate;
     }
+
 
     public int getDurationMinutes() {
-        return mDurationMinutes;
+        return durationMinutes;
     }
+
 
     public void setDurationMinutes(int durationMinutes) {
-        this.mDurationMinutes = durationMinutes;
+        this.durationMinutes = durationMinutes;
     }
+
 
     public boolean isPercent() {
-        return mIsPercent;
+        return isPercent;
     }
 
+
     public void setIsPercent(boolean yesIsPercent) {
-        this.mIsPercent = yesIsPercent;
+        this.isPercent = yesIsPercent;
     }
+
 
     public TempBasalPair() {
     }
 
+
     public TempBasalPair(double insulinRate, boolean isPercent, int durationMinutes) {
-        mInsulinRate = insulinRate;
-        mIsPercent = isPercent;
-        mDurationMinutes = durationMinutes;
+        this.insulinRate = insulinRate;
+        this.isPercent = isPercent;
+        this.durationMinutes = durationMinutes;
     }
 
 
     public TempBasalPair(byte[] response) {
 
-        mIsPercent = response[0] == 1;
+        LOG.debug("Received response: " + response);
 
-        if (mIsPercent) {
-            mInsulinRate = response[1];
+        isPercent = response[0] == 1;
+
+        if (isPercent) {
+            insulinRate = response[1];
         } else {
             int strokes = MedtronicUtil.makeUnsignedShort(response[2], response[3]);
 
-            mInsulinRate = strokes / 40.0d;
+            insulinRate = strokes / 40.0d;
         }
 
-        mDurationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
+        durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
 
     }
 
+
     public byte[] getAsRawData() {
 
+        // TODO check if this works with 523 and higher
         List<Byte> list = new ArrayList<Byte>();
 
-        list.add((byte) 0); // absolute
-        list.add((byte) 0); // percent amount
+        list.add((byte) 5);
 
-        byte[] insulinRate = MedtronicUtil.getBasalStrokes(mInsulinRate, true);
+        byte[] insulinRate = MedtronicUtil.getBasalStrokes(this.insulinRate, true);
+        byte[] timeMin = MedtronicUtil.getByteArrayFromUnsignedShort(MedtronicUtil.getIntervalFromMinutes(durationMinutes), true);
+
+        //list.add((byte) 0); // ?
+
+        //list.add((byte) 0); // is_absolute
+
+        if (insulinRate.length == 1)
+            list.add((byte) 0x00);
+        else
+            list.add(insulinRate[1]);
 
         list.add(insulinRate[0]);
-        list.add(insulinRate[1]);
+        //list.add((byte) 0); // percent amount
 
-        byte[] timeMin = MedtronicUtil.getByteArrayFromUnsignedShort(mDurationMinutes, true);
+        list.add(timeMin[0]); // 3 (time) - OK
 
-        list.add(timeMin[0]);
-        list.add(timeMin[1]);
+        if (insulinRate.length == 1)
+            list.add((byte) 0x00);
+        else
+            list.add(insulinRate[1]);
+
+        list.add(insulinRate[0]);
 
         return MedtronicUtil.createByteArray(list);
+    }
+
+
+    @Override
+    public String toString() {
+        return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent=" + isPercent + "]";
     }
 }

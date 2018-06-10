@@ -4,28 +4,32 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.recor
 import android.os.Bundle;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class BGReceivedPumpEvent extends TimeStampedRecord {
     private int amount = 0;
     private byte[] meter = new byte[3];
 
+
     public BGReceivedPumpEvent() {
     }
+
 
     @Override
     public int getLength() {
         return 10;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "BG Received";
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         if (!super.simpleParse(data, 2)) {
             return false;
         }
@@ -34,6 +38,7 @@ public class BGReceivedPumpEvent extends TimeStampedRecord {
         return true;
     }
 
+
     @Override
     public boolean readFromBundle(Bundle in) {
         amount = in.getInt("amount");
@@ -41,12 +46,14 @@ public class BGReceivedPumpEvent extends TimeStampedRecord {
         return super.readFromBundle(in);
     }
 
+
     @Override
     public void writeToBundle(Bundle in) {
         super.writeToBundle(in);
         in.putInt("amount", amount);
         in.putByteArray("meter", meter);
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

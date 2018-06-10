@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.PumpTimeStamp;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeFormat;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
@@ -8,18 +7,22 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
 public class ResultDailyTotalPumpEvent extends TimeStampedRecord {
     private static final String TAG = "ResultDailyTotalPumpEvent";
 
+
     public ResultDailyTotalPumpEvent() {
     }
+
 
     @Override
     public int getDatestampOffset() {
         return 5;
     }
 
+
     @Override
     public int getLength() {
-        return PumpModel.isLargerFormat(model) ? 10 : 7;
+        return isLargerFormat() ? 10 : 7;
     }
+
 
     @Override
     protected boolean collectTimeStamp(byte[] data, int offset) {
@@ -32,10 +35,12 @@ public class ResultDailyTotalPumpEvent extends TimeStampedRecord {
         return true;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Result Daily Total";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

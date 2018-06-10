@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history;
 import android.os.Bundle;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 /*
  *  Many events in the history only consist of a single opcode and a datestamp.
@@ -14,30 +14,37 @@ abstract public class TimeStampedRecord extends Record {
     //private final static String TAG = "TimeStampedRecord";
     private final static boolean DEBUG_TIMESTAMPEDRECORD = false;
 
+
     @Override
     public int getLength() {
         return 7;
     }
 
+
     public int getDatestampOffset() {
         return 2;
     }
 
+
     protected PumpTimeStamp timestamp;
+
 
     public TimeStampedRecord() {
         timestamp = new PumpTimeStamp();
     }
+
 
     @Override
     public PumpTimeStamp getTimestamp() {
         return timestamp;
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         return simpleParse(data, getDatestampOffset());
     }
+
 
     // This is useful if there is no data inside, or we don't care about the data.
     public boolean simpleParse(byte[] data, int fiveByteDateOffset) {
@@ -51,6 +58,7 @@ abstract public class TimeStampedRecord extends Record {
         return true;
     }
 
+
     protected boolean collectTimeStamp(byte[] data, int offset) {
         try {
             timestamp = new PumpTimeStamp(TimeFormat.parse5ByteDate(data, offset));
@@ -60,12 +68,14 @@ abstract public class TimeStampedRecord extends Record {
         return true;
     }
 
+
     @Override
     public boolean readFromBundle(Bundle in) {
         String timestampString = in.getString("timestamp");
         timestamp = new PumpTimeStamp(timestampString);
         return super.readFromBundle(in);
     }
+
 
     @Override
     public void writeToBundle(Bundle in) {

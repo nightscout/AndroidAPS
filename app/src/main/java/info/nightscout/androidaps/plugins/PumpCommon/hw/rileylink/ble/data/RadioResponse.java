@@ -29,6 +29,7 @@ public class RadioResponse {
         init(rxData);
     }
 
+
     public boolean isValid() {
         if (!decodedOK) {
             return false;
@@ -40,6 +41,7 @@ public class RadioResponse {
         }
         return false;
     }
+
 
     public void init(byte[] rxData) {
         if (rxData == null) {
@@ -66,6 +68,7 @@ public class RadioResponse {
             LOG.error("Failed to decode radio data: " + ByteUtil.shortHexString(encodedPayload));
         }
     }
+
 
     public byte[] getPayload() {
         return decodedPayload;

@@ -82,4 +82,34 @@ public abstract class PumpStatus {
     public void setPumpType(PumpType pumpType) {
         this.pumpType = pumpType;
     }
+
+    // FIXME cleanup this is from RT2
+
+    public long getTimeIndex() {
+        return (long) Math.ceil(time.getTime() / 60000d);
+    }
+
+    public void setTimeIndex(long timeIndex) {
+        this.timeIndex = timeIndex;
+    }
+
+    public long timeIndex;
+
+    public Date time;
+
+    public double remainUnits = 0;
+    public int remainBattery = 0;
+
+    public double currentBasal = 0;
+
+    public int tempBasalInProgress = 0;
+    public int tempBasalRatio = 0;
+    public int tempBasalRemainMin = 0;
+    public Date tempBasalStart;
+
+    public Date last_bolus_time;
+    public double last_bolus_amount = 0;
+
+
+
 }

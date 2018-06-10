@@ -24,11 +24,14 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
         super(1, 1, 10000, TimeUnit.MILLISECONDS, taskQueue);
     }
 
+
     public static ServiceTask startTask(ServiceTask task) {
         instance.execute(task); // task will be run on async thread from pool.
         return task;
     }
 
+
+    // FIXME
     protected void beforeExecute(Thread t, Runnable r) {
         // This is run on either caller UI thread or Service UI thread.
         ServiceTask task = (ServiceTask) r;
@@ -37,6 +40,8 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
         task.preOp();
     }
 
+
+    // FIXME
     protected void afterExecute(Runnable r, Throwable t) {
         // This is run on either caller UI thread or Service UI thread.
         ServiceTask task = (ServiceTask) r;

@@ -1,26 +1,29 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.PumpTimeStamp;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeFormat;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class Sara6EPumpEvent extends TimeStampedRecord {
     public Sara6EPumpEvent() {
     }
+
 
     @Override
     public int getLength() {
         return 52;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Sara6E";
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         // We don't understand this event...
         // Minimum 16 characters? date components?
         if (16 > data.length) {
@@ -33,6 +36,7 @@ public class Sara6EPumpEvent extends TimeStampedRecord {
         }
         return true;
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

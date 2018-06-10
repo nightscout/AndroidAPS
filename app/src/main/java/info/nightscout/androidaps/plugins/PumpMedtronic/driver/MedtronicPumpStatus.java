@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.driver;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,13 +44,16 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     // fixme
 
+
     public long getTimeIndex() {
         return (long) Math.ceil(time.getTime() / 60000d);
     }
 
+
     public void setTimeIndex(long timeIndex) {
         this.timeIndex = timeIndex;
     }
+
 
     public long timeIndex;
 
@@ -84,9 +88,9 @@ public class MedtronicPumpStatus extends PumpStatus {
         this.reservoirRemainingUnits = 75d;
         this.batteryRemaining = 75;
 
-        if (this.medtronicPumpMap == null)
-            createMedtronicPumpMap();
+        if (this.medtronicPumpMap == null) createMedtronicPumpMap();
     }
+
 
     private void createMedtronicPumpMap() {
 
@@ -113,8 +117,7 @@ public class MedtronicPumpStatus extends PumpStatus {
         try {
 
             // FIXME don't reload information several times
-            if (this.medtronicPumpMap == null)
-                createMedtronicPumpMap();
+            if (this.medtronicPumpMap == null) createMedtronicPumpMap();
 
 
             this.errorDescription = null;
@@ -157,10 +160,8 @@ public class MedtronicPumpStatus extends PumpStatus {
 
                     RileyLinkUtil.setPumpStatus(this);
 
-                    if (pumpTypePart.startsWith("7"))
-                        this.reservoirFullUnits = "300";
-                    else
-                        this.reservoirFullUnits = "180";
+                    if (pumpTypePart.startsWith("7")) this.reservoirFullUnits = "300";
+                    else this.reservoirFullUnits = "180";
                 }
             }
 

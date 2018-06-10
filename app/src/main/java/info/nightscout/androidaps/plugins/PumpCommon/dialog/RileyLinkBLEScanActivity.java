@@ -33,9 +33,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gxwtech.roundtrip2.RT2Const;
-import com.gxwtech.roundtrip2.util.LocationHelper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.LocationHelper;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.utils.SP;
 
@@ -51,7 +50,7 @@ import info.nightscout.utils.SP;
 public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(RileyLinkBLEScanActivity.class);
-    private final static String TAG = "RileyLinkScan";
+
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mLEScanner;
     private LeDeviceListAdapter mLeDeviceListAdapter;
@@ -92,12 +91,12 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
                 SP.putString(MedtronicConst.Prefs.RileyLinkAddress, bleAddress);
 
                 //Notify that we have a new rileylinkAddressKey
-                RileyLinkUtil.sendBroadcastMessage(RT2Const.local.INTENT_NEW_rileylinkAddressKey);
+                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_rileylinkAddressKey);
 
-                Log.d(TAG, "New rileylinkAddressKey: " + bleAddress);
+                LOG.debug("New rileylinkAddressKey: " + bleAddress);
 
                 //Notify that we have a new pumpIDKey
-                RileyLinkUtil.sendBroadcastMessage(RT2Const.local.INTENT_NEW_pumpIDKey);
+                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_pumpIDKey);
                 finish();
             }
         });
@@ -205,7 +204,7 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
                 public void run() {
                     mScanning = false;
                     mLEScanner.stopScan(mScanCallback);
-                    Log.d(TAG, "scanLeDevice: Scanning Stop");
+                    LOG.debug("scanLeDevice: Scanning Stop");
                     //Toast.makeText(mContext, "Scanning finished", Toast.LENGTH_SHORT).show();
                     snackbar.dismiss();
                 }
@@ -213,14 +212,14 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
             mScanning = true;
             mLEScanner.startScan(mScanCallback);
-            Log.d(TAG, "scanLeDevice: Scanning Start");
+            LOG.debug("scanLeDevice: Scanning Start");
             //Toast.makeText(this, "Scanning", Toast.LENGTH_SHORT).show();
             snackbar.show();
         } else {
             mScanning = false;
             mLEScanner.stopScan(mScanCallback);
 
-            Log.d(TAG, "scanLeDevice: Scanning Stop");
+            LOG.debug("scanLeDevice: Scanning Stop");
             //Toast.makeText(this, "Scanning finished", Toast.LENGTH_SHORT).show();
             snackbar.dismiss();
 
@@ -238,7 +237,7 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
                     if (device.getName() != null && device.getName().length() > 0) {
                         mLeDeviceListAdapter.addDevice(device);
                         mLeDeviceListAdapter.notifyDataSetChanged();
-                        Log.d(TAG, "Found BLE" + device.getName());
+                        LOG.debug("Found BLE" + device.getName());
                     }
                 }
             });
@@ -254,9 +253,9 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
                         BluetoothDevice device = result.getDevice();
                         if (device.getName() != null && device.getName().length() > 0) {
                             mLeDeviceListAdapter.addDevice(device);
-                            Log.d(TAG, "Found BLE" + result.toString());
+                            LOG.debug("Found BLE" + result.toString());
                         } else {
-                            Log.e(TAG, "Found BLE, but name appears to be missing. Ignoring. " + device.getAddress());
+                            LOG.error("Found BLE, but name appears to be missing. Ignoring. " + device.getAddress());
                         }
                     }
                     mLeDeviceListAdapter.notifyDataSetChanged();

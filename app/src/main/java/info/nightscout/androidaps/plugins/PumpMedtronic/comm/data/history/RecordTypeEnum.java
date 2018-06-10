@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.AlarmClockReminderPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.AlarmSensorPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.BGReceivedPumpEvent;
@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.DeleteBolusReminderTimePumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.DeleteOtherDeviceIDPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.EnableDisableRemotePumpEvent;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.IgnoredHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.InsulinMarkerEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.JournalEntryExerciseMarkerPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.JournalEntryPumpLowBatteryPumpEvent;
@@ -54,103 +55,181 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.ResultDailyTotalPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.ResumePumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.RewindPumpEvent;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.Sara6EPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.SuspendPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.TempBasalDurationPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.TempBasalRatePumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.UnabsorbedInsulin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.Unknown7ByteEvent1;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 /**
  * Created by geoff on 5/28/15.
  */
+@Deprecated
 public enum RecordTypeEnum {
-    RECORD_TYPE_NULL((byte) 0x00, null),
-    RECORD_TYPE_BOLUSNORMAL((byte) 0x01, BolusNormalPumpEvent.class),
-    RECORD_TYPE_PRIME((byte) 0x03, PrimePumpEvent.class),
-    RECORD_TYPE_ALARMPUMP((byte) 0x06, PumpAlarmPumpEvent.class),
-    RECORD_TYPE_RESULTDAILYTOTAL((byte) 0x07, ResultDailyTotalPumpEvent.class),
-    RECORD_TYPE_CHANGEBASALPROFILEPATTERN((byte) 0x08, ChangeBasalProfilePatternPumpEvent.class),
-    RECORD_TYPE_CHANGEBASALPROFILE((byte) 0x09, ChangeBasalProfilePumpEvent.class),
-    RECORD_TYPE_CALBGFORPH((byte) 0x0A, CalBgForPhPumpEvent.class),
-    RECORD_TYPE_ALARMSENSOR((byte) 0x0B, AlarmSensorPumpEvent.class),
-    RECORD_TYPE_CLEARALARM((byte) 0x0C, ClearAlarmPumpEvent.class),
-    //RECORD_TYPE_SELECTBASALPROFILE((byte)0x14,SelectBasalProfile.class),
-    RECORD_TYPE_TEMPBASALDURATION((byte) 0x16, TempBasalDurationPumpEvent.class),
-    RECORD_TYPE_CHANGETIME((byte) 0x17, ChangeTimePumpEvent.class),
-    RECORD_TYPE_NEWTIMESET((byte) 0x18, NewTimeSet.class),
-    RECORD_TYPE_JournalEntryPumpLowBattery((byte) 0x19, JournalEntryPumpLowBatteryPumpEvent.class),
-    RECORD_TYPE_BATTERY((byte) 0x1A, BatteryPumpEvent.class),
-    RECORD_TYPE_PUMPSUSPENDED((byte) 0x1E, SuspendPumpEvent.class),
-    RECORD_TYPE_PUMPRESUMED((byte) 0x1F, ResumePumpEvent.class),
-    RECORD_TYPE_REWIND((byte) 0x21, RewindPumpEvent.class),
-    RECORD_TYPE_CHANGECHILDBLOCKENABLE((byte) 0x23, ChangeChildBlockEnablePumpEvent.class),
-    RECORD_TYPE_CHANGEMAXBOLUS((byte) 0x24, ChangeMaxBolusPumpEvent.class),
-    RECORD_TYPE_ENABLEDISABLEREMOTE((byte) 0x26, EnableDisableRemotePumpEvent.class),
-    RECORD_TYPE_TEMPBASALRATE((byte) 0x33, TempBasalRatePumpEvent.class),
-    RECORD_TYPE_LOWRESERVOIR((byte) 0x34, JournalEntryPumpLowReservoirPumpEvent.class),
-    RECORD_TYPE_AlarmClockReminder((byte) 0x35, AlarmClockReminderPumpEvent.class),
-    RECORD_TYPE_BGRECEIVED((byte) 0x3F, BGReceivedPumpEvent.class),
-    RECORD_TYPE_JournalEntryExerciseMarker((byte) 0x41, JournalEntryExerciseMarkerPumpEvent.class),
-    RECORD_TYPE_Unknown7Byte_1((byte) 0x42, Unknown7ByteEvent1.class),
-    RECORD_TYPE_InsulinMarker((byte) 0x43, InsulinMarkerEvent.class),
-    RECORD_TYPE_CHANGESENSORSETUP2((byte) 0x50, ChangeSensorSetup2PumpEvent.class),
-    RECORD_TYPE_ChangeSensorRateOfChangeAlertSetup((byte) 0x56, ChangeSensorRateOfChangeAlertSetupPumpEvent.class),
-    RECORD_TYPE_ChangeBolusScrollStepSize((byte) 0x57, ChangeBolusScrollStepSizePumpEvent.class),
-    RECORD_TYPE_ChangeBolusWizardSetup((byte) 0x5A, ChangeBolusWizardSetupPumpEvent.class),
-    RECORD_TYPE_BolusWizardBolusEstimate((byte) 0x5B, BolusWizardBolusEstimatePumpEvent.class),
-    RECORD_TYPE_UNABSORBEDINSULIN((byte) 0x5C, UnabsorbedInsulin.class),
-    RECORD_TYPE_CHANGEVARIABLEBOLUS((byte) 0x5e, ChangeVariableBolusPumpEvent.class),
-    RECORD_TYPE_CHANGEAUDIOBOLUS((byte) 0x5f, ChangeAudioBolusPumpEvent.class),
-    RECORD_TYPE_ChangeBGReminderEnable((byte) 0x60, ChangeBGReminderEnablePumpEvent.class),
-    RECORD_TYPE_ChangeAlarmClockEnable((byte) 0x61, ChangeAlarmClockEnablePumpEvent.class),
-    RECORD_TYPE_ChangeTempBasalType((byte) 0x62, ChangeTempBasalTypePumpEvent.class),
-    RECORD_TYPE_ChangeAlarmNotifyMode((byte) 0x63, ChangeAlarmNotifyModePumpEvent.class),
-    RECORD_TYPE_ChangeTimeFormat((byte) 0x64, ChangeTimeFormatPumpEvent.class),
-    RECORD_TYPE_ChangeReservoirWarningTime((byte) 0x65, ChangeReservoirWarningTimePumpEvent.class),
-    RECORD_TYPE_ChangeBolusReminderEnable((byte) 0x66, ChangeBolusReminderEnablePumpEvent.class),
-    RECORD_TYPE_ChangeBolusReminderTime((byte) 0x67, ChangeBolusReminderTimePumpEvent.class),
-    RECORD_TYPE_DeleteBolusReminderTime((byte) 0x68, DeleteBolusReminderTimePumpEvent.class),
-    RECORD_TYPE_DeleteAlarmClockTime((byte) 0x6a, DeleteAlarmClockTimePumpEvent.class),
-    RECORD_TYPE_MODEL522RESULTTOTALS((byte) 0x6D, Model522ResultTotalsPumpEvent.class),
-    RECORD_TYPE_SARA6E((byte) 0x6E, Sara6EPumpEvent.class),
-    RECORD_TYPE_ChangeCarbUnits((byte) 0x6f, ChangeCarbUnitsPumpEvent.class),
-    RECORD_TYPE_BASALPROFILESTART((byte) 0x7B, BasalProfileStart.class),
-    RECORD_TYPE_ChangeWatchdogEnable((byte) 0x7c, ChangeWatchdogEnablePumpEvent.class),
-    RECORD_TYPE_CHANGEOTHERDEVICEID((byte) 0x7d, ChangeOtherDeviceIDPumpEvent.class),
-    RECORD_TYPE_ChangeWatchdogMarriageProfile((byte) 0x81, ChangeWatchdogMarriageProfilePumpEvent.class),
-    RECORD_TYPE_DeleteOtherDeviceID((byte) 0x82, DeleteOtherDeviceIDPumpEvent.class),
-    RECORD_TYPE_ChangeCaptureEventEnable((byte) 0x83, ChangeCaptureEventEnablePumpEvent.class);
+
+    Null((byte) 0x00, null, 0), //
+
+    // Good Events
+    BolusNormal(0x01, BolusNormalPumpEvent.class), // OK
+    Prime((byte) 0x03, PrimePumpEvent.class), // OK
+    AlarmPump((byte) 0x06, PumpAlarmPumpEvent.class), //
+    ResultDailyTotal((byte) 0x07, ResultDailyTotalPumpEvent.class), // OK
+    ChangeBasalProfile_old_profile((byte) 0x08, ChangeBasalProfilePatternPumpEvent.class), // OK
+    ChangeBasalProfile_new_profile((byte) 0x09, ChangeBasalProfilePumpEvent.class), // OK
+
+    CalBgForPh((byte) 0x0A, CalBgForPhPumpEvent.class),  //
+    AlarmSensor((byte) 0x0B, AlarmSensorPumpEvent.class),  //
+    ClearAlarm((byte) 0x0C, ClearAlarmPumpEvent.class),  //
+    SelectBasalProfile((byte) 0x14, IgnoredHistoryEntry.class, 7), // OK
+    TempBasalDuration((byte) 0x16, TempBasalDurationPumpEvent.class),  // OK
+    ChangeTime((byte) 0x17, ChangeTimePumpEvent.class),  // OK
+    NewTimeSet((byte) 0x18, NewTimeSet.class), // OK
 
 
+    JournalEntryPumpLowBattery((byte) 0x19, JournalEntryPumpLowBatteryPumpEvent.class),  //
+    RECORD_TYPE_BATTERY((byte) 0x1A, BatteryPumpEvent.class),  //
+    SetAutoOff(0x1b, 7), //
+    Suspend((byte) 0x1E, SuspendPumpEvent.class),  // OK
+    Resume((byte) 0x1F, ResumePumpEvent.class),  // OK
+    SelfTest(0x20, 7), //
+    Rewind((byte) 0x21, RewindPumpEvent.class),  //
+    ClearSettings(0x22, 7), //
+    ChangeChildBlockEnable((byte) 0x23, ChangeChildBlockEnablePumpEvent.class),  //
+    ChangeMaxBolus((byte) 0x24, ChangeMaxBolusPumpEvent.class),  //
+    EnableDisableRemote((byte) 0x26, EnableDisableRemotePumpEvent.class),  //
+    ChangeMaxBasal(0x2c, 7), //
+    EnableBolusWizard(0x2d, 7), //
+    Andy2E(0x2e, 7), //
+    Andy2F(0x2f, 7), //
+    Andy30(0x30, 7), //
+    ChangeBGReminderOffset(0x31, 7), //
+    ChangeAlarmClockTime(0x32, 7), //
+    tempBasal((byte) 0x33, TempBasalRatePumpEvent.class),  //
+    journalEntryPumpLowReservoir((byte) 0x34, JournalEntryPumpLowReservoirPumpEvent.class),  //
+    AlarmClockReminder((byte) 0x35, AlarmClockReminderPumpEvent.class),  //
+    ChangeMeterId(0x36, 7), // 715 = 21 ??
+    MM512_Event_0x37(0x37, 7), //
+    MM512_Event_0x38(0x38, 7), //
+    MM512_Event_0x39(0x39, 7), //
+    MM512_Event_0x3A(0x3A, 7), //
+    MM512_Event_0x3B(0x3b, 7), // Questionable3b
+    changeParadigmLinkID(0x3c, 7), //
+    MM512_Event_0x3D(0x3D, 7), //
+    MM512_Event_0x3E(0x3e, 7), //
+    bgReceived((byte) 0x3F, BGReceivedPumpEvent.class),  //
+    JournalEntryMealMarker(0x40, 7), //
+    JournalEntryExerciseMarker((byte) 0x41, JournalEntryExerciseMarkerPumpEvent.class),  //
+    JournalEntryInsulinMarker((byte) 0x42, Unknown7ByteEvent1.class),  //
+    journalEntryOtherMarker((byte) 0x43, InsulinMarkerEvent.class),  //
+
+    MM512_Event_0x44(0x44, 7), //
+    MM512_Event_0x45(0x45, 7), //
+    MM512_Event_0x46(0x46, 7), //
+    MM512_Event_0x47(0x47, 7), //
+    MM512_Event_0x48(0x48, 7), //
+    MM512_Event_0x49(0x49, 7), //
+    MM512_Event_0x4a(0x4a, 7), //
+    MM512_Event_0x4b(0x4b, 7), //
+    MM512_Event_0x4c(0x4c, 7), //
+    MM512_Event_0x4d(0x4d, 7), //
+    MM512_Event_0x4e(0x4e, 7), //
+
+
+    //                case changeBolusWizardSetup = 0x4f, 7), //
+
+    changeSensorSetup2((byte) 0x50, ChangeSensorSetup2PumpEvent.class),  //
+    //                case restoreMystery51 = 0x51, 7), //
+    //            case restoreMystery52 = 0x52, 7), //
+    //            case changeSensorAlarmSilenceConfig = 0x53, 7), //
+    //            case restoreMystery54 = 0x54, 7), //
+    //            case restoreMystery55 = 0x55, 7), //
+    ChangeSensorRateOfChangeAlertSetup((byte) 0x56, ChangeSensorRateOfChangeAlertSetupPumpEvent.class),  //
+    ChangeBolusScrollStepSize((byte) 0x57, ChangeBolusScrollStepSizePumpEvent.class),  //
+    ChangeBolusWizardSetup((byte) 0x5A, ChangeBolusWizardSetupPumpEvent.class),  //
+    BolusWizardBolusEstimate((byte) 0x5B, BolusWizardBolusEstimatePumpEvent.class),  //
+    unabsorbedInsulin((byte) 0x5C, UnabsorbedInsulin.class),  //
+    //             case saveSettings = 0x5d, 7), //
+    changeVariableBolus((byte) 0x5e, ChangeVariableBolusPumpEvent.class),  //
+    changeAudioBolus((byte) 0x5f, ChangeAudioBolusPumpEvent.class), //
+    ChangeBGReminderEnable((byte) 0x60, ChangeBGReminderEnablePumpEvent.class), //
+    ChangeAlarmClockEnable((byte) 0x61, ChangeAlarmClockEnablePumpEvent.class),  //
+
+
+    ChangeTempBasalType((byte) 0x62, ChangeTempBasalTypePumpEvent.class),  //
+    ChangeAlarmNotifyMode((byte) 0x63, ChangeAlarmNotifyModePumpEvent.class),  //
+    ChangeTimeFormat((byte) 0x64, ChangeTimeFormatPumpEvent.class),  //
+    ChangeReservoirWarningTime((byte) 0x65, ChangeReservoirWarningTimePumpEvent.class),  //
+    ChangeBolusReminderEnable((byte) 0x66, ChangeBolusReminderEnablePumpEvent.class),  //
+    ChangeBolusReminderTime((byte) 0x67, ChangeBolusReminderTimePumpEvent.class),  //
+    DeleteBolusReminderTime((byte) 0x68, DeleteBolusReminderTimePumpEvent.class),  //
+    // case bolusReminder = 0x69, 7), //
+    DeleteAlarmClockTime((byte) 0x6a, DeleteAlarmClockTimePumpEvent.class),  //
+    DailyTotal515(0x6c, 38), // FIXME
+    dailyTotal522((byte) 0x6D, Model522ResultTotalsPumpEvent.class),  //
+    dailyTotal523((byte) 0x6E, IgnoredHistoryEntry.class, 52), // Sara6E  // FIXME
+    ChangeCarbUnits((byte) 0x6f, ChangeCarbUnitsPumpEvent.class),  //
+    basalProfileStart((byte) 0x7B, BasalProfileStart.class),  //
+    ChangeWatchdogEnable((byte) 0x7c, ChangeWatchdogEnablePumpEvent.class), //
+    ChangeOtherDeviceID((byte) 0x7d, ChangeOtherDeviceIDPumpEvent.class),  //
+    ChangeWatchdogMarriageProfile((byte) 0x81, ChangeWatchdogMarriageProfilePumpEvent.class),  //
+    DeleteOtherDeviceID((byte) 0x82, DeleteOtherDeviceIDPumpEvent.class),  //
+    ChangeCaptureEventEnable((byte) 0x83, ChangeCaptureEventEnablePumpEvent.class),
+
+    // Irelevant records (events that don't concern us for AAPS usage)
+
+
+    ;
+
+    private static Map<Byte, RecordTypeEnum> mapByOpCode = null;
     private byte opcode;
     private Class mRecordClass;
+    private int length;
+    private String shortTypeName;
+
 
     public byte opcode() {
         return opcode;
     }
 
+
     public Class recordClass() {
         return mRecordClass;
     }
 
-    RecordTypeEnum(byte b, Class c) {
-        opcode = b;
+
+    RecordTypeEnum(int b, Class c) {
+        opcode = (byte) b;
         mRecordClass = c;
     }
 
+
+    RecordTypeEnum(int b, Class c, int length) {
+        opcode = (byte) b;
+        mRecordClass = c;
+        this.length = length;
+    }
+
+
+    RecordTypeEnum(int b, int length) {
+        this(b, IgnoredHistoryEntry.class, length);
+    }
+
+
     public static RecordTypeEnum fromByte(byte b) {
-        for (RecordTypeEnum en : RecordTypeEnum.values()) {
+        for(RecordTypeEnum en : RecordTypeEnum.values()) {
             if (en.opcode() == b) {
                 return en;
             }
         }
-        return RECORD_TYPE_NULL;
+        return Null;
     }
+
 
     private static final String TAG = "RecordTypeEnum";
 
-    public <T extends Record> T getRecordClassInstance(PumpModel model) {
+
+    public <T extends Record> T getRecordClassInstance(MedtronicDeviceType model) {
         Constructor<T> ctor;
         T record = null;
         try {
@@ -160,6 +239,12 @@ public enum RecordTypeEnum {
                 if (ctor != null) {
                     record = ctor.newInstance();
                     record.setPumpModel(model);
+
+                    // if this is IgnoredHistoryEntry we need to set type so that we get correct length and name
+                    if (record instanceof IgnoredHistoryEntry) {
+                        IgnoredHistoryEntry he = (IgnoredHistoryEntry) record;
+                        he.init(this);
+                    }
                 }
             }
         } catch (NoSuchMethodException e) {
@@ -175,10 +260,30 @@ public enum RecordTypeEnum {
         return record;
     }
 
-    public static <T extends Record> T getRecordClassInstance(Bundle bundle, PumpModel model) {
+
+    public static <T extends Record> T getRecordClassInstance(Bundle bundle, MedtronicDeviceType model) {
         byte opcode = bundle.getByte("_opcode");
         RecordTypeEnum e = RecordTypeEnum.fromByte(opcode);
         return e.getRecordClassInstance(model);
     }
 
+
+    public int getLength() {
+        return length;
+    }
+
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+
+    public String getShortTypeName() {
+        return shortTypeName;
+    }
+
+
+    public void setShortTypeName(String shortTypeName) {
+        this.shortTypeName = shortTypeName;
+    }
 }

@@ -12,30 +12,30 @@ import java.util.Map;
 
 // changed to Enum, since this is now enum, I had to remove duplicate entries, so if entry is on first list, it was removed
 // from second (commented out)
+@Deprecated
 public enum MessageType {
-    Invalid((byte) 0x00),
-    Alert((byte) 0x01),
-    AlertCleared((byte) 0x02),
-    DeviceTest((byte) 0x03),
-    PumpStatus((byte) 0x04),
-    PumpAck((byte) 0x06),
-    PumpBackfill((byte) 0x08),
-    FindDevice((byte) 0x09),
-    DeviceLink((byte) 0x0a),
-    ChangeTime((byte) 0x40),
-    Bolus((byte) 0x42),
-    ChangeTempBasal((byte) 0x4c),
-    ButtonPress((byte) 0x5b),
-    PowerOn((byte) 0x5d),
-    ReadTime((byte) 0x70),
-    GetBattery((byte) 0x72),
-    GetHistoryPage((byte) 0x80),
-    GetISFProfile((byte) 0x8b),
-    GetPumpModel((byte) 0x8d),
-    ReadTempBasal((byte) 0x98),
-    ReadSettings((byte) 0xc0),
-    SetBasalProfileSTD((byte) 111),
-    ReadBasalProfileSTD((byte) 146),
+    Invalid((byte) 0x00), Alert((byte) 0x01),  //
+    AlertCleared((byte) 0x02),  //
+    DeviceTest((byte) 0x03), //
+    PumpStatus((byte) 0x04),  //
+    PumpAck((byte) 0x06),  //
+    PumpBackfill((byte) 0x08),  //
+    FindDevice((byte) 0x09),  //
+    DeviceLink((byte) 0x0a),  //
+    ChangeTime((byte) 0x40),  //
+    Bolus((byte) 0x42),  //
+    ChangeTempBasal((byte) 0x4c),  //
+    ButtonPress((byte) 0x5b),  //
+    PowerOn((byte) 0x5d),  //
+    ReadTime((byte) 0x70),  //
+    GetBattery((byte) 0x72), //
+    GetHistoryPage((byte) 0x80),  //
+    GetISFProfile((byte) 0x8b),  //
+    GetPumpModel((byte) 0x8d),  //
+    ReadTempBasal((byte) 0x98),  //
+    ReadSettings((byte) 0xc0),  //
+    SetBasalProfileSTD((byte) 0x6f),  //
+    ReadBasalProfileSTD((byte) 0x92),
 
 
     // The above codes include codes that are not 522/722 specific.
@@ -115,7 +115,7 @@ public enum MessageType {
 
         boolean foundErrors = false;
 
-        for (MessageType messageType : values()) {
+        for(MessageType messageType : values()) {
 
             if (mapByValue.containsKey(messageType.getValue())) {
                 // leave this check in case someone adds any new commands
@@ -127,8 +127,7 @@ public enum MessageType {
         }
 
         if (foundErrors) {
-            LOG.error("MessageType has duplicate entries. Each items needs to have unique value associated with it. " +
-                    "If this is not the case, application might not work correctly. Fix this and restart application.");
+            LOG.error("MessageType has duplicate entries. Each items needs to have unique value associated with it. " + "If this is not the case, application might not work correctly. Fix this and restart application.");
 
             System.exit(0);
         }
@@ -138,9 +137,11 @@ public enum MessageType {
 
     byte mtype;
 
+
     MessageType(byte mtype) {
         this.mtype = mtype;
     }
+
 
     public static MessageBody constructMessageBody(MessageType messageType, byte[] bodyData) {
         switch (messageType) {
@@ -151,9 +152,11 @@ public enum MessageType {
         }
     }
 
+
     public byte getValue() {
         return this.mtype;
     }
+
 
     public static MessageType getByValue(byte msgType) {
 

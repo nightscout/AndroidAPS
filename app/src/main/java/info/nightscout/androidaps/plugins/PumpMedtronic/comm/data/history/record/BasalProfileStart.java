@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.recor
 
 import android.os.Bundle;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class BasalProfileStart extends TimeStampedRecord {
     private static final String TAG = "BasalProfileStart";
@@ -11,21 +11,25 @@ public class BasalProfileStart extends TimeStampedRecord {
     private double rate = 0.0;
     private int profileIndex = 0;
 
+
     public BasalProfileStart() {
     }
+
 
     @Override
     public int getLength() {
         return 10;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Basal Profile Start";
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         if (!simpleParse(data, 2)) {
             return false;
         }
@@ -36,6 +40,7 @@ public class BasalProfileStart extends TimeStampedRecord {
         return true;
     }
 
+
     @Override
     public boolean readFromBundle(Bundle in) {
         offset = in.getInt("offset");
@@ -44,6 +49,7 @@ public class BasalProfileStart extends TimeStampedRecord {
         return super.readFromBundle(in);
     }
 
+
     @Override
     public void writeToBundle(Bundle in) {
         super.writeToBundle(in);
@@ -51,6 +57,7 @@ public class BasalProfileStart extends TimeStampedRecord {
         in.putDouble("rate", rate);
         in.putInt("profileIndex", profileIndex);
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

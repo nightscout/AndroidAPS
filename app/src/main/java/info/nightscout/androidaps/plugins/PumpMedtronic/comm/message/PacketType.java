@@ -15,30 +15,30 @@ public enum PacketType {
     Sensor(0xa8) //
     ;
 
-    private short value = 0;
-    public static Map<Short, PacketType> mapByValue;
+    private byte value = 0;
+    public static Map<Byte, PacketType> mapByValue;
 
     static {
         mapByValue = new HashMap<>();
 
-        for (PacketType packetType : values()) {
+        for(PacketType packetType : values()) {
             mapByValue.put(packetType.value, packetType);
         }
     }
 
 
     PacketType(int value) {
-        this.value = (short) value;
+        this.value = (byte) value;
     }
 
-    public short getValue() {
+
+    public byte getValue() {
         return value;
     }
 
+
     public static PacketType getByValue(short value) {
-        if (mapByValue.containsKey(value))
-            return mapByValue.get(value);
-        else
-            return PacketType.Invalid;
+        if (mapByValue.containsKey(value)) return mapByValue.get(value);
+        else return PacketType.Invalid;
     }
 }

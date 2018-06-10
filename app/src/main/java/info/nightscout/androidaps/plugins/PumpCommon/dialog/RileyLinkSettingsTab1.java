@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 
@@ -33,6 +33,7 @@ public class RileyLinkSettingsTab1 extends Fragment implements RefreshableInterf
     RileyLinkServiceData rileyLinkServiceData;
 
     MedtronicPumpStatus medtronicPumpStatus;
+    boolean first = false;
 
 
     @Override
@@ -60,15 +61,19 @@ public class RileyLinkSettingsTab1 extends Fragment implements RefreshableInterf
         this.lastUsedFrequency = (TextView) getActivity().findViewById(R.id.rls_t1_last_used_frequency);
         this.lastDeviceContact = (TextView) getActivity().findViewById(R.id.rls_t1_last_device_contact);
 
+        if (!first) {
 
-        // 7-12
-        int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
-                R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12};
+            // 7-12
+            int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
+                    R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12};
 
-        for (int id : ids) {
+            for (int id : ids) {
 
-            TextView tv = (TextView) getActivity().findViewById(id);
-            tv.setText(tv.getText() + ":");
+                TextView tv = (TextView) getActivity().findViewById(id);
+                tv.setText(tv.getText() + ":");
+            }
+
+            first = true;
         }
 
         refreshData();

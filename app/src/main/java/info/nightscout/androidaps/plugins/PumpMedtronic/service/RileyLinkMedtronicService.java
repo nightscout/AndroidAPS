@@ -5,14 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
-
-import com.gxwtech.roundtrip2.RT2Const;
-import com.gxwtech.roundtrip2.RoundtripService.Tasks.ServiceTask;
-import com.gxwtech.roundtrip2.ServiceData.ServiceNotification;
-import com.gxwtech.roundtrip2.ServiceData.ServiceResult;
-import com.gxwtech.roundtrip2.ServiceData.ServiceTransport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +14,22 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceNotification;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
@@ -61,10 +64,10 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
 
     public RileyLinkMedtronicService() {
-        super();
+        super(MainApp.instance().getApplicationContext());
         instance = this;
         LOG.debug("RileyLinkMedtronicService newly constructed");
-
+        RileyLinkUtil.setRileyLinkService(this);
         pumpStatus = (MedtronicPumpStatus) MedtronicPumpPlugin.getPlugin().getPumpStatusData();
     }
 
@@ -80,15 +83,15 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
 
     public void addPumpSpecificIntents(IntentFilter intentFilter) {
-        intentFilter.addAction(RT2Const.IPC.MSG_PUMP_fetchHistory);
-        intentFilter.addAction(RT2Const.IPC.MSG_PUMP_fetchSavedHistory);
+        intentFilter.addAction(RileyLinkConst.IPC.MSG_PUMP_fetchHistory);
+        intentFilter.addAction(RileyLinkConst.IPC.MSG_PUMP_fetchSavedHistory);
     }
 
 
     public void handlePumpSpecificIntents(Intent intent) {
         String action = intent.getAction();
 
-        if (action.equals(RT2Const.IPC.MSG_PUMP_fetchHistory)) {
+        if (action.equals(RileyLinkConst.IPC.MSG_PUMP_fetchHistory)) {
 
 //            mHistoryPages = medtronicCommunicationManager.getAllHistoryPages();
 //            final boolean savePages = true;
@@ -135,7 +138,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 //            msg.setData(bundle);
 //            //rileyLinkIPCConnection.sendMessage(msg, null/*broadcast*/);
 //            LOG.debug("sendMessage: sent Full history report");
-        } else if (RT2Const.IPC.MSG_PUMP_fetchSavedHistory.equals(action)) {
+        } else if (RileyLinkConst.IPC.MSG_PUMP_fetchSavedHistory.equals(action)) {
             LOG.info("Fetching saved history");
 //            FileInputStream inputStream;
 //            ArrayList<Page> storedHistoryPages = new ArrayList<>();
@@ -210,16 +213,40 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
+    @Override
+    protected void determineRileyLinkTargetFrequency() {
+        boolean hasUSFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, MainApp.gs(R.string.medtronic_pump_frequency_us)).equals(MainApp.gs(R.string.medtronic_pump_frequency_us));
+
+        if (hasUSFrequency)
+            this.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Medtronic_US;
+        else
+            this.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Medtronic_WorldWide;
+    }
+
+
     /**
      * If you have customized RileyLinkServiceData you need to override this
      */
     public void initRileyLinkServiceData() {
+
         rileyLinkServiceData = new RileyLinkServiceData(RileyLinkTargetDevice.MedtronicPump);
+
+        RileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
 
         setPumpIDString(SP.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
+        // get most recently used RileyLink address
+        rileyLinkServiceData.rileylinkAddress = SP.getString(MedtronicConst.Prefs.RileyLinkAddress, "");
+
+        rileyLinkBLE = new RileyLinkBLE(this.context); // or this
+        rfspy = new RFSpy(rileyLinkBLE);
+        rfspy.startReader();
+
+        RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
+
+
         // init rileyLinkCommunicationManager
-        pumpCommunicationManager = new MedtronicCommunicationManager(context, rfspy, false, rileyLinkServiceData.pumpIDBytes);
+        pumpCommunicationManager = new MedtronicCommunicationManager(context, rfspy, rileyLinkTargetFrequency);
         medtronicCommunicationManager = (MedtronicCommunicationManager) pumpCommunicationManager;
 
 
@@ -229,6 +256,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
+    public MedtronicCommunicationManager getMedtronicCommunicationManager() {
+        return this.medtronicCommunicationManager;
+    }
 
 
     /* private functions */
@@ -300,86 +330,87 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     public void handleIncomingServiceTransport(Intent intent) {
 
-        Bundle bundle = intent.getBundleExtra(RT2Const.IPC.bundleKey);
-
-        ServiceTransport serviceTransport = new ServiceTransport(bundle);
-
-        if (serviceTransport.getServiceCommand().isPumpCommand()) {
-            switch (serviceTransport.getOriginalCommandName()) {
-                case "ReadPumpClock":
-                    //ServiceTaskExecutor.startTask(new ReadPumpClockTask(serviceTransport));
-                    break;
-                case "FetchPumpHistory":
-                    //ServiceTaskExecutor.startTask(new FetchPumpHistoryTask(serviceTransport));
-                    break;
-                case "RetrieveHistoryPage":
-                    //ServiceTask task = new RetrieveHistoryPageTask(serviceTransport);
-                    //ServiceTaskExecutor.startTask(task);
-                    break;
-                case "ReadISFProfile":
-                    //ServiceTaskExecutor.startTask(new ReadISFProfileTask(serviceTransport));
-                /*
-                ISFTable table = pumpCommunicationManager.getPumpISFProfile();
-                ServiceResult result = new ServiceResult();
-                if (table.isValid()) {
-                    // convert from ISFTable to ISFProfile
-                    Bundle map = result.getMap();
-                    map.putIntArray("times", table.getTimes());
-                    map.putFloatArray("rates", table.getRates());
-                    map.putString("ValidDate", TimeFormat.standardFormatter().print(table.getValidDate()));
-                    result.setMap(map);
-                    result.setResultOK();
-                }
-                sendServiceTransportResponse(serviceTransport,result);
-                */
-                    break;
-                case "ReadBolusWizardCarbProfile":
-                    //ServiceTaskExecutor.startTask(new ReadBolusWizardCarbProfileTask());
-                    break;
-                case "UpdatePumpStatus":
-                    //ServiceTaskExecutor.startTask(new UpdatePumpStatusTask());
-                    break;
-                case "WakeAndTune":
-                    //sServiceTaskExecutor.startTask(new WakeAndTuneTask());
-                default:
-                    LOG.error("Failed to handle pump command: " + serviceTransport.getOriginalCommandName());
-                    break;
-            }
-        } else {
-            switch (serviceTransport.getOriginalCommandName()) {
-                case "SetPumpID":
-                    // This one is a command to RileyLinkMedtronicService, not to the MedtronicCommunicationManager
-                    String pumpID = serviceTransport.getServiceCommand().getMap().getString("pumpID", "");
-                    ServiceResult result = new ServiceResult();
-                    if ((pumpID != null) && (pumpID.length() == 6)) {
-                        setPumpIDString(pumpID);
-                        result.setResultOK();
-                    } else {
-                        LOG.error("handleIncomingServiceTransport: SetPumpID bundle missing 'pumpID' value");
-                        result.setResultError(-1, "Invalid parameter (missing pumpID)");
-                    }
-                    sendServiceTransportResponse(serviceTransport, result);
-                    break;
-                case "UseThisRileylink":
-                    // If we are not connected, connect using the given address.
-                    // If we are connected and the addresses differ, disconnect, connect to new.
-                    // If we are connected and the addresses are the same, ignore.
-                    String deviceAddress = serviceTransport.getServiceCommand().getMap().getString("rlAddress", "");
-                    if ("".equals(deviceAddress)) {
-                        LOG.error("handleIPCMessage: null RL address passed");
-                    } else {
-                        reconfigureRileylink(deviceAddress);
-                    }
-                    break;
-                default:
-                    LOG.error("handleIncomingServiceTransport: Failed to handle service command '" + serviceTransport.getOriginalCommandName() + "'");
-                    break;
-            }
-        }
+//        Bundle bundle = intent.getBundleExtra(RT2Const.IPC.bundleKey);
+//
+//        ServiceTransport serviceTransport = new ServiceTransport(bundle);
+//
+//        if (serviceTransport.getServiceCommand().isPumpCommand()) {
+//            switch (serviceTransport.getOriginalCommandName()) {
+//                case "ReadPumpClock":
+//                    ServiceTaskExecutor.startTask(new ReadPumpClockTask(serviceTransport));
+//                    break;
+//                case "FetchPumpHistory":
+//                    ServiceTaskExecutor.startTask(new FetchPumpHistoryTask(serviceTransport));
+//                    break;
+//                case "RetrieveHistoryPage":
+//                    ServiceTask task = new RetrieveHistoryPageTask(serviceTransport);
+//                    ServiceTaskExecutor.startTask(task);
+//                    break;
+//                case "ReadISFProfile":
+//                    ServiceTaskExecutor.startTask(new ReadISFProfileTask(serviceTransport));
+//                /*
+//                ISFTable table = pumpCommunicationManager.getPumpISFProfile();
+//                ServiceResult result = new ServiceResult();
+//                if (table.isValid()) {
+//                    // convert from ISFTable to ISFProfile
+//                    Bundle map = result.getMap();
+//                    map.putIntArray("times", table.getTimes());
+//                    map.putFloatArray("rates", table.getRates());
+//                    map.putString("ValidDate", TimeFormat.standardFormatter().print(table.getValidDate()));
+//                    result.setMap(map);
+//                    result.setResultOK();
+//                }
+//                sendServiceTransportResponse(serviceTransport,result);
+//                */
+//                    break;
+//                case "ReadBolusWizardCarbProfile":
+//                    ServiceTaskExecutor.startTask(new ReadBolusWizardCarbProfileTask());
+//                    break;
+//                case "UpdatePumpStatus":
+//                    ServiceTaskExecutor.startTask(new UpdatePumpStatusTask());
+//                    break;
+//                case "WakeAndTune":
+//                    ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+//                default:
+//                    LOG.error("Failed to handle pump command: " + serviceTransport.getOriginalCommandName());
+//                    break;
+//            }
+//        } else {
+//            switch (serviceTransport.getOriginalCommandName()) {
+//                case "SetPumpID":
+//                    // This one is a command to RileyLinkMedtronicService, not to the MedtronicCommunicationManager
+//                    String pumpID = serviceTransport.getServiceCommand().getMap().getString("pumpID", "");
+//                    ServiceResult result = new ServiceResult();
+//                    if ((pumpID != null) && (pumpID.length() == 6)) {
+//                        setPumpIDString(pumpID);
+//                        result.setResultOK();
+//                    } else {
+//                        LOG.error("handleIncomingServiceTransport: SetPumpID bundle missing 'pumpID' value");
+//                        result.setResultError(-1, "Invalid parameter (missing pumpID)");
+//                    }
+//                    sendServiceTransportResponse(serviceTransport, result);
+//                    break;
+//                case "UseThisRileylink":
+//                    // If we are not connected, connect using the given address.
+//                    // If we are connected and the addresses differ, disconnect, connect to new.
+//                    // If we are connected and the addresses are the same, ignore.
+//                    String deviceAddress = serviceTransport.getServiceCommand().getMap().getString("rlAddress", "");
+//                    if ("".equals(deviceAddress)) {
+//                        LOG.error("handleIPCMessage: null RL address passed");
+//                    } else {
+//                        reconfigureRileylink(deviceAddress);
+//                    }
+//                    break;
+//                default:
+//                    LOG.error("handleIncomingServiceTransport: Failed to handle service command '" + serviceTransport.getOriginalCommandName() + "'");
+//                    break;
+//            }
+//        }
     }
 
 
     public void announceProgress(int progressPercent) {
+        /*
         if (currentTask != null) {
             ServiceNotification note = new ServiceNotification(RT2Const.IPC.MSG_note_TaskProgress);
             note.getMap().putInt("progress", progressPercent);
@@ -388,7 +419,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             //rileyLinkIPCConnection.sendNotification(note, senderHashcode);
         } else {
             LOG.error("announceProgress: No current task");
-        }
+        }*/
     }
 
 
@@ -412,6 +443,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     // PumpInterface
 
+    public boolean isInitialized() {
+        return RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
+    }
 
     public boolean isSuspended() {
         return false;
@@ -422,6 +456,32 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
+    public boolean isConnected() {
+        return RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
+    }
+
+
+    public boolean isConnecting() {
+        return !RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
+    }
+
+
+    public void connect(String reason) {
+        //bluetoothInit(); // this starts chain-loading connection
+    }
+
+
+    public void disconnect(String reason) {
+
+    }
+
+
+    public void stopConnecting() {
+
+    }
+
+
+    // FIXME to do 1st command
     public void getPumpStatus() {
 
     }
@@ -470,6 +530,15 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     public PumpEnactResult loadTDDs() {
         return null;
+    }
+
+    public MedtronicCommunicationManager getPumpManager() {
+        return this.medtronicCommunicationManager;
+    }
+
+    // FIXME remove
+    public void sendNotification(ServiceNotification serviceNotification, Object o) {
+        LOG.warn("Send Notification has no implementation.");
     }
 
 

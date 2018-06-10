@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.recor
 
 import android.os.Bundle;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.PumpTimeStamp;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeFormat;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class BolusNormalPumpEvent extends TimeStampedRecord {
     private final static String TAG = "BolusNormalPumpEvent";
@@ -17,29 +17,34 @@ public class BolusNormalPumpEvent extends TimeStampedRecord {
     private double unabsorbedInsulinTotal = 0.0;
     private String bolusType = "Unset";
 
+
     public BolusNormalPumpEvent() {
     }
 
+
     @Override
     public int getLength() {
-        return PumpModel.isLargerFormat(model) ? 13 : 9;
+        return isLargerFormat() ? 13 : 9;
     }
+
 
     @Override
     public String getShortTypeName() {
         return "Normal Bolus";
     }
 
+
     private double insulinDecode(int a, int b) {
         return ((a << 8) + b) / 40.0;
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         if (getLength() > data.length) {
             return false;
         }
-        if (PumpModel.isLargerFormat(model)) {
+        if (MedtronicDeviceType.isLargerFormat(model)) {
             programmedAmount = insulinDecode(asUINT8(data[1]), asUINT8(data[2]));
             deliveredAmount = insulinDecode(asUINT8(data[3]), asUINT8(data[4]));
             unabsorbedInsulinTotal = insulinDecode(asUINT8(data[5]), asUINT8(data[6]));
@@ -66,6 +71,7 @@ public class BolusNormalPumpEvent extends TimeStampedRecord {
         return true;
     }
 
+
     @Override
     public boolean readFromBundle(Bundle in) {
         programmedAmount = in.getDouble("programmedAmount", 0.0);
@@ -76,6 +82,7 @@ public class BolusNormalPumpEvent extends TimeStampedRecord {
         return super.readFromBundle(in);
     }
 
+
     @Override
     public void writeToBundle(Bundle in) {
         super.writeToBundle(in);
@@ -85,6 +92,7 @@ public class BolusNormalPumpEvent extends TimeStampedRecord {
         in.putDouble("unabsorbedInsulinTotal", unabsorbedInsulinTotal);
         in.putString("bolusType", bolusType);
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

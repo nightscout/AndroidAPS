@@ -16,18 +16,20 @@
 
 package info.nightscout.androidaps.plugins.PumpCommon.utils;
 
+import java.util.List;
+
 /**
  * Clone of Android's HexDump class, for use in debugging. Cosmetic changes
  * only.
  */
 public class HexDump {
-    private final static char[] HEX_DIGITS = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-    };
+    private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
 
     public static String dumpHexString(byte[] array) {
         return dumpHexString(array, 0, array.length);
     }
+
 
     public static String dumpHexString(byte[] array, int offset, int length) {
         StringBuilder result = new StringBuilder();
@@ -38,11 +40,11 @@ public class HexDump {
         result.append("\n0x");
         result.append(toHexString(offset));
 
-        for (int i = offset; i < offset + length; i++) {
+        for(int i = offset; i < offset + length; i++) {
             if (lineIndex == 16) {
                 result.append(" ");
 
-                for (int j = 0; j < 16; j++) {
+                for(int j = 0; j < 16; j++) {
                     if (line[j] > ' ' && line[j] < '~') {
                         result.append(new String(line, j, 1));
                     } else {
@@ -66,11 +68,11 @@ public class HexDump {
         if (lineIndex != 16) {
             int count = (16 - lineIndex) * 3;
             count++;
-            for (int i = 0; i < count; i++) {
+            for(int i = 0; i < count; i++) {
                 result.append(" ");
             }
 
-            for (int i = 0; i < lineIndex; i++) {
+            for(int i = 0; i < lineIndex; i++) {
                 if (line[i] > ' ' && line[i] < '~') {
                     result.append(new String(line, i, 1));
                 } else {
@@ -82,19 +84,22 @@ public class HexDump {
         return result.toString();
     }
 
+
     public static String toHexString(byte b) {
         return toHexString(toByteArray(b));
     }
+
 
     public static String toHexString(byte[] array) {
         return toHexString(array, 0, array.length);
     }
 
+
     public static String toHexString(byte[] array, int offset, int length) {
         char[] buf = new char[length * 2];
 
         int bufIndex = 0;
-        for (int i = offset; i < offset + length; i++) {
+        for(int i = offset; i < offset + length; i++) {
             byte b = array[i];
             buf[bufIndex++] = HEX_DIGITS[(b >>> 4) & 0x0F];
             buf[bufIndex++] = HEX_DIGITS[b & 0x0F];
@@ -103,19 +108,79 @@ public class HexDump {
         return new String(buf);
     }
 
+
+    public static String toHexStringDisplayable(byte[] arr) {
+        StringBuilder sb = new StringBuilder();
+
+        if (arr == null) {
+            sb.append("Null array");
+        } else {
+
+            if (arr.length == 0) {
+                sb.append("Zero-length array");
+            } else {
+
+                for(byte element : arr) {
+                    sb.append(getCorrectHexValue(element));
+                    sb.append(" ");
+                }
+            }
+        }
+
+        return sb.toString();
+    }
+
+
+    public static String toHexStringDisplayable(List<Byte> data) {
+        StringBuilder sb = new StringBuilder();
+
+        for(byte element : data) {
+            sb.append(getCorrectHexValue(element));
+            sb.append(" ");
+        }
+
+        return sb.toString();
+    }
+
+
+    public static String getCorrectHexValue(byte inp) {
+        String hx = Integer.toHexString((char) inp);
+        hx = hx.toUpperCase();
+
+        if (hx.length() == 0)
+            return "00";
+        else if (hx.length() == 1)
+            return "0" + hx;
+        else if (hx.length() == 2)
+            return hx;
+        else if (hx.length() == 4)
+            return hx.substring(2);
+        else {
+            System.out.println("HEX ERROR !!!!!!!!!!!!!!!!");
+        }
+
+        // System.out.print(Integer.toHexString((char)arr[i]) + " ");
+
+        return null;
+    }
+
+
     public static String toHexString(int i) {
         return toHexString(toByteArray(i));
     }
 
+
     public static String toHexString(short i) {
         return toHexString(toByteArray(i));
     }
+
 
     public static byte[] toByteArray(byte b) {
         byte[] array = new byte[1];
         array[0] = b;
         return array;
     }
+
 
     public static byte[] toByteArray(int i) {
         byte[] array = new byte[4];
@@ -128,6 +193,7 @@ public class HexDump {
         return array;
     }
 
+
     public static byte[] toByteArray(short i) {
         byte[] array = new byte[2];
 
@@ -136,6 +202,7 @@ public class HexDump {
 
         return array;
     }
+
 
     private static int toByte(char c) {
         if (c >= '0' && c <= '9')
@@ -148,15 +215,17 @@ public class HexDump {
         throw new RuntimeException("Invalid hex char '" + c + "'");
     }
 
+
     public static byte[] hexStringToByteArray(String hexString) {
         int length = hexString.length();
         byte[] buffer = new byte[length / 2];
 
-        for (int i = 0; i < length; i += 2) {
-            buffer[i / 2] = (byte) ((toByte(hexString.charAt(i)) << 4) | toByte(hexString
-                    .charAt(i + 1)));
+        for(int i = 0; i < length; i += 2) {
+            buffer[i / 2] = (byte) ((toByte(hexString.charAt(i)) << 4) | toByte(hexString.charAt(i + 1)));
         }
 
         return buffer;
     }
+
+
 }

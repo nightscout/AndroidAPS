@@ -33,8 +33,9 @@ public class BasalProfile {
     private static final Logger LOG = LoggerFactory.getLogger(BasalProfile.class);
 
     private static final boolean DEBUG_BASALPROFILE = false;
-    protected static final int MAX_RAW_DATA_SIZE = (21 * 3) + 1;
+    protected static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
     protected byte[] mRawData; // store as byte array to make transport (via parcel) easier
+
 
     public BasalProfile() {
         init();
@@ -53,10 +54,12 @@ public class BasalProfile {
         mRawData[2] = 0x3f;
     }
 
+
     // this asUINT8 should be combined with Record.asUINT8, and placed in a new util class.
     protected static int readUnsignedByte(byte b) {
         return (b < 0) ? b + 256 : b;
     }
+
 
     public boolean setRawData(byte[] data) {
         if (data == null) {
@@ -64,6 +67,7 @@ public class BasalProfile {
             return false;
         }
         int len = Math.min(MAX_RAW_DATA_SIZE, data.length);
+        mRawData = new byte[len];
         System.arraycopy(data, 0, mRawData, 0, len);
         if (DEBUG_BASALPROFILE) {
             LOG.debug(String.format("setRawData: copied raw data buffer of %d bytes.", len));
@@ -71,18 +75,32 @@ public class BasalProfile {
         return true;
     }
 
+
     public void dumpBasalProfile() {
         LOG.debug("Basal Profile entries:");
         List<BasalProfileEntry> entries = getEntries();
-        for (int i = 0; i < entries.size(); i++) {
+        for(int i = 0; i < entries.size(); i++) {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
-            LOG.debug(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)",
-                    i + 1, entry.rate, entry.rate_raw,
-                    startString, entry.startTime_raw));
+            LOG.debug(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate, entry.rate_raw, startString, entry.startTime_raw));
 
         }
     }
+
+
+    public String getBasalProfileAsString() {
+        StringBuffer sb = new StringBuffer("Basal Profile entries:\n");
+        List<BasalProfileEntry> entries = getEntries();
+        for(int i = 0; i < entries.size(); i++) {
+            BasalProfileEntry entry = entries.get(i);
+            String startString = entry.startTime.toString("HH:mm");
+
+            sb.append(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)\n", i + 1, entry.rate, entry.rate_raw, startString, entry.startTime_raw));
+        }
+
+        return sb.toString();
+    }
+
 
     // TODO: this function must be expanded to include changes in which profile is in use.
     // and changes to the profiles themselves.
@@ -90,8 +108,7 @@ public class BasalProfile {
         BasalProfileEntry rval = new BasalProfileEntry();
         List<BasalProfileEntry> entries = getEntries();
         if (entries.size() == 0) {
-            LOG.warn(String.format("getEntryForTime(%s): table is empty",
-                    when.toDateTime().toLocalTime().toString("HH:mm")));
+            LOG.warn(String.format("getEntryForTime(%s): table is empty", when.toDateTime().toLocalTime().toString("HH:mm")));
             return rval;
         }
         //Log.w(TAG,"Assuming first entry");
@@ -107,16 +124,16 @@ public class BasalProfile {
         while (!done) {
             BasalProfileEntry entry = entries.get(i);
             if (DEBUG_BASALPROFILE) {
-                LOG.debug(String.format("Comparing 'now'=%s to entry 'start time'=%s",
-                        when.toDateTime().toLocalTime().toString("HH:mm"),
-                        entry.startTime.toString("HH:mm")));
+                LOG.debug(String.format("Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime().toString("HH:mm"), entry.startTime.toString("HH:mm")));
             }
             if (localMillis >= entry.startTime.getMillisOfDay()) {
                 rval = entry;
-                if (DEBUG_BASALPROFILE) LOG.debug("Accepted Entry");
+                if (DEBUG_BASALPROFILE)
+                    LOG.debug("Accepted Entry");
             } else {
                 // entry at i has later start time, keep older entry
-                if (DEBUG_BASALPROFILE) LOG.debug("Rejected Entry");
+                if (DEBUG_BASALPROFILE)
+                    LOG.debug("Rejected Entry");
                 done = true;
             }
             i++;
@@ -125,13 +142,11 @@ public class BasalProfile {
             }
         }
         if (DEBUG_BASALPROFILE) {
-            LOG.debug(String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)",
-                    when.toDateTime().toLocalTime().toString("HH:mm"),
-                    rval.rate, rval.rate_raw,
-                    rval.startTime.toString("HH:mm"), rval.startTime_raw));
+            LOG.debug(String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when.toDateTime().toLocalTime().toString("HH:mm"), rval.rate, rval.rate_raw, rval.startTime.toString("HH:mm"), rval.startTime_raw));
         }
         return rval;
     }
+
 
     public List<BasalProfileEntry> getEntries() {
         List<BasalProfileEntry> entries = new ArrayList<>();
@@ -163,6 +178,11 @@ public class BasalProfile {
     List<BasalProfileEntry> listEntries;
 
 
+    /**
+     * This is used to prepare new profile
+     *
+     * @param entry
+     */
     public void addEntry(BasalProfileEntry entry) {
         if (listEntries == null)
             listEntries = new ArrayList<>();
@@ -171,40 +191,35 @@ public class BasalProfile {
     }
 
 
-    public void generateRawData() {
+    public byte[] generateRawData() {
 
         List<Byte> outData = new ArrayList<>();
 
-        for (BasalProfileEntry profileEntry : listEntries) {
+        for(BasalProfileEntry profileEntry : listEntries) {
 
             byte[] strokes = MedtronicUtil.getBasalStrokes(profileEntry.rate, true);
 
             // TODO check if this is correct
-            outData.add(strokes[0]);
-            outData.add(strokes[1]);
+            outData.add(profileEntry.rate_raw[0]);
+            outData.add(profileEntry.rate_raw[1]);
 
-            int time = profileEntry.startTime.getHourOfDay();
+            //int time = profileEntry.startTime.getHourOfDay();
 
-            if (profileEntry.startTime.getMinuteOfHour() == 30) {
-                time++;
-            }
+            //if (profileEntry.startTime.getMinuteOfHour() == 30) {
+            //    time++;
+            //}
 
-            outData.add((byte) time);
+            outData.add(profileEntry.startTime_raw);
         }
 
         this.setRawData(MedtronicUtil.createByteArray(outData));
+
+        return this.mRawData;
     }
 
 
     public static void testParser() {
-        byte[] testData = new byte[]{
-                32, 0, 0,
-                38, 0, 13,
-                44, 0, 19,
-                38, 0, 28,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0};
+        byte[] testData = new byte[]{32, 0, 0, 38, 0, 13, 44, 0, 19, 38, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   /* from decocare:
   _test_schedule = {'total': 22.50, 'schedule': [
     { 'start': '12:00A', 'rate': 0.80 },
@@ -219,15 +234,14 @@ public class BasalProfile {
         if (entries.isEmpty()) {
             LOG.error("testParser: failed");
         } else {
-            for (int i = 0; i < entries.size(); i++) {
+            for(int i = 0; i < entries.size(); i++) {
                 BasalProfileEntry e = entries.get(i);
-                LOG.debug(String.format("testParser entry #%d: rate: %.2f, start %d:%d",
-                        i, e.rate, e.startTime.getHourOfDay(),
-                        e.startTime.getMinuteOfHour()));
+                LOG.debug(String.format("testParser entry #%d: rate: %.2f, start %d:%d", i, e.rate, e.startTime.getHourOfDay(), e.startTime.getMinuteOfHour()));
             }
         }
 
     }
+
 
     public byte[] getRawData() {
         return this.mRawData;

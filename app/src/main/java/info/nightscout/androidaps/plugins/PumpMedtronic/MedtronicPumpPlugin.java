@@ -25,7 +25,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpPlugin.class);
 
-    //private ServiceClientConnection serviceClientConnection;
 
     private RileyLinkMedtronicService medtronicService;
     protected static MedtronicPumpPlugin plugin = null;
@@ -113,5 +112,61 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return false;
     }
 
+
+    // Pump Plugin
+
+    private boolean isServiceSet() {
+        return medtronicService != null;
+    }
+
+    public boolean isInitialized() {
+        return isServiceSet() && medtronicService.isInitialized();
+    }
+
+    public boolean isSuspended() {
+        return isServiceSet() && medtronicService.isSuspended();
+    }
+
+    public boolean isBusy() {
+        return isServiceSet() && medtronicService.isBusy();
+    }
+
+
+    public boolean isConnected() {
+        return isServiceSet() && medtronicService.isConnected();
+    }
+
+
+    public boolean isConnecting() {
+        return isServiceSet() && medtronicService.isConnecting();
+    }
+
+
+    public void connect(String reason) {
+        if (isServiceSet()) {
+            medtronicService.connect(reason);
+        }
+    }
+
+
+    public void disconnect(String reason) {
+        if (isServiceSet()) {
+            medtronicService.disconnect(reason);
+        }
+    }
+
+
+    public void stopConnecting() {
+        if (isServiceSet()) {
+            medtronicService.stopConnecting();
+        }
+    }
+
+
+    public void getPumpStatus() {
+        if (isServiceSet()) {
+            medtronicService.getPumpStatus();
+        }
+    }
 
 }

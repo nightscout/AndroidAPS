@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
@@ -24,7 +23,7 @@ public class RFSpyReader {
 
     private static final Logger LOG = LoggerFactory.getLogger(RFSpyReader.class);
 
-    private Context context;
+    //private Context context;
     private RileyLinkBLE rileyLinkBle;
     private Semaphore waitForRadioData = new Semaphore(0, true);
     AsyncTask<Void, Void, Void> readerTask;
@@ -32,15 +31,18 @@ public class RFSpyReader {
     private int acquireCount = 0;
     private int releaseCount = 0;
 
-    public RFSpyReader(Context context, RileyLinkBLE rileyLinkBle) {
-        this.context = context;
+
+    public RFSpyReader(/*Context context,*/ RileyLinkBLE rileyLinkBle) {
+        //this.context = context;
         this.rileyLinkBle = rileyLinkBle;
     }
 
-    public void init(Context context, RileyLinkBLE rileyLinkBLE) {
-        this.context = context;
+
+    public void init(/*Context context,*/ RileyLinkBLE rileyLinkBLE) {
+        //this.context = context;
         this.rileyLinkBle = rileyLinkBLE;
     }
+
 
     public void setRileyLinkBle(RileyLinkBLE rileyLinkBle) {
         if (readerTask != null) {
@@ -49,9 +51,10 @@ public class RFSpyReader {
         this.rileyLinkBle = rileyLinkBle;
     }
 
+
     // This timeout must be coordinated with the length of the RFSpy radio operation or Bad Things Happen.
     public byte[] poll(int timeout_ms) {
-        LOG.debug(ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms + " mDataQueue size is " + mDataQueue.size());
+        LOG.trace(ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms + " mDataQueue size is " + mDataQueue.size());
         if (mDataQueue.isEmpty())
             try {
                 // block until timeout or data available.
@@ -69,13 +72,15 @@ public class RFSpyReader {
         return null;
     }
 
+
     // Call this from the "response count" notification handler.
     public void newDataIsAvailable() {
         releaseCount++;
 
-        LOG.debug(ThreadUtil.sig() + "waitForRadioData released(count=" + releaseCount + ") at t=" + SystemClock.uptimeMillis());
+        LOG.trace(ThreadUtil.sig() + "waitForRadioData released(count=" + releaseCount + ") at t=" + SystemClock.uptimeMillis());
         waitForRadioData.release();
     }
+
 
     public void start() {
         readerTask = new AsyncTask<Void, Void, Void>() {
@@ -88,7 +93,7 @@ public class RFSpyReader {
                     try {
                         acquireCount++;
                         waitForRadioData.acquire();
-                        LOG.debug(ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t=" + SystemClock.uptimeMillis());
+                        LOG.trace(ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t=" + SystemClock.uptimeMillis());
                         SystemClock.sleep(100);
                         SystemClock.sleep(1);
                         result = rileyLinkBle.readCharacteristic_blocking(serviceUUID, radioDataUUID);
@@ -96,7 +101,7 @@ public class RFSpyReader {
 
                         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
                             // only data up to the first null is valid
-                            for (int i = 0; i < result.value.length; i++) {
+                            for(int i = 0; i < result.value.length; i++) {
                                 if (result.value[i] == 0) {
                                     result.value = ByteUtil.substring(result.value, 0, i);
                                     break;

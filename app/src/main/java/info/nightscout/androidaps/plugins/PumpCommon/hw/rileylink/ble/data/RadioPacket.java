@@ -11,12 +11,19 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
 public class RadioPacket {
     protected byte[] pkt;
 
+
     public RadioPacket(byte[] pkt) {
         this.pkt = pkt;
     }
 
+
     public byte[] getRaw() {
         return pkt;
+    }
+
+    public byte[] getWithCRC() {
+        byte[] withCRC = ByteUtil.concat(pkt, CRC.crc8(pkt));
+        return withCRC;
     }
 
     public byte[] getEncoded() {

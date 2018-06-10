@@ -3,29 +3,33 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.recor
 
 import android.os.Bundle;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class PrimePumpEvent extends TimeStampedRecord {
     private double amount = 0.0;
     private double programmedAmount = 0.0;
     private String primeType = "unknown";
 
+
     public PrimePumpEvent() {
     }
+
 
     @Override
     public int getLength() {
         return 10;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Prime Pump";
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         if (!simpleParse(data, 5)) {
             return false;
         }
@@ -35,6 +39,7 @@ public class PrimePumpEvent extends TimeStampedRecord {
         return true;
     }
 
+
     @Override
     public boolean readFromBundle(Bundle in) {
         amount = in.getDouble("amount", 0.0);
@@ -43,6 +48,7 @@ public class PrimePumpEvent extends TimeStampedRecord {
         return super.readFromBundle(in);
     }
 
+
     @Override
     public void writeToBundle(Bundle in) {
         in.putDouble("amount", amount);
@@ -50,6 +56,7 @@ public class PrimePumpEvent extends TimeStampedRecord {
         in.putString("primeType", primeType);
         super.writeToBundle(in);
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

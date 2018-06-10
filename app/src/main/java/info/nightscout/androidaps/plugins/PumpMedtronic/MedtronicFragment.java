@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicNewStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicRileyLinkStatusChange;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
@@ -174,6 +175,14 @@ public class MedtronicFragment extends SubscriberFragment {
             );
         }
     }
+
+
+    @Subscribe
+    public void onStatusEvent(final EventMedtronicRileyLinkStatusChange s) {
+
+
+    }
+
 
     @Subscribe
     public void onStatusEvent(final EventMedtronicNewStatus s) {

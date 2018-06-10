@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks;
 
-import com.gxwtech.roundtrip2.ServiceData.ServiceTransport;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
 
 /**
  * Created by geoff on 7/9/16.
@@ -10,29 +10,36 @@ public class ServiceTask implements Runnable {
     protected ServiceTransport mTransport;
     public boolean completed = false;
 
+
     public ServiceTask() {
         init(new ServiceTransport());
     }
+
 
     public ServiceTask(ServiceTransport transport) {
         init(transport);
     }
 
+
     public void init(ServiceTransport transport) {
         mTransport = transport;
     }
+
 
     @Override
     public void run() {
     }
 
+
     public void preOp() {
         // This function is called by UI thread before running asynch thread.
     }
 
+
     public void postOp() {
         // This function is called by UI thread after running asynch thread.
     }
+
 
     public ServiceTransport getServiceTransport() {
         return mTransport;

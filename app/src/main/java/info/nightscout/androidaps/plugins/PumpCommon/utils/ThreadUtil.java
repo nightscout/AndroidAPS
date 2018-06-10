@@ -8,9 +8,11 @@ public class ThreadUtil {
         return Thread.currentThread().getId();
     }
 
+
     public static String getThreadName() {
         return Thread.currentThread().getName();
     }
+
 
     public static String sig() {
         Thread t = Thread.currentThread();

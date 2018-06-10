@@ -3,36 +3,42 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.recor
 
 import android.os.Bundle;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class TempBasalRatePumpEvent extends TimeStampedRecord {
     private double basalRate = 0.0; // rate in Units/hr
     private boolean mIsPercent = false; // The value is either an absolute number or a percentage
 
+
     public TempBasalRatePumpEvent() {
     }
+
 
     @Override
     public int getLength() {
         return 8;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Temp Basal Rate";
     }
 
+
     public double getBasalRate() {
         return basalRate;
     }
+
 
     public boolean isPercent() {
         return mIsPercent;
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         if (!simpleParse(data, 2)) {
             return false;
         }
@@ -46,6 +52,7 @@ public class TempBasalRatePumpEvent extends TimeStampedRecord {
         return true;
     }
 
+
     @Override
     public boolean readFromBundle(Bundle in) {
         basalRate = in.getDouble("basalRate", 0);
@@ -53,12 +60,14 @@ public class TempBasalRatePumpEvent extends TimeStampedRecord {
         return super.readFromBundle(in);
     }
 
+
     @Override
     public void writeToBundle(Bundle in) {
         in.putDouble("basalRate", basalRate);
         in.putBoolean("mIsPercent", mIsPercent);
         super.writeToBundle(in);
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

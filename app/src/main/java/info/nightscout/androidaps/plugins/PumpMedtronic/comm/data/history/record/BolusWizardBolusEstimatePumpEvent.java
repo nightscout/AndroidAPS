@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.recor
 
 import android.os.Bundle;
 
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.PumpModel;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
 
@@ -18,6 +18,7 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
     private int insulinSensitivity;
     private double carbRatio;
 
+
     public BolusWizardBolusEstimatePumpEvent() {
         correctionEstimate = (double) 0.0;
         bloodGlucose = 0;
@@ -31,15 +32,18 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
         unabsorbedInsulinTotal = 0.0;
     }
 
+
     @Override
     public int getLength() {
-        return PumpModel.isLargerFormat(model) ? 22 : 20;
+        return isLargerFormat() ? 22 : 20;
     }
+
 
     @Override
     public String getShortTypeName() {
         return "Bolus Wizard Est.";
     }
+
 
     @Override
     public boolean readFromBundle(Bundle in) {
@@ -56,6 +60,7 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
         return super.readFromBundle(in);
     }
 
+
     @Override
     public void writeToBundle(Bundle in) {
         super.writeToBundle(in);
@@ -71,56 +76,68 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
         in.putDouble("carbRatio", carbRatio);
     }
 
+
     public double getCorrectionEstimate() {
         return correctionEstimate;
     }
+
 
     public long getBG() {
         return bloodGlucose;
     }
 
+
     public int getCarbohydrates() {
         return carbohydrates;
     }
+
 
     public double getICRatio() {
         return carbRatio;
     }
 
+
     public int getInsulinSensitivity() {
         return insulinSensitivity;
     }
+
 
     public int getBgTargetLow() {
         return bgTargetLow;
     }
 
+
     public int getBgTargetHigh() {
         return bgTargetHigh;
     }
+
 
     public double getBolusEstimate() {
         return bolusEstimate;
     }
 
+
     public double getFoodEstimate() {
         return foodEstimate;
     }
+
 
     public double getUnabsorbedInsulinTotal() {
         return unabsorbedInsulinTotal;
     }
 
+
     private double insulinDecode(int a, int b) {
         return ((a << 8) + b) / 40.0;
     }
 
+
     @Override
-    public boolean parseFrom(byte[] data, PumpModel model) {
+    public boolean parseFrom(byte[] data, MedtronicDeviceType model) {
         if (!simpleParse(data, 2)) {
             return false;
         }
-        if (PumpModel.isLargerFormat(model)) {
+        if (MedtronicDeviceType.isLargerFormat(model)) {
             carbohydrates = (asUINT8(data[8]) & 0x0c << 6) + asUINT8(data[7]);
             bloodGlucose = (asUINT8(data[8]) & 0x03 << 8) + asUINT8(data[1]);
             foodEstimate = insulinDecode(asUINT8(data[14]), asUINT8(data[15]));
@@ -146,6 +163,7 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
 
         return true;
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

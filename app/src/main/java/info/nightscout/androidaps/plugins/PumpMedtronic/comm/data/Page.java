@@ -44,20 +44,26 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.PumpTi
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.Record;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.RecordTypeEnum;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeFormat;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.IgnoredHistoryEntry;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
+@Deprecated
 public class Page {
     private final static String TAG = "Page";
     private static final boolean DEBUG_PAGE = true;
 
     private byte[] crc;
     private byte[] data;
-    protected PumpModel model;
+    //protected PumpModel model;
+    public static MedtronicDeviceType model = MedtronicDeviceType.Medtronic_522;
     public List<Record> mRecordList;
 
+
     public Page() {
-        this.model = PumpModel.UNSET;
+        this.model = MedtronicDeviceType.Unknown_Device;
         mRecordList = new ArrayList<>();
     }
+
 
     public byte[] getRawData() {
         if (data == null) {
@@ -69,6 +75,7 @@ public class Page {
         return ByteUtil.concat(data, crc);
     }
 
+
     protected PumpTimeStamp collectTimeStamp(byte[] data, int offset) {
         try {
             PumpTimeStamp timestamp = new PumpTimeStamp(TimeFormat.parse5ByteDate(data, offset));
@@ -78,7 +85,8 @@ public class Page {
         }
     }
 
-    public boolean parsePicky(byte[] rawPage, PumpModel model) {
+
+    public boolean parsePicky(byte[] rawPage, MedtronicDeviceType model) {
         mRecordList = new ArrayList<>();
         this.model = model;
         int pageOffset = 0;
@@ -102,8 +110,7 @@ public class Page {
         while (pageOffset < data.length) {
             if (data[pageOffset] == 0) {
                 if (record != null) {
-                    Log.i(TAG, String.format("End of page or Previous parse fail: prev opcode 0x%02x, curr offset %d, %d bytes remaining",
-                            record.getRecordOp(), pageOffset, data.length - pageOffset + 1));
+                    Log.i(TAG, String.format("End of page or Previous parse fail: prev opcode 0x%02x, curr offset %d, %d bytes remaining", record.getRecordOp(), pageOffset, data.length - pageOffset + 1));
                     break;
                 } else {
                     Log.i(TAG, "WTF?");
@@ -125,8 +132,8 @@ public class Page {
         ArrayList<Record> pickyRecords = new ArrayList<>();
         pickyRecords.addAll(mRecordList);
         parseByDates(rawPage, model);
-        for (Record r : mRecordList) {
-            for (Record r2 : pickyRecords) {
+        for(Record r : mRecordList) {
+            for(Record r2 : pickyRecords) {
                 if (r.getFoundAtOffset() == r2.getFoundAtOffset()) {
                     Log.v(TAG, "Found matching record at offset " + r.getFoundAtOffset());
                 }
@@ -135,13 +142,14 @@ public class Page {
         return true;
     }
 
-    public boolean parseByDates(byte[] rawPage, PumpModel model) {
+
+    public boolean parseByDates(byte[] rawPage, MedtronicDeviceType model) {
         mRecordList = new ArrayList<>();
         if (rawPage.length != 1024) {
             Log.e(TAG, "Unexpected page size. Expected: 1024 Was: " + rawPage.length);
             //return false;
         }
-        this.model = model;
+        Page.model = model;
         if (DEBUG_PAGE) {
             Log.i(TAG, "Parsing page");
         }
@@ -197,7 +205,8 @@ public class Page {
         return true;
     }
 
-    public boolean parseFrom(byte[] rawPage, PumpModel model) {
+
+    public boolean parseFrom(byte[] rawPage, MedtronicDeviceType model) {
         mRecordList = new ArrayList<>(); // wipe old contents each time when parsing.
         if (rawPage.length != 1024) {
             Log.e(TAG, "Unexpected page size. Expected: 1024 Was: " + rawPage.length);
@@ -229,6 +238,7 @@ public class Page {
 
         int dataIndex = 0;
         boolean done = false;
+        Record previousRecord = null;
         while (!done) {
             Record record = null;
             if (data[dataIndex] != 0) {
@@ -240,30 +250,72 @@ public class Page {
                 }
             } else {
                 Log.v(TAG, "Zero opcode encountered -- end of page. " + (rawPage.length - dataIndex) + " bytes remaining.");
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("Possible parsing problem: ");
+                stringBuilder.append("Previous record: " + previousRecord);
+                stringBuilder.append("  Content of previous record: " + HexDump.toHexStringDisplayable(previousRecord.getRawbytes()));
+
+                int remainingData = rawPage.length - dataIndex;
+                byte[] tmpData = new byte[remainingData + 10];
+                System.arraycopy(data, dataIndex, tmpData, 0, remainingData - 10);
+
+                stringBuilder.append("  Remaining data: " + HexDump.toHexStringDisplayable(tmpData));
+
+                Log.v(TAG, stringBuilder.toString());
+
                 break;
             }
+
             if (record != null) {
-                Log.v(TAG, "parseFrom: found event " + record.getClass().getSimpleName() + " length=" + record.getLength() + " offset=" + record.getFoundAtOffset());
-                mRecordList.add(record);
+                if (record instanceof IgnoredHistoryEntry) {
+                    IgnoredHistoryEntry he = (IgnoredHistoryEntry) record;
+                    Log.v(TAG, "parseFrom: found event " + he.getShortTypeName() + " length=" + record.getLength() + " offset=" + record.getFoundAtOffset() + " -- IGNORING");
+                } else {
+                    Log.v(TAG, "parseFrom: found event " + record.getClass().getSimpleName() + " length=" + record.getLength() + " offset=" + record.getFoundAtOffset());
+                    mRecordList.add(record);
+                }
+
                 dataIndex += record.getLength();
+
             } else {
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("Possible parsing problem: ");
+                stringBuilder.append("Previous record: " + previousRecord);
+                stringBuilder.append("  Content of previous record: " + HexDump.toHexStringDisplayable(previousRecord.getRawbytes()));
+
+                int remainingData = data.length - dataIndex;
+                byte[] tmpData = Arrays.copyOfRange(data, dataIndex, 1022);
+
+
+                //new byte[remainingData];
+                //System.arraycopy(data, dataIndex, tmpData, 0, remainingData - 2);
+
+                stringBuilder.append("  Remaining data: " + HexDump.toHexStringDisplayable(tmpData));
+
+
                 Log.e(TAG, String.format("parseFrom: Failed to parse opcode 0x%02x, offset=%d", data[dataIndex], dataIndex));
                 done = true;
             }
             if (dataIndex >= data.length - 2) {
                 done = true;
             }
+
+            previousRecord = record;
         }
+
         if (DEBUG_PAGE) {
             Log.i(TAG, String.format("Number of records: %d", mRecordList.size()));
             int index = 1;
-            for (Record r : mRecordList) {
+            for(Record r : mRecordList) {
                 Log.v(TAG, String.format("Record #%d: %s", index, r.getShortTypeName()));
                 index += 1;
             }
         }
         return true;
     }
+
 
     /* attemptParseRecord will attempt to create a subclass of Record from the given
      * data and offset.  It will return NULL if it fails.  If it succeeds, the returned
@@ -283,18 +335,19 @@ public class Page {
         }
         //Log.d(TAG,String.format("checking for handler for record type 0x%02X at index %d",data[offsetStart],offsetStart));
         RecordTypeEnum en = RecordTypeEnum.fromByte(data[offsetStart]);
-        T record = en.getRecordClassInstance(PumpModel.MM522);
+        T record = en.getRecordClassInstance(model);
         if (record != null) {
             // have to do this to set the record's opCode
             byte[] tmpData = new byte[data.length];
             System.arraycopy(data, offsetStart, tmpData, 0, data.length - offsetStart);
-            boolean didParse = record.parseWithOffset(tmpData, PumpModel.MM522, offsetStart);
+            boolean didParse = record.parseWithOffset(tmpData, model, offsetStart);
             if (!didParse) {
                 Log.e(TAG, String.format("attemptParseRecord: class %s (opcode 0x%02X) failed to parse at offset %d", record.getShortTypeName(), data[offsetStart], offsetStart));
             }
         }
         return record;
     }
+
 
     public static DateTime parseSimpleDate(byte[] data, int offset) {
         DateTime timeStamp = null;
@@ -325,6 +378,7 @@ public class Page {
         return timeStamp;
     }
 
+
     public static void discoverRecords(byte[] data) {
         int i = 0;
         boolean done = false;
@@ -332,7 +386,7 @@ public class Page {
         ArrayList<Integer> keyLocations = new ArrayList();
         while (!done) {
             RecordTypeEnum en = RecordTypeEnum.fromByte(data[i]);
-            if (en != RecordTypeEnum.RECORD_TYPE_NULL) {
+            if (en != RecordTypeEnum.Null) {
                 keyLocations.add(i);
                 Log.v(TAG, String.format("Possible record of type %s found at index %d", en, i));
             }
@@ -348,10 +402,10 @@ public class Page {
             done = (i >= data.length - 2);
         }
         // for each of the discovered key locations, attempt to parse a sequence of records
-        for (RecordTypeEnum en : RecordTypeEnum.values()) {
+        for(RecordTypeEnum en : RecordTypeEnum.values()) {
 
         }
-        for (int ix = 0; ix < keyLocations.size(); ix++) {
+        for(int ix = 0; ix < keyLocations.size(); ix++) {
 
         }
     }
@@ -369,13 +423,14 @@ public class Page {
     public List<Record> mRecordList;
     */
 
+
     public Bundle pack() {
         Bundle bundle = new Bundle();
         bundle.putByteArray("crc", crc);
         bundle.putByteArray("data", data);
-        bundle.putString("model", PumpModel.toString(model));
+        bundle.putString("model", model.name());
         ArrayList<Bundle> records = new ArrayList<>();
-        for (int i = 0; i < mRecordList.size(); i++) {
+        for(int i = 0; i < mRecordList.size(); i++) {
             try {
                 records.add(mRecordList.get(i).dictionaryRepresentation());
             } catch (NullPointerException e) {
@@ -386,14 +441,15 @@ public class Page {
         return bundle;
     }
 
+
     public void unpack(Bundle in) {
         crc = in.getByteArray("crc");
         data = in.getByteArray("data");
-        model = PumpModel.fromString(in.getString("model"));
+        model = MedtronicDeviceType.valueOf(in.getString("model"));
         ArrayList<Bundle> records = in.getParcelableArrayList("mRecordList");
         mRecordList = new ArrayList<>();
         if (records != null) {
-            for (int i = 0; i < records.size(); i++) {
+            for(int i = 0; i < records.size(); i++) {
                 Record r = RecordTypeEnum.getRecordClassInstance(records.get(i), model);
                 r.readFromBundle(records.get(i));
                 mRecordList.add(r);

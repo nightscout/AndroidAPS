@@ -1055,6 +1055,10 @@
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump">Operation not supported by pump.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
+    <string name="location_not_found_title">Location Is Not Enabled</string>
+    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
+    <string name="location_yes">Enable</string>
+    <string name="location_no">No</string>
 
     <!-- Medtronic -->
     <string name="medtronic_name" translatable="false">Medtronic</string>
