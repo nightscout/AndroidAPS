@@ -82,6 +82,8 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from DexcomG5 -->
                 <action android:name="com.dexcom.cgm.DATA" />
+                <!-- Receiver from Poctech -->
+                <action android:name="com.china.poctech.data" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->

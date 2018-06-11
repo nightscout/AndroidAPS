@@ -803,6 +803,7 @@
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
     <string name="dexcomg5_upload">G5 upload settings</string>
+    <string name="poctech_upload">Poctech upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
@@ -1139,4 +1140,6 @@
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="nav_plugin_preferences">Plugin preferences</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Receive BG values from Poctech app</string>
 </resources>
