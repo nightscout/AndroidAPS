@@ -112,7 +112,7 @@ public abstract class Objective {
         private long minimumDuration;
 
         public MinimumDurationTask(long minimumDuration) {
-            super(R.string.time_leftover);
+            super(R.string.time_elapsed);
             this.minimumDuration = minimumDuration;
         }
 
@@ -123,19 +123,17 @@ public abstract class Objective {
 
         @Override
         public String getProgress() {
-            long timeLeftover = minimumDuration - (System.currentTimeMillis() - getObjective().getStartedOn().getTime());
-            return getDurationText(timeLeftover) + " / " + getDurationText(minimumDuration);
+            return getDurationText(System.currentTimeMillis() - getObjective().getStartedOn().getTime())
+                    + " / " + getDurationText(minimumDuration);
         }
 
         private String getDurationText(long duration) {
-            int days = (int) (duration / (24L * 60L * 60L * 1000L));
-            int hours = (int) (duration / (60L * 60L * 1000L));
-            int minutes = (int) (duration / (60L * 1000L));
+            int days = (int) Math.floor((double) duration / (24D * 60D * 60D * 1000D));
+            int hours = (int) Math.floor((double) duration / (60D * 60D * 1000D));
+            int minutes = (int) Math.floor((double) duration / (60D * 1000D));
             if (days > 0) return MainApp.gq(R.plurals.objective_days, days, days);
             else if (hours > 0) return MainApp.gq(R.plurals.objective_hours, hours, hours);
-            else if (minutes > 0) return MainApp.gq(R.plurals.objective_minutes, minutes, minutes);
-            else if (duration > 0) return MainApp.gq(R.plurals.objective_minutes, 1, 1);
-            else return MainApp.gs(R.string.time_none);
+            else return MainApp.gq(R.plurals.objective_minutes, minutes, minutes);
         }
     }
 

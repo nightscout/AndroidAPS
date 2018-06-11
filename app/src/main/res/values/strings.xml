@@ -1141,8 +1141,7 @@
     <string name="nav_plugin_preferences">Plugin preferences</string>
     <string name="completed_well_done">Completed, well done!</string>
     <string name="not_completed_yet">Not completed yet</string>
-    <string name="time_leftover">Time leftover</string>
-    <string name="time_none">None</string>
+    <string name="time_elapsed">Time elapsed</string>
     <string name="nth_objective">%1$d. Objective</string>
 
     <plurals name="objective_days">
