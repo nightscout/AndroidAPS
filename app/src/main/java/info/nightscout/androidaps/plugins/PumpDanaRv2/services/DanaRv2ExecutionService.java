@@ -18,6 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -470,5 +471,20 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int)(timeToWholeMinute / 1000))));
             SystemClock.sleep(Math.min(timeToWholeMinute, 100));
         }
+    }
+
+    public PumpEnactResult updateUserSettings() {
+        if (!isConnected())
+            return new PumpEnactResult().success(false);
+        SystemClock.sleep(300);
+        MsgSettingUserOptions msg;
+
+        mSerialIOThread.sendMessage(msg);
+        while (!msg.done && mRfcommSocket.isConnected()) {
+            SystemClock.sleep(100);
+        }
+        SystemClock.sleep(200);
+        mDanaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
     }
 }
