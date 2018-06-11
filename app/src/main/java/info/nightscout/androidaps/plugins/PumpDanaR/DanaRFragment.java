@@ -274,7 +274,7 @@ public class DanaRFragment extends SubscriberFragment {
                     }
                     //hide user options button if not an RS pump
                     boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
-                    if(isKorean){
+                    if (isKorean ) {
                         danar_user_options.setVisibility(View.GONE);
                     }
                 }
