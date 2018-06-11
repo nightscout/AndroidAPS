@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.ConstraintsObjectives;
 import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -20,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +31,12 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
+import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
 import info.nightscout.utils.FabricPrivacy;
 
@@ -38,6 +47,15 @@ public class ObjectivesFragment extends SubscriberFragment {
     CheckBox enableFake;
     TextView reset;
     ObjectivesAdapter objectivesAdapter = new ObjectivesAdapter();
+    Handler handler = new Handler(Looper.getMainLooper());
+
+    private Runnable objectiveUpdater = new Runnable() {
+        @Override
+        public void run() {
+            handler.postDelayed(this, 60 * 1000);
+            updateGUI();
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,13 +76,30 @@ public class ObjectivesFragment extends SubscriberFragment {
                 scrollToCurrentObjective();
             });
             scrollToCurrentObjective();
-
+            startUpdateTimer();
             return view;
         } catch (Exception e) {
             FabricPrivacy.logException(e);
         }
 
         return null;
+    }
+
+    @Override
+    public synchronized void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacks(objectiveUpdater);
+    }
+
+    private void startUpdateTimer() {
+        handler.removeCallbacks(objectiveUpdater);
+        for (Objective objective : ObjectivesPlugin.getObjectives()) {
+            if (objective.isStarted() && !objective.isAccomplished()) {
+                long timeTillNextMinute = (System.currentTimeMillis() - objective.getStartedOn().getTime()) % (60 * 1000);
+                handler.postDelayed(objectiveUpdater, timeTillNextMinute);
+                break;
+            }
+        }
     }
 
     private void scrollToCurrentObjective() {
@@ -142,11 +177,13 @@ public class ObjectivesFragment extends SubscriberFragment {
                 objective.setAccomplishedOn(new Date());
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
+                startUpdateTimer();
             });
             holder.start.setOnClickListener((view) -> {
                 objective.setStartedOn(new Date());
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
+                startUpdateTimer();
             });
         }
 
