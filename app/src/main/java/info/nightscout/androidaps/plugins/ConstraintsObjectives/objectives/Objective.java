@@ -33,15 +33,16 @@ public abstract class Objective {
         for (Task task : tasks) task.objective = this;
     }
 
-    public boolean isAccomplished() {
-        boolean completed = true;
+    public boolean isCompleted() {
         for (Task task : tasks) {
-            if (!task.shouldBeIgnored() && !task.isCompleted()) {
-                completed = false;
-                break;
-            }
+            if (!task.shouldBeIgnored() && !task.isCompleted())
+                return false;
         }
-        return startedOn != null && (accomplishedOn != null || completed);
+        return true;
+    }
+
+    public boolean isAccomplished() {
+        return accomplishedOn != null;
     }
 
     public boolean isStarted() {

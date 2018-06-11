@@ -1,13 +1,16 @@
 package info.nightscout.androidaps.plugins.ConstraintsObjectives;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +54,10 @@ public class ObjectivesFragment extends SubscriberFragment {
             reset.setOnClickListener(v -> {
                 ObjectivesPlugin.getPlugin().reset();
                 ObjectivesPlugin.saveProgress();
-                updateGUI();
+                recyclerView.getAdapter().notifyDataSetChanged();
+                scrollToCurrentObjective();
             });
+            scrollToCurrentObjective();
 
             return view;
         } catch (Exception e) {
@@ -60,6 +65,28 @@ public class ObjectivesFragment extends SubscriberFragment {
         }
 
         return null;
+    }
+
+    private void scrollToCurrentObjective() {
+        for (int i = 0; i < ObjectivesPlugin.getObjectives().size(); i++) {
+            Objective objective = ObjectivesPlugin.getObjectives().get(i);
+            if (!objective.isStarted() || !objective.isAccomplished()) {
+                RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
+                    @Override
+                    protected int getVerticalSnapPreference() {
+                        return LinearSmoothScroller.SNAP_TO_START;
+                    }
+
+                    @Override
+                    protected int calculateTimeForScrolling(int dx) {
+                        return super.calculateTimeForScrolling(dx) * 4;
+                    }
+                };
+                smoothScroller.setTargetPosition(i);
+                recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
+                break;
+            }
+        }
     }
 
     private class ObjectivesAdapter extends RecyclerView.Adapter<ObjectivesAdapter.ViewHolder> {
@@ -97,7 +124,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             } else if (objective.isStarted()) {
                 holder.gate.setTextColor(0xFFFFFFFF);
                 holder.verify.setVisibility(View.VISIBLE);
-                holder.verify.setEnabled(objective.isAccomplished() || enableFake.isChecked());
+                holder.verify.setEnabled(objective.isCompleted() || enableFake.isChecked());
                 holder.start.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.VISIBLE);
                 holder.progress.removeAllViews();
@@ -113,11 +140,13 @@ public class ObjectivesFragment extends SubscriberFragment {
             }
             holder.verify.setOnClickListener((view) -> {
                 objective.setAccomplishedOn(new Date());
-                updateGUI();
+                notifyDataSetChanged();
+                scrollToCurrentObjective();
             });
             holder.start.setOnClickListener((view) -> {
                 objective.setStartedOn(new Date());
-                updateGUI();
+                notifyDataSetChanged();
+                scrollToCurrentObjective();
             });
         }
 
