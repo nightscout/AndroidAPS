@@ -134,7 +134,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView baseBasalView;
     TextView extendedBolusView;
     TextView activeProfileView;
-    TextView reservoirView;
     TextView iobView;
     TextView cobView;
     TextView apsModeView;
@@ -233,7 +232,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
             extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
             activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
-            reservoirView = (TextView) view.findViewById(R.id.overview_reservoir);
             pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
             pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
             openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
@@ -1194,28 +1192,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
         activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
         activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
-
-        if (reservoirView != null) {
-            boolean showReservoirView = SP.getBoolean(R.string.key_show_reservoirview, false);
-            int reservoirLevel = pump.isInitialized() ? (int) Math.round(pump.getReservoirLevel()) : -1;
-            if (showReservoirView && reservoirLevel != -1) {
-                int levelWarning = SP.getInt(R.string.key_reservoirview_levelwarning, 80);
-                int levelCritical = SP.getInt(R.string.key_reservoirview_levelcritical, 5);
-                reservoirView.setText(reservoirLevel + " " + MainApp.sResources.getString(R.string.insulin_unit_shortname));
-                if (reservoirLevel <= levelCritical) {
-                    reservoirView.setBackgroundColor(MainApp.gc(R.color.ribbonBgCritical));
-                    reservoirView.setTextColor(MainApp.gc(R.color.ribbonTextCritical));
-                } else if (reservoirLevel <= levelWarning) {
-                    reservoirView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
-                    reservoirView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
-                } else {
-                    reservoirView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
-                    reservoirView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
-                }
-            } else {
-                reservoirView.setVisibility(View.GONE);
-            }
-        }
 
         tempTargetView.setOnLongClickListener(view -> {
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);

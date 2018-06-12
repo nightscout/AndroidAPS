@@ -47,18 +47,6 @@
 
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                    <TextView
-                        android:id="@+id/overview_reservoir"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Reservoir"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:paddingBottom="3dp"
-                        android:paddingTop="3dp"/>
 
                     <TextView
                         android:id="@+id/overview_activeprofile"
