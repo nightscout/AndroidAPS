@@ -476,7 +476,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
     }
 
-    public PumpEnactResult updateUserSettings() {
+    public PumpEnactResult setUserOptions() {
         if (!isConnected())
             return new PumpEnactResult().success(false);
         SystemClock.sleep(300);

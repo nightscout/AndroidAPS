@@ -28,8 +28,9 @@ public class CommandSetUserSettings extends Command {
             boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
             if(isDanaRv2){
                 pump.getPumpStatus();
+                danaPump.setUserOptions();
             }
-            PumpEnactResult r = danaPump.setUserSettings();
+            PumpEnactResult r = danaPump.setUserOptions();
             if (callback != null)
                 callback.result(r).run();
         }

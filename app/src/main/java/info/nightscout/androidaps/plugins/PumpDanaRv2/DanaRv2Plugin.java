@@ -390,8 +390,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public PumpEnactResult setUserSettings() {
-        return null;
+    public PumpEnactResult setUserOptions() {
+        DanaRv2ExecutionService service = new DanaRv2ExecutionService();
+        log.debug("MsgSetingUserOptions executed!");
+        return service.setUserOptions();
     }
 
     public PumpEnactResult getUserOptions() {

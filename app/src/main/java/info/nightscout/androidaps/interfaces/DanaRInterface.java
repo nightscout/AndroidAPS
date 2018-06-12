@@ -9,5 +9,5 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 public interface DanaRInterface {
     PumpEnactResult loadHistory(byte type); // for history browser
     PumpEnactResult loadEvents(); // events history to build treatments from
-    PumpEnactResult setUserSettings(); // like AnyDana does
+    PumpEnactResult setUserOptions(); // like AnyDana does
 }
