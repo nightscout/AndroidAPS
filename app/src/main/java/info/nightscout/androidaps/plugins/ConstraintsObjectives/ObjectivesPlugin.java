@@ -56,6 +56,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
                 .showInList(!Config.NSCLIENT && !Config.G5UPLOADER)
                 .pluginName(R.string.objectives)
                 .shortName(R.string.objectives_shortname)
+                .description(R.string.description_objectives)
         );
         initializeData();
         loadProgress();

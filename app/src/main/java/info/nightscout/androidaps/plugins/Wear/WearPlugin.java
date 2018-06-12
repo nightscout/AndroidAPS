@@ -56,6 +56,7 @@ public class WearPlugin extends PluginBase {
                 .pluginName(R.string.wear)
                 .shortName(R.string.wear_shortname)
                 .preferencesId(R.xml.pref_wear)
+                .description(R.string.description_wear)
         );
         this.ctx = ctx;
     }
