@@ -37,6 +37,9 @@ public class MsgGetUserOptions extends MessageBase {
     public void handleMessage(byte[] packet) {
         DanaRPump pump = DanaRPump.getInstance();
         byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
+        for(int pos=0; pos < bytes.length; pos++) {
+            log.debug("[" + pos + "]" + bytes[pos]);
+        }
         pump.timeDisplayType = bytes[0] == (byte) 1 ? 0 : 1; // 1 -> 24h 0 -> 12h
         pump.buttonScrollOnOff = bytes[1] == (byte) 1 ? 1 : 0; // 1 -> ON, 0-> OFF
         pump.beepAndAlarm = bytes[2]; // 1 -> Sound on alarm 2-> Vibrate on alarm 3-> Both on alarm 5-> Sound + beep 6-> vibrate + beep 7-> both + beep Beep adds 4

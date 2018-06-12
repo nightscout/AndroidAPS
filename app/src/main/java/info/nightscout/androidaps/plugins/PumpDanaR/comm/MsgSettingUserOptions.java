@@ -28,6 +28,15 @@ public class MsgSettingUserOptions extends MessageBase {
     public MsgSettingUserOptions(int timeDisplayType, int buttonScrollOnOff, int beepAndAlarm, int lcdOnTimeSec, int backlightOnTimeSec, int selectedLanguage, int glucoseUnit, int shutdownHour, int lowReservoirRate, int cannulaVolume, int refillRate) {
         this();
         log.debug(" initializing MsgSetUserOptions");
+        log.debug("timeDisplayType: " + (byte) timeDisplayType);
+        log.debug("Button scroll: " + (byte) buttonScrollOnOff);
+        log.debug("BeepAndAlarm: " + (byte) beepAndAlarm);
+        log.debug("screen timeout: " + (byte) lcdOnTimeSec);
+        log.debug("Backlight: " + (byte) backlightOnTimeSec);
+        log.debug("Selected language: " + (byte) selectedLanguage);
+        log.debug("Units: " + (byte) glucoseUnit);
+        log.debug("Shutdown: " + (byte) shutdownHour);
+        log.debug("Low reservoir: " + (byte) lowReservoirRate);
         this.timeDisplayType = timeDisplayType;
         this.buttonScrollOnOff = buttonScrollOnOff;
         this.beepAndAlarm = beepAndAlarm;
@@ -39,7 +48,8 @@ public class MsgSettingUserOptions extends MessageBase {
         this.lowReservoirRate = lowReservoirRate;
         this.cannulaVolume = cannulaVolume;
         this.refillRate = refillRate;
-
+        // need to organize here
+        // glucoseunit is at pos 8 and lowReservoirRate is at pos 27
         AddParamByte((byte) timeDisplayType);
         AddParamByte((byte) buttonScrollOnOff);
         AddParamByte((byte) beepAndAlarm);
