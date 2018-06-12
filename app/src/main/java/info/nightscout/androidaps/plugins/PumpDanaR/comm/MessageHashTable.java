@@ -56,6 +56,7 @@ public class MessageHashTable {
             put(new MsgSettingGlucose());            // 0x3209 CMD_SETTING_V_GLUCOSEandEASY
             put(new MsgSettingPumpTime());           // 0x320A CMD_SETTING_V_TIME_I
             put(new MsgSettingUserOptions());        // 0x320B CMD_SETTING_V_USER_OPTIONS
+            put(new MsgGetUserOptions());            // 0x320B CMD_SETTING_V_USER_OPTIONS - trying to get uptions
             put(new MsgSettingActiveProfile());      // 0x320C CMD_SETTING_V_PROFILE_NUMBER
             put(new MsgSettingProfileRatiosAll());   // 0x320D CMD_SETTING_V_CIR_CF_VALUE
             put(new MsgSetSingleBasalProfile());     // 0x3302 CMD_SETTING_BASAL_INS_S

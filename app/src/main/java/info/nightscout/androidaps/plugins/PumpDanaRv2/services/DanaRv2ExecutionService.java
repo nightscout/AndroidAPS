@@ -18,6 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgGetUserOptions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -200,6 +201,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
+                //added by Roumen for testing
+                mSerialIOThread.sendMessage(new MsgGetUserOptions());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
@@ -473,18 +476,39 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
     }
 
-    public PumpEnactResult updateUserSettings() {
-        if (!isConnected())
-            return new PumpEnactResult().success(false);
+    public PumpEnactResult setUserOptions() {
+        if (!isConnected()) {
+            log.debug("MsgSetUserOptions - service is not connected");
+//            return new PumpEnactResult().success(false);
+            connect();
+        }
         SystemClock.sleep(300);
-        MsgSettingUserOptions msg;
-
+        DanaRPump pump = DanaRPump.getInstance();
+        MsgSettingUserOptions msg = new MsgSettingUserOptions(pump.timeDisplayType, pump.buttonScrollOnOff, pump.beepAndAlarm, pump.lcdOnTimeSec, pump.backlightOnTimeSec, pump.selectedLanguage, pump.units, pump.shutdownHour, pump.lowReservoirRate, 0, 0);
+        if (mSerialIOThread != null) {
+            mSerialIOThread.disconnect("MsgSetUserOptions - Recreate SerialIOThread");
+        }
+        mSerialIOThread = new SerialIOThread(mRfcommSocket);
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
         mSerialIOThread.sendMessage(msg);
         while (!msg.done && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);
         }
         SystemClock.sleep(200);
         mDanaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
+    }
+
+    public PumpEnactResult getUserOptions() {
+        if (!isConnected()) {
+            log.debug("MsgGetUserOptions fails - disconnected!");
+            connect();
+//            return new PumpEnactResult().success(false);
+        }
+        MsgGetUserOptions msg = new MsgGetUserOptions();
+//        mSerialIOThread.sendMessage(msg); // == null
+        mDanaRPump.lastConnection = System.currentTimeMillis();
+        log.debug("MsgGetUserOptions executed!");
         return new PumpEnactResult().success(true);
     }
 }

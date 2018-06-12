@@ -381,7 +381,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public PumpEnactResult setUserSettings() {
+    public PumpEnactResult setUserOptions() {
         return null;
     }
 }

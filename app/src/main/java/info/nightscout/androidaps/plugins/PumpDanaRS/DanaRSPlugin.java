@@ -224,7 +224,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public PumpEnactResult setUserSettings() {
+    public PumpEnactResult setUserOptions() {
         return danaRSService.setUserSettings();
     }
 
