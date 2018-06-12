@@ -21,9 +21,11 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NumberPicker;
 
@@ -81,8 +83,7 @@ public class DanaRUserOptionsActivity extends Activity {
 
         saveToPumpButton.setOnClickListener(v -> onSaveClick());
 
-        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
-        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
+        boolean isv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
 
 
         DanaRPump pump = DanaRPump.getInstance();
@@ -95,7 +96,20 @@ public class DanaRUserOptionsActivity extends Activity {
                 + "\nbacklight:" + pump.backlightOnTimeSec
                 + "\npumpUnits:" + pump.units
                 + "\nlowReservoir:" + pump.lowReservoirRate);
+        log.debug("isV2:"+isv2);
+        if(isv2 && pump.lowReservoirRate < 10){
+            log.debug("No user settings loaded forcing reload!");
+            DanaRv2Plugin.getPlugin().getUserOptions();
+            log.debug("UserOptionsLoaded:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
+                    + "\ntimeDisplayType:" + pump.timeDisplayType
+                    + "\nbuttonScroll:" + pump.buttonScrollOnOff
+                    + "\ntimeDisplayType:" + pump.timeDisplayType
+                    + "\nlcdOnTimeSec:" + pump.lcdOnTimeSec
+                    + "\nbacklight:" + pump.backlightOnTimeSec
+                    + "\npumpUnits:" + pump.units
+                    + "\nlowReservoir:" + pump.lowReservoirRate);
 
+        }
 
         screenTimeout.setParams((double) pump.lcdOnTimeSec, 5d, 240d, 5d, new DecimalFormat("1"), false);
         backlightTimeout.setParams((double) pump.backlightOnTimeSec, 1d, 60d, 1d, new DecimalFormat("1"), false);
@@ -111,9 +125,9 @@ public class DanaRUserOptionsActivity extends Activity {
     public void setData() {
         DanaRPump pump = DanaRPump.getInstance();
 
-        timeFormat.setChecked(pump.timeDisplayType == 0);
+        timeFormat.setChecked(pump.timeDisplayType != 0);
         buttonScroll.setChecked(pump.buttonScrollOnOff != 0);
-        beep.setChecked(pump.beepAndAlarm != 0);
+        beep.setChecked(pump.beepAndAlarm < 5);
         screenTimeout.setValue((double) pump.lcdOnTimeSec);
         backlightTimeout.setValue((double) pump.backlightOnTimeSec);
         pumpUnits.setChecked(pump.getUnits() != null && pump.getUnits().equals(Constants.MMOL));
@@ -128,9 +142,14 @@ public class DanaRUserOptionsActivity extends Activity {
 
     public void onSaveClick() {
         boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
-        if (!isRS) {
-            //exit if pump is not DanaRS
+        boolean isDanaR = MainApp.getSpecificPlugin(DanaRPlugin.class) != null && MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PUMP);
+        boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
+        if (!isRS && !isDanaR && !isDanaRv2) {
+            //exit if pump is not DanaRS, Dana!, or DanaR with upgraded firmware
             return;
+        }
+        if (isDanaRv2) {
+            DanaRv2Plugin.getPlugin().getUserOptions();
         }
         DanaRPump pump = DanaRPump.getInstance();
 
@@ -143,13 +162,13 @@ public class DanaRUserOptionsActivity extends Activity {
         else
             pump.buttonScrollOnOff = 0;
         // step is 5 seconds
-        int screenTimeoutValue = (Integer.parseInt(screenTimeout.getText().toString()) / 5) * 5;
+        int screenTimeoutValue = !screenTimeout.getText().isEmpty() ? (Integer.parseInt(screenTimeout.getText().toString()) / 5) * 5: 5;
         if (screenTimeoutValue > 4 && screenTimeoutValue < 241) {
             pump.lcdOnTimeSec = screenTimeoutValue;
         } else {
             pump.lcdOnTimeSec = 5;
         }
-        int backlightTimeoutValue = Integer.parseInt(backlightTimeout.getText().toString());
+        int backlightTimeoutValue = !backlightTimeout.getText().isEmpty() ? Integer.parseInt(backlightTimeout.getText().toString()): 1;
         if (backlightTimeoutValue > 0 && backlightTimeoutValue < 61) {
             pump.backlightOnTimeSec = backlightTimeoutValue;
         }
@@ -158,13 +177,13 @@ public class DanaRUserOptionsActivity extends Activity {
         } else {
             pump.units = 0;
         }
-        int shutDownValue = Integer.parseInt(shutdown.getText().toString());
+        int shutDownValue = !shutdown.getText().isEmpty() ? Integer.parseInt(shutdown.getText().toString()) : 0;
         if (shutDownValue > -1 && shutDownValue < 25) {
             pump.shutdownHour = shutDownValue;
         } else {
             pump.shutdownHour = 0;
         }
-        int lowReservoirValue = (Integer.parseInt(lowReservoir.getText().toString()) * 10) / 10;
+        int lowReservoirValue = !lowReservoir.getText().isEmpty() ? (Integer.parseInt(lowReservoir.getText().toString()) * 10) / 10 : 10;
         if (lowReservoirValue > 9 && lowReservoirValue < 51) {
             pump.lowReservoirRate = lowReservoirValue;
         } else

@@ -44,15 +44,15 @@ public class MsgSettingUserOptions extends MessageBase {
         this.cannulaVolume = cannulaVolume;
         this.refillRate = refillRate;
 
-        AddParamByte((byte) timeDisplayType);
-        AddParamByte((byte) buttonScrollOnOff);
-        AddParamByte((byte) beepAndAlarm);
-        AddParamByte((byte) lcdOnTimeSec);
-        AddParamByte((byte) backlightOnTimeSec);
-        AddParamByte((byte) selectedLanguage);
-        AddParamByte((byte) glucoseUnit);
-        AddParamByte((byte) shutdownHour);
-        AddParamByte((byte) lowReservoirRate);
+        AddParamInt(timeDisplayType);
+        AddParamInt(buttonScrollOnOff);
+        AddParamInt(beepAndAlarm);
+        AddParamInt(lcdOnTimeSec);
+        AddParamInt(backlightOnTimeSec);
+        AddParamInt(selectedLanguage);
+        AddParamInt(glucoseUnit);
+        AddParamInt(shutdownHour);
+        AddParamInt(lowReservoirRate);
     }
 
     private static Logger log = LoggerFactory.getLogger(MsgSettingUserOptions.class);

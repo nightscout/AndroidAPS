@@ -18,6 +18,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgGetUserOptions;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -380,6 +382,30 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
+    }
+
+    public PumpEnactResult getUserOptions() {
+        if (!isConnected())
+            return new PumpEnactResult().success(false);
+        DanaRPump pump = DanaRPump.getInstance();
+        MsgGetUserOptions msg = new MsgGetUserOptions();
+        mDanaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
+    }
+
+    public PumpEnactResult updateUserOptions() {
+        if (!isConnected())
+            return new PumpEnactResult().success(false);
+        DanaRPump pump = DanaRPump.getInstance();
+        MsgSettingUserOptions msg = new MsgSettingUserOptions(pump.timeDisplayType, pump.buttonScrollOnOff, pump.beepAndAlarm, pump.lcdOnTimeSec, pump.backlightOnTimeSec, pump.selectedLanguage, pump.units, pump.shutdownHour, pump.lowReservoirRate, 0, 0);
+
+        mSerialIOThread.sendMessage(msg);
+        while (!msg.done && mRfcommSocket.isConnected()) {
+            SystemClock.sleep(100);
+        }
+        SystemClock.sleep(200);
+        mDanaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
     }
 
     @Subscribe

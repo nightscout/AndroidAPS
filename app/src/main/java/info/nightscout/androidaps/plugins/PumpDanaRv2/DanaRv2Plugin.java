@@ -394,4 +394,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return null;
     }
 
+    public PumpEnactResult getUserOptions() {
+        DanaRv2ExecutionService service = new DanaRv2ExecutionService();
+        log.debug("MsgGetUserOptions executed!");
+        return service.getUserOptions();
+    }
+
 }

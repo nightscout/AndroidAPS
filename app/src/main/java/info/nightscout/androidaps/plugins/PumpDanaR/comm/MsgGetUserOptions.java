@@ -34,16 +34,17 @@ public class MsgGetUserOptions extends MessageBase {
         SetCommand(0x320B);
     }
 
-    public void handleMessage(byte[] bytes) {
+    public void handleMessage(byte[] packet) {
         DanaRPump pump = DanaRPump.getInstance();
-        pump.timeDisplayType = bytes[0] == (byte) 1 ? 0 : 1;
-        pump.buttonScrollOnOff = bytes[1];
-        pump.beepAndAlarm = bytes[2];
+        byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
+        pump.timeDisplayType = bytes[0] == (byte) 1 ? 0 : 1; // 1 -> 24h 0 -> 12h
+        pump.buttonScrollOnOff = bytes[1] == (byte) 1 ? 1 : 0; // 1 -> ON, 0-> OFF
+        pump.beepAndAlarm = bytes[2]; // 1 -> Sound on alarm 2-> Vibrate on alarm 3-> Both on alarm 5-> Sound + beep 6-> vibrate + beep 7-> both + beep Beep adds 4
         pump.lcdOnTimeSec = bytes[3] & 255;
         pump.backlightOnTimeSec = bytes[4] & 255;
-        pump.selectedLanguage = bytes[5];
+        pump.selectedLanguage = bytes[5]; // on DanaRv2 is that needed ?
         pump.units = bytes[8];
-        pump.shutdownHour = bytes[9] & 255;
+        pump.shutdownHour = bytes[9];
         pump.lowReservoirRate = bytes[32] & 255;
         /* int selectableLanguage1 = bytes[10];
         int selectableLanguage2 = bytes[11];
@@ -52,7 +53,8 @@ public class MsgGetUserOptions extends MessageBase {
         int selectableLanguage5 = bytes[14];
         */
 
-        if (Config.logDanaMessageDetail) {
+//        if (Config.logDanaMessageDetail) {
+
             log.debug("timeDisplayType: " + pump.timeDisplayType);
             log.debug("Button scroll: " + pump.buttonScrollOnOff);
             log.debug("BeepAndAlarm: " + pump.beepAndAlarm);
@@ -62,6 +64,14 @@ public class MsgGetUserOptions extends MessageBase {
             log.debug("Units: " + pump.getUnits());
             log.debug("Shutdown: " + pump.shutdownHour);
             log.debug("Low reservoir: " + pump.lowReservoirRate);
+//        }
+    }
+    public static byte[] getDataBytes(byte[] bytes, int start, int len) {
+        if (bytes == null) {
+            return null;
         }
+        byte[] ret = new byte[len];
+        System.arraycopy(bytes, start + 6, ret, 0, len);
+        return ret;
     }
 }
