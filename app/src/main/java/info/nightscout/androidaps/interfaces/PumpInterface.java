@@ -35,6 +35,8 @@ public interface PumpInterface {
 
     double getReservoirLevel();
 
+    int getBatteryLevel();  // in percent as integer
+
     PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo);
     void stopBolusDelivering();
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew);
