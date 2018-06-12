@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.queue.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
@@ -14,7 +17,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandSetUserSettings extends Command {
-
+    private static Logger log = LoggerFactory.getLogger(CommandSetUserSettings.class);
     public CommandSetUserSettings(Callback callback) {
         commandType = CommandType.SETUSERSETTINGS;
         this.callback = callback;
@@ -27,8 +30,7 @@ public class CommandSetUserSettings extends Command {
             DanaRInterface danaPump = (DanaRInterface) pump;
             boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
             if(isDanaRv2){
-                pump.getPumpStatus();
-                danaPump.setUserOptions();
+                log.debug("MsgSetUserOptions detected for DanaRv2");
             }
             PumpEnactResult r = danaPump.setUserOptions();
             if (callback != null)

@@ -382,7 +382,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public PumpEnactResult setUserSettings() {
+    public PumpEnactResult setUserOptions() {
         return null;
     }
 }

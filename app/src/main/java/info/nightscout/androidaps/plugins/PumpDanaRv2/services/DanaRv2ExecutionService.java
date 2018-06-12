@@ -477,12 +477,19 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     }
 
     public PumpEnactResult setUserOptions() {
-        if (!isConnected())
-            return new PumpEnactResult().success(false);
+        if (!isConnected()) {
+            log.debug("MsgSetUserOptions - service is not connected");
+//            return new PumpEnactResult().success(false);
+            connect();
+        }
         SystemClock.sleep(300);
         DanaRPump pump = DanaRPump.getInstance();
         MsgSettingUserOptions msg = new MsgSettingUserOptions(pump.timeDisplayType, pump.buttonScrollOnOff, pump.beepAndAlarm, pump.lcdOnTimeSec, pump.backlightOnTimeSec, pump.selectedLanguage, pump.units, pump.shutdownHour, pump.lowReservoirRate, 0, 0);
-
+        if (mSerialIOThread != null) {
+            mSerialIOThread.disconnect("MsgSetUserOptions - Recreate SerialIOThread");
+        }
+        mSerialIOThread = new SerialIOThread(mRfcommSocket);
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
         mSerialIOThread.sendMessage(msg);
         while (!msg.done && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);

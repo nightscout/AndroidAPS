@@ -4,11 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 05.07.2016.
@@ -32,6 +27,7 @@ public class MsgSettingUserOptions extends MessageBase {
 
     public MsgSettingUserOptions(int timeDisplayType, int buttonScrollOnOff, int beepAndAlarm, int lcdOnTimeSec, int backlightOnTimeSec, int selectedLanguage, int glucoseUnit, int shutdownHour, int lowReservoirRate, int cannulaVolume, int refillRate) {
         this();
+        log.debug(" initializing MsgSetUserOptions");
         this.timeDisplayType = timeDisplayType;
         this.buttonScrollOnOff = buttonScrollOnOff;
         this.beepAndAlarm = beepAndAlarm;
@@ -44,15 +40,15 @@ public class MsgSettingUserOptions extends MessageBase {
         this.cannulaVolume = cannulaVolume;
         this.refillRate = refillRate;
 
-        AddParamInt(timeDisplayType);
-        AddParamInt(buttonScrollOnOff);
-        AddParamInt(beepAndAlarm);
-        AddParamInt(lcdOnTimeSec);
-        AddParamInt(backlightOnTimeSec);
-        AddParamInt(selectedLanguage);
-        AddParamInt(glucoseUnit);
-        AddParamInt(shutdownHour);
-        AddParamInt(lowReservoirRate);
+        AddParamByte((byte) timeDisplayType);
+        AddParamByte((byte) buttonScrollOnOff);
+        AddParamByte((byte) beepAndAlarm);
+        AddParamByte((byte) lcdOnTimeSec);
+        AddParamByte((byte) backlightOnTimeSec);
+        AddParamByte((byte) selectedLanguage);
+        AddParamByte((byte) glucoseUnit);
+        AddParamByte((byte) shutdownHour);
+        AddParamByte((byte) lowReservoirRate);
     }
 
     private static Logger log = LoggerFactory.getLogger(MsgSettingUserOptions.class);
@@ -62,6 +58,7 @@ public class MsgSettingUserOptions extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
+        log.debug("Entering handleMessage ");
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
