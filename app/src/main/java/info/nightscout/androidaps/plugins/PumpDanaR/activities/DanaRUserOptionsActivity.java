@@ -115,7 +115,23 @@ public class DanaRUserOptionsActivity extends Activity {
         backlightTimeout.setParams((double) pump.backlightOnTimeSec, 1d, 60d, 1d, new DecimalFormat("1"), false);
         shutdown.setParams((double) pump.shutdownHour, 0d, 24d, 1d, new DecimalFormat("1"), true);
         lowReservoir.setParams((double) pump.lowReservoirRate, 10d, 60d, 10d, new DecimalFormat("10"), false);
-
+        switch (pump.beepAndAlarm) {
+            case 1: pumpAlarmSound.setChecked(true);
+                break;
+            case 2: pumpAlarmVibrate.setChecked(true);
+                break;
+            case 3: pumpAlarmBoth.setChecked(true);
+                break;
+            case 5: pumpAlarmSound.setChecked(true);
+                beep.setChecked(true);
+                break;
+            case 6: pumpAlarmVibrate.setChecked(true);
+                beep.setChecked(true);
+                break;
+            case 7: pumpAlarmBoth.setChecked(true);
+                beep.setChecked(true);
+                break;
+        }
         if (pump.lastSettingsRead == 0)
             log.debug("No settings loaded from pump!");
         else
@@ -127,7 +143,7 @@ public class DanaRUserOptionsActivity extends Activity {
 
         timeFormat.setChecked(pump.timeDisplayType != 0);
         buttonScroll.setChecked(pump.buttonScrollOnOff != 0);
-        beep.setChecked(pump.beepAndAlarm < 5);
+        beep.setChecked(pump.beepAndAlarm > 4);
         screenTimeout.setValue((double) pump.lcdOnTimeSec);
         backlightTimeout.setValue((double) pump.backlightOnTimeSec);
         pumpUnits.setChecked(pump.getUnits() != null && pump.getUnits().equals(Constants.MMOL));
