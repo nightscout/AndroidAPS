@@ -95,6 +95,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalcul
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewCarbsDialog;
@@ -153,6 +154,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView cage;
     TextView sage;
     TextView pbage;
+
+    TextView iageView;
+    TextView cageView;
+    TextView reservoirView;
+    TextView sageView;
+    TextView pbageView;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -251,6 +258,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cage = (TextView) view.findViewById(R.id.careportal_canulaage);
             sage = (TextView) view.findViewById(R.id.careportal_sensorage);
             pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+
+            iageView = (TextView) view.findViewById(R.id.overview_insulinage);
+            cageView = (TextView) view.findViewById(R.id.overview_canulaage);
+            reservoirView = (TextView) view.findViewById(R.id.overview_reservoirlevel);
+            sageView = (TextView) view.findViewById(R.id.overview_sensorage);
+            pbageView = (TextView) view.findViewById(R.id.overview_pbage);
 
             bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
             iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -1304,6 +1317,67 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
+        CareportalEvent careportalEvent;
+        NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+
+        double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 120);
+        double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 96);
+        double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 48);
+        double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 24);
+        double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 504);
+        double sageWarn = nsSettings.getExtendedWarnValue("sage", "warn", 336);
+        double pbageUrgent = nsSettings.getExtendedWarnValue("pgage", "urgent", 672);
+        double pbageWarn = nsSettings.getExtendedWarnValue("pgage", "warn", 504);
+
+        if (cageView != null) {
+            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
+            if (careportalEvent != null) {
+                cageView.setTextColor(determineTextColor(careportalEvent, cageWarn, cageUrgent));
+                cageView.setText("CAN"); //: " + careportalEvent.age());
+            } else {
+                cageView.setText("n/a");
+            }
+        }
+
+        if (iageView != null) {
+            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
+            if (careportalEvent != null) {
+                iageView.setTextColor(determineTextColor(careportalEvent, iageWarn, iageUrgent));
+                iageView.setText("INS"); //: + careportalEvent.age());
+            } else {
+                iageView.setText("n/a");
+            }
+        }
+
+        if (reservoirView != null) {
+            if (pump.isInitialized() && pump.getReservoirLevel() < 50) {
+                reservoirView.setTextColor(MainApp.gc(R.color.low));
+            } else {
+                reservoirView.setTextColor(MainApp.gc(R.color.colorLightGray));
+            }
+            reservoirView.setText("RES");
+        }
+
+        if (sageView != null) {
+            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
+            if (careportalEvent != null) {
+                sageView.setTextColor(determineTextColor(careportalEvent, sageWarn, sageUrgent));
+                sageView.setText("SEN"); // + careportalEvent.age());
+            } else {
+                sageView.setText("n/a");
+            }
+        }
+
+        if (pbageView != null) {
+            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
+            if (careportalEvent != null) {
+                pbageView.setTextColor(determineTextColor(careportalEvent, pbageWarn, pbageUrgent));
+                pbageView.setText("BAT"); //careportalEvent.age());
+            } else {
+                pbageView.setText("n/a");
+            }
+        }
+
         final boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
         // pump status from ns
         if (pumpDeviceStatusView != null) {
@@ -1463,6 +1537,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             notificationsView.setVisibility(View.VISIBLE);
         } else {
             notificationsView.setVisibility(View.GONE);
+        }
+    }
+
+    public static int determineTextColor(CareportalEvent careportalEvent, double warnThreshold, double urgentThreshold) {
+        if (careportalEvent.isOlderThan(urgentThreshold)) {
+            return MainApp.gc(R.color.low);
+        } else if (careportalEvent.isOlderThan(warnThreshold)) {
+            return MainApp.gc(R.color.high);
+        } else {
+            return MainApp.gc(R.color.colorLightGray);
         }
     }
 
