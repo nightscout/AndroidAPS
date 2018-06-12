@@ -405,7 +405,7 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean setUserSettings(Callback callback) {
+    public boolean setUserOptions(Callback callback) {
         if (isRunning(Command.CommandType.SETUSERSETTINGS)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
