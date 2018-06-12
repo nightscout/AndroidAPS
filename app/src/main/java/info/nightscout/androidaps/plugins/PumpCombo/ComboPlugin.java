@@ -423,6 +423,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return pump.basalProfile.hourlyRates[currentHour];
     }
 
+    @Override
+    public double getReservoirLevel() {
+        return pump.reservoirLevel;
+    }
+
     private static BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
         switch (state) {

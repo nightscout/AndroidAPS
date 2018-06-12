@@ -625,6 +625,8 @@
     <string name="tempbasal">TBR</string>
     <string name="danar_history">Pumpen-Speicher</string>
     <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Wizard. Nicht aktivieren, wenn du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
+    <string name="show_reservoirview">Zeige Reservoir-Füllstand in Übersicht</string>
+    <string name="show_reservoirview_summary">Zeigt den Füllstand des Reservoirs in der Übersicht an.</string>
     <string name="gettingbolusstatus">Status des Bolus wird ermittelt</string>
     <string name="pairing">PAIRING</string>
     <string name="startingbolus">Bolus-Abgabe gestartet</string>

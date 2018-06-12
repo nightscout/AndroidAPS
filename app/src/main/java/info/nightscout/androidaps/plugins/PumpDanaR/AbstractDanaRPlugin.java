@@ -151,6 +151,9 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
+    public double getReservoirLevel() { return pump.reservoirRemainingUnits; }
+
+    @Override
     public void stopBolusDelivering() {
         if (sExecutionService == null) {
             log.error("stopBolusDelivering sExecutionService is null");

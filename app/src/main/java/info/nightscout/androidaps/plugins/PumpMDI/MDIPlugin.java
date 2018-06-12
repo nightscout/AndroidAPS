@@ -130,6 +130,9 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
+    public double getReservoirLevel() { return -1; }
+
+    @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

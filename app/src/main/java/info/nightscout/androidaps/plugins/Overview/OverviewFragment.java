@@ -134,6 +134,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView baseBasalView;
     TextView extendedBolusView;
     TextView activeProfileView;
+    TextView reservoirView;
     TextView iobView;
     TextView cobView;
     TextView apsModeView;
@@ -232,6 +233,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
             extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
             activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
+            reservoirView = (TextView) view.findViewById(R.id.overview_reservoir);
             pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
             pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
             openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
@@ -1040,25 +1042,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
-            apsModeView.setBackgroundColor(MainApp.gc(R.color.loopenabled));
-            apsModeView.setTextColor(Color.BLACK);
+            apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
+            apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
             if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuperBolus()) {
-                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(Color.WHITE);
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isDisconnected()) {
-                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(Color.WHITE);
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuspended()) {
-                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(Color.WHITE);
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (pump.isSuspended()) {
-                apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
                 apsModeView.setText(MainApp.gs(R.string.pumpsuspended));
-                apsModeView.setTextColor(Color.WHITE);
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
                 if (closedLoopEnabled.value()) {
                     apsModeView.setText(MainApp.gs(R.string.closedloop));
@@ -1066,9 +1068,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     apsModeView.setText(MainApp.gs(R.string.openloop));
                 }
             } else {
-                apsModeView.setBackgroundColor(MainApp.gc(R.color.loopdisabled));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonBgCritical));
                 apsModeView.setText(MainApp.gs(R.string.disabledloop));
-                apsModeView.setTextColor(Color.WHITE);
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextCritical));
             }
         } else {
             apsModeView.setVisibility(View.GONE);
@@ -1077,13 +1079,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // temp target
         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
-            tempTargetView.setTextColor(Color.BLACK);
-            tempTargetView.setBackgroundColor(MainApp.gc(R.color.tempTargetBackground));
+            tempTargetView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
+            tempTargetView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
             tempTargetView.setVisibility(View.VISIBLE);
             tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
         } else {
-            tempTargetView.setTextColor(Color.WHITE);
-            tempTargetView.setBackgroundColor(MainApp.gc(R.color.tempTargetDisabledBackground));
+            tempTargetView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
+            tempTargetView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
@@ -1190,7 +1192,30 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
-        activeProfileView.setBackgroundColor(Color.GRAY);
+        activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
+        activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
+
+        if (reservoirView != null) {
+            boolean showReservoirView = SP.getBoolean(R.string.key_show_reservoirview, false);
+            int reservoirLevel = pump.isInitialized() ? (int) Math.round(pump.getReservoirLevel()) : -1;
+            if (showReservoirView && reservoirLevel != -1) {
+                int levelWarning = SP.getInt(R.string.key_reservoirview_levelwarning, 80);
+                int levelCritical = SP.getInt(R.string.key_reservoirview_levelcritical, 5);
+                reservoirView.setText(reservoirLevel + " " + MainApp.sResources.getString(R.string.insulin_unit_shortname));
+                if (reservoirLevel <= levelCritical) {
+                    reservoirView.setBackgroundColor(MainApp.gc(R.color.ribbonBgCritical));
+                    reservoirView.setTextColor(MainApp.gc(R.color.ribbonTextCritical));
+                } else if (reservoirLevel <= levelWarning) {
+                    reservoirView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
+                    reservoirView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
+                } else {
+                    reservoirView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
+                    reservoirView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
+                }
+            } else {
+                reservoirView.setVisibility(View.GONE);
+            }
+        }
 
         tempTargetView.setOnLongClickListener(view -> {
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
