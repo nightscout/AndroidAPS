@@ -43,6 +43,7 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
                 .pluginName(R.string.sensitivityweightedaverage)
                 .shortName(R.string.sensitivity_shortname)
                 .preferencesId(R.xml.pref_absorption_aaps)
+                .description(R.string.description_sensitivity_weighted_average)
         );
     }
 

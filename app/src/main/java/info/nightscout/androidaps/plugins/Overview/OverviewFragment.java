@@ -672,12 +672,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     private void onClickAcceptTemp() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
+        Context context = getContext();
+
+        if (context == null) return;
 
         if (LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && profile != null) {
             LoopPlugin.getPlugin().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(MainApp.gs(R.string.confirmation));
                 builder.setMessage(MainApp.gs(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {

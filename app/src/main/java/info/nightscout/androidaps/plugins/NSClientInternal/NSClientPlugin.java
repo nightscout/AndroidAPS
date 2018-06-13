@@ -69,6 +69,7 @@ public class NSClientPlugin extends PluginBase {
                 .pluginName(R.string.nsclientinternal)
                 .shortName(R.string.nsclientinternal_shortname)
                 .preferencesId(R.xml.pref_nsclientinternal)
+                .description(R.string.description_ns_client)
         );
 
         if (Config.NSCLIENT || Config.G5UPLOADER) {
