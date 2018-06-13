@@ -17,6 +17,7 @@ public class ActionsPlugin extends PluginBase {
                 .fragmentClass(ActionsFragment.class.getName())
                 .pluginName(R.string.actions)
                 .shortName(R.string.actions_shortname)
+                .description(R.string.description_actions)
         );
     }
 }
