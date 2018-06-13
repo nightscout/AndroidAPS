@@ -185,10 +185,6 @@ public class DanaRUserOptionsActivity extends Activity {
         } else
             pump.lowReservoirRate = 10;
 
-        if (isDanaRv2) {
-            DanaRv2Plugin.getPlugin().setUserOptions();
-        }
-
         MainApp.getConfigBuilder().getCommandQueue().setUserOptions(null);
         finish();
     }
