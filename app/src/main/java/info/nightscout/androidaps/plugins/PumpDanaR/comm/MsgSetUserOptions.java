@@ -49,49 +49,4 @@ public class MsgSetUserOptions extends MessageBase {
         }
     }
 
-    public byte[] getCommByte(int cmd, byte[] data) {
-        int len = (data == null ? 0 : data.length) + 3;
-        byte[] btSendData = new byte[(len + 7)];
-        byte[] csr = new byte[2];
-        byte[] crcData = new byte[len];
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        btSendData[0] = (byte) 126;
-        btSendData[1] = (byte) 126;
-        btSendData[2] = (byte) len;
-        btSendData[3] = (byte) 241;
-        btSendData[4] = (byte) ((cmd >> 8) & 255);
-        btSendData[5] = (byte) (cmd & 255);
-        if (len > 3) {
-            System.arraycopy(data, 0, btSendData, 6, len - 3);
-        }
-        System.arraycopy(btSendData, 3, crcData, 0, len);
-        int crc_result = GenerateCrc(crcData, len) & SupportMenu.USER_MASK;
-        csr[0] = (byte) (crc_result & 255);
-        csr[1] = (byte) ((crc_result >> 8) & 255);
-        btSendData[len + 3] = csr[1];
-        btSendData[len + 4] = csr[0];
-        btSendData[len + 5] = (byte) 46;
-        btSendData[len + 6] = (byte) 46;
-        return btSendData;
-    }
-
-    public static int GenerateCrc(byte[] send_buf, int len) {
-        int crc = 0;
-        for (int i = 0; i < len; i++) {
-            crc = Crc16(send_buf[i], crc);
-        }
-        return crc;
-    }
-
-    static int Crc16(byte byte1, int crc) {
-        int li_crc = ((((crc >> 8) | (crc << 8)) & SupportMenu.USER_MASK) ^ (byte1 & 255)) & SupportMenu.USER_MASK;
-        li_crc = (li_crc ^ ((li_crc & 255) >> 4)) & SupportMenu.USER_MASK;
-        li_crc = (li_crc ^ ((li_crc << 8) << 4)) & SupportMenu.USER_MASK;
-        return (li_crc ^ (((li_crc & 255) << 4) << 1)) & SupportMenu.USER_MASK;
-    }
-
 }
