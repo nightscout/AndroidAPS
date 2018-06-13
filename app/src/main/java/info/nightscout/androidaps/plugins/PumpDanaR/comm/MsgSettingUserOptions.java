@@ -41,6 +41,9 @@ public class MsgSettingUserOptions extends MessageBase {
         int selectableLanguage4 = bytes[13];
         int selectableLanguage5 = bytes[14];
         */
+        for(int i=0; i<pump.userOptionsFrompump.length; i++){
+            log.debug("rgDebug:userOptions["+i+"]="+pump.userOptionsFrompump[i]);
+        }
 
 //        if (Config.logDanaMessageDetail) {
 

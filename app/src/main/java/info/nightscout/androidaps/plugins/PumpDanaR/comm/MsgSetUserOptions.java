@@ -14,19 +14,6 @@ public class MsgSetUserOptions extends MessageBase {
 
     private static Logger log = LoggerFactory.getLogger(MsgSetUserOptions.class);
 
-    private int backlightOnTimeSec;
-    private int beepAndAlarm;
-    private int buttonScrollOnOff;
-    private int cannulaVolume;
-    private int error;
-    private int glucoseUnit;
-    private int lcdOnTimeSec;
-    private int lowReservoirRate;
-    private int refillRate;
-    private int selectedLanguage;
-    private int shutdownHour;
-    private int timeDisplayType;
-    byte[] newOptions;
     public boolean done;
 
     public MsgSetUserOptions(int timeDisplayType, int buttonScrollOnOff, int beepAndAlarm, int lcdOnTimeSec, int backlightOnTimeSec, int selectedLanguage, int glucoseUnit, int shutdownHour, int lowReservoirRate, int cannulaVolume, int refillRate) {
@@ -48,37 +35,45 @@ public class MsgSetUserOptions extends MessageBase {
         log.debug("Units: " + (byte) glucoseUnit);
         log.debug("Shutdown: " + (byte) shutdownHour);
         log.debug("Low reservoir: " + (byte) lowReservoirRate);
-        this.timeDisplayType = timeDisplayType;
-        this.buttonScrollOnOff = buttonScrollOnOff;
-        this.beepAndAlarm = beepAndAlarm;
-        this.lcdOnTimeSec = lcdOnTimeSec;
-        this.backlightOnTimeSec = backlightOnTimeSec;
-        this.selectedLanguage = selectedLanguage;
-        this.glucoseUnit = glucoseUnit;
-        this.shutdownHour = shutdownHour;
-        this.lowReservoirRate = lowReservoirRate;
-        this.cannulaVolume = cannulaVolume;
-        this.refillRate = refillRate;
-        pump.userOptionsFrompump[0] = (byte) (timeDisplayType == 1 ? 0 : 1);
-        pump.userOptionsFrompump[1] = (byte) buttonScrollOnOff;
-        pump.userOptionsFrompump[2] = (byte) beepAndAlarm;
-        pump.userOptionsFrompump[3] = (byte) lcdOnTimeSec;
-        pump.userOptionsFrompump[4] = (byte) backlightOnTimeSec;
-        pump.userOptionsFrompump[5] = (byte) selectedLanguage;
-        pump.userOptionsFrompump[8] = (byte) glucoseUnit;
-        pump.userOptionsFrompump[9] = (byte) shutdownHour;
-        pump.userOptionsFrompump[27] = (byte) lowReservoirRate;
+        pump.userOptionsFrompump[0] = (byte) (pump.timeDisplayType == 1 ? 0 : 1);
+        pump.userOptionsFrompump[1] = (byte) pump.buttonScrollOnOff;
+        pump.userOptionsFrompump[2] = (byte) pump.beepAndAlarm;
+        pump.userOptionsFrompump[3] = (byte) pump.lcdOnTimeSec;
+        pump.userOptionsFrompump[4] = (byte) pump.backlightOnTimeSec;
+        pump.userOptionsFrompump[5] = (byte) pump.selectedLanguage;
+        pump.userOptionsFrompump[8] = (byte) pump.units;
+        pump.userOptionsFrompump[9] = (byte) pump.shutdownHour;
+        pump.userOptionsFrompump[27] = (byte) pump.lowReservoirRate;
         for(int i=0; i<pump.userOptionsFrompump.length; i++){
-            AddParamByte(pump.userOptionsFrompump[i]);
+//            AddParamByte(pump.userOptionsFrompump[i]);
+            log.debug("rgDebug:userOptions["+i+"]="+pump.userOptionsFrompump[i]);
         }
     }
 
     public MsgSetUserOptions() {
         SetCommand(0x330B);
+        DanaRPump pump = DanaRPump.getInstance();
+        if (pump.userOptionsFrompump == null) {
+            // No options set -> Exitting
+            log.debug("NO USER OPTIONS LOADED EXITTING!");
+            return;
+        }
+        pump.userOptionsFrompump[0] = (byte) (pump.timeDisplayType == 1 ? 0 : 1);
+        pump.userOptionsFrompump[1] = (byte) pump.buttonScrollOnOff;
+        pump.userOptionsFrompump[2] = (byte) pump.beepAndAlarm;
+        pump.userOptionsFrompump[3] = (byte) pump.lcdOnTimeSec;
+        pump.userOptionsFrompump[4] = (byte) pump.backlightOnTimeSec;
+        pump.userOptionsFrompump[5] = (byte) pump.selectedLanguage;
+        pump.userOptionsFrompump[8] = (byte) pump.units;
+        pump.userOptionsFrompump[9] = (byte) pump.shutdownHour;
+        pump.userOptionsFrompump[27] = (byte) pump.lowReservoirRate;
+        for(int i=0; i<pump.userOptionsFrompump.length; i++){
+            AddParamByte(pump.userOptionsFrompump[i]);
+            log.debug("rgDebug:userOptions["+i+"]="+pump.userOptionsFrompump[i]);
+        }
     }
 
     public void handleMessage(byte[] bytes) {
-        log.debug("Entering handleMessage ");
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
