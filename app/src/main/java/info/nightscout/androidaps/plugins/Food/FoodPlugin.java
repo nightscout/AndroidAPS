@@ -26,6 +26,7 @@ public class FoodPlugin extends PluginBase {
                 .fragmentClass(FoodFragment.class.getName())
                 .pluginName(R.string.food)
                 .shortName(R.string.food_short)
+                .description(R.string.description_food)
         );
         this.service = new FoodService();
     }

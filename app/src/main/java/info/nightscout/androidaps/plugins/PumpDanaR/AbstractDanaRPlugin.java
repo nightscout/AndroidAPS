@@ -59,6 +59,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
                 .pluginName(R.string.danarspump)
                 .shortName(R.string.danarpump_shortname)
                 .preferencesId(R.xml.pref_danars)
+                .description(R.string.description_pump_dana_r)
         );
     }
 

@@ -64,6 +64,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
                 .fragmentClass(LocalProfileFragment.class.getName())
                 .pluginName(R.string.localprofile)
                 .shortName(R.string.localprofile_shortname)
+                .description(R.string.description_profile_local)
         );
         loadSettings();
     }

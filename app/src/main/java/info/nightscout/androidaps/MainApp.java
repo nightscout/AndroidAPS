@@ -69,6 +69,7 @@ import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
@@ -178,6 +179,8 @@ public class MainApp extends Application {
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
             if (!Config.NSCLIENT)
                 pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourcePoctechPlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 

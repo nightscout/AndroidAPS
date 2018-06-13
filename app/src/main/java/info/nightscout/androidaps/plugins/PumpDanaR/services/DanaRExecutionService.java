@@ -18,8 +18,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgGetUserOptions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -64,7 +64,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
 
 public class DanaRExecutionService extends AbstractDanaRExecutionService{
 
@@ -179,6 +178,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
+                mSerialIOThread.sendMessage(new MsgSettingUserOptions());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
@@ -384,30 +384,6 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
         return true;
     }
 
-    public PumpEnactResult getUserOptions() {
-        if (!isConnected())
-            return new PumpEnactResult().success(false);
-        DanaRPump pump = DanaRPump.getInstance();
-        MsgGetUserOptions msg = new MsgGetUserOptions();
-        mDanaRPump.lastConnection = System.currentTimeMillis();
-        return new PumpEnactResult().success(true);
-    }
-
-    public PumpEnactResult updateUserOptions() {
-        if (!isConnected())
-            return new PumpEnactResult().success(false);
-        DanaRPump pump = DanaRPump.getInstance();
-        MsgSettingUserOptions msg = new MsgSettingUserOptions(pump.timeDisplayType, pump.buttonScrollOnOff, pump.beepAndAlarm, pump.lcdOnTimeSec, pump.backlightOnTimeSec, pump.selectedLanguage, pump.units, pump.shutdownHour, pump.lowReservoirRate, 0, 0);
-
-        mSerialIOThread.sendMessage(msg);
-        while (!msg.done && mRfcommSocket.isConnected()) {
-            SystemClock.sleep(100);
-        }
-        SystemClock.sleep(200);
-        mDanaRPump.lastConnection = System.currentTimeMillis();
-        return new PumpEnactResult().success(true);
-    }
-
     @Subscribe
     public void onStatusEvent(EventAppExit event) {
         if (Config.logFunctionCalls)
@@ -423,4 +399,13 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService{
             log.debug("EventAppExit finished");
     }
 
+    public PumpEnactResult setUserOptions() {
+        if (!isConnected())
+            return new PumpEnactResult().success(false);
+        SystemClock.sleep(300);
+        MsgSetUserOptions msg = new MsgSetUserOptions();
+        mSerialIOThread.sendMessage(msg);
+        SystemClock.sleep(200);
+        return new PumpEnactResult().success(!msg.failed);
+    }
 }

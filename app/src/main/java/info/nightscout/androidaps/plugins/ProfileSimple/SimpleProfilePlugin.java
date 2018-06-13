@@ -52,6 +52,7 @@ public class SimpleProfilePlugin extends PluginBase implements ProfileInterface 
                 .fragmentClass(SimpleProfileFragment.class.getName())
                 .pluginName(R.string.simpleprofile)
                 .shortName(R.string.simpleprofile_shortname)
+                .description(R.string.description_profile_simple)
         );
         loadSettings();
     }
