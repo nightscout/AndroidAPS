@@ -79,9 +79,6 @@ public class DanaRUserOptionsActivity extends Activity {
 
         saveToPumpButton.setOnClickListener(v -> onSaveClick());
 
-        boolean isv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
-
-
         DanaRPump pump = DanaRPump.getInstance();
         //used for debugging
         log.debug("UserOptionsLoaded:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
@@ -92,7 +89,6 @@ public class DanaRUserOptionsActivity extends Activity {
                 + "\nbacklight:" + pump.backlightOnTimeSec
                 + "\npumpUnits:" + pump.units
                 + "\nlowReservoir:" + pump.lowReservoirRate);
-        log.debug("isV2:"+isv2);
 
         screenTimeout.setParams((double) pump.lcdOnTimeSec, 5d, 240d, 5d, new DecimalFormat("1"), false);
         backlightTimeout.setParams((double) pump.backlightOnTimeSec, 1d, 60d, 1d, new DecimalFormat("1"), false);
