@@ -20,6 +20,8 @@ public class MsgSettingUserOptions extends MessageBase {
     public void handleMessage(byte[] packet) {
         DanaRPump pump = DanaRPump.getInstance();
         byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
+        // saving pumpDataBytes to use it in MsgSetUserOptions
+        pump.userOptionsFrompump = bytes;
         for(int pos=0; pos < bytes.length; pos++) {
             log.debug("[" + pos + "]" + bytes[pos]);
         }
