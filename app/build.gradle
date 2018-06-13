@@ -99,7 +99,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/blueowl"
+                    appIcon: "@mipmap/ic_launcher"
             ]
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"

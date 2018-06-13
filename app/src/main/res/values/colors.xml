@@ -75,4 +75,5 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
+    <color name="ic_launcher_background">#424242</color>
 </resources>
