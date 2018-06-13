@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
@@ -20,8 +22,7 @@ public class MsgSettingUserOptions extends MessageBase {
     public void handleMessage(byte[] packet) {
         DanaRPump pump = DanaRPump.getInstance();
         byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
-        // saving pumpDataBytes to use it in MsgSetUserOptions
-        pump.userOptionsFrompump = bytes;
+        pump.userOptionsFrompump = Arrays.copyOf(bytes, bytes.length);// saving pumpDataBytes to use it in MsgSetUserOptions
         for(int pos=0; pos < bytes.length; pos++) {
             log.debug("[" + pos + "]" + bytes[pos]);
         }
@@ -54,6 +55,7 @@ public class MsgSettingUserOptions extends MessageBase {
             log.debug("Low reservoir: " + pump.lowReservoirRate);
 //        }
     }
+
     public static byte[] getDataBytes(byte[] bytes, int start, int len) {
         if (bytes == null) {
             return null;
