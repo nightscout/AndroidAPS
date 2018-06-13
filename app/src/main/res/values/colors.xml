@@ -35,7 +35,8 @@
 
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#009688</color>
+    <color name="colorAccent">#40bbaa</color>
+    <color name="mdtp_accent_color">#40bbaa</color>
     <color name="colorInitializingBorder">#00695c</color>
 
     <color name="cardColorBackground">#121212</color>
@@ -73,11 +74,5 @@
     <color name="deviationgreen">#7200FF00</color>
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
-
-
-    <color name="swColorPrimary">#303030</color>
-    <color name="swColorPrimaryDark">#303030</color>
-    <color name="swColorAccent">#FFEB3B</color>
-    <color name="swColorBackground">#303030</color>
 
 </resources>
