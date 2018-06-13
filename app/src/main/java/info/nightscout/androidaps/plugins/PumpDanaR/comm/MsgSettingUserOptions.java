@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
@@ -41,11 +42,8 @@ public class MsgSettingUserOptions extends MessageBase {
         int selectableLanguage4 = bytes[13];
         int selectableLanguage5 = bytes[14];
         */
-        for(int i=0; i<pump.userOptionsFrompump.length; i++){
-            log.debug("rgDebug:userOptions["+i+"]="+pump.userOptionsFrompump[i]);
-        }
 
-//        if (Config.logDanaMessageDetail) {
+        if (Config.logDanaMessageDetail) {
 
             log.debug("timeDisplayType: " + pump.timeDisplayType);
             log.debug("Button scroll: " + pump.buttonScrollOnOff);
@@ -56,7 +54,7 @@ public class MsgSettingUserOptions extends MessageBase {
             log.debug("Units: " + pump.getUnits());
             log.debug("Shutdown: " + pump.shutdownHour);
             log.debug("Low reservoir: " + pump.lowReservoirRate);
-//        }
+        }
     }
 
     public static byte[] getDataBytes(byte[] bytes, int start, int len) {

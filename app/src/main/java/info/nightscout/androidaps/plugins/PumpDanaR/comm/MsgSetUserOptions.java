@@ -16,40 +16,6 @@ public class MsgSetUserOptions extends MessageBase {
 
     public boolean done;
 
-    public MsgSetUserOptions(int timeDisplayType, int buttonScrollOnOff, int beepAndAlarm, int lcdOnTimeSec, int backlightOnTimeSec, int selectedLanguage, int glucoseUnit, int shutdownHour, int lowReservoirRate, int cannulaVolume, int refillRate) {
-        this();
-        DanaRPump pump = DanaRPump.getInstance();
-        if (pump.userOptionsFrompump.length == 0) {
-            // No options set -> Exitting
-            log.debug("NO USER OPTIONS LOADED EXITTING!");
-            return;
-        }
-
-        log.debug(" initializing MsgSetUserOptions");
-        log.debug("timeDisplayType: " + (byte) timeDisplayType);
-        log.debug("Button scroll: " + (byte) buttonScrollOnOff);
-        log.debug("BeepAndAlarm: " + (byte) beepAndAlarm);
-        log.debug("screen timeout: " + (byte) lcdOnTimeSec);
-        log.debug("Backlight: " + (byte) backlightOnTimeSec);
-        log.debug("Selected language: " + (byte) selectedLanguage);
-        log.debug("Units: " + (byte) glucoseUnit);
-        log.debug("Shutdown: " + (byte) shutdownHour);
-        log.debug("Low reservoir: " + (byte) lowReservoirRate);
-        pump.userOptionsFrompump[0] = (byte) (pump.timeDisplayType == 1 ? 0 : 1);
-        pump.userOptionsFrompump[1] = (byte) pump.buttonScrollOnOff;
-        pump.userOptionsFrompump[2] = (byte) pump.beepAndAlarm;
-        pump.userOptionsFrompump[3] = (byte) pump.lcdOnTimeSec;
-        pump.userOptionsFrompump[4] = (byte) pump.backlightOnTimeSec;
-        pump.userOptionsFrompump[5] = (byte) pump.selectedLanguage;
-        pump.userOptionsFrompump[8] = (byte) pump.units;
-        pump.userOptionsFrompump[9] = (byte) pump.shutdownHour;
-        pump.userOptionsFrompump[27] = (byte) pump.lowReservoirRate;
-        for(int i=0; i<pump.userOptionsFrompump.length; i++){
-//            AddParamByte(pump.userOptionsFrompump[i]);
-            log.debug("rgDebug:userOptions["+i+"]="+pump.userOptionsFrompump[i]);
-        }
-    }
-
     public MsgSetUserOptions() {
         SetCommand(0x330B);
         DanaRPump pump = DanaRPump.getInstance();
@@ -69,7 +35,6 @@ public class MsgSetUserOptions extends MessageBase {
         pump.userOptionsFrompump[27] = (byte) pump.lowReservoirRate;
         for(int i=0; i<pump.userOptionsFrompump.length; i++){
             AddParamByte(pump.userOptionsFrompump[i]);
-            log.debug("rgDebug:userOptions["+i+"]="+pump.userOptionsFrompump[i]);
         }
     }
 
