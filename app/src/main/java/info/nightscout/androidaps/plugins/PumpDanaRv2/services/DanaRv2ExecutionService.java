@@ -201,7 +201,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
-                //added by Roumen for testing and
+                //added by Roumen for testing
                 mSerialIOThread.sendMessage(new MsgGetUserOptions());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
@@ -478,7 +478,9 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult setUserOptions() {
         if (!isConnected()) {
-            return new PumpEnactResult().success(false);
+            log.debug("MsgSetUserOptions - service is not connected");
+//            return new PumpEnactResult().success(false);
+            connect();
         }
         SystemClock.sleep(300);
         DanaRPump pump = DanaRPump.getInstance();
@@ -499,11 +501,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult getUserOptions() {
         if (!isConnected()) {
-            return new PumpEnactResult().success(false);
+            log.debug("MsgGetUserOptions fails - disconnected!");
+            connect();
+//            return new PumpEnactResult().success(false);
         }
         MsgGetUserOptions msg = new MsgGetUserOptions();
-        mSerialIOThread.sendMessage(msg);
+//        mSerialIOThread.sendMessage(msg); // == null
         mDanaRPump.lastConnection = System.currentTimeMillis();
+        log.debug("MsgGetUserOptions executed!");
         return new PumpEnactResult().success(true);
     }
 }
