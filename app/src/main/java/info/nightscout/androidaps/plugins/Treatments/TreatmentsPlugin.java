@@ -80,7 +80,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .shortName(R.string.treatments_shortname)
                 .preferencesId(R.xml.pref_absorption_oref0)
                 .alwaysEnabled(true)
-                .description(R.string.description_treatments)
         );
         this.service = new TreatmentService();
     }

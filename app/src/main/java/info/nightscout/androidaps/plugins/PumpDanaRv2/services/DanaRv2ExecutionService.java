@@ -18,8 +18,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgGetUserOptions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -70,6 +70,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
+import info.nightscout.utils.ToastUtils;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
@@ -200,12 +201,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
-<<<<<<< HEAD
                 //added by Roumen for testing and
                 mSerialIOThread.sendMessage(new MsgGetUserOptions());
-=======
-                mSerialIOThread.sendMessage(new MsgSettingUserOptions());
->>>>>>> upstream/rsoption
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
@@ -480,22 +477,26 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     }
 
     public PumpEnactResult setUserOptions() {
-<<<<<<< HEAD
         if (!isConnected()) {
             return new PumpEnactResult().success(false);
         }
-=======
-        if (!isConnected())
-            return new PumpEnactResult().success(false);
->>>>>>> upstream/rsoption
         SystemClock.sleep(300);
-        MsgSetUserOptions msg = new MsgSetUserOptions();
+        DanaRPump pump = DanaRPump.getInstance();
+        MsgSettingUserOptions msg = new MsgSettingUserOptions(pump.timeDisplayType, pump.buttonScrollOnOff, pump.beepAndAlarm, pump.lcdOnTimeSec, pump.backlightOnTimeSec, pump.selectedLanguage, pump.units, pump.shutdownHour, pump.lowReservoirRate, 0, 0);
+        if (mSerialIOThread != null) {
+            mSerialIOThread.disconnect("MsgSetUserOptions - Recreate SerialIOThread");
+        }
+        mSerialIOThread = new SerialIOThread(mRfcommSocket);
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
         mSerialIOThread.sendMessage(msg);
+        while (!msg.done && mRfcommSocket.isConnected()) {
+            SystemClock.sleep(100);
+        }
         SystemClock.sleep(200);
-        return new PumpEnactResult().success(!msg.failed);
+        mDanaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
     }
 
-<<<<<<< HEAD
     public PumpEnactResult getUserOptions() {
         if (!isConnected()) {
             return new PumpEnactResult().success(false);
@@ -505,6 +506,4 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         mDanaRPump.lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
     }
-=======
->>>>>>> upstream/rsoption
 }

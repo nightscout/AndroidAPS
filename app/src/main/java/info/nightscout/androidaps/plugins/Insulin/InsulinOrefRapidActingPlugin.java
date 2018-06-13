@@ -22,8 +22,7 @@ public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
     private InsulinOrefRapidActingPlugin() {
         super();
         pluginDescription
-                .pluginName(R.string.rapid_acting_oref)
-                .description(R.string.description_insulin_rapid);
+                .pluginName(R.string.rapid_acting_oref);
     }
 
     @Override

@@ -21,7 +21,7 @@ abstract public class SubscriberFragment extends Fragment {
         updateGUI();
     }
 
-    @Override public synchronized void onDestroyView() {
+    @Override public void onDestroyView() {
         super.onDestroyView();
         if (unbinder != null)
             unbinder.unbind();

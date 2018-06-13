@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
@@ -86,14 +85,8 @@ public class SWDefinition {
         return this;
     }
 
-    SWDefinition() {
-        if (BuildConfig.FLAVOR.equals("full"))
-            SWDefinitionFull();
-        else if (BuildConfig.FLAVOR.equals("nsclient"))
-            SWDefinitionNSClient();
-    }
 
-    private void SWDefinitionFull() {
+    SWDefinition() {
         // List all the screens here
         add(new SWScreen(R.string.nav_setupwizard)
                 .add(new SWInfotext()
@@ -235,7 +228,6 @@ public class SWDefinition {
                 .add(new SWBreak())
                 .add(new SWPlugin()
                         .option(PluginType.INSULIN)
-                        .makeVisible(false)
                         .label(R.string.configbuilder_insulin))
                 .add(new SWBreak())
                 .add(new SWButton()
@@ -446,179 +438,6 @@ public class SWDefinition {
                         .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
                         .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
                 )
-        ;
-    }
-
-    private void SWDefinitionNSClient() {
-        // List all the screens here
-        add(new SWScreen(R.string.nav_setupwizard)
-                .add(new SWInfotext()
-                        .label(R.string.welcometosetupwizard))
-                .add(new SWButton()
-                        .text(R.string.nav_import)
-                        .action(() -> ImportExportPrefs.importSharedPreferences(getActivity()))
-                        .visibility(ImportExportPrefs.file::exists))
-                .add(new SWInfotext()
-                        .label(R.string.backupismissing)
-                        .visibility(() -> !ImportExportPrefs.file.exists()))
-        )
-        .add(new SWScreen(R.string.language)
-                .skippable(false)
-                .add(new SWRadioButton()
-                        .option(R.array.languagesArray, R.array.languagesValues)
-                        .preferenceId(R.string.key_language).label(R.string.language)
-                        .comment(R.string.setupwizard_language_prompt))
-                .validator(() -> {
-                    String lang = SP.getString("language", "en");
-                    LocaleHelper.setLocale(MainApp.instance().getApplicationContext(), lang);
-                    return SP.contains(R.string.key_language);
-                })
-        )
-        .add(new SWScreen(R.string.end_user_license_agreement)
-                .skippable(false)
-                .add(new SWInfotext()
-                        .label(R.string.end_user_license_agreement_text))
-                .add(new SWBreak())
-                .add(new SWButton()
-                        .text(R.string.end_user_license_agreement_i_understand)
-                        .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
-                        .action(() -> {
-                            SP.putBoolean(R.string.key_i_understand, true);
-                            MainApp.bus().post(new EventSWUpdate(false));
-                        }))
-                .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
-                .validator(() -> SP.getBoolean(R.string.key_i_understand, false))
-        )
-        .add(new SWScreen(R.string.permission)
-                .skippable(false)
-                .add(new SWInfotext()
-                        .label(String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name))))
-                .add(new SWBreak())
-                .add(new SWButton()
-                        .text(R.string.askforpermission)
-                        .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS))
-                        .action(() -> AndroidPermission.askForPermission(getActivity(), Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, AndroidPermission.CASE_BATTERY)))
-                .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS))
-                .validator(() -> !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)))
-        )
-        .add(new SWScreen(R.string.permission)
-                .skippable(false)
-                .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.needstoragepermission)))
-                .add(new SWBreak())
-                .add(new SWButton()
-                        .text(R.string.askforpermission)
-                        .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                        .action(() -> AndroidPermission.askForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, AndroidPermission.CASE_STORAGE)))
-                .visibility(() -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                .validator(() -> !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !AndroidPermission.checkForPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)))
-        )
-        .add(new SWScreen(R.string.nsclientinternal_title)
-                .skippable(true)
-                .add(new SWInfotext()
-                        .label(R.string.nsclientinfotext))
-                .add(new SWBreak())
-                .add(new SWButton()
-                        .text(R.string.enable_nsclient)
-                        .action(() -> {
-                            NSClientPlugin.getPlugin().setPluginEnabled(PluginType.GENERAL, true);
-                            NSClientPlugin.getPlugin().setFragmentVisible(PluginType.GENERAL, true);
-                            ConfigBuilderFragment.processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL);
-                            ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-                            MainApp.bus().post(new EventConfigBuilderChange());
-                            MainApp.bus().post(new EventSWUpdate(true));
-                        })
-                        .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
-                .add(new SWEditUrl()
-                        .preferenceId(R.string.key_nsclientinternal_url)
-                        .label(R.string.nsclientinternal_url_title)
-                        .comment(R.string.nsclientinternal_url_dialogmessage))
-                .add(new SWEditString()
-                        .validator(text -> text.length() >= 12)
-                        .preferenceId(R.string.key_nsclientinternal_api_secret)
-                        .label(R.string.nsclientinternal_secret_dialogtitle)
-                        .comment(R.string.nsclientinternal_secret_dialogmessage))
-                .add(new SWBreak())
-                .add(new SWEventListener(this)
-                        .label(R.string.status)
-                        .initialStatus(NSClientPlugin.getPlugin().status)
-                        .listener(new Object() {
-                            @Subscribe
-                            public void onEventNSClientStatus(EventNSClientStatus event) {
-                                MainApp.bus().post(new EventSWLabel(event.status));
-                            }
-                        })
-                )
-                .add(new SWBreak())
-                .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
-                .visibility(() -> !(NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth))
-        )
-        .add(new SWScreen(R.string.patientage)
-                .skippable(false)
-                .add(new SWInfotext()
-                        .label(R.string.patientage_summary))
-                .add(new SWBreak())
-                .add(new SWRadioButton()
-                        .option(R.array.ageArray, R.array.ageValues)
-                        .preferenceId(R.string.key_age)
-                        .label(R.string.patientage)
-                        .comment(R.string.patientage_summary))
-                .validator(() -> SP.contains(R.string.key_age))
-        )
-        .add(new SWScreen(R.string.configbuilder_insulin)
-                .skippable(false)
-                .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.rapid_acting_oref) + ": " + MainApp.gs(R.string.fastactinginsulincomment)))
-                .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.ultrarapid_oref) + ": " + MainApp.gs(R.string.ultrafastactinginsulincomment)))
-                .add(new SWInfotext()
-                        .label(MainApp.gs(R.string.free_peak_oref) + ": " + MainApp.gs(R.string.free_peak_oref_description)))
-                .add(new SWBreak())
-                .add(new SWInfotext()
-                        .label(R.string.diawarning))
-                .add(new SWBreak())
-                .add(new SWPlugin()
-                        .option(PluginType.INSULIN)
-                        .makeVisible(false)
-                        .label(R.string.configbuilder_insulin))
-                .add(new SWBreak())
-                .add(new SWButton()
-                        .text(R.string.insulinsourcesetup)
-                        .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveInsulin();
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
-                                Intent i = new Intent(activity, PreferencesActivity.class);
-                                i.putExtra("id", plugin.getPreferencesId());
-                                activity.startActivity(i);
-                            }, null);
-                        })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveInsulin()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveInsulin()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveInsulin() != null)
-        )
-        .add(new SWScreen(R.string.configbuilder_sensitivity)
-                .skippable(false)
-                .add(new SWInfotext()
-                        .label(R.string.setupwizard_sensitivity_description))
-                .add(new SWHtmlLink()
-                        .label(R.string.setupwizard_sensitivity_url))
-                .add(new SWBreak())
-                .add(new SWPlugin()
-                        .option(PluginType.SENSITIVITY)
-                        .label(R.string.configbuilder_sensitivity))
-                .add(new SWBreak())
-                .add(new SWButton()
-                        .text(R.string.sensitivitysetup)
-                        .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveSensitivity();
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
-                                Intent i = new Intent(activity, PreferencesActivity.class);
-                                i.putExtra("id", plugin.getPreferencesId());
-                                activity.startActivity(i);
-                            }, null);
-                        })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveSensitivity()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null)
-        )
         ;
     }
 

@@ -139,10 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
         AndroidPermission.notifyForStoragePermission(this);
         AndroidPermission.notifyForBatteryOptimizationPermission(this);
-        if (BuildConfig.APS || BuildConfig.PUMPCONTROL) {
-            AndroidPermission.notifyForLocationPermissions(this);
-            AndroidPermission.notifyForSMSPermissions(this);
-        }
+        AndroidPermission.notifyForLocationPermissions(this);
+        AndroidPermission.notifyForSMSPermissions(this);
 
         MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
     }
@@ -202,14 +200,13 @@ public class MainActivity extends AppCompatActivity {
         menu.clear();
         for (PluginBase p : MainApp.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
-            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.getType()) && !p.pluginDescription.neverVisible) {
+            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.getType())) {
                 MenuItem menuItem = menu.add(p.getName());
                 menuItem.setCheckable(true);
                 menuItem.setOnMenuItemClickListener(item -> {
                     Intent intent = new Intent(this, SingleFragmentActivity.class);
                     intent.putExtra("plugin", MainApp.getPluginsList().indexOf(p));
                     startActivity(intent);
-                    ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
                     return true;
                 });
             }

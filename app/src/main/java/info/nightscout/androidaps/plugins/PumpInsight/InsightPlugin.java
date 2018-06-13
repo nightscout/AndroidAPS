@@ -112,7 +112,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 .pluginName(R.string.insightpump)
                 .shortName(R.string.insightpump_shortname)
                 .preferencesId(R.xml.pref_insightpump)
-                .description(R.string.description_pump_insight)
         );
         log("InsightPlugin instantiated");
         pumpDescription.isBolusCapable = true;

@@ -62,7 +62,6 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                 .pluginName(R.string.openapsama)
                 .shortName(R.string.oaps_shortname)
                 .preferencesId(R.xml.pref_openapsama)
-                .description(R.string.description_ama)
         );
     }
 

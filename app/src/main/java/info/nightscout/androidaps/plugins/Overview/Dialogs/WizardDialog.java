@@ -315,7 +315,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                         confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
-                        okClicked = false;
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
                         builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
@@ -409,9 +408,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void initDialog() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
+        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
 
-        if (profile == null || profileStore == null) {
+        if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
             dismiss();
             return;

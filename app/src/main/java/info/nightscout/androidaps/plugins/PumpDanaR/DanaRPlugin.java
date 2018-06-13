@@ -382,6 +382,6 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult setUserOptions() {
-        return sExecutionService.setUserOptions();
+        return null;
     }
 }

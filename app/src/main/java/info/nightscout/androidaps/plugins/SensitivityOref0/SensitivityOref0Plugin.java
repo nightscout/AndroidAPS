@@ -46,7 +46,6 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
                 .pluginName(R.string.sensitivityoref0)
                 .shortName(R.string.sensitivity_shortname)
                 .preferencesId(R.xml.pref_absorption_oref0)
-                .description(R.string.description_sensitivity_oref0)
         );
     }
 

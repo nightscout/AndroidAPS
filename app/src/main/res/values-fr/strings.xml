@@ -468,7 +468,7 @@
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Le dispositif n’apparaît pas pour renforcer la liste blanche de l’optimisation de batterie!</string>
     <string name="pleaseallowpermission">Autorisez l\'accès svp</string>
-    <string name="needwhitelisting">%s a besoin de la liste blanche de l\’optimisation batterie  pour une bonne performance</string>
+    <string name="needwhitelisting">% a besoin de la liste blanche de l’optimisation batterie  pour une bonne performance</string>
     <string name="loopsuspended">Loop suspendu</string>
     <string name="loopsuspendedfor" formatted="false">Suspendu (%d m)</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>

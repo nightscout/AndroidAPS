@@ -42,7 +42,6 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         super(new PluginDescription()
                 .mainType(PluginType.PUMP)
                 .pluginName(R.string.mdi)
-                .description(R.string.description_pump_mdi)
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;

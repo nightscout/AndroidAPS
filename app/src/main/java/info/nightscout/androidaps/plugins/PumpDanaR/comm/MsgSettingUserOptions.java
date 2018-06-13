@@ -4,12 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import android.support.v4.internal.view.SupportMenu;
 
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.Config;
 
 /**
- * Created by Rumen Georgiev on 6/11/2018.
+ * Created by mike on 05.07.2016.
  */
-<<<<<<< HEAD
 public class MsgSettingUserOptions extends MessageBase {
 
     private int backlightOnTimeSec;
@@ -64,10 +63,6 @@ public class MsgSettingUserOptions extends MessageBase {
         // 6 extended bolus on/off
         // 10 missed bolus
     }
-=======
-
-public class MsgSettingUserOptions extends MessageBase {
->>>>>>> upstream/rsoption
 
     private static Logger log = LoggerFactory.getLogger(MsgSettingUserOptions.class);
 
@@ -75,7 +70,6 @@ public class MsgSettingUserOptions extends MessageBase {
         SetCommand(0x320B);
     }
 
-<<<<<<< HEAD
     public void handleMessage(byte[] bytes) {
         log.debug("Entering handleMessage ");
         newOptions = new byte[]{bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9], bytes[15], bytes[16], bytes[17], bytes[18], bytes[19], bytes[20], bytes[21], bytes[22], bytes[23], bytes[24], bytes[25], bytes[26], bytes[27], bytes[28], bytes[29], bytes[30], bytes[31], bytes[32]};
@@ -86,52 +80,8 @@ public class MsgSettingUserOptions extends MessageBase {
         } else {
             if (Config.logDanaMessageDetail)
                 log.debug("Setting user options: " + result);
-=======
-    public void handleMessage(byte[] packet) {
-        DanaRPump pump = DanaRPump.getInstance();
-        byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
-        for(int pos=0; pos < bytes.length; pos++) {
-            log.debug("[" + pos + "]" + bytes[pos]);
->>>>>>> upstream/rsoption
         }
-        pump.timeDisplayType = bytes[0] == (byte) 1 ? 0 : 1; // 1 -> 24h 0 -> 12h
-        pump.buttonScrollOnOff = bytes[1] == (byte) 1 ? 1 : 0; // 1 -> ON, 0-> OFF
-        pump.beepAndAlarm = bytes[2]; // 1 -> Sound on alarm 2-> Vibrate on alarm 3-> Both on alarm 5-> Sound + beep 6-> vibrate + beep 7-> both + beep Beep adds 4
-        pump.lcdOnTimeSec = bytes[3] & 255;
-        pump.backlightOnTimeSec = bytes[4] & 255;
-        pump.selectedLanguage = bytes[5]; // on DanaRv2 is that needed ?
-        pump.units = bytes[8];
-        pump.shutdownHour = bytes[9];
-        pump.lowReservoirRate = bytes[32] & 255;
-        /* int selectableLanguage1 = bytes[10];
-        int selectableLanguage2 = bytes[11];
-        int selectableLanguage3 = bytes[12];
-        int selectableLanguage4 = bytes[13];
-        int selectableLanguage5 = bytes[14];
-        */
-
-//        if (Config.logDanaMessageDetail) {
-
-            log.debug("timeDisplayType: " + pump.timeDisplayType);
-            log.debug("Button scroll: " + pump.buttonScrollOnOff);
-            log.debug("BeepAndAlarm: " + pump.beepAndAlarm);
-            log.debug("screen timeout: " + pump.lcdOnTimeSec);
-            log.debug("Backlight: " + pump.backlightOnTimeSec);
-            log.debug("Selected language: " + pump.selectedLanguage);
-            log.debug("Units: " + pump.getUnits());
-            log.debug("Shutdown: " + pump.shutdownHour);
-            log.debug("Low reservoir: " + pump.lowReservoirRate);
-//        }
     }
-    public static byte[] getDataBytes(byte[] bytes, int start, int len) {
-        if (bytes == null) {
-            return null;
-        }
-        byte[] ret = new byte[len];
-        System.arraycopy(bytes, start + 6, ret, 0, len);
-        return ret;
-    }
-<<<<<<< HEAD
 
     public byte[] getCommByte(int cmd, byte[] data) {
         int len = (data == null ? 0 : data.length) + 3;
@@ -178,6 +128,4 @@ public class MsgSettingUserOptions extends MessageBase {
         return (li_crc ^ (((li_crc & 255) << 4) << 1)) & SupportMenu.USER_MASK;
     }
 
-=======
->>>>>>> upstream/rsoption
 }

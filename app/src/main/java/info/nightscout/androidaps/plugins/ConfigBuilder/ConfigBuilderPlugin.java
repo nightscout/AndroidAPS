@@ -92,7 +92,6 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .alwayVisible(false)
                 .pluginName(R.string.configbuilder)
                 .shortName(R.string.configbuilder_shortname)
-                .description(R.string.description_config_builder)
         );
     }
 

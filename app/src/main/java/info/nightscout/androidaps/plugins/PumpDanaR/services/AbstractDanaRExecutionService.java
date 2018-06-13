@@ -92,7 +92,6 @@ public abstract class AbstractDanaRExecutionService extends Service {
 
     public abstract boolean extendedBolusStop();
 
-    public abstract PumpEnactResult setUserOptions();
 
     protected BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override

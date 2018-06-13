@@ -124,7 +124,6 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 .pluginName(R.string.smscommunicator)
                 .shortName(R.string.smscommunicator_shortname)
                 .preferencesId(R.xml.pref_smscommunicator)
-                .description(R.string.description_sms_communicator)
         );
         processSettings(null);
     }

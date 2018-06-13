@@ -47,7 +47,6 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
                 .pluginName(R.string.sensitivityaaps)
                 .shortName(R.string.sensitivity_shortname)
                 .preferencesId(R.xml.pref_absorption_aaps)
-                .description(R.string.description_sensitivity_aaps)
         );
     }
 

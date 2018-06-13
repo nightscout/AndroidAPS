@@ -70,7 +70,6 @@ public class StatuslinePlugin extends PluginBase {
                 .shortName(R.string.xdripstatus_shortname)
                 .neverVisible(true)
                 .preferencesId(R.xml.pref_xdripstatus)
-                .description(R.string.description_xdrip_status_line)
         );
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);

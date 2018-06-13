@@ -49,7 +49,6 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
                 .alwaysEnabled(Config.NSCLIENT)
                 .alwayVisible(Config.NSCLIENT)
                 .showInList(!Config.NSCLIENT)
-                .description(R.string.description_profile_nightscout)
         );
         loadNSProfile();
     }
