@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import android.support.v4.internal.view.SupportMenu;
 
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -23,7 +24,7 @@ public class MsgSettingUserOptions extends MessageBase {
     private int selectedLanguage;
     private int shutdownHour;
     private int timeDisplayType;
-
+    byte[] newOptions;
     public boolean done;
 
     public MsgSettingUserOptions(int timeDisplayType, int buttonScrollOnOff, int beepAndAlarm, int lcdOnTimeSec, int backlightOnTimeSec, int selectedLanguage, int glucoseUnit, int shutdownHour, int lowReservoirRate, int cannulaVolume, int refillRate) {
@@ -49,17 +50,19 @@ public class MsgSettingUserOptions extends MessageBase {
         this.lowReservoirRate = lowReservoirRate;
         this.cannulaVolume = cannulaVolume;
         this.refillRate = refillRate;
+        newOptions[0] = (byte) (timeDisplayType == 1 ? 0 : 1);
+        newOptions[1] = (byte) buttonScrollOnOff;
+        newOptions[2] = (byte) beepAndAlarm;
+        newOptions[3] = (byte) lcdOnTimeSec;
+        newOptions[4] = (byte) backlightOnTimeSec;
+        newOptions[5] = (byte) selectedLanguage;
+        newOptions[8] = (byte) glucoseUnit;
+        newOptions[9] = (byte) shutdownHour;
+        newOptions[27] = (byte) lowReservoirRate;
         // need to organize here
         // glucoseunit is at pos 8 and lowReservoirRate is at pos 27
-        AddParamByte((byte) timeDisplayType);
-        AddParamByte((byte) buttonScrollOnOff);
-        AddParamByte((byte) beepAndAlarm);
-        AddParamByte((byte) lcdOnTimeSec);
-        AddParamByte((byte) backlightOnTimeSec);
-        AddParamByte((byte) selectedLanguage);
-        AddParamByte((byte) glucoseUnit);
-        AddParamByte((byte) shutdownHour);
-        AddParamByte((byte) lowReservoirRate);
+        // 6 extended bolus on/off
+        // 10 missed bolus
     }
 =======
 
@@ -75,6 +78,7 @@ public class MsgSettingUserOptions extends MessageBase {
 <<<<<<< HEAD
     public void handleMessage(byte[] bytes) {
         log.debug("Entering handleMessage ");
+        newOptions = new byte[]{bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9], bytes[15], bytes[16], bytes[17], bytes[18], bytes[19], bytes[20], bytes[21], bytes[22], bytes[23], bytes[24], bytes[25], bytes[26], bytes[27], bytes[28], bytes[29], bytes[30], bytes[31], bytes[32]};
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
@@ -129,7 +133,6 @@ public class MsgSettingUserOptions extends MessageBase {
     }
 <<<<<<< HEAD
 
-<<<<<<< HEAD
     public byte[] getCommByte(int cmd, byte[] data) {
         int len = (data == null ? 0 : data.length) + 3;
         byte[] btSendData = new byte[(len + 7)];
@@ -177,6 +180,4 @@ public class MsgSettingUserOptions extends MessageBase {
 
 =======
 >>>>>>> upstream/rsoption
-=======
->>>>>>> parent of f1f8bae2d... more debugging output
 }

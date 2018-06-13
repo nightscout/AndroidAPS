@@ -11,25 +11,9 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
  */
 
 public class MsgGetUserOptions extends MessageBase {
-    private int backlightOnTimeSec;
-    private int beepAndAlarm;
-    private int buttonScrollOnOff;
-    private int cannulaVolume;
-    private int glucoseUnit;
-    private int lcdOnTimeSec;
-    private int lowReservoirRate;
-    private int refillRate;
-    private int selectableLanguage1;
-    private int selectableLanguage2;
-    private int selectableLanguage3;
-    private int selectableLanguage4;
-    private int selectableLanguage5;
-    private int selectedLanguage;
-    private int shutdownHour;
-    private int timeDisplayType;
 
     private static Logger log = LoggerFactory.getLogger(MsgGetUserOptions.class);
-
+    private byte[] optionsInPump;
     public MsgGetUserOptions() {
         SetCommand(0x320B);
     }
@@ -37,8 +21,9 @@ public class MsgGetUserOptions extends MessageBase {
     public void handleMessage(byte[] packet) {
         DanaRPump pump = DanaRPump.getInstance();
         byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
-        for(int pos=0; pos < bytes.length; pos++) {
-            log.debug("[" + pos + "]" + bytes[pos]);
+        this.optionsInPump = getDataBytes(packet, 0, packet.length - 10);
+        for(int pos=0; pos < packet.length; pos++) {
+            log.debug("[" + pos + "]" + packet[pos]);
         }
         pump.timeDisplayType = bytes[0] == (byte) 1 ? 0 : 1; // 1 -> 24h 0 -> 12h
         pump.buttonScrollOnOff = bytes[1] == (byte) 1 ? 1 : 0; // 1 -> ON, 0-> OFF
@@ -69,6 +54,7 @@ public class MsgGetUserOptions extends MessageBase {
             log.debug("Low reservoir: " + pump.lowReservoirRate);
 //        }
     }
+
     public static byte[] getDataBytes(byte[] bytes, int start, int len) {
         if (bytes == null) {
             return null;
@@ -77,4 +63,6 @@ public class MsgGetUserOptions extends MessageBase {
         System.arraycopy(bytes, start + 6, ret, 0, len);
         return ret;
     }
+
+
 }
