@@ -3,6 +3,9 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
@@ -20,6 +23,7 @@ public class MsgSettingUserOptions extends MessageBase {
     public void handleMessage(byte[] packet) {
         DanaRPump pump = DanaRPump.getInstance();
         byte[] bytes = getDataBytes(packet, 0, packet.length - 10);
+        pump.userOptionsFrompump = Arrays.copyOf(bytes, bytes.length);// saving pumpDataBytes to use it in MsgSetUserOptions
         for(int pos=0; pos < bytes.length; pos++) {
             log.debug("[" + pos + "]" + bytes[pos]);
         }
@@ -39,7 +43,7 @@ public class MsgSettingUserOptions extends MessageBase {
         int selectableLanguage5 = bytes[14];
         */
 
-//        if (Config.logDanaMessageDetail) {
+        if (Config.logDanaMessageDetail) {
 
             log.debug("timeDisplayType: " + pump.timeDisplayType);
             log.debug("Button scroll: " + pump.buttonScrollOnOff);
@@ -50,8 +54,9 @@ public class MsgSettingUserOptions extends MessageBase {
             log.debug("Units: " + pump.getUnits());
             log.debug("Shutdown: " + pump.shutdownHour);
             log.debug("Low reservoir: " + pump.lowReservoirRate);
-//        }
+        }
     }
+
     public static byte[] getDataBytes(byte[] bytes, int start, int len) {
         if (bytes == null) {
             return null;

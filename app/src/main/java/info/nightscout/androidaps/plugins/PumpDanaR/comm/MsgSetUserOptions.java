@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import android.support.v4.internal.view.SupportMenu;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -11,40 +12,33 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
  */
 public class MsgSetUserOptions extends MessageBase {
 
+    private static Logger log = LoggerFactory.getLogger(MsgSetUserOptions.class);
+
     public boolean done;
 
     public MsgSetUserOptions() {
         SetCommand(0x330B);
-
         DanaRPump pump = DanaRPump.getInstance();
-
-        log.debug(" initializing MsgSetUserOptions");
-        log.debug("timeDisplayType: " + (byte) pump.timeDisplayType);
-        log.debug("Button scroll: " + (byte) pump.buttonScrollOnOff);
-        log.debug("BeepAndAlarm: " + (byte) pump.beepAndAlarm);
-        log.debug("screen timeout: " + (byte) pump.lcdOnTimeSec);
-        log.debug("Backlight: " + (byte) pump.backlightOnTimeSec);
-        log.debug("Selected language: " + (byte) pump.selectedLanguage);
-        log.debug("Units: " + (byte) pump.units);
-        log.debug("Shutdown: " + (byte) pump.shutdownHour);
-        log.debug("Low reservoir: " + (byte) pump.lowReservoirRate);
-        // need to organize here
-        // glucoseunit is at pos 8 and lowReservoirRate is at pos 27
-        AddParamByte((byte) pump.timeDisplayType);
-        AddParamByte((byte) pump.buttonScrollOnOff);
-        AddParamByte((byte) pump.beepAndAlarm);
-        AddParamByte((byte) pump.lcdOnTimeSec);
-        AddParamByte((byte) pump.backlightOnTimeSec);
-        AddParamByte((byte) pump.selectedLanguage);
-        AddParamByte((byte) pump.units);
-        AddParamByte((byte) pump.shutdownHour);
-        AddParamByte((byte) pump.lowReservoirRate);
+        if (pump.userOptionsFrompump == null) {
+            // No options set -> Exitting
+            log.debug("NO USER OPTIONS LOADED EXITTING!");
+            return;
+        }
+        pump.userOptionsFrompump[0] = (byte) (pump.timeDisplayType == 1 ? 0 : 1);
+        pump.userOptionsFrompump[1] = (byte) pump.buttonScrollOnOff;
+        pump.userOptionsFrompump[2] = (byte) pump.beepAndAlarm;
+        pump.userOptionsFrompump[3] = (byte) pump.lcdOnTimeSec;
+        pump.userOptionsFrompump[4] = (byte) pump.backlightOnTimeSec;
+        pump.userOptionsFrompump[5] = (byte) pump.selectedLanguage;
+        pump.userOptionsFrompump[8] = (byte) pump.units;
+        pump.userOptionsFrompump[9] = (byte) pump.shutdownHour;
+        pump.userOptionsFrompump[27] = (byte) pump.lowReservoirRate;
+        for(int i=0; i<pump.userOptionsFrompump.length; i++){
+            AddParamByte(pump.userOptionsFrompump[i]);
+        }
     }
 
-    private static Logger log = LoggerFactory.getLogger(MsgSetUserOptions.class);
-
     public void handleMessage(byte[] bytes) {
-        log.debug("Entering handleMessage ");
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;

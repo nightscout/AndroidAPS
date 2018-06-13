@@ -153,6 +153,14 @@ public class DanaRUserOptionsActivity extends Activity {
             pump.buttonScrollOnOff = 1;
         else
             pump.buttonScrollOnOff = 0;
+
+        pump.beepAndAlarm = 1; // default
+        if (pumpAlarmSound.isChecked()) pump.beepAndAlarm = 1;
+        else if (pumpAlarmVibrate.isChecked()) pump.beepAndAlarm = 2;
+        else if (pumpAlarmBoth.isChecked()) pump.beepAndAlarm = 3;
+        if (beep.isChecked()) pump.beepAndAlarm += 4;
+
+
         // step is 5 seconds
         int screenTimeoutValue = !screenTimeout.getText().isEmpty() ? (Integer.parseInt(screenTimeout.getText().toString()) / 5) * 5: 5;
         if (screenTimeoutValue > 4 && screenTimeoutValue < 241) {
