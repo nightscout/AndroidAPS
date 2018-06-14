@@ -1210,8 +1210,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
-        activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
-        activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
+        if (profile.getPercentage() != 100 || profile.getTimeshift() != 0) {
+            activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
+            activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
+        } else {
+            activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonBgDefault));
+            activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
+        }
 
         tempTargetView.setOnLongClickListener(view -> {
             view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
