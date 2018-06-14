@@ -87,7 +87,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     }
 
     public long getHoursFromStart() {
-        return (System.currentTimeMillis() - date) / (60 * 1000);
+        return (System.currentTimeMillis() - date) / (60 * 60 * 1000);
     }
 
     public String age() {
