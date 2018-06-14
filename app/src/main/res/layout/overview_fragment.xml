@@ -184,6 +184,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/overview_statuslights"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -232,7 +233,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/overview_pbage"
+                        android:id="@+id/overview_batterylevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="5dp"

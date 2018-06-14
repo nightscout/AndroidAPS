@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.arch.core.util.Function;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -159,7 +160,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView cageView;
     TextView reservoirView;
     TextView sageView;
-    TextView pbageView;
+    TextView batteryView;
+    LinearLayout statuslightsLayout;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -263,7 +265,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cageView = (TextView) view.findViewById(R.id.overview_canulaage);
             reservoirView = (TextView) view.findViewById(R.id.overview_reservoirlevel);
             sageView = (TextView) view.findViewById(R.id.overview_sensorage);
-            pbageView = (TextView) view.findViewById(R.id.overview_pbage);
+            batteryView = (TextView) view.findViewById(R.id.overview_batterylevel);
+            statuslightsLayout = (LinearLayout) view.findViewById(R.id.overview_statuslights);
 
             bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
             iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -1321,44 +1324,54 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        CareportalEvent careportalEvent;
-        NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+        if (statuslightsLayout != null) {
+            if (SP.getBoolean(R.string.key_show_statuslights, false)) {
+                CareportalEvent careportalEvent;
+                NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+                double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 96);
+                double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 72);
+                double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 72);
+                double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 48);
+                double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 166);
+                double sageWarn = nsSettings.getExtendedWarnValue("sage", "warn", 164);
+                //double pbageUrgent = nsSettings.getExtendedWarnValue("pgage", "urgent", 360);
+                //double pbageWarn = nsSettings.getExtendedWarnValue("pgage", "warn", 240);
+                double batUrgent = SP.getDouble(R.string.key_statuslights_bat_critical, 5.0);
+                double batWarn = SP.getDouble(R.string.key_statuslights_bat_warning, 25.0);
+                double resUrgent = SP.getDouble(R.string.key_statuslights_res_critical, 10.0);
+                double resWarn = SP.getDouble(R.string.key_statuslights_res_warning, 80.0);
 
-        double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 120);
-        double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 96);
-        double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 48);
-        double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 24);
-        double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 504);
-        double sageWarn = nsSettings.getExtendedWarnValue("sage", "warn", 336);
-        double pbageUrgent = nsSettings.getExtendedWarnValue("pgage", "urgent", 672);
-        double pbageWarn = nsSettings.getExtendedWarnValue("pgage", "warn", 504);
+                if (cageView != null) {
+                    careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
+                    double canAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
+                    applyRibbonView(cageView, "CAN", canAge, cageWarn, cageUrgent, Double.MAX_VALUE, true);
+                }
 
-        if (cageView != null) {
-            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
-            double canAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
-            applyRibbonView(cageView, "CAN", canAge, cageWarn, cageUrgent, Double.MAX_VALUE);
-        }
+                if (iageView != null) {
+                    careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
+                    double insulinAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
+                    applyRibbonView(iageView, "INS", insulinAge, iageWarn, iageUrgent, Double.MAX_VALUE, true);
+                }
 
-        if (iageView != null) {
-            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
-            double insulinAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
-            applyRibbonView(iageView, "INS", insulinAge, iageWarn, iageUrgent, Double.MAX_VALUE);
-        }
+                if (reservoirView != null) {
+                    double reservoirLevel = pump.isInitialized() ? pump.getReservoirLevel() : -1;
+                    applyRibbonView(reservoirView, "RES", reservoirLevel, resWarn, resUrgent, -1, false);
+                }
 
-        if (reservoirView != null) {
-            double reservoirLevel = pump.isInitialized() ? pump.getReservoirLevel() : -1;
-            applyRibbonView(reservoirView, "RES", reservoirLevel, 80, 10, -1);
-        }
+                if (sageView != null) {
+                    careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
+                    double sensorAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
+                    applyRibbonView(sageView, "SEN", sensorAge, sageWarn, sageUrgent, Double.MAX_VALUE, true);
+                }
 
-        if (sageView != null) {
-            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
-            double sensorAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
-            applyRibbonView(sageView, "SEN", sensorAge, sageWarn, sageUrgent, Double.MAX_VALUE);
-        }
-
-        if (pbageView != null) {
-            double batteryLevel = pump.isInitialized() ? pump.getBatteryLevel() : -1;
-            applyRibbonView(pbageView, "BAT", batteryLevel, 25, 5, -1);
+                if (batteryView != null) {
+                    double batteryLevel = pump.isInitialized() ? pump.getBatteryLevel() : -1;
+                    applyRibbonView(batteryView, "BAT", batteryLevel, batWarn, batUrgent, -1, false);
+                }
+                statuslightsLayout.setVisibility(View.VISIBLE);
+            } else {
+                statuslightsLayout.setVisibility(View.GONE);
+            }
         }
 
         final boolean predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
@@ -1523,13 +1536,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    public static void applyRibbonView(TextView view, String text, double value, double warnThreshold, double urgentThreshold, double invalid) {
+    public static void applyRibbonView(TextView view, String text, double value, double warnThreshold, double urgentThreshold, double invalid, boolean checkAscending) {
+        Function<Double, Boolean> check = checkAscending ? (Double threshold) -> value >= threshold : (Double threshold) -> value <= threshold;
         if (value != invalid) {
             view.setText(text);
-            if (value <= urgentThreshold) {
+            if (check.apply(urgentThreshold)) {
                 view.setTextColor(MainApp.gc(R.color.ribbonTextCritical));
                 view.setBackgroundColor(MainApp.gc(R.color.ribbonBgCritical));
-            } else if (value <= warnThreshold) {
+            } else if (check.apply(warnThreshold)) {
                 view.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
                 view.setBackgroundColor(MainApp.gc(R.color.ribbonBgWarning));
             } else {

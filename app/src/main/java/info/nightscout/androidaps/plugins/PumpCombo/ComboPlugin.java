@@ -432,7 +432,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     public int getBatteryLevel() {
         switch (pump.state.batteryState) {
             case PumpState.EMPTY:
-                return 0;
+                return 5;
             case PumpState.LOW:
                 return 25;
             default:
