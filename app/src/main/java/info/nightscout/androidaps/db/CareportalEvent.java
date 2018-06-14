@@ -87,7 +87,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     }
 
     public long getHoursFromStart() {
-        return (System.currentTimeMillis() - date) / (60 * 1000);
+        return (System.currentTimeMillis() - date) / (60 * 60 * 1000);
     }
 
     public String age() {
@@ -98,13 +98,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
     }
 
-    public boolean isOlderThan(double hours) {
-        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
-            if(diff.get(TimeUnit.DAYS)*24 + diff.get(TimeUnit.HOURS) > hours)
-                return true;
-            else
-                return false;
-    }
+    public boolean isOlderThan(double hours) { return getHoursFromStart() > hours; }
 
     public String log() {
         return "CareportalEvent{" +

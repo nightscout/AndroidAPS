@@ -603,6 +603,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         String units = MainApp.getConfigBuilder().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
+        // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
+        // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
+        if (manager.isStateSaved())
+            return;
         switch (v.getId()) {
             case R.id.overview_accepttempbutton:
                 onClickAcceptTemp();
