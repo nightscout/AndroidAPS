@@ -327,4 +327,9 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         return true;
     }
 
+    @Override
+    public PumpEnactResult setUserOptions() {
+        return null;
+    }
+
 }

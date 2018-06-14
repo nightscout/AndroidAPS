@@ -161,7 +161,7 @@ public class DanaRPump {
     public int lowReservoirRate;
     public int cannulaVolume;
     public int refillAmount;
-
+    public byte[] userOptionsFrompump;
     public double initialBolusAmount;
     // Bolus settings
     public int bolusCalculationOption;

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_User_Option;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -70,6 +71,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_D
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_User_Option;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
@@ -146,6 +148,7 @@ public class DanaRSService extends Service {
                 bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
+                bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option()); // Getting user options
                 long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 3) {
@@ -198,6 +201,13 @@ public class DanaRSService extends Service {
             lastHistoryFetched = 0;
         log.debug("Events loaded");
         danaRPump.lastConnection = System.currentTimeMillis();
+        return new PumpEnactResult().success(true);
+    }
+
+
+    public PumpEnactResult setUserSettings() {
+        bleComm.sendMessage(new DanaRS_Packet_Option_Set_User_Option());
+        bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option());
         return new PumpEnactResult().success(true);
     }
 

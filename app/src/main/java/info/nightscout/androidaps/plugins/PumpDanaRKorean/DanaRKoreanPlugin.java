@@ -380,4 +380,9 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult loadEvents() {
         return null; // no history, not needed
     }
+
+    @Override
+    public PumpEnactResult setUserOptions() {
+        return null;
+    }
 }
