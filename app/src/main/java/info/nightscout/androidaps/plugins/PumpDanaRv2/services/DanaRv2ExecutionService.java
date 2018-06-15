@@ -18,6 +18,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -68,7 +70,6 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
-import info.nightscout.utils.ToastUtils;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
@@ -199,6 +200,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
+                mSerialIOThread.sendMessage(new MsgSettingUserOptions());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
@@ -471,4 +473,15 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             SystemClock.sleep(Math.min(timeToWholeMinute, 100));
         }
     }
+
+    public PumpEnactResult setUserOptions() {
+        if (!isConnected())
+            return new PumpEnactResult().success(false);
+        SystemClock.sleep(300);
+        MsgSetUserOptions msg = new MsgSetUserOptions();
+        mSerialIOThread.sendMessage(msg);
+        SystemClock.sleep(200);
+        return new PumpEnactResult().success(!msg.failed);
+    }
+
 }

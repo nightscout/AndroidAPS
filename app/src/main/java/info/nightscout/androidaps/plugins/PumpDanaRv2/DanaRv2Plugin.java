@@ -389,4 +389,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return sExecutionService.loadEvents();
     }
 
+    @Override
+    public PumpEnactResult setUserOptions() {
+        return sExecutionService.setUserOptions();
+    }
 }
