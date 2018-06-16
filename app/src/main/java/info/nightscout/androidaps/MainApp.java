@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.annotation.PluralsRes;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
@@ -279,6 +280,10 @@ public class MainApp extends Application {
 
     public static String gs(int id, Object... args) {
         return sResources.getString(id, args);
+    }
+
+    public static String gq(@PluralsRes int id, int quantity, Object... args) {
+        return sResources.getQuantityString(id, quantity, args);
     }
 
     public static int gc(int id) {

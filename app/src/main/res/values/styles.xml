@@ -27,6 +27,4 @@
     <style name="ButtonSmallFontStyle">
         <item name="android:textSize">10sp</item>
     </style>
-
-     <!-- Preferences -->
 </resources>
