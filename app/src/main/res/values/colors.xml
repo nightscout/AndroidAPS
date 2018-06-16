@@ -71,13 +71,11 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
-    <color name="ribbonBgDefault">#5a595b</color>
-    <color name="ribbonBgWarning">#f4d700</color>
-    <color name="ribbonBgCritical">#ff0400</color>
+    <color name="ribbonDefault">#5a595b</color>
+    <color name="ribbonWarning">#f4d700</color>
+    <color name="ribbonCritical">#ff0400</color>
     <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
     <color name="ribbonTextCritical">#FFFFFF</color>
-    <color name="ribbonBgDisabled">#424242</color>
-    <color name="ribbonTextDisabled">#333333</color>
 
 </resources>
