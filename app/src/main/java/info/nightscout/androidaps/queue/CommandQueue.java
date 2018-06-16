@@ -37,6 +37,7 @@ import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
 import info.nightscout.androidaps.queue.commands.CommandReadStatus;
 import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
+import info.nightscout.androidaps.queue.commands.CommandSetUserSettings;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
@@ -397,6 +398,25 @@ public class CommandQueue {
 
         // add new command to queue
         add(new CommandLoadHistory(type, callback));
+
+        notifyAboutNewCommand();
+
+        return true;
+    }
+
+    // returns true if command is queued
+    public boolean setUserOptions(Callback callback) {
+        if (isRunning(Command.CommandType.SETUSERSETTINGS)) {
+            if (callback != null)
+                callback.result(executingNowError()).run();
+            return false;
+        }
+
+        // remove all unfinished
+        removeAll(Command.CommandType.SETUSERSETTINGS);
+
+        // add new command to queue
+        add(new CommandSetUserSettings(callback));
 
         notifyAboutNewCommand();
 

@@ -78,4 +78,5 @@
     <color name="ribbonTextWarning">#303030</color>
     <color name="ribbonTextCritical">#FFFFFF</color>
 
+    <color name="ic_launcher_background">#424242</color>
 </resources>

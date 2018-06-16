@@ -30,6 +30,7 @@
         android:name=".MainApp"
         android:allowBackup="true"
         android:icon="${appIcon}"
+        android:roundIcon="${appIconRound}"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
@@ -48,6 +49,7 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />
         <activity android:name=".TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
