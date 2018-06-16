@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data;
+package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -66,11 +66,11 @@ public class BasalProfile {
             LOG.error("setRawData: buffer is null!");
             return false;
         }
-        int len = Math.min(MAX_RAW_DATA_SIZE, data.length);
-        mRawData = new byte[len];
-        System.arraycopy(data, 0, mRawData, 0, len);
+        //int len = Math.min(MAX_RAW_DATA_SIZE, data.length);
+        mRawData = data;
+        //System.arraycopy(data, 0, mRawData, 0, len);
         if (DEBUG_BASALPROFILE) {
-            LOG.debug(String.format("setRawData: copied raw data buffer of %d bytes.", len));
+            LOG.debug(String.format("setRawData: copied raw data buffer of %d bytes.", data.length));
         }
         return true;
     }
@@ -79,7 +79,7 @@ public class BasalProfile {
     public void dumpBasalProfile() {
         LOG.debug("Basal Profile entries:");
         List<BasalProfileEntry> entries = getEntries();
-        for(int i = 0; i < entries.size(); i++) {
+        for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
             LOG.debug(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate, entry.rate_raw, startString, entry.startTime_raw));
@@ -91,7 +91,7 @@ public class BasalProfile {
     public String getBasalProfileAsString() {
         StringBuffer sb = new StringBuffer("Basal Profile entries:\n");
         List<BasalProfileEntry> entries = getEntries();
-        for(int i = 0; i < entries.size(); i++) {
+        for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
 
@@ -195,7 +195,7 @@ public class BasalProfile {
 
         List<Byte> outData = new ArrayList<>();
 
-        for(BasalProfileEntry profileEntry : listEntries) {
+        for (BasalProfileEntry profileEntry : listEntries) {
 
             byte[] strokes = MedtronicUtil.getBasalStrokes(profileEntry.rate, true);
 
@@ -234,12 +234,58 @@ public class BasalProfile {
         if (entries.isEmpty()) {
             LOG.error("testParser: failed");
         } else {
-            for(int i = 0; i < entries.size(); i++) {
+            for (int i = 0; i < entries.size(); i++) {
                 BasalProfileEntry e = entries.get(i);
                 LOG.debug(String.format("testParser entry #%d: rate: %.2f, start %d:%d", i, e.rate, e.startTime.getHourOfDay(), e.startTime.getMinuteOfHour()));
             }
         }
 
+    }
+
+
+    public Double[] getProfilesByHour() {
+
+        List<BasalProfileEntry> entries = getEntries();
+
+        Double[] basalByHour = new Double[24];
+
+        for (int i = 0; i < entries.size(); i++) {
+            BasalProfileEntry current = entries.get(i);
+
+            int currentTime = (current.startTime_raw % 2 == 0) ?
+                    current.startTime_raw : current.startTime_raw - 1;
+
+            currentTime = (currentTime * 30) / 60;
+
+            int lastHour = 0;
+            if ((i + 1) == entries.size()) {
+                lastHour = 24;
+            } else {
+                BasalProfileEntry basalProfileEntry = entries.get(i + 1);
+
+                int rawTime = (basalProfileEntry.startTime_raw % 2 == 0) ?
+                        basalProfileEntry.startTime_raw : basalProfileEntry.startTime_raw - 1;
+
+                lastHour = (rawTime * 30) / 60;
+            }
+
+            //System.out.println("Current time: " + currentTime + " Next Time: " + lastHour);
+
+            for (int j = currentTime; j < lastHour; j++) {
+                basalByHour[j] = current.rate;
+            }
+        }
+
+//        StringBuilder sb = new StringBuilder();
+//
+//        for (int i = 0; i < 24; i++) {
+//            sb.append("" + i + "=" + basalByHour[i]);
+//            sb.append("\n");
+//        }
+//
+//        System.out.println("Basal Profile: \n" + sb.toString());
+
+        return basalByHour;
     }
 
 

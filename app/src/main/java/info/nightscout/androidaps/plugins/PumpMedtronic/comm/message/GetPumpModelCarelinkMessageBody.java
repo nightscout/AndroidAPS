@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.message;
 /**
  * Created by geoff on 5/29/16.
  */
+@Deprecated
 public class GetPumpModelCarelinkMessageBody extends MessageBody {
 
     @Override

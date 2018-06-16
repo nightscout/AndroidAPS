@@ -5,5 +5,5 @@ import info.nightscout.androidaps.events.Event;
 /**
  * Created by andy on 04.06.2018.
  */
-public class EventMedtronicNewStatus extends Event {
+public class EventMedtronicPumpValuesChanged extends Event {
 }

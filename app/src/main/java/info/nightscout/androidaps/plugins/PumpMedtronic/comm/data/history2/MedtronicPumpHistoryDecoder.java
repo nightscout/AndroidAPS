@@ -12,12 +12,12 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.BasalProfileEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.RawHistoryPage;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfileEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BolusDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BolusWizardDTO;
-import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpBolusType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpBolusType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
@@ -124,7 +124,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
                 int els = getUnsignedInt(elements);
 
-                for(int k = 0; k < (els - 2); k++) {
+                for (int k = 0; k < (els - 2); k++) {
                     listRawData.add((byte) dataClear.get(counter));
                     counter++;
                 }
@@ -132,7 +132,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 special = true;
             } else {
 
-                for(int j = 0; j < (entryType.getTotalLength() - 1); j++) {
+                for (int j = 0; j < (entryType.getTotalLength() - 1); j++) {
 
                     try {
                         listRawData.add(dataClear.get(counter));
@@ -508,7 +508,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         Float rate = null;
         int index = body[2];
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getDeviceType(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f;
         }
 
@@ -530,7 +530,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         float bolus_strokes = 10.0f;
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getDeviceType(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolus_strokes = 40.0f;
 
@@ -607,7 +607,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         byte[] data = entry.getHead();
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getDeviceType(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus.setRequestedAmount(bitUtils.toInt(data[0], data[1]) / 40.0f);
             bolus.setDeliveredAmount(bitUtils.toInt(data[2], data[3]) / 10.0f);
             bolus.setInsulinOnBoard(bitUtils.toInt(data[4], data[5]) / 40.0f);

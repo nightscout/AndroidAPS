@@ -18,7 +18,9 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.Riley
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.PumpMessage;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.utils.SP;
 
 
@@ -137,6 +139,8 @@ public abstract class RileyLinkCommunicationManager {
         // **** FIXME: this wakeup doesn't seem to work well... must revisit
         //receiverDeviceAwakeForMinutes = duration_minutes;
 
+        MedtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
+
         if (force)
             nextWakeUpRequired = 0L;
 
@@ -146,6 +150,8 @@ public abstract class RileyLinkCommunicationManager {
             byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
             RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 200, (byte) 0, (byte) 0, 25000, (byte) 0);
             LOG.info("wakeup: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
+
+            // FIXME wakeUp successful !!!!!!!!!!!!!!!!!!
 
             nextWakeUpRequired = System.currentTimeMillis() + (receiverDeviceAwakeForMinutes * 60 * 1000);
         } else {
@@ -203,17 +209,17 @@ public abstract class RileyLinkCommunicationManager {
         wakeUp(receiverDeviceAwakeForMinutes, false);
         FrequencyScanResults results = new FrequencyScanResults();
 
-        for(int i = 0; i < frequencies.length; i++) {
+        for (int i = 0; i < frequencies.length; i++) {
             int tries = 3;
             FrequencyTrial trial = new FrequencyTrial();
             trial.frequencyMHz = frequencies[i];
             rfspy.setBaseFrequency(frequencies[i]);
 
             int sumRSSI = 0;
-            for(int j = 0; j < tries; j++) {
+            for (int j = 0; j < tries; j++) {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
-                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0, (byte) 0, (byte) 0, rfspy.EXPECTED_MAX_BLUETOOTH_LATENCY_MS, (byte) 0);
+                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0, (byte) 0, (byte) 0, 3000, (byte) 0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
@@ -235,7 +241,7 @@ public abstract class RileyLinkCommunicationManager {
         }
         results.sort(); // sorts in ascending order
         LOG.debug("Sorted scan results:");
-        for(int k = 0; k < results.trials.size(); k++) {
+        for (int k = 0; k < results.trials.size(); k++) {
             FrequencyTrial one = results.trials.get(k);
             LOG.debug("Scan Result[{}]: Freq={}, avg RSSI = {}", k, one.frequencyMHz, one.averageRSSI);
         }
@@ -289,7 +295,7 @@ public abstract class RileyLinkCommunicationManager {
     public double quickTuneForPump(double startFrequencyMHz) {
         double betterFrequency = startFrequencyMHz;
         double stepsize = 0.05;
-        for(int tries = 0; tries < 4; tries++) {
+        for (int tries = 0; tries < 4; tries++) {
             double evenBetterFrequency = quickTunePumpStep(betterFrequency, stepsize);
             if (evenBetterFrequency == 0.0) {
                 // could not see the pump at all.
@@ -346,7 +352,7 @@ public abstract class RileyLinkCommunicationManager {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
         SP.putLong(MedtronicConst.Prefs.LastGoodPumpCommunicationTime, lastGoodReceiverCommunicationTime);
-        pumpStatus.setLastDataTimeToNow();
+        MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
     }
 
 

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.PumpCommon;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 
@@ -16,9 +15,9 @@ import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -26,13 +25,14 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -47,7 +47,6 @@ import info.nightscout.utils.DecimalFormatter;
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
-    //protected boolean pumpServiceRunning = false;
 
     protected PumpDescription pumpDescription = new PumpDescription();
     protected PumpStatus pumpStatusData;
@@ -59,22 +58,29 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     protected ServiceConnection serviceConnection = null;
 
 
-    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
-                                 String internalName, //
-                                 String fragmentClassName, //
-                                 int pluginName, //
-                                 int pluginShortName, //
-                                 PumpType pumpType) {
-        this(pumpDriverInterface, //
-                internalName, //
-                new PluginDescription() //
-                        .mainType(PluginType.PUMP) //
-                        .fragmentClass(fragmentClassName) //
-                        .pluginName(pluginName) //
-                        .shortName(pluginShortName), //
-                pumpType //
-        );
-    }
+    protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
+            .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
+
+    protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult()
+            .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
+
+
+//    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
+//                                 String internalName, //
+//                                 String fragmentClassName, //
+//                                 int pluginName, //
+//                                 int pluginShortName, //
+//                                 PumpType pumpType) {
+//        this(pumpDriverInterface, //
+//                internalName, //
+//                new PluginDescription() //
+//                        .mainType(PluginType.PUMP) //
+//                        .fragmentClass(fragmentClassName) //
+//                        .pluginName(pluginName) //
+//                        .shortName(pluginShortName), //
+//                pumpType //
+//        );
+//    }
 
 
     protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
@@ -84,12 +90,22 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     ) {
         super(pluginDescription);
 
+        LOG.error("After super called.");
+
+
         this.pumpDriver = pumpDriverInterface;
         this.internalName = internalName;
 
-        initPumpStatusData();
+        LOG.error("Before Init Pump Statis Data called.");
 
         PumpUtil.setPumpDescription(getPumpDescription(), pumpType);
+
+        initPumpStatusData();
+
+        LOG.error("Before set description");
+
+
+        LOG.error("Before pumpDriver");
 
         this.pumpDriver.initDriver(this.pumpStatus, this.pumpDescription);
     }
@@ -213,9 +229,9 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     } // base basal rate, not temp basal
 
 
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        return pumpDriver.deliverTreatment(detailedBolusInfo);
-    }
+//    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+//        return pumpDriver.deliverTreatment(detailedBolusInfo);
+//    }
 
 
     public void stopBolusDelivering() {
@@ -247,7 +263,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public PumpEnactResult cancelExtendedBolus() {
-        return pumpDriver.cancelExtendedBolus();
+        LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
+        return OPERATION_NOT_YET_SUPPORTED;
     }
 
     // Status to be passed to NS
@@ -259,7 +276,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public String deviceID() {
-        return pumpDriver.deviceID();
+        LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
+        return "FakeDevice";
     }
 
     // Pump capabilities
@@ -273,7 +291,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public boolean isFakingTempsByExtendedBoluses() {
-        return pumpDriver.isInitialized();
+        LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
+        return false;
     }
 
 
@@ -419,20 +438,60 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
+    @Override
+    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+
+        try {
+            if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
+                // neither carbs nor bolus requested
+                LOG.error("deliverTreatment: Invalid input");
+                return new PumpEnactResult().success(false).enacted(false)
+                        .bolusDelivered(0d).carbsDelivered(0d)
+                        .comment(MainApp.gs(R.string.danar_invalidinput));
+            } else if (detailedBolusInfo.insulin > 0) {
+                // bolus needed, ask pump to deliver it
+                return deliverBolus(detailedBolusInfo);
+            } else {
+                // no bolus required, carb only treatment
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                bolusingEvent.t = new Treatment();
+                bolusingEvent.t.isSMB = detailedBolusInfo.isSMB;
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(bolusingEvent);
+
+                return new PumpEnactResult().success(true).enacted(true)
+                        .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
+                        .comment(MainApp.gs(R.string.virtualpump_resultok));
+            }
+        } finally {
+            triggerUIChange();
+        }
+
+    }
+
+
+    protected abstract PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo);
+
+
+    protected abstract void triggerUIChange();
+
+
     // Profile interface
 
-    @Nullable
-    public ProfileStore getProfile() {
-        return this.pumpStatus.profileStore;
-    }
-
-    public String getUnits() {
-        return this.pumpStatus.units;
-    }
-
-    public String getProfileName() {
-        return this.pumpStatus.activeProfileName;
-    }
+//    @Nullable
+//    public ProfileStore getProfile() {
+//        return this.pumpStatus.profileStore;
+//    }
+//
+//    public String getUnits() {
+//        return this.pumpStatus.units;
+//    }
+//
+//    public String getProfileName() {
+//        return this.pumpStatus.activeProfileName;
+//    }
 
 
 }

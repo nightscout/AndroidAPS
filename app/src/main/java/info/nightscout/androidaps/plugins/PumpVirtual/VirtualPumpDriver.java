@@ -110,7 +110,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     public void connect(String reason) {
         if (!Config.NSCLIENT && !Config.G5UPLOADER)
             NSUpload.uploadDeviceStatus();
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
     }
 
     @Override
@@ -123,12 +123,12 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
 
     @Override
     public void getPumpStatus() {
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
     }
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
@@ -185,7 +185,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         if (Config.logPumpComm)
             LOG.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
         return result;
     }
@@ -215,7 +215,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         if (Config.logPumpComm)
             LOG.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         return result;
     }
 
@@ -244,7 +244,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         if (Config.logPumpComm)
             LOG.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         return result;
     }
 
@@ -269,7 +269,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         if (Config.logPumpComm)
             LOG.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         return result;
     }
 
@@ -289,7 +289,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
                 LOG.debug("Canceling temp basal: " + result);
             MainApp.bus().post(new EventVirtualPumpUpdateGui());
         }
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         return result;
     }
 
@@ -309,7 +309,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         if (Config.logPumpComm)
             LOG.debug("Canceling extended basal: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        pumpStatusData.setLastDataTimeToNow();
+        pumpStatusData.setLastCommunicationToNow();
         return result;
     }
 

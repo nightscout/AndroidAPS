@@ -53,7 +53,7 @@
             android:defaultValue="xx:xx:xx:xx:xx:xx"
             android:editable="false"
             android:inputType="textFilter"
-            android:key="pref_medtronic_rileylink_mac"
+            android:key="pref_rileylink_mac_address"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/rileylink_mac_address" />

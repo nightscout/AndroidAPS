@@ -78,7 +78,7 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         if (Config.logPumpComm)
             LOG.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        getPumpStatusData().setLastDataTimeToNow();
+        getPumpStatusData().setLastCommunicationToNow();
         return result;
     }
 

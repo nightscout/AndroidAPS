@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.utils.SP;
 
 import static info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil.getRileyLinkCommunicationManager;
@@ -160,6 +160,7 @@ public abstract class RileyLinkService extends Service {
 
                         } else if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
 
+                            // FIXME remove
                             final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
 
                             LOG.debug("Bluetooth Action State Changed: " + state);
@@ -219,6 +220,8 @@ public abstract class RileyLinkService extends Service {
                             doTunePump();
                         } else if (action.equals(RileyLinkConst.IPC.MSG_PUMP_quickTune)) {
                             doTunePump();
+                        } else if (RileyLinkConst.Intents.RileyLinkNewAddressSet.equals(action)) {
+                            reconfigureRileyLink(MedtronicUtil.getPumpStatus().rileyLinkAddress);
                         } else if (action.startsWith("MSG_PUMP_")) {
                             handlePumpSpecificIntents(intent);
                         } else if (RileyLinkConst.IPC.MSG_ServiceCommand.equals(action)) {
@@ -277,6 +280,8 @@ public abstract class RileyLinkService extends Service {
         intentFilter.addAction(RileyLinkConst.Intents.BluetoothDisconnected);
         intentFilter.addAction(RileyLinkConst.Intents.RileyLinkReady);
         intentFilter.addAction(RileyLinkConst.Intents.RileyLinkDisconnected);
+        intentFilter.addAction(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+
         intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         intentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
         //intentFilter.addAction(RT2Const.serviceLocal.ipcBound);
@@ -342,7 +347,7 @@ public abstract class RileyLinkService extends Service {
 
         if (bluetoothAdapter == null) {
             LOG.error("Unable to obtain a BluetoothAdapter.");
-            RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.UnableToObtainBluetoothAdapter);
+            RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
         } else {
 
             if (!bluetoothAdapter.isEnabled()) {
@@ -362,7 +367,7 @@ public abstract class RileyLinkService extends Service {
 
 
     // returns true if our Rileylink configuration changed
-    public boolean reconfigureRileylink(String deviceAddress) {
+    public boolean reconfigureRileyLink(String deviceAddress) {
 
         RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkInitializing);
 
@@ -381,7 +386,7 @@ public abstract class RileyLinkService extends Service {
                 return true;
             }
         } else {
-            Toast.makeText(context, "Using RL " + deviceAddress, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Using RL " + deviceAddress, Toast.LENGTH_SHORT).show();
             LOG.debug("handleIPCMessage: Using RL " + deviceAddress);
 
             if (RileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {

@@ -34,8 +34,10 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.Page;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.utils.SP;
 
 /**
@@ -67,7 +69,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         super(MainApp.instance().getApplicationContext());
         instance = this;
         LOG.debug("RileyLinkMedtronicService newly constructed");
-        RileyLinkUtil.setRileyLinkService(this);
+        MedtronicUtil.setMedtronicService(this);
         pumpStatus = (MedtronicPumpStatus) MedtronicPumpPlugin.getPlugin().getPumpStatusData();
     }
 
@@ -236,14 +238,13 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         setPumpIDString(SP.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
         // get most recently used RileyLink address
-        rileyLinkServiceData.rileylinkAddress = SP.getString(MedtronicConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileylinkAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
         rileyLinkBLE = new RileyLinkBLE(this.context); // or this
         rfspy = new RFSpy(rileyLinkBLE);
         rfspy.startReader();
 
         RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
-
 
         // init rileyLinkCommunicationManager
         pumpCommunicationManager = new MedtronicCommunicationManager(context, rfspy, rileyLinkTargetFrequency);
@@ -261,19 +262,13 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    /* private functions */
-
-
-    private void setPumpIDString(String pumpID) {
+    public void setPumpIDString(String pumpID) {
         if (pumpID.length() != 6) {
             LOG.error("setPumpIDString: invalid pump id string: " + pumpID);
             return;
         }
 
         byte[] pumpIDBytes = ByteUtil.fromHexString(pumpID);
-
-
-        //SP.putString(MedtronicConst.Prefs.PumpSerial, pumpIDString);
 
         if (pumpIDBytes == null) {
             LOG.error("Invalid pump ID? " + ByteUtil.shortHexString(pumpIDBytes));
@@ -294,38 +289,18 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             LOG.info("Using pump ID " + pumpID);
 
             rileyLinkServiceData.setPumpID(pumpID, pumpIDBytes);
+
+            return;
         }
+
+        MedtronicUtil.setPumpDeviceState(PumpDeviceState.InvalidConfiguration);
+
 
         //LOG.info("setPumpIDString: saved pumpID " + idString);
     }
 
 
-    private void reportPumpFound() {
-        //rileyLinkIPCConnection.sendMessage(RT2Const.IPC.MSG_PUMP_pumpFound);
-    }
-
-
-//    public void setCurrentTask(ServiceTask task) {
-//        if (currentTask == null) {
-//            currentTask = task;
-//        } else {
-//            LOG.error("setCurrentTask: Cannot replace current task");
-//        }
-//    }
-//
-//
-//    public void finishCurrentTask(ServiceTask task) {
-//        if (task != currentTask) {
-//            LOG.error("finishCurrentTask: task does not match");
-//        }
-//        // hack to force deep copy of transport contents
-//        ServiceTransport transport = task.getServiceTransport().clone();
-//
-//        if (transport.hasServiceResult()) {
-//            sendServiceTransportResponse(transport, transport.getServiceResult());
-//        }
-//        currentTask = null;
-//    }
+    /* private functions */
 
 
     public void handleIncomingServiceTransport(Intent intent) {
@@ -467,7 +442,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
 
     public void connect(String reason) {
-        //bluetoothInit(); // this starts chain-loading connection
     }
 
 

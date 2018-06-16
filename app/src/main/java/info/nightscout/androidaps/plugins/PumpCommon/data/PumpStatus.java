@@ -19,7 +19,7 @@ public abstract class PumpStatus {
 
     // last bolus
     public Date lastBolusTime;
-    public double lastBolusAmount;
+    public Double lastBolusAmount;
 
     // other pump settings
     public String activeProfileName = "0";
@@ -51,6 +51,7 @@ public abstract class PumpStatus {
     public Double constraintBolus;
     public Integer constraintCarbs;
     public Double constraintMaxIob;
+    public Double[] basalsByHour;
 
 
     public PumpStatus(PumpDescription pumpDescription) {
@@ -63,7 +64,7 @@ public abstract class PumpStatus {
     public abstract void initSettings();
 
 
-    public void setLastDataTimeToNow() {
+    public void setLastCommunicationToNow() {
         this.lastDataTime = new Date();
         this.lastConnection = System.currentTimeMillis();
     }
@@ -109,7 +110,6 @@ public abstract class PumpStatus {
 
     public Date last_bolus_time;
     public double last_bolus_amount = 0;
-
 
 
 }

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 /**
  * Created by andy on 6/2/18.
  */
-
+@Deprecated
 public class PumpTimeStampedRecord {
 
     protected LocalDateTime localDateTime;

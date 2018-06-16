@@ -18,6 +18,8 @@ public class RileyLinkConst {
         public static final String BluetoothDisconnected = Prefix + "Bluetooth_Disconnected";
         public static final String RileyLinkDisconnected = Prefix + "RileyLink_Disconnected";
 
+        public static final String RileyLinkNewAddressSet = Prefix + "NewAddressSet";
+
         public static final String INTENT_NEW_rileylinkAddressKey = Prefix + "INTENT_NEW_rileylinkAddressKey";
         public static final String INTENT_NEW_pumpIDKey = Prefix + "INTENT_NEW_pumpIDKey";
     }
@@ -32,4 +34,9 @@ public class RileyLinkConst {
         public static final String MSG_ServiceCommand = Prefix + "MSG_ServiceCommand";
     }
 
+    public class Prefs {
+        public static final String PrefPrefix = "pref_rileylink_";
+
+        public static final String RileyLinkAddress = PrefPrefix + "mac_address";
+    }
 }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.message;
 /**
  * Created by geoff on 6/2/16.
  */
+@Deprecated
 public class ButtonPressCarelinkMessageBody extends CarelinkLongMessageBody {
     public static final byte BUTTON_EASY = 0x00;
     public static final byte BUTTON_ESC = 0x01;

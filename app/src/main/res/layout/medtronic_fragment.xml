@@ -15,6 +15,7 @@
             android:layout_above="@+id/medtronic_buttons"
             android:fillViewport="true">
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +31,7 @@
                     android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/overview_pumpstatus"
+                        android:id="@+id/overview_pump_medtronic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -58,10 +59,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
-                        android:text="@string/danar_bluetooth_status"
+                        android:text="@string/rileylink_status"
                         android:textSize="14sp" />
 
                     <TextView
@@ -75,7 +76,7 @@
                         android:textSize="14sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/medtronic_btconnection"
+                        android:id="@+id/medtronic_rl_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -83,7 +84,55 @@
                         android:paddingLeft="5dp"
                         android:text="{fa-bluetooth-b}"
                         android:textColor="@android:color/white"
-                        android:textSize="20dp" />
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/listdelimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingRight="5dp"
+                        android:text="@string/medtronic_pump_status"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingEnd="2dp"
+                        android:paddingStart="2dp"
+                        android:text=":"
+                        android:textSize="14sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/medtronic_pump_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingLeft="5dp"
+                        android:text="{fa-bluetooth-b}"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -112,7 +161,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/pump_battery_label"
@@ -129,14 +178,15 @@
                         android:textSize="14sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
-                        android:id="@+id/medtronic_battery"
+                        android:id="@+id/medtronic_pumpstate_battery"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
                         android:paddingLeft="5dp"
                         android:textColor="@android:color/white"
-                        android:textSize="20dp" />
+                        android:text=""
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -158,7 +208,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/pump_lastconnection_label"
@@ -203,7 +253,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/pump_lastbolus_label"
@@ -249,7 +299,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/pump_basebasalrate_label"
@@ -294,7 +344,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/pump_tempbasal_label"
@@ -340,7 +390,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/pump_reservoir_label"
@@ -368,51 +418,6 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:paddingRight="5dp"
-                        android:text="@string/danar_iob_label"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingEnd="2dp"
-                        android:paddingStart="2dp"
-                        android:text=":"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/medtronic_iob"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
 
                 <View
                     android:layout_width="fill_parent"
@@ -431,7 +436,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
                         android:gravity="end"
                         android:paddingRight="5dp"
                         android:text="@string/medtronic_errors"

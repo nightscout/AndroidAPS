@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data;
+package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
 import org.joda.time.LocalTime;
 

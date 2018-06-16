@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
+package info.nightscout.androidaps.plugins.PumpMedtronic.defs;
 
 import java.util.HashMap;
 
@@ -42,7 +42,7 @@ public enum PumpBolusType //implements CodeEnumWithTranslation
     private static boolean translated;
 
     static {
-        for(PumpBolusType pbt : values()) {
+        for (PumpBolusType pbt : values()) {
             codeMapping.put(pbt.code, pbt);
         }
     }

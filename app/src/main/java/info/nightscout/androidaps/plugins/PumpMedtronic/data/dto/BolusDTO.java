@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpBolusType;
 
 /**
  * Application:   GGC - GNU Gluco Control

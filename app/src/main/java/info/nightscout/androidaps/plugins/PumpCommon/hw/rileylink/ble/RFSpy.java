@@ -150,7 +150,7 @@ public class RFSpy {
 
 
     public RFSpyResponse getRadioVersion() {
-        RFSpyResponse resp = writeToData(getCommandArray(RFSpyCommand.GetVersion, null), 1000);
+        RFSpyResponse resp = writeToData(getCommandArray(RFSpyCommand.GetVersion, null), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
         if (resp == null) {
             LOG.error("getRadioVersion returned null");
         }

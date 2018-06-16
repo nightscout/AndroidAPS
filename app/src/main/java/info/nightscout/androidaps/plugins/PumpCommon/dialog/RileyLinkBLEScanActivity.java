@@ -41,9 +41,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.LocationHelper;
-import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.utils.SP;
 
 
@@ -87,16 +85,15 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
                 TextView textview = (TextView) view.findViewById(R.id.rileylink_device_address);
                 String bleAddress = textview.getText().toString();
 
-                //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SP.putString(MedtronicConst.Prefs.RileyLinkAddress, bleAddress);
+                SP.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-                //Notify that we have a new rileylinkAddressKey
-                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_rileylinkAddressKey);
-
-                LOG.debug("New rileylinkAddressKey: " + bleAddress);
-
-                //Notify that we have a new pumpIDKey
-                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_pumpIDKey);
+//                //Notify that we have a new rileylinkAddressKey
+//                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_rileylinkAddressKey);
+//
+//                LOG.debug("New rileylinkAddressKey: " + bleAddress);
+//
+//                //Notify that we have a new pumpIDKey
+//                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_pumpIDKey);
                 finish();
             }
         });
@@ -338,7 +335,7 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
             BluetoothDevice device = mLeDevices.get(i);
             String deviceName = device.getName();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            if (SP.getString(MedtronicConst.Prefs.RileyLinkAddress, "").compareTo(device.getAddress()) == 0) {
+            if (SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "").compareTo(device.getAddress()) == 0) {
                 //viewHolder.deviceName.setTextColor(getColor(R.color.secondary_text_light));
                 //viewHolder.deviceAddress.setTextColor(getColor(R.color.secondary_text_light));
                 deviceName += " (" + getResources().getString(R.string.rileylink_scanner_selected_device) + ")";

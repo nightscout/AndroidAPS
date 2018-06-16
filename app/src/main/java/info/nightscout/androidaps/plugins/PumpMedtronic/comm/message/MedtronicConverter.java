@@ -10,14 +10,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.BasalProfile;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BatteryStatusDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
-import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BatteryType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpConfigurationGroup;
@@ -38,7 +37,7 @@ public class MedtronicConverter {
 
         LOG.debug("Raw response before convert: " + HexDump.toHexStringDisplayable(rawContent));
 
-        this.pumpModel = RileyLinkUtil.getMedtronicPumpModel();
+        this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
 
         switch (commandType) {
 
@@ -132,39 +131,42 @@ public class MedtronicConverter {
     }
 
 
-    private Integer decodeBatteryStatus(byte[] rawData) {
-        //00 00 7C 00 00
+    private BatteryStatusDTO decodeBatteryStatus(byte[] rawData) {
+        // 00 7C 00 00
 
-        if (rawData.length <= 2) {
+        BatteryStatusDTO batteryStatus = new BatteryStatusDTO();
 
-            int status = rawData[0];
+        int status = rawData[0];
 
-            if (status == 0) {
-                return 75; // NORMAL
-            } else if (status == 1) {
-                return 20; // LOW
-            } else if (status == 2) {
+        if (status == 0) {
+            batteryStatus.batteryStatusType = BatteryStatusDTO.BatteryStatusType.Normal;
+        } else if (status == 1) {
+            batteryStatus.batteryStatusType = BatteryStatusDTO.BatteryStatusType.Low;
+        } else if (status == 2) {
+            batteryStatus.batteryStatusType = BatteryStatusDTO.BatteryStatusType.Unknown;
+        }
 
-            }
+        if (rawData.length > 1) {
 
-            return null;
-        } else {
             // if response in 3 bytes then we add additional information
             //double d = MedtronicUtil.makeUnsignedShort(rawData[2], rawData[1]) / 100.0d;
 
             double d = ByteUtil.toInt(rawData[1], rawData[2]) / 100.0d;
 
-            double perc = (d - BatteryType.Alkaline.lowVoltage) / (BatteryType.Alkaline.highVoltage - BatteryType.Alkaline.lowVoltage);
+            batteryStatus.voltage = d;
 
-            LOG.warn("Percent status: " + perc);
-            LOG.warn("Unknown status: " + rawData[0]);
-            LOG.warn("Full result: " + d);
+//            double perc = (d - BatteryType.Alkaline.lowVoltage) / (BatteryType.Alkaline.highVoltage - BatteryType.Alkaline.lowVoltage);
+//
+//            LOG.warn("Percent status: " + perc);
+//            LOG.warn("Unknown status: " + rawData[0]);
+//            LOG.warn("Full result: " + d);
+//
+//            int percent = (int) (perc * 100.0d);
 
-            int percent = (int) (perc * 100.0d);
-
-            return percent;
+            //return percent;
         }
 
+        return batteryStatus;
     }
 
 

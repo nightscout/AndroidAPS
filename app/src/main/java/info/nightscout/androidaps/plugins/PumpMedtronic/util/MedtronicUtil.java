@@ -8,22 +8,32 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.MessageType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
+import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtronicService;
 
 /**
  * Created by andy on 5/9/18.
  */
 
-public class MedtronicUtil {
+public class MedtronicUtil extends RileyLinkUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicUtil.class);
-    private static MedtronicDeviceType deviceType;
     private static boolean lowLevelDebug = true;
+    private static PumpDeviceState pumpDeviceState;
+    private static MedtronicDeviceType medtronicPumpModel;
+    private static RileyLinkMedtronicService medtronicService;
+    private static MedtronicPumpStatus medtronicPumpStatus;
+    private static MedtronicCommandType currentCommand;
 
 
     public static LocalTime getTimeFrom30MinInterval(int interval) {
@@ -68,7 +78,7 @@ public class MedtronicUtil {
 
         byte[] array = new byte[data.size()];
 
-        for(int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.size(); i++) {
             array[i] = data.get(i);
         }
 
@@ -103,7 +113,7 @@ public class MedtronicUtil {
 
 
     public static byte[] getBolusStrokes(double amount) {
-        return getStrokes(amount, 10, false);
+        return getStrokes(amount, medtronicPumpModel.getBolusStrokes(), false);
     }
 
 
@@ -117,7 +127,7 @@ public class MedtronicUtil {
 
         int strokes = getStrokesInt(amount, strokesPerUnit);
 
-        return getByteArrayFromUnsignedShort(strokes, false);
+        return getByteArrayFromUnsignedShort(strokes, returnFixedSize);
 
     }
 
@@ -183,7 +193,7 @@ public class MedtronicUtil {
         } else {
             sendPayloadBuffer.put((byte) parameters.length); // size
 
-            for(byte val : parameters) {
+            for (byte val : parameters) {
                 sendPayloadBuffer.put(val);
             }
         }
@@ -203,14 +213,6 @@ public class MedtronicUtil {
 
 
     // FIXME
-    public static MedtronicDeviceType getDeviceType() {
-        return deviceType;
-    }
-
-
-    public static void setDeviceType(MedtronicDeviceType deviceType) {
-        MedtronicUtil.deviceType = deviceType;
-    }
 
 
     public static boolean isLowLevelDebug() {
@@ -220,5 +222,68 @@ public class MedtronicUtil {
 
     public static void setLowLevelDebug(boolean lowLevelDebug) {
         MedtronicUtil.lowLevelDebug = lowLevelDebug;
+    }
+
+    public static void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
+        MedtronicUtil.pumpDeviceState = pumpDeviceState;
+        MainApp.bus().post(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+    }
+
+    public static PumpDeviceState getPumpDeviceState() {
+        return pumpDeviceState;
+    }
+
+    // TODO MOVE
+    public static boolean isModelSet() {
+        return MedtronicUtil.medtronicPumpModel != null;
+    }
+
+
+    public static void setMedtronicPumpModel(MedtronicDeviceType medtronicPumpModel) {
+        if (medtronicPumpModel != null && medtronicPumpModel != MedtronicDeviceType.Unknown_Device) {
+            MedtronicUtil.medtronicPumpModel = medtronicPumpModel;
+        }
+    }
+
+
+    public static MedtronicDeviceType getMedtronicPumpModel() {
+        return MedtronicUtil.medtronicPumpModel;
+    }
+
+
+    public static MedtronicCommunicationManager getMedtronicCommunicationManager() {
+        return (MedtronicCommunicationManager) RileyLinkUtil.rileyLinkCommunicationManager;
+    }
+
+
+    public static RileyLinkMedtronicService getMedtronicService() {
+        return MedtronicUtil.medtronicService;
+    }
+
+
+    public static void setMedtronicService(RileyLinkMedtronicService medtronicService) {
+        MedtronicUtil.medtronicService = medtronicService;
+    }
+
+    public static void setPumpStatus(MedtronicPumpStatus medtronicPumpStatus) {
+        MedtronicUtil.medtronicPumpStatus = medtronicPumpStatus;
+    }
+
+    public static MedtronicPumpStatus getPumpStatus() {
+        return MedtronicUtil.medtronicPumpStatus;
+    }
+
+    public static void setCurrentCommand(MedtronicCommandType currentCommand) {
+        MedtronicUtil.currentCommand = currentCommand;
+    }
+
+    public static MedtronicCommandType getCurrectCommand() {
+        return MedtronicUtil.currentCommand;
+    }
+
+    public static boolean isSame(Double d1, Double d2) {
+        double diff = d1 - d2;
+
+        return (Math.abs(diff) <= 0.000001);
     }
 }

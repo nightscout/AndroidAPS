@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
  * <p>
  * Author: Andy {andy@atech-software.com}
  */
-
+@Deprecated
 public class TemporaryBasalRateDTO extends PumpTimeStampedRecord {
 
     private Float amount;

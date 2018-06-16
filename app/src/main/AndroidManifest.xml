@@ -169,7 +169,10 @@
         <service
             android:name=".plugins.Overview.notifications.DismissNotificationService"
             android:exported="false" />
-        <service android:name=".plugins.PumpMedtronic.service.RileyLinkMedtronicService" />
+        <service
+            android:name=".plugins.PumpMedtronic.service.RileyLinkMedtronicService"
+            android:enabled="true"
+            android:exported="true" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

@@ -76,7 +76,7 @@ public enum MedtronicDeviceType {
 
         mapByDescription = new HashMap<>();
 
-        for(MedtronicDeviceType minimedDeviceType : values()) {
+        for (MedtronicDeviceType minimedDeviceType : values()) {
 
             if (!minimedDeviceType.isFamily) {
                 mapByDescription.put(minimedDeviceType.pumpModel, minimedDeviceType);
@@ -104,7 +104,7 @@ public enum MedtronicDeviceType {
 
     public static boolean isSameDevice(MedtronicDeviceType deviceWeCheck, MedtronicDeviceType deviceSources) {
         if (deviceSources.isFamily) {
-            for(MedtronicDeviceType mdt : deviceSources.familyMembers) {
+            for (MedtronicDeviceType mdt : deviceSources.familyMembers) {
                 if (mdt == deviceWeCheck)
                     return true;
             }
@@ -147,5 +147,9 @@ public enum MedtronicDeviceType {
 
     public static boolean isLargerFormat(MedtronicDeviceType model) {
         return isSameDevice(model, Medtronic_523andHigher);
+    }
+
+    public int getBolusStrokes() {
+        return (isLargerFormat(this)) ? 40 : 10;
     }
 }
