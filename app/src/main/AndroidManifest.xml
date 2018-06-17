@@ -166,6 +166,8 @@
             android:name=".plugins.Overview.notifications.DismissNotificationService"
             android:exported="false" />
 
+        <service android:name=".plugins.Persistentnotification.DummyService" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Persistentnotification;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -35,7 +36,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -46,9 +46,16 @@ import info.nightscout.utils.DecimalFormatter;
 
 public class PersistentNotificationPlugin extends PluginBase {
 
+    private static PersistentNotificationPlugin plugin;
+
+    public static PersistentNotificationPlugin getPlugin() {
+        if (plugin == null) plugin = new PersistentNotificationPlugin(MainApp.instance());
+        return plugin;
+    }
+
     public static final String CHANNEL_ID = "AndroidAPS-Ongoing";
 
-    private static final int ONGOING_NOTIFICATION_ID = 4711;
+    public static final int ONGOING_NOTIFICATION_ID = 4711;
     private final Context ctx;
 
     public PersistentNotificationPlugin(Context ctx) {
@@ -57,6 +64,7 @@ public class PersistentNotificationPlugin extends PluginBase {
                 .neverVisible(true)
                 .pluginName(R.string.ongoingnotificaction)
                 .enableByDefault(true)
+                .alwaysEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 .description(R.string.description_persistent_notification)
         );
         this.ctx = ctx;
@@ -66,7 +74,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     protected void onStart() {
         MainApp.bus().register(this);
         createNotificationChannel();
-        updateNotification();
+        triggerNotificationUpdate();
         super.onStart();
     }
 
@@ -85,20 +93,22 @@ public class PersistentNotificationPlugin extends PluginBase {
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
-        NotificationManager mNotificationManager =
-                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancel(ONGOING_NOTIFICATION_ID);
+        MainApp.instance().stopService(new Intent(MainApp.instance(), DummyService.class));
     }
 
-    private void updateNotification() {
+    private void triggerNotificationUpdate() {
+        MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
+    }
+
+    Notification updateNotification() {
         if (!isEnabled(PluginType.GENERAL)) {
-            return;
+            return null;
         }
 
         String line1 = "";
 
         if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !MainApp.getConfigBuilder().isProfileValid("Notificiation"))
-            return;
+            return null;
         String units = MainApp.getConfigBuilder().getProfileUnits();
 
 
@@ -166,7 +176,7 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         android.app.Notification notification = builder.build();
         mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
-
+        return notification;
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
@@ -188,42 +198,42 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
-        updateNotification();
+        triggerNotificationUpdate();
     }
 
 }
