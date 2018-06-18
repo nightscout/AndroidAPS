@@ -5,8 +5,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+/**
+ * Keeps AndroidAPS in foreground state, so it won't be terminated by Android nor get restricted by the background execution limits
+ */
 public class DummyService extends Service {
     @Nullable
     @Override
@@ -17,7 +19,8 @@ public class DummyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
-        if (notification != null) startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
+        if (notification != null)
+            startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
         return START_STICKY;
     }
 
