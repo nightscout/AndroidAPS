@@ -39,6 +39,7 @@
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
     <string name="description_sensitivity_oref0">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences.</string>
+    <string name="description_sensitivity_oref1">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_dexcom_g5">Receive BG values from the patched Dexcom G5 app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
@@ -665,6 +666,7 @@
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref0">Sensitivity Oref0</string>
+    <string name="sensitivityoref1">Sensitivity Oref1</string>
     <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
