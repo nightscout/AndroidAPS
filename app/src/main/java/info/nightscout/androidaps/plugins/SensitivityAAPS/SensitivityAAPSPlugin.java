@@ -5,7 +5,6 @@ import android.support.v4.util.LongSparseArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -98,7 +97,7 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
             }
 
             if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
-                deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+                deviationsArray.add(autosensData.validDeviation ? autosensData.deviation : 0d);
             if (deviationsArray.size() > hoursForDetection * 60 / 5)
                 deviationsArray.remove(0);
 

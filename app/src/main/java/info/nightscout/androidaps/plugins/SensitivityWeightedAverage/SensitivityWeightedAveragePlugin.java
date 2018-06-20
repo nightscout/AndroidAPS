@@ -103,9 +103,9 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
 
             //data.append(autosensData.time);
             long reverseWeight = (toTime - autosensData.time) / (5 * 60 * 1000L);
-            data.append(reverseWeight, autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+            data.append(reverseWeight, autosensData.validDeviation ? autosensData.deviation : 0d);
             //weights += reverseWeight;
-            //weightedsum += reverseWeight * (autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+            //weightedsum += reverseWeight * (autosensData.validDeviation ? autosensData.deviation : 0d);
 
 
             pastSensitivity += autosensData.pastSensitivity;

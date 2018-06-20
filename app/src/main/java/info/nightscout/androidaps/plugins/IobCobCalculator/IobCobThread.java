@@ -245,18 +245,17 @@ public class IobCobThread extends Thread {
                     // calculate autosens only without COB
                     if (autosensData.cob <= 0) {
                         if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
-                            autosensData.pastSensitivity += "=";
-                            autosensData.nonEqualDeviation = true;
+                            autosensData.pastSensitivity = "=";
+                            autosensData.validDeviation = true;
                         } else if (deviation > 0) {
-                            autosensData.pastSensitivity += "+";
-                            autosensData.nonEqualDeviation = true;
+                            autosensData.pastSensitivity = "+";
+                            autosensData.validDeviation = true;
                         } else {
-                            autosensData.pastSensitivity += "-";
-                            autosensData.nonEqualDeviation = true;
+                            autosensData.pastSensitivity = "-";
+                            autosensData.validDeviation = true;
                         }
-                        autosensData.nonCarbsDeviation = true;
                     } else {
-                        autosensData.pastSensitivity += "C";
+                        autosensData.pastSensitivity = "C";
                     }
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 

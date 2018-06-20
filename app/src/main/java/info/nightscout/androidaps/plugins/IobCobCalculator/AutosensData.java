@@ -59,8 +59,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     long chartTime;
     public String pastSensitivity = "";
     public double deviation = 0d;
-    boolean nonCarbsDeviation = false;
-    public boolean nonEqualDeviation = false;
+    public boolean validDeviation = false;
     List<CarbsInPast> activeCarbsList = new ArrayList<>();
     double absorbed = 0d;
     public double carbsFromBolus = 0d;
@@ -75,6 +74,14 @@ public class AutosensData implements DataPointWithLabelInterface {
     public double slopeFromMinDeviation = 999;
     public double usedMinCarbsImpact = 0d;
     public boolean failoverToMinAbsorbtionRate = false;
+
+    // Oref1
+    public boolean absorbing = false;
+    public double mealCarbs = 0;
+    public int mealStartCounter = 999;
+    public String type = "";
+    public boolean uam = false;
+    public List<Double> extraDeviation = new ArrayList<>();
 
     @Override
     public String toString() {

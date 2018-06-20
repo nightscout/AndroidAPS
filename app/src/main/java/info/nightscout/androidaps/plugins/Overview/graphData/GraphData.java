@@ -438,9 +438,18 @@ public class GraphData {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 int color = MainApp.gc(R.color.deviationblack); // "="
-                if (autosensData.pastSensitivity.equals("C")) color = MainApp.gc(R.color.deviationgrey);
-                if (autosensData.pastSensitivity.equals("+")) color = MainApp.gc(R.color.deviationgreen);
-                if (autosensData.pastSensitivity.equals("-")) color = MainApp.gc(R.color.deviationred);
+                if (autosensData.type.equals("") || autosensData.type.equals("non-meal")) {
+                    if (autosensData.pastSensitivity.equals("C"))
+                        color = MainApp.gc(R.color.deviationgrey);
+                    if (autosensData.pastSensitivity.equals("+"))
+                        color = MainApp.gc(R.color.deviationgreen);
+                    if (autosensData.pastSensitivity.equals("-"))
+                        color = MainApp.gc(R.color.deviationred);
+                } else if (autosensData.type.equals("uam")) {
+                    color = MainApp.gc(R.color.uam);
+                } else if (autosensData.type.equals("csf")) {
+                    color = MainApp.gc(R.color.deviationgrey);
+                }
                 devArray.add(new DeviationDataPoint(time, autosensData.deviation, color, devScale));
                 maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
             }

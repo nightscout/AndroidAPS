@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
@@ -21,13 +23,11 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.Event;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
-import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -35,6 +35,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
 import static info.nightscout.utils.DateUtil.now;
+import static java.util.Calendar.MINUTE;
 
 /**
  * Created by mike on 23.01.2018.
@@ -209,16 +210,16 @@ public class IobCobOref1Thread extends Thread {
                     if (previous != null && previous.cob > 0) {
                         // calculate sum of min carb impact from all active treatments
                         double totalMinCarbsImpact = 0d;
-                        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
-                            //when the impact depends on a max time, sum them up as smaller carb sizes make them smaller
-                            for (int ii = 0; ii < autosensData.activeCarbsList.size(); ++ii) {
-                                AutosensData.CarbsInPast c = autosensData.activeCarbsList.get(ii);
-                                totalMinCarbsImpact += c.min5minCarbImpact;
-                            }
-                        } else {
-                            //Oref sensitivity
-                            totalMinCarbsImpact = SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
-                        }
+//                        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+                        //when the impact depends on a max time, sum them up as smaller carb sizes make them smaller
+//                            for (int ii = 0; ii < autosensData.activeCarbsList.size(); ++ii) {
+//                                AutosensData.CarbsInPast c = autosensData.activeCarbsList.get(ii);
+//                                totalMinCarbsImpact += c.min5minCarbImpact;
+//                            }
+//                        } else {
+                        //Oref sensitivity
+                        totalMinCarbsImpact = SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
+//                        }
 
                         // figure out how many carbs that represents
                         // but always assume at least 3mg/dL/5m (default) absorption per active treatment
@@ -228,11 +229,18 @@ public class IobCobOref1Thread extends Thread {
                         autosensData.absorbed = ci * profile.getIc(bgTime) / sens;
                         // and add that to the running total carbsAbsorbed
                         autosensData.cob = Math.max(previous.cob - autosensData.absorbed, 0d);
+                        autosensData.mealCarbs = previous.mealCarbs;
                         autosensData.substractAbosorbedCarbs();
                         autosensData.usedMinCarbsImpact = totalMinCarbsImpact;
+                        autosensData.absorbing = previous.absorbing;
+                        autosensData.mealStartCounter = previous.mealStartCounter;
+                        autosensData.type = previous.type;
+                        autosensData.uam = previous.uam;
                     }
+
                     autosensData.removeOldCarbs(bgTime);
                     autosensData.cob += autosensData.carbsFromBolus;
+                    autosensData.mealCarbs += autosensData.carbsFromBolus;
                     autosensData.deviation = deviation;
                     autosensData.bgi = bgi;
                     autosensData.delta = delta;
@@ -242,23 +250,85 @@ public class IobCobOref1Thread extends Thread {
                     autosensData.slopeFromMinDeviation = slopeFromMinDeviation;
 
 
-                    // calculate autosens only without COB
-                    if (autosensData.cob <= 0) {
-                        if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
-                            autosensData.pastSensitivity += "=";
-                            autosensData.nonEqualDeviation = true;
-                        } else if (deviation > 0) {
-                            autosensData.pastSensitivity += "+";
-                            autosensData.nonEqualDeviation = true;
-                        } else {
-                            autosensData.pastSensitivity += "-";
-                            autosensData.nonEqualDeviation = true;
+                    // If mealCOB is zero but all deviations since hitting COB=0 are positive, exclude from autosens
+                    if (autosensData.cob > 0 || autosensData.absorbing || autosensData.mealCarbs > 0) {
+                        if (deviation > 0)
+                            autosensData.absorbing = true;
+                        else
+                            autosensData.absorbing = false;
+                        // stop excluding positive deviations as soon as mealCOB=0 if meal has been absorbing for >5h
+                        if (autosensData.mealStartCounter > 60 && autosensData.cob < 0.5) {
+                            autosensData.absorbing = false;
                         }
-                        autosensData.nonCarbsDeviation = true;
+                        if (!autosensData.absorbing && autosensData.cob < 0.5) {
+                            autosensData.mealCarbs = 0;
+                        }
+                        // check previous "type" value, and if it wasn't csf, set a mealAbsorption start flag
+                        if (!autosensData.type.equals("csf")) {
+//                                process.stderr.write("(");
+                            autosensData.mealStartCounter = 0;
+                        }
+                        autosensData.mealStartCounter++;
+                        autosensData.type = "csf";
                     } else {
-                        autosensData.pastSensitivity += "C";
+                        // check previous "type" value, and if it was csf, set a mealAbsorption end flag
+                        if (autosensData.type.equals("csf")) {
+//                                process.stderr.write(")");
+                        }
+
+                        double currentBasal = profile.getBasal(bgTime);
+                        // always exclude the first 45m after each carb entry
+                        //if (iob.iob > currentBasal || uam ) {
+                        if (iob.iob > 2 * currentBasal || autosensData.uam || autosensData.mealStartCounter < 9) {
+                            autosensData.mealStartCounter++;
+                            if (deviation > 0)
+                                autosensData.uam = true;
+                            else
+                                autosensData.uam = false;
+                            if (!autosensData.type.equals("uam")) {
+//                                    process.stderr.write("u(");
+                            }
+                            autosensData.type = "uam";
+                        } else {
+                            if (autosensData.type.equals("uam")) {
+//                                    process.stderr.write(")");
+                            }
+                            autosensData.type = "non-meal";
+                        }
+                    }
+
+                    // Exclude meal-related deviations (carb absorption) from autosens
+                    if (autosensData.type.equals("non-meal")) {
+                        if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
+                            autosensData.pastSensitivity = "=";
+                            autosensData.validDeviation = true;
+                        } else if (deviation > 0) {
+                            autosensData.pastSensitivity = "+";
+                            autosensData.validDeviation = true;
+                        } else {
+                            autosensData.pastSensitivity = "-";
+                            autosensData.validDeviation = true;
+                        }
+                    } else {
+                        autosensData.pastSensitivity = "x";
                     }
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
+
+                    // add an extra negative deviation if a high temptarget is running and exercise mode is set
+                    if (SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                        TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(bgTime);
+                        if (tempTarget != null && tempTarget.target() > 100) {
+                            autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20);
+                        }
+                    }
+
+                    // add one neutral deviation every 2 hours to help decay over long exclusion periods
+                    GregorianCalendar calendar = new GregorianCalendar();
+                    calendar.setTimeInMillis(bgTime);
+                    int min = calendar.get(MINUTE);
+                    int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                    if (min >= 0 && min < 5 && hours %2 == 0)
+                        autosensData.extraDeviation.add(0d);
 
                     previous = autosensData;
                     autosensDataTable.put(bgTime, autosensData);

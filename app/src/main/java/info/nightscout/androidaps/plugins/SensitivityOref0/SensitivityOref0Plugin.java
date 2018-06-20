@@ -98,7 +98,7 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
             }
 
             if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
-                deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+                deviationsArray.add(autosensData.validDeviation ? autosensData.deviation : 0d);
             if (deviationsArray.size() > hoursForDetection * 60 / 5)
                 deviationsArray.remove(0);
 
