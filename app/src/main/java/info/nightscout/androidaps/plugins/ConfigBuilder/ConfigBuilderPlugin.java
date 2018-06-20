@@ -520,6 +520,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
         // deliver SMB
         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.lastKnownBolusTime = activeTreatments.getLastBolusTime();
         detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
         detailedBolusInfo.insulin = request.smb;
         detailedBolusInfo.isSMB = true;
