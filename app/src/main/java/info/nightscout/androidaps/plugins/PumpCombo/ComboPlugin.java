@@ -354,6 +354,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
         // trigger a connect, which will update state and check history
         CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
+        if (stateResult.invalidSetup) {
+            MainApp.bus().post(new EventNewNotification(
+                    new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_invalid_setup), Notification.URGENT)));
+            return;
+        }
         if (!stateResult.success) {
             return;
         }
