@@ -79,7 +79,7 @@ public class NSProfileFragment extends SubscriberFragment {
     public void onStatusEvent(final EventNSProfileUpdateGUI ev) {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> updateGUI());
+            activity.runOnUiThread(() -> { synchronized (NSProfileFragment.this) { updateGUI(); } });
     }
 
     @Override

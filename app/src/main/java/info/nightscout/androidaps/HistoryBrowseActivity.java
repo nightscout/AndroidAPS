@@ -176,7 +176,9 @@ public class HistoryBrowseActivity extends AppCompatActivity {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateGUI("EventAutosensCalculationFinished");
+                    synchronized (HistoryBrowseActivity.this) {
+                        updateGUI("EventAutosensCalculationFinished");
+                    }
                 }
             });
         }
