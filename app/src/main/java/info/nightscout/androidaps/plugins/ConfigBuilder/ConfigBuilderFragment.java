@@ -22,9 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import butterknife.Optional;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
@@ -51,7 +49,7 @@ import info.nightscout.utils.PasswordProtection;
 
 public class ConfigBuilderFragment extends SubscriberFragment {
 
-    private List<PluginView> pluginViews = new ArrayList<>();
+    private List<PluginViewHolder> pluginViewHolders = new ArrayList<>();
 
     @BindView(R.id.profile_plugins)
     LinearLayout profilePlugins;
@@ -111,33 +109,33 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        for (PluginView pluginView : pluginViews) pluginView.unbind();
-        pluginViews.clear();
+        for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.unbind();
+        pluginViewHolders.clear();
     }
 
     @Override
     protected void updateGUI() {
-        for (PluginView pluginView : pluginViews) pluginView.update();
+        for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.update();
     }
 
     private void createViews() {
-        createViewsForPlugins(profilePlugins, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
-        createViewsForPlugins(insulinPlugins, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
-        createViewsForPlugins(bgSourcePlugins, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE));
-        createViewsForPlugins(pumpPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP));
-        createViewsForPlugins(sensitivityPlugins, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY));
-        createViewsForPlugins(apsPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.APS));
-        createViewsForPlugins(loopPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP));
-        createViewsForPlugins(constraintsPlugins, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS));
-        createViewsForPlugins(treatmentsPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT));
-        createViewsForPlugins(generalPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL));
+        createViewsForPlugins(profilePlugins, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
+        createViewsForPlugins(insulinPlugins, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
+        createViewsForPlugins(bgSourcePlugins, PluginType.BGSOURCE, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE));
+        createViewsForPlugins(pumpPlugins, PluginType.PUMP, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP));
+        createViewsForPlugins(sensitivityPlugins, PluginType.SENSITIVITY, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY));
+        createViewsForPlugins(apsPlugins, PluginType.APS, MainApp.getSpecificPluginsVisibleInList(PluginType.APS));
+        createViewsForPlugins(loopPlugins, PluginType.LOOP, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP));
+        createViewsForPlugins(constraintsPlugins, PluginType.CONSTRAINTS, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS));
+        createViewsForPlugins(treatmentsPlugins, PluginType.TREATMENT, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT));
+        createViewsForPlugins(generalPlugins, PluginType.GENERAL, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL));
     }
 
-    private void createViewsForPlugins(LinearLayout parent, List<PluginBase> plugins) {
+    private void createViewsForPlugins(LinearLayout parent, PluginType pluginType, List<PluginBase> plugins) {
         for (PluginBase plugin: plugins) {
-            PluginView pluginView = new PluginView(plugin);
-            parent.addView(pluginView.getBaseView());
-            pluginViews.add(pluginView);
+            PluginViewHolder pluginViewHolder = new PluginViewHolder(pluginType, plugin);
+            parent.addView(pluginViewHolder.getBaseView());
+            pluginViewHolders.add(pluginViewHolder);
         }
     }
 
@@ -200,9 +198,10 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
     }
 
-    class PluginView {
+    class PluginViewHolder {
 
         private Unbinder unbinder;
+        private PluginType pluginType;
         private PluginBase plugin;
 
         LinearLayout baseView;
@@ -219,7 +218,8 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         @BindView(R.id.plugin_visibility)
         CheckBox pluginVisibility;
 
-        public PluginView(PluginBase plugin) {
+        public PluginViewHolder(PluginType pluginType, PluginBase plugin) {
+            this.pluginType = pluginType;
             this.plugin = plugin;
             baseView = (LinearLayout) getLayoutInflater().inflate(R.layout.configbuilder_single_plugin, null);
             unbinder = ButterKnife.bind(this, baseView);
@@ -231,10 +231,10 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
 
         public void update() {
-            enabledExclusive.setVisibility(areMultipleSelectionsAllowed(plugin.getType()) ? View.GONE : View.VISIBLE);
-            enabledInclusive.setVisibility(areMultipleSelectionsAllowed(plugin.getType()) ? View.VISIBLE : View.GONE);
-            enabledExclusive.setChecked(plugin.isEnabled(plugin.getType()));
-            enabledInclusive.setChecked(plugin.isEnabled(plugin.getType()));
+            enabledExclusive.setVisibility(areMultipleSelectionsAllowed(pluginType) ? View.GONE : View.VISIBLE);
+            enabledInclusive.setVisibility(areMultipleSelectionsAllowed(pluginType) ? View.VISIBLE : View.GONE);
+            enabledExclusive.setChecked(plugin.isEnabled(pluginType));
+            enabledInclusive.setChecked(plugin.isEnabled(pluginType));
             enabledInclusive.setEnabled(!plugin.pluginDescription.alwaysEnabled);
             enabledExclusive.setEnabled(!plugin.pluginDescription.alwaysEnabled);
             pluginName.setText(plugin.getName());
@@ -243,15 +243,15 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                 pluginDescription.setVisibility(View.VISIBLE);
                 pluginDescription.setText(plugin.getDescription());
             }
-            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(plugin.getType()) ? View.INVISIBLE : View.VISIBLE);
+            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(pluginType) ? View.INVISIBLE : View.VISIBLE);
             pluginVisibility.setVisibility(plugin.hasFragment() ? View.VISIBLE : View.INVISIBLE);
-            pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(plugin.getType()));
+            pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(pluginType));
             pluginVisibility.setChecked(plugin.isFragmentVisible());
         }
 
         @OnClick(R.id.plugin_visibility)
         void onVisibilityChanged() {
-            plugin.setFragmentVisible(plugin.getType(), pluginVisibility.isChecked());
+            plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked());
             ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible");
             MainApp.bus().post(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().logPluginStatus();
@@ -260,9 +260,9 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         @OnClick({R.id.plugin_enabled_exclusive, R.id.plugin_enabled_inclusive})
         void onEnabledChanged() {
             boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
-            plugin.setPluginEnabled(plugin.getType(), enabled);
-            plugin.setFragmentVisible(plugin.getType(), enabled);
-            processOnEnabledCategoryChanged(plugin, plugin.getType());
+            plugin.setPluginEnabled(pluginType, enabled);
+            plugin.setFragmentVisible(pluginType, enabled);
+            processOnEnabledCategoryChanged(plugin, pluginType);
             updateGUI();
             ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
             MainApp.bus().post(new EventRefreshGui());
