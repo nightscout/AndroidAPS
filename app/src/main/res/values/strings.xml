@@ -437,6 +437,7 @@
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
     <string name="refresheventsfromnightscout">Refresh events from NS</string>
+    <string name="deletefuturetreatmets">Delete treatments in the future</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
@@ -1163,6 +1164,7 @@
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
+    <string name="nav_deletefuturetreatments">Delete treatments in the future</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
