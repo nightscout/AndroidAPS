@@ -90,6 +90,9 @@ public class SensitivityOref1Plugin extends PluginBase implements SensitivityInt
             }
 
             deviationsArray.add(autosensData.validDeviation ? autosensData.deviation : 0d);
+
+            for (int i = 0; i < autosensData.extraDeviation.size(); i++)
+                deviationsArray.add(autosensData.extraDeviation.get(i));
             if (deviationsArray.size() > 96)
                 deviationsArray.remove(0);
 
