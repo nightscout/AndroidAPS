@@ -1470,14 +1470,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
                 ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
-                Profile profile = store.getSpecificProfile(profileSwitch.profileName);
-                if (profile != null) {
-                    profileSwitch.profileJson = profile.getData().toString();
-                    log.debug("Profile switch prefilled with JSON from local store");
-                    // Update data in NS
-                    NSUpload.updateProfileSwitch(profileSwitch);
+                if (store != null) {
+                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null) {
+                        profileSwitch.profileJson = profile.getData().toString();
+                        log.debug("Profile switch prefilled with JSON from local store");
+                        // Update data in NS
+                        NSUpload.updateProfileSwitch(profileSwitch);
+                    } else {
+                        log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                        return;
+                    }
                 } else {
-                    log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                    log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
             }
