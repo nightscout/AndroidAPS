@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -332,7 +333,9 @@ public class LoopPlugin extends PluginBase {
             Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
 
             if (closedLoopEnabled.value()) {
-                if (result.isChangeRequested()) {
+                if (result.isChangeRequested()
+                        && !ConfigBuilderPlugin.getCommandQueue().bolusInQueue()
+                        && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)
