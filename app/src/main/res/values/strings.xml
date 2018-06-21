@@ -1163,6 +1163,7 @@
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
+    <string name="custom">Custom</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
