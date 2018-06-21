@@ -80,7 +80,7 @@ public class LoopFragment extends SubscriberFragment {
         clearGUI();
         final Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> { synchronized (LoopFragment.this) { lastRunView.setText(ev.text); } });
+            activity.runOnUiThread(() -> { synchronized (LoopFragment.this) { if (lastRunView != null) lastRunView.setText(ev.text); } });
     }
 
 
@@ -90,6 +90,7 @@ public class LoopFragment extends SubscriberFragment {
         if (activity != null)
             activity.runOnUiThread(() -> {
                 synchronized (LoopFragment.this) {
+                    if (!isBound()) return;
                     LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
                     if (lastRun != null) {
                         requestView.setText(lastRun.request != null ? lastRun.request.toSpanned() : "");
@@ -120,14 +121,28 @@ public class LoopFragment extends SubscriberFragment {
         if (activity != null)
             activity.runOnUiThread(() -> {
                 synchronized (LoopFragment.this) {
-                    requestView.setText("");
-                    constraintsProcessedView.setText("");
-                    sourceView.setText("");
-                    lastRunView.setText("");
-                    lastEnactView.setText("");
-                    tbrSetByPumpView.setText("");
-                    smbSetByPumpView.setText("");
+                    if (isBound()) {
+                        requestView.setText("");
+                        constraintsProcessedView.setText("");
+                        sourceView.setText("");
+                        lastRunView.setText("");
+                        lastEnactView.setText("");
+                        tbrSetByPumpView.setText("");
+                        smbSetByPumpView.setText("");
+                    }
                 }
             });
+    }
+
+    boolean isBound() {
+        return requestView != null
+                && constraintsProcessedView != null
+                && sourceView != null
+                && lastRunView != null
+                && lastEnactView != null
+                && tbrSetByPumpView != null
+                && smbSetByPumpView != null
+                && constraintsView != null
+                && runNowButton != null;
     }
 }

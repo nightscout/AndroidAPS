@@ -88,6 +88,7 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     synchronized (OpenAPSSMBFragment.this) {
+                        if (!isBound()) return;
                         OpenAPSSMBPlugin plugin = OpenAPSSMBPlugin.getPlugin();
                         DetermineBasalResultSMB lastAPSResult = plugin.lastAPSResult;
                         if (lastAPSResult != null) {
@@ -129,18 +130,35 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     synchronized (OpenAPSSMBFragment.this) {
-                        resultView.setText(text);
-                        glucoseStatusView.setText("");
-                        currentTempView.setText("");
-                        iobDataView.setText("");
-                        profileView.setText("");
-                        mealDataView.setText("");
-                        autosensDataView.setText("");
-                        scriptdebugView.setText("");
-                        requestView.setText("");
-                        lastRunView.setText("");
+                        if (isBound()) {
+                            resultView.setText(text);
+                            glucoseStatusView.setText("");
+                            currentTempView.setText("");
+                            iobDataView.setText("");
+                            profileView.setText("");
+                            mealDataView.setText("");
+                            autosensDataView.setText("");
+                            scriptdebugView.setText("");
+                            requestView.setText("");
+                            lastRunView.setText("");
+                        }
                     }
                 }
             });
+    }
+
+    private boolean isBound() {
+        return run != null
+                && lastRunView != null
+                && constraintsView != null
+                && glucoseStatusView != null
+                && currentTempView != null
+                && iobDataView != null
+                && profileView != null
+                && mealDataView != null
+                && autosensDataView != null
+                && resultView != null
+                && scriptdebugView != null
+                && requestView != null;
     }
 }

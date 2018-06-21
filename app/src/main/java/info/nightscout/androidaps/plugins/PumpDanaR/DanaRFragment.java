@@ -217,6 +217,8 @@ public class DanaRFragment extends SubscriberFragment {
                 @Override
                 public void run() {
                     synchronized(DanaRFragment.this) {
+                        if (!isBound()) return;
+
                         DanaRPump pump = DanaRPump.getInstance();
                         if (pump.lastConnection != 0) {
                             Long agoMsec = System.currentTimeMillis() - pump.lastConnection;
@@ -280,12 +282,30 @@ public class DanaRFragment extends SubscriberFragment {
                         }
                         //hide user options button if not an RS pump
                         boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
-                        if (isKorean ) {
+                        if (isKorean) {
                             danar_user_options.setVisibility(View.GONE);
                         }
                     }
                 }
             });
+    }
+
+    private boolean isBound() {
+        return lastConnectionView != null
+                && lastBolusView != null
+                && dailyUnitsView != null
+                && basaBasalRateView != null
+                && tempBasalView != null
+                && extendedBolusView != null
+                && reservoirView != null
+                && batteryView != null
+                && iobView != null
+                && firmwareView != null
+                && basalStepView != null
+                && bolusStepView != null
+                && serialNumberView != null
+                && danar_user_options != null
+                && queueView != null;
     }
 
 }

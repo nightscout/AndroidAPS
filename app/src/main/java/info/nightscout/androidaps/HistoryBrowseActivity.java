@@ -185,6 +185,10 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     }
 
     void updateGUI(String from) {
+
+        if (noProfile == null || buttonDate == null || buttonZoom == null || bgGraph == null || iobGraph == null || seekBar == null)
+            return;
+
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
