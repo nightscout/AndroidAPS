@@ -224,7 +224,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             case R.id.treatments_delete_future_treatments:
                 builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle(MainApp.gs(R.string.confirmation));
-                builder.setMessage(MainApp.gs(R.string.deletefuturetreatmets) + "?");
+                builder.setMessage(MainApp.gs(R.string.deletefuturetreatments) + "?");
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     final List<Treatment> futureTreatments = TreatmentsPlugin.getPlugin().getService()
                             .getTreatmentDataFromTime(now() + 1000, true);
