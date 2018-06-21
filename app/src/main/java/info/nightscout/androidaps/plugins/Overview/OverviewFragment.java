@@ -494,8 +494,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (v == tempTargetView) {
             menu.setHeaderTitle(MainApp.gs(R.string.careportal_temporarytarget));
             menu.add(MainApp.gs(R.string.custom));
-            menu.add(MainApp.gs(R.string.activity));
             menu.add(MainApp.gs(R.string.eatingsoon));
+            menu.add(MainApp.gs(R.string.activity));
             menu.add(MainApp.gs(R.string.hypo));
             if (TreatmentsPlugin.getPlugin().getTempTargetFromHistory() != null) {
                 menu.add(MainApp.gs(R.string.cancel));
