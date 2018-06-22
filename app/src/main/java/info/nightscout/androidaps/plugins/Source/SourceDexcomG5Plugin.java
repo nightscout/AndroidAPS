@@ -2,11 +2,17 @@ package info.nightscout.androidaps.plugins.Source;
 
 import android.os.Bundle;
 
+import com.google.common.collect.Lists;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -47,8 +53,8 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
     }
 
     @Override
-    public void processNewData(Bundle bundle) {
-        BgReading bgReading = new BgReading();
+    public List<BgReading> processNewData(Bundle bundle) {
+        List<BgReading> bgReadings = new ArrayList<>();
 
         String data = bundle.getString("data");
         // onHandleIntent Bundle{ data => [{"m_time":1511939180,"m_trend":"NotComputable","m_value":335}]; android.support.content.wakelockid => 95; }Bundle
@@ -59,22 +65,27 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
             log.debug("Received Dexcom Data size:" + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
+                BgReading bgReading = new BgReading();
                 bgReading.value = json.getInt("m_value");
                 bgReading.direction = json.getString("m_trend");
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
                 bgReading.filtered = true;
                 bgReading.sourcePlugin = SourceDexcomG5Plugin.getPlugin().getName();
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading);
-                }
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    NSUpload.sendToXdrip(bgReading);
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
+                if (isNew) {
+                    bgReadings.add(bgReading);
+                    if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                        NSUpload.uploadBg(bgReading);
+                    }
+                    if (SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                        NSUpload.sendToXdrip(bgReading);
+                    }
                 }
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+        return bgReadings;
     }
 }

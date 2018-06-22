@@ -2,6 +2,11 @@ package info.nightscout.androidaps.plugins.Source;
 
 import android.os.Bundle;
 
+import com.google.common.collect.Lists;
+
+import java.util.Collections;
+import java.util.List;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -33,7 +38,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
     }
 
     @Override
-    public void processNewData(Bundle bundle) {
+    public List<BgReading> processNewData(Bundle bundle) {
         BgReading bgReading = new BgReading();
 
         bgReading.value = bundle.getDouble("mySGV");
@@ -43,6 +48,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
         bgReading.filtered = false;
         bgReading.sourcePlugin = SourceGlimpPlugin.getPlugin().getName();
 
-        MainApp.getDbHelper().createIfNotExists(bgReading, getName());
+        boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
+        return isNew ? Lists.newArrayList(bgReading) : Collections.emptyList();
     }
 }

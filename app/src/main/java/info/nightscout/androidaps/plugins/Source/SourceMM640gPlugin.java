@@ -8,6 +8,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -40,11 +44,10 @@ public class SourceMM640gPlugin extends PluginBase implements BgSourceInterface 
     }
 
     @Override
-    public void processNewData(Bundle bundle) {
-        final String collection = bundle.getString("collection");
-        if (collection == null) return;
+    public List<BgReading> processNewData(Bundle bundle) {
+        List<BgReading> bgReadings = new ArrayList<>();
 
-        if (collection.equals("entries")) {
+        if (Objects.equals(bundle.getString("collection"), "entries")) {
             final String data = bundle.getString("data");
 
             if ((data != null) && (data.length() > 0)) {
@@ -64,7 +67,10 @@ public class SourceMM640gPlugin extends PluginBase implements BgSourceInterface 
                                 bgReading.filtered = true;
                                 bgReading.sourcePlugin = SourceMM640gPlugin.getPlugin().getName();
 
-                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
+                                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
+                                if (isNew) {
+                                    bgReadings.add(bgReading);
+                                }
                                 break;
                             default:
                                 log.debug("Unknown entries type: " + type);
@@ -75,5 +81,7 @@ public class SourceMM640gPlugin extends PluginBase implements BgSourceInterface 
                 }
             }
         }
+
+        return bgReadings;
     }
 }

@@ -8,6 +8,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -47,8 +50,8 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
     }
 
     @Override
-    public void processNewData(Bundle bundle) {
-        BgReading bgReading = new BgReading();
+    public List<BgReading> processNewData(Bundle bundle) {
+        List<BgReading> bgReadings = new ArrayList<>();
 
         String data = bundle.getString("data");
         log.debug("Received Poctech Data", data);
@@ -58,23 +61,27 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
             log.debug("Received Poctech Data size:" + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);
+                BgReading bgReading = new BgReading();
                 bgReading.value = json.getDouble("current");
                 bgReading.direction = json.getString("direction");
                 bgReading.date = json.getLong("date");
                 bgReading.raw = json.getDouble("raw");
                 if (JsonHelper.safeGetString(json, "utils", Constants.MGDL).equals("mmol/L"))
                     bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech");
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading);
-                }
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    NSUpload.sendToXdrip(bgReading);
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
+                if (isNew) {
+                    bgReadings.add(bgReading);
+                    if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                        NSUpload.uploadBg(bgReading);
+                    }
+                    if (SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                        NSUpload.sendToXdrip(bgReading);
+                    }
                 }
             }
-
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+        return bgReadings;
     }
 }

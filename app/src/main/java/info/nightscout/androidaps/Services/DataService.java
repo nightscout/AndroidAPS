@@ -71,6 +71,8 @@ public class DataService extends IntentService {
     protected void onHandleIntent(final Intent intent) {
         if (intent == null)
             return;
+        if (Config.logIncommingData)
+            log.debug("Got intent: " + intent.getAction());
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
         if (ConfigBuilderPlugin.getActiveBgSource() == null) {
@@ -203,25 +205,21 @@ public class DataService extends IntentService {
     }
 
     private void processNewBgIntent(BgSourceInterface bgSource, Intent intent) {
-        if (Config.logIncommingData)
-            log.debug("Got intent: " + intent.getAction());
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
         bgSource.processNewData(bundle);
     }
 
     private void handleNewDataFromNSClient(Intent intent) {
-        Bundle bundles = intent.getExtras();
-        if (bundles == null) return;
-
-
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
 
         if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
-            if (bundles.containsKey("nsclientversioncode")) {
-                ConfigBuilderPlugin.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
-                ConfigBuilderPlugin.nightscoutVersionName = bundles.getString("nightscoutversionname");
-                ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
-                ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
+            if (bundle.containsKey("nsclientversioncode")) {
+                ConfigBuilderPlugin.nightscoutVersionCode = bundle.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
+                ConfigBuilderPlugin.nightscoutVersionName = bundle.getString("nightscoutversionname");
+                ConfigBuilderPlugin.nsClientVersionCode = bundle.getInt("nsclientversioncode"); // for ver 1.17 contains 117
+                ConfigBuilderPlugin.nsClientVersionName = bundle.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
                 try {
                     if (ConfigBuilderPlugin.nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
@@ -243,9 +241,9 @@ public class DataService extends IntentService {
                 Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
             }
-            if (bundles.containsKey("status")) {
+            if (bundle.containsKey("status")) {
                 try {
-                    JSONObject statusJson = new JSONObject(bundles.getString("status"));
+                    JSONObject statusJson = new JSONObject(bundle.getString("status"));
                     NSSettingsStatus.getInstance().setData(statusJson);
                     if (Config.logIncommingData)
                         log.debug("Received status: " + statusJson.toString());
@@ -262,8 +260,8 @@ public class DataService extends IntentService {
         }
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
             try {
-                if (bundles.containsKey("devicestatus")) {
-                    JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
+                if (bundle.containsKey("devicestatus")) {
+                    JSONObject devicestatusJson = new JSONObject(bundle.getString("devicestatus"));
                     NSDeviceStatus.getInstance().setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
@@ -271,8 +269,8 @@ public class DataService extends IntentService {
                         ObjectivesPlugin.saveProgress();
                     }
                 }
-                if (bundles.containsKey("devicestatuses")) {
-                    String devicestatusesstring = bundles.getString("devicestatuses");
+                if (bundle.containsKey("devicestatuses")) {
+                    String devicestatusesstring = bundle.getString("devicestatuses");
                     JSONArray jsonArray = new JSONArray(devicestatusesstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject devicestatusJson = jsonArray.getJSONObject(i);
@@ -291,8 +289,8 @@ public class DataService extends IntentService {
         // Handle profile
         if (intent.getAction().equals(Intents.ACTION_NEW_PROFILE)) {
             try {
-                String activeProfile = bundles.getString("activeprofile");
-                String profile = bundles.getString("profile");
+                String activeProfile = bundle.getString("activeprofile");
+                String profile = bundle.getString("profile");
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
                 NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
@@ -305,12 +303,12 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
-                if (bundles.containsKey("treatment")) {
-                    JSONObject json = new JSONObject(bundles.getString("treatment"));
+                if (bundle.containsKey("treatment")) {
+                    JSONObject json = new JSONObject(bundle.getString("treatment"));
                     handleTreatmentFromNS(json, intent);
                 }
-                if (bundles.containsKey("treatments")) {
-                    String trstring = bundles.getString("treatments");
+                if (bundle.containsKey("treatments")) {
+                    String trstring = bundle.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject json = jsonArray.getJSONObject(i);
@@ -324,14 +322,14 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_TREATMENT)) {
             try {
-                if (bundles.containsKey("treatment")) {
-                    String trstring = bundles.getString("treatment");
+                if (bundle.containsKey("treatment")) {
+                    String trstring = bundle.getString("treatment");
                     JSONObject json = new JSONObject(trstring);
                     handleTreatmentFromNS(json);
                 }
 
-                if (bundles.containsKey("treatments")) {
-                    String trstring = bundles.getString("treatments");
+                if (bundle.containsKey("treatments")) {
+                    String trstring = bundle.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject json = jsonArray.getJSONObject(i);
@@ -344,36 +342,19 @@ public class DataService extends IntentService {
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_SGV)) {
-            try {
-                if (bundles.containsKey("sgv")) {
-                    String sgvstring = bundles.getString("sgv");
-                    JSONObject sgvJson = new JSONObject(sgvstring);
-                    storeSgv(sgvJson);
-                }
-
-                if (bundles.containsKey("sgvs")) {
-                    String sgvstring = bundles.getString("sgvs");
-                    JSONArray jsonArray = new JSONArray(sgvstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject sgvJson = jsonArray.getJSONObject(i);
-                        storeSgv(sgvJson);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
+            SourceNSClientPlugin.getPlugin().processNewData(bundle);
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {
             try {
-                if (bundles.containsKey("mbg")) {
-                    String mbgstring = bundles.getString("mbg");
+                if (bundle.containsKey("mbg")) {
+                    String mbgstring = bundle.getString("mbg");
                     JSONObject mbgJson = new JSONObject(mbgstring);
                     storeMbg(mbgJson);
                 }
 
-                if (bundles.containsKey("mbgs")) {
-                    String sgvstring = bundles.getString("mbgs");
+                if (bundle.containsKey("mbgs")) {
+                    String sgvstring = bundle.getString("mbgs");
                     JSONArray jsonArray = new JSONArray(sgvstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject mbgJson = jsonArray.getJSONObject(i);
@@ -388,12 +369,12 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
                 || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
             int mode = Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
-            EventNsFood evt = new EventNsFood(mode, bundles);
+            EventNsFood evt = new EventNsFood(mode, bundle);
             MainApp.bus().post(evt);
         }
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
+            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundle);
             MainApp.bus().post(evt);
         }
     }
@@ -464,13 +445,6 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
         if (Config.logIncommingData)
             log.debug("Adding/Updating new MBG: " + careportalEvent.log());
-    }
-
-    private void storeSgv(JSONObject sgvJson) {
-        NSSgv nsSgv = new NSSgv(sgvJson);
-        BgReading bgReading = new BgReading(nsSgv);
-        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
-        SourceNSClientPlugin.getPlugin().detectSource(JsonHelper.safeGetString(sgvJson, "device"), JsonHelper.safeGetLong(sgvJson, "mills"));
     }
 
     private void handleNewSMS(Intent intent) {

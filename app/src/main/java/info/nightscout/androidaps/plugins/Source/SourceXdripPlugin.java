@@ -2,6 +2,10 @@ package info.nightscout.androidaps.plugins.Source;
 
 import android.os.Bundle;
 
+import com.google.common.collect.Lists;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
@@ -36,7 +40,7 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
     }
 
     @Override
-    public void processNewData(Bundle bundle) {
+    public List<BgReading> processNewData(Bundle bundle) {
         BgReading bgReading = new BgReading();
 
         bgReading.value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE);
@@ -46,6 +50,7 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
         bgReading.sourcePlugin = SourceXdripPlugin.getPlugin().getName();
         bgReading.filtered = Objects.equals(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION), "G5 Native");
 
-        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
+        boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
+        return isNew ? Lists.newArrayList(bgReading) : Collections.emptyList();
     }
 }
