@@ -14,6 +14,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -72,6 +73,7 @@ public class SensitivityOref1Plugin extends PluginBase implements SensitivityInt
             return new AutosensResult();
         }
 
+        List<CareportalEvent> siteChanges = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true);
 
         List<Double> deviationsArray = new ArrayList<>();
         String pastSensitivity = "";
@@ -87,6 +89,12 @@ public class SensitivityOref1Plugin extends PluginBase implements SensitivityInt
             if (autosensData.time > toTime) {
                 index++;
                 continue;
+            }
+
+            // reset deviations after site change
+            if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+                deviationsArray.clear();
+                pastSensitivity += "(SITECHANGE)";
             }
 
             deviationsArray.add(autosensData.validDeviation ? autosensData.deviation : 0d);
