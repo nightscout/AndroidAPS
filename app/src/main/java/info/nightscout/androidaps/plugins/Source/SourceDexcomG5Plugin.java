@@ -71,7 +71,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
                 bgReading.filtered = true;
-                bgReading.sourcePlugin = SourceDexcomG5Plugin.getPlugin().getName();
+                bgReading.sourcePlugin = getName();
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
                 if (isNew) {
                     bgReadings.add(bgReading);

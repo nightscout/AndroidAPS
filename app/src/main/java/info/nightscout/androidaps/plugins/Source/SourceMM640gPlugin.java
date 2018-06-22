@@ -65,7 +65,7 @@ public class SourceMM640gPlugin extends PluginBase implements BgSourceInterface 
                                 bgReading.date = json_object.getLong("date");
                                 bgReading.raw = json_object.getDouble("sgv");
                                 bgReading.filtered = true;
-                                bgReading.sourcePlugin = SourceMM640gPlugin.getPlugin().getName();
+                                bgReading.sourcePlugin = getName();
 
                                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
                                 if (isNew) {

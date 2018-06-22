@@ -46,7 +46,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
         bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
         bgReading.filtered = false;
-        bgReading.sourcePlugin = SourceGlimpPlugin.getPlugin().getName();
+        bgReading.sourcePlugin = getName();
 
         boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
         return isNew ? Lists.newArrayList(bgReading) : Collections.emptyList();

@@ -65,6 +65,8 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject sgvJson = jsonArray.getJSONObject(i);
                     BgReading bgReading = new BgReading(new NSSgv(sgvJson));
+                    bgReading.filtered = false;
+                    bgReading.sourcePlugin = getName();
                     boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
                     if (isNew) {
                         sgvs.add(bgReading);
