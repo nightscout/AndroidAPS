@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Source;
 
+import android.os.Bundle;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
@@ -31,4 +33,9 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
         );
     }
 
+    @Override
+    public void processNewData(Bundle bundle) {
+        // TODO
+        throw new IllegalStateException("Nope");
+    }
 }

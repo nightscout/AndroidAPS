@@ -160,7 +160,7 @@ public class LoopPlugin extends PluginBase {
             // no BG source active
             return;
         }
-        if (!Objects.equals(bgReading.sourcePlugin, bgSource.pluginDescription.getUserfriendlyName())) {
+        if (!Objects.equals(bgReading.sourcePlugin, bgSource.getName())) {
             // reading not from active BG source (likely coming in from NS)
             return;
         }

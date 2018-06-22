@@ -23,6 +23,8 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.interfaces.BgSourceInterface;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -133,23 +135,23 @@ public class DataService extends IntentService {
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
             if (xDripEnabled) {
-                handleNewDataFromXDrip(intent);
+                processNewBgIntent(SourceXdripPlugin.getPlugin(), intent);
             }
         } else if (Intents.NS_EMULATOR.equals(action)) {
             if (mm640gEnabled) {
-                handleNewDataFromMM640g(intent);
+                processNewBgIntent(SourceMM640gPlugin.getPlugin(), intent);
             }
         } else if (Intents.GLIMP_BG.equals(action)) {
             if (glimpEnabled) {
-                handleNewDataFromGlimp(intent);
+                processNewBgIntent(SourceGlimpPlugin.getPlugin(), intent);
             }
         } else if (Intents.DEXCOMG5_BG.equals(action)) {
             if (dexcomG5Enabled) {
-                handleNewDataFromDexcomG5(intent);
+                processNewBgIntent(SourceDexcomG5Plugin.getPlugin(), intent);
             }
         } else if (Intents.POCTECH_BG.equals(action)) {
             if (poctechEnabled) {
-                handleNewDataFromPoctech(intent);
+                processNewBgIntent(SourcePoctechPlugin.getPlugin(), intent);
             }
         } else if (Intents.ACTION_NEW_SGV.equals(action)) {
             if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
@@ -200,153 +202,18 @@ public class DataService extends IntentService {
         MainApp.unsubscribe(this);
     }
 
-    private void handleNewDataFromXDrip(Intent intent) {
+    private void processNewBgIntent(BgSourceInterface bgSource, Intent intent) {
+        if (Config.logIncommingData)
+            log.debug("Got intent: " + intent.getAction());
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
-
-        BgReading bgReading = new BgReading();
-
-        bgReading.value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE);
-        bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
-        bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
-        bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
-        bgReading.sourcePlugin = SourceXdripPlugin.getPlugin().pluginDescription.getUserfriendlyName();
-        bgReading.filtered = Objects.equals(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION), "G5 Native");
-
-        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
-    }
-
-    private void handleNewDataFromGlimp(Intent intent) {
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
-
-        BgReading bgReading = new BgReading();
-
-        bgReading.value = bundle.getDouble("mySGV");
-        bgReading.direction = bundle.getString("myTrend");
-        bgReading.date = bundle.getLong("myTimestamp");
-        bgReading.raw = 0;
-        bgReading.filtered = false;
-        bgReading.sourcePlugin = SourceGlimpPlugin.getPlugin().pluginDescription.getUserfriendlyName();
-
-        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
-    }
-
-    private void handleNewDataFromDexcomG5(Intent intent) {
-        // onHandleIntent Bundle{ data => [{"m_time":1511939180,"m_trend":"NotComputable","m_value":335}]; android.support.content.wakelockid => 95; }Bundle
-
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
-
-        BgReading bgReading = new BgReading();
-
-        String data = bundle.getString("data");
-        log.debug("Received Dexcom Data", data);
-
-        try {
-            JSONArray jsonArray = new JSONArray(data);
-            log.debug("Received Dexcom Data size:" + jsonArray.length());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject json = jsonArray.getJSONObject(i);
-                bgReading.value = json.getInt("m_value");
-                bgReading.direction = json.getString("m_trend");
-                bgReading.date = json.getLong("m_time") * 1000L;
-                bgReading.raw = 0;
-                bgReading.filtered = true;
-                bgReading.sourcePlugin = SourceDexcomG5Plugin.getPlugin().pluginDescription.getUserfriendlyName();
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading);
-                }
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    NSUpload.sendToXdrip(bgReading);
-                }
-            }
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-    }
-
-    private void handleNewDataFromPoctech(Intent intent) {
-
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
-
-        BgReading bgReading = new BgReading();
-
-        String data = bundle.getString("data");
-        log.debug("Received Poctech Data", data);
-
-        try {
-            JSONArray jsonArray = new JSONArray(data);
-            log.debug("Received Poctech Data size:" + jsonArray.length());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject json = jsonArray.getJSONObject(i);
-                bgReading.value = json.getDouble("current");
-                bgReading.direction = json.getString("direction");
-                bgReading.date = json.getLong("date");
-                bgReading.raw = json.getDouble("raw");
-                if (JsonHelper.safeGetString(json, "utils", Constants.MGDL).equals("mmol/L"))
-                    bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech");
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading);
-                }
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    NSUpload.sendToXdrip(bgReading);
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void handleNewDataFromMM640g(Intent intent) {
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
-
-        final String collection = bundle.getString("collection");
-        if (collection == null) return;
-
-        if (collection.equals("entries")) {
-            final String data = bundle.getString("data");
-
-            if ((data != null) && (data.length() > 0)) {
-                try {
-                    final JSONArray json_array = new JSONArray(data);
-                    for (int i = 0; i < json_array.length(); i++) {
-                        final JSONObject json_object = json_array.getJSONObject(i);
-                        final String type = json_object.getString("type");
-                        switch (type) {
-                            case "sgv":
-                                BgReading bgReading = new BgReading();
-
-                                bgReading.value = json_object.getDouble("sgv");
-                                bgReading.direction = json_object.getString("direction");
-                                bgReading.date = json_object.getLong("date");
-                                bgReading.raw = json_object.getDouble("sgv");
-                                bgReading.filtered = true;
-                                bgReading.sourcePlugin = SourceMM640gPlugin.getPlugin().pluginDescription.getUserfriendlyName();
-
-                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
-                                break;
-                            default:
-                                log.debug("Unknown entries type: " + type);
-                        }
-                    }
-                } catch (JSONException e) {
-                    log.error("Got JSON exception: " + e);
-                }
-            }
-        }
+        bgSource.processNewData(bundle);
     }
 
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
-        if (Config.logIncommingData)
-            log.debug("Got intent: " + intent.getAction());
+
 
 
         if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
