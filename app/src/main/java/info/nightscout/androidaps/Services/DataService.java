@@ -604,6 +604,7 @@ public class DataService extends IntentService {
         NSSgv nsSgv = new NSSgv(sgvJson);
         BgReading bgReading = new BgReading(nsSgv);
         MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+        SourceNSClientPlugin.getPlugin().detectSource(JsonHelper.safeGetString(sgvJson, "device"), JsonHelper.safeGetLong(sgvJson, "mills"));
     }
 
     private void handleNewSMS(Intent intent) {
