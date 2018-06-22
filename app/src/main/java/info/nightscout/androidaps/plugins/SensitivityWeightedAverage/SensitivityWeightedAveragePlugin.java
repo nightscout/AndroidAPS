@@ -6,11 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -79,6 +81,8 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
             return new AutosensResult();
         }
 
+        List<CareportalEvent> siteChanges = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true);
+
         String pastSensitivity = "";
         int index = 0;
         LongSparseArray<Double> data = new LongSparseArray<>();
@@ -99,6 +103,12 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
             if (autosensData.time < toTime - hoursForDetection * 60 * 60 * 1000L) {
                 index++;
                 continue;
+            }
+
+            // reset deviations after site change
+            if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+                data.clear();
+                pastSensitivity += "(SITECHANGE)";
             }
 
             //data.append(autosensData.time);
