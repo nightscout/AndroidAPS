@@ -111,9 +111,15 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
                 pastSensitivity += "(SITECHANGE)";
             }
 
+            double deviation = autosensData.validDeviation ? autosensData.deviation : 0d;
+
+            //set positive deviations to zero if bg < 80
+            if (autosensData.bg < 80 && deviation > 0)
+                deviation = 0;
+
             //data.append(autosensData.time);
             long reverseWeight = (toTime - autosensData.time) / (5 * 60 * 1000L);
-            data.append(reverseWeight, autosensData.validDeviation ? autosensData.deviation : 0d);
+            data.append(reverseWeight, deviation);
             //weights += reverseWeight;
             //weightedsum += reverseWeight * (autosensData.validDeviation ? autosensData.deviation : 0d);
 

@@ -145,6 +145,7 @@ public class IobCobThread extends Thread {
                         log.error("! value < 39");
                         continue;
                     }
+                    autosensData.bg = bg;
                     delta = (bg - bucketed_data.get(i + 1).value);
                     avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
 

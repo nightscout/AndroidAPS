@@ -56,7 +56,8 @@ public class AutosensData implements DataPointWithLabelInterface {
     }
 
     public long time = 0L;
-    long chartTime;
+    public double bg = 0; // mgdl
+    private long chartTime;
     public String pastSensitivity = "";
     public double deviation = 0d;
     public boolean validDeviation = false;

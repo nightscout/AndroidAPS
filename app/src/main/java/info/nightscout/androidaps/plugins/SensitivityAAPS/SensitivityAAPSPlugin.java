@@ -105,8 +105,14 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
                 pastSensitivity += "(SITECHANGE)";
             }
 
+            double deviation = autosensData.validDeviation ? autosensData.deviation : 0d;
+
+            //set positive deviations to zero if bg < 80
+            if (autosensData.bg < 80 && deviation > 0)
+                deviation = 0;
+
             if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
-                deviationsArray.add(autosensData.validDeviation ? autosensData.deviation : 0d);
+                deviationsArray.add(deviation);
             if (deviationsArray.size() > hoursForDetection * 60 / 5)
                 deviationsArray.remove(0);
 

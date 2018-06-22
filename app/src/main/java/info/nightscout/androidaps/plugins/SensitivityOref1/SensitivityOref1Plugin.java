@@ -97,7 +97,13 @@ public class SensitivityOref1Plugin extends PluginBase implements SensitivityInt
                 pastSensitivity += "(SITECHANGE)";
             }
 
-            deviationsArray.add(autosensData.validDeviation ? autosensData.deviation : 0d);
+            double deviation = autosensData.validDeviation ? autosensData.deviation : 0d;
+
+            //set positive deviations to zero if bg < 80
+            if (autosensData.bg < 80 && deviation > 0)
+                deviation = 0;
+
+            deviationsArray.add(deviation);
 
             for (int i = 0; i < autosensData.extraDeviation.size(); i++)
                 deviationsArray.add(autosensData.extraDeviation.get(i));

@@ -146,6 +146,7 @@ public class IobCobOref1Thread extends Thread {
                         log.error("! value < 39");
                         continue;
                     }
+                    autosensData.bg = bg;
                     delta = (bg - bucketed_data.get(i + 1).value);
                     avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
 
@@ -327,7 +328,7 @@ public class IobCobOref1Thread extends Thread {
                     calendar.setTimeInMillis(bgTime);
                     int min = calendar.get(MINUTE);
                     int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                    if (min >= 0 && min < 5 && hours %2 == 0)
+                    if (min >= 0 && min < 5 && hours % 2 == 0)
                         autosensData.extraDeviation.add(0d);
 
                     previous = autosensData;
