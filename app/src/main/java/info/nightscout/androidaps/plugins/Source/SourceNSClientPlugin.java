@@ -19,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.utils.JsonHelper;
 
 /**
  * Created by mike on 05.08.2016.
@@ -65,7 +66,9 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject sgvJson = jsonArray.getJSONObject(i);
                     BgReading bgReading = new BgReading(new NSSgv(sgvJson));
-                    bgReading.filtered = false;
+                    String sourceDescription = JsonHelper.safeGetString(sgvJson, "device");
+                    bgReading.filtered = sourceDescription != null
+                            && (sourceDescription.equals("G5 Native") || sourceDescription.equals("AndroidAPS-DexcomG5"));
                     bgReading.sourcePlugin = getName();
                     boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
                     if (isNew) {
