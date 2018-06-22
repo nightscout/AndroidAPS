@@ -122,7 +122,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
                     "filtered", "integer");
             createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
-                    "sourcePlugin", "integer");
+                    "sourcePlugin", "text");
 
         } catch (SQLException e) {
             log.error("Can't create database", e);
@@ -132,7 +132,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private void createRowIfNotExists(Dao dao, String table, String name, String type) {
         try {
-            dao.executeRaw("ALTER TABLE `" + table + "` ADD CoLUMN `" + name + " " + type);
+            dao.executeRaw("ALTER TABLE `" + table + "` ADD COLUMN `" + name + " " + type);
         } catch (SQLException e) {
             // row already exists
         }
