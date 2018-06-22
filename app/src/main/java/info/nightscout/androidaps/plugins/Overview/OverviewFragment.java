@@ -114,6 +114,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
@@ -121,6 +122,8 @@ import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SingleClickButton;
 import info.nightscout.utils.ToastUtils;
+
+import static info.nightscout.utils.DateUtil.now;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
@@ -488,6 +491,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
                 menu.add(MainApp.gs(R.string.careportal_profileswitch));
             }
+        } else if (v == tempTargetView) {
+            menu.setHeaderTitle(MainApp.gs(R.string.careportal_temporarytarget));
+            menu.add(MainApp.gs(R.string.custom));
+            menu.add(MainApp.gs(R.string.eatingsoon));
+            menu.add(MainApp.gs(R.string.activity));
+            menu.add(MainApp.gs(R.string.hypo));
+            if (TreatmentsPlugin.getPlugin().getTempTargetFromHistory() != null) {
+                menu.add(MainApp.gs(R.string.cancel));
+            }
         }
     }
 
@@ -578,6 +590,53 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(System.currentTimeMillis());
             FragmentManager manager = getFragmentManager();
             pvd.show(manager, "ProfileViewDialog");
+        } else if (item.getTitle().equals(MainApp.gs(R.string.eatingsoon))) {
+            DefaultValueHelper defHelper = new DefaultValueHelper();
+            double target = defHelper.determineEatingSoonTT(profile.getUnits());
+            TempTarget tempTarget = new TempTarget()
+                    .date(System.currentTimeMillis())
+                    .duration(defHelper.determineEatingSoonTTDuration())
+                    .reason(MainApp.gs(R.string.eatingsoon))
+                    .source(Source.USER)
+                    .low(target)
+                    .high(target);
+            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+        } else if (item.getTitle().equals(MainApp.gs(R.string.activity))) {
+            DefaultValueHelper defHelper = new DefaultValueHelper();
+            double target = defHelper.determineActivityTT(profile.getUnits());
+            TempTarget tempTarget = new TempTarget()
+                    .date(now())
+                    .duration(defHelper.determineActivityTTDuration())
+                    .reason(MainApp.gs(R.string.activity))
+                    .source(Source.USER)
+                    .low(target)
+                    .high(target);
+            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+        } else if (item.getTitle().equals(MainApp.gs(R.string.hypo))) {
+            DefaultValueHelper defHelper = new DefaultValueHelper();
+            double target = defHelper.determineHypoTT(profile.getUnits());
+            TempTarget tempTarget = new TempTarget()
+                    .date(now())
+                    .duration(defHelper.determineHypoTTDuration())
+                    .reason(MainApp.gs(R.string.activity))
+                    .source(Source.USER)
+                    .low(target)
+                    .high(target);
+            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+        } else if (item.getTitle().equals(MainApp.gs(R.string.custom))) {
+            NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
+            final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
+            temptarget.executeTempTarget = true;
+            newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
+            newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+        } else if (item.getTitle().equals(MainApp.gs(R.string.cancel))) {
+            TempTarget tempTarget = new TempTarget()
+                    .source(Source.USER)
+                    .date(now())
+                    .duration(0)
+                    .low(0)
+                    .high(0);
+            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         }
 
         return super.onContextItemSelected(item);
@@ -843,6 +902,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         sLoopHandler.removeCallbacksAndMessages(null);
         unregisterForContextMenu(apsModeView);
         unregisterForContextMenu(activeProfileView);
+        unregisterForContextMenu(tempTargetView);
     }
 
     @Override
@@ -856,6 +916,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
         registerForContextMenu(apsModeView);
         registerForContextMenu(activeProfileView);
+        registerForContextMenu(tempTargetView);
         updateGUI("onResume");
     }
 
@@ -1195,17 +1256,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
         activeProfileView.setBackgroundColor(Color.GRAY);
-
-        tempTargetView.setOnLongClickListener(view -> {
-            view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-            final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
-            temptarget.executeTempTarget = true;
-            newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
-            newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-            return true;
-        });
-        tempTargetView.setLongClickable(true);
 
         // QuickWizard button
         QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
