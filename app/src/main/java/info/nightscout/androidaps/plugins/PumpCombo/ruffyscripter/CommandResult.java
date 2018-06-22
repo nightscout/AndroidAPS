@@ -5,10 +5,11 @@ import android.support.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 
 public class CommandResult {
+    /** True if a condition indicating a broken pump setup/configuration is detected */
+    public boolean invalidSetup;
     /** Whether the command was executed successfully. */
     public boolean success;
     /** State of the pump *after* command execution. */

@@ -39,17 +39,19 @@ public class ReadQuickInfoCommand extends BaseCommand {
             // read bolus records
             int totalRecords = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.TOTAL_RECORD);
             int record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
-            while (true) {
-                bolusHistory.add(readBolusRecord());
-                if (bolusHistory.size() == numberOfBolusRecordsToRetrieve || record == totalRecords) {
-                    break;
+            if (record > 0) {
+                while (true) {
+                    bolusHistory.add(readBolusRecord());
+                    if (bolusHistory.size() == numberOfBolusRecordsToRetrieve || record == totalRecords) {
+                        break;
+                    }
+                    // advance to next record
+                    scripter.pressDownKey();
+                    while (record == (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD)) {
+                        scripter.waitForScreenUpdate();
+                    }
+                    record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
                 }
-                // advance to next record
-                scripter.pressDownKey();
-                while (record == (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD)) {
-                    scripter.waitForScreenUpdate();
-                }
-                record = (int) scripter.getCurrentMenu().getAttribute(MenuAttribute.CURRENT_RECORD);
             }
             if (log.isDebugEnabled()) {
                 if (!result.history.bolusHistory.isEmpty()) {

@@ -10,6 +10,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
  * Created by mike on 29.05.2017.
@@ -17,6 +18,7 @@ import info.nightscout.androidaps.db.Source;
 
 public class DetailedBolusInfo {
     public long date = System.currentTimeMillis();
+    public long lastKnownBolusTime;
     public String eventType = CareportalEvent.MEALBOLUS;
     public double insulin = 0;
     public double carbs = 0;
