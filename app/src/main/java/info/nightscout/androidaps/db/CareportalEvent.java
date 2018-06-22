@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.T;
 import info.nightscout.utils.Translator;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
@@ -125,6 +126,19 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             result.put(unit, diff);
         }
         return result;
+    }
+
+
+    public static boolean isEvent5minBack(List<CareportalEvent> list, long time) {
+        for (int i = 0; i < list.size(); i++) {
+            CareportalEvent event = list.get(i);
+            if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
+                //log.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                return true;
+            }
+        }
+        //log.debug("WWWWWW No found event for time: " + DateUtil.dateAndTimeString(time));
+        return false;
     }
 
     // -------- DataPointWithLabelInterface -------

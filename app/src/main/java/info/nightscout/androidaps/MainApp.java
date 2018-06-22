@@ -64,6 +64,7 @@ import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
+import info.nightscout.androidaps.plugins.SensitivityOref1.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
@@ -150,6 +151,7 @@ public class MainApp extends Application {
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
+            pluginsList.add(SensitivityOref1Plugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRPlugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRv2Plugin.getPlugin());
