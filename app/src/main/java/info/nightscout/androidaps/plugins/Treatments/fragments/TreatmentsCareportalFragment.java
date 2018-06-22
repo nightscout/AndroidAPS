@@ -136,7 +136,7 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEventsFromTime(false));
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false));
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.careportal_refreshfromnightscout);
@@ -185,7 +185,7 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEventsFromTime(false)), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false)), false);
                 }
             });
     }

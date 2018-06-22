@@ -39,6 +39,7 @@
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
     <string name="description_sensitivity_oref0">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences.</string>
+    <string name="description_sensitivity_oref1">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_dexcom_g5">Receive BG values from the patched Dexcom G5 app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
@@ -666,6 +667,7 @@
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref0">Sensitivity Oref0</string>
+    <string name="sensitivityoref1">Sensitivity Oref1</string>
     <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
@@ -1115,7 +1117,7 @@
     <string name="readstatus">Read status</string>
     <string name="adjustprofileinns">Changes must be done in NS</string>
     <string name="exitwizard">Skip setup wizard</string>
-    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be comming from ?\n</string>
+    <string name="setupwizard_bgsource_description">Where should blood glucose(BG) data be coming from ?\n</string>
     <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
     <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.\n</string>
     <string name="enableobjectives">Enable Objectives</string>
@@ -1129,7 +1131,7 @@
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5-6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="bgsourcesetup">Configure BG source</string>
     <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
-    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usualy more powerfull and more aggresive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
+    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggresive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="startobjective">Start your first objective</string>
     <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>
@@ -1163,6 +1165,10 @@
     <string name="nth_objective">%1$d. Objective</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
+    <string translatable="false" name="key_high_temptarget_raises_sensitivity">high_temptarget_raises_sensitivity</string>
+    <string translatable="false" name="key_low_temptarget_lowers_sensitivity">low_temptarget_lowers_sensitivity</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Raise sensitivity for temptargets >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
     <string name="custom">Custom</string>
 

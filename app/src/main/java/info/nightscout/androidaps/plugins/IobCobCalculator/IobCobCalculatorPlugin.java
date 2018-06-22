@@ -35,6 +35,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.SensitivityOref1.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -68,7 +69,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     final Object dataLock = new Object();
 
     boolean stopCalculationTrigger = false;
-    private IobCobThread thread = null;
+    private Thread thread = null;
 
     public IobCobCalculatorPlugin() {
         super(new PluginDescription()
@@ -541,7 +542,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
     public void runCalculation(String from, long start, boolean bgDataReload, Event cause) {
         log.debug("Starting calculation thread: " + from);
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
-            thread = new IobCobThread(this, from, start, bgDataReload, cause);
+            if (SensitivityOref1Plugin.getPlugin().isEnabled(PluginType.SENSITIVITY))
+                thread = new IobCobOref1Thread(this, from, start, bgDataReload, cause);
+            else
+                thread = new IobCobThread(this, from, start, bgDataReload, cause);
             thread.start();
         }
     }
