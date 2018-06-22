@@ -38,6 +38,10 @@ public class BgReading implements DataPointWithLabelInterface {
     public String direction;
     @DatabaseField
     public double raw;
+    @DatabaseField
+    public boolean filtered;
+    @DatabaseField
+    public String sourcePlugin;
 
     @DatabaseField
     public int source = Source.NONE;
@@ -120,17 +124,9 @@ public class BgReading implements DataPointWithLabelInterface {
                 ", value=" + value +
                 ", direction=" + direction +
                 ", raw=" + raw +
+                ", filtered=" + filtered +
+                ", sourcePlugin=" + sourcePlugin +
                 '}';
-    }
-
-    public boolean isDataChanging(BgReading other) {
-        if (date != other.date) {
-            log.error("Comparing different");
-            return false;
-        }
-        if (value != other.value)
-            return true;
-        return false;
     }
 
     public boolean isEqual(BgReading other) {
@@ -158,6 +154,8 @@ public class BgReading implements DataPointWithLabelInterface {
         raw = other.raw;
         direction = other.direction;
         _id = other._id;
+        sourcePlugin = other.sourcePlugin;
+        filtered = other.filtered;
     }
 
     // ------------------ DataPointWithLabelInterface ------------------

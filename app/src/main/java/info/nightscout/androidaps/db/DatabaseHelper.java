@@ -117,9 +117,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
+
+            // soft migration without changing DB version
+            createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
+                    "filtered", "integer");
+            createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
+                    "sourcePlugin", "integer");
+
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    private void createRowIfNotExists(Dao dao, String table, String name, String type) {
+        try {
+            dao.executeRaw("ALTER TABLE `" + table + "` ADD CoLUMN `" + name + " " + type);
+        } catch (SQLException e) {
+            // row already exists
         }
     }
 
