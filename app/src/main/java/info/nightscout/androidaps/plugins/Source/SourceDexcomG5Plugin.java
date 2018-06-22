@@ -33,8 +33,4 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
         );
     }
 
-    @Override
-    public boolean advancedFilteringSupported() {
-        return true;
-    }
 }

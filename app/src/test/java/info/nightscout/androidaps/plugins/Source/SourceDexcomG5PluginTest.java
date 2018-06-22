@@ -15,8 +15,8 @@ public class SourceDexcomG5PluginTest {
         Assert.assertNotEquals(null, SourceDexcomG5Plugin.getPlugin());
     }
 
-    @Test
-    public void advancedFilteringSupported() {
-        Assert.assertEquals(true, SourceDexcomG5Plugin.getPlugin().advancedFilteringSupported());
-    }
+//    @Test
+//    public void advancedFilteringSupported() {
+//        Assert.assertEquals(true, SourceDexcomG5Plugin.getPlugin().advancedFilteringSupported());
+//    }
 }

@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -60,56 +62,58 @@ public class DataService extends IntentService {
 
     public DataService() {
         super("DataService");
-        registerBus();
+        MainApp.subscribe(this);
     }
 
     @Override
     protected void onHandleIntent(final Intent intent) {
+        if (intent == null)
+            return;
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource() == null) {
+        if (ConfigBuilderPlugin.getActiveBgSource() == null) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = true;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = true;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourcePoctechPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourcePoctechPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
@@ -126,55 +130,53 @@ public class DataService extends IntentService {
             acceptNSData = acceptNSData || bundles.getBoolean("islocal");
         }
 
-
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
-                if (xDripEnabled) {
-                    handleNewDataFromXDrip(intent);
-                }
-            } else if (Intents.NS_EMULATOR.equals(action)) {
-                if (mm640gEnabled) {
-                    handleNewDataFromMM640g(intent);
-                }
-            } else if (Intents.GLIMP_BG.equals(action)) {
-                if (glimpEnabled) {
-                    handleNewDataFromGlimp(intent);
-                }
-            } else if (Intents.DEXCOMG5_BG.equals(action)) {
-                if (dexcomG5Enabled) {
-                    handleNewDataFromDexcomG5(intent);
-                }
-            } else if (Intents.POCTECH_BG.equals(action)) {
-                if (poctechEnabled) {
-                    handleNewDataFromPoctech(intent);
-                }
-            } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-                if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
-                    handleNewDataFromNSClient(intent);
-                // Objectives 0
-                ObjectivesPlugin.bgIsAvailableInNS = true;
-                ObjectivesPlugin.saveProgress();
-            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
-                // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
-                handleNewDataFromNSClient(intent);
-            } else if (acceptNSData &&
-                    (Intents.ACTION_NEW_TREATMENT.equals(action) ||
-                            Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
-                            Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
-                            Intents.ACTION_NEW_STATUS.equals(action) ||
-                            Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
-                            Intents.ACTION_NEW_FOOD.equals(action) ||
-                            Intents.ACTION_CHANGED_FOOD.equals(action) ||
-                            Intents.ACTION_REMOVED_FOOD.equals(action) ||
-                            Intents.ACTION_NEW_CAL.equals(action) ||
-                            Intents.ACTION_NEW_MBG.equals(action))
-                    ) {
-                handleNewDataFromNSClient(intent);
-            } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
-                handleNewSMS(intent);
+        final String action = intent.getAction();
+        if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
+            if (xDripEnabled) {
+                handleNewDataFromXDrip(intent);
             }
+        } else if (Intents.NS_EMULATOR.equals(action)) {
+            if (mm640gEnabled) {
+                handleNewDataFromMM640g(intent);
+            }
+        } else if (Intents.GLIMP_BG.equals(action)) {
+            if (glimpEnabled) {
+                handleNewDataFromGlimp(intent);
+            }
+        } else if (Intents.DEXCOMG5_BG.equals(action)) {
+            if (dexcomG5Enabled) {
+                handleNewDataFromDexcomG5(intent);
+            }
+        } else if (Intents.POCTECH_BG.equals(action)) {
+            if (poctechEnabled) {
+                handleNewDataFromPoctech(intent);
+            }
+        } else if (Intents.ACTION_NEW_SGV.equals(action)) {
+            if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
+                handleNewDataFromNSClient(intent);
+            // Objectives 0
+            ObjectivesPlugin.bgIsAvailableInNS = true;
+            ObjectivesPlugin.saveProgress();
+        } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
+            // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
+            handleNewDataFromNSClient(intent);
+        } else if (acceptNSData &&
+                (Intents.ACTION_NEW_TREATMENT.equals(action) ||
+                        Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
+                        Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
+                        Intents.ACTION_NEW_STATUS.equals(action) ||
+                        Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
+                        Intents.ACTION_NEW_FOOD.equals(action) ||
+                        Intents.ACTION_CHANGED_FOOD.equals(action) ||
+                        Intents.ACTION_REMOVED_FOOD.equals(action) ||
+                        Intents.ACTION_NEW_CAL.equals(action) ||
+                        Intents.ACTION_NEW_MBG.equals(action))
+                ) {
+            handleNewDataFromNSClient(intent);
+        } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
+            handleNewSMS(intent);
         }
+
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent exit " + intent);
         DataReceiver.completeWakefulIntent(intent);
@@ -195,16 +197,7 @@ public class DataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainApp.bus().unregister(this);
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
+        MainApp.unsubscribe(this);
     }
 
     private void handleNewDataFromXDrip(Intent intent) {
@@ -217,8 +210,9 @@ public class DataService extends IntentService {
         bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
-        String source = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "no Source specified");
-        SourceXdripPlugin.getPlugin().setSource(source);
+        bgReading.sourcePlugin = SourceXdripPlugin.getPlugin().pluginDescription.getUserfriendlyName();
+        bgReading.filtered = Objects.equals(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION), "G5 Native");
+
         MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
     }
 
@@ -232,6 +226,8 @@ public class DataService extends IntentService {
         bgReading.direction = bundle.getString("myTrend");
         bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
+        bgReading.filtered = false;
+        bgReading.sourcePlugin = SourceGlimpPlugin.getPlugin().pluginDescription.getUserfriendlyName();
 
         MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
     }
@@ -256,6 +252,8 @@ public class DataService extends IntentService {
                 bgReading.direction = json.getString("m_trend");
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
+                bgReading.filtered = true;
+                bgReading.sourcePlugin = SourceDexcomG5Plugin.getPlugin().pluginDescription.getUserfriendlyName();
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                     NSUpload.uploadBg(bgReading);
@@ -264,9 +262,8 @@ public class DataService extends IntentService {
                     NSUpload.sendToXdrip(bgReading);
                 }
             }
-
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -329,6 +326,8 @@ public class DataService extends IntentService {
                                 bgReading.direction = json_object.getString("direction");
                                 bgReading.date = json_object.getLong("date");
                                 bgReading.raw = json_object.getDouble("sgv");
+                                bgReading.filtered = true;
+                                bgReading.sourcePlugin = SourceMM640gPlugin.getPlugin().pluginDescription.getUserfriendlyName();
 
                                 MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
                                 break;
@@ -545,7 +544,7 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
-    private void handleTreatmentFromNS(JSONObject json, Intent intent) throws JSONException {
+    private void handleTreatmentFromNS(JSONObject json, Intent intent) {
         // new DB model
         int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
         double insulin = JsonHelper.safeGetDouble(json, "insulin");

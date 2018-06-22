@@ -111,15 +111,15 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
-    @Test
-    public void isAdvancedFilteringEnabledTest() throws Exception {
-        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
-
-        Constraint<Boolean> c = constraintChecker.isAdvancedFilteringEnabled();
-        Assert.assertEquals(true, c.getReasonList().size() == 1); // Safety
-        Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 1); // Safety
-        Assert.assertEquals(Boolean.FALSE, c.value());
-    }
+//    @Test
+//    public void isAdvancedFilteringEnabledTest() throws Exception {
+//        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+//
+//        Constraint<Boolean> c = constraintChecker.isAdvancedFilteringEnabled();
+//        Assert.assertEquals(true, c.getReasonList().size() == 1); // Safety
+//        Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 1); // Safety
+//        Assert.assertEquals(Boolean.FALSE, c.value());
+//    }
 
     @Test
     public void isSMBModeEnabledTest() throws Exception {

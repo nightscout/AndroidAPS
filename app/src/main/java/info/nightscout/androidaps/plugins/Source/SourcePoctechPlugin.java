@@ -31,9 +31,4 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
         );
     }
 
-    @Override
-    public boolean advancedFilteringSupported() {
-        return false;
-    }
-
 }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
+import info.nightscout.androidaps.MainApp;
+
 public class PluginDescription {
     PluginType mainType = PluginType.GENERAL;
     String fragmentClass = null;
@@ -86,5 +88,9 @@ public class PluginDescription {
 
     public PluginType getType() {
         return mainType;
+    }
+
+    public String getUserfriendlyName() {
+        return MainApp.gs(pluginName);
     }
 }

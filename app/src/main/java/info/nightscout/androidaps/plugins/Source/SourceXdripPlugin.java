@@ -13,8 +13,6 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
 
     private static SourceXdripPlugin plugin = null;
     
-    boolean advancedFiltering;
-
     public static SourceXdripPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceXdripPlugin();
@@ -28,14 +26,5 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
                 .pluginName(R.string.xdrip)
                 .description(R.string.description_source_xdrip)
         );
-    }
-
-    @Override
-    public boolean advancedFilteringSupported() {
-        return advancedFiltering;
-    }
-
-    public void setSource(String source) {
-        this.advancedFiltering = source.contains("G5 Native");
     }
 }
