@@ -719,7 +719,6 @@
     <string name="combo_pump_tbr_cancelled_warrning">TBR cancelada, advertencia acceptada</string>
     <string name="combo_error_no_bolus_delivered">Emisión del bolo fallada. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automaticamente.</string>
     <string name="combo_error_partial_bolus_delivered" formatted="false">"Solo %.2f U del bolo mandado de %.2f U ha sido emitido por causa de un error. Por favorn controla la bomba para confirmar y toma acciones apropiadas. "</string>
-    <string name="combo_error_bolus_verification_failed">"Fallo de emitir bolo y de controlar historical de la bomba.Por favor controla manualmente y crea un record en Careportal si el bolo ha sido emitido. "</string>
     <string name="combo_error_bolus_recovery_progress">Reestablecido conexión fallada.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">"No hay suficiente insulina en el deposito para emitir bolo. "</string>
     <string name="extendedbolusdeliveryerror">"Error al emitir bolo prolongado. "</string>
@@ -731,7 +730,7 @@
     <string name="combo_activity_checking_pump_state">Actualizando estado bomba</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rechazando temporal alta ya que el calculo no consideró los cambios recientes en el historial de la bomba</string>
     <string name="combo_error_updating_treatment_record">El bolus se administró con éxito, pero no se pudo agregar la entrada al tratamiento. Esto puede suceder si se administran dos bolos pequeños del mismo tamaño en los últimos dos minutos. Verifique el historial de la bomba y las entradas de tratamiento y use Careportal para agregar entradas faltantes. Asegúrese de no agregar ninguna entrada para el mismo minuto exacto y la misma cantidad.</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">El historial de la bomba ha cambiado después de que se realizó el cálculo del bolo. El bolo no fue entregado. Por favor, vuelva a calcular si aún se necesita un bolo. Si se requiere la misma cantidad de bolo, espere dos minutos ya que los bolos con la misma cantidad se bloquean cuando se solicita con menos de dos minutos entre ellos por seguridad (independientemente de si se administraron o no).</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">El historial de la bomba ha cambiado después de que se realizó el cálculo del bolo. El bolo no fue entregado. Por favor, vuelva a calcular si aún se necesita un bolo.</string>
     <string name="combo_actvity_reading_basal_profile">Leyendo perfil basal</string>
     <string name="start_hypo_tt">Inicio TT Hipo</string>
     <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>

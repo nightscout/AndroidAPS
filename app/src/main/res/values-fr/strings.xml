@@ -718,7 +718,6 @@
     <string name="combo_pump_tbr_cancelled_warrning">TBR ANNULÉ warning confirmé</string>
     <string name="combo_error_no_bolus_delivered">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, Veuillez vérifier la pompe pour éviter un double bolus ensuite re bolusez une nouvelle fois</string>
     <string name="combo_error_partial_bolus_delivered" formatted="false">Seulement %.2f U de %.2f U du bolus demandé a été administré dû à une erreur. Veuillez svp vérifier la pompe pour contrôler cela et prendre les mesures appropriées</string>
-    <string name="combo_error_bolus_verification_failed">L’administration du bolus et la vérification de l’historique de la pompe ont échoué, Veuillez vérifier la pompe et créez un enregistrement bolus en utilisant Careportal tab si le bolus a été délivré</string>
     <string name="combo_error_bolus_recovery_progress">"Reconnexion après perte de connexion "</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Pas assez d\'insuline restante dans le réservoir pour le bolus</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
