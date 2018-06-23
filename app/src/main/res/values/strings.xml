@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -1172,6 +1172,8 @@
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
     <string name="custom">Custom</string>
     <string name="key_lockscreen" translatable="false">lockscreen</string>
+    <string name="largetimedifftitle">Large Time Difference</string>
+    <string name="largetimediff">Large time difference: Time in pump was adjuted for more than 1.5 hours. Make sure that reading the history from the pump does not cause unexpected behaviour.</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
