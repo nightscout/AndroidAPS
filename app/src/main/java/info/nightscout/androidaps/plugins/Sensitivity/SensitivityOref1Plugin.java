@@ -179,8 +179,18 @@ public class SensitivityOref1Plugin extends PluginBase implements SensitivityInt
         ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
         ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
 
+        //If not-excluded data <= MIN_HOURS -> don't do Autosens
+        //If not-excluded data >= MIN_HOURS_FULL_AUTOSENS -> full Autosens
+        //Between MIN_HOURS and MIN_HOURS_FULL_AUTOSENS: gradually increase autosens
+        double autosensContrib = (Math.min(Math.max(MIN_HOURS, deviationsArray.size() / 12d), MIN_HOURS_FULL_AUTOSENS) - MIN_HOURS) / (MIN_HOURS_FULL_AUTOSENS - MIN_HOURS);
+        ratio = autosensContrib * (ratio - 1) + 1;
+
+        if (autosensContrib != 1d) {
+            ratioLimit += "(" + deviationsArray.size() + " of " + MIN_HOURS_FULL_AUTOSENS * 12 + " values) ";
+        }
+
         if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
+            ratioLimit += "Ratio limited from " + rawRatio + " to " + ratio;
             log.debug(ratioLimit);
         }
 
