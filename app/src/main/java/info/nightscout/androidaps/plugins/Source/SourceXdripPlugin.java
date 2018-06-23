@@ -54,6 +54,8 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
         String sourceDescription = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "");
         bgReading.filtered = sourceDescription.equals("G5 Native");
         if (MainApp.engineeringMode && !bgReading.filtered && bgReading.noise >= 0 && bgReading.noise <= 4) {
+            // TODO syncing noice with NS is neither implemented nor tested
+            // * NSUpload.uploadBg
             log.debug("Setting filtered=true, since noise is provided and passed check: " + bgReading.noise);
             bgReading.filtered = true;
         }

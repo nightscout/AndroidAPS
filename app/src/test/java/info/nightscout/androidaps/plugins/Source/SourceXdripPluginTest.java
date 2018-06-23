@@ -44,7 +44,7 @@ public class SourceXdripPluginTest {
     }
 
     // TODO
-    @Ignore("Bundle needs to be properly mocked")
+    @Ignore("Bundle needs to be properly mocked or Robolectrics issues with SQLite resolved")
     @Test
     public void bgWithUnknownSourceIsMarkedUnfiltered() {
         Bundle bundle = createBroadcastBundle();
@@ -53,11 +53,33 @@ public class SourceXdripPluginTest {
     }
 
     // TODO
-    @Ignore("Bundle needs to be properly mocked")
+    @Ignore("Bundle needs to be properly mocked or Robolectrics issues with SQLite resolved")
     @Test
     public void bgWithSourceG5NativeIsMarkedFiltered() {
         Bundle bundle = createBroadcastBundle();
         bundle.putString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "G5 Native");
+
+        BgReading bgReadings = plugin.processNewData(bundle).get(0);
+        assertTrue(bgReadings.filtered);
+    }
+
+    // TODO
+    @Ignore("Bundle needs to be properly mocked or Robolectrics issues with SQLite resolved")
+    @Test
+    public void bgWithWithGoodNoiseIsMarkedFiltered() {
+        Bundle bundle = createBroadcastBundle();
+        bundle.putString(Intents.EXTRA_NOISE, "1.0");
+
+        BgReading bgReadings = plugin.processNewData(bundle).get(0);
+        assertTrue(bgReadings.filtered);
+    }
+
+    // TODO
+    @Ignore("Bundle needs to be properly mocked or Robolectrics issues with SQLite resolved")
+    @Test
+    public void bgWithWithExcessiveNoiseDataIsMarkedFiltered() {
+        Bundle bundle = createBroadcastBundle();
+        bundle.putString(Intents.EXTRA_NOISE, "80.0");
 
         BgReading bgReadings = plugin.processNewData(bundle).get(0);
         assertTrue(bgReadings.filtered);
