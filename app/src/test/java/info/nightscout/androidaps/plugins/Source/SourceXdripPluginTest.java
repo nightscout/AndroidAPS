@@ -63,6 +63,7 @@ public class SourceXdripPluginTest {
         assertTrue(bgReadings.isFiltered);
     }
 
+    /*
     // TODO
     @Ignore("Bundle needs to be properly mocked or Robolectrics issues with SQLite resolved")
     @Test
@@ -84,6 +85,7 @@ public class SourceXdripPluginTest {
         BgReading bgReadings = plugin.processNewData(bundle).get(0);
         assertTrue(bgReadings.isFiltered);
     }
+    */
 
     @NonNull
     private Bundle createBroadcastBundle() {
