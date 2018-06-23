@@ -187,7 +187,7 @@ public class MainApp extends Application {
 
             pluginsList.add(WearPlugin.initPlugin(this));
             pluginsList.add(StatuslinePlugin.initPlugin(this));
-            pluginsList.add(new PersistentNotificationPlugin(this));
+            pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
 
             pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());

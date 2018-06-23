@@ -113,7 +113,15 @@ public class ConfigBuilderPlugin extends PluginBase {
         pluginList = MainApp.getPluginsList();
         upgradeSettings();
         loadSettings();
+        setAlwaysEnabledPluginsEnabled();
         MainApp.bus().post(new EventAppInitialized());
+    }
+
+    private void setAlwaysEnabledPluginsEnabled() {
+        for (PluginBase plugin : pluginList) {
+            if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true);
+        }
+        storeSettings("setAlwaysEnabledPluginsEnabled");
     }
 
     public void storeSettings(String from) {
