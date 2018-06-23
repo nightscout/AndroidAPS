@@ -539,7 +539,6 @@
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="isfmissing">ISF saknas i profilen. Använder standardvärde.</string>
     <string name="lock_screen">Lås skärm</string>
-    <string name="lock_screen_short">Lås</string>
     <string name="mmol">mmol/l</string>
     <string name="minago" formatted="false">%d&#160;m</string>
     <string name="mgdl">mg/dl</string>
@@ -729,7 +728,6 @@
     <string name="combo_pump_tbr_cancelled_warrning">Varningen om avbruten tempbasal bekräftad</string>
     <string name="combo_error_no_bolus_delivered">Bolus avbruten. Det verkar som om ingen bolus gavs. För att vara säker, vänligen kontrollera pumpen för att undvika dubbel bolus och prova sedan vid behov igen. För att förhindra fel orsakade av mjukvaran, försöker inte mjukvaran igen automatiskt.</string>
     <string name="combo_error_partial_bolus_delivered">Endast %.2f enheter %.2f gavs pga ett fel. Vänligen verifiera på pumpen och vidta nödvändiga åtgärder.</string>
-    <string name="combo_error_bolus_verification_failed">Leverans av bolus och verifiering av historiken misslyckades. Vänligen kontrollera på pumpen och lägg till bolusen manuellt under Careportal om den gått fram.</string>
     <string name="combo_error_bolus_recovery_progress">Återansluter efter att ha tappat kontakten</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Inte tillräckligt med insulin i reservoaren för att ge bolus</string>
     <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
@@ -832,7 +830,7 @@
     <string name="not_eng_mode_or_release">Engineering Mode inte aktiverat och appen körs inte som release</string>
     <string name="pump_basebasalrate">%.2f E/h</string>
     <string name="combo_actvity_reading_basal_profile">Läser basalprofil</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">Pumphistoriken ändrad efter att boluskalkylen gjordes. Bolusen har inte levererats. Vänligen gör en ny kalkyl vid behov. Om samma mängd insulin krävs, vänligen vänta två minuter eftersom appen begränsar likadana bolusar av säkerhetsskäl.</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Pumphistoriken ändrad efter att boluskalkylen gjordes. Bolusen har inte levererats. Vänligen gör en ny kalkyl vid behov.</string>
     <string name="combo_error_updating_treatment_record">Bolusen levererad, men det gick inte att lägga till den i loggen. Detta kan hända om två små bolusar ges inom två minuter. Vänligen kontrollera pumpens historik och Careportal och lägg till om det saknas. Se till att inte lägga till två bolusar med samma mängd och samma tid.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Avböjer hög tempbasal eftersom kalkylen inte innefattade nyligen ändrad historik</string>
     <string name="combo_activity_checking_pump_state">Uppdaterar pumpsstatus</string>

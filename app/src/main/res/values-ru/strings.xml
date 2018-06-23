@@ -555,7 +555,6 @@
     <string name="invalid">НЕВЕРНО</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
     <string name="lock_screen">блокировка экрана</string>
-    <string name="lock_screen_short">блок</string>
     <string name="mdtp_cancel">отмена</string>
     <string name="mdtp_ok">OK</string>
     <string name="nl_lang">Голландский</string>

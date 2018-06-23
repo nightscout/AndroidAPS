@@ -135,6 +135,11 @@ public class DateUtil {
         return MainApp.gs(R.string.minago, mins);
     }
 
+    public static String minAgoShort(long time) {
+        Integer mins = (int) ((time - now()) / 1000 / 60);
+        return (mins > 0 ? "+" : "") + mins.toString();
+    }
+
     public static String hourAgo(long time) {
         double hours = (now() - time) / 1000d / 60 / 60;
         return MainApp.gs(R.string.hoursago, hours);

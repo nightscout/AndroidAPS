@@ -561,7 +561,6 @@
     <string name="basal_short">БАЗА</string>
     <string name="virtualpump_extendedbolus_label_short">УД.</string>
     <string name="lock_screen">Заключен екран</string>
-    <string name="lock_screen_short">Закл</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
     <string name="mdtp_ok">OK</string>
@@ -629,7 +628,6 @@
     <string name="combo_activity_reading_pump_history">Чете историята на помпата</string>
     <string name="combo_activity_setting_basal_profile">Настройва базалният профил</string>
     <string name="combo_error_bolus_recovery_progress">Опитва се да възстанови връзката</string>
-    <string name="combo_error_bolus_verification_failed">Доставянето на болуса и проверката на историята на помпата са неуспешни, моля, проверете помпата и ако е доставен болус го добавете като запис през Careportal</string>
     <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
     <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
@@ -824,7 +822,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Closed loop е деактивиран.</string>
     <string name="not_eng_mode_or_release">Engineering mode не е активиран и не е release версия</string>
     <string name="combo_actvity_reading_basal_profile">Прочита базалният профил</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">"Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус. Ако се изисква същото болусно количество, моля, изчакайте две минути, тъй за това време болусите с едно и също количество са блокирани от съображения за  безопасност "</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">"Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус.</string>
     <string name="about_link_urls">" http://www.androidaps.org  facebook: http://facebook.androidaps.org"</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
     <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>

@@ -203,7 +203,6 @@
     <string name="localprofile">Lokaal profiel</string>
     <string name="localprofile_shortname">LP</string>
     <string name="lock_screen">Vergrendel scherm</string>
-    <string name="lock_screen_short">Vergrendel</string>
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
@@ -708,7 +707,6 @@
     <string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
 	<string name="combo_activity_reading_pump_history">Lezen van pomp historiek</string>
     <string name="combo_error_partial_bolus_delivered">Maar %.2f E van de gevraagde %.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
-    <string name="combo_error_bolus_verification_failed">Toedienen en controleren van de bolus in de pomp historiek is mislukt, controleer de pomp en creëer een manuele bolus in het Careportal tabblad</string>
 	<string name="combo_error_no_bolus_delivered">Bolus toedienen mislukt. Waarschijnlijk is er geen bolus toegediend. Gelieve de pomp te controleren om een dubbele bolus te vermijden. Als bescherming tegen programmeerfouten worden bolussen niet automatisch opnieuw uitgevoerd.</string>
 	<string name="combo_pump_activity_label">Actie</string>
 	<string name="combo_pump_action_setting_tbr">Instellen TBR (%d%% / %d min)</string>
@@ -725,7 +723,7 @@
     <string name="zerovalueinprofile">Ongeldig profiel: %s</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Er kon geen verbinding met de pomp gemaakt worden. De Bolus is niet toegediend.</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedien storing</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig. Als dezelfde bolus hoeveelheid moet worden toegediend, gelieve 2 minuten te wachten. Gelijke bolussen worden geweigerd om veiligheidsredenen (toegediend of niet).</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig.</string>
     <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegend van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Tijdelijk basaal geweigerd doordat de berekeningen geen rekening hielden met  de recente wijzigingen in de pomp historiek</string>
     <string name="combo_activity_checking_pump_state">Vernieuwen van pomp status</string>

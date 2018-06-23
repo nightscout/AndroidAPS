@@ -202,6 +202,12 @@ public class Profile {
             if (targetHigh_v == null)
                 targetHigh_v = convertToSparseArray(targetHigh);
             validate(targetHigh_v);
+
+            if (targetHigh_v.size() != targetLow_v.size()) isValid = false;
+            else for (int i = 0; i < targetHigh_v.size(); i++)
+                if (targetHigh_v.get(i) < targetLow_v.get(i))
+                    isValid = false;
+
             isValidated = true;
         }
 
@@ -550,6 +556,11 @@ public class Profile {
     public static String toUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
         else return DecimalFormatter.to1Decimal(valueInMmol);
+    }
+
+    public static String toSignedUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
+        if (units.equals(Constants.MGDL)) return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
+        else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
     }
 
     // targets are stored in mg/dl but profile vary

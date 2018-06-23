@@ -559,7 +559,6 @@
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="lock_screen">Κλείδωμα οθόνης</string>
-    <string name="lock_screen_short">Κλείδωμα</string>
     <string name="sensitivity_warning">Ενεργοποιώντας το autosense θυμιθείτε να εισάγετε όλους τους υδατ. Διαφορετικά, οι αποκλίσεις των υδατανθράκων θα εντοπιστούν λανθασμένα ως αλλαγή ευαισθησίας</string>
     <string name="sensitivityweightedaverage">Σταθμισμένος μέσος όρος ευαισθησίας</string>
     <string name="mdtp_ok">OK</string>

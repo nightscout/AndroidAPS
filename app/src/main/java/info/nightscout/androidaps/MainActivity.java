@@ -20,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,11 +41,11 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventFeatureRunning;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
-import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
@@ -88,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        onStatusEvent(new EventSetWakeLock(SP.getBoolean("lockscreen", false)));
+        // initialize screen wake lock
+        onEventPreferenceChange(new EventPreferenceChange(R.string.key_lockscreen));
 
         doMigrations();
 
@@ -156,15 +156,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventSetWakeLock ev) {
-        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        if (ev.lock) {
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
-            if (!mWakeLock.isHeld())
-                mWakeLock.acquire();
-        } else {
-            if (mWakeLock != null && mWakeLock.isHeld())
-                mWakeLock.release();
+    public void onEventPreferenceChange(final EventPreferenceChange ev) {
+        if (ev.isChanged(R.string.key_lockscreen)) {
+            boolean lock = SP.getBoolean(R.string.key_lockscreen, false);
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (lock) {
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
+                if (!mWakeLock.isHeld())
+                    mWakeLock.acquire();
+            } else {
+                if (mWakeLock != null && mWakeLock.isHeld())
+                    mWakeLock.release();
+            }
         }
     }
 
@@ -184,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
+            boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean(R.string.key_lockscreen, false);
             if (lockScreen)
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             else

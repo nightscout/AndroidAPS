@@ -686,7 +686,7 @@
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="lock_screen">Lock screen</string>
-    <string name="lock_screen_short">Lock</string>
+    <string name="lock_screen_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
@@ -872,7 +872,7 @@
     <string name="combo_error_no_connection_no_bolus_delivered">The pump could not be reached. No bolus was given</string>
     <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
     <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
-    <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually create a bolus record using the Careportal tab if a bolus was delivered.</string>
+    <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually. If a bolus was delivered, it will be added to treatments during the next connection to the pump.</string>
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
@@ -996,7 +996,7 @@
     <string name="not_eng_mode_or_release">Engineering mode not enabled and not on release branch</string>
     <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed. If the same bolus amount is required, please wait two minutes since boluses with the same amount are blocked when requested with less than two minutes between them for safety (regardless of whether they were administered or not).</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed.</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejecting high temp since calculation didn\'t consider recently changed pump history</string>
     <string name="combo_activity_checking_pump_state">Refreshing pump state</string>
@@ -1171,6 +1171,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
     <string name="custom">Custom</string>
+    <string name="key_lockscreen" translatable="false">lockscreen</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
