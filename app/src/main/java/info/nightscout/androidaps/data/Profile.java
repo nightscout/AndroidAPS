@@ -205,7 +205,7 @@ public class Profile {
 
             if (targetHigh_v.size() != targetLow_v.size()) isValid = false;
             else for (int i = 0; i < targetHigh_v.size(); i++)
-                if (targetHigh_v.get(i) < targetLow_v.get(i))
+                if (targetHigh_v.valueAt(i) < targetLow_v.valueAt(i))
                     isValid = false;
 
             isValidated = true;
@@ -245,16 +245,16 @@ public class Profile {
                 isValidated = false;
             }
 
-         }
+        }
         return isValid;
     }
 
     protected void sendBelowMinimumNotification(String from) {
-        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     protected void sendAboveMaximumNotification(String from) {
-        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
+        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     private void validate(LongSparseArray array) {
@@ -458,12 +458,12 @@ public class Profile {
         return ret;
     }
 
-    public double getTarget(){
-        return  getTarget(secondsFromMidnight(System.currentTimeMillis()));
+    public double getTarget() {
+        return getTarget(secondsFromMidnight(System.currentTimeMillis()));
     }
 
     protected double getTarget(int timeAsSeconds) {
-        return (getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds))/2;
+        return (getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2;
     }
 
     public double getTargetLow() {
@@ -559,7 +559,8 @@ public class Profile {
     }
 
     public static String toSignedUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
-        if (units.equals(Constants.MGDL)) return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
+        if (units.equals(Constants.MGDL))
+            return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
         else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
     }
 
