@@ -192,6 +192,12 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);
 
+        Constraint<Boolean> bgFiltered = new Constraint<>(bgReading.filtered);
+        if (!bgReading.filtered) {
+            bgFiltered.set(false, MainApp.gs(R.string.smbalwaysdisabled), this);
+        }
+        inputConstraints.copyReasons(bgFiltered);
+
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "SMB data gathering", start);
 
