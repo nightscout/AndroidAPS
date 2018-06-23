@@ -203,7 +203,6 @@
     <string name="localprofile">Lokaal profiel</string>
     <string name="localprofile_shortname">LP</string>
     <string name="lock_screen">Vergrendel scherm</string>
-    <string name="lock_screen_short">Vergrendel</string>
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>

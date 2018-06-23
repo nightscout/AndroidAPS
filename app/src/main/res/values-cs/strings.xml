@@ -526,7 +526,6 @@
     <string name="invalidprofile">Chybný profil !!!</string>
     <string name="iob">IOB</string>
     <string name="lock_screen">Zámek obrazovky</string>
-    <string name="lock_screen_short">Zámek</string>
     <string name="mdtp_cancel">Zrušit</string>
     <string name="mdtp_ok">OK</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>

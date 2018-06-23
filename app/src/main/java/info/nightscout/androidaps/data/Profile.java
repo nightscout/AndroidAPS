@@ -552,6 +552,11 @@ public class Profile {
         else return DecimalFormatter.to1Decimal(valueInMmol);
     }
 
+    public static String toSignedUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
+        if (units.equals(Constants.MGDL)) return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
+        else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
+    }
+
     // targets are stored in mg/dl but profile vary
     public static String toTargetRangeString(double low, double high, String sourceUnits, String units) {
         double lowMgdl = toMgdl(low, sourceUnits);

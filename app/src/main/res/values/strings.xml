@@ -686,7 +686,7 @@
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="lock_screen">Lock screen</string>
-    <string name="lock_screen_short">Lock</string>
+    <string name="lock_screen_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
@@ -1171,6 +1171,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
     <string name="custom">Custom</string>
+    <string name="key_lockscreen" translatable="false">lockscreen</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>

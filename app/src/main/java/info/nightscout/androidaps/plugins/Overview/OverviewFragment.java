@@ -24,14 +24,11 @@ import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextMenu;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -88,6 +85,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
@@ -102,7 +100,6 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity;
-import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationRecyclerViewAdapter;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
@@ -131,8 +128,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView timeView;
     TextView bgView;
     TextView arrowView;
+    TextView sensitivityView;
     TextView timeAgoView;
+    TextView timeAgoShortView;
     TextView deltaView;
+    TextView deltaShortView;
     TextView avgdeltaView;
     TextView baseBasalView;
     TextView extendedBolusView;
@@ -170,8 +170,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     SingleClickButton carbsButton;
     SingleClickButton cgmButton;
     SingleClickButton quickWizardButton;
-
-    CheckBox lockScreen;
 
     boolean smallWidth;
     boolean smallHeight;
@@ -229,8 +227,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (smallWidth) {
                 arrowView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35);
             }
+            sensitivityView = (TextView) view.findViewById(R.id.overview_sensitivity);
             timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
+            timeAgoShortView = (TextView) view.findViewById(R.id.overview_timeagoshort);
             deltaView = (TextView) view.findViewById(R.id.overview_delta);
+            deltaShortView = (TextView) view.findViewById(R.id.overview_deltashort);
             avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
             baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
             extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
@@ -326,18 +327,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             });
 
             setupChartMenu(view);
-
-            lockScreen = (CheckBox) view.findViewById(R.id.overview_lockscreen);
-            if (lockScreen != null) {
-                lockScreen.setChecked(SP.getBoolean("lockscreen", false));
-                lockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        SP.putBoolean("lockscreen", isChecked);
-                        MainApp.bus().post(new EventSetWakeLock(isChecked));
-                    }
-                });
-            }
 
             return view;
         } catch (Exception e) {
@@ -1088,12 +1077,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             arrowView.setTextColor(color);
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
             if (glucoseStatus != null) {
-                deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                if (deltaView != null)
+                    deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                if (deltaShortView != null)
+                    deltaShortView.setText(Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
                 if (avgdeltaView != null)
                     avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
                             "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
             } else {
-                deltaView.setText("Δ " + MainApp.gs(R.string.notavailable));
+                if (deltaView != null)
+                    deltaView.setText("Δ " + MainApp.gs(R.string.notavailable));
+                if (deltaShortView != null)
+                    deltaShortView.setText("---");
                 if (avgdeltaView != null)
                     avgdeltaView.setText("");
             }
@@ -1249,7 +1244,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setText(extendedBolusText);
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(View.GONE);
+                extendedBolusView.setVisibility(View.INVISIBLE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
@@ -1316,7 +1311,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
         bgView.setPaintFlags(flag);
 
-        timeAgoView.setText(DateUtil.minAgo(lastBG.date));
+        if (timeAgoView != null)
+            timeAgoView.setText(DateUtil.minAgo(lastBG.date));
+        if (timeAgoShortView != null)
+            timeAgoShortView.setText("(" + DateUtil.minAgoShort(lastBG.date) + ")");
 
         // iob
         TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
@@ -1374,6 +1372,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (uploaderDeviceStatusView != null) {
             uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatus());
             uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus(), null));
+        }
+
+        // Sensitivity
+        if (sensitivityView != null) {
+            AutosensResult lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.getPlugin().oldestDataAvailable(), System.currentTimeMillis());
+            if (lastAutosensResult != null)
+                sensitivityView.setText(String.format("%.0f%%", lastAutosensResult.ratio * 100));
+            else
+                sensitivityView.setText("");
         }
 
         // ****** GRAPH *******

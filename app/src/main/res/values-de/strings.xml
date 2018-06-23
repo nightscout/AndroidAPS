@@ -493,7 +493,6 @@
     <string name="danar_totaluploaded">Insgesamt %1$d Einträge erfolgreich hochgeladen</string>
     <string name="danarprofile_dia_summary">Dauer der Insulinwirkung</string>
     <string name="insulin_shortname">INS</string>
-    <string name="lock_screen_short">Sperr</string>
     <string name="needwhitelisting">%1$s benötigt Batterie-Optimierungs-Whitelisting, um korrekt arbeiten zu können</string>
     <string name="nsalarm_staledata">Veraltete Daten</string>
     <string name="nsalarm_staledatavalue_label">Veraltete Daten seit [Min.]</string>

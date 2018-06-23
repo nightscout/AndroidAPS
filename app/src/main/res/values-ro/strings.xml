@@ -590,7 +590,6 @@
     <string name="basal_short">BAZ</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="lock_screen">Ecran blocare</string>
-    <string name="lock_screen_short">Blocat</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
     <string name="sensitivityweightedaverage">Mediană sensibilitate</string>
     <string name="mdtp_ok">OK</string>

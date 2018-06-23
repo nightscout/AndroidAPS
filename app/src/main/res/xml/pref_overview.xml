@@ -4,6 +4,12 @@
 
     <PreferenceCategory android:title="@string/overview">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_lockscreen"
+            android:title="@string/lock_screen"
+            android:summary="@string/lock_screen_summary"/>
+
         <PreferenceScreen android:title="@string/overview_buttons_selection">
 
             <SwitchPreference

@@ -561,7 +561,6 @@
     <string name="basal_short">БАЗА</string>
     <string name="virtualpump_extendedbolus_label_short">УД.</string>
     <string name="lock_screen">Заключен екран</string>
-    <string name="lock_screen_short">Закл</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
     <string name="mdtp_ok">OK</string>
