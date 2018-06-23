@@ -132,7 +132,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private void createRowIfNotExists(Dao dao, String table, String name, String type) {
         try {
-            dao.executeRaw("ALTER TABLE `" + table + "` ADD COLUMN `" + name + " " + type);
+            final String statement = "ALTER TABLE `" + table + "` ADD COLUMN `" + name + "` " + type;
+            dao.executeRaw(statement);
         } catch (SQLException e) {
             // row already exists
         }

@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -23,7 +22,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
 
     private static SourceXdripPlugin plugin = null;
-    
+
     public static SourceXdripPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceXdripPlugin();
@@ -48,7 +47,7 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
         String sourceDescription = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "");
-        bgReading.filtered = sourceDescription.equals("G5 Native") || sourceDescription.equals("AndroidAPS-DexcomG5");
+        bgReading.filtered = sourceDescription.equals("G5 Native");
         bgReading.sourcePlugin = getName();
 
         boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());

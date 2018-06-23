@@ -70,7 +70,7 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                     bgReading.filtered = sourceDescription != null
                             && (sourceDescription.equals("G5 Native") || sourceDescription.equals("AndroidAPS-DexcomG5"));
                     bgReading.sourcePlugin = getName();
-                    boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                    boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
                     if (isNew) {
                         sgvs.add(bgReading);
                     }
