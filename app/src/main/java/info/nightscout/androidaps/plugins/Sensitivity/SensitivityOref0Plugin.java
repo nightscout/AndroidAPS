@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SensitivityOref0;
+package info.nightscout.androidaps.plugins.Sensitivity;
 
 import android.support.v4.util.LongSparseArray;
 
