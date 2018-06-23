@@ -708,7 +708,6 @@
     <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
     <string name="combo_is_in_error_state" formatted="false">Pumpa hlásí chybu E%d: %s</string>
     <string name="combo_error_bolus_recovery_progress">Pokouším se obnovit spojení</string>
-    <string name="combo_error_bolus_verification_failed">Provádění bolusu a čtení historie selhalo. Zkontrolujte pumpu a zadejte bolus přes péči</string>
     <string name="combo_error_no_bolus_delivered">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
     <string name="combo_error_partial_bolus_delivered" formatted="false">Pouze %.2f U z bolusu %.2f bylo podáno díky chybě. Zkontrolujte pumpu a proveďte nápravu.</string>
     <string name="combo_pump_tbr_cancelled_warrning">Varování o ukončeném dočasném bazálu bylo potvrzeno.</string>
@@ -826,7 +825,7 @@
     <string name="engineering_mode_enabled">Expertní mód povolen</string>
     <string name="not_eng_mode_or_release">Expertní mód není povolen a neběží vydaná verze</string>
     <string name="combo_actvity_reading_basal_profile">Načítám bazální profil</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba. Pokud bude potřeba bolus stejné velikosti, počkejte 2 minuty, protože bolusy stejné velikosti jsou blokovány z bezpečnostních důvodů.</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba.</string>
     <string name="combo_error_updating_treatment_record">Bolus úspěšne podán, ale zápis se nezdařil. To se může stát pokud jsou podány bolusy stejné velikosti během 2 minut. Zkontrolujte historii pumpy a zadejte chybějící položky do ošetření. Ujistěte se, že nezadáváte stejnou velikost v rámci 1 minuty.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Odmítnut vysoký dočasný bazál, protože kalkulace neuvažovala poslední změny v historii pumpy</string>
     <string name="combo_activity_checking_pump_state">Obnovuji stav pumpy</string>
