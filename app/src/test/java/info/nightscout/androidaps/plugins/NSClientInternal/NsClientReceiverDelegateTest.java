@@ -70,6 +70,14 @@ public class NsClientReceiverDelegateTest {
         ev.mobileConnected = true;
         ev.wifiConnected = true;
         assertTrue(sut.calculateStatus(ev));
+
+        ev.ssid = "test";
+        when(SP.getString(anyInt(), anyString())).thenReturn("\"test\"");
+        assertTrue(sut.calculateStatus(ev));
+
+        ev.ssid = "\"test\"";
+        assertTrue(sut.calculateStatus(ev));
+        
         ev.wifiConnected = false;
         assertTrue(sut.calculateStatus(ev));
 
