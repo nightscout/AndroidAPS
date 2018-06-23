@@ -67,7 +67,7 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                     JSONObject sgvJson = jsonArray.getJSONObject(i);
                     BgReading bgReading = new BgReading(new NSSgv(sgvJson));
                     String sourceDescription = JsonHelper.safeGetString(sgvJson, "device");
-                    bgReading.filtered = sourceDescription != null
+                    bgReading.isFiltered = sourceDescription != null
                             && (sourceDescription.contains("G5 Native") || sourceDescription.contains("AndroidAPS-DexcomG5"));
                     bgReading.sourcePlugin = getName();
                     boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());

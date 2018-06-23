@@ -49,7 +49,7 @@ public class SourceXdripPluginTest {
     public void bgWithUnknownSourceIsMarkedUnfiltered() {
         Bundle bundle = createBroadcastBundle();
         BgReading bgReadings = plugin.processNewData(bundle).get(0);
-        assertFalse(bgReadings.filtered);
+        assertFalse(bgReadings.isFiltered);
     }
 
     // TODO
@@ -60,7 +60,7 @@ public class SourceXdripPluginTest {
         bundle.putString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "G5 Native");
 
         BgReading bgReadings = plugin.processNewData(bundle).get(0);
-        assertTrue(bgReadings.filtered);
+        assertTrue(bgReadings.isFiltered);
     }
 
     // TODO
@@ -71,7 +71,7 @@ public class SourceXdripPluginTest {
         bundle.putString(Intents.EXTRA_NOISE, "1.0");
 
         BgReading bgReadings = plugin.processNewData(bundle).get(0);
-        assertTrue(bgReadings.filtered);
+        assertTrue(bgReadings.isFiltered);
     }
 
     // TODO
@@ -82,7 +82,7 @@ public class SourceXdripPluginTest {
         bundle.putString(Intents.EXTRA_NOISE, "80.0");
 
         BgReading bgReadings = plugin.processNewData(bundle).get(0);
-        assertTrue(bgReadings.filtered);
+        assertTrue(bgReadings.isFiltered);
     }
 
     @NonNull

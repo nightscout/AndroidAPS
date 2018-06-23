@@ -120,7 +120,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             // soft migration without changing DB version
             createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
-                    "filtered", "integer");
+                    "isFiltered", "integer");
             createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
                     "sourcePlugin", "text");
             createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,

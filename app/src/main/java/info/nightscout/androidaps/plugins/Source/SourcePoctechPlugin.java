@@ -66,7 +66,7 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
                 bgReading.direction = json.getString("direction");
                 bgReading.date = json.getLong("date");
                 bgReading.raw = json.getDouble("raw");
-                bgReading.filtered = false;
+                bgReading.isFiltered = false;
                 bgReading.sourcePlugin = getName();
                 if (JsonHelper.safeGetString(json, "utils", Constants.MGDL).equals("mmol/L"))
                     bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;

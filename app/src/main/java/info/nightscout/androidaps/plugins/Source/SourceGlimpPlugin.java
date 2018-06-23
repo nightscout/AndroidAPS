@@ -45,7 +45,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
         bgReading.direction = bundle.getString("myTrend");
         bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
-        bgReading.filtered = false;
+        bgReading.isFiltered = false;
         bgReading.sourcePlugin = getName();
 
         boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());

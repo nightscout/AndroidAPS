@@ -192,8 +192,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);
 
-        Constraint<Boolean> bgFiltered = new Constraint<>(bgReading.filtered);
-        if (!bgReading.filtered) {
+        Constraint<Boolean> bgFiltered = new Constraint<>(bgReading.isFiltered);
+        if (!bgReading.isFiltered) {
             bgFiltered.set(false, MainApp.gs(R.string.smbalwaysdisabled), this);
         }
         inputConstraints.copyReasons(bgFiltered);
@@ -207,7 +207,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
                     smbAllowed.value(),
-                    bgReading.filtered
+                    bgReading.isFiltered
             );
         } catch (JSONException e) {
             log.error(e.getMessage());

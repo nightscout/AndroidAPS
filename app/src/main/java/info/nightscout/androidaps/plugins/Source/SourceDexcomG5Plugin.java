@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.Source;
 
 import android.os.Bundle;
 
-import com.google.common.collect.Lists;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
@@ -70,7 +67,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 bgReading.direction = json.getString("m_trend");
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
-                bgReading.filtered = true;
+                bgReading.isFiltered = true;
                 bgReading.sourcePlugin = getName();
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());
                 if (isNew) {
