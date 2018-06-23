@@ -202,6 +202,12 @@ public class Profile {
             if (targetHigh_v == null)
                 targetHigh_v = convertToSparseArray(targetHigh);
             validate(targetHigh_v);
+
+            if (targetHigh_v.size() != targetLow_v.size()) isValid = false;
+            else for (int i = 0; i < targetHigh_v.size(); i++)
+                if (targetHigh_v.get(i) < targetLow_v.get(i))
+                    isValid = false;
+
             isValidated = true;
         }
 
