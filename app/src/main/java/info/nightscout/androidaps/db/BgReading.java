@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.db;
 
-import android.content.res.Resources;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -38,6 +36,8 @@ public class BgReading implements DataPointWithLabelInterface {
     public String direction;
     @DatabaseField
     public double raw;
+    @DatabaseField
+    public double noise = -999; // xDrip sends -999 to indicate lack of a noise reading (due to missed readings or calibration)
     @DatabaseField
     public boolean filtered;
     @DatabaseField
@@ -154,6 +154,7 @@ public class BgReading implements DataPointWithLabelInterface {
         raw = other.raw;
         direction = other.direction;
         _id = other._id;
+        noise = other.noise;
         sourcePlugin = other.sourcePlugin;
         filtered = other.filtered;
     }

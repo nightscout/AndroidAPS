@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import com.google.common.collect.Lists;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +23,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
  * Created by mike on 05.08.2016.
  */
 public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
+    private static final Logger log = LoggerFactory.getLogger(SourceXdripPlugin.class);
 
     private static SourceXdripPlugin plugin = null;
 
@@ -46,8 +50,13 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
         bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
+        bgReading.noise = bundle.getDouble(Intents.EXTRA_NOISE, -999);
         String sourceDescription = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "");
         bgReading.filtered = sourceDescription.equals("G5 Native");
+        if (MainApp.engineeringMode && !bgReading.filtered && bgReading.noise >= 0 && bgReading.noise <= 4) {
+            log.debug("Setting filtered=true, since noise is provided and passed check: " + bgReading.noise);
+            bgReading.filtered = true;
+        }
         bgReading.sourcePlugin = getName();
 
         boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, getName());

@@ -38,6 +38,7 @@ public interface Intents {
     String EXTRA_TIMESTAMP = "com.eveningoutpost.dexdrip.Extras.Time";
     String EXTRA_RAW = "com.eveningoutpost.dexdrip.Extras.Raw";
     String XDRIP_DATA_SOURCE_DESCRIPTION = "com.eveningoutpost.dexdrip.Extras.SourceDesc";
+    String EXTRA_NOISE = "com.eveningoutpost.dexdrip.Extras.Noise";
 
 
     String ACTION_NEW_BG_ESTIMATE_NO_DATA = "com.eveningoutpost.dexdrip.BgEstimateNoData";
