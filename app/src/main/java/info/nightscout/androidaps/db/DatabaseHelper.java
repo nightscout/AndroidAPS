@@ -123,8 +123,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     "isFiltered", "integer");
             createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
                     "sourcePlugin", "text");
-            createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
-                    "noise", "real");
 
         } catch (SQLException e) {
             log.error("Can't create database", e);

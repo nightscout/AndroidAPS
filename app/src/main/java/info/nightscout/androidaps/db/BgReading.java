@@ -37,8 +37,6 @@ public class BgReading implements DataPointWithLabelInterface {
     @DatabaseField
     public double raw;
     @DatabaseField
-    public double noise = -999; // xDrip sends -999 to indicate lack of a noise reading (due to missed readings or calibration)
-    @DatabaseField
     public boolean isFiltered;
     @DatabaseField
     public String sourcePlugin;
@@ -154,7 +152,6 @@ public class BgReading implements DataPointWithLabelInterface {
         raw = other.raw;
         direction = other.direction;
         _id = other._id;
-        noise = other.noise;
         sourcePlugin = other.sourcePlugin;
         isFiltered = other.isFiltered;
     }
