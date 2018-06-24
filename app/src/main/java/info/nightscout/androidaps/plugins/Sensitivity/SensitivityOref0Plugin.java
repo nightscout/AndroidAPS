@@ -55,12 +55,7 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
         LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
-        String age = SP.getString(R.string.key_age, "");
-        int defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 24;
-        int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
+        int hoursForDetection = 24;
 
         long now = System.currentTimeMillis();
         Profile profile = MainApp.getConfigBuilder().getProfile();
