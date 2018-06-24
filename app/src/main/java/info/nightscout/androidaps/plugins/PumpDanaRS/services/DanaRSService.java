@@ -154,6 +154,7 @@ public class DanaRSService extends Service {
                 log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 3) {
                     if (Math.abs(timeDiff) > 60*60*1.5) {
+                        log.debug("Pump time difference: " + timeDiff + " seconds - large difference");
                         //If time-diff is very large, warn user until we can synchronize history readings properly
                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.error);

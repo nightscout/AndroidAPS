@@ -209,10 +209,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 3) {
-                    waitForWholeMinute(); // Dana can set only whole minute
-                    // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
                     if (Math.abs(timeDiff) > 60*60*1.5) {
+                        log.debug("Pump time difference: " + timeDiff + " seconds - large difference");
                         //If time-diff is very large, warn user until we can synchronize history readings properly
                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.error);
@@ -220,10 +218,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                         i.putExtra("title", MainApp.gs(R.string.largetimedifftitle));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         MainApp.instance().startActivity(i);
+                    } else {
+                        waitForWholeMinute(); // Dana can set only whole minute
+                        // add 10sec to be sure we are over minute (will be cutted off anyway)
+                        mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
+                        mSerialIOThread.sendMessage(new MsgSettingPumpTime());
+                        timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                        log.debug("Pump time difference: " + timeDiff + " seconds");
                     }
-                    mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                    timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-                    log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
                 mDanaRPump.lastSettingsRead = now;
             }
