@@ -318,7 +318,7 @@ public class IobCobOref1Thread extends Thread {
                     // add an extra negative deviation if a high temptarget is running and exercise mode is set
                     if (SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(bgTime);
-                        if (tempTarget != null && tempTarget.target() > 100) {
+                        if (tempTarget != null && tempTarget.target() >= 100) {
                             autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20);
                         }
                     }
