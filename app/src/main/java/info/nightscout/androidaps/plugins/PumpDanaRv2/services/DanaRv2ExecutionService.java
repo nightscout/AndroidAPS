@@ -205,8 +205,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     MainApp.instance().startActivity(i);
 
                     //deinitialize pump
-                    DanaRPump.reset();
-                    mDanaRPump = DanaRPump.getInstance();
+                    mDanaRPump.lastConnection = 0;
                     MainApp.bus().post(new EventDanaRNewStatus());
                     MainApp.bus().post(new EventInitializationChanged());
                     return;
@@ -219,6 +218,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
             }
+            mDanaRPump.lastConnection = System.currentTimeMillis();
 
             long now = System.currentTimeMillis();
             if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
@@ -445,6 +445,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     }
 
     public PumpEnactResult loadEvents() {
+
+        if(!MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()){
+            PumpEnactResult result = new PumpEnactResult().success(false);
+            result.comment = "pump not initialized";
+            return result;
+        }
+        
+        
         if (!isConnected())
             return new PumpEnactResult().success(false);
         SystemClock.sleep(300);
