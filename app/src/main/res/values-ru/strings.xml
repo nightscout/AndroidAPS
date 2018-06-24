@@ -554,7 +554,6 @@
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
-    <string name="lock_screen">блокировка экрана</string>
     <string name="mdtp_cancel">отмена</string>
     <string name="mdtp_ok">OK</string>
     <string name="nl_lang">Голландский</string>
