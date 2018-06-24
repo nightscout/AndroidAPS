@@ -584,7 +584,9 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 ev.isChanged(R.string.key_age) ||
                 ev.isChanged(R.string.key_absorption_maxtime) ||
                 ev.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
-                ev.isChanged(R.string.key_absorption_cutoff)
+                ev.isChanged(R.string.key_absorption_cutoff) ||
+                ev.isChanged(R.string.key_openapsama_autosens_max) ||
+                ev.isChanged(R.string.key_openapsama_autosens_min)
                 ) {
             stopCalculation("onEventPreferenceChange");
             synchronized (dataLock) {
