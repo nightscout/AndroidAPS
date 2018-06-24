@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -1173,6 +1173,9 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
     <string name="custom">Custom</string>
+    <string name="key_lockscreen" translatable="false">lockscreen</string>
+    <string name="largetimedifftitle">Large Time Difference</string>
+    <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
 

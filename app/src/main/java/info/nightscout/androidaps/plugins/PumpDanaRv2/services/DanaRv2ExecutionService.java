@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpDanaRv2.services;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.SystemClock;
@@ -18,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetUserOptions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
@@ -187,6 +189,36 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(tempStatusMsg);
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingextendedbolusstatus)));
             mSerialIOThread.sendMessage(exStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
+            mSerialIOThread.sendMessage(new MsgSettingPumpTime());
+            long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+            log.debug("Pump time difference: " + timeDiff + " seconds");
+            if (Math.abs(timeDiff) > 3) {
+                if (Math.abs(timeDiff) > 60*60*1.5) {
+                    log.debug("Pump time difference: " + timeDiff + " seconds - large difference");
+                    //If time-diff is very large, warn user until we can synchronize history readings properly
+                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                    i.putExtra("soundid", R.raw.error);
+                    i.putExtra("status", MainApp.gs(R.string.largetimediff));
+                    i.putExtra("title", MainApp.gs(R.string.largetimedifftitle));
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    MainApp.instance().startActivity(i);
+
+                    //deinitialize pump
+                    mDanaRPump.lastConnection = 0;
+                    MainApp.bus().post(new EventDanaRNewStatus());
+                    MainApp.bus().post(new EventInitializationChanged());
+                    return;
+                } else {
+                    waitForWholeMinute(); // Dana can set only whole minute
+                    // add 10sec to be sure we are over minute (will be cutted off anyway)
+                    mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
+                    mSerialIOThread.sendMessage(new MsgSettingPumpTime());
+                    timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                    log.debug("Pump time difference: " + timeDiff + " seconds");
+                }
+            }
+            mDanaRPump.lastConnection = System.currentTimeMillis();
 
             long now = System.currentTimeMillis();
             if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
@@ -202,18 +234,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingUserOptions());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
-                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
-                mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-                log.debug("Pump time difference: " + timeDiff + " seconds");
-                if (Math.abs(timeDiff) > 3) {
-                    waitForWholeMinute(); // Dana can set only whole minute
-                    // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
-                    mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                    timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-                    log.debug("Pump time difference: " + timeDiff + " seconds");
-                }
                 mDanaRPump.lastSettingsRead = now;
             }
 
@@ -425,6 +445,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     }
 
     public PumpEnactResult loadEvents() {
+
+        if(!MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()){
+            PumpEnactResult result = new PumpEnactResult().success(false);
+            result.comment = "pump not initialized";
+            return result;
+        }
+        
+        
         if (!isConnected())
             return new PumpEnactResult().success(false);
         SystemClock.sleep(300);
