@@ -30,7 +30,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityOref0Plugin extends PluginBase implements SensitivityInterface {
+public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
 
     static SensitivityOref0Plugin plugin = null;

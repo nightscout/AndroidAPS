@@ -28,7 +28,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityWeightedAveragePlugin extends PluginBase implements SensitivityInterface {
+public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
 
     private static SensitivityWeightedAveragePlugin plugin = null;

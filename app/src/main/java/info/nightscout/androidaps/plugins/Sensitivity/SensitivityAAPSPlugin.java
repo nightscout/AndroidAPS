@@ -30,7 +30,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInterface {
+public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
 
     static SensitivityAAPSPlugin plugin = null;

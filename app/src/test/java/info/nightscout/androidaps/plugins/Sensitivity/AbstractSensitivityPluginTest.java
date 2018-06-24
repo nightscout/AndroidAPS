@@ -2,14 +2,24 @@ package info.nightscout.androidaps.plugins.Sensitivity;
 
 import org.junit.Test;
 
+import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 
 import static org.junit.Assert.assertEquals;
 
-public class SensitivityInterfaceTest {
+public class AbstractSensitivityPluginTest {
 
-    private class SensitivityTestClass implements SensitivityInterface {
+    private class SensitivityTestClass extends AbstractSensitivityPlugin {
+
+        public SensitivityTestClass() {
+            super(null);
+        }
+
+        public SensitivityTestClass(PluginDescription pluginDescription) {
+            super(pluginDescription);
+        }
+
         @Override
         public AutosensResult detectSensitivity(long fromTime, long toTime) {
             return null;
