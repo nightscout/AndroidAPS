@@ -403,7 +403,6 @@
     <string name="invalidprofile">Ungültiges oder defektes Profil!</string>
     <string name="iob">IOB</string>
     <string name="localprofile">Lokales Profil</string>
-    <string name="lock_screen">Sperrbildschirm</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d Min.)</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="loopsuspendedfor">Pausiert (%1$d Min.)</string>

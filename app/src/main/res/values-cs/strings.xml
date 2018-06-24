@@ -525,7 +525,6 @@
     <string name="hours">hodin</string>
     <string name="invalidprofile">Chybný profil !!!</string>
     <string name="iob">IOB</string>
-    <string name="lock_screen">Zámek obrazovky</string>
     <string name="mdtp_cancel">Zrušit</string>
     <string name="mdtp_ok">OK</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>
@@ -774,8 +773,6 @@
     <string name="ro_lang">Rumunština</string>
     <string name="zh_lang">Čínština</string>
     <string name="resistantadult">Dospělý s nízkou citlivostí</string>
-    <string name="combopump">Accu-Chek Combo</string>
-    <string name="combopump_shortname">COMBO</string>
     <string name="insight_keepalive_format_string">%d vyprší %s</string>
     <string name="insight_keep_alive_status">Stav keep-alive</string>
     <string name="statistics">Statistika</string>

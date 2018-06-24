@@ -577,7 +577,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Bloqueo de pantalla</string>
     <string name="sensitivity_warning">Al activar autosens recuerda editar todos carbohidratos comidos. Si no, sensibilidad será calculada incorrectamente !!!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
