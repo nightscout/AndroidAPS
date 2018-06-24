@@ -30,7 +30,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInterface {
+public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
 
     static SensitivityAAPSPlugin plugin = null;
@@ -154,26 +154,16 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
         if (Config.logAutosensData)
             log.debug(sensResult);
 
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-
-        if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
-        }
+        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
+                sensResult, deviationsArray.size());
 
         if (Config.logAutosensData) {
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: {}, percentile: {} ratio: {} mealCOB: ",
+                    new Date(toTime).toLocaleString(),
+                    percentile, output.ratio, ratio, current.cob);
             log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
         }
 
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
         return output;
     }
 }

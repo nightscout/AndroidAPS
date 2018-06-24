@@ -30,7 +30,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityOref0Plugin extends PluginBase implements SensitivityInterface {
+public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
 
     static SensitivityOref0Plugin plugin = null;
@@ -55,12 +55,7 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
         LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
-        String age = SP.getString(R.string.key_age, "");
-        int defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 24;
-        int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
+        int hoursForDetection = 24;
 
         long now = System.currentTimeMillis();
         Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -166,24 +161,13 @@ public class SensitivityOref0Plugin extends PluginBase implements SensitivityInt
 
         ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-
-        if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
-        }
+        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
+                sensResult, deviationsArray.size());
 
         if (Config.logAutosensData)
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: {} ratio: {} mealCOB: {}",
+                    new Date(toTime).toLocaleString(), output.ratio, current.cob);
 
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
         return output;
     }
 }

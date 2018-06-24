@@ -28,7 +28,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityWeightedAveragePlugin extends PluginBase implements SensitivityInterface {
+public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
 
     private static SensitivityWeightedAveragePlugin plugin = null;
@@ -176,25 +176,13 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
         if (Config.logAutosensData)
             log.debug(sensResult);
 
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-
-        if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            if (Config.logAutosensData)
-                log.debug(ratioLimit);
-        }
+        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
+                sensResult, data.size());
 
         if (Config.logAutosensData)
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: {}  weightedaverage: {} ratio: {} mealCOB: {}", new Date(toTime).toLocaleString(),
+                    average, output.ratio, current.cob);
 
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
         return output;
     }
 }
