@@ -1175,7 +1175,7 @@
     <string name="custom">Custom</string>
     <string name="key_lockscreen" translatable="false">lockscreen</string>
     <string name="largetimedifftitle">Large Time Difference</string>
-    <string name="largetimediff">Large time difference: Time in pump was adjuted for more than 1.5 hours. Make sure that reading the history from the pump does not cause unexpected behaviour.</string>
+    <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
 
     <plurals name="objective_days">
