@@ -154,36 +154,16 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
         if (Config.logAutosensData)
             log.debug(sensResult);
 
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-
-        //If not-excluded data <= MIN_HOURS -> don't do Autosens
-        //If not-excluded data >= MIN_HOURS_FULL_AUTOSENS -> full Autosens
-        //Between MIN_HOURS and MIN_HOURS_FULL_AUTOSENS: gradually increase autosens
-        double autosensContrib = (Math.min(Math.max(MIN_HOURS, deviationsArray.size() / 12d), MIN_HOURS_FULL_AUTOSENS) - MIN_HOURS) / (MIN_HOURS_FULL_AUTOSENS - MIN_HOURS);
-        ratio = autosensContrib * (ratio - 1) + 1;
-
-        if (autosensContrib != 1d) {
-            ratioLimit += "(" + deviationsArray.size() + " of " + MIN_HOURS_FULL_AUTOSENS * 12 + " values) ";
-        }
-
-        if (ratio != rawRatio) {
-            ratioLimit += "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
-        }
+        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
+                sensResult, deviationsArray.size());
 
         if (Config.logAutosensData) {
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: {}, percentile: {} ratio: {} mealCOB: ",
+                    new Date(toTime).toLocaleString(),
+                    percentile, output.ratio, ratio, current.cob);
             log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
         }
 
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
         return output;
     }
 }
