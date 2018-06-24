@@ -24,6 +24,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -33,7 +34,7 @@ import info.nightscout.utils.T;
 import info.nightscout.utils.Translator;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
-public class CareportalEvent implements DataPointWithLabelInterface {
+public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     private static Logger log = LoggerFactory.getLogger(CareportalEvent.class);
 
     @DatabaseField(id = true)
@@ -221,14 +222,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
 
     @Override
     public long getDuration() {
-        try {
-            JSONObject object = new JSONObject(json);
-            if (object.has("duration"))
-                return object.getInt("duration") * 60 * 1000L;
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-        return 0;
+        return end() - start();
     }
 
     @Override
@@ -267,8 +261,79 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         if (eventType.equals(EXERCISE))
             return Color.BLUE;
         if (eventType.equals(OPENAPSOFFLINE))
-            return Color.GRAY;
+            return Color.GRAY & 0x80FFFFFF;
         return Color.GRAY;
+    }
+
+    // Interval interface
+    Long cuttedEnd = null;
+
+    @Override
+    public long durationInMsec() {
+        try {
+            JSONObject object = new JSONObject(json);
+            if (object.has("duration"))
+                return object.getInt("duration") * 60 * 1000L;
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        return 0;
+    }
+
+    @Override
+    public long start() {
+        return date;
+    }
+
+    @Override
+    public long originalEnd() {
+        return date + durationInMsec();
+    }
+
+    @Override
+    public long end() {
+        if (cuttedEnd != null)
+            return cuttedEnd;
+        return originalEnd();
+    }
+
+    @Override
+    public void cutEndTo(long end) {
+        cuttedEnd = end;
+    }
+
+    @Override
+    public boolean match(long time) {
+        if (start() <= time && end() >= time)
+            return true;
+        return false;
+    }
+
+    public boolean before(long time) {
+        if (end() < time)
+            return true;
+        return false;
+    }
+
+    public boolean after(long time) {
+        if (start() > time)
+            return true;
+        return false;
+    }
+
+    @Override
+    public boolean isInProgress() {
+        return match(System.currentTimeMillis());
+    }
+
+    @Override
+    public boolean isEndingEvent() {
+        return durationInMsec() == 0;
+    }
+
+    @Override
+    public boolean isValid() {
+        return eventType.equals(OPENAPSOFFLINE);
     }
 
 }

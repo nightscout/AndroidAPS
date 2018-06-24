@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
@@ -1242,11 +1243,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             where.ge("date", mills);
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
         return new ArrayList<>();
+    }
+
+    public void preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
+        OverlappingIntervals offlineEvents = new OverlappingIntervals();
+        for (int i = 0; i < list.size(); i++) {
+            CareportalEvent event = list.get(i);
+            if (!event.eventType.equals(CareportalEvent.OPENAPSOFFLINE)) continue;
+            offlineEvents.add(event);
+        }
+
     }
 
     public List<CareportalEvent> getCareportalEventsFromTime(long mills, String type, boolean ascending) {
@@ -1258,6 +1270,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             where.ge("date", mills).and().eq("eventType", type);
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1272,6 +1285,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.orderBy("date", ascending);
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
