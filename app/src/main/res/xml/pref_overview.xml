@@ -6,9 +6,9 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_lockscreen"
-            android:title="@string/lock_screen"
-            android:summary="@string/lock_screen_summary"/>
+            android:key="@string/key_keep_screen_on"
+            android:title="@string/keep_screen_on_title"
+            android:summary="@string/keep_screen_on_summary"/>
 
         <PreferenceScreen android:title="@string/overview_buttons_selection">
 

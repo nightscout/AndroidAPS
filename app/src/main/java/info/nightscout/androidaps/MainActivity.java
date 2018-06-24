@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         // initialize screen wake lock
-        onEventPreferenceChange(new EventPreferenceChange(R.string.key_lockscreen));
+        onEventPreferenceChange(new EventPreferenceChange(R.string.key_keep_screen_on));
 
         doMigrations();
 
@@ -157,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onEventPreferenceChange(final EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_lockscreen)) {
-            boolean lock = SP.getBoolean(R.string.key_lockscreen, false);
+        if (ev.isChanged(R.string.key_keep_screen_on)) {
+            boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
             final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (lock) {
+            if (keepScreenOn) {
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
                 if (!mWakeLock.isHeld())
                     mWakeLock.acquire();
@@ -187,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean(R.string.key_lockscreen, false);
-            if (lockScreen)
+            boolean keepScreenOn = BuildConfig.NSCLIENTOLNY && SP.getBoolean(R.string.key_keep_screen_on, false);
+            if (keepScreenOn)
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             else
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

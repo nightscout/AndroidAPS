@@ -556,7 +556,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Écran verrouillé</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tout les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées alors que la sensibilité change !!</string>
     <string name="sensitivityweightedaverage">Sensibilité avec moyenne pondérée</string>
     <string name="mdtp_ok">OK</string>
