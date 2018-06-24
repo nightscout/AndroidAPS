@@ -153,8 +153,7 @@ public class DanaRSService extends Service {
                     MainApp.instance().startActivity(i);
 
                     //deinitialize pump
-                    DanaRPump.reset();
-                    danaRPump =  DanaRPump.getInstance();
+                    danaRPump.lastConnection = 0;
                     MainApp.bus().post(new EventDanaRNewStatus());
                     MainApp.bus().post(new EventInitializationChanged());
                     return;
@@ -167,6 +166,7 @@ public class DanaRSService extends Service {
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
             }
+            danaRPump.lastConnection = System.currentTimeMillis();
 
             long now = System.currentTimeMillis();
             if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
@@ -203,6 +203,13 @@ public class DanaRSService extends Service {
     }
 
     public PumpEnactResult loadEvents() {
+
+        if(!MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()){
+            PumpEnactResult result = new PumpEnactResult().success(false);
+            result.comment = "pump not initialized";
+            return result;
+        }
+
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
             msg = new DanaRS_Packet_APS_History_Events(0);
