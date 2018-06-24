@@ -78,7 +78,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .fragmentClass(TreatmentsFragment.class.getName())
                 .pluginName(R.string.treatments)
                 .shortName(R.string.treatments_shortname)
-                .preferencesId(R.xml.pref_absorption_oref0)
                 .alwaysEnabled(true)
                 .description(R.string.description_treatments)
         );
