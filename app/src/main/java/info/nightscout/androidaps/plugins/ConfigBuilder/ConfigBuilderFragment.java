@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,26 +52,8 @@ public class ConfigBuilderFragment extends SubscriberFragment {
 
     private List<PluginViewHolder> pluginViewHolders = new ArrayList<>();
 
-    @BindView(R.id.profile_plugins)
-    LinearLayout profilePlugins;
-    @BindView(R.id.insulin_plugins)
-    LinearLayout insulinPlugins;
-    @BindView(R.id.bgsource_plugins)
-    LinearLayout bgSourcePlugins;
-    @BindView(R.id.pump_plugins)
-    LinearLayout pumpPlugins;
-    @BindView(R.id.sensitivity_plugins)
-    LinearLayout sensitivityPlugins;
-    @BindView(R.id.aps_plugins)
-    LinearLayout apsPlugins;
-    @BindView(R.id.loop_plugins)
-    LinearLayout loopPlugins;
-    @BindView(R.id.constraints_plugins)
-    LinearLayout constraintsPlugins;
-    @BindView(R.id.treatments_plugins)
-    LinearLayout treatmentsPlugins;
-    @BindView(R.id.general_plugins)
-    LinearLayout generalPlugins;
+    @BindView(R.id.categories)
+    LinearLayout categories;
 
     @BindView(R.id.main_layout)
     ScrollView mainLayout;
@@ -119,24 +102,30 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     }
 
     private void createViews() {
-        createViewsForPlugins(profilePlugins, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
-        createViewsForPlugins(insulinPlugins, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
-        createViewsForPlugins(bgSourcePlugins, PluginType.BGSOURCE, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE));
-        createViewsForPlugins(pumpPlugins, PluginType.PUMP, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP));
-        createViewsForPlugins(sensitivityPlugins, PluginType.SENSITIVITY, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY));
-        createViewsForPlugins(apsPlugins, PluginType.APS, MainApp.getSpecificPluginsVisibleInList(PluginType.APS));
-        createViewsForPlugins(loopPlugins, PluginType.LOOP, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP));
-        createViewsForPlugins(constraintsPlugins, PluginType.CONSTRAINTS, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS));
-        createViewsForPlugins(treatmentsPlugins, PluginType.TREATMENT, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT));
-        createViewsForPlugins(generalPlugins, PluginType.GENERAL, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL));
+        createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
+        createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
+        createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE));
+        createViewsForPlugins(R.string.configbuilder_pump, R.string.configbuilder_pump_description, PluginType.PUMP, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP));
+        createViewsForPlugins(R.string.configbuilder_sensitivity, R.string.configbuilder_sensitivity_description, PluginType.SENSITIVITY, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY));
+        createViewsForPlugins(R.string.configbuilder_aps, R.string.configbuilder_aps_description, PluginType.APS, MainApp.getSpecificPluginsVisibleInList(PluginType.APS));
+        createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP));
+        createViewsForPlugins(R.string.configbuilder_constraints, R.string.configbuilder_constraints_description, PluginType.CONSTRAINTS, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS));
+        createViewsForPlugins(R.string.configbuilder_treatments, R.string.configbuilder_treatments_description, PluginType.TREATMENT, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT));
+        createViewsForPlugins(R.string.configbuilder_general, R.string.configbuilder_general_description, PluginType.GENERAL, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL));
     }
 
-    private void createViewsForPlugins(LinearLayout parent, PluginType pluginType, List<PluginBase> plugins) {
+    private void createViewsForPlugins(@StringRes int title, @StringRes int description, PluginType pluginType, List<PluginBase> plugins) {
+        if (plugins.size() == 0) return;
+        LinearLayout parent = (LinearLayout) getLayoutInflater().inflate(R.layout.configbuilder_single_category, null);
+        ((TextView) parent.findViewById(R.id.category_title)).setText(MainApp.gs(title));
+        ((TextView) parent.findViewById(R.id.category_description)).setText(MainApp.gs(description));
+        LinearLayout pluginContainer = parent.findViewById(R.id.category_plugins);
         for (PluginBase plugin: plugins) {
             PluginViewHolder pluginViewHolder = new PluginViewHolder(pluginType, plugin);
-            parent.addView(pluginViewHolder.getBaseView());
+            pluginContainer.addView(pluginViewHolder.getBaseView());
             pluginViewHolders.add(pluginViewHolder);
         }
+        categories.addView(parent);
     }
 
     private boolean areMultipleSelectionsAllowed(PluginType type) {
