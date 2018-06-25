@@ -152,8 +152,6 @@ public class BgReading implements DataPointWithLabelInterface {
         raw = other.raw;
         direction = other.direction;
         _id = other._id;
-        sourcePlugin = other.sourcePlugin;
-        isFiltered = other.isFiltered;
     }
 
     // ------------------ DataPointWithLabelInterface ------------------
