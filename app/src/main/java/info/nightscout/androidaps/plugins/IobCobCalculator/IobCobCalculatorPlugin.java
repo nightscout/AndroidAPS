@@ -388,10 +388,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 //log.debug(">>> getAutosensData Cache hit " + data.log(time));
                 return data;
             } else {
-                if (time > now) {
-                    // data may not be calculated yet, use last data
-                    return getLastAutosensData("getAutosensData");
-                }
                 //log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
                 return null;
             }
