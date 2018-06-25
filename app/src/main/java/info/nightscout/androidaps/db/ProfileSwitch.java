@@ -103,14 +103,11 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         if(LocalProfilePlugin.LOCAL_PROFILE.equals(name)){
             name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
         }
-        //Test if name is already containing percentage or timeshift
-        if (!name.endsWith("h)") || !name.endsWith("%)")) {
-            if (isCPP) {
-                name += "(" + percentage + "%";
-                if (timeshift != 0)
-                    name += "," + timeshift + "h";
-                name += ")";
-            }
+        if (isCPP) {
+            name += "(" + percentage + "%";
+            if (timeshift != 0)
+                name += "," + timeshift + "h";
+            name += ")";
         }
         return name;
     }
