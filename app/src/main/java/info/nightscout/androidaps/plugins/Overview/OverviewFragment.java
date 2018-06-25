@@ -311,7 +311,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
             bgGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
             iobGraph.getGridLabelRenderer().setLabelVerticalWidth(axisWidth);
-            iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
+            iobGraph.getGridLabelRenderer().setNumVerticalLabels(3);
 
             rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
 
