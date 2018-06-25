@@ -261,10 +261,14 @@ public class IobCobThread extends Thread {
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
                     previous = autosensData;
-                    autosensDataTable.put(bgTime, autosensData);
+                    if (bgTime < now())
+                        autosensDataTable.put(bgTime, autosensData);
                     if (Config.logAutosensData)
                         log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
-                    autosensData.autosensRatio = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime).ratio;
+                    AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime);
+                    if (Config.logAutosensData)
+                        log.debug("Sensitivity result: " + sensitivity.toString());
+                    autosensData.autosensRatio = sensitivity.ratio;
                     if (Config.logAutosensData)
                         log.debug(autosensData.toString());
                 }

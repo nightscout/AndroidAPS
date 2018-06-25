@@ -332,7 +332,8 @@ public class IobCobOref1Thread extends Thread {
                         autosensData.extraDeviation.add(0d);
 
                     previous = autosensData;
-                    autosensDataTable.put(bgTime, autosensData);
+                    if (bgTime < now())
+                        autosensDataTable.put(bgTime, autosensData);
                     if (Config.logAutosensData)
                         log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
                     autosensData.autosensRatio = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime).ratio;
