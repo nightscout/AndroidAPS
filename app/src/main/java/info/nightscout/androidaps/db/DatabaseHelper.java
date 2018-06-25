@@ -28,7 +28,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -119,9 +118,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
 
             // soft migration without changing DB version
-            createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
+            createColumnIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
                     "isFiltered", "integer");
-            createRowIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
+            createColumnIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
                     "sourcePlugin", "text");
 
         } catch (SQLException e) {
@@ -130,7 +129,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private void createRowIfNotExists(Dao dao, String table, String name, String type) {
+    private void createColumnIfNotExists(Dao dao, String table, String name, String type) {
         try {
             final String statement = "ALTER TABLE `" + table + "` ADD COLUMN `" + name + "` " + type;
             dao.executeRaw(statement);
