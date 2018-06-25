@@ -310,6 +310,8 @@ public class IobCobOref1Thread extends Thread {
                             autosensData.pastSensitivity = "-";
                             autosensData.validDeviation = true;
                         }
+                    } else if (autosensData.type.equals("uam")) {
+                        autosensData.pastSensitivity = "u";
                     } else {
                         autosensData.pastSensitivity = "x";
                     }
