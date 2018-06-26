@@ -288,8 +288,8 @@
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">To send calibration %.2f reply with code %s</string>
+    <string name="smscommunicator_bolusreplywithcode">To deliver bolus %1$.2fU reply with code %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">To send calibration %1$.2f reply with code %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusrequested" formatted="false">Going to deliver %.2fU</string>
@@ -362,13 +362,13 @@
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
-    <string name="valuelimitedto" formatted="false">%.2f limited to %.2f</string>
+    <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Value %s is out of hard limits</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">To suspend loop for %d minutes reply with code %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
+    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h reply with code %2$s</string>
+    <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
+    <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
@@ -479,7 +479,7 @@
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
-    <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="danar_model">Model: %1$02X Protocol: %2$02X Code: %3$02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
@@ -719,7 +719,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short" formatted="false">DIA of %f too short - using %f instead!</string>
+    <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
     <string name="activate_profile">Activate profile</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
@@ -843,14 +843,14 @@
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %d min</string>
-    <string name="combo_tbr_remaining">%d%% (%d min remaining)</string>
-    <string name="combo_last_bolus" translatable="false">%.1f %s (%s)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min remaining)</string>
+    <string name="combo_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="combo_pump_state_initializing">Initializing</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
     <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
     <string name="combo_pump_state_running">Running</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
-    <string name="combo_pump_action_setting_tbr">Setting TBR (%d%% / %d min)</string>
+    <string name="combo_pump_action_setting_tbr">Setting TBR (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Refreshing</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
@@ -863,7 +863,7 @@
     <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
-    <string name="combo_is_in_error_state">The pump is showing the error E%d: %s</string>
+    <string name="combo_is_in_error_state">The pump is showing the error E%1$d: %2$s</string>
     <string name="combo_reservoir_low">Low</string>
     <string name="combo_reservoir_empty">Empty</string>
     <string name="combo_reservoir_normal">Normal</string>
@@ -872,7 +872,7 @@
     <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
     <string name="combo_error_no_connection_no_bolus_delivered">The pump could not be reached. No bolus was given</string>
     <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
-    <string name="combo_error_partial_bolus_delivered">Only %.2f U of the requested bolus of %.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
+    <string name="combo_error_partial_bolus_delivered">Only %1$.2f U of the requested bolus of %2$.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually. If a bolus was delivered, it will be added to treatments during the next connection to the pump.</string>
     <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
@@ -917,7 +917,7 @@
     <string name="day">day</string>
     <string name="week">week</string>
     <string name="time_plural">s</string>
-    <string name="insight_keepalive_format_string">%ds expires %s</string>
+    <string name="insight_keepalive_format_string">%1$ds expires %2$s</string>
     <string name="insight_keep_alive_status">Keep-alive status</string>
     <string name="statistics">Statistics</string>
     <string name="connect_preemptively">Connect preemptively</string>
@@ -1018,7 +1018,7 @@
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
-    <string name="limitingbasalratio">Limiting max basal rate to %.2f U/h because of %s</string>
+    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
     <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
@@ -1029,12 +1029,12 @@
     <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
-    <string name="limitingpercentrate" formatted="false">Limiting max percent rate to %d%% because of %s</string>
+    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
-    <string name="limitingbolus" formatted="false">Limiting bolus to %.1f U because of %s</string>
-    <string name="limitingmaxiob" formatted="false">Limiting max IOB to %.1f U because of %s</string>
-    <string name="limitingcarbs" formatted="false">Limiting carbs to %d g because of %s</string>
-    <string name="limitingiob" formatted="false">Limiting IOB to %.1f U because of %s</string>
+    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+    <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
+    <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
+    <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
@@ -1075,7 +1075,7 @@
     <string name="setupwizard_language_prompt">Select your language</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
-    <string name="boluserrorcode">Asked: %.2fU Delivered: %.2fU Error code: %d</string>
+    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$d</string>
     <string name="firstinsulinincrement">First insulin increment</string>
     <string name="secondinsulinincrement">Second insulin increment</string>
     <string name="thirdinsulinincrement">Third insulin increment</string>

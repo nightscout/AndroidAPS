@@ -195,8 +195,8 @@
     <string name="waitingforpumpresult">Se așteaptă rezultatul</string>
     <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">Pentru a livra un bolus de %.2fU răspundeți cu codul %s</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Pentru a trimite calibrarea cu %.2f răspundeți cu codul %s</string>
+    <string name="smscommunicator_bolusreplywithcode">Pentru a livra un bolus de %1$.2fU răspundeți cu codul %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">Pentru a trimite calibrarea cu %1$.2f răspundeți cu codul %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus eșuat</string>
     <string name="bolusdelivered" formatted="false">Bolusul de %.2fU livrat cu succes</string>
     <string name="bolusrequested" formatted="false">Se va livra un bolus de %.2fU</string>
@@ -268,9 +268,9 @@
     <string name="smscommunicator_loopisenabled">Bucla este activată</string>
     <string name="smscommunicator_remotebasalnotallowed">Setarea de la distanță a bazalei nu este permisă</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">Pentru pornirea bazalei de %.2fU/h trimiteți codul %s</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Pentru suspendarea buclei pentru %d minute trimiteți codul %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Bazala temporară %.2fU/h pentru %d minute a fost trimisă cu succes</string>
+    <string name="smscommunicator_basalreplywithcode">Pentru pornirea bazalei de %1$.2fU/h trimiteți codul %2$s</string>
+    <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
+    <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
     <string name="smscommunicator_tempbasalfailed">Trimiterea bazalei temporare a eșuat</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Pentru oprirea bazalei temporare trimiteți codul %s</string>
     <string name="smscommunicator_tempbasalcanceled">Bazala temporară a fost anulată</string>
@@ -378,7 +378,7 @@
     <string name="always_use_shortavg">Folosește întotdeauna media scurtă a diferenței în locul diferenței simple</string>
     <string name="always_use_shortavg_summary">Folositor când datele vin de la surse nefiltrate, ca atunci când xDrip are măsurători zgomotoase.</string>
     <string name="advancedsettings_title">Setări avansate</string>
-    <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Cod: %02X</string>
+    <string name="danar_model">Model: %1$02X Protocol: %2$02X Cod: %3$02X</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3\nAceasta este o setare de critică de securitate a OpenAPS. Asta înseamnă că se limitează bazala lade 3x valoarea maximă a bazalelor tale.Cel mai probabil nu veți schimba această valoare, dar trebuie să țineți cont de ce se discută despre “3x max zilnic; 4x curent” ca valori de siguranță.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a "3x max zilnic; 4x curent" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
@@ -389,7 +389,7 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valoare implicită: 3.0\nAceasta este o setare ce privește impactul carbohidraților pe o durată de 5 minute. Valoarea implicită este de așteptat a fi 3mg/dl/5min. Aceasta afectează cât de mult se scade valoarea COB și cât de mare este presupusă a fi absorbția de carbohidrați în calcularea valorii prezise a glicemiei, atunci când glicemia scade cu mai mult decât s-a estimat sau când nu crește așa cum s-a așteptat.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenție!\nÎn mod normal nu este nevoie să modificați valorile de mai jos. Vă rog să APĂSAȚI AICI și să CITIȚI textul și să vă asigurați că l-ați ÎNȚELES înainte de a schimba valorile.</string>
     <string name="error_only_numeric_digits_allowed">Se acceptă numai valori numerice.</string>
-    <string name="error_only_numeric_digits_range_allowed">Se acceptă numai valori numerice între %1s - %2s.</string>
+    <string name="error_only_numeric_digits_range_allowed">Se acceptă numai valori numerice între %1$1s - %2$2s.</string>
     <string name="error_field_must_not_be_empty">Acest câmp nu trebuie lăsat necompletat</string>
     <string name="error_phone_not_valid">Numărul de telefon este invalid</string>
     <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
@@ -539,7 +539,7 @@
     <string name="bolusstopping">Se oprește bolusul</string>
     <string name="objectives_7_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
     <string name="objectives_7_gate">Trebuie sa citiți wiki și măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
-    <string name="valuelimitedto" formatted="false">%.2f este limitată la %.2f</string>
+    <string name="valuelimitedto">%1$.2f este limitată la %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Valarea %s este mai mare decât limita fizică</string>
     <string name="refresheventsfromnightscout">Sincronizează cu NS</string>
     <string name="hypo">Hipo</string>
@@ -614,7 +614,7 @@
     <string name="free_peak_oref">Oref Fără-Vârf</string>
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
     <string name="ultrarapid_oref">Oref Insulină-UltraRapidă</string>
-    <string name="dia_too_short" formatted="false">DIA din %f prea scurtă - se folosește %f în schimb!</string>
+    <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <string name="activate_profile">Activează profil</string>
     <string name="date">Data</string>
     <string name="invalid">INVALID</string>
@@ -714,13 +714,13 @@
     <string name="combo_pump_state_label">Stare</string>
     <string name="combo_pump_activity_label">Activitate</string>
     <string name="combo_no_pump_connection" formatted="false">Fără conexiune de %d min</string>
-    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min rămase)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min rămase)</string>
     <string name="combo_pump_state_initializing">Inițializare</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspendat din cauza unei erori</string>
     <string name="combo_pump_state_suspended_by_user">Suspendat de utilizator</string>
     <string name="combo_pump_state_running">Funcționează</string>
     <string name="combo_pump_action_cancelling_tbr">Se oprește TBR</string>
-    <string name="combo_pump_action_setting_tbr" formatted="false">Se setează TBR (%d%% / %d min)</string>
+    <string name="combo_pump_action_setting_tbr">Se setează TBR (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing" formatted="false">Bolusare (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Reîncărcare</string>
     <string name="combo_pump_unsupported_operation">Operațiunea nu este suportată de pompă</string>
@@ -732,7 +732,7 @@
     <string name="combo_activity_setting_basal_profile">Se setează profilul bazalei</string>
     <string name="combo_pump_cartridge_low_warrning">Nivelul insulinei din pompă este scăzut</string>
     <string name="combo_pump_battery_low_warrning">Nivelul bateriei pompei este scăzut</string>
-    <string name="combo_is_in_error_state" formatted="false">Pompa are eroarea: E%d: %s</string>
+    <string name="combo_is_in_error_state">Pompa are eroarea: E%1$d: %2$s</string>
     <string name="combo_reservoir_low">Scăzut</string>
     <string name="combo_reservoir_empty">Gol</string>
     <string name="combo_reservoir_normal">Normal</string>
@@ -741,7 +741,7 @@
     <string name="combo_pump_tbr_cancelled_warrning">Alerta RBT ANULATĂ a fost confirmată</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Pompa nu poate fi contactată. Nu s-a livrat niciun bolus</string>
     <string name="combo_error_no_bolus_delivered">Livrare eșuată. Se pare că nu a fost livrat bolusul. Pentru siguranță, verificați în pompă pentru a evita bolusarea dublă. Pentru evitarea greșelilor, bolusurile nu sunt retrimise automat.</string>
-    <string name="combo_error_partial_bolus_delivered" formatted="false">Doar %.2f U din totalul cerut de %.2f U a fost livrat din cauza unei erori. Verificați pompa pentru confirmare și acționați corespunzător.</string>
+    <string name="combo_error_partial_bolus_delivered">Doar %1$.2f U din totalul cerut de %2$.2f U a fost livrat din cauza unei erori. Verificați pompa pentru confirmare și acționați corespunzător.</string>
     <string name="combo_error_bolus_recovery_progress">Revenire după pierderea conexiunii</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
@@ -785,7 +785,7 @@
     <string name="day">z</string>
     <string name="week">săptămână</string>
     <string name="time_plural">e</string>
-    <string name="insight_keepalive_format_string" formatted="false">%ds expiră %s</string>
+    <string name="insight_keepalive_format_string">%1$ds expiră %2$s</string>
     <string name="insight_keep_alive_status">Stare de menținere</string>
     <string name="statistics">Statistici</string>
     <string name="connect_preemptively">Conectare preventivă</string>
@@ -883,18 +883,18 @@
     <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
     <string name="autosensdisabledinpreferences">Autosens dezactivat în preferințe</string>
     <string name="smbdisabledinpreferences">SMB dezactivat în preferințe</string>
-    <string name="limitingbasalratio" formatted="false">Se limitează maximul ratei bazale la %.2f U/o datorită %s</string>
+    <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
     <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
     <string name="maxbasalmultiplier">maximul multiplicatorului bazalei</string>
     <string name="maxdailybasalmultiplier">maximul zilnic al multiplicatorului bazalei</string>
     <string name="smb_frequency_exceeded">S-a livrat un bolus în ultimile 3 minute, nu se livrează SMB</string>
     <string name="basal_set_correctly">Bazala setată corect</string>
-    <string name="limitingpercentrate" formatted="false">Se limitează procentul ratei maxime la %d%% datorită %s</string>
-    <string name="limitingbolus" formatted="false">Se limitează bolusul la %.1f U datorită %s</string>
-    <string name="limitingmaxiob" formatted="false">Se limitează max IOB la %.1f U datorită %s</string>
-    <string name="limitingcarbs" formatted="false">Se limitează carbohidrații %d g datorită %s</string>
-    <string name="limitingiob" formatted="false">Se limitează IOB la %.1f U datorită %s</string>
+    <string name="limitingpercentrate">Se limitează procentul ratei maxime la %1$d%% datorită %2$s</string>
+    <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
+    <string name="limitingmaxiob">Se limitează max IOB la %1$.1f U datorită %2$s</string>
+    <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
+    <string name="limitingiob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="unsafeusage">folosire nesigură</string>
     <string name="readstatusfailed">Citire eșuată a stării</string>
@@ -916,7 +916,7 @@
     <string name="time">Timp</string>
     <string name="reset">reset</string>
     <string name="openapssmb_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS, OpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
-    <string name="boluserrorcode" formatted="false">Solicitat: %.2fU Livrat: %.2fU Cod eroare: %d</string>
+    <string name="boluserrorcode">Solicitat: %1$.2fU Livrat: %2$.2fU Cod eroare: %3$d</string>
     <string name="firstinsulinincrement">Primul increment de insulină</string>
     <string name="secondinsulinincrement">Al doilea increment de insulină</string>
     <string name="thirdinsulinincrement">Al treilea increment de insulină</string>
