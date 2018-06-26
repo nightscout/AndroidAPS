@@ -27,7 +27,7 @@ public class SWFragment extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
+    public void generateDialog(LinearLayout layout) {
         definition.getActivity().getSupportFragmentManager().beginTransaction().add(layout.getId(), fragment, fragment.getTag()).commit();
     }
 

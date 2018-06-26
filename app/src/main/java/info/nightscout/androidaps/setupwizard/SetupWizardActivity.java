@@ -129,7 +129,7 @@ public class SetupWizardActivity extends AppCompatActivity {
         LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.sw_content_fields));
         for (int i = 0; i < currentScreen.items.size(); i++) {
             SWItem currentItem = currentScreen.items.get(i);
-            currentItem.generateDialog(this.findViewById(R.id.sw_content_fields), layout);
+            currentItem.generateDialog(layout);
         }
         scrollView.smoothScrollTo(0,0);
     }
