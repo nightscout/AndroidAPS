@@ -958,7 +958,6 @@
     <string name="setupwizard_objectives_description">Apăsați butonul pentru a activa Obiectivele. După terminarea procesului de setare, alegeți fereastra Obiective pentru a face AndroidAPS complet funcțional.</string>
     <string name="enableobjectives">Activați Obiectivele</string>
     <string name="apssetup">Configurați plugin APS</string>
-    <string name="backupismissing">Nu există configurații exportate, decin nu se poate face import de configurații.</string>
     <string name="sensitivitysetup">Configurați pluginul pentru Sensibilitate</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="nsclientinfotext">NSClient răspunde de conexiunea cu Nightscout. Puteți ignora această secțiune, dar nu veți putea completa obiectivele până nu îl configurați.</string>

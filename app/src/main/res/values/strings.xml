@@ -1122,7 +1122,6 @@
     <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.\n</string>
     <string name="enableobjectives">Enable Objectives</string>
     <string name="apssetup">Configure APS plugin</string>
-    <string name="backupismissing">Exported configuration is missing thus import configuration is not possible.\n</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="sensitivitysetup">Configure Sensitivity plugin</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
@@ -1178,6 +1177,7 @@
     <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
+    <string name="storedsettingsfound">Stored settings found</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
