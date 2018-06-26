@@ -26,6 +26,7 @@ public class SWPlugin extends SWItem {
 
     private PluginType pType;
     private RadioGroup radioGroup;
+    private int pluginDescription;
 
     private boolean makeVisible = true;
 
@@ -33,8 +34,9 @@ public class SWPlugin extends SWItem {
         super(Type.PLUGIN);
     }
 
-    public SWPlugin option(PluginType pType) {
+    public SWPlugin option(PluginType pType, int pluginDescription) {
         this.pType = pType;
+        this.pluginDescription = pluginDescription;
         return this;
     }
 
@@ -55,6 +57,13 @@ public class SWPlugin extends SWItem {
         radioGroup.setOrientation(LinearLayout.VERTICAL);
         radioGroup.setVisibility(View.VISIBLE);
 
+        TextView pdesc = new TextView(context);
+        pdesc.setText(pluginDescription);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 0, 40);
+        pdesc.setLayoutParams(params);
+        layout.addView(pdesc);
+
         for (int i = 0; i < pluginsInCategory.size(); i++) {
             RadioButton rdbtn = new RadioButton(context);
             PluginBase p = pluginsInCategory.get(i);
@@ -64,7 +73,7 @@ public class SWPlugin extends SWItem {
                 rdbtn.setChecked(true);
             rdbtn.setTag(p);
             radioGroup.addView(rdbtn);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(80, 0, 0, 0);
             TextView desc = new TextView(context);
             desc.setText(p.getDescription());

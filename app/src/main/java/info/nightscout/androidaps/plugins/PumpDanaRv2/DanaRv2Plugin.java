@@ -44,6 +44,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     private DanaRv2Plugin() {
+        pluginDescription.description(R.string.description_pump_dana_r_v2);
+
         log = LoggerFactory.getLogger(DanaRv2Plugin.class);
         useExtendedBoluses = false;
 

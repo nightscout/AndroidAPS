@@ -45,7 +45,8 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     public DanaRKoreanPlugin() {
-        super();
+        pluginDescription.description(R.string.description_pump_dana_r_korean);
+
         log = LoggerFactory.getLogger(DanaRKoreanPlugin.class);
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
 

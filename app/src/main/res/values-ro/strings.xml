@@ -614,7 +614,6 @@
     <string name="free_peak_oref">Oref Fără-Vârf</string>
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
     <string name="ultrarapid_oref">Oref Insulină-UltraRapidă</string>
-    <string name="free_peak_oref_description">Insulină personalizată</string>
     <string name="dia_too_short" formatted="false">DIA din %f prea scurtă - se folosește %f în schimb!</string>
     <string name="activate_profile">Activează profil</string>
     <string name="date">Data</string>
@@ -955,7 +954,6 @@
     <string name="readstatus">Citire stare</string>
     <string name="adjustprofileinns">Schimbările trebuie făcute în NS</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
-    <string name="setupwizard_bgsource_description">Care este sursa de glicemii?</string>
     <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
     <string name="setupwizard_objectives_description">Apăsați butonul pentru a activa Obiectivele. După terminarea procesului de setare, alegeți fereastra Obiective pentru a face AndroidAPS complet funcțional.</string>
     <string name="enableobjectives">Activați Obiectivele</string>
