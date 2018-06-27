@@ -885,7 +885,7 @@
     <string name="maxdailybasalmultiplier">mazimální násobek nejvyššího bazálu</string>
     <string name="smb_frequency_exceeded">Odeslán bolus během posledních 3 minut, SMB přeskočeno</string>
     <string name="basal_set_correctly">Bazál nastaven správně</string>
-    <string name="limitingpercentrate">Bazál omezen na %1$d%%2$: %3$s</string>
+    <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
     <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
     <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
     <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
