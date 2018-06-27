@@ -206,7 +206,8 @@
         </activity>
         <activity
             android:name=".interaction.actions.AcceptActivity"
-            android:label="CPP">
+            android:launchMode="singleInstance"
+            android:label="ACCEPT">
         </activity>
         <activity
             android:name=".interaction.actions.FillActivity"

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interaction.actions;
 
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -139,5 +140,16 @@ public class AcceptActivity extends ViewSelectorActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected synchronized void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(dismissThread != null) dismissThread.invalidate();
+        Bundle extras = intent.getExtras();
+        Intent msgIntent = new Intent(this, AcceptActivity.class);
+        msgIntent.putExtras(extras);
+        startActivity(msgIntent);
+        finish();
     }
 }
