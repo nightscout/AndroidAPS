@@ -3,6 +3,8 @@ package info.nightscout.androidaps.interaction.actions;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
@@ -26,10 +28,14 @@ public class AcceptActivity extends ViewSelectorActivity {
     String title = "";
     String message = "";
     String actionstring = "";
+    private DismissThread dismissThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.dismissThread = new DismissThread();
+        dismissThread.start();
 
         Bundle extras = getIntent().getExtras();
         title = extras.getString("title", "");
@@ -106,6 +112,32 @@ public class AcceptActivity extends ViewSelectorActivity {
             return view==object;
         }
 
+    }
 
+    @Override
+    public synchronized void onDestroy(){
+        super.onDestroy();
+        if(dismissThread != null){
+            dismissThread.invalidate();
+        }
+
+    }
+
+    private class DismissThread extends Thread{
+        private boolean valid = true;
+
+        public synchronized void invalidate(){
+            valid = false;
+        }
+
+        @Override
+        public void run() {
+            SystemClock.sleep(60 * 1000);
+            synchronized (this) {
+                if(valid) {
+                    AcceptActivity.this.finish();
+                }
+            }
+        }
     }
 }

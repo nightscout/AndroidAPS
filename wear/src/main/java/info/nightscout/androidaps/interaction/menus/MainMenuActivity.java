@@ -88,16 +88,6 @@ public class MainMenuActivity extends MenuListActivity {
             intent = new Intent(this, FillMenuActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
-            /*
-            intent = new Intent(this, AcceptActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Bundle params = new Bundle();
-            params.putString("heading", "Confirm");
-            params.putString("text", "dies\nist ein\nhoffentlich\n langer text\n\ndies\nist ein\nhoffentlich\n langer text\n\ndies\nist ein\nhoffentlich\n langer text\n\ndies\nist ein\nhoffentlich\n langer text\n\n");
-            params.putString("actionstring", "blablubb");
-            intent.putExtras(params);
-            startActivity(intent);
-            */
         } else if ("eCarb".equals(action)) {
         intent = new Intent(this, ECarbActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
