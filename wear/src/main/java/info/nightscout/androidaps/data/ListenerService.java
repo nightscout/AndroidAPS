@@ -436,6 +436,13 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         context.startService(intent);
     }
 
+    public static void confirmAction(Context context, String actionstring) {
+        Intent intent = new Intent(context, ListenerService.class);
+        intent.putExtra("actionstring", actionstring);
+        intent.setAction(ACTION_CONFIRMATION);
+        context.startService(intent);
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
         requestData();

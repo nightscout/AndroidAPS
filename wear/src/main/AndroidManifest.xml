@@ -205,6 +205,10 @@
             android:label="CPP">
         </activity>
         <activity
+            android:name=".interaction.actions.AcceptActivity"
+            android:label="CPP">
+        </activity>
+        <activity
             android:name=".interaction.actions.FillActivity"
             android:label="Fill">
         </activity>

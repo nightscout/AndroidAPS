@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
+import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity;
@@ -34,7 +35,7 @@ public class MainMenuActivity extends MenuListActivity {
     protected String[] getElements() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(!sharedPreferences.getBoolean("wearcontrol", false)){
+        if(false && !sharedPreferences.getBoolean("wearcontrol", false)){
             return new String[] {
                     "Settings",
                     "Re-Sync"};
@@ -84,9 +85,17 @@ public class MainMenuActivity extends MenuListActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
         } else if ("Prime/Fill".equals(action)) {
-            intent = new Intent(this, FillMenuActivity.class);
+            /*intent = new Intent(this, FillMenuActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
+            */
+            intent = new Intent(this, AcceptActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle params = new Bundle();
+            params.putString("text", "dies\nist ein\nhoffentlich\n langer text\n\ndies\nist ein\nhoffentlich\n langer text\n\ndies\nist ein\nhoffentlich\n langer text\n\ndies\nist ein\nhoffentlich\n langer text\n\n");
+            params.putString("actionstring", "blablubb");
+            intent.putExtras(params);
+            startActivity(intent);
         } else if ("eCarb".equals(action)) {
         intent = new Intent(this, ECarbActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
