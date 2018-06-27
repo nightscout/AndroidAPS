@@ -354,47 +354,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         params.putString("actionstring", actionstring);
         intent.putExtras(params);
         startActivity(intent);
-
-        /*
-        if(confirmThread != null){
-            confirmThread.invalidate();
-        }
-
-        Intent actionIntent = new Intent(this, ListenerService.class);
-        actionIntent.setAction(ACTION_CONFIRMATION);
-        actionIntent.putExtra("actionstring", actionstring);
-        PendingIntent actionPendingIntent = PendingIntent.getService(this, 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);;
-
-        long[] vibratePattern = new long[]{0, 100, 50, 100, 50};
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle(title)
-                        .setContentText(message)
-                        .setContentIntent(actionPendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setVibrate(vibratePattern)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                        .extend(new NotificationCompat.WearableExtender())
-                        .addAction(R.drawable.ic_confirm, title, actionPendingIntent);
-
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(this);
-
-        notificationManager.notify(CONFIRM_NOTIF_ID, notificationBuilder.build());
-
-        // keep the confirmation dialog open for one minute.
-        scheduleDismissConfirm(60);
-        */
-    }
-
-    private void scheduleDismissConfirm(final int seconds) {
-        if(confirmThread != null){
-            confirmThread.invalidate();
-        }
-        confirmThread = new DismissThread(CONFIRM_NOTIF_ID, seconds);
-        confirmThread.start();
     }
 
     private void scheduleDismissBolusprogress(final int seconds) {
