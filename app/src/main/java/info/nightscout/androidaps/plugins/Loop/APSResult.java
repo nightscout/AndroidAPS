@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -28,7 +27,7 @@ import info.nightscout.utils.DecimalFormatter;
 public class APSResult {
     private static Logger log = LoggerFactory.getLogger(APSResult.class);
 
-    public Date date;
+    public long date = 0;
     public String reason;
     public double rate;
     public int duration;
@@ -133,8 +132,8 @@ public class APSResult {
     public List<BgReading> getPredictions() {
         List<BgReading> array = new ArrayList<>();
         try {
-            long startTime = date.getTime();
-            if (json.has("predBGs")) {
+            long startTime = date;
+            if (json != null && json.has("predBGs")) {
                 JSONObject predBGs = json.getJSONObject("predBGs");
                 if (predBGs.has("IOB")) {
                     JSONArray iob = predBGs.getJSONArray("IOB");
@@ -196,8 +195,8 @@ public class APSResult {
     public long getLatestPredictionsTime() {
         long latest = 0;
         try {
-            long startTime = date != null ? date.getTime() : 0;
-            if (json.has("predBGs")) {
+            long startTime = date;
+            if (json != null && json.has("predBGs")) {
                 JSONObject predBGs = json.getJSONObject("predBGs");
                 if (predBGs.has("IOB")) {
                     JSONArray iob = predBGs.getJSONArray("IOB");
