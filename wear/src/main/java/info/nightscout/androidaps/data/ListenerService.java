@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
 
@@ -345,6 +346,16 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private void showConfirmationDialog(String title, String message, String actionstring) {
 
+        Intent intent = new Intent(this, AcceptActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle params = new Bundle();
+        params.putString("title", title);
+        params.putString("message", message);
+        params.putString("actionstring", actionstring);
+        intent.putExtras(params);
+        startActivity(intent);
+
+        /*
         if(confirmThread != null){
             confirmThread.invalidate();
         }
@@ -375,7 +386,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         // keep the confirmation dialog open for one minute.
         scheduleDismissConfirm(60);
-
+        */
     }
 
     private void scheduleDismissConfirm(final int seconds) {

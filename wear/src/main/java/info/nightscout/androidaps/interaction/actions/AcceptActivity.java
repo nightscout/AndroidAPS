@@ -12,12 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
-import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
-import info.nightscout.androidaps.interaction.utils.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.
@@ -27,7 +23,8 @@ import info.nightscout.androidaps.interaction.utils.SafeParse;
 public class AcceptActivity extends ViewSelectorActivity {
 
 
-    String text = "";
+    String title = "";
+    String message = "";
     String actionstring = "";
 
     @Override
@@ -35,10 +32,11 @@ public class AcceptActivity extends ViewSelectorActivity {
         super.onCreate(savedInstanceState);
 
         Bundle extras = getIntent().getExtras();
-        text = extras.getString("text", "");
+        title = extras.getString("title", "");
+        message = extras.getString("message", "");
         actionstring = extras.getString("actionstring", "");
 
-        if ("".equals(text) || "".equals(actionstring) ){
+        if ("".equals(message) || "".equals(actionstring) ){
             finish(); return;
         }
 
@@ -75,8 +73,10 @@ public class AcceptActivity extends ViewSelectorActivity {
 
             if(col == 0){
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_confirm_text, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.confirmtext);
-                textView.setText(text);
+                final TextView headingView = (TextView) view.findViewById(R.id.title);
+                headingView.setText(title);
+                final TextView textView = (TextView) view.findViewById(R.id.message);
+                textView.setText(message);
                 container.addView(view);
                 return view;
             } else {
