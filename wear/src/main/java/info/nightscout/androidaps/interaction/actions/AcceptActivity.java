@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.interaction.actions;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
@@ -54,6 +56,10 @@ public class AcceptActivity extends ViewSelectorActivity {
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
+
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        long[] vibratePattern = new long[]{0, 100, 50, 100, 50};
+        v.vibrate(vibratePattern, -1);
     }
 
 
