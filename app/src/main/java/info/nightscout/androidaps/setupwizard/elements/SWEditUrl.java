@@ -27,8 +27,8 @@ public class SWEditUrl extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
 
         TextView l = new TextView(context);
         l.setId(View.generateViewId());
@@ -48,7 +48,7 @@ public class SWEditUrl extends SWItem {
         editText.setMaxLines(1);
         editText.setText(SP.getString(preferenceId, ""));
         layout.addView(editText);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override

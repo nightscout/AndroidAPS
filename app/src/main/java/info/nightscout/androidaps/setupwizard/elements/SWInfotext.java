@@ -38,8 +38,8 @@ public class SWInfotext extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
 
         l = new TextView(context);
         l.setId(View.generateViewId());
