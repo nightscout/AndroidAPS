@@ -1414,13 +1414,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             final long fromTime;
             final long endTime;
 
-            APSResult apsResult;
-            if (Config.APS)
-                apsResult = finalLastRun.constraintsProcessed;
-            else
-                apsResult = NSDeviceStatus.getAPSResult();
+            APSResult apsResult = null;
 
             if (finalPredictionsAvailable && SP.getBoolean("showprediction", false)) {
+                if (Config.APS)
+                    apsResult = finalLastRun.constraintsProcessed;
+                else
+                    apsResult = NSDeviceStatus.getAPSResult();
                 int predHours = (int) (Math.ceil(apsResult.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
                 predHours = Math.min(2, predHours);
                 predHours = Math.max(0, predHours);
