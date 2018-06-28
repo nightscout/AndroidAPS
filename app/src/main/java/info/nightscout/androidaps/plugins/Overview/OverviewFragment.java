@@ -839,7 +839,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             if (wizard.superBolus) {
                                 final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
                                 if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                                    loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
+                                    loopPlugin.superBolusTo(System.currentTimeMillis() + DateUtil.hourToMs(2));
                                     MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                 }
                                 ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
@@ -1426,12 +1426,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 predHours = Math.max(0, predHours);
                 hoursToFetch = rangeToDisplay - predHours;
                 toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-                fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-                endTime = toTime + predHours * 60 * 60 * 1000L;
+                fromTime = toTime - DateUtil.hourToMs(hoursToFetch);
+                endTime = toTime + DateUtil.hourToMs(predHours);
             } else {
                 hoursToFetch = rangeToDisplay;
                 toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-                fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                fromTime = toTime - DateUtil.hourToMs(hoursToFetch);
                 endTime = toTime;
             }
 
