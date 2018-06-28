@@ -486,8 +486,12 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            // use special APS temp basal call ... 100+/15min .... 100-/30min
-            result = setHighTempBasalPercent(percentRate);
+            if (percentRate == 0 && durationInMinutes > 30) {
+                result = setTempBasalPercent(percentRate, durationInMinutes, profile, false);
+            } else {
+                // use special APS temp basal call ... 100+/15min .... 100-/30min
+                result = setHighTempBasalPercent(percentRate);
+            }
             if (!result.success) {
                 log.error("setTempBasalAbsolute: Failed to set hightemp basal");
                 return result;
