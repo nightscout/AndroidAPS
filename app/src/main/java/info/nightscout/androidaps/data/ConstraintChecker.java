@@ -42,10 +42,6 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isSMBModeEnabled(new Constraint<>(true));
     }
 
-    public Constraint<Boolean> isAdvancedFilteringEnabled() {
-        return isAdvancedFilteringEnabled(new Constraint<>(true));
-    }
-
     public Constraint<Double> getMaxBasalAllowed(Profile profile) {
         return applyBasalConstraints(new Constraint<>(Constants.REALLYHIGHBASALRATE), profile);
     }
@@ -69,7 +65,7 @@ public class ConstraintChecker implements ConstraintsInterface {
     @Override
     public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
 
-        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
@@ -81,7 +77,7 @@ public class ConstraintChecker implements ConstraintsInterface {
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
 
-        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
@@ -122,17 +118,6 @@ public class ConstraintChecker implements ConstraintsInterface {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isSMBModeEnabled(value);
-        }
-        return value;
-    }
-
-    @Override
-    public Constraint<Boolean> isAdvancedFilteringEnabled(Constraint<Boolean> value) {
-        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constraint = (ConstraintsInterface) p;
-            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
-            constraint.isAdvancedFilteringEnabled(value);
         }
         return value;
     }

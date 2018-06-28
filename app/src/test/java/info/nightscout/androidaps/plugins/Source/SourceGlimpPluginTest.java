@@ -14,9 +14,4 @@ public class SourceGlimpPluginTest {
     public void getPlugin() {
         Assert.assertNotEquals(null, SourceGlimpPlugin.getPlugin());
     }
-
-    @Test
-    public void advancedFilteringSupported() {
-        Assert.assertEquals(false, SourceGlimpPlugin.getPlugin().advancedFilteringSupported());
-    }
 }

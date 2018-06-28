@@ -469,6 +469,8 @@ public class NSUpload {
             data.put("sgv", reading.value);
             data.put("direction", reading.direction);
             data.put("type", "sgv");
+            data.put("isFiltered", reading.isFiltered);
+            data.put("sourcePlugin", reading.sourcePlugin);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

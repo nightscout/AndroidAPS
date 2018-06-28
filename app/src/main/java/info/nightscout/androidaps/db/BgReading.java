@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.db;
 
-import android.content.res.Resources;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -38,6 +36,10 @@ public class BgReading implements DataPointWithLabelInterface {
     public String direction;
     @DatabaseField
     public double raw;
+    @DatabaseField
+    public boolean isFiltered;
+    @DatabaseField
+    public String sourcePlugin;
 
     @DatabaseField
     public int source = Source.NONE;
@@ -120,17 +122,9 @@ public class BgReading implements DataPointWithLabelInterface {
                 ", value=" + value +
                 ", direction=" + direction +
                 ", raw=" + raw +
+                ", filtered=" + isFiltered +
+                ", sourcePlugin=" + sourcePlugin +
                 '}';
-    }
-
-    public boolean isDataChanging(BgReading other) {
-        if (date != other.date) {
-            log.error("Comparing different");
-            return false;
-        }
-        if (value != other.value)
-            return true;
-        return false;
     }
 
     public boolean isEqual(BgReading other) {

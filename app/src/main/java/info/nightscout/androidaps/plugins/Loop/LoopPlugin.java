@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -32,7 +33,6 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -57,11 +57,9 @@ import info.nightscout.utils.SP;
 public class LoopPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
 
-    public static final String CHANNEL_ID = "AndroidAPS-Openloop";
-
-    long lastBgTriggeredRun = 0;
-
-    protected static LoopPlugin loopPlugin;
+    private static final String CHANNEL_ID = "AndroidAPS-Openloop";
+    private long lastBgTriggeredRun = 0;
+    private static LoopPlugin loopPlugin;
 
     @NonNull
     public static LoopPlugin getPlugin() {
@@ -157,13 +155,18 @@ public class LoopPlugin extends PluginBase {
             // already looped with that value
             return;
         }
+        PluginBase bgSource = (PluginBase) ConfigBuilderPlugin.getActiveBgSource();
+        if (bgSource == null) {
+            // no BG source active
+            return;
+        }
+        if (!Objects.equals(bgReading.sourcePlugin, bgSource.getName())) {
+            // reading not from active BG source (likely coming in from NS)
+            return;
+        }
 
         lastBgTriggeredRun = bgReading.date;
         invoke("AutosenseCalculation for " + bgReading, true);
-    }
-
-    public long suspendedTo() {
-        return loopSuspendedTill;
     }
 
     public void suspendTo(long endTime) {
