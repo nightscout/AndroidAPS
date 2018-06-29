@@ -126,7 +126,7 @@
     <string formated="false" name="minago">%d nóim ó shin</string>
     <string formated="false" name="hoursago">%.1fu ó shin</string>
     <string formated="false" name="pump_basebasalrate">%.2f A/u</string>
-    <string formated="false" name="combo_tbr_remaining">%d%% (%d nóim fágtha)</string>
+    <string formated="false" name="combo_tbr_remaining">%1$d%% (%2$d nóim fágtha)</string>
     <string name="actions">Gníomhartha</string>
     <string name="actions_shortname">GNÍ</string>
     <string name="overview_editquickwizardlistactivity_add">Cuir</string>
@@ -204,7 +204,7 @@
     <string name="combo_actvity_reading_basal_profile">Léigh próifíl bunaidh</string>
     <string name="combo_activity_reading_pump_history">Léigh stair caidéil</string>
     <string name="enabled">Cumasaithe</string>
-    <string formated="false" name="combo_pump_action_setting_tbr">Socrú BRS (%d%% / %d nóim)</string>
+    <string formated="false" name="combo_pump_action_setting_tbr">Socrú BRS (%1$d%% / %2$d nóim)</string>
     <string name="combo_pump_action_initializing">Tosaithe</string>
     <string name="combo_pump_action_cancelling_tbr">Cealú BRS</string>
     <string name="combo_pump_battery_low_warrning">Is ceallraí Caidéil íseal</string>
