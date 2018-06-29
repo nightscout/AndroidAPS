@@ -180,7 +180,7 @@ public class CommandQueue {
 
         if (type == Command.CommandType.SMB_BOLUS) {
             if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
-                log.debug("Rejecting SMB since a bolus is queued/running");
+                log.debug("Rejecting SMB since a bolus is queue/running");
                 return false;
             }
             if (detailedBolusInfo.lastKnownBolusTime < TreatmentsPlugin.getPlugin().getLastBolusTime()) {
