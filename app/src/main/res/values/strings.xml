@@ -1178,6 +1178,7 @@
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
     <string name="storedsettingsfound">Stored settings found</string>
+    <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will be synchronizing the basal settings with the pump and overwrite them. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>

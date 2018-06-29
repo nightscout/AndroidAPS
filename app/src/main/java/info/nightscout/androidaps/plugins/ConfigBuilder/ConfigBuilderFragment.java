@@ -187,7 +187,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
     }
 
-    class PluginViewHolder {
+    public class PluginViewHolder {
 
         private Unbinder unbinder;
         private PluginType pluginType;
@@ -248,16 +248,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
 
         @OnClick({R.id.plugin_enabled_exclusive, R.id.plugin_enabled_inclusive})
         void onEnabledChanged() {
-            boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
-            plugin.setPluginEnabled(pluginType, enabled);
-            plugin.setFragmentVisible(pluginType, enabled);
-            processOnEnabledCategoryChanged(plugin, pluginType);
-            updateGUI();
-            ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
-            MainApp.bus().post(new EventRefreshGui());
-            MainApp.bus().post(new EventConfigBuilderChange());
-            ConfigBuilderPlugin.getPlugin().logPluginStatus();
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
+            plugin.switchAllowed(new PluginSwitcher(), getActivity());
         }
 
         @OnClick(R.id.plugin_preferences)
@@ -273,6 +264,23 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             unbinder.unbind();
         }
 
-    }
+        public class PluginSwitcher {
+            public void invoke() {
+                boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
+                plugin.setPluginEnabled(pluginType, enabled);
+                plugin.setFragmentVisible(pluginType, enabled);
+                processOnEnabledCategoryChanged(plugin, pluginType);
+                updateGUI();
+                ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
+                MainApp.bus().post(new EventRefreshGui());
+                MainApp.bus().post(new EventConfigBuilderChange());
+                ConfigBuilderPlugin.getPlugin().logPluginStatus();
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
+            }
 
+            public void cancel(){
+                updateGUI();
+            }
+        }
+    }
 }
