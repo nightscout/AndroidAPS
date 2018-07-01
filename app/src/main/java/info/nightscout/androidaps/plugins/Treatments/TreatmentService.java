@@ -330,7 +330,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             List<Treatment> result = getDao().query(preparedQuery);
             switch (result.size()) {
                 case 0: return null;
-                case 1: return result.get(1);
+                case 1: return result.get(0);
                 default: throw new RuntimeException("Multiple records with the same pump id found: " + result.toString());
             }
         } catch (SQLException e) {
