@@ -1185,7 +1185,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) != null) {
+            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) == null) {
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
                 updated = true;
             }
