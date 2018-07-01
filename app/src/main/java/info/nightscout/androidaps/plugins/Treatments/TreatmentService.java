@@ -248,12 +248,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
             if (treatment.source == Source.PUMP) {
                 // check for changed from pump change in NS
-                QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
-                Where where = queryBuilder.where();
-                where.eq("pumpId", treatment.pumpId);
-                PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-                List<Treatment> trList = getDao().query(preparedQuery);
-                if (trList.size() > 0) {
+                Treatment existingTreatment = getPumpRecordById(treatment.pumpId);
+                if (existingTreatment != null) {
                     // do nothing, pump history record cannot be changed
                     log.debug("TREATMENT: Pump record already found in database: " + treatment.toString());
                     return false;
@@ -320,6 +316,26 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             log.error("Unhandled exception", e);
         }
         return false;
+    }
+
+    /** Returns the record for the given id, null if none, throws RuntimeException
+     * if multiple records with the same pump id exist. */
+    @Nullable
+    public Treatment getPumpRecordById(long pumpId) {
+        try {
+            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("pumpId", pumpId);
+            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+            List<Treatment> result = getDao().query(preparedQuery);
+            switch (result.size()) {
+                case 0: return null;
+                case 1: return result.get(1);
+                default: throw new RuntimeException("Multiple records with the same pump id found: " + result.toString());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteNS(JSONObject json) {
