@@ -12,8 +12,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -23,8 +21,6 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
-import info.nightscout.androidaps.interfaces.BgSourceInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
@@ -64,60 +60,56 @@ public class DataService extends IntentService {
 
     public DataService() {
         super("DataService");
-        MainApp.subscribe(this);
+        registerBus();
     }
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        if (intent == null)
-            return;
-        if (Config.logIncommingData)
-            log.debug("Got intent: " + intent.getAction());
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-        if (ConfigBuilderPlugin.getActiveBgSource() == null) {
+        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource() == null) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
             glimpEnabled = false;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = true;
             dexcomG5Enabled = false;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = true;
             poctechEnabled = false;
-        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourcePoctechPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourcePoctechPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
@@ -134,53 +126,55 @@ public class DataService extends IntentService {
             acceptNSData = acceptNSData || bundles.getBoolean("islocal");
         }
 
-        final String action = intent.getAction();
-        if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
-            if (xDripEnabled) {
-                processNewBgIntent(SourceXdripPlugin.getPlugin(), intent);
-            }
-        } else if (Intents.NS_EMULATOR.equals(action)) {
-            if (mm640gEnabled) {
-                processNewBgIntent(SourceMM640gPlugin.getPlugin(), intent);
-            }
-        } else if (Intents.GLIMP_BG.equals(action)) {
-            if (glimpEnabled) {
-                processNewBgIntent(SourceGlimpPlugin.getPlugin(), intent);
-            }
-        } else if (Intents.DEXCOMG5_BG.equals(action)) {
-            if (dexcomG5Enabled) {
-                processNewBgIntent(SourceDexcomG5Plugin.getPlugin(), intent);
-            }
-        } else if (Intents.POCTECH_BG.equals(action)) {
-            if (poctechEnabled) {
-                processNewBgIntent(SourcePoctechPlugin.getPlugin(), intent);
-            }
-        } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-            if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
-                handleNewDataFromNSClient(intent);
-            // Objectives 0
-            ObjectivesPlugin.bgIsAvailableInNS = true;
-            ObjectivesPlugin.saveProgress();
-        } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
-            // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
-            handleNewDataFromNSClient(intent);
-        } else if (acceptNSData &&
-                (Intents.ACTION_NEW_TREATMENT.equals(action) ||
-                        Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
-                        Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
-                        Intents.ACTION_NEW_STATUS.equals(action) ||
-                        Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
-                        Intents.ACTION_NEW_FOOD.equals(action) ||
-                        Intents.ACTION_CHANGED_FOOD.equals(action) ||
-                        Intents.ACTION_REMOVED_FOOD.equals(action) ||
-                        Intents.ACTION_NEW_CAL.equals(action) ||
-                        Intents.ACTION_NEW_MBG.equals(action))
-                ) {
-            handleNewDataFromNSClient(intent);
-        } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
-            handleNewSMS(intent);
-        }
 
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
+                if (xDripEnabled) {
+                    handleNewDataFromXDrip(intent);
+                }
+            } else if (Intents.NS_EMULATOR.equals(action)) {
+                if (mm640gEnabled) {
+                    handleNewDataFromMM640g(intent);
+                }
+            } else if (Intents.GLIMP_BG.equals(action)) {
+                if (glimpEnabled) {
+                    handleNewDataFromGlimp(intent);
+                }
+            } else if (Intents.DEXCOMG5_BG.equals(action)) {
+                if (dexcomG5Enabled) {
+                    handleNewDataFromDexcomG5(intent);
+                }
+            } else if (Intents.POCTECH_BG.equals(action)) {
+                if (poctechEnabled) {
+                    handleNewDataFromPoctech(intent);
+                }
+            } else if (Intents.ACTION_NEW_SGV.equals(action)) {
+                if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
+                    handleNewDataFromNSClient(intent);
+                // Objectives 0
+                ObjectivesPlugin.bgIsAvailableInNS = true;
+                ObjectivesPlugin.saveProgress();
+            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
+                // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
+                handleNewDataFromNSClient(intent);
+            } else if (acceptNSData &&
+                    (Intents.ACTION_NEW_TREATMENT.equals(action) ||
+                            Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
+                            Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
+                            Intents.ACTION_NEW_STATUS.equals(action) ||
+                            Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
+                            Intents.ACTION_NEW_FOOD.equals(action) ||
+                            Intents.ACTION_CHANGED_FOOD.equals(action) ||
+                            Intents.ACTION_REMOVED_FOOD.equals(action) ||
+                            Intents.ACTION_NEW_CAL.equals(action) ||
+                            Intents.ACTION_NEW_MBG.equals(action))
+                    ) {
+                handleNewDataFromNSClient(intent);
+            } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
+                handleNewSMS(intent);
+            }
+        }
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent exit " + intent);
         DataReceiver.completeWakefulIntent(intent);
@@ -201,25 +195,167 @@ public class DataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainApp.unsubscribe(this);
+        MainApp.bus().unregister(this);
     }
 
-    private void processNewBgIntent(BgSourceInterface bgSource, Intent intent) {
+    private void registerBus() {
+        try {
+            MainApp.bus().unregister(this);
+        } catch (RuntimeException x) {
+            // Ignore
+        }
+        MainApp.bus().register(this);
+    }
+
+    private void handleNewDataFromXDrip(Intent intent) {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
-        bgSource.processNewData(bundle);
+
+        BgReading bgReading = new BgReading();
+
+        bgReading.value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE);
+        bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
+        bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
+        bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
+        String source = bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION, "no Source specified");
+        SourceXdripPlugin.getPlugin().setSource(source);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
+    }
+
+    private void handleNewDataFromGlimp(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        bgReading.value = bundle.getDouble("mySGV");
+        bgReading.direction = bundle.getString("myTrend");
+        bgReading.date = bundle.getLong("myTimestamp");
+        bgReading.raw = 0;
+
+        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
+    }
+
+    private void handleNewDataFromDexcomG5(Intent intent) {
+        // onHandleIntent Bundle{ data => [{"m_time":1511939180,"m_trend":"NotComputable","m_value":335}]; android.support.content.wakelockid => 95; }Bundle
+
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        String data = bundle.getString("data");
+        log.debug("Received Dexcom Data", data);
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            log.debug("Received Dexcom Data size:" + jsonArray.length());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                bgReading.value = json.getInt("m_value");
+                bgReading.direction = json.getString("m_trend");
+                bgReading.date = json.getLong("m_time") * 1000L;
+                bgReading.raw = 0;
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                    NSUpload.uploadBg(bgReading);
+                }
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                    NSUpload.sendToXdrip(bgReading);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleNewDataFromPoctech(Intent intent) {
+
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        String data = bundle.getString("data");
+        log.debug("Received Poctech Data", data);
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            log.debug("Received Poctech Data size:" + jsonArray.length());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                bgReading.value = json.getDouble("current");
+                bgReading.direction = json.getString("direction");
+                bgReading.date = json.getLong("date");
+                bgReading.raw = json.getDouble("raw");
+                if (JsonHelper.safeGetString(json, "utils", Constants.MGDL).equals("mmol/L"))
+                    bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech");
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                    NSUpload.uploadBg(bgReading);
+                }
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                    NSUpload.sendToXdrip(bgReading);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleNewDataFromMM640g(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        final String collection = bundle.getString("collection");
+        if (collection == null) return;
+
+        if (collection.equals("entries")) {
+            final String data = bundle.getString("data");
+
+            if ((data != null) && (data.length() > 0)) {
+                try {
+                    final JSONArray json_array = new JSONArray(data);
+                    for (int i = 0; i < json_array.length(); i++) {
+                        final JSONObject json_object = json_array.getJSONObject(i);
+                        final String type = json_object.getString("type");
+                        switch (type) {
+                            case "sgv":
+                                BgReading bgReading = new BgReading();
+
+                                bgReading.value = json_object.getDouble("sgv");
+                                bgReading.direction = json_object.getString("direction");
+                                bgReading.date = json_object.getLong("date");
+                                bgReading.raw = json_object.getDouble("sgv");
+
+                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
+                                break;
+                            default:
+                                log.debug("Unknown entries type: " + type);
+                        }
+                    }
+                } catch (JSONException e) {
+                    log.error("Got JSON exception: " + e);
+                }
+            }
+        }
     }
 
     private void handleNewDataFromNSClient(Intent intent) {
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
+        Bundle bundles = intent.getExtras();
+        if (bundles == null) return;
+        if (Config.logIncommingData)
+            log.debug("Got intent: " + intent.getAction());
+
 
         if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
-            if (bundle.containsKey("nsclientversioncode")) {
-                ConfigBuilderPlugin.nightscoutVersionCode = bundle.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
-                ConfigBuilderPlugin.nightscoutVersionName = bundle.getString("nightscoutversionname");
-                ConfigBuilderPlugin.nsClientVersionCode = bundle.getInt("nsclientversioncode"); // for ver 1.17 contains 117
-                ConfigBuilderPlugin.nsClientVersionName = bundle.getString("nsclientversionname");
+            if (bundles.containsKey("nsclientversioncode")) {
+                ConfigBuilderPlugin.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
+                ConfigBuilderPlugin.nightscoutVersionName = bundles.getString("nightscoutversionname");
+                ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
+                ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
                 try {
                     if (ConfigBuilderPlugin.nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
@@ -241,9 +377,9 @@ public class DataService extends IntentService {
                 Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
             }
-            if (bundle.containsKey("status")) {
+            if (bundles.containsKey("status")) {
                 try {
-                    JSONObject statusJson = new JSONObject(bundle.getString("status"));
+                    JSONObject statusJson = new JSONObject(bundles.getString("status"));
                     NSSettingsStatus.getInstance().setData(statusJson);
                     if (Config.logIncommingData)
                         log.debug("Received status: " + statusJson.toString());
@@ -260,8 +396,8 @@ public class DataService extends IntentService {
         }
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
             try {
-                if (bundle.containsKey("devicestatus")) {
-                    JSONObject devicestatusJson = new JSONObject(bundle.getString("devicestatus"));
+                if (bundles.containsKey("devicestatus")) {
+                    JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
                     NSDeviceStatus.getInstance().setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
@@ -269,8 +405,8 @@ public class DataService extends IntentService {
                         ObjectivesPlugin.saveProgress();
                     }
                 }
-                if (bundle.containsKey("devicestatuses")) {
-                    String devicestatusesstring = bundle.getString("devicestatuses");
+                if (bundles.containsKey("devicestatuses")) {
+                    String devicestatusesstring = bundles.getString("devicestatuses");
                     JSONArray jsonArray = new JSONArray(devicestatusesstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject devicestatusJson = jsonArray.getJSONObject(i);
@@ -289,8 +425,8 @@ public class DataService extends IntentService {
         // Handle profile
         if (intent.getAction().equals(Intents.ACTION_NEW_PROFILE)) {
             try {
-                String activeProfile = bundle.getString("activeprofile");
-                String profile = bundle.getString("profile");
+                String activeProfile = bundles.getString("activeprofile");
+                String profile = bundles.getString("profile");
                 ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
                 NSProfilePlugin.getPlugin().storeNewProfile(profileStore);
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
@@ -303,12 +439,12 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
-                if (bundle.containsKey("treatment")) {
-                    JSONObject json = new JSONObject(bundle.getString("treatment"));
+                if (bundles.containsKey("treatment")) {
+                    JSONObject json = new JSONObject(bundles.getString("treatment"));
                     handleTreatmentFromNS(json, intent);
                 }
-                if (bundle.containsKey("treatments")) {
-                    String trstring = bundle.getString("treatments");
+                if (bundles.containsKey("treatments")) {
+                    String trstring = bundles.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject json = jsonArray.getJSONObject(i);
@@ -322,14 +458,14 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_TREATMENT)) {
             try {
-                if (bundle.containsKey("treatment")) {
-                    String trstring = bundle.getString("treatment");
+                if (bundles.containsKey("treatment")) {
+                    String trstring = bundles.getString("treatment");
                     JSONObject json = new JSONObject(trstring);
                     handleTreatmentFromNS(json);
                 }
 
-                if (bundle.containsKey("treatments")) {
-                    String trstring = bundle.getString("treatments");
+                if (bundles.containsKey("treatments")) {
+                    String trstring = bundles.getString("treatments");
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject json = jsonArray.getJSONObject(i);
@@ -342,19 +478,36 @@ public class DataService extends IntentService {
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_SGV)) {
-            SourceNSClientPlugin.getPlugin().processNewData(bundle);
+            try {
+                if (bundles.containsKey("sgv")) {
+                    String sgvstring = bundles.getString("sgv");
+                    JSONObject sgvJson = new JSONObject(sgvstring);
+                    storeSgv(sgvJson);
+                }
+
+                if (bundles.containsKey("sgvs")) {
+                    String sgvstring = bundles.getString("sgvs");
+                    JSONArray jsonArray = new JSONArray(sgvstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject sgvJson = jsonArray.getJSONObject(i);
+                        storeSgv(sgvJson);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Unhandled exception", e);
+            }
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {
             try {
-                if (bundle.containsKey("mbg")) {
-                    String mbgstring = bundle.getString("mbg");
+                if (bundles.containsKey("mbg")) {
+                    String mbgstring = bundles.getString("mbg");
                     JSONObject mbgJson = new JSONObject(mbgstring);
                     storeMbg(mbgJson);
                 }
 
-                if (bundle.containsKey("mbgs")) {
-                    String sgvstring = bundle.getString("mbgs");
+                if (bundles.containsKey("mbgs")) {
+                    String sgvstring = bundles.getString("mbgs");
                     JSONArray jsonArray = new JSONArray(sgvstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject mbgJson = jsonArray.getJSONObject(i);
@@ -369,12 +522,12 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
                 || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
             int mode = Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
-            EventNsFood evt = new EventNsFood(mode, bundle);
+            EventNsFood evt = new EventNsFood(mode, bundles);
             MainApp.bus().post(evt);
         }
 
         if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundle);
+            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
             MainApp.bus().post(evt);
         }
     }
@@ -392,7 +545,7 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
-    private void handleTreatmentFromNS(JSONObject json, Intent intent) {
+    private void handleTreatmentFromNS(JSONObject json, Intent intent) throws JSONException {
         // new DB model
         int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
         double insulin = JsonHelper.safeGetDouble(json, "insulin");
@@ -445,6 +598,13 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
         if (Config.logIncommingData)
             log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+    }
+
+    private void storeSgv(JSONObject sgvJson) {
+        NSSgv nsSgv = new NSSgv(sgvJson);
+        BgReading bgReading = new BgReading(nsSgv);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+        SourceNSClientPlugin.getPlugin().detectSource(JsonHelper.safeGetString(sgvJson, "device"), JsonHelper.safeGetLong(sgvJson, "mills"));
     }
 
     private void handleNewSMS(Intent intent) {

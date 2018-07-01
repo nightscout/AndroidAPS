@@ -28,6 +28,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
@@ -117,25 +118,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
-
-            // soft migration without changing DB version
-            createColumnIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
-                    "isFiltered", "integer");
-            createColumnIfNotExists(getDaoBgReadings(), DatabaseHelper.DATABASE_BGREADINGS,
-                    "sourcePlugin", "text");
-
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
-        }
-    }
-
-    private void createColumnIfNotExists(Dao dao, String table, String name, String type) {
-        try {
-            final String statement = "ALTER TABLE `" + table + "` ADD COLUMN `" + name + "` " + type;
-            dao.executeRaw(statement);
-        } catch (SQLException e) {
-            // row already exists
         }
     }
 

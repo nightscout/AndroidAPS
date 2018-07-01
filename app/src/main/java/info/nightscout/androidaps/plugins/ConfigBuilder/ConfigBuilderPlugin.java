@@ -65,11 +65,12 @@ public class ConfigBuilderPlugin extends PluginBase {
         return configBuilderPlugin;
     }
 
-    private static BgSourceInterface activeBgSource;
+    private BgSourceInterface activeBgSource;
     private static PumpInterface activePump;
     private static ProfileInterface activeProfile;
     private static TreatmentsInterface activeTreatments;
     private static APSInterface activeAPS;
+    private static LoopPlugin activeLoop;
     private static InsulinInterface activeInsulin;
     private static SensitivityInterface activeSensitivity;
 
@@ -256,7 +257,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         return commandQueue;
     }
 
-    public static BgSourceInterface getActiveBgSource() {
+    public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
@@ -335,6 +336,9 @@ public class ConfigBuilderPlugin extends PluginBase {
             VirtualPumpPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
         }
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
+
+        // PluginType.LOOP
+        activeLoop = this.determineActivePlugin(PluginType.LOOP);
 
         // PluginType.TREATMENT
         activeTreatments = this.determineActivePlugin(PluginType.TREATMENT);

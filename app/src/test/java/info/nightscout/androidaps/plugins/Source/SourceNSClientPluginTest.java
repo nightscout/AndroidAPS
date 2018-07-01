@@ -12,4 +12,9 @@ public class SourceNSClientPluginTest {
     public void getPlugin() {
         Assert.assertNotEquals(null, SourceNSClientPlugin.getPlugin());
     }
+
+    @Test
+    public void advancedFilteringSupported() {
+        Assert.assertEquals(false, SourceNSClientPlugin.getPlugin().advancedFilteringSupported());
+    }
 }

@@ -14,8 +14,6 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -106,7 +104,6 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         }
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        BgReading bgReading = DatabaseHelper.actualBg();
         Profile profile = MainApp.getConfigBuilder().getProfile();
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
@@ -124,7 +121,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
             return;
         }
 
-        if (glucoseStatus == null || bgReading == null) {
+        if (glucoseStatus == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
             if (Config.logAPSResult)
                 log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
@@ -192,11 +189,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);
 
-        Constraint<Boolean> bgFiltered = new Constraint<>(bgReading.isFiltered);
-        if (!bgReading.isFiltered) {
-            bgFiltered.set(false, MainApp.gs(R.string.smbalwaysdisabled), this);
-        }
-        inputConstraints.copyReasons(bgFiltered);
+        Constraint<Boolean> advancedFiltering = new Constraint<>(!tempBasalFallback);
+        MainApp.getConstraintChecker().isAdvancedFilteringEnabled(advancedFiltering);
+        inputConstraints.copyReasons(advancedFiltering);
 
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "SMB data gathering", start);
@@ -207,7 +202,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
                     smbAllowed.value(),
-                    bgReading.isFiltered
+                    advancedFiltering.value()
             );
         } catch (JSONException e) {
             log.error(e.getMessage());

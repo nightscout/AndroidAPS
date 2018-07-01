@@ -90,6 +90,16 @@ public class SafetyPluginTest {
     }
 
     @Test
+    public void bgsourceShouldPreventSMBAlways() throws Exception {
+        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+
+        Constraint<Boolean> c = new Constraint<>(true);
+        c = safetyPlugin.isAdvancedFilteringEnabled(c);
+        Assert.assertEquals("Safety: SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering", c.getReasons());
+        Assert.assertEquals(Boolean.FALSE, c.value());
+    }
+
+    @Test
     public void basalRateShouldBeLimited() throws Exception {
         when(SP.getDouble(R.string.key_openapsma_max_basal, 1d)).thenReturn(1d);
         when(SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d)).thenReturn(4d);
