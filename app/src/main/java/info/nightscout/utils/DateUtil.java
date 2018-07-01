@@ -179,9 +179,4 @@ public class DateUtil {
     public static long roundDateToSec(long date) {
         return date - date % 1000;
     }
-
-    public static long hourToMs(long hour) {
-        return hour * 60 * 60 * 1000L;
-    }
-
 }

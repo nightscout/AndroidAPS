@@ -119,6 +119,7 @@ import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SingleClickButton;
+import info.nightscout.utils.T;
 import info.nightscout.utils.ToastUtils;
 
 import static info.nightscout.utils.DateUtil.now;
@@ -839,7 +840,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             if (wizard.superBolus) {
                                 final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
                                 if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                                    loopPlugin.superBolusTo(System.currentTimeMillis() + DateUtil.hourToMs(2));
+                                    loopPlugin.superBolusTo(System.currentTimeMillis() + T.hours(2).msecs());
                                     MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                 }
                                 ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
@@ -1426,12 +1427,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 predHours = Math.max(0, predHours);
                 hoursToFetch = rangeToDisplay - predHours;
                 toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-                fromTime = toTime - DateUtil.hourToMs(hoursToFetch);
-                endTime = toTime + DateUtil.hourToMs(predHours);
+                fromTime = toTime - T.hours(hoursToFetch).msecs();
+                endTime = toTime + T.hours(predHours).msecs();
             } else {
                 hoursToFetch = rangeToDisplay;
                 toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
-                fromTime = toTime - DateUtil.hourToMs(hoursToFetch);
+                fromTime = toTime - T.hours(hoursToFetch).msecs();
                 endTime = toTime;
             }
 
