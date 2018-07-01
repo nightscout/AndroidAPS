@@ -495,6 +495,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             NSUpload.uploadTreatmentRecord(detailedBolusInfo);
 
         if (!allowUpdate && !newRecordCreated) {
+            log.error("Treatment could not be added to DB", new Exception());
             Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);
             i.putExtra("title", MainApp.gs(R.string.error_adding_treatment_title));
