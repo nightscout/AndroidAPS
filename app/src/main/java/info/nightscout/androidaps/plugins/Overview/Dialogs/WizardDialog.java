@@ -389,7 +389,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             }
                                         });
                                     } else {
-                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                                     }
                                     FabricPrivacy.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }

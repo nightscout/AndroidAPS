@@ -199,7 +199,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
             detailedBolusInfo.insulin = t.insulin;
             detailedBolusInfo.date = System.currentTimeMillis();
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();

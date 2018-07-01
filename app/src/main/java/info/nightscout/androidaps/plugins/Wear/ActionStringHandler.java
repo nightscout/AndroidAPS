@@ -719,7 +719,7 @@ public class ActionStringHandler {
                 }
             });
         } else {
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         }
     }
 

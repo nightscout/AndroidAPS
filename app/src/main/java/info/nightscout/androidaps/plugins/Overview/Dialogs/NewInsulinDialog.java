@@ -270,7 +270,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                             detailedBolusInfo.notes = notes;
                             if (recordOnlyCheckbox.isChecked()) {
                                 detailedBolusInfo.date = time;
-                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                             } else {
                                 detailedBolusInfo.date = now();
                                 ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {

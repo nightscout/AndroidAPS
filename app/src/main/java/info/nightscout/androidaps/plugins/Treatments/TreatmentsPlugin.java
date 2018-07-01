@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
@@ -465,7 +467,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     // return true if new record is created
     @Override
-    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
+    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
         treatment.source = detailedBolusInfo.source;
@@ -491,6 +493,16 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
         if (newRecordCreated && detailedBolusInfo.isValid)
             NSUpload.uploadTreatmentRecord(detailedBolusInfo);
+
+        if (!allowUpdate && !newRecordCreated) {
+            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+            i.putExtra("soundid", R.raw.error);
+            i.putExtra("status", MainApp.gs(R.string.error_adding_treatment_message));
+            i.putExtra("title", MainApp.gs(R.string.error_adding_treatment_title));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
+        }
+
         return newRecordCreated;
     }
 

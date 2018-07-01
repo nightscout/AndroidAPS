@@ -133,14 +133,14 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
                 break;
             case DanaRPump.BOLUS:
                 detailedBolusInfo.insulin = param1 / 100d;
-                boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                 log.debug((newRecord ? "**NEW** " : "") + "EVENT BOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 DetailedBolusInfoStorage.remove(detailedBolusInfo.date);
                 status = "BOLUS " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALBOLUS:
                 detailedBolusInfo.insulin = param1 / 100d;
-                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                 log.debug((newRecord ? "**NEW** " : "") + "EVENT DUALBOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 DetailedBolusInfoStorage.remove(detailedBolusInfo.date);
                 status = "DUALBOLUS " + DateUtil.timeString(datetime);
@@ -183,7 +183,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
                 emptyCarbsInfo.date = datetime.getTime();
                 emptyCarbsInfo.source = Source.PUMP;
                 emptyCarbsInfo.pumpId = datetime.getTime();
-                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(emptyCarbsInfo);
+                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(emptyCarbsInfo, false);
                 log.debug((newRecord ? "**NEW** " : "") + "EVENT CARBS (" + recordCode + ") " + datetime.toLocaleString() + " Carbs: " + param1 + "g");
                 status = "CARBS " + DateUtil.timeString(datetime);
                 break;
