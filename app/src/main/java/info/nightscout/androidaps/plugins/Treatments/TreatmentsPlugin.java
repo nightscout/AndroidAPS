@@ -497,8 +497,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (!allowUpdate && !newRecordCreated) {
             Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);
-            i.putExtra("status", MainApp.gs(R.string.error_adding_treatment_message));
-            i.putExtra("title", String.format(MainApp.gs(R.string.error_adding_treatment_title), treatment.insulin, treatment.carbs));
+            i.putExtra("title", MainApp.gs(R.string.error_adding_treatment_title));
+            i.putExtra("status", String.format(MainApp.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs));
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MainApp.instance().startActivity(i);
         }
