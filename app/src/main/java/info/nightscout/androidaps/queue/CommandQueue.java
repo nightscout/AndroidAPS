@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperAc
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
@@ -176,6 +177,18 @@ public class CommandQueue {
     // returns true if command is queued
     public synchronized boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
+
+        if (type == Command.CommandType.SMB_BOLUS) {
+            if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
+                log.debug("Rejecting SMB since a bolus is queue/running");
+                return false;
+            }
+            if (detailedBolusInfo.lastKnownBolusTime < TreatmentsPlugin.getPlugin().getLastBolusTime()) {
+                log.debug("Rejecting bolus, another bolus was issued since request time");
+                return false;
+            }
+        }
+
 
         if(type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0){
             type = Command.CommandType.CARBS_ONLY_TREATMENT;

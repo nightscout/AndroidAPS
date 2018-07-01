@@ -2,9 +2,11 @@ package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ public class SWPlugin extends SWItem {
 
     private PluginType pType;
     private RadioGroup radioGroup;
+    private int pluginDescription;
 
     private boolean makeVisible = true;
 
@@ -31,8 +34,9 @@ public class SWPlugin extends SWItem {
         super(Type.PLUGIN);
     }
 
-    public SWPlugin option(PluginType pType) {
+    public SWPlugin option(PluginType pType, int pluginDescription) {
         this.pType = pType;
+        this.pluginDescription = pluginDescription;
         return this;
     }
 
@@ -42,8 +46,9 @@ public class SWPlugin extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+
+        Context context = layout.getContext();
         radioGroup = new RadioGroup(context);
         radioGroup.clearCheck();
 
@@ -51,6 +56,13 @@ public class SWPlugin extends SWItem {
 
         radioGroup.setOrientation(LinearLayout.VERTICAL);
         radioGroup.setVisibility(View.VISIBLE);
+
+        TextView pdesc = new TextView(context);
+        pdesc.setText(pluginDescription);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 0, 40);
+        pdesc.setLayoutParams(params);
+        layout.addView(pdesc);
 
         for (int i = 0; i < pluginsInCategory.size(); i++) {
             RadioButton rdbtn = new RadioButton(context);
@@ -61,6 +73,12 @@ public class SWPlugin extends SWItem {
                 rdbtn.setChecked(true);
             rdbtn.setTag(p);
             radioGroup.addView(rdbtn);
+            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(80, 0, 0, 0);
+            TextView desc = new TextView(context);
+            desc.setText(p.getDescription());
+            desc.setLayoutParams(params);
+            radioGroup.addView(desc);
         }
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -74,6 +92,6 @@ public class SWPlugin extends SWItem {
             MainApp.bus().post(new EventSWUpdate());
         });
         layout.addView(radioGroup);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
     }
 }

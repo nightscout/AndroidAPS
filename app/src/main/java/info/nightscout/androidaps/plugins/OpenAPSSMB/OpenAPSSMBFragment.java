@@ -87,34 +87,37 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    OpenAPSSMBPlugin plugin = OpenAPSSMBPlugin.getPlugin();
-                    DetermineBasalResultSMB lastAPSResult = plugin.lastAPSResult;
-                    if (lastAPSResult != null) {
-                        resultView.setText(JSONFormatter.format(lastAPSResult.json));
-                        requestView.setText(lastAPSResult.toSpanned());
-                    }
-                    DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = plugin.lastDetermineBasalAdapterSMBJS;
-                    if (determineBasalAdapterSMBJS != null) {
-                        glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getGlucoseStatusParam()).toString().trim());
-                        currentTempView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getCurrentTempParam()).toString().trim());
-                        try {
-                            JSONArray iobArray = new JSONArray(determineBasalAdapterSMBJS.getIobDataParam());
-                            iobDataView.setText((String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0))).trim());
-                        } catch (JSONException e) {
-                            log.error("Unhandled exception", e);
-                            iobDataView.setText("JSONException see log for details");
+                    synchronized (OpenAPSSMBFragment.this) {
+                        if (!isBound()) return;
+                        OpenAPSSMBPlugin plugin = OpenAPSSMBPlugin.getPlugin();
+                        DetermineBasalResultSMB lastAPSResult = plugin.lastAPSResult;
+                        if (lastAPSResult != null) {
+                            resultView.setText(JSONFormatter.format(lastAPSResult.json));
+                            requestView.setText(lastAPSResult.toSpanned());
                         }
-                        profileView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getProfileParam()).toString().trim());
-                        mealDataView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getMealDataParam()).toString().trim());
-                        scriptdebugView.setText(determineBasalAdapterSMBJS.getScriptDebug().trim());
-                        if (lastAPSResult != null && lastAPSResult.inputConstraints != null)
-                            constraintsView.setText(lastAPSResult.inputConstraints.getReasons().trim());
-                    }
-                    if (plugin.lastAPSRun != null) {
-                        lastRunView.setText(plugin.lastAPSRun.toLocaleString().trim());
-                    }
-                    if (plugin.lastAutosensResult != null) {
-                        autosensDataView.setText(JSONFormatter.format(plugin.lastAutosensResult.json()).toString().trim());
+                        DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = plugin.lastDetermineBasalAdapterSMBJS;
+                        if (determineBasalAdapterSMBJS != null) {
+                            glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getGlucoseStatusParam()).toString().trim());
+                            currentTempView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getCurrentTempParam()).toString().trim());
+                            try {
+                                JSONArray iobArray = new JSONArray(determineBasalAdapterSMBJS.getIobDataParam());
+                                iobDataView.setText((String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0))).trim());
+                            } catch (JSONException e) {
+                                log.error("Unhandled exception", e);
+                                iobDataView.setText("JSONException see log for details");
+                            }
+                            profileView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getProfileParam()).toString().trim());
+                            mealDataView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getMealDataParam()).toString().trim());
+                            scriptdebugView.setText(determineBasalAdapterSMBJS.getScriptDebug().trim());
+                            if (lastAPSResult != null && lastAPSResult.inputConstraints != null)
+                                constraintsView.setText(lastAPSResult.inputConstraints.getReasons().trim());
+                        }
+                        if (plugin.lastAPSRun != null) {
+                            lastRunView.setText(plugin.lastAPSRun.toLocaleString().trim());
+                        }
+                        if (plugin.lastAutosensResult != null) {
+                            autosensDataView.setText(JSONFormatter.format(plugin.lastAutosensResult.json()).toString().trim());
+                        }
                     }
                 }
             });
@@ -126,17 +129,36 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    resultView.setText(text);
-                    glucoseStatusView.setText("");
-                    currentTempView.setText("");
-                    iobDataView.setText("");
-                    profileView.setText("");
-                    mealDataView.setText("");
-                    autosensDataView.setText("");
-                    scriptdebugView.setText("");
-                    requestView.setText("");
-                    lastRunView.setText("");
+                    synchronized (OpenAPSSMBFragment.this) {
+                        if (isBound()) {
+                            resultView.setText(text);
+                            glucoseStatusView.setText("");
+                            currentTempView.setText("");
+                            iobDataView.setText("");
+                            profileView.setText("");
+                            mealDataView.setText("");
+                            autosensDataView.setText("");
+                            scriptdebugView.setText("");
+                            requestView.setText("");
+                            lastRunView.setText("");
+                        }
+                    }
                 }
             });
+    }
+
+    private boolean isBound() {
+        return run != null
+                && lastRunView != null
+                && constraintsView != null
+                && glucoseStatusView != null
+                && currentTempView != null
+                && iobDataView != null
+                && profileView != null
+                && mealDataView != null
+                && autosensDataView != null
+                && resultView != null
+                && scriptdebugView != null
+                && requestView != null;
     }
 }

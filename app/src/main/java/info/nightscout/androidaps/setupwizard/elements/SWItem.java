@@ -78,7 +78,7 @@ public class SWItem {
         return layout;
     }
 
-    public void generateDialog(View view, LinearLayout layout) {
+    public void generateDialog(LinearLayout layout) {
     }
 
     public void processVisibility() {

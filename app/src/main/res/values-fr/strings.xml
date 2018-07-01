@@ -217,8 +217,8 @@
     <string name="waitingforpumpresult">Attente de résultat</string>
     <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">Administrer bolus %.2fU retour avec un code %s</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Envoyer calibrage %.2fU retour avec un code %s</string>
+    <string name="smscommunicator_bolusreplywithcode">Administrer bolus %1$.2fU retour avec un code %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">Envoyer calibrage %1$.2fU retour avec un code %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus interrompu</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU administré avec succès</string>
     <string name="bolusrequested" formatted="false">" %.2fU va être administré"</string>
@@ -289,13 +289,13 @@
     <string name="smscommunicator_loophasbeenenabled">Loop a été désactivé</string>
     <string name="smscommunicator_loopisdisabled">"Loop est désactivé "</string>
     <string name="smscommunicator_loopisenabled">Loop est activé</string>
-    <string name="valuelimitedto" formatted="false">%.2f limité à %.2f</string>
+    <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
     <string name="valueoutofrange" formatted="false">La valeur %s est hors limites strictes</string>
     <string name="smscommunicator_remotebasalnotallowed">Le réglage du basal à distance n\'est pas autorisé</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">Lancer le basal %.2fU/h retour avec un code %s</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Suspendre Loop pour %d minutes retour avec un code %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Démarrage réussi pour %.2fU/h de basal tempo pour %d min</string>
+    <string name="smscommunicator_basalreplywithcode">Lancer le basal %1$.2fU/h retour avec un code %2$s</string>
+    <string name="smscommunicator_suspendreplywithcode">Suspendre Loop pour %1$d minutes retour avec un code %2$s</string>
+    <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal tempo pour %2$d min</string>
     <string name="smscommunicator_tempbasalfailed">Démarage échoué pour basal tempo</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Arrêter basal tempo retour avec un code %s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal tempo annulé</string>
@@ -403,7 +403,7 @@
     <string name="always_use_shortavg">Toujours utilisez une moyenne (delta) courte au lieu d’une moyenne normale</string>
     <string name="always_use_shortavg_summary">Utile quand les données provenant de sources non filtrées lorsque xDrip devient bruyant</string>
     <string name="advancedsettings_title">Paramètres Avancés</string>
-    <string name="danar_model" formatted="false">Modèle: %02X Protocole: %02X Code: %02X</string>
+    <string name="danar_model">Modèle: %1$02X Protocole: %2$02X Code: %3$02X</string>
     <string name="profile">Profil</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valeur par défaut : true</string>
     <string name="error_only_numeric_digits_range_allowed">Seuls les chiffres numériques qui se trouvent dans la fourchette %1$s - %2$s sont autorisés</string>
@@ -556,8 +556,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Écran verrouillé</string>
-    <string name="lock_screen_short">verrouiller</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tout les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées alors que la sensibilité change !!</string>
     <string name="sensitivityweightedaverage">Sensibilité avec moyenne pondérée</string>
     <string name="mdtp_ok">OK</string>
@@ -578,7 +576,7 @@
     <string name="insulin_peak_time">"Durée du Pic [min] "</string>
     <string name="rapid_acting_oref">"Insuline à Action Rapide Oref "</string>
     <string name="ultrarapid_oref">Insuline à Action Ultra Rapide Oref</string>
-    <string name="dia_too_short" formatted="false">Durée d’Action pour %f trop courte - utiliser %f à la place!</string>
+    <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place!</string>
     <string name="activate_profile">ACTIVER LE PROFIL</string>
     <string name="date">" Date"</string>
     <string name="invalid">INVALID</string>
@@ -686,7 +684,7 @@
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
     <string name="combo_no_pump_connection" formatted="false">Pas de connexion depuis %d min</string>
-    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min restantes)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min restantes)</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspendu pour cause d\'erreur</string>
     <string name="combo_pump_state_suspended_by_user">Suspendu par l\'utilisateur</string>
     <string name="combo_pump_state_running">En cours d\'exécution</string>
@@ -697,7 +695,7 @@
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
     <string name="enableuam_summary">Détection des repas non annoncés</string>
     <string name="combo_pump_action_cancelling_tbr">Annulation en cours du TBR</string>
-    <string name="combo_pump_action_setting_tbr" formatted="false">"Paramétrer TBR (%d%% / %d min) "</string>
+    <string name="combo_pump_action_setting_tbr">"Paramétrer TBR (%1$d%% / %2$d min) "</string>
     <string name="combo_pump_action_bolusing">"Administration du bolus en cours (%.1f U) "</string>
     <string name="combo_pump_action_refreshing">Actualisation en cours</string>
     <string name="combo_pump_unsupported_operation">L\'opération demandée n\'est pas prise en charge par la pompe</string>
@@ -709,7 +707,7 @@
     <string name="combo_activity_setting_basal_profile">Définir le profil basal</string>
     <string name="combo_pump_cartridge_low_warrning">Niveau cartouche pompe bas</string>
     <string name="combo_pump_battery_low_warrning">Niveau batterie pompe bas</string>
-    <string name="combo_is_in_error_state" formatted="false">La pompe  affiche l’erreur E%d: %s</string>
+    <string name="combo_is_in_error_state">La pompe  affiche l’erreur E%1$d: %2$s</string>
     <string name="combo_reservoir_low">Bas</string>
     <string name="combo_reservoir_empty">Vide</string>
     <string name="combo_reservoir_normal">Normal</string>
@@ -717,8 +715,7 @@
     <string name="combo_warning">Warning</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR ANNULÉ warning confirmé</string>
     <string name="combo_error_no_bolus_delivered">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, Veuillez vérifier la pompe pour éviter un double bolus ensuite re bolusez une nouvelle fois</string>
-    <string name="combo_error_partial_bolus_delivered" formatted="false">Seulement %.2f U de %.2f U du bolus demandé a été administré dû à une erreur. Veuillez svp vérifier la pompe pour contrôler cela et prendre les mesures appropriées</string>
-    <string name="combo_error_bolus_verification_failed">L’administration du bolus et la vérification de l’historique de la pompe ont échoué, Veuillez vérifier la pompe et créez un enregistrement bolus en utilisant Careportal tab si le bolus a été délivré</string>
+    <string name="combo_error_partial_bolus_delivered">Seulement %1$.2f U de %2$.2f U du bolus demandé a été administré dû à une erreur. Veuillez svp vérifier la pompe pour contrôler cela et prendre les mesures appropriées</string>
     <string name="combo_error_bolus_recovery_progress">"Reconnexion après perte de connexion "</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Pas assez d\'insuline restante dans le réservoir pour le bolus</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>

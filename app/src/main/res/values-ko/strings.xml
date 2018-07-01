@@ -224,8 +224,8 @@
     <string name="waitingforpumpresult">결과 기다리는 중</string>
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">식사주입 %.2fU 을 실행하려면 %s 를 입력하고 답장하세요</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">보정값 %.2f을 전송하려면 %s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_bolusreplywithcode">식사주입 %1$.2fU 을 실행하려면 %2$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_calibrationreplywithcode">보정값 %1$.2f을 전송하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusrequested" formatted="false">%.2fU 주입 예정입니다.</string>
@@ -295,13 +295,13 @@
     <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
-    <string name="valuelimitedto" formatted="false">%.2f, %.2f으로 제한됨</string>
+    <string name="valuelimitedto">%1$.2f, %2$.2f으로 제한됨</string>
     <string name="valueoutofrange" formatted="false">%s값이 하드리밋(Hard Limit)를 벗어났습니다</string>
     <string name="smscommunicator_remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 실행하려면 %s 를 입력하고 답장하세요</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">%d분동안 Loop 일시중지하려면 %s 를 입력하고 답장하세요</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
+    <string name="smscommunicator_basalreplywithcode">기초주입 %1$.2fU/h 을 실행하려면 %2$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_suspendreplywithcode">%1$d분동안 Loop 일시중지하려면 %2$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">임시기초주입을 중지하려면 %s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
@@ -409,7 +409,7 @@
     <string name="always_use_shortavg">단순델타값 대신 단기평균델타값을 항상 사용합니다.</string>
     <string name="always_use_shortavg_summary">xDrip의 혈당데이터에 노이즈가 심할경우 유용합니다.</string>
     <string name="advancedsettings_title">고급 설정</string>
-    <string name="danar_model" formatted="false">모델: %02X 프로토콜: %02X 코드: %02X</string>
+    <string name="danar_model">모델: %1$02X 프로토콜: %2$02X 코드: %3$02X</string>
     <string name="profile">프로파일</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대기초주입량보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 "3x max daily; 4x current"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 "3x max daily; 4x current"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이 값은 펌프에 설정된 최대기초주입량과 관계없이, 설정된 현재시간의 기초주입량에 이 값을 곱한 양을 초과할 수 없게됩니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
@@ -570,8 +570,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">화면 잠금</string>
-    <string name="lock_screen_short">잠금</string>
     <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
     <string name="sensitivityweightedaverage">민감도 가중평균</string>
     <string name="mdtp_ok">OK</string>
@@ -591,7 +589,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short" formatted="false">"DIA %f는 너무 짧습니다. 대신 %f을 사용하세요!"</string>
+    <string name="dia_too_short">"DIA %1$f는 너무 짧습니다. 대신 %2$f을 사용하세요!"</string>
     <string name="activate_profile">프로파일 활성화하기</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>

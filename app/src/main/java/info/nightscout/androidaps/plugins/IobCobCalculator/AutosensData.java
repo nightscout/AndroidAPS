@@ -16,8 +16,8 @@ import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
-import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.SP;
 
@@ -56,11 +56,11 @@ public class AutosensData implements DataPointWithLabelInterface {
     }
 
     public long time = 0L;
-    long chartTime;
+    public double bg = 0; // mgdl
+    private long chartTime;
     public String pastSensitivity = "";
     public double deviation = 0d;
-    boolean nonCarbsDeviation = false;
-    public boolean nonEqualDeviation = false;
+    public boolean validDeviation = false;
     List<CarbsInPast> activeCarbsList = new ArrayList<>();
     double absorbed = 0d;
     public double carbsFromBolus = 0d;
@@ -75,6 +75,14 @@ public class AutosensData implements DataPointWithLabelInterface {
     public double slopeFromMinDeviation = 999;
     public double usedMinCarbsImpact = 0d;
     public boolean failoverToMinAbsorbtionRate = false;
+
+    // Oref1
+    public boolean absorbing = false;
+    public double mealCarbs = 0;
+    public int mealStartCounter = 999;
+    public String type = "";
+    public boolean uam = false;
+    public List<Double> extraDeviation = new ArrayList<>();
 
     @Override
     public String toString() {

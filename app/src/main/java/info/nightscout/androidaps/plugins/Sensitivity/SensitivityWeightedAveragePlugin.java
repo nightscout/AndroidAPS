@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SensitivityWeightedAverage;
+package info.nightscout.androidaps.plugins.Sensitivity;
 
 import android.support.v4.util.LongSparseArray;
 
@@ -6,11 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -26,7 +28,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityWeightedAveragePlugin extends PluginBase implements SensitivityInterface {
+public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
 
     private static SensitivityWeightedAveragePlugin plugin = null;
@@ -79,6 +81,8 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
             return new AutosensResult();
         }
 
+        List<CareportalEvent> siteChanges = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true);
+
         String pastSensitivity = "";
         int index = 0;
         LongSparseArray<Double> data = new LongSparseArray<>();
@@ -101,11 +105,24 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
                 continue;
             }
 
+            // reset deviations after site change
+            if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+                data.clear();
+                pastSensitivity += "(SITECHANGE)";
+            }
+
+            double deviation = autosensData.deviation;
+
+            //set positive deviations to zero if bg < 80
+            if (autosensData.bg < 80 && deviation > 0)
+                deviation = 0;
+
             //data.append(autosensData.time);
             long reverseWeight = (toTime - autosensData.time) / (5 * 60 * 1000L);
-            data.append(reverseWeight, autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+            if (autosensData.validDeviation)
+                data.append(reverseWeight, deviation);
             //weights += reverseWeight;
-            //weightedsum += reverseWeight * (autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+            //weightedsum += reverseWeight * (autosensData.validDeviation ? autosensData.deviation : 0d);
 
 
             pastSensitivity += autosensData.pastSensitivity;
@@ -159,25 +176,13 @@ public class SensitivityWeightedAveragePlugin extends PluginBase implements Sens
         if (Config.logAutosensData)
             log.debug(sensResult);
 
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-
-        if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            if (Config.logAutosensData)
-                log.debug(ratioLimit);
-        }
+        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
+                sensResult, data.size());
 
         if (Config.logAutosensData)
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " weightedaverage: " + average + " ratio: " + ratio + " mealCOB: " + current.cob);
+            log.debug("Sensitivity to: {}  weightedaverage: {} ratio: {} mealCOB: {}", new Date(toTime).toLocaleString(),
+                    average, output.ratio, current.cob);
 
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
         return output;
     }
 }

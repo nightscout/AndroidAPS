@@ -40,8 +40,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -78,7 +78,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .fragmentClass(TreatmentsFragment.class.getName())
                 .pluginName(R.string.treatments)
                 .shortName(R.string.treatments_shortname)
-                .preferencesId(R.xml.pref_absorption_oref0)
                 .alwaysEnabled(true)
                 .description(R.string.description_treatments)
         );

@@ -49,7 +49,8 @@ import info.nightscout.utils.Round;
 public class GraphData {
 
     private GraphView graph;
-    public double maxY = 0;
+    public double maxY = Double.MIN_VALUE;
+    public double minY = Double.MAX_VALUE;
     private List<BgReading> bgReadingsArray;
     private String units;
     private List<Series> series = new ArrayList<>();
@@ -63,7 +64,7 @@ public class GraphData {
     }
 
     public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, List<BgReading> predictions) {
-        double maxBgValue = 0d;
+        double maxBgValue = Double.MIN_VALUE;
         bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
@@ -93,10 +94,8 @@ public class GraphData {
 
 
         maxY = maxBgValue;
+        minY = 0;
         // set manual y bounds to have nice steps
-        graph.getViewport().setMaxY(maxY);
-        graph.getViewport().setMinY(0);
-        graph.getViewport().setYAxisBoundsManual(true);
         graph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
 
         addSeries(new PointsWithLabelGraphSeries<>(bg));
@@ -335,7 +334,7 @@ public class GraphData {
     public void addIob(long fromTime, long toTime, boolean useForScale, double scale) {
         FixedLineGraphSeries<ScaledDataPoint> iobSeries;
         List<ScaledDataPoint> iobArray = new ArrayList<>();
-        Double maxIobValueFound = 0d;
+        Double maxIobValueFound = Double.MIN_VALUE;
         double lastIob = 0;
         Scale iobScale = new Scale();
 
@@ -361,8 +360,10 @@ public class GraphData {
         iobSeries.setColor(MainApp.gc(R.color.iob));
         iobSeries.setThickness(3);
 
-        if (useForScale)
+        if (useForScale) {
             maxY = maxIobValueFound;
+            minY = -maxIobValueFound;
+        }
 
         iobScale.setMultiplier(maxY * scale / maxIobValueFound);
 
@@ -406,8 +407,10 @@ public class GraphData {
         cobSeries.setColor(MainApp.gc(R.color.cob));
         cobSeries.setThickness(3);
 
-        if (useForScale)
+        if (useForScale) {
             maxY = maxCobValueFound;
+            minY = 0;
+        }
 
         cobScale.setMultiplier(maxY * scale / maxCobValueFound);
 
@@ -438,9 +441,18 @@ public class GraphData {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
                 int color = MainApp.gc(R.color.deviationblack); // "="
-                if (autosensData.pastSensitivity.equals("C")) color = MainApp.gc(R.color.deviationgrey);
-                if (autosensData.pastSensitivity.equals("+")) color = MainApp.gc(R.color.deviationgreen);
-                if (autosensData.pastSensitivity.equals("-")) color = MainApp.gc(R.color.deviationred);
+                if (autosensData.type.equals("") || autosensData.type.equals("non-meal")) {
+                    if (autosensData.pastSensitivity.equals("C"))
+                        color = MainApp.gc(R.color.deviationgrey);
+                    if (autosensData.pastSensitivity.equals("+"))
+                        color = MainApp.gc(R.color.deviationgreen);
+                    if (autosensData.pastSensitivity.equals("-"))
+                        color = MainApp.gc(R.color.deviationred);
+                } else if (autosensData.type.equals("uam")) {
+                    color = MainApp.gc(R.color.uam);
+                } else if (autosensData.type.equals("csf")) {
+                    color = MainApp.gc(R.color.deviationgrey);
+                }
                 devArray.add(new DeviationDataPoint(time, autosensData.deviation, color, devScale));
                 maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
             }
@@ -457,8 +469,10 @@ public class GraphData {
             }
         });
 
-        if (useForScale)
+        if (useForScale) {
             maxY = maxDevValueFound;
+            minY = -maxY;
+        }
 
         devScale.setMultiplier(maxY * scale / maxDevValueFound);
 
@@ -469,14 +483,16 @@ public class GraphData {
     public void addRatio(long fromTime, long toTime, boolean useForScale, double scale) {
         LineGraphSeries<ScaledDataPoint> ratioSeries;
         List<ScaledDataPoint> ratioArray = new ArrayList<>();
-        Double maxRatioValueFound = 0d;
-        Scale ratioScale = new Scale(-1d);
+        Double maxRatioValueFound = Double.MIN_VALUE;
+        Double minRatioValueFound = Double.MAX_VALUE;
+        Scale ratioScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
-                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio, ratioScale));
-                maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
+                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio - 1, ratioScale));
+                maxRatioValueFound = Math.max(maxRatioValueFound, autosensData.autosensRatio - 1);
+                minRatioValueFound = Math.min(minRatioValueFound, autosensData.autosensRatio - 1);
             }
         }
 
@@ -487,8 +503,10 @@ public class GraphData {
         ratioSeries.setColor(MainApp.gc(R.color.ratio));
         ratioSeries.setThickness(3);
 
-        if (useForScale)
+        if (useForScale) {
             maxY = maxRatioValueFound;
+            minY = minRatioValueFound;
+        }
 
         ratioScale.setMultiplier(maxY * scale / maxRatioValueFound);
 
@@ -529,8 +547,10 @@ public class GraphData {
         dsMinSeries.setColor(MainApp.gc(R.color.devslopeneg));
         dsMinSeries.setThickness(3);
 
-        if (useForScale)
+        if (useForScale) {
             maxY = Math.max(maxFromMaxValueFound, maxFromMinValueFound);
+            minY = -maxY;
+        }
 
         dsMaxScale.setMultiplier(maxY * scale / maxFromMaxValueFound);
         dsMinScale.setMultiplier(maxY * scale / maxFromMinValueFound);
@@ -583,6 +603,10 @@ public class GraphData {
                 graph.getSeries().add(s);
             }
         }
+
+        graph.getViewport().setMaxY(Round.ceilTo(maxY, 1d));
+        graph.getViewport().setMinY(Round.floorTo(minY, 1d));
+        graph.getViewport().setYAxisBoundsManual(true);
 
         // draw it
         graph.onDataChanged(false, false);

@@ -107,16 +107,14 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.gs(R.string.confirmation));
                         builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(careportalEvent.date));
-                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                final String _id = careportalEvent._id;
-                                if (NSUpload.isIdValid(_id)) {
-                                    NSUpload.removeCareportalEntryFromNS(_id);
-                                } else {
-                                    UploadQueue.removeID("dbAdd", _id);
-                                }
-                                MainApp.getDbHelper().delete(careportalEvent);
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                            final String _id = careportalEvent._id;
+                            if (NSUpload.isIdValid(_id)) {
+                                NSUpload.removeCareportalEntryFromNS(_id);
+                            } else {
+                                UploadQueue.removeID("dbAdd", _id);
                             }
+                            MainApp.getDbHelper().delete(careportalEvent);
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
@@ -136,11 +134,13 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEventsFromTime(false));
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false));
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.careportal_refreshfromnightscout);
         refreshFromNS.setOnClickListener(this);
+
+        view.findViewById(R.id.careportal_removeandroidapsstartedevents).setOnClickListener(this);
 
         context = getContext();
 
@@ -169,6 +169,16 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
                 break;
+            case R.id.careportal_removeandroidapsstartedevents:
+                builder = new AlertDialog.Builder(context);
+                builder.setTitle(MainApp.gs(R.string.confirmation));
+                builder.setMessage(MainApp.gs(R.string.careportal_removestartedevents));
+                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                    removeAndroidAPSStatedEvents();
+                });
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
+                builder.show();
+                break;
         }
 
     }
@@ -185,8 +195,24 @@ public class TreatmentsCareportalFragment extends SubscriberFragment implements 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEventsFromTime(false)), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false)), false);
                 }
             });
+    }
+
+    private void removeAndroidAPSStatedEvents() {
+        List<CareportalEvent> events = MainApp.getDbHelper().getCareportalEvents(false);
+        for (int i = 0; i < events.size(); i++) {
+            CareportalEvent careportalEvent = events.get(i);
+            if (careportalEvent.json.contains(MainApp.gs(R.string.androidaps_start))) {
+                final String _id = careportalEvent._id;
+                if (NSUpload.isIdValid(_id)) {
+                    NSUpload.removeCareportalEntryFromNS(_id);
+                } else {
+                    UploadQueue.removeID("dbAdd", _id);
+                }
+                MainApp.getDbHelper().delete(careportalEvent);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import butterknife.Optional;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
@@ -44,35 +43,17 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.PasswordProtection;
 
 
 public class ConfigBuilderFragment extends SubscriberFragment {
 
-    private List<PluginView> pluginViews = new ArrayList<>();
+    private List<PluginViewHolder> pluginViewHolders = new ArrayList<>();
 
-    @BindView(R.id.profile_plugins)
-    LinearLayout profilePlugins;
-    @BindView(R.id.insulin_plugins)
-    LinearLayout insulinPlugins;
-    @BindView(R.id.bgsource_plugins)
-    LinearLayout bgSourcePlugins;
-    @BindView(R.id.pump_plugins)
-    LinearLayout pumpPlugins;
-    @BindView(R.id.sensitivity_plugins)
-    LinearLayout sensitivityPlugins;
-    @BindView(R.id.aps_plugins)
-    LinearLayout apsPlugins;
-    @BindView(R.id.loop_plugins)
-    LinearLayout loopPlugins;
-    @BindView(R.id.constraints_plugins)
-    LinearLayout constraintsPlugins;
-    @BindView(R.id.treatments_plugins)
-    LinearLayout treatmentsPlugins;
-    @BindView(R.id.general_plugins)
-    LinearLayout generalPlugins;
+    @BindView(R.id.categories)
+    LinearLayout categories;
 
     @BindView(R.id.main_layout)
     ScrollView mainLayout;
@@ -111,34 +92,40 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        for (PluginView pluginView : pluginViews) pluginView.unbind();
-        pluginViews.clear();
+        for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.unbind();
+        pluginViewHolders.clear();
     }
 
     @Override
     protected void updateGUI() {
-        for (PluginView pluginView : pluginViews) pluginView.update();
+        for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.update();
     }
 
     private void createViews() {
-        createViewsForPlugins(profilePlugins, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
-        createViewsForPlugins(insulinPlugins, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
-        createViewsForPlugins(bgSourcePlugins, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE));
-        createViewsForPlugins(pumpPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP));
-        createViewsForPlugins(sensitivityPlugins, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY));
-        createViewsForPlugins(apsPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.APS));
-        createViewsForPlugins(loopPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP));
-        createViewsForPlugins(constraintsPlugins, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS));
-        createViewsForPlugins(treatmentsPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT));
-        createViewsForPlugins(generalPlugins, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL));
+        createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
+        createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
+        createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginType.BGSOURCE));
+        createViewsForPlugins(R.string.configbuilder_pump, R.string.configbuilder_pump_description, PluginType.PUMP, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP));
+        createViewsForPlugins(R.string.configbuilder_sensitivity, R.string.configbuilder_sensitivity_description, PluginType.SENSITIVITY, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginType.SENSITIVITY));
+        createViewsForPlugins(R.string.configbuilder_aps, R.string.configbuilder_aps_description, PluginType.APS, MainApp.getSpecificPluginsVisibleInList(PluginType.APS));
+        createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP));
+        createViewsForPlugins(R.string.constraints, R.string.configbuilder_constraints_description, PluginType.CONSTRAINTS, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginType.CONSTRAINTS));
+        createViewsForPlugins(R.string.configbuilder_treatments, R.string.configbuilder_treatments_description, PluginType.TREATMENT, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT));
+        createViewsForPlugins(R.string.configbuilder_general, R.string.configbuilder_general_description, PluginType.GENERAL, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL));
     }
 
-    private void createViewsForPlugins(LinearLayout parent, List<PluginBase> plugins) {
+    private void createViewsForPlugins(@StringRes int title, @StringRes int description, PluginType pluginType, List<PluginBase> plugins) {
+        if (plugins.size() == 0) return;
+        LinearLayout parent = (LinearLayout) getLayoutInflater().inflate(R.layout.configbuilder_single_category, null);
+        ((TextView) parent.findViewById(R.id.category_title)).setText(MainApp.gs(title));
+        ((TextView) parent.findViewById(R.id.category_description)).setText(MainApp.gs(description));
+        LinearLayout pluginContainer = parent.findViewById(R.id.category_plugins);
         for (PluginBase plugin: plugins) {
-            PluginView pluginView = new PluginView(plugin);
-            parent.addView(pluginView.getBaseView());
-            pluginViews.add(pluginView);
+            PluginViewHolder pluginViewHolder = new PluginViewHolder(pluginType, plugin);
+            pluginContainer.addView(pluginViewHolder.getBaseView());
+            pluginViewHolders.add(pluginViewHolder);
         }
+        categories.addView(parent);
     }
 
     private boolean areMultipleSelectionsAllowed(PluginType type) {
@@ -200,9 +187,10 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
     }
 
-    class PluginView {
+    public class PluginViewHolder {
 
         private Unbinder unbinder;
+        private PluginType pluginType;
         private PluginBase plugin;
 
         LinearLayout baseView;
@@ -219,7 +207,8 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         @BindView(R.id.plugin_visibility)
         CheckBox pluginVisibility;
 
-        public PluginView(PluginBase plugin) {
+        public PluginViewHolder(PluginType pluginType, PluginBase plugin) {
+            this.pluginType = pluginType;
             this.plugin = plugin;
             baseView = (LinearLayout) getLayoutInflater().inflate(R.layout.configbuilder_single_plugin, null);
             unbinder = ButterKnife.bind(this, baseView);
@@ -231,10 +220,10 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
 
         public void update() {
-            enabledExclusive.setVisibility(areMultipleSelectionsAllowed(plugin.getType()) ? View.GONE : View.VISIBLE);
-            enabledInclusive.setVisibility(areMultipleSelectionsAllowed(plugin.getType()) ? View.VISIBLE : View.GONE);
-            enabledExclusive.setChecked(plugin.isEnabled(plugin.getType()));
-            enabledInclusive.setChecked(plugin.isEnabled(plugin.getType()));
+            enabledExclusive.setVisibility(areMultipleSelectionsAllowed(pluginType) ? View.GONE : View.VISIBLE);
+            enabledInclusive.setVisibility(areMultipleSelectionsAllowed(pluginType) ? View.VISIBLE : View.GONE);
+            enabledExclusive.setChecked(plugin.isEnabled(pluginType));
+            enabledInclusive.setChecked(plugin.isEnabled(pluginType));
             enabledInclusive.setEnabled(!plugin.pluginDescription.alwaysEnabled);
             enabledExclusive.setEnabled(!plugin.pluginDescription.alwaysEnabled);
             pluginName.setText(plugin.getName());
@@ -243,15 +232,15 @@ public class ConfigBuilderFragment extends SubscriberFragment {
                 pluginDescription.setVisibility(View.VISIBLE);
                 pluginDescription.setText(plugin.getDescription());
             }
-            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(plugin.getType()) ? View.INVISIBLE : View.VISIBLE);
+            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(pluginType) ? View.INVISIBLE : View.VISIBLE);
             pluginVisibility.setVisibility(plugin.hasFragment() ? View.VISIBLE : View.INVISIBLE);
-            pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(plugin.getType()));
+            pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(pluginType));
             pluginVisibility.setChecked(plugin.isFragmentVisible());
         }
 
         @OnClick(R.id.plugin_visibility)
         void onVisibilityChanged() {
-            plugin.setFragmentVisible(plugin.getType(), pluginVisibility.isChecked());
+            plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked());
             ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible");
             MainApp.bus().post(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().logPluginStatus();
@@ -259,16 +248,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
 
         @OnClick({R.id.plugin_enabled_exclusive, R.id.plugin_enabled_inclusive})
         void onEnabledChanged() {
-            boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
-            plugin.setPluginEnabled(plugin.getType(), enabled);
-            plugin.setFragmentVisible(plugin.getType(), enabled);
-            processOnEnabledCategoryChanged(plugin, plugin.getType());
-            updateGUI();
-            ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
-            MainApp.bus().post(new EventRefreshGui());
-            MainApp.bus().post(new EventConfigBuilderChange());
-            ConfigBuilderPlugin.getPlugin().logPluginStatus();
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
+            plugin.switchAllowed(new PluginSwitcher(), getActivity());
         }
 
         @OnClick(R.id.plugin_preferences)
@@ -284,6 +264,23 @@ public class ConfigBuilderFragment extends SubscriberFragment {
             unbinder.unbind();
         }
 
-    }
+        public class PluginSwitcher {
+            public void invoke() {
+                boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
+                plugin.setPluginEnabled(pluginType, enabled);
+                plugin.setFragmentVisible(pluginType, enabled);
+                processOnEnabledCategoryChanged(plugin, pluginType);
+                updateGUI();
+                ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
+                MainApp.bus().post(new EventRefreshGui());
+                MainApp.bus().post(new EventConfigBuilderChange());
+                ConfigBuilderPlugin.getPlugin().logPluginStatus();
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
+            }
 
+            public void cancel(){
+                updateGUI();
+            }
+        }
+    }
 }

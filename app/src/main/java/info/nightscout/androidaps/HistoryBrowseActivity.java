@@ -176,13 +176,19 @@ public class HistoryBrowseActivity extends AppCompatActivity {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateGUI("EventAutosensCalculationFinished");
+                    synchronized (HistoryBrowseActivity.this) {
+                        updateGUI("EventAutosensCalculationFinished");
+                    }
                 }
             });
         }
     }
 
     void updateGUI(String from) {
+
+        if (noProfile == null || buttonDate == null || buttonZoom == null || bgGraph == null || iobGraph == null || seekBar == null)
+            return;
+
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 

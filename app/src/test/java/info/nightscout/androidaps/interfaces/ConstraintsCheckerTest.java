@@ -76,7 +76,7 @@ public class ConstraintsCheckerTest {
     @Test
     public void isClosedLoopAllowedTest() throws Exception {
         when(SP.getString("aps_mode", "open")).thenReturn("closed");
-        objectivesPlugin.objectives.get(3).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(3).setStartedOn(null);
 
         Constraint<Boolean> c = constraintChecker.isClosedLoopAllowed();
         Assert.assertEquals(true, c.getReasonList().size() == 2); // Safety & Objectives
@@ -92,7 +92,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isAutosensModeEnabledTest() throws Exception {
-        objectivesPlugin.objectives.get(5).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(5).setStartedOn(null);
         when(SP.getBoolean(R.string.key_openapsama_useautosens, false)).thenReturn(false);
 
         Constraint<Boolean> c = constraintChecker.isAutosensModeEnabled();
@@ -103,7 +103,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isAMAModeEnabledTest() throws Exception {
-        objectivesPlugin.objectives.get(6).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(6).setStartedOn(null);
 
         Constraint<Boolean> c = constraintChecker.isAMAModeEnabled();
         Assert.assertEquals(true, c.getReasonList().size() == 1); // Objectives
@@ -123,7 +123,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isSMBModeEnabledTest() throws Exception {
-        objectivesPlugin.objectives.get(7).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(7).setStartedOn(null);
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
         when(MainApp.getConstraintChecker().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
 

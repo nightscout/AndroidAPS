@@ -80,7 +80,7 @@ public class LoopFragment extends SubscriberFragment {
         clearGUI();
         final Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> lastRunView.setText(ev.text));
+            activity.runOnUiThread(() -> { synchronized (LoopFragment.this) { if (lastRunView != null) lastRunView.setText(ev.text); } });
     }
 
 
@@ -89,26 +89,29 @@ public class LoopFragment extends SubscriberFragment {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {
-                LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
-                if (lastRun != null) {
-                    requestView.setText(lastRun.request != null ? lastRun.request.toSpanned() : "");
-                    constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toSpanned() : "");
-                    sourceView.setText(lastRun.source != null ? lastRun.source : "");
-                    lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
-                    lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
-                    tbrSetByPumpView.setText(lastRun.tbrSetByPump != null ? Html.fromHtml(lastRun.tbrSetByPump.toHtml()) : "");
-                    smbSetByPumpView.setText(lastRun.smbSetByPump != null ? Html.fromHtml(lastRun.smbSetByPump.toHtml()) : "");
+                synchronized (LoopFragment.this) {
+                    if (!isBound()) return;
+                    LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
+                    if (lastRun != null) {
+                        requestView.setText(lastRun.request != null ? lastRun.request.toSpanned() : "");
+                        constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toSpanned() : "");
+                        sourceView.setText(lastRun.source != null ? lastRun.source : "");
+                        lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
+                        lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
+                        tbrSetByPumpView.setText(lastRun.tbrSetByPump != null ? Html.fromHtml(lastRun.tbrSetByPump.toHtml()) : "");
+                        smbSetByPumpView.setText(lastRun.smbSetByPump != null ? Html.fromHtml(lastRun.smbSetByPump.toHtml()) : "");
 
-                    String constraints = "";
-                    if (lastRun.constraintsProcessed != null) {
-                        Constraint<Double> allConstraints = new Constraint<>(0d);
-                        if (lastRun.constraintsProcessed.rateConstraint != null)
-                            allConstraints.copyReasons(lastRun.constraintsProcessed.rateConstraint);
-                        if (lastRun.constraintsProcessed.smbConstraint != null)
-                            allConstraints.copyReasons(lastRun.constraintsProcessed.smbConstraint);
-                        constraints = allConstraints.getMostLimitedReasons();
+                        String constraints = "";
+                        if (lastRun.constraintsProcessed != null) {
+                            Constraint<Double> allConstraints = new Constraint<>(0d);
+                            if (lastRun.constraintsProcessed.rateConstraint != null)
+                                allConstraints.copyReasons(lastRun.constraintsProcessed.rateConstraint);
+                            if (lastRun.constraintsProcessed.smbConstraint != null)
+                                allConstraints.copyReasons(lastRun.constraintsProcessed.smbConstraint);
+                            constraints = allConstraints.getMostLimitedReasons();
+                        }
+                        constraintsView.setText(constraints);
                     }
-                    constraintsView.setText(constraints);
                 }
             });
     }
@@ -117,13 +120,29 @@ public class LoopFragment extends SubscriberFragment {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {
-                requestView.setText("");
-                constraintsProcessedView.setText("");
-                sourceView.setText("");
-                lastRunView.setText("");
-                lastEnactView.setText("");
-                tbrSetByPumpView.setText("");
-                smbSetByPumpView.setText("");
+                synchronized (LoopFragment.this) {
+                    if (isBound()) {
+                        requestView.setText("");
+                        constraintsProcessedView.setText("");
+                        sourceView.setText("");
+                        lastRunView.setText("");
+                        lastEnactView.setText("");
+                        tbrSetByPumpView.setText("");
+                        smbSetByPumpView.setText("");
+                    }
+                }
             });
+    }
+
+    boolean isBound() {
+        return requestView != null
+                && constraintsProcessedView != null
+                && sourceView != null
+                && lastRunView != null
+                && lastEnactView != null
+                && tbrSetByPumpView != null
+                && smbSetByPumpView != null
+                && constraintsView != null
+                && runNowButton != null;
     }
 }

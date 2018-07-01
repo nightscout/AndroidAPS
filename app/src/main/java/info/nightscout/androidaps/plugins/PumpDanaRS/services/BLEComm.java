@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 import info.nightscout.androidaps.MainApp;
@@ -45,11 +43,11 @@ public class BLEComm {
 
     private static final long WRITE_DELAY_MILLIS = 50;
 
-    public static String UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
-    public static String UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb";
+    private static String UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
+    private static String UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb";
 
-    private byte PACKET_START_BYTE = (byte) 0xA5;
-    private byte PACKET_END_BYTE = (byte) 0x5A;
+    private final byte PACKET_START_BYTE = (byte) 0xA5;
+    private final byte PACKET_END_BYTE = (byte) 0x5A;
     private static BLEComm instance = null;
 
     public static BLEComm getInstance(DanaRSService service) {
@@ -58,16 +56,13 @@ public class BLEComm {
         return instance;
     }
 
-    private final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledDisconnection = null;
 
     private DanaRS_Packet processsedMessage = null;
-    private ArrayList<byte[]> mSendQueue = new ArrayList<>();
+    private final ArrayList<byte[]> mSendQueue = new ArrayList<>();
 
     private BluetoothManager mBluetoothManager = null;
     private BluetoothAdapter mBluetoothAdapter = null;
-    private BluetoothDevice mBluetoothDevice = null;
-    private String mBluetoothDeviceAddress = null;
     private String mBluetoothDeviceName = null;
     private BluetoothGatt mBluetoothGatt = null;
 
@@ -79,7 +74,7 @@ public class BLEComm {
 
     private DanaRSService service;
 
-    BLEComm(DanaRSService service) {
+    private BLEComm(DanaRSService service) {
         this.service = service;
         initialize();
     }
@@ -138,15 +133,13 @@ public class BLEComm {
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
-            log.debug("Device not found.  Unable to connect.");
+            log.debug("Device not found.  Unable to connect from: " + from);
             return false;
         }
 
-        log.debug("Trying to create a new connection.");
+        log.debug("Trying to create a new connection from: " + from);
         mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
-        mBluetoothDevice = device;
-        mBluetoothDeviceAddress = address;
         mBluetoothDeviceName = device.getName();
         return true;
     }
@@ -174,7 +167,7 @@ public class BLEComm {
         SystemClock.sleep(2000);
     }
 
-    public void close() {
+    public synchronized void close() {
         log.debug("BluetoothAdapter close");
         if (mBluetoothGatt == null) {
             return;
@@ -184,15 +177,8 @@ public class BLEComm {
         mBluetoothGatt = null;
     }
 
-    public BluetoothDevice getConnectDevice() {
-        return mBluetoothDevice;
-    }
 
-    public String getConnectDeviceAddress() {
-        return mBluetoothDeviceAddress;
-    }
-
-    public String getConnectDeviceName() {
+    private String getConnectDeviceName() {
         return mBluetoothDeviceName;
     }
 
@@ -229,33 +215,25 @@ public class BLEComm {
         public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
             log.debug("onCharacteristicChanged" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
             addToReadBuffer(characteristic.getValue());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    readDataParsing();
-                }
-            }).start();
+            new Thread(() -> readDataParsing()).start();
         }
 
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             log.debug("onCharacteristicWrite" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (mSendQueue) {
-                        // after message sent, check if there is the rest of the message waiting and send it
-                        if (mSendQueue.size() > 0) {
-                            byte[] bytes = mSendQueue.get(0);
-                            mSendQueue.remove(0);
-                            writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
-                        }
+            new Thread(() -> {
+                synchronized (mSendQueue) {
+                    // after message sent, check if there is the rest of the message waiting and send it
+                    if (mSendQueue.size() > 0) {
+                        byte[] bytes = mSendQueue.get(0);
+                        mSendQueue.remove(0);
+                        writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
                     }
                 }
             }).start();
         }
     };
 
-    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
+    private synchronized void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
         log.debug("setCharacteristicNotification");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
@@ -266,7 +244,7 @@ public class BLEComm {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
     }
 
-    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
+    public synchronized void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         log.debug("readCharacteristic");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
@@ -277,41 +255,39 @@ public class BLEComm {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
-    public void writeCharacteristic_NO_RESPONSE(final BluetoothGattCharacteristic characteristic, final byte[] data) {
-        new Thread(new Runnable() {
-            public void run() {
-                SystemClock.sleep(WRITE_DELAY_MILLIS);
+    private synchronized void writeCharacteristic_NO_RESPONSE(final BluetoothGattCharacteristic characteristic, final byte[] data) {
+        new Thread(() -> {
+            SystemClock.sleep(WRITE_DELAY_MILLIS);
 
-                if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-                    log.debug("BluetoothAdapter not initialized_ERROR");
-                    isConnecting = false;
-                    isConnected = false;
-                    return;
-                }
-
-                characteristic.setValue(data);
-                characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-                log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
-                mBluetoothGatt.writeCharacteristic(characteristic);
+            if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
+                log.debug("BluetoothAdapter not initialized_ERROR");
+                isConnecting = false;
+                isConnected = false;
+                return;
             }
+
+            characteristic.setValue(data);
+            characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+            log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
+            mBluetoothGatt.writeCharacteristic(characteristic);
         }).start();
     }
 
-    public BluetoothGattCharacteristic getUARTReadBTGattChar() {
+    private BluetoothGattCharacteristic getUARTReadBTGattChar() {
         if (UART_Read == null) {
             UART_Read = new BluetoothGattCharacteristic(UUID.fromString(UART_READ_UUID), BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY, 0);
         }
         return UART_Read;
     }
 
-    public BluetoothGattCharacteristic getUARTWriteBTGattChar() {
+    private BluetoothGattCharacteristic getUARTWriteBTGattChar() {
         if (UART_Write == null) {
             UART_Write = new BluetoothGattCharacteristic(UUID.fromString(UART_WRITE_UUID), BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE, 0);
         }
         return UART_Write;
     }
 
-    public List<BluetoothGattService> getSupportedGattServices() {
+    private List<BluetoothGattService> getSupportedGattServices() {
         log.debug("getSupportedGattServices");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
             log.debug("BluetoothAdapter not initialized_ERROR");
@@ -329,7 +305,7 @@ public class BLEComm {
         if (gattServices == null) {
             return;
         }
-        String uuid = null;
+        String uuid;
 
         for (BluetoothGattService gattService : gattServices) {
             List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
@@ -346,7 +322,7 @@ public class BLEComm {
         }
     }
 
-    private byte[] readBuffer = new byte[1024];
+    private final byte[] readBuffer = new byte[1024];
     private int bufferLength = 0;
 
     private void addToReadBuffer(byte[] buffer) {
@@ -634,7 +610,7 @@ public class BLEComm {
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
     }
 
-    protected void SendPumpCheck() {
+    private void SendPumpCheck() {
         // 1st message sent to pump after connect
         byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, getConnectDeviceName());
         log.debug(">>>>> " + "ENCRYPTION__PUMP_CHECK (0x00)" + " " + DanaRS_Packet.toHexString(bytes));

@@ -122,7 +122,8 @@ class NsClientReceiverDelegate {
         boolean newAllowedState = true;
 
         if (ev.wifiConnected) {
-            if (!allowedSSIDs.trim().isEmpty() && !allowedSSIDs.contains(ev.ssid)) {
+            if (!allowedSSIDs.trim().isEmpty() &&
+                    (!allowedSSIDs.contains(ev.getSsid()) && !allowedSSIDs.contains(ev.ssid))) {
                 newAllowedState = false;
             }
         } else {

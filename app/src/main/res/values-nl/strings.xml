@@ -190,20 +190,18 @@
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoon nummers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">Om het basaal %.2fU/u te starten antwoord met de code %s</string>
+    <string name="smscommunicator_basalreplywithcode">Om het basaal %1$.2fU/u te starten antwoord met de code %2$s</string>
     <string name="smscommunicator_basalstopreplywithcode">Om het tijdelijke basaal te stoppen antwoord met de code %s</string>
     <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU succesvol toegediend</string>
     <string name="smscommunicator_bolusfailed">Bolus mislukt</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">Om de bolus %.2fU toe te dienen antwoord met de code %s</string>
+    <string name="smscommunicator_bolusreplywithcode">Om de bolus %1$.2fU toe te dienen antwoord met de code %2$s</string>
     <string name="smscommunicator_calibrationfailed">XDrip ontvangt geen callibraties</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Om calibratie %.2f te verzenden antwoord met de code %s</string>
+    <string name="smscommunicator_calibrationreplywithcode">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
     <string name="smscommunicator_calibrationsent">Kalibratie verzonden. Het ontvangen van kalibraties moet actief zijn in xDrip.</string>
     <string name="ko_lang">한국어</string>
     <string name="language">Taal</string>
     <string name="localprofile">Lokaal profiel</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="lock_screen">Vergrendel scherm</string>
-    <string name="lock_screen_short">Vergrendel</string>
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
@@ -574,12 +572,12 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal ; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft.Dit is een veiligheidsmaatregel om te vermijden dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
     <string name="objectives_5_gate">Gedurende 1 week succesvol closed loop met KH ingave</string>
     <string name="careportal_activity_label">ACTIVITIJD &amp; FEEDBACK</string>
-    <string name="danar_model" formatted="false">Model: %02X Protokoll: %02X Code: %02X</string>
+    <string name="danar_model">Model: %1$02X Protokoll: %2$02X Code: %3$02X</string>
     <string name="danar_history_connectingfor">Verbonden gedurende %d s</string>
     <string name="danar_totaluploaded">Totaal %d gegevens geupload</string>
-    <string name="valuelimitedto" formatted="false">%.2f gelimitteerd tot %.2f</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Om de loop te onderbreken voor %d minuten antwoord met de code %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Tijdelijk basaal %.2fE/u voor %d minuten succesvol gestart</string>
+    <string name="valuelimitedto">%1$.2f gelimitteerd tot %2$.2f</string>
+    <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
+    <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
     <string name="end_user_license_agreement_text">Dit mag niet gebruikt worden om medische besluiten te trekken. Er is geen garantie voor dit programma voor de werking en het gebruik van dit programma. Tenzij anders beschreven in het copy right. Gebruikers en andere partijen leven dit programma zoals het momenteel is, dit zonder enige garantie.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standaard waarde: 3.0 Dit is een belangrijke veiligheid parameter van OpenAPS. Dit limiteert je basaal met een max va 3 maal je hoogste basale dosis. Normaal hoef je deze niet te veranderen. Het is echter belangrijk dat je de ingebouwde limieten kent</string>
@@ -587,7 +585,7 @@
     <string name="activate_profile">Activeer profiel</string>
     <string name="date">Datum</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="dia_too_short" formatted="false">DIA van %f te kort -  %f wordt inplaats gebruikt!\"</string>
+    <string name="dia_too_short">DIA van %1$f te kort -  %2$f wordt inplaats gebruikt!\"</string>
     <string name="insulin_oref_peak">IOB curve piek tijd</string>
     <string name="insulin_peak_time">Piek tijd [min]</string>
     <string name="invalid">Ongeldig</string>
@@ -686,7 +684,7 @@
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
     <string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
-    <string name="combo_tbr_remaining">%d%% (%d min resterend)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min resterend)</string>
     <string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
 	<string name="combo_warning">Waarschuwing</string>
 	<string name="combo_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
@@ -703,15 +701,14 @@
 	<string name="combo_pump_state_suspended_by_user">Gestopt door de gebruiker</string>
 	<string name="combo_pump_state_running">Actief</string>
 	<string name="combo_pump_cartridge_low_warrning">Insuline ampul is bijna leeg</string>
-	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp: E%d %s</string>
+	<string name="combo_is_in_error_state">Pomp is in storing, controleer op de pomp: E%1$d %2$s</string>
 	<string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
     <string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
 	<string name="combo_activity_reading_pump_history">Lezen van pomp historiek</string>
-    <string name="combo_error_partial_bolus_delivered">Maar %.2f E van de gevraagde %.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
-    <string name="combo_error_bolus_verification_failed">Toedienen en controleren van de bolus in de pomp historiek is mislukt, controleer de pomp en creëer een manuele bolus in het Careportal tabblad</string>
+    <string name="combo_error_partial_bolus_delivered">Maar %1$.2f E van de gevraagde %2$.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
 	<string name="combo_error_no_bolus_delivered">Bolus toedienen mislukt. Waarschijnlijk is er geen bolus toegediend. Gelieve de pomp te controleren om een dubbele bolus te vermijden. Als bescherming tegen programmeerfouten worden bolussen niet automatisch opnieuw uitgevoerd.</string>
 	<string name="combo_pump_activity_label">Actie</string>
-	<string name="combo_pump_action_setting_tbr">Instellen TBR (%d%% / %d min)</string>
+	<string name="combo_pump_action_setting_tbr">Instellen TBR (%1$d%% / %2$d min)</string>
     <string name="combo_force_disabled_notification">Onvoorzichtig gebruik: Vertraagde of multi wave bolussen zijn toegediend in de afgelopen 6 uur op het geselecteerde basaal patroon is niet 1. Loop is onderbroken tot de 6 uur nadat deze bolussen of andere basale patronen zijn gedetecteerd. Alleen normale bolussen en basaal patroon 1 zijn mogelijk binnen basaal patroon 1</string>
     <string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wafe bolussen zijn actief. Loop is naar onderdruk lage waardes enkel overgeschakeld gedurende 6 uur. Alleen gewone bolussen worden onderdsteund in loop modus.</string>
 	<string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
@@ -725,7 +722,7 @@
     <string name="zerovalueinprofile">Ongeldig profiel: %s</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Er kon geen verbinding met de pomp gemaakt worden. De Bolus is niet toegediend.</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedien storing</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig. Als dezelfde bolus hoeveelheid moet worden toegediend, gelieve 2 minuten te wachten. Gelijke bolussen worden geweigerd om veiligheidsredenen (toegediend of niet).</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berend was. De bolus is NIET toegediend. Programmeer een nieuwe bolus indien nodig.</string>
     <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegend van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Tijdelijk basaal geweigerd doordat de berekeningen geen rekening hielden met  de recente wijzigingen in de pomp historiek</string>
     <string name="combo_activity_checking_pump_state">Vernieuwen van pomp status</string>
@@ -877,7 +874,7 @@
     <string name="ns_allowroaming">Sta verbinding tijdens roaming toe</string>
     <string name="connectionsettings_title">Verbindings instellingen</string>
     <string name="ns_chargingonly">Enkel tijdens opladen</string>
-    <string name="boluserrorcode">Gevraagd: %.2fU Afgegeven: %.2fU Storings code: %d</string>
+    <string name="boluserrorcode">Gevraagd: %1$.2fU Afgegeven: %2$.2fU Storings code: %3$d</string>
     <string name="ro_lang">Românesc</string>
     <string name="zh_lang">Chinese</string>
     <string name="openapsama_autosens_adjusttargets">Autosens regelt de BG streefwaarde bij</string>
@@ -900,11 +897,11 @@
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
     <string name="smbdisabledinpreferences">SMB gedeactiveerd in de voorkeuren</string>
     <string name="insight_unknown">Ongekend</string>
-    <string name="limitingbasalratio">Beperken van basaal tot max %.2f E/U wegens de %s</string>
+    <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/U wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="basal_set_correctly">Basaal correct ingesteld</string>
-    <string name="limitingpercentrate" formatted="false">Begrezen van max procentuele wijzigen tot %d%% want de %s</string>
+    <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% want de %2$s</string>
     <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
     <string name="loopdisconnectedfor">Niet verbonden (%d m)</string>
@@ -924,7 +921,7 @@
     <string name="automatic_careportal_events">Automatische Careportal gebeurtenissen</string>
     <string name="insight_remaining_over">resterende van</string>
     <string name="insight_upfront_with">op voorhand met</string>
-    <string name="insight_keepalive_format_string">%ds verloopt %s</string>
+    <string name="insight_keepalive_format_string">%1$ds verloopt %2$s</string>
     <string name="about_link_urls">" http://www.androidaps.org  facebook: http://facebook.androidaps.org"</string>
     <string name="firstinsulinincrement">"Eerste insuline increment"</string>
     <string name="secondinsulinincrement">Tweede insuline increment</string>
@@ -932,12 +929,12 @@
     <string name="firstcarbsincrement">Eerste koolhydraten increment</string>
     <string name="secondcarbsincrement">Tweede koolhydraten increment</string>
     <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
-    <string name="limitingbolus" formatted="false">Bolus beperkt tot %.1f E doordat %s</string>
+    <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
     <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
-    <string name="limitingmaxiob" formatted="false">Max IOB wordt beperkt tot %1.f E doordat %s</string>
-    <string name="limitingcarbs" formatted="false">Koolhydraten worden beperkt tot %d gr doordat %s</string>
+    <string name="limitingmaxiob">Max IOB wordt beperkt tot %1$1.f E doordat %2$s</string>
+    <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
     <string name="maxvalueinpreferences">Maximum waarde in voorkeuren</string>
-    <string name="limitingiob" formatted="false">IOB gelimmiteerd tot %.1f E doordat %s</string>
+    <string name="limitingiob">IOB gelimmiteerd tot %1$.1f E doordat %2$s</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatische Insuline, infusieset wissels, batterij wissels en pomp alarmen naar NS uploaden</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd vollezig is opgenomen. Resterende KH worden niet mee gerekend.</string>
     <string name="openapssmb_maxiob_title">Max totaal IOB dat OpenAPS niet kan overschrijden (E)</string>

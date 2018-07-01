@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.Profile;
  */
 public interface ConstraintsInterface {
 
-    default Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+    default Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
         return value;
     }
 

@@ -26,8 +26,8 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
-import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -145,6 +145,7 @@ public class IobCobThread extends Thread {
                         log.error("! value < 39");
                         continue;
                     }
+                    autosensData.bg = bg;
                     delta = (bg - bucketed_data.get(i + 1).value);
                     avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
 
@@ -245,26 +246,29 @@ public class IobCobThread extends Thread {
                     // calculate autosens only without COB
                     if (autosensData.cob <= 0) {
                         if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
-                            autosensData.pastSensitivity += "=";
-                            autosensData.nonEqualDeviation = true;
+                            autosensData.pastSensitivity = "=";
+                            autosensData.validDeviation = true;
                         } else if (deviation > 0) {
-                            autosensData.pastSensitivity += "+";
-                            autosensData.nonEqualDeviation = true;
+                            autosensData.pastSensitivity = "+";
+                            autosensData.validDeviation = true;
                         } else {
-                            autosensData.pastSensitivity += "-";
-                            autosensData.nonEqualDeviation = true;
+                            autosensData.pastSensitivity = "-";
+                            autosensData.validDeviation = true;
                         }
-                        autosensData.nonCarbsDeviation = true;
                     } else {
-                        autosensData.pastSensitivity += "C";
+                        autosensData.pastSensitivity = "C";
                     }
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
                     previous = autosensData;
-                    autosensDataTable.put(bgTime, autosensData);
+                    if (bgTime < now())
+                        autosensDataTable.put(bgTime, autosensData);
                     if (Config.logAutosensData)
                         log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime));
-                    autosensData.autosensRatio = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime).ratio;
+                    AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivity(oldestTimeWithData, bgTime);
+                    if (Config.logAutosensData)
+                        log.debug("Sensitivity result: " + sensitivity.toString());
+                    autosensData.autosensRatio = sensitivity.ratio;
                     if (Config.logAutosensData)
                         log.debug(autosensData.toString());
                 }

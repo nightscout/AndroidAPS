@@ -204,7 +204,7 @@
     <string name="bolusdelivered" formatted="false">Bolus %.2fU aplikován úspěšně</string>
     <string name="smscommunicator_bolusfailed">Chyba při aplikování bolusu</string>
     <string name="smscommunicator_remotebolusnotallowed">Vzdálený bolus není momentálně povolen</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">K potvzení bolusu %.2fU odpověz SMS s kódem %s</string>
+    <string name="smscommunicator_bolusreplywithcode">K potvzení bolusu %1$.2fU odpověz SMS s kódem %2$s</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
@@ -273,12 +273,12 @@
     <string name="noprofileselected">Není vybrán žádný profil</string>
     <string name="valueoutofrange" formatted="false">Hodnota %s je mimo přednastavený rozsah</string>
     <string name="smscommunicator_remotebasalnotallowed">Vzdálené posílání příkazů není povoleno</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">Na spuštění bazálu %.2fU/h odpověz SMS s kódem %s</string>
+    <string name="smscommunicator_basalreplywithcode">Na spuštění bazálu %1$.2fU/h odpověz SMS s kódem %2$s</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Na ukončení bazálu odpověz SMS s kódem %s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočaný bazál zastaven</string>
     <string name="smscommunicator_tempbasalcancelfailed">Rušení dočasného bazálu selhalo</string>
     <string name="smscommunicator_tempbasalfailed">Spuštění dočasného bazálu selhalo</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Dočasný bazál %.2fU/h na %d minut spuštěn</string>
+    <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fU/h na %2$d minut spuštěn</string>
     <string name="smscommunicator_unknowncommand">Neznámý příkaz nebo chybná odpověď</string>
     <string name="overview_editquickwizard_buttontext">Text na tlačítku:</string>
     <string name="overview_editquickwizard_carbs">Sacharidy:</string>
@@ -354,7 +354,7 @@
     <string name="openapsama_useautosens">Používat autodetekci senzitivity</string>
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
-    <string name="valuelimitedto" formatted="false">%.2f omezeno na %.2f</string>
+    <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
     <string name="removerecord">Odstranit záznam:</string>
     <string name="short_avgdelta">Krátkodobý průměr</string>
     <string name="refresheventsfromnightscout">Obnovit události z NS</string>
@@ -414,7 +414,7 @@
     <string name="send_calibration">Poslat do xDripu kalibraci %.1f ?</string>
     <string name="xdripnotinstalled">xDrip+ není nainstalován</string>
     <string name="smscommunicator_calibrationfailed">xDrip nepřijímá kalibrace</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">Odeslání kalibrace %.2f potvrďte kódem %s</string>
+    <string name="smscommunicator_calibrationreplywithcode">Odeslání kalibrace %1$.2f potvrďte kódem %2$s</string>
     <string name="smscommunicator_calibrationsent">Kalibrace odeslána. Příjem musí být v xDripu povolený.</string>
     <string name="smscommunicator_remotecalibrationnotallowed">Vzdálené kalibrace nejsou povoleny</string>
     <string name="disconnecting">Odpojuji</string>
@@ -482,7 +482,7 @@
     <string name="smscommunicator_loopresumed">Smyčka obnovena</string>
     <string name="smscommunicator_loopsuspended">Smyčka pozastavena</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálený příkaz není povolen</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">K pozastavení smyčky na %d minut odpověz SMS s kódem %s</string>
+    <string name="smscommunicator_suspendreplywithcode">K pozastavení smyčky na %1$d minut odpověz SMS s kódem %2$s</string>
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
     <string name="ns_logappstartedevent">Zaznamenávat spuštění aplikace do NS</string>
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>
@@ -525,8 +525,6 @@
     <string name="hours">hodin</string>
     <string name="invalidprofile">Chybný profil !!!</string>
     <string name="iob">IOB</string>
-    <string name="lock_screen">Zámek obrazovky</string>
-    <string name="lock_screen_short">Zámek</string>
     <string name="mdtp_cancel">Zrušit</string>
     <string name="mdtp_ok">OK</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>
@@ -573,7 +571,7 @@
     <string name="activate_profile">Aktivovat profil</string>
     <string name="danar_visualizeextendedaspercentage_title">Zobrazovat prodloužený bolus v %</string>
     <string name="date">Datum</string>
-    <string name="dia_too_short" formatted="false">DIA %f je příliž krátké - použito %f !</string>
+    <string name="dia_too_short">DIA %1$f je příliž krátké - použito %2$f !</string>
     <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
     <string name="insulin_peak_time">Vrchol křivky [min]</string>
     <string name="invalid">NEPLATNÝ</string>
@@ -609,7 +607,7 @@
     <string name="waitingforpairing">Čekání na spárování na pumpě</string>
     <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear</string>
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
-    <string name="danar_model" formatted="false">Model: %02X Protokol: %02X Kód: %02X</string>
+    <string name="danar_model">Model: %1$02X Protokol: %2$02X Kód: %3$02X</string>
     <string name="active"><![CDATA[<Aktivní>]]></string>
     <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
     <string name="connectiontimedout">Vypršel čas připojování</string>
@@ -689,13 +687,13 @@
     <string name="combo_pump_state_label">Stav</string>
     <string name="combo_pump_activity_label">Aktivita</string>
     <string name="combo_no_pump_connection" formatted="false">Žádné spojení %d min</string>
-    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min zbývá)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min zbývá)</string>
     <string name="combo_pump_state_initializing">Inicializace</string>
     <string name="combo_pump_state_suspended_due_to_error">Vypnuto díky chybě</string>
     <string name="combo_pump_state_suspended_by_user">Vypnuto uživatelem</string>
     <string name="combo_pump_state_running">Beží</string>
     <string name="combo_pump_action_cancelling_tbr">Rušení dočasného bazálu</string>
-    <string name="combo_pump_action_setting_tbr" formatted="false">Nastavování doč. bazálu (%d%% / %d min)</string>
+    <string name="combo_pump_action_setting_tbr">Nastavování doč. bazálu (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing" formatted="false">Bolus (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Obnovování</string>
     <string name="combo_pump_unsupported_operation">Požadovaná operace není pumpou podporována</string>
@@ -707,11 +705,10 @@
     <string name="combo_activity_setting_basal_profile">Nastavení bazálního profilu</string>
     <string name="combo_pump_cartridge_low_warrning">V zásobníku je málo inzulínu</string>
     <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
-    <string name="combo_is_in_error_state" formatted="false">Pumpa hlásí chybu E%d: %s</string>
+    <string name="combo_is_in_error_state">Pumpa hlásí chybu E%1$d: %2$s</string>
     <string name="combo_error_bolus_recovery_progress">Pokouším se obnovit spojení</string>
-    <string name="combo_error_bolus_verification_failed">Provádění bolusu a čtení historie selhalo. Zkontrolujte pumpu a zadejte bolus přes péči</string>
     <string name="combo_error_no_bolus_delivered">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
-    <string name="combo_error_partial_bolus_delivered" formatted="false">Pouze %.2f U z bolusu %.2f bylo podáno díky chybě. Zkontrolujte pumpu a proveďte nápravu.</string>
+    <string name="combo_error_partial_bolus_delivered">Pouze %1$.2f U z bolusu %2$.2f bylo podáno díky chybě. Zkontrolujte pumpu a proveďte nápravu.</string>
     <string name="combo_pump_tbr_cancelled_warrning">Varování o ukončeném dočasném bazálu bylo potvrzeno.</string>
     <string name="combo_warning">Varování</string>
     <string name="combo_reservoir_empty">Prázdný</string>
@@ -776,9 +773,7 @@
     <string name="ro_lang">Rumunština</string>
     <string name="zh_lang">Čínština</string>
     <string name="resistantadult">Dospělý s nízkou citlivostí</string>
-    <string name="combopump">Accu-Chek Combo</string>
-    <string name="combopump_shortname">COMBO</string>
-    <string name="insight_keepalive_format_string">%d vyprší %s</string>
+    <string name="insight_keepalive_format_string">%1$d vyprší %2$s</string>
     <string name="insight_keep_alive_status">Stav keep-alive</string>
     <string name="statistics">Statistika</string>
     <string name="connect_preemptively">Připojování dopředu</string>
@@ -827,7 +822,7 @@
     <string name="engineering_mode_enabled">Expertní mód povolen</string>
     <string name="not_eng_mode_or_release">Expertní mód není povolen a neběží vydaná verze</string>
     <string name="combo_actvity_reading_basal_profile">Načítám bazální profil</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba. Pokud bude potřeba bolus stejné velikosti, počkejte 2 minuty, protože bolusy stejné velikosti jsou blokovány z bezpečnostních důvodů.</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba.</string>
     <string name="combo_error_updating_treatment_record">Bolus úspěšne podán, ale zápis se nezdařil. To se může stát pokud jsou podány bolusy stejné velikosti během 2 minut. Zkontrolujte historii pumpy a zadejte chybějící položky do ošetření. Ujistěte se, že nezadáváte stejnou velikost v rámci 1 minuty.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Odmítnut vysoký dočasný bazál, protože kalkulace neuvažovala poslední změny v historii pumpy</string>
     <string name="combo_activity_checking_pump_state">Obnovuji stav pumpy</string>
@@ -883,18 +878,18 @@
     <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
     <string name="autosensdisabledinpreferences">Autosens zakázán v nastavení</string>
     <string name="smbdisabledinpreferences">SMB zakázáno v nastavení</string>
-    <string name="limitingbasalratio">Max bazál omezen na %.2f U/h: %s</string>
+    <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
     <string name="itmustbepositivevalue">pořadována kladná hodnota</string>
     <string name="maxbasalmultiplier">maximální násobek bazálu</string>
     <string name="maxdailybasalmultiplier">mazimální násobek nejvyššího bazálu</string>
     <string name="smb_frequency_exceeded">Odeslán bolus během posledních 3 minut, SMB přeskočeno</string>
     <string name="basal_set_correctly">Bazál nastaven správně</string>
-    <string name="limitingpercentrate">Bazál omezen na %d%%: %s</string>
-    <string name="limitingbolus">Bolus omezen na %.1f U: %s</string>
-    <string name="limitingmaxiob">Max IOB omezeno na %.1f U: %s</string>
-    <string name="limitingcarbs">Sacharidy omezeny na %d g: %s</string>
-    <string name="limitingiob">IOB omezeno na %.1f U: %s</string>
+    <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
+    <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
+    <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
+    <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
+    <string name="limitingiob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
     <string name="hardlimit">pevný limit</string>
     <string name="unsafeusage">nebezpečné použití</string>
@@ -915,7 +910,7 @@
     <string name="absorption_cutoff_summary">Doba, po které jsou všechny sacharidy považovány za strávené. Zbylé budou oříznuty</string>
     <string name="time">Čas</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovat kolonku poznámky v dialozích ošetření</string>
-    <string name="boluserrorcode">Požadováno: %.2fU Doručeno: %.2fU Chyba: %d</string>
+    <string name="boluserrorcode">Požadováno: %1$.2fU Doručeno: %2$.2fU Chyba: %3$d</string>
     <string name="firstinsulinincrement">První přídavek izulínu</string>
     <string name="secondinsulinincrement">Druhý přídavek inzulínu</string>
     <string name="thirdinsulinincrement">Třetí přídavek inzulínu</string>

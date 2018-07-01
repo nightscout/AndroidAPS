@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by mike on 19.03.2018.
@@ -25,7 +23,7 @@ public class ConstraintChecker implements ConstraintsInterface {
 
 
     public Constraint<Boolean> isLoopInvokationAllowed() {
-        return isLoopInvokationAllowed(new Constraint<>(true));
+        return isLoopInvocationAllowed(new Constraint<>(true));
     }
 
     public Constraint<Boolean> isClosedLoopAllowed() {
@@ -69,13 +67,13 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
-    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
 
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
-            constraint.isLoopInvokationAllowed(value);
+            constraint.isLoopInvocationAllowed(value);
         }
         return value;
     }

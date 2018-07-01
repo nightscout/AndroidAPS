@@ -221,7 +221,7 @@
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false" >Para entregar bolo %.2fU responder con código %s</string>
+    <string name="smscommunicator_bolusreplywithcode" >Para entregar bolo %1$.2fU responder con código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolo falló</string>
     <string name="bolusdelivered" formatted="false">Bolo %.2fU entregado con éxito</string>
     <string name="smscommunicator_bolusdelivered">Bolo %.2fU enviado correctamente</string>
@@ -300,8 +300,8 @@
     <string name="quickwizard">Asistente</string>
     <string name="quickwizardsettings">Asistente configuración</string>
     <string name="smscommunicator_remotebasalnotallowed">No permitidos ajustes basales remotos</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false" >Para iniciar basal %.2fU/h responder con código %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Basal temporal %.2fU/h para %d min iniciada correctamente</string>
+    <string name="smscommunicator_basalreplywithcode" >Para iniciar basal %1$.2fU/h responder con código %2$s</string>
+    <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con código %s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temporal cancelada</string>
@@ -334,12 +334,12 @@
     <string name="sv_lang">Sueco</string>
     <string name="openapsma_maxbasal_title">Max U/h para el perfil base</string>
     <string name="openapsma_maxiob_title">"Max IOB basal OpenAPs puede emitir "</string>
-    <string name="smscommunicator_calibratiónreplywithcode" formatted="false">Para enviar calibracion %.2f responder con código %s</string>
+    <string name="smscommunicator_calibratiónreplywithcode">Para enviar calibracion %1$.2f responder con código %2$s</string>
     <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
-    <string name="valuelimitedto" formatted="false">%.2f limitado a %.2f</string>
+    <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">no permitido el mando remoto</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con código %s</string>
+    <string name="smscommunicator_suspendreplywithcode">Para cancelar loop por %1$d minutos responde con código %2$s</string>
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillbolus_title">Llenar/Rellenar cantidad de insulina estándar</string>
     <string name="mgdl">mg/dl</string>
@@ -420,7 +420,7 @@
     <string name="always_use_shortavg">Usa siempre delta media corto en vez de delta simple</string>
     <string name="always_use_shortavg_summary">Recomendado si los datos de origen no filtrados como xDrip son inestables.</string>
     <string name="advancedsettings_title">Ajustes avancados</string>
-    <string name="danar_model" formatted="false">Modelo: %02X Protocolo: %02X Codigo: %02X</string>
+    <string name="danar_model">Modelo: %1$02X Protocolo: %2$02X Codigo: %3$02X</string>
     <string name="profile">Perfiles</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">"Valor por defecte: 3 Esto es valor de seguridad establecido pos OpenAPS. Limita tu base al máximo de x3 de tu base máxima. No necesitas cambiar esto, pero debes tener en cuenta, que esto se esta discutiento sobre „3 x max diario; 4x actual“ pro razones de seguridad. "</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">"Ajuste pro defecto: 4 Esto es la otra mitad de los ajustes de seguridad de OpenAPS y la otra mitad de \"3x max diario, 4x actual\". Esto significa, que tu base no puede ser mas alta que el numero que multiplica tu base. Esto es para evitar que las personas se encuentren en situaciones peligrosas por aumentar mucho la base sin entender el algoritmo del sistema. El ajuste por defecto es x4. La mayoría de las personas nunca tendra que cambiar estos ajustes, si no debe modificar otros ajustes en la terapia. "</string>
@@ -577,8 +577,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Bloqueo de pantalla</string>
-    <string name="lock_screen_short">Bloqueo</string>
     <string name="sensitivity_warning">Al activar autosens recuerda editar todos carbohidratos comidos. Si no, sensibilidad será calculada incorrectamente !!!</string>
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
@@ -598,7 +596,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short" formatted="false">DIA de %f demasiado corto - usando %f!</string>
+    <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="date">Fecha</string>
     <string name="invalid">INVALIDO</string>
@@ -692,12 +690,12 @@
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividad</string>
     <string name="combo_no_pump_connection" formatted="false">Ninguna conexión por %d min</string>
-    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min restan)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min restan)</string>
     <string name="combo_pump_state_suspended_due_to_error">Apagado por error</string>
     <string name="combo_pump_state_suspended_by_user">Apagado por usario</string>
     <string name="combo_pump_state_running">Funcionando</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelando TBR</string>
-    <string name="combo_pump_action_setting_tbr" formatted="false">Poniendo TBR (%d%% / %d min)</string>
+    <string name="combo_pump_action_setting_tbr">Poniendo TBR (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing" formatted="false">Emitiendo bolo (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualizando</string>
     <string name="combo_pump_unsupported_operation">"Acción no disponible en la bomba "</string>
@@ -709,7 +707,7 @@
     <string name="combo_activity_setting_basal_profile">" Activando perfil base "</string>
     <string name="combo_pump_cartridge_low_warrning">"Nivel del deposito bajo "</string>
     <string name="combo_pump_battery_low_warrning">Bateria casi agotada</string>
-    <string name="combo_is_in_error_state" formatted="false">La bomba muesta el error E%d: %s</string>
+    <string name="combo_is_in_error_state">La bomba muesta el error E%1$d: %2$s</string>
     <string name="combo_reservoir_low">Bajo</string>
     <string name="combo_reservoir_empty">Vacio</string>
     <string name="danar_history">Historial</string>
@@ -718,8 +716,7 @@
     <string name="combo_warning">Alerta</string>
     <string name="combo_pump_tbr_cancelled_warrning">TBR cancelada, advertencia acceptada</string>
     <string name="combo_error_no_bolus_delivered">Emisión del bolo fallada. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automaticamente.</string>
-    <string name="combo_error_partial_bolus_delivered" formatted="false">"Solo %.2f U del bolo mandado de %.2f U ha sido emitido por causa de un error. Por favorn controla la bomba para confirmar y toma acciones apropiadas. "</string>
-    <string name="combo_error_bolus_verification_failed">"Fallo de emitir bolo y de controlar historical de la bomba.Por favor controla manualmente y crea un record en Careportal si el bolo ha sido emitido. "</string>
+    <string name="combo_error_partial_bolus_delivered">"Solo %1$.2f U del bolo mandado de %2$.2f U ha sido emitido por causa de un error. Por favorn controla la bomba para confirmar y toma acciones apropiadas. "</string>
     <string name="combo_error_bolus_recovery_progress">Reestablecido conexión fallada.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">"No hay suficiente insulina en el deposito para emitir bolo. "</string>
     <string name="extendedbolusdeliveryerror">"Error al emitir bolo prolongado. "</string>
@@ -731,7 +728,7 @@
     <string name="combo_activity_checking_pump_state">Actualizando estado bomba</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rechazando temporal alta ya que el calculo no consideró los cambios recientes en el historial de la bomba</string>
     <string name="combo_error_updating_treatment_record">El bolus se administró con éxito, pero no se pudo agregar la entrada al tratamiento. Esto puede suceder si se administran dos bolos pequeños del mismo tamaño en los últimos dos minutos. Verifique el historial de la bomba y las entradas de tratamiento y use Careportal para agregar entradas faltantes. Asegúrese de no agregar ninguna entrada para el mismo minuto exacto y la misma cantidad.</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">El historial de la bomba ha cambiado después de que se realizó el cálculo del bolo. El bolo no fue entregado. Por favor, vuelva a calcular si aún se necesita un bolo. Si se requiere la misma cantidad de bolo, espere dos minutos ya que los bolos con la misma cantidad se bloquean cuando se solicita con menos de dos minutos entre ellos por seguridad (independientemente de si se administraron o no).</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">El historial de la bomba ha cambiado después de que se realizó el cálculo del bolo. El bolo no fue entregado. Por favor, vuelva a calcular si aún se necesita un bolo.</string>
     <string name="combo_actvity_reading_basal_profile">Leyendo perfil basal</string>
     <string name="start_hypo_tt">Inicio TT Hipo</string>
     <string name="no_action_selected">Ninguna acción seleccionada, nada sucederá</string>
@@ -776,7 +773,7 @@
     <string name="automatically_connect_when">Conectar automáticamente cuando se abre AndroidAPS, antes de solicitar ningún comando de bomba, para reducir el retraso de la conexión</string>
     <string name="statistics">Estadísticas</string>
     <string name="insight_keep_alive_status">Estado de Mantener-Activo</string>
-    <string name="insight_keepalive_format_string">%ds expira en %s</string>
+    <string name="insight_keepalive_format_string">%1$ds expira en %2$s</string>
     <string name="resistantadult">Adulto resistente a la insulina</string>
     <string name="enablesmbaftercarbs_summary">Habilitar SMB durante 6 h después de Carbohidratos, incluso con 0 COB. Solo posible  con fuente BG con buen filtrado de datos como G5</string>
     <string name="enablesmbalways_summary">Habilitar SMB siempre de forma independiente a los Bolos. Solo posible con fuente BG con buen filtrado de datos como G5</string>
@@ -856,18 +853,18 @@
     <string name="closedmodedisabledinpreferences">Loop cerrado desabilitado en preferencias</string>
     <string name="autosensdisabledinpreferences">Autosens desabilitado en preferencias</string>
     <string name="smbdisabledinpreferences">SMB desabilitado en preferencias</string>
-    <string name="limitingbasalratio">limitando max basal rate a %.2f U/h debido a %s</string>
+    <string name="limitingbasalratio">limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">Limite de la bomba</string>
     <string name="itmustbepositivevalue">Tiene que ser un valor positivo</string>
     <string name="maxbasalmultiplier">Multiplicador basal máximo</string>
     <string name="maxdailybasalmultiplier">Multiplicador diario basal máximo</string>
     <string name="smb_frequency_exceeded">Un Bolo entregado en los últimos 3 minutos</string>
     <string name="basal_set_correctly">Basal establecida correctamente</string>
-    <string name="limitingpercentrate">Limitando porcentaje máximo de tasa a  %d%% debido a %s</string>
-    <string name="limitingbolus">"Limitando el bolo a %.1f U debido a %s "</string>
-    <string name="limitingmaxiob">Limitando max IOB to %.1f U debido a %s</string>
-    <string name="limitingcarbs">Limitando carbs to %d g debido a %s</string>
-    <string name="limitingiob">Limitando IOB to %.1f U debido a %s</string>
+    <string name="limitingpercentrate">Limitando porcentaje máximo de tasa a  %1$d%% debido a %2$s</string>
+    <string name="limitingbolus">"Limitando el bolo a %1$.1f U debido a %2$s "</string>
+    <string name="limitingmaxiob">Limitando max IOB to %1$.1f U debido a %2$s</string>
+    <string name="limitingcarbs">Limitando carbs to %1$d g debido a %2$s</string>
+    <string name="limitingiob">Limitando IOB to %1$.1f U debido a %2$s</string>
     <string name="maxvalueinpreferences">Valor máximo en preferencias</string>
     <string name="hardlimit">Limite estricto</string>
     <string name="unsafeusage">uso no seguro</string>
@@ -887,7 +884,7 @@
     <string name="absorption_cutoff_summary">"Tiempo en el que cualquier comida se considera absorbida. Los carbohidratos restantes serán cortados. "</string>
     <string name="time">Tiempo</string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar el campo notas en dialogos de tratamientos</string>
-    <string name="boluserrorcode">Solicitado: %.2fU Entregado: %.2fU Codigo de error: %d</string>
+    <string name="boluserrorcode">Solicitado: %1$.2fU Entregado: %2$.2fU Codigo de error: %3$d</string>
     <string name="firstinsulinincrement">Primer incremento insulina</string>
     <string name="secondinsulinincrement">Segundo incremento insulina</string>
     <string name="thirdinsulinincrement">Tercer incremento insulina</string>

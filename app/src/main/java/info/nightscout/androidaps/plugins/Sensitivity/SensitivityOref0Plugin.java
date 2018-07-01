@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.SensitivityAAPS;
+package info.nightscout.androidaps.plugins.Sensitivity;
 
 import android.support.v4.util.LongSparseArray;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -30,24 +30,24 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInterface {
-    private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
+public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
+    private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
 
-    static SensitivityAAPSPlugin plugin = null;
+    static SensitivityOref0Plugin plugin = null;
 
-    public static SensitivityAAPSPlugin getPlugin() {
+    public static SensitivityOref0Plugin getPlugin() {
         if (plugin == null)
-            plugin = new SensitivityAAPSPlugin();
+            plugin = new SensitivityOref0Plugin();
         return plugin;
     }
 
-    public SensitivityAAPSPlugin() {
+    public SensitivityOref0Plugin() {
         super(new PluginDescription()
                 .mainType(PluginType.SENSITIVITY)
-                .pluginName(R.string.sensitivityaaps)
+                .pluginName(R.string.sensitivityoref0)
                 .shortName(R.string.sensitivity_shortname)
-                .preferencesId(R.xml.pref_absorption_aaps)
-                .description(R.string.description_sensitivity_aaps)
+                .preferencesId(R.xml.pref_absorption_oref0)
+                .description(R.string.description_sensitivity_oref0)
         );
     }
 
@@ -55,13 +55,9 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
         LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
-        String age = SP.getString(R.string.key_age, "");
-        int defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 4;
-        int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
+        int hoursForDetection = 24;
 
+        long now = System.currentTimeMillis();
         Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null) {
@@ -76,10 +72,12 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
 
         AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            log.debug("No autosens data available");
+            log.debug("No current autosens data available");
             return new AutosensResult();
         }
 
+
+        List<CareportalEvent> siteChanges = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true);
 
         List<Double> deviationsArray = new ArrayList<>();
         String pastSensitivity = "";
@@ -97,11 +95,23 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
                 continue;
             }
 
-            if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
-                deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+            // reset deviations after site change
+            if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+                deviationsArray.clear();
+                pastSensitivity += "(SITECHANGE)";
+            }
+
+            double deviation = autosensData.deviation;
+
+            //set positive deviations to zero if bg < 80
+            if (autosensData.bg < 80 && deviation > 0)
+                deviation = 0;
+
+            if (autosensData.validDeviation)
+                if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
+                    deviationsArray.add(deviation);
             if (deviationsArray.size() > hoursForDetection * 60 / 5)
                 deviationsArray.remove(0);
-
 
             pastSensitivity += autosensData.pastSensitivity;
             int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
@@ -116,6 +126,7 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
 
         double sens = profile.getIsf();
 
+        double ratio = 1;
         String ratioLimit = "";
         String sensResult = "";
 
@@ -124,13 +135,22 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
 
         Arrays.sort(deviations);
 
-        double percentile = IobCobCalculatorPlugin.percentile(deviations, 0.50);
-        double basalOff = percentile * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
-        double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
+        for (double i = 0.9; i > 0.1; i = i - 0.02) {
+            if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.02)) >= 0 && IobCobCalculatorPlugin.percentile(deviations, i) < 0) {
+                if (Config.logAutosensData)
+                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
+            }
+        }
+        double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
+        double pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.45);
 
-        if (percentile < 0) { // sensitive
+        double basalOff = 0;
+
+        if (pSensitive < 0) { // sensitive
+            basalOff = pSensitive * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
             sensResult = "Excess insulin sensitivity detected";
-        } else if (percentile > 0) { // resistant
+        } else if (pResistant > 0) { // resistant
+            basalOff = pResistant * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
             sensResult = "Excess insulin resistance detected";
         } else {
             sensResult = "Sensitivity normal";
@@ -139,26 +159,15 @@ public class SensitivityAAPSPlugin extends PluginBase implements SensitivityInte
         if (Config.logAutosensData)
             log.debug(sensResult);
 
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
+        ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
-        if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
-        }
+        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
+                sensResult, deviationsArray.size());
 
-        if (Config.logAutosensData) {
-            log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio + " mealCOB: " + current.cob);
-            log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
-        }
+        if (Config.logAutosensData)
+            log.debug("Sensitivity to: {} ratio: {} mealCOB: {}",
+                    new Date(toTime).toLocaleString(), output.ratio, current.cob);
 
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
         return output;
     }
 }

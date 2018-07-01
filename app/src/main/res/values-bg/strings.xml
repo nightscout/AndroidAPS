@@ -222,8 +222,8 @@
     <string name="waitingforpumpresult">Изчаква резултат от помпата</string>
     <string name="smscommunicator_allowednumbers">Разрешени телефонни номера</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">За да доставите болус от %.2fЕ отговорете с код %s</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">За да изпратите калибрация %.2f отговорете с код %s</string>
+    <string name="smscommunicator_bolusreplywithcode">За да доставите болус от %1$.2fЕ отговорете с код %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">За да изпратите калибрация %1$.2f отговорете с код %2$s</string>
     <string name="smscommunicator_bolusfailed">Болус отказан</string>
     <string name="bolusdelivered" formatted="false">Болус %.2fЕд беше подаден успешно</string>
     <string name="bolusrequested" formatted="false">Подава болус %.2fЕ</string>
@@ -292,13 +292,13 @@
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
-    <string name="valuelimitedto" formatted="false">%.2f ограничен до %.2f</string>
+    <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Стойността %s е извън границите</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">To suspend loop for %d minutes reply with code %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
+    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h reply with code %2$s</string>
+    <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
+    <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
@@ -406,7 +406,7 @@
     <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
     <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум</string>
     <string name="advancedsettings_title">Разширени настройки</string>
-    <string name="danar_model" formatted="false">Модел: %02X Протокол: %02X Код: %02X</string>
+    <string name="danar_model">Модел: %1$02X Протокол: %2$02X Код: %3$02X</string>
     <string name="profile">Профил</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от "3x от най-високия дневен; 4x от текущия". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
@@ -560,8 +560,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">БАЗА</string>
     <string name="virtualpump_extendedbolus_label_short">УД.</string>
-    <string name="lock_screen">Заключен екран</string>
-    <string name="lock_screen_short">Закл</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
     <string name="mdtp_ok">OK</string>
@@ -584,7 +582,7 @@
     <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
     <string name="careportal_pump_label">ПОМПА</string>
     <string name="date">Дата</string>
-    <string name="dia_too_short" formatted="false">DIA от %f е твърде кратка - използвай %f вместо това!</string>
+    <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
     <string name="free_peak_oref">Със свободен пик по Oref</string>
     <string name="insulin_oref_peak">Пик на кривата на IOB</string>
     <string name="insulin_peak_time">Време на пик [мин.]</string>
@@ -629,7 +627,6 @@
     <string name="combo_activity_reading_pump_history">Чете историята на помпата</string>
     <string name="combo_activity_setting_basal_profile">Настройва базалният профил</string>
     <string name="combo_error_bolus_recovery_progress">Опитва се да възстанови връзката</string>
-    <string name="combo_error_bolus_verification_failed">Доставянето на болуса и проверката на историята на помпата са неуспешни, моля, проверете помпата и ако е доставен болус го добавете като запис през Careportal</string>
     <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
     <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
@@ -711,13 +708,13 @@
     <string name="combo_pump_state_label">Състояние</string>
     <string name="combo_pump_activity_label">Активност</string>
     <string name="combo_no_pump_connection" formatted="false">Няма връзка от %d мин.</string>
-    <string name="combo_tbr_remaining" formatted="false">%d%% (%d мин. остават)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d мин. остават)</string>
     <string name="combo_pump_state_initializing">Инициализация</string>
     <string name="combo_pump_state_suspended_due_to_error">Прекратен поради грешка</string>
     <string name="combo_pump_state_suspended_by_user">Прекратен от потребителя</string>
     <string name="combo_pump_state_running">Изпълнява</string>
     <string name="combo_pump_action_cancelling_tbr">Отказва временен базал</string>
-    <string name="combo_pump_action_setting_tbr" formatted="false">Задава временен базал (%d%% / %d min)</string>
+    <string name="combo_pump_action_setting_tbr">Задава временен базал (%1$d%% / %2$d min)</string>
     <string name="combo_pump_action_bolusing" formatted="false">Болус (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Обновява</string>
     <string name="combo_pump_unsupported_operation">Исканата операция не се поддържа от помпата</string>
@@ -727,12 +724,12 @@
     <string name="combo_pump_connected_now">Сега</string>
     <string name="combo_pump_cartridge_low_warrning">Ниско ниво на резервоар на помпа</string>
     <string name="combo_pump_battery_low_warrning">Батерията на помпата е слаба</string>
-    <string name="combo_is_in_error_state" formatted="false">Помпата отчита грешка E%d: %s</string>
+    <string name="combo_is_in_error_state">Помпата отчита грешка E%1$d: %2$s</string>
     <string name="combo_notification_check_time_date">Необходимо е сверяване на часа в помпата</string>
     <string name="combo_pump_tbr_cancelled_warrning">Отказването на временният базал беше потвърдено</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Помпата е недостъпна. Не беше доставен болус.</string>
     <string name="combo_error_no_bolus_delivered">Болусът беше неуспешен.  За да сте сигурни, моля, проверете помпата, за да избегнете повторение на вече доставен болус. За да се избегнат бъгове болусите не се повтарят автоматично.</string>
-    <string name="combo_error_partial_bolus_delivered" formatted="false">Само %.2f U от искания болус от %.2f U е доставен поради грешка. Моля, проверете помпата, за да потвърдите това и да предприемете съответните действия.</string>
+    <string name="combo_error_partial_bolus_delivered">Само %1$.2f U от искания болус от %2$.2f U е доставен поради грешка. Моля, проверете помпата, за да потвърдите това и да предприемете съответните действия.</string>
     <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight помпа</string>
     <string name="status_no_colon">Статус</string>
@@ -775,7 +772,7 @@
     <string name="hour">час</string>
     <string name="day">ден</string>
     <string name="week">седмица</string>
-    <string name="insight_keepalive_format_string">%ds изтича %s</string>
+    <string name="insight_keepalive_format_string">%1$ds изтича %2$s</string>
     <string name="statistics">Статистика</string>
     <string name="connect_preemptively">Предварително свързване</string>
     <string name="automatically_connect_when">Автоматично свързване при отваряне на AndroidAPS, преди връзка с помпата за намаляване на първоначалното забавяне</string>
@@ -824,7 +821,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Closed loop е деактивиран.</string>
     <string name="not_eng_mode_or_release">Engineering mode не е активиран и не е release версия</string>
     <string name="combo_actvity_reading_basal_profile">Прочита базалният профил</string>
-    <string name="combo_bolus_rejected_due_to_pump_history_change">"Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус. Ако се изисква същото болусно количество, моля, изчакайте две минути, тъй за това време болусите с едно и също количество са блокирани от съображения за  безопасност "</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">"Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус.</string>
     <string name="about_link_urls">" http://www.androidaps.org  facebook: http://facebook.androidaps.org"</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
     <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
@@ -837,18 +834,18 @@
     <string name="closedmodedisabledinpreferences">Closed loop е забранен в настройките</string>
     <string name="autosensdisabledinpreferences">Аутосенс е забранен в настройките</string>
     <string name="smbdisabledinpreferences">SMB е забранен в настройките</string>
-    <string name="limitingbasalratio" formatted="false">Ограничаване на макс. базална стойност до %.2f Е/ч поради %s</string>
+    <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
     <string name="itmustbepositivevalue">трябва да бъде положително число</string>
     <string name="maxbasalmultiplier">множител на макс. базал</string>
     <string name="maxdailybasalmultiplier">множител на макс. дневен базал</string>
     <string name="smb_frequency_exceeded">Болус беше доставен през последните 3 мин, пропуска SMB</string>
     <string name="basal_set_correctly">Базалът е зададен коректно</string>
-    <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %d%% поради %s</string>
-    <string name="limitingbolus" formatted="false">Ограничаване на болус до %.1f Е поради %s</string>
-    <string name="limitingmaxiob" formatted="false">Ограничаване на макс. IOB до %.1f Е поради %s</string>
-    <string name="limitingcarbs" formatted="false">Ограничаване на въглехидрати до %d гр. поради %s</string>
-    <string name="limitingiob" formatted="false">Ограничаване на IOB до %.1f Е поради %s</string>
+    <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
+    <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
+    <string name="limitingmaxiob">Ограничаване на макс. IOB до %1$.1f Е поради %2$s</string>
+    <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
+    <string name="limitingiob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
     <string name="maxvalueinpreferences">макс. стойност в настройките</string>
     <string name="unsafeusage">опасно използване</string>
     <string name="readstatusfailed">Четенето на статуса се провали</string>
@@ -870,7 +867,7 @@
     <string name="time">Време</string>
     <string name="reset">нулиране</string>
     <string name="openapssmb_maxiob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
-    <string name="boluserrorcode">Поискано: %.2fU Доставено: %.2fU Error code: %d</string>
+    <string name="boluserrorcode">Поискано: %1$.2fU Доставено: %2$.2fU Error code: %3$d</string>
     <string name="firstinsulinincrement">Първо добавяне за инсулин</string>
     <string name="secondinsulinincrement">Второ добавяне за инсулин</string>
     <string name="thirdinsulinincrement">Трето добавяне за инсулин</string>

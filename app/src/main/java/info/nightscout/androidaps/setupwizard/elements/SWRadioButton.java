@@ -38,8 +38,8 @@ public class SWRadioButton extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
         // Get if there is already value in SP
         String previousValue = SP.getString(preferenceId, "none");
         radioGroup = new RadioGroup(context);
@@ -62,7 +62,7 @@ public class SWRadioButton extends SWItem {
             save(values()[i]);
         });
         layout.addView(radioGroup);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
     }
 
     public SWRadioButton preferenceId(int preferenceId) {

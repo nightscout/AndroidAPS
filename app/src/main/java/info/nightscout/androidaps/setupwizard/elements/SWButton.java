@@ -39,8 +39,8 @@ public class SWButton extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
 
         button = new Button(context);
         button.setText(buttonText);
@@ -50,7 +50,7 @@ public class SWButton extends SWItem {
         });
         processVisibility();
         layout.addView(button);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
     }
 
     @Override
