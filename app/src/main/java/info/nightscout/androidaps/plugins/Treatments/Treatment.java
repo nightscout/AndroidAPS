@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.JsonHelper;
+import info.nightscout.utils.ToastUtils;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
@@ -135,16 +136,21 @@ public class Treatment implements DataPointWithLabelInterface {
 
     /*
      * mealBolus, _id and isSMB cannot be known coming from pump. Only compare rest
+     * TODO: remove debug toasts
      */
     public boolean equalsRePumpHistory(Treatment other) {
-        if (date != other.date)
+        if (date != other.date) {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "date: " + date + " vs " +  other.date);
             return false;
-        if (insulin != other.insulin)
+        }
+        if (insulin != other.insulin) {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "insulin: " + insulin + " vs " +  other.insulin);
             return false;
-        if (carbs != other.carbs)
+        }
+        if (carbs != other.carbs) {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "carbs: " + carbs + " vs " +  other.carbs);
             return false;
-        if (pumpId != other.pumpId)
-            return false;
+        }
         return true;
     }
 
@@ -156,6 +162,13 @@ public class Treatment implements DataPointWithLabelInterface {
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
         isSMB = t.isSMB;
+    }
+
+    public void copyBasics(Treatment t) {
+        date = t.date;
+        insulin = t.insulin;
+        carbs = t.carbs;
+        pumpId = t.pumpId;
     }
 
     //  ----------------- DataPointInterface --------------------

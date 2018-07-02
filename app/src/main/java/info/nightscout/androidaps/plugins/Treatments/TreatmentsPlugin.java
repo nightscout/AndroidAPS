@@ -497,10 +497,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         if (!allowUpdate && !creatOrUpdateResult.success) {
             log.error("Treatment could not be added to DB", new Exception());
+
+            String status = String.format(MainApp.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
+
             Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);
             i.putExtra("title", MainApp.gs(R.string.error_adding_treatment_title));
-            i.putExtra("status", String.format(MainApp.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs));
+            i.putExtra("status", status);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MainApp.instance().startActivity(i);
         }

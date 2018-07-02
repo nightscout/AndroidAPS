@@ -250,10 +250,32 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 // check for changed from pump change in NS
                 Treatment existingTreatment = getPumpRecordById(treatment.pumpId);
                 if (existingTreatment != null) {
-                    // do nothing, pump history record cannot be changed
-                    log.debug("TREATMENT: Pump record already found in database: " + treatment.toString());
-                    //return new UpdateReturn(true, false);
-                    return new UpdateReturn(existingTreatment.equalsRePumpHistory(treatment), false);
+                    boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    if(!equalRePumpHistory) {
+                        // another treatment exists. Update it with the treatment coming from the pump
+                        log.debug("TREATMENT: Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+                        long oldDate = existingTreatment.date;
+                        getDao().delete(existingTreatment); // need to delete/create because date may change too
+                        existingTreatment.copyBasics(treatment);
+                        getDao().create(existingTreatment);
+                        DatabaseHelper.updateEarliestDataChange(oldDate);
+                        DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                        scheduleTreatmentChange(treatment);                    }
+                    return new UpdateReturn(equalRePumpHistory, false);
+                }
+                existingTreatment = getDao().queryForId(treatment.date);
+                if (existingTreatment != null) {
+                    // another treatment exists with different pumpID. Update it with the treatment coming from the pump
+                    boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    long oldDate = existingTreatment.date;
+                    log.debug("TREATMENT: Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+                    getDao().delete(existingTreatment); // need to delete/create because date may change too
+                    existingTreatment.copyFrom(treatment);
+                    getDao().create(existingTreatment);
+                    DatabaseHelper.updateEarliestDataChange(oldDate);
+                    DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                    scheduleTreatmentChange(treatment);
+                    return new UpdateReturn(equalRePumpHistory, false);
                 }
                 getDao().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
