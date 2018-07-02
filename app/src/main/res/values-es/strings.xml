@@ -334,7 +334,7 @@
     <string name="sv_lang">Sueco</string>
     <string name="openapsma_maxbasal_title">Max U/h para el perfil base</string>
     <string name="openapsma_maxiob_title">"Max IOB basal OpenAPs puede emitir "</string>
-    <string name="smscommunicator_calibratiónreplywithcode">Para enviar calibracion %1$.2f responder con código %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">Para enviar calibracion %1$.2f responder con código %2$s</string>
     <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
