@@ -11,8 +11,6 @@
     <string name="danar_bt_name_title">DanaR dispositivo Bluetooth</string>
     <string name="ns_sync_use_absolute_title">Usar siempre valor basal absoluto</string>
     <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importantes para trazar y verificar que el algoritmo funcione correctamente)</string>
-    <string name="objectives_objective_label_string">Objetivo:</string>
-    <string name="objectives_gate_label_string">Meta:</string>
     <string name="objectives_button_start">Inicio</string>
     <string name="objectives_button_verify">Verificar</string>
     <string name="nsprofileview_units_label">Unidades</string>
@@ -83,7 +81,6 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
     <string name="days">días</string>
-    <string name="objectives_minimalduration">Duración mínima</string>
     <string name="constraints">Restricciones</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
@@ -194,7 +191,6 @@
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
     <string name="danar_pump_settings">Ajustes de la bomba DanaR</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">No deben utilizarse para tomar decisiones médicas. NO HAY GARANTÍA PARA EL PROGRAMA, la extensión permitida por la legislación aplicable. Excepto cuando se indique de otra forma por escrito, los tenedores del copyright y / u otras partes proporcionan el programa \"tal cual\" sin garantía de ningún tipo, ya sea expresa o implícita, incluyendo, pero no limitado a, las garantías implícitas de COMERCIALIZACIÓN E IDONEIDAD PARA UN FIN DETERMINADO . TODO EL RIESGO EN CUANTO A LA CALIDAD Y RENDIMIENTO DEL PROGRAMA ES CON USTED. SI EL PROGRAMA TIENE UN ERROR, asume el coste de cualquier servicio, reparación o corrección.</string>
     <string name="end_user_license_agreement_i_understand">Entiendo y acepto</string>
@@ -334,7 +330,7 @@
     <string name="sv_lang">Sueco</string>
     <string name="openapsma_maxbasal_title">Max U/h para el perfil base</string>
     <string name="openapsma_maxiob_title">"Max IOB basal OpenAPs puede emitir "</string>
-    <string name="smscommunicator_calibratiónreplywithcode">Para enviar calibracion %1$.2f responder con código %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">Para enviar calibracion %1$.2f responder con código %2$s</string>
     <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
@@ -435,7 +431,6 @@
     <string name="copied_to_clipboard">Copiado al clipboard</string>
     <string name="nav_show_logcat">mostrar log</string>
     <string name="overview_calibration">Calibración</string>
-    <string name="overview_calibration_bg_label">Calibración</string>
     <string name="send_calibration" formatted="false">Mandar calibración %.1f a xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ no instalado</string>
     <string name="calibrationsent">Calibración mandada a xDrip</string>
@@ -487,8 +482,6 @@
     <string name="adult">Adulto</string>
     <string name="patientage_summary">Por favor elige edad del paciente para emplear limites de seguridad</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Aparato parece no soportar optimización de bateria whitelisting!</string>
-    <string name="pleaseallowpermission">Por favor conceda permiso</string>
     <string name="needwhitelisting" formatted="false">%s necesita optimización de bateria whitelisting para funcionar bien</string>
     <string name="loopsuspended">Loop desactivado</string>
     <string name="loopsuspendedfor" formatted="false">desactivado (%d m)</string>
@@ -517,7 +510,6 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Insulina acción rápida prolongada</string>
     <string name="enablesuperbolus">activar superbolo en wizard</string>
     <string name="enablesuperbolus_summary">Activar función superbolo en wizard. No lo actives hasta que hayas aprendido lo que realmente hace. PUEDE CAUSAR SOBREDOSIS DE INSULINA usandolo sin precaución!</string>
     <string name="iob">IOB</string>
@@ -717,7 +709,6 @@
     <string name="combo_pump_tbr_cancelled_warrning">TBR cancelada, advertencia acceptada</string>
     <string name="combo_error_no_bolus_delivered">Emisión del bolo fallada. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automaticamente.</string>
     <string name="combo_error_partial_bolus_delivered">"Solo %1$.2f U del bolo mandado de %2$.2f U ha sido emitido por causa de un error. Por favorn controla la bomba para confirmar y toma acciones apropiadas. "</string>
-    <string name="combo_error_bolus_recovery_progress">Reestablecido conexión fallada.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">"No hay suficiente insulina en el deposito para emitir bolo. "</string>
     <string name="extendedbolusdeliveryerror">"Error al emitir bolo prolongado. "</string>
     <string name="pump_unreachable_threshold">Bomba no alcanzable durante [min]</string>
@@ -737,7 +728,6 @@
     <string name="overview_show_iob">Insulina activa IOB</string>
     <string name="overview_show_deviations">Desviaciones</string>
     <string name="overview_show_sensitivity">Sensibilidad</string>
-    <string name="ns_autobackfill">Autorelleno de lecturas perdidas de BG</string>
     <string name="bolusrecordedonly">El Bolo solo será anotado</string>
     <string name="category">Categoría</string>
     <string name="subcategory">Subcategoría</string>
@@ -801,14 +791,10 @@
     <string name="insight_companion_app_not_installed">Companion app parece no instalada!</string>
     <string name="insight_not_connected_to_companion_app">¡La aplicación Companion no parece estar instalada!</string>
     <string name="insight_stay_always_connected">Permanecer siempre conectado</string>
-    <string name="insight_use_real_tbr_cancels">Usar cancelación Basal Temporal (TBR) real</string>
-    <string name="insight_actually_cancel_tbr_summary">Actualmente, cancelar una Basal Temporal TBR (crea una alarma de bomba) en su lugar  establecer el 90% durante 1 minuto</string>
     <string name="alert_w31">Advertencia W31: Cartucho insulina bajo</string>
     <string name="alert_w32">Advertencia W32: Bateria baja</string>
     <string name="alert_w33">Advertencia W33: Fecha/hora inválida</string>
     <string name="alert_w34">Advertencia W34: Final de garantía</string>
-    <string name="alert_w36">Advertencia W36: Basal Temporal cancelada</string>
-    <string name="alert_w38">Warning W38: Bolo cancelado</string>
     <string name="alert_w39">Warning W39: Adevertencia tiempo de prestamo</string>
     <string name="loop_smbsetbypump_label">SMB administrado por bomba</string>
     <string name="combo_pump_state_initializing">Inicializando</string>

@@ -16,7 +16,7 @@
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_careportal">Enter advanced log book entries.</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
-    <string name="description_objectives">Helps you to get started with AndroidAPS</string>
+    <string name="description_objectives">Learning program</string>
     <string name="description_food">Displays the food presets defined in Nightscout</string>
     <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
@@ -53,8 +53,6 @@
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
-    <string name="objectives_objective_label_string">Objective:</string>
-    <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
@@ -134,7 +132,6 @@
     <string name="configbuilder_general_description">These are some general plugins you might find useful.</string>
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
     <string name="days">days</string>
-    <string name="objectives_minimalduration">Minimal duration</string>
     <string name="constraints">Constraints</string>
 
     <string name="loop">Loop</string>
@@ -262,7 +259,6 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
@@ -505,7 +501,6 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="nav_show_logcat">Show log</string>
     <string name="overview_calibration">Calibration</string>
-    <string name="overview_calibration_bg_label">Calibration</string>
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
@@ -575,8 +570,6 @@
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
-    <string name="pleaseallowpermission">Please Allow Permission</string>
     <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor" formatted="false">Suspended (%d m)</string>
@@ -607,7 +600,6 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
@@ -874,7 +866,6 @@
     <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
     <string name="combo_error_partial_bolus_delivered">Only %1$.2f U of the requested bolus of %2$.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump and manually. If a bolus was delivered, it will be added to treatments during the next connection to the pump.</string>
-    <string name="combo_error_bolus_recovery_progress">Recovering from connection loss</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="insightpump_shortname">Insight</string>
@@ -894,8 +885,6 @@
     <string name="insight_total_with">total with</string>
     <string name="insight_upfront_with">upfront with</string>
     <string name="insight_stay_always_connected">Stay always connected</string>
-    <string name="insight_use_real_tbr_cancels">Use Real TBR cancels</string>
-    <string name="insight_actually_cancel_tbr_summary">Actually cancel a TBR (creates pump alarm) instead of setting 90% for 1 minute</string>
     <string name="insight_history_idle">IDLE</string>
     <string name="insight_history_syncing">SYNCING</string>
     <string name="insight_history_busy">BUSY</string>
@@ -1063,14 +1052,10 @@
     <string name="time">Time</string>
     <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
-    <string name="title_activity_setup_wizard">SetupWizardActivity</string>
+    <string name="title_activity_setup_wizard" translatable="false">SetupWizardActivity</string>
     <string name="next_button">Next</string>
     <string name="previous_button">Prev</string>
-    <string name="skip_button">Skip</string>
     <string name="nav_setupwizard">Setup Wizard</string>
-    <string name="setupwizard_next">Next</string>
-    <string name="setupwizard_previous">Prev</string>
-    <string name="setupwizard_skip">Skip</string>
     <string name="setupwizard_finish">FINISH</string>
     <string name="setupwizard_language_prompt">Select your language</string>
     <string name="key_language" translatable="false">language</string>
@@ -1147,8 +1132,8 @@
     <string name="danar_pumpalarm_sound">Sound</string>
     <string name="danar_pumpalarm_vibrate">Vibrate</string>
     <string name="danar_pumpalarm_both">Both</string>
-    <string name="danar_screentimeout">LCD on time(seconds)</string>
-    <string name="danar_backlight">Backlight on time(seconds)</string>
+    <string name="danar_screentimeout">LCD on time [s]</string>
+    <string name="danar_backlight">Backlight on time [h]</string>
     <string name="danar_glucoseunits">Glucose units</string>
     <string name="danar_shutdown">Shutdown(hours)</string>
     <string name="danar_lowreservoir">Low reservoir (Units)</string>
@@ -1170,9 +1155,8 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Raise sensitivity for temptargets >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Low temptarget lowers sensitivity</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
-    <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named "QUICK INFO" using the 360 configuration software.</string>
+    <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named QUICK INFO using the 360 configuration software.</string>
     <string name="custom">Custom</string>
-    <string name="key_lockscreen" translatable="false">lockscreen</string>
     <string name="largetimedifftitle">Large Time Difference</string>
     <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>

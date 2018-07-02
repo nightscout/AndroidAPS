@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showPreviousPage"
-            android:text="@string/setupwizard_previous"
+            android:text="@string/previous_button"
             android:textColor="#FFFFFF" />
 
         <View
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:onClick="showNextPage"
-            android:text="@string/setupwizard_next"
+            android:text="@string/next_button"
             android:textColor="#FFFFFF" />
 
         <Button

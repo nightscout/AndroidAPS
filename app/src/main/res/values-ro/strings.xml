@@ -14,8 +14,6 @@
     <string name="ns_sync_use_absolute_title">Folosesțe întotdeauna valori absolute ale bazalei</string>
     <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din System Settings \naltfel AndroidAPS nu va putea face loguri (importante pentru verificarea corectitudinii funcționării algoritmului)!</string>
 
-    <string name="objectives_objective_label_string">Obiectiv:</string>
-    <string name="objectives_gate_label_string">Poartă:</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verifică</string>
     <string name="nsprofileview_units_label">Unități</string>
@@ -74,17 +72,13 @@
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>
     <string name="careportal">Careportal</string>
-
-
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_treatments">Tratamente</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
     <string name="days">zile</string>
-    <string name="objectives_minimalduration">Durată minimă</string>
     <string name="constraints">Constrângeri</string>
-
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
@@ -170,7 +164,6 @@
     <string name="connected">Conectat</string>
     <string name="disconnected">Deconectat</string>
     <string name="danar_pump_settings">Setări pompă DanaR</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU TREBUIE SĂ FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
@@ -397,7 +390,6 @@
     <string name="copied_to_clipboard">Copiat în clipboard</string>
     <string name="nav_show_logcat">Afișează istoricul</string>
     <string name="overview_calibration">Calibrare</string>
-    <string name="overview_calibration_bg_label">Glicemie calibrare</string>
     <string name="send_calibration" formatted="false">Trimite calibrarea %.1f către xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ nu este instalat.</string>
     <string name="calibrationsent">Calibrare trimisă către xDrip</string>
@@ -449,8 +441,6 @@
     <string name="adult">Adult</string>
     <string name="patientage_summary">Vă rog să selectați vârsta pacientului în vederea stabilirii valorilor maxime admise de siguranță</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Se pare că dispozitivul nu suportă excluderea din lista de optimizare a bateriei!</string>
-    <string name="pleaseallowpermission">Vă rog să activați permisiunea</string>
     <string name="needwhitelisting">%s necesită excluderea din lista de optimizare a bateriei pentru funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="loopsuspendedfor" formatted="false">Suspendată (%d m)</string>
@@ -477,7 +467,6 @@
     <string name="fastactinginsulin">Insulină rapidă</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Insulină rapidă cu efect prelungit</string>
     <string name="enablesuperbolus">Activează superbolus în asistent</string>
     <string name="enablesuperbolus_summary">Activează funcționalitatea de superbolus în asistentul de buclă. Nu activați până nu înțelegeți ce face cu adevărat. DACĂ ESTE FOLOSIT ÎN NECUNOȘTINȚĂ DE CAUZĂ POATE DUCE LA SUPRADOZĂ DE INSULINĂ!</string>
     <string name="iob">IOB</string>
@@ -742,7 +731,6 @@
     <string name="combo_error_no_connection_no_bolus_delivered">Pompa nu poate fi contactată. Nu s-a livrat niciun bolus</string>
     <string name="combo_error_no_bolus_delivered">Livrare eșuată. Se pare că nu a fost livrat bolusul. Pentru siguranță, verificați în pompă pentru a evita bolusarea dublă. Pentru evitarea greșelilor, bolusurile nu sunt retrimise automat.</string>
     <string name="combo_error_partial_bolus_delivered">Doar %1$.2f U din totalul cerut de %2$.2f U a fost livrat din cauza unei erori. Verificați pompa pentru confirmare și acționați corespunzător.</string>
-    <string name="combo_error_bolus_recovery_progress">Revenire după pierderea conexiunii</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
     <string name="insightpump_shortname">Insight</string>
@@ -762,8 +750,6 @@
     <string name="insight_total_with">total cu</string>
     <string name="insight_upfront_with">față de</string>
     <string name="insight_stay_always_connected">Rămâneți conectat permanent</string>
-    <string name="insight_use_real_tbr_cancels">Se folosesc anulări de RBT</string>
-    <string name="insight_actually_cancel_tbr_summary">Anulare reală a unei RBT (generează alarmă a pompei) în loc de a seta 90% pentru 1 minut</string>
     <string name="insight_history_idle">LIBER</string>
     <string name="insight_history_syncing">SINCRONIZARE</string>
     <string name="insight_history_busy">OCUPAT</string>
@@ -856,8 +842,6 @@
     <string name="alert_w32">Atenționare W32: Baterie aproape terminată</string>
     <string name="alert_w33">Atenționare W33: Timp/dată invalide</string>
     <string name="alert_w34">Atenționare W34: Sfârșitul garanției</string>
-    <string name="alert_w36">Atenționare W36: RBT terminat</string>
-    <string name="alert_w38">Atenționare W38: Bolus anulat</string>
     <string name="alert_w39">Atenționare W39: Alertă timp închiriere</string>
     <string name="alert_m20">Mentenanță M20: Rezervorul nu este inserat</string>
     <string name="alert_m21">Mentenanță M21: Rezervol gol</string>

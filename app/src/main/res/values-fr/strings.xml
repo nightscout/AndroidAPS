@@ -12,9 +12,7 @@
     <string name="danar_bt_name_title">Dispositif Bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">utiliser toujours les valeurs absolues du basal</string>
     <string name="alert_dialog_storage_permission_text">Rebootez votre smartphone ou redémarrez AndroidAPS depuis les paramètres système sinon AndroidAPS ne sera pas connecté ( important de suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
-    <string name="objectives_objective_label_string">Objectif:</string>
     <string name="objectives_button_start">Activer</string>
-    <string name="objectives_gate_label_string">Gate :</string>
     <string name="objectives_button_verify">Vérifier</string>
     <string name="nsprofileview_units_label">Unités</string>
     <string name="nsprofileview_dia_label">Durée d’Action</string>
@@ -79,7 +77,6 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Général</string>
     <string name="days">Jours</string>
-    <string name="objectives_minimalduration">Durée minimale</string>
     <string name="constraints">Restrictions</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
@@ -193,7 +190,6 @@
     <string name="connected">Connectée</string>
     <string name="disconnected">Déconnectée</string>
     <string name="danar_pump_settings">Paramètres pompe DanaR</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Contrat de Licence pour Utilisateur Final</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">JE COMPRENDS ET J\'ACCEPTE LES CONDITIONS DU CONTRAT</string>
@@ -414,7 +410,6 @@
     <string name="copied_to_clipboard">Copier dans le Presse-Papiers</string>
     <string name="nav_show_logcat">Afficher le journal</string>
     <string name="overview_calibration">Étalonnage</string>
-    <string name="overview_calibration_bg_label">Étalonnage</string>
     <string name="send_calibration" formatted="false">Transmettre l\'étalonnage %.1f à xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ n\'est pas installé</string>
     <string name="calibrationsent">Étalonnage envoyé à xDrip</string>
@@ -466,8 +461,6 @@
     <string name="adult">Adulte</string>
     <string name="patientage_summary">Veuillez sélectionner l’âge du patient pour paramétrer les limites de sécurité svp</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Le dispositif n’apparaît pas pour renforcer la liste blanche de l’optimisation de batterie!</string>
-    <string name="pleaseallowpermission">Autorisez l\'accès svp</string>
     <string name="needwhitelisting">%s a besoin de la liste blanche de l\’optimisation batterie  pour une bonne performance</string>
     <string name="loopsuspended">Loop suspendu</string>
     <string name="loopsuspendedfor" formatted="false">Suspendu (%d m)</string>
@@ -496,7 +489,6 @@
     <string name="fastactinginsulincomment">Novorapid, Humalog, Apidra</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Insuline Rapide à Action Prolongée</string>
     <string name="enablesuperbolus">Activer les Superbolus dans l’assistant</string>
     <string name="enablesuperbolus_summary">Activer la fonctionalité superbolus dans l’assistant. Ne pas l’activez jusqu’au moment où vous appreniez comment il fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT!</string>
     <string name="iob">" IR"</string>
@@ -716,7 +708,6 @@
     <string name="combo_pump_tbr_cancelled_warrning">TBR ANNULÉ warning confirmé</string>
     <string name="combo_error_no_bolus_delivered">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, Veuillez vérifier la pompe pour éviter un double bolus ensuite re bolusez une nouvelle fois</string>
     <string name="combo_error_partial_bolus_delivered">Seulement %1$.2f U de %2$.2f U du bolus demandé a été administré dû à une erreur. Veuillez svp vérifier la pompe pour contrôler cela et prendre les mesures appropriées</string>
-    <string name="combo_error_bolus_recovery_progress">"Reconnexion après perte de connexion "</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Pas assez d\'insuline restante dans le réservoir pour le bolus</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
     <string name="insightpump_shortname">Insight</string>
@@ -736,8 +727,6 @@
     <string name="insight_total_with">total</string>
     <string name="insight_upfront_with">en amont avec</string>
     <string name="insight_stay_always_connected">Rester toujours connectée</string>
-    <string name="insight_use_real_tbr_cancels">"Utiliser les vrais annulations TBR "</string>
-    <string name="insight_actually_cancel_tbr_summary">Annuler réellement TBR (creation d\'alarme pompe)au lieu de programmer 90% ou 110% du TBR pour 15 minutes</string>
     <string name="insight_history_idle">EN VEILLE</string>
     <string name="insight_history_syncing">SYNCHRONISATION</string>
     <string name="insight_history_busy">CHARGÉ</string>

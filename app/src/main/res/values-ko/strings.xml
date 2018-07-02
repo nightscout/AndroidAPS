@@ -12,8 +12,6 @@
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="ns_sync_use_absolute_title">기초주입량 절대값 사용하기</string>
     <string name="alert_dialog_storage_permission_text">폰을 재부팅하고나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그가 기록이되지 않습니다.(알고리즘이 제대로 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
-    <string name="objectives_objective_label_string">목표:</string>
-    <string name="objectives_gate_label_string">방법:</string>
     <string name="objectives_button_start">시작</string>
     <string name="objectives_button_verify">확인</string>
     <string name="nsprofileview_units_label">단위</string>
@@ -83,7 +81,6 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">일반</string>
     <string name="days">일</string>
-    <string name="objectives_minimalduration">최소기간</string>
     <string name="constraints">제한</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
@@ -199,7 +196,6 @@
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
     <string name="danar_pump_settings">다나R 펌프 설정</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
@@ -428,7 +424,6 @@
     <string name="copied_to_clipboard">클립보드에 복사되었습니다</string>
     <string name="nav_show_logcat">로그 보기</string>
     <string name="overview_calibration">보정</string>
-    <string name="overview_calibration_bg_label">혈당 보정</string>
     <string name="send_calibration" formatted="false">보정값 %.1f을 xDrip에 전송하시겠습니까?</string>
     <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
     <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
@@ -480,8 +475,6 @@
     <string name="adult">성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
-    <string name="pleaseallowpermission">권한을 허용하세요.</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor" formatted="false">일시중지중 (%d분)</string>
     <string name="loopsuperbolusfor" formatted="false">수퍼 식사주입 (%d분)</string>
@@ -509,7 +502,6 @@
     <string name="fastactinginsulincomment">노보래피드, 휴마로그, 에피드라</string>
     <string name="ultrafastactinginsulincomment">피아스프(Fiasp)</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="enablesuperbolus">마법사에서 수퍼 식사주입 활성화하기</string>
     <string name="enablesuperbolus_summary">마법사에서 수퍼 식사주입 기능을 활성화합니다. 어떤 기능인지 확실히 알기전까지 활성화 하지 마세요. 제대로 알지 못하고 사용하면 일슐린이 과다 주입될 수 있습니다!</string>
     <string name="iob">IOB</string>

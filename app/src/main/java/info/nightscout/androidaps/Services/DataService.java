@@ -289,7 +289,7 @@ public class DataService extends IntentService {
                 bgReading.direction = json.getString("direction");
                 bgReading.date = json.getLong("date");
                 bgReading.raw = json.getDouble("raw");
-                if (JsonHelper.safeGetString(json, "utils", Constants.MGDL).equals("mmol/L"))
+                if (JsonHelper.safeGetString(json, "units", Constants.MGDL).equals("mmol/L"))
                     bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {

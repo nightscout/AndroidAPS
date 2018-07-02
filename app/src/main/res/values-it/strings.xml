@@ -164,7 +164,6 @@
     <string name="exported">Esportare Preferenze</string>
     <string name="failedupdatebasalprofile">Errore caricamento profilo Basal</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="fastactinginsulinprolonged">L\'insulina ad azione rapida prolungata</string>
     <string name="fastactinginsulin">Velocita\' insulina</string>
     <string name="filenotfound">File non coretto</string>
     <string name="gettingpumpstatus">Stato Micro</string>
@@ -202,7 +201,6 @@
     <string name="nav_preferences">Preferenze</string>
     <string name="nav_refreshtreatments">Ricaricare</string>
     <string name="nav_resetdb">Reset Databases</string>
-    <string name="nightscout">Nightscout</string>
     <string name="noapsselected">APS selezionato o Provaider non corretto</string>
     <string name="nobtadapter">No bluetooth riconosciuto</string>
     <string name="nochangerequested">Non cambiare requisiti</string>
@@ -237,9 +235,6 @@
     <string name="objectives_bgavailableinns">BG disponibile in NS</string>
     <string name="objectives_button_start">Avvio</string>
     <string name="objectives_button_verify">Verificato</string>
-    <string name="objectives_gate_label_string">Gate:</string>
-    <string name="objectives_minimalduration">Durata minima</string>
-    <string name="objectives_objective_label_string">Obbiettivo</string>
     <string name="objectives_pumpstatusavailableinns">Micro disponibile in NS</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="occlusion">Occlusione</string>
@@ -280,7 +275,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_calculator_label">Calcolatore</string>
     <string name="overview_calibration">Calibrazione</string>
-    <string name="overview_calibration_bg_label">Calibrazione BG</string>
     <string name="overview_editquickwizard_buttontext">Tasto testo:</string>
     <string name="overview_editquickwizard_carbs">Carboidrati:</string>
     <string name="overview_editquickwizard_valid">Valido:</string>

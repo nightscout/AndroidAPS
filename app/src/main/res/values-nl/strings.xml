@@ -58,7 +58,6 @@
     <string name="basal">Basaal</string>
     <string name="basal_short">BAS</string>
     <string name="batterydischarged">Pomp Batterij Leeg</string>
-    <string name="batteryoptimalizationerror">Toestel ondersteund klaarblijkelijk geen baterij optimalisatie vrijschakeling!</string>
     <string name="bg_lang">български</string>
     <string name="bolus">Bolus</string>
     <string name="bolus_step">Bolus Stap</string>
@@ -309,7 +308,6 @@
     <string name="nosuccess">Niet geslaagd - controleer de telefoon</string>
     <string name="notavailable">Niet beschikbaar</string>
     <string name="nowritepermission">NSCLIENT heeft geen schrijfrechten. Verkeerd API geheim?</string>
-    <string name="nightscout">Nightscout</string>
     <string name="ok">Ok</string>
     <string name="danar_stats_basalrate">Basaal</string>
     <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
@@ -430,7 +428,6 @@
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="tempbasal">Tijdelijk basaal</string>
     <string name="temptarget">Tijdelijk streefdoel</string>
-    <string name="objectives_gate_label_string">Actie</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Controleer</string>
     <string name="queue">Wachtend:</string>
@@ -440,7 +437,6 @@
     <string name="profile">Profiel</string>
     <string name="percent">Percent</string>
     <string name="patientage_summary">Kies leeftijd van de patient voor veiligheids limieten</string>
-    <string name="pleaseallowpermission">Sta wijzigingen toe</string>
     <string name="target_range">Streefdoel:</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
@@ -449,7 +445,6 @@
     <string name="refresheventsfromnightscout">Haal wijzigingen op van NS</string>
     <string name="reloadprofile">Herlaad profiel</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken</string>
-    <string name="objectives_objective_label_string">Doel:</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus via sms niet toegestaan</string>
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
     <string name="smscommunicator_remotecommandsallowed">Sta SMS bevelen toe</string>
@@ -471,7 +466,6 @@
     <string name="overview_editquickwizard_valid">Beschikbaarheid:</string>
     <string name="overview_editquickwizard_carbs">Koolhydraten:</string>
     <string name="overview_editquickwizard_buttontext">Naam:</string>
-    <string name="overview_calibration_bg_label">Kalibratie</string>
     <string name="overview_calculator_label">Bolus wizard</string>
     <string name="danar_ebolus">E bolus</string>
     <string name="danar_dsbolus">DS bolus</string>
@@ -493,7 +487,6 @@
     <string name="delta">Verschil</string>
     <string name="dia">DIA:</string>
     <string name="enacted">Uitgevoerd</string>
-    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="long_avgdelta">Groot gemiddeld verschil</string>
     <string name="low_mark">LAAG grens</string>
     <string name="noapsselected">GEEN APS GESLECTEERD OF TOEGEKENT RESULTAAT</string>
@@ -513,7 +506,6 @@
     <string name="oaps_shortname">OAPS</string>
     <string name="objectives_6_objective">Activeren van extra functies tijdens de dag zoals AMA</string>
     <string name="objectives_manualenacts">Manuele correcties</string>
-    <string name="objectives_minimalduration">Minimale tijdsduur</string>
     <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar op NS</string>
     <string name="objectives_shortname">DOEL</string>
     <string name="occlusion">Afsluiting</string>
@@ -685,8 +677,7 @@
 	<string name="combo_pump_state_label">Status</string>
     <string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min resterend)</string>
-    <string name="combo_error_bolus_recovery_progress">Herstel van verbroken verbindng</string>
-	<string name="combo_warning">Waarschuwing</string>
+    <string name="combo_warning">Waarschuwing</string>
 	<string name="combo_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
 	<string name="combo_reservoir_empty">Leeg</string>
 	<string name="combo_reservoir_low">Bijna leeg</string>
@@ -802,7 +793,6 @@
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_sensitivity">Gevoeligheid</string>
     <string name="overview_show_deviations">Afwijkingen</string>
-    <string name="don_t_bolus_record_only">Geef geen bolus, enkel opslaan in database</string>
     <string name="overview_show_basals">Basalen</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="wear_wizard_settings">Wizard instellingen</string>
@@ -810,8 +800,6 @@
     <string name="wear_display_settings">Scherm instellingen</string>
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="alert_w31">Waarschuwing W31: Patroon bijna leeg</string>
-    <string name="alert_w38">Waarschuwing W38: Bolus geannuleerd</string>
-    <string name="alert_w36">Waarschuwing W36: Tijdelijk basaal geannuleerd</string>
     <string name="alert_w32">Waarschuwing W32: Batterij niveau laag</string>
     <string name="alert_w33">Waarschuwing W33: Datum/tijd onjuist</string>
     <string name="alert_w34">Waarschuwing W34: Einde van garantie periode</string>
@@ -908,11 +896,9 @@
     <string name="hardlimit">max limiet (SC)</string>
     <string name="unsafeusage">Onveilig gebruik</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev cersie actief. Closed loop gedeactiveerd</string>
-    <string name="insight_actually_cancel_tbr_summary">Anneuleren van een TBR zorgt voor een alarm op de pomp, daarom wordt pomp op 90% gezet voor 1 minuut</string>
     <string name="insight_waiting_for_code">Wacht op confirmatie van code</string>
     <string name="insight_incompatible_compantion_app_we_need_version">Incompatiebele hulp app, we hebben deze versie nodig</string>
     <string name="insight_app_binding">app koppeling</string>
-    <string name="insight_use_real_tbr_cancels">Gebruik echte  TBR uischakelingen</string>
     <string name="insight_not_connected_to_companion_app">Niet verbonden met de hulpapp!</string>
     <string name="insight_companion_app_not_installed">Hulp app lijkt niet geïnstalleerd</string>
     <string name="record_pump_site_change">Markeer een infuuwissel in NS</string>

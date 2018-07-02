@@ -20,7 +20,6 @@
     <string name="basal_step">шаг базала</string>
     <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
     <string name="batterydischarged">батарея помпы разряжена</string>
-    <string name="batteryoptimalizationerror">по-видимому устройство не поддерживается белым списком оптимизации батареи</string>
     <string name="bg_lang">болгарский</string>
     <string name="bolus">болюс</string>
     <string name="bolus_step">шаг болюса</string>
@@ -200,7 +199,6 @@
     <string name="failedupdatebasalprofile">не удалось обновить базальный профиль</string>
     <string name="fastactinginsulin">быстродействующий инсулин</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="fastactinginsulinprolonged">пролонгированный инсулин быстрого действия</string>
     <string name="filenotfound">файл не найден</string>
     <string name="fillbolus_title">заполнить стандартное количество инсулина</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
@@ -245,7 +243,6 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="nav_show_logcat">показать лог</string>
     <string name="needwhitelisting" formatted="false">%s необходимо включить в белый список для корректной работы</string>
-    <string name="nightscout">Nightscout</string>
     <string name="noapsselected">APS не выбрана или не выдала результат</string>
     <string name="nobtadapter">адаптер блутус не найден</string>
     <string name="nochangerequested">изменения не запрошены</string>
@@ -296,10 +293,7 @@
     <string name="objectives_bgavailableinns">гликемия доступна в NS</string>
     <string name="objectives_button_start">старт</string>
     <string name="objectives_button_verify">проверка</string>
-    <string name="objectives_gate_label_string">действие</string>
     <string name="objectives_manualenacts">ввод вручную</string>
-    <string name="objectives_minimalduration">минимальная продолжительность</string>
-    <string name="objectives_objective_label_string">Цель:</string>
     <string name="objectives_pumpstatusavailableinns">статус помпы доступен в NS</string>
     <string name="objectives_shortname">ЦЕЛИ</string>
     <string name="occlusion">закупорка</string>
@@ -351,7 +345,6 @@
     <string name="overview_bolusprogress_stoppressed">нажат стоп</string>
     <string name="overview_calculator_label">калькулятор</string>
     <string name="overview_calibration">калибровка</string>
-    <string name="overview_calibration_bg_label">калибровка СК</string>
     <string name="overview_editquickwizard_buttontext">текст на кнопке</string>
     <string name="overview_editquickwizard_carbs">углеводы:</string>
     <string name="overview_editquickwizard_valid">использовать до:</string>
@@ -367,7 +360,6 @@
     <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
     <string name="paused">на паузе</string>
     <string name="percent">процент</string>
-    <string name="pleaseallowpermission">предоставьте разрешение</string>
     <string name="prefs_range_summary">нижняя и верхняя граница диаграммы в отчетах и Smartwatch (mmol/l)</string>
     <string name="prefs_range_title">диапазон для визуализации</string>
     <string name="primefill">прайм/заполнение</string>

@@ -121,8 +121,6 @@
     <string name="openapsma_lastenact_label">Zuletzt abgegeben</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="openapsma_currenttemp_label">Aktuelle TBR</string>
-    <string name="objectives_gate_label_string">Beschränkung:</string>
-    <string name="objectives_objective_label_string">Ziel:</string>
     <string name="objectives">Zielsetzungen</string>
     <string name="noprofileset">KEIN PROFIL GESETZT</string>
     <string name="nsclientnotinstalled">Nightscout-Client ist nicht installiert. Eintrag verloren!</string>
@@ -153,7 +151,6 @@
     <string name="objectives_manualenacts">Manuelle Aktionen</string>
     <string name="carbsconstraintapplied">Kohlenhydrat-Beschränkung erreicht</string>
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
-    <string name="objectives_minimalduration">Minimale Dauer</string>
     <string name="nav_refreshtreatments">Erneure Behandlungen von NS</string>
     <string name="nav_exit">Exit</string>
     <string name="missing">Fehlend</string>
@@ -169,7 +166,6 @@
     <string name="openapsma_maxbasal_summary">Dieser Wert wird \"max basal\" in OpenAPS genannt</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von nicht Bolus-IOB, die OpenAPs abgeben kann</string>
     <string name="bg_lang">Bulgarian</string>
-    <string name="nightscout">Nightscout</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="absolute">Absolut</string>
     <string name="smscommunicator_bolusfailed">Bolus fehlgeschlagen</string>
@@ -334,7 +330,6 @@
     <string name="basal_short">BAS</string>
     <string name="basal_step">Basal-Schritt</string>
     <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
-    <string name="batteryoptimalizationerror">Smartphone untertützt anscheinend das Deaktivieren der Akku-Leistungsoptimierung nicht!</string>
     <string name="bolus_step">Bolus-Schritt</string>
     <string name="bolusrequested">Werde %.2f IE abgeben</string>
     <string name="careportal_activity_label">AKTIVITÄT &amp; FEEDBACK</string>
@@ -396,7 +391,6 @@
     <string name="extendedbolus">Verlängerter Bolus</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="gettingpumpstatus">Pumpenstatus wird geladen</string>
     <string name="hours">Stunden</string>
     <string name="initializing">Initialisierung &#8230;</string>
@@ -445,7 +439,6 @@
     <string name="openapsma_scriptdebugdata_label">Skript Debug</string>
     <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits</string>
     <string name="overview_calibration">Kalibrierung</string>
-    <string name="overview_calibration_bg_label">Kalibrierung</string>
     <string name="overview_editquickwizard_buttontext">Button-Text:</string>
     <string name="overview_extendedbolus_cancel_button">Verlängerten Bolus abbrechen</string>
     <string name="overview_newtempbasal_basalabsolute">Basal Wert [IE/h]</string>
@@ -498,7 +491,6 @@
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
     <string name="openapsma_maxbasal_title">Max IE/h, die als TBR gesetzt werden können</string>
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
-    <string name="pleaseallowpermission">Bitte Rechte gewähren</string>
     <string name="prefs_range_summary">Hoch- und Niedrig-Werte für die Übersicht- und die Smartwatch-Anzeige</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosense-Funktion sicher, dass du alle gegessenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrate-Abweichung zu falschen Resistenz-/Empfindlichkeitswerten führen!</string>
@@ -672,7 +664,6 @@
     <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in den letzten zwei Minuten angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
     <string name="combo_activity_reading_pump_history">Historie wird gelesen</string>
     <string name="combo_activity_setting_basal_profile">Basalratenprofil wird aktualisiert</string>
-    <string name="combo_error_bolus_recovery_progress">Verbindung wird wieder hergestellt</string>
     <string name="combo_error_bolus_verification_failed">Der abgegebene Bolus konnte nicht bestätigt werden. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde. Sofern ein Bolus abgegeben wurde wird dieser zu den Behandlungen hinzugefügt sobald erneut eine Verbindung zur Pumpe zustande kommt.</string>
     <string name="combo_error_no_bolus_delivered">Die Bolusabgabe ist fehlgeschlagen: Es wurde scheinbar kein Bolus abgegeben. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde. Um doppelte Boli durch Programmfehler zu vermeiden, werden Boli nicht automatisch wiederholt.</string>
     <string name="combo_error_partial_bolus_delivered">Wegen eines Fehlers wurden nur %1$.2f IE von den angeforderten %2$.2f IE abgegeben. Bitte prüfe den abgegebenen Bolus auf der Pumpe.</string>

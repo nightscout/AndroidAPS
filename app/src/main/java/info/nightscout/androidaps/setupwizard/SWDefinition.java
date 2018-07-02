@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
@@ -87,7 +88,7 @@ public class SWDefinition {
     }
 
     SWDefinition() {
-        if (BuildConfig.FLAVOR.equals("full"))
+        if (BuildConfig.FLAVOR.equals("full") || BuildConfig.FLAVOR.equals("pumpcontrol"))
             SWDefinitionFull();
         else if (BuildConfig.FLAVOR.equals("nsclient"))
             SWDefinitionNSClient();
@@ -368,6 +369,7 @@ public class SWDefinition {
                         })
                         .visibility(() -> MainApp.getConfigBuilder().getActiveAPS() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveAPS()).getPreferencesId() > 0))
                 .validator(() -> MainApp.getConfigBuilder().getActiveAPS() != null)
+                .visibility(() -> Config.APS)
         )
         .add(new SWScreen(R.string.configbuilder_loop)
                 .skippable(false)
@@ -386,7 +388,7 @@ public class SWDefinition {
                         })
                         .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
                 .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
-                .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+                .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && Config.APS)
         )
         .add(new SWScreen(R.string.configbuilder_sensitivity)
                 .skippable(false)
@@ -428,18 +430,18 @@ public class SWDefinition {
                         })
                         .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible()))
                 .validator(() -> ObjectivesPlugin.getPlugin().isEnabled(PluginType.CONSTRAINTS))
-                .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible())
+                .visibility(() -> !ObjectivesPlugin.getPlugin().isFragmentVisible() && Config.APS)
         )
         .add(new SWScreen(R.string.objectives)
-                        .skippable(false)
-                        .add(new SWInfotext()
-                                .label(R.string.startobjective))
-                        .add(new SWBreak())
-                        .add(new SWFragment(this)
-                                .add(new ObjectivesFragment()))
-                        .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
-                        .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
-                )
+                .skippable(false)
+                .add(new SWInfotext()
+                        .label(R.string.startobjective))
+                .add(new SWBreak())
+                .add(new SWFragment(this)
+                        .add(new ObjectivesFragment()))
+                .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
+                .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(0).isStarted() && Config.APS)
+        )
         ;
     }
 

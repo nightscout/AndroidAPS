@@ -12,8 +12,6 @@
     <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
     <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
     <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки или Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
-    <string name="objectives_objective_label_string">Цел:</string>
-    <string name="objectives_gate_label_string">Действие:</string>
     <string name="objectives_button_start">Стартирай</string>
     <string name="objectives_button_verify">Провери</string>
     <string name="nsprofileview_units_label">Единици</string>
@@ -83,7 +81,6 @@
     <string name="configbuilder_aps">Алгоритъм за APS</string>
     <string name="configbuilder_general">Общи</string>
     <string name="days">дни</string>
-    <string name="objectives_minimalduration">Минимална продължителност</string>
     <string name="constraints">Ограничения</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
@@ -197,7 +194,6 @@
     <string name="connected">Свързана</string>
     <string name="disconnected">Не е сврзана</string>
     <string name="danar_pump_settings">DanaR настройки</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">Разбирам и приемам</string>
@@ -425,7 +421,6 @@
     <string name="copied_to_clipboard">Копирано</string>
     <string name="nav_show_logcat">Покажи лог</string>
     <string name="overview_calibration">Калибрация</string>
-    <string name="overview_calibration_bg_label">Калибрация</string>
     <string name="send_calibration" formatted="false">Изпрати калибрация %.1f на xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
     <string name="calibrationsent">Калибрацията е изпратена към xDrip</string>
@@ -470,8 +465,6 @@
     <string name="adult">Възрастен</string>
     <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Устройството изглежда не подържа изключване на оптимизиране на батерията!</string>
-    <string name="pleaseallowpermission">Моля, добавете рарешение</string>
     <string name="needwhitelisting" formatted="false">%s се нуждае от зключване на оптимизиране на батерията за пълна функционалност</string>
     <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor" formatted="false">Изключен (%d мин)</string>
@@ -499,7 +492,6 @@
     <string name="fastactinginsulin">Бързодействащ инсулин</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">ИНС</string>
-    <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължение</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="iob">IOB</string>
@@ -626,7 +618,6 @@
     <string name="closedmodeenabled">Closed Loop е позволен</string>
     <string name="combo_activity_reading_pump_history">Чете историята на помпата</string>
     <string name="combo_activity_setting_basal_profile">Настройва базалният профил</string>
-    <string name="combo_error_bolus_recovery_progress">Опитва се да възстанови връзката</string>
     <string name="danar_setbasalstep001">Задайте стъпка на базала 0.01 Е/ч</string>
     <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>

@@ -179,5 +179,4 @@ public class DateUtil {
     public static long roundDateToSec(long date) {
         return date - date % 1000;
     }
-
 }
