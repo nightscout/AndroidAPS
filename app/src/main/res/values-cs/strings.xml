@@ -70,7 +70,6 @@
     <string name="loop_smbsetbypump_label">SMB provedené pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
-    <string name="objectives_minimalduration">Minimální trvání</string>
     <string name="nav_exit">Ukončit</string>
     <string name="nav_preferences">Nastavení</string>
     <string name="nav_refreshtreatments">Aktualizuj ošetření z NS</string>
@@ -88,8 +87,6 @@
     <string name="objectives">Cíle</string>
     <string name="objectives_button_start">Začátek</string>
     <string name="objectives_button_verify">Kontrola</string>
-    <string name="objectives_gate_label_string">Splnit:</string>
-    <string name="objectives_objective_label_string">Cíl:</string>
     <string name="ok">OK</string>
     <string name="openapsma_currenttemp_label">Současný bazál</string>
     <string name="openapsma_disabled">Modul zakázán</string>
@@ -179,7 +176,6 @@
     <string name="disconnected">Odpojeno</string>
     <string name="danar_bt_name_title">DanaR Bluetooth zařízení</string>
     <string name="danar_pump_settings">DanaR nastavení</string>
-    <string name="nightscout">Nightscout</string>
     <string name="absolute">Absolutní</string>
     <string name="comment">Komentář</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
@@ -410,7 +406,6 @@
     <string name="error_phone_not_valid">Neplatné telefonní číslo</string>
     <string name="calibrationsent">Kalibrace odeslána do xDripu</string>
     <string name="overview_calibration">Kalibrace</string>
-    <string name="overview_calibration_bg_label">Kalibrační glykémie</string>
     <string name="send_calibration">Poslat do xDripu kalibraci %.1f ?</string>
     <string name="xdripnotinstalled">xDrip+ není nainstalován</string>
     <string name="smscommunicator_calibrationfailed">xDrip nepřijímá kalibrace</string>
@@ -462,7 +457,6 @@
     <string name="wear_detailedIOB_title">Zobrazit detailní IOB</string>
     <string name="wear_settings">Nastavení hodinek</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Zařízení patrně nepodporuje vyloučení z optimalizace baterie.</string>
     <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
     <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
     <string name="disconnectpumpfor15m">Odpojit pumpu na 15 min</string>
@@ -472,7 +466,6 @@
     <string name="loopsuspended">Smyčka pozastavena</string>
     <string name="loopsuspendedfor" formatted="false">Pozastaveno (%d min)</string>
     <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
-    <string name="pleaseallowpermission">Prosím povolte oprávnění</string>
     <string name="resume">Uvolnit</string>
     <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
     <string name="suspendloopfor1h">Pozastavit smyčku na 1 h</string>
@@ -488,7 +481,6 @@
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>
     <string name="configbuilder_insulin">Inzulín</string>
     <string name="fastactinginsulin">Rychlý inzulín</string>
-    <string name="fastactinginsulinprolonged">Rychlý inzulín prodloužený</string>
     <string name="insulin_shortname">INZ</string>
     <string name="loopsuperbolusfor">Superbolus (%d m)</string>
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
@@ -706,7 +698,6 @@
     <string name="combo_pump_cartridge_low_warrning">V zásobníku je málo inzulínu</string>
     <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
     <string name="combo_is_in_error_state">Pumpa hlásí chybu E%1$d: %2$s</string>
-    <string name="combo_error_bolus_recovery_progress">Pokouším se obnovit spojení</string>
     <string name="combo_error_no_bolus_delivered">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
     <string name="combo_error_partial_bolus_delivered">Pouze %1$.2f U z bolusu %2$.2f bylo podáno díky chybě. Zkontrolujte pumpu a proveďte nápravu.</string>
     <string name="combo_pump_tbr_cancelled_warrning">Varování o ukončeném dočasném bazálu bylo potvrzeno.</string>
@@ -741,8 +732,6 @@
     <string name="insight_history_busy">ZANEPRÁZDNĚN</string>
     <string name="insight_history_syncing">SYNCHRONIZUJI</string>
     <string name="insight_history_idle">NEČINNÝ</string>
-    <string name="insight_actually_cancel_tbr_summary">Momentálně zruší dočasný bazál (spouští alarm na pumpě) místo nastavení 90% na 1 min</string>
-    <string name="insight_use_real_tbr_cancels">Použít skutečné ukončení dočasného bazálu</string>
     <string name="insight_stay_always_connected">Zůstat stále připojený</string>
     <string name="insight_not_connected_to_companion_app">Nepřipojen k podpůrné aplikaci!</string>
     <string name="insight_companion_app_not_installed">Podpůrná aplikace patrně není nainstalovaná!</string>
@@ -840,8 +829,6 @@
     <string name="alert_w32">Varování W32: Nízký stav baterie</string>
     <string name="alert_w33">Varování W33: Chybný datum/čas</string>
     <string name="alert_w34">Varování W34: Konec záruky</string>
-    <string name="alert_w36">Varování W36: Ukončení dočasného bazálu</string>
-    <string name="alert_w38">Varování W38: Bolus přerušen</string>
     <string name="alert_m20">Údržba M20: Není vložený zásobník</string>
     <string name="alert_m21">Údržba M21: Zásobník prázdný</string>
     <string name="alert_m22">Údržba M22: Prázdná baterie</string>
@@ -991,7 +978,6 @@
     <string name="combo_error_bolus_verification_failed">Podání bolusu a kontrola historie pumpy selhala. Zkontrolujte pumpu ručně. Pokus bolus proběhl, načte se při přístím připojení automaticky.</string>
     <string name="next_button">Další</string>
     <string name="previous_button">Zpět</string>
-    <string name="skip_button">Přeskočit</string>
     <string name="nav_setupwizard">Průvodce nastavením</string>
     <string name="setupwizard_finish">Dokončit</string>
     <string name="setupwizard_language_prompt">Vyberte jazyk</string>

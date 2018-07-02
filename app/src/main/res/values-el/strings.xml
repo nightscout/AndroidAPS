@@ -12,8 +12,6 @@
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
     <string name="ns_sync_use_absolute_title">"Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού "</string>
     <string name="alert_dialog_storage_permission_text">"Παρακαλώ κάντε reboot στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, αλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)! "</string>
-    <string name="objectives_objective_label_string">Στόχοι:</string>
-    <string name="objectives_gate_label_string">Δράση:</string>
     <string name="objectives_button_start">Έναρξη</string>
     <string name="objectives_button_verify">Επικύρωση</string>
     <string name="nsprofileview_units_label">Μονάδες</string>
@@ -84,7 +82,6 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Γενικά</string>
     <string name="days">ημέρες</string>
-    <string name="objectives_minimalduration">Ελάχ.Διάρκεια</string>
     <string name="constraints">Περιορισμοί</string>
     <string name="loop">Κύκλωμα</string>
     <string name="configbuilder_loop">Κύκλωμα</string>
@@ -193,7 +190,6 @@
     <string name="connected">Συνδέθηκε</string>
     <string name="disconnected">Αποσύνδεση</string>
     <string name="danar_pump_settings">Ρυθμίσεις αντλίας DanaR</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Άδεια χρήσης τελικού χρήστη</string>
     <string name="end_user_license_agreement_text">ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΝΑ ΚΑΝΕΤΕ ΙΑΤΡΙΚΗ ΑΠΟΦΑΣΗ ΔΕΝ ΥΠΑΡΧΕΙ ΕΓΓΥΗΣΗ ΓΙΑ ΤΟ ΠΡΟΓΡΑΜΜΑ, ΣΤΟ ΒΑΘΜΟ ΠΟΥ ΕΠΙΤΡΕΠΕΤΑΙ ΑΠΟ ΤΟ ΕΦΑΡΜΟΣΤΕΟ ΔΙΚΑΙΟ. ΕΚΤΟΣ ΟΠΟΙΑΣΔΗΠΟΤΕ ΔΙΑΒΑΘΜΙΣΜΕΝΗ ΚΑΤΑ ΤΗΝ ΕΓΓΡΑΦΗ ΤΩΝ ΚΑΤΟΧΟΙ ΠΝΕΥΜΑΤΙΚΩΝ ΔΙΚΑΙΩΜΑΤΩΝ ΚΑΙ / Η ΑΛΛΑ ΜΕΡΗ ΠΑΡΕΧΟΝΤΑΙ ΤΟ ΠΡΟΓΡΑΜΜΑ \"ΩΣ ΕΧΕΙ\" ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ, ΕΞΑΙΡΟΥΜΕΝΕΣ Ή ΣΙΩΠΗΡΕΣ, ΣΥΜΠΕΡΙΛΑΜΒΑΝΟΜΕΝΩΝ, ΕΝΔΕΙΚΤΙΚΑ, ΤΩΝ ΣΙΩΠΗΡΩΝ ΕΓΓΥΗΣΕΩΝ ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ΚΑΙ ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ . Ο ΟΛΟΚΛΗΡΩΜΕΝΟΣ ΚΙΝΔΥΝΟΣ ΟΣΟΝ ΑΦΟΡΑ ΤΗΝ ΠΟΙΟΤΗΤΑ ΚΑΙ ΤΗΝ ΑΠΟΔΟΣΗ ΤΟΥ ΠΡΟΓΡΑΜΜΑΤΟΣ ΕΙΝΑΙ ΔΙΚΟ ΣΑΣ. ΕΑΝ ΤΟ ΠΡΟΓΡΑΜΜΑ ΔΕΝ ΕΙΝΑΙ ΕΛΑΤΤΩΜΑΤΙΚΟ, ΠΡΕΠΕΙ ΝΑ ΕΞΕΤΑΣΤΕ ΤΟ ΚΟΣΤΟΣ ΟΛΩΝ ΤΩΝ ΑΠΑΡΑΙΤΗΤΩΝ ΣΥΝΤΗΡΗΣΕΩΝ, ΕΠΙΣΚΕΥΩΝ Ή ΔΙΟΡΘΩΣΕΩΝ</string>
     <string name="end_user_license_agreement_i_understand">ΚΑΤΑΛΑΒΑ ΚΑΙ ΣΥΜΦΩΝΩ</string>
@@ -415,7 +411,6 @@
     <string name="copied_to_clipboard">Αντιγράφτηκε στο Πρόχειρο</string>
     <string name="nav_show_logcat">Εμφάνιση αρχείου καταγραφής</string>
     <string name="overview_calibration">Βαθμονόμηση</string>
-    <string name="overview_calibration_bg_label">Βαθμονόμηση</string>
     <string name="send_calibration" formatted="false">"Να στείλω την βαθμονόμηση %.1f στο xDrip? "</string>
     <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
     <string name="calibrationsent">Η βαθμονόμηση εστάλει στο xDrip</string>
@@ -467,8 +462,6 @@
     <string name="adult">Ενήλικας</string>
     <string name="patientage_summary">Παρακαλώ επιλέξτε ηλικία χρήστη για να ορισθούν όρια ασφαλείας</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Η συσκευή πιθανώς δεν υποστηρίζει αποκλεισμό από τη βελτιστοποίηση της μπαταρίας!</string>
-    <string name="pleaseallowpermission">Παρακαλώ Επιτρέψτε Άδεια</string>
     <string name="needwhitelisting" formatted="false">Το %s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
     <string name="loopsuspended">Κύκλωμα σε παύση</string>
     <string name="loopsuspendedfor" formatted="false">Παύση (%d m)</string>
@@ -497,7 +490,6 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Ταχείας Δράσης Ινσουλίνη Παρατεταμένη</string>
     <string name="enablesuperbolus">Ενεργοποίηση superbolus</string>
     <string name="enablesuperbolus_summary">"Ενεργοποιήστε το superbolus.Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ! "</string>
     <string name="iob">IOB</string>

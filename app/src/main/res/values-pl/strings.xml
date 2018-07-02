@@ -14,8 +14,6 @@
     <string name="ns_sync_use_absolute_title">Zawsze używaj wartości bezwzględnych bazy</string>
     <string name="alert_dialog_storage_permission_text">Proszę uruchomić ponownie telefon lub zrestartować AndroidAPS w ustawieniach systemu telefonu \inaczej AndroidAPS nie będzie otrzymywał logowań (ważne ze względu na śledzenie i sprawdzanie poprawności działania algorytmów)!</string>
 
-    <string name="objectives_objective_label_string">Zadanie:</string>
-    <string name="objectives_gate_label_string">Bramka:</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Sprawdź</string>
     <string name="nsprofileview_units_label">Jednostki</string>
@@ -81,17 +79,13 @@
     <string name="treatments">Leczenie</string>
     <string name="virtualpump">Pompa wirtualna</string>
     <string name="careportal">PortalOpieki</string>
-
-
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_treatments">Leczenie</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Ogólne</string>
     <string name="days">dni</string>
-    <string name="objectives_minimalduration">Minimalny czas</string>
     <string name="constraints">Ograniczenia</string>
-
     <string name="loop">Pętla</string>
     <string name="configbuilder_loop">Pętla</string>
     <string name="loop_aps_label">APS</string>
@@ -215,7 +209,6 @@
     <string name="connected">Połączono</string>
     <string name="disconnected">Rozłączono</string>
     <string name="danar_pump_settings">Ustawienia pompy DanaR</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Umowa licencyjna użytkownika końcowego</string>
     <string name="end_user_license_agreement_text">NIE MOŻE BY WYKORZYSTYWANY DO PODEJMOWANIA DECYZJI MEDYCZNYCH. NIE MA ŻADNEJ GWARANCJI NA PROGRAM, W ZAKRESIE DOZWOLONYM PRZEZ OBOWIĄZUJĄCE PRAWO. Z WYJĄTKIEM PRZYPADKÓW, GDY W INNY SPOSÓB PISMO OŚWIADCZENIA PRAW AUTORSKICH I / LUB INNYCH STRON, PRZEDSTAWIAĆ PROGRAM "W STANIE TAKIM, W JAKIM SIĘ ZNAJDUJE" BEZ JAKIEJKOLWIEK GWARANCJI, WYRAŹNEJ LUB DOMNIEMANEJ, W TYM MIĘDZY INNYMI DOMNIEMANYCH GWARANCJI PRZYDATNOŚCI HANDLOWEJ I PRZYDATNOŚCI DO OKREŚLONEGO CELU. CAŁKOWITE RYZYKO ZWIĄZANE Z JAKOŚCIĄ I WYNIKIEM PROGRAMU JEST PO PAŃSTWA STRONIE. W PRZYPADKU USZKODZENIA PROGRAMU UŻYTKOWNIK PONOSI KOSZT CAŁEGO NIEZBĘDNEGO SERWISU, NAPRAWY LUB POPRAWEK. W PRZYPADKU NIEPOROZUMIEŃ ZASTOSOWANIE PRAWNE MA UMOWA W ANGIELSKIEJ WERSJI JĘZYKOWEJ!!!</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM I WYRAŻAM ZGODĘ</string>
@@ -449,7 +442,6 @@
     <string name="copied_to_clipboard">Skopiowane do schowka</string>
     <string name="nav_show_logcat">Pokaż log</string>
     <string name="overview_calibration">Kalibracja</string>
-    <string name="overview_calibration_bg_label">Kalibracja</string>
     <string name="send_calibration" formatted="false">Wysłać kalibrację %.1f do xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ nie zainstalowany</string>
     <string name="calibrationsent">Kalibracja przesłana do xDrip</string>
@@ -502,8 +494,6 @@
     <string name="resistantadult">Osoba dorosła insulino odporna</string>
     <string name="patientage_summary">Proszę wybierz wiek pacjenta w celu ustawienia wartości bezpieczeństwa</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Wygląda na to, że urządzenie nie obsługuje białej listy optymalizacji baterii!</string>
-    <string name="pleaseallowpermission">Przoszę udzielić pozwolenia </string>
     <string name="needwhitelisting">%s Potrzebuję wpisu na białąlistę optymalizacji baterii w celu zapewnienia poprawnego działania</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="loopsuspendedfor" formatted="false">Wstrzymana (%d m)</string>
@@ -532,7 +522,6 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Szybko działająca insulina przedłużona</string>
     <string name="enablesuperbolus">Zezwalaj na superbolus w kreatorze</string>
     <string name="enablesuperbolus_summary">Zezwalaj na funkcjonalność Superbolus w kreatorze. Nie zezwalaj dopuki nie nauczysz się co ta funkcjonalność wprowadza. MOŻE SPOWODOWAĆ PRZEDAWKOWANIE INSULINY JEŻELI UŻYTE BEZ WIEDZY!</string>
     <string name="iob">IOB</string>
@@ -748,7 +737,6 @@
     <string name="combo_error_no_connection_no_bolus_delivered">Pompa nie została odnaleziona. Nie podano bolusa</string>
     <string name="combo_error_no_bolus_delivered">Podanie bolusa nie powiodło się. Wygląda na to, że bolus nie został dostarczony. Aby upewnić się, sprawdź pompę, aby uniknąć podwójnego bolusa, a następnie ponownie podaj bolus. Aby uniknąć błędów, bolusy nie są automatycznie ponawiane.</string>
     <string name="combo_error_partial_bolus_delivered">Only %1$.2f U z zamierzonego bolusa %2$.2f U zostało dostarczone z powodu błędu. Sprawdź pompę, aby sięupewnić i podejmij odpowiednie działania.</string>
-    <string name="combo_error_bolus_recovery_progress">Odzyskiwanie po utracie połączenia</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Za mało insuliny na bolus pozostało w zbiorniku</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <string name="insightpump_shortname">Wgląd</string>
@@ -768,8 +756,6 @@
     <string name="insight_total_with">total with</string>
     <string name="insight_upfront_with">upfront with</string>
     <string name="insight_stay_always_connected">Stay always connected</string>
-    <string name="insight_use_real_tbr_cancels">Use Real TBR cancels</string>
-    <string name="insight_actually_cancel_tbr_summary">Actually cancel a TBR (creates pump alarm) instead of setting 90% for 1 minute</string>
     <string name="insight_history_idle">BEZCZYNNY</string>
     <string name="insight_history_syncing">SYNCHRONIZUJE</string>
     <string name="insight_history_busy">ZAJĘTY</string>
