@@ -241,7 +241,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     // return true if new record is created
-    public boolean createOrUpdate(Treatment treatment) {
+    public UpdateReturn createOrUpdate(Treatment treatment) {
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
@@ -252,13 +252,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 if (existingTreatment != null) {
                     // do nothing, pump history record cannot be changed
                     log.debug("TREATMENT: Pump record already found in database: " + treatment.toString());
-                    return false;
+                    //return new UpdateReturn(true, false);
+                    return new UpdateReturn(existingTreatment.equalsRePumpHistory(treatment), false);
                 }
                 getDao().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
-                return true;
+                return new UpdateReturn(true, true);
             }
             if (treatment.source == Source.NIGHTSCOUT) {
                 old = getDao().queryForId(treatment.date);
@@ -275,9 +276,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             DatabaseHelper.updateEarliestDataChange(old.date);
                         }
                         scheduleTreatmentChange(treatment);
-                        return true;
+                        return new UpdateReturn(true, true);
                     }
-                    return false;
+                    return new UpdateReturn(true, false);
                 }
                 // find by NS _id
                 if (treatment._id != null) {
@@ -295,7 +296,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                                 DatabaseHelper.updateEarliestDataChange(old.date);
                             }
                             scheduleTreatmentChange(treatment);
-                            return true;
+                            return new UpdateReturn(true, true);
                         }
                     }
                 }
@@ -303,19 +304,19 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
-                return true;
+                return new UpdateReturn(true, true);
             }
             if (treatment.source == Source.USER) {
                 getDao().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
-                return true;
+                return new UpdateReturn(true, true);
             }
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return false;
+        return new UpdateReturn(false, false);
     }
 
     /** Returns the record for the given id, null if none, throws RuntimeException
@@ -439,4 +440,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    public class UpdateReturn {
+        public UpdateReturn(boolean success, boolean newRecord){
+            this.success = success;
+            this.newRecord = newRecord;
+        }
+        boolean newRecord;
+        boolean success;
+    }
+
 }
