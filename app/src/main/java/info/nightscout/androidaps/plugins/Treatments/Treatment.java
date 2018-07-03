@@ -169,6 +169,7 @@ public class Treatment implements DataPointWithLabelInterface {
         insulin = t.insulin;
         carbs = t.carbs;
         pumpId = t.pumpId;
+        source = t.source;
     }
 
     //  ----------------- DataPointInterface --------------------
