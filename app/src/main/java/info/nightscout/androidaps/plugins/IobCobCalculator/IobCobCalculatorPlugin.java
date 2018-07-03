@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.T;
 
 import static info.nightscout.utils.DateUtil.now;
 
@@ -131,8 +132,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
     public static long roundUpTime(long time) {
         if (time % 60000 == 0)
             return time;
-        long rouded = (time / 60000 + 1) * 60000;
-        return rouded;
+        long rounded = (time / 60000 + 1) * 60000;
+        return rounded;
     }
 
     void loadBgData(long start) {
@@ -293,7 +294,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         long now = System.currentTimeMillis();
 
         long oldestDataAvailable = TreatmentsPlugin.getPlugin().oldestDataAvailable();
-        long getBGDataFrom = Math.max(oldestDataAvailable, (long) (now - 60 * 60 * 1000L * (24 + MainApp.getConfigBuilder().getProfile().getDia())));
+        long getBGDataFrom = Math.max(oldestDataAvailable, (long) (now - T.hours(1).msecs() * (24 + MainApp.getConfigBuilder().getProfile().getDia())));
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
         return getBGDataFrom;
     }
@@ -375,20 +376,31 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Nullable
     public AutosensData getAutosensData(long time) {
+        return this.getAutosensData(time, true);
+    }
+
+    // just a dirty workaround to avoid problems using a too fresh time
+    // should get reworked...
+    private AutosensData getAutosensData(long time, boolean firstCall) {
         synchronized (dataLock) {
             long now = System.currentTimeMillis();
-            if (time > now)
+            if (time > now) {
                 return null;
+            }
             Long previous = findPreviousTimeFromBucketedData(time);
-            if (previous == null)
+            if (previous == null) {
                 return null;
+            }
             time = roundUpTime(previous);
             AutosensData data = autosensDataTable.get(time);
             if (data != null) {
                 //log.debug(">>> getAutosensData Cache hit " + data.log(time));
                 return data;
             } else {
-                //log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
+//                log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
+                if (firstCall) {
+                    return this.getAutosensData(time - T.mins(5).msecs(), false);
+                }
                 return null;
             }
         }
