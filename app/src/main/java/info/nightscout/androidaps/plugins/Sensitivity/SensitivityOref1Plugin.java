@@ -53,6 +53,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
     @Override
     public AutosensResult detectSensitivity(long fromTime, long toTime) {
+        // todo this method is called from the IobCobCalculatorPlugin, which leads to a circular
+        // dependency, this should be avoided
         LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
