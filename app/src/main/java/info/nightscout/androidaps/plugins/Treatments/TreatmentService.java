@@ -251,6 +251,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 Treatment existingTreatment = getPumpRecordById(treatment.pumpId);
                 if (existingTreatment != null) {
                     boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    boolean sameSource = existingTreatment.source == treatment.source;
                     if(!equalRePumpHistory) {
                         // another treatment exists. Update it with the treatment coming from the pump
                         log.debug("TREATMENT: Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
@@ -260,13 +261,16 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         getDao().create(existingTreatment);
                         DatabaseHelper.updateEarliestDataChange(oldDate);
                         DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
-                        scheduleTreatmentChange(treatment);                    }
+                        scheduleTreatmentChange(treatment);
+                        return new UpdateReturn(sameSource, false); //updating a pump treatment with another one from the pump is not counted as clash
+                    }
                     return new UpdateReturn(equalRePumpHistory, false);
                 }
                 existingTreatment = getDao().queryForId(treatment.date);
                 if (existingTreatment != null) {
                     // another treatment exists with different pumpID. Update it with the treatment coming from the pump
                     boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    boolean sameSource = existingTreatment.source == treatment.source;
                     long oldDate = existingTreatment.date;
                     log.debug("TREATMENT: Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
                     getDao().delete(existingTreatment); // need to delete/create because date may change too
@@ -275,7 +279,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     DatabaseHelper.updateEarliestDataChange(oldDate);
                     DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
                     scheduleTreatmentChange(treatment);
-                    return new UpdateReturn(equalRePumpHistory, false);
+                    return new UpdateReturn(equalRePumpHistory || sameSource, false);
                 }
                 getDao().create(treatment);
                 log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
