@@ -376,12 +376,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Nullable
     public AutosensData getAutosensData(long time) {
-        return this.getAutosensData(time, true);
-    }
-
-    // just a dirty workaround to avoid problems using a too fresh time
-    // should get reworked...
-    private AutosensData getAutosensData(long time, boolean firstCall) {
         synchronized (dataLock) {
             long now = System.currentTimeMillis();
             if (time > now) {
@@ -398,9 +392,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 return data;
             } else {
 //                log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
-                if (firstCall) {
-                    return this.getAutosensData(time - T.mins(5).msecs(), false);
-                }
                 return null;
             }
         }
