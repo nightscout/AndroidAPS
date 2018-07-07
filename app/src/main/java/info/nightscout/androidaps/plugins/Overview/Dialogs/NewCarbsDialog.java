@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 
 import com.google.common.base.Joiner;
 
+import info.nightscout.utils.NSUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -394,6 +395,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                 CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes);
                             } else {
                                 CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes);
+                                NSUpload.uploadEvent(CareportalEvent.NOTE, now() - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset));
                             }
                         }
                     }
