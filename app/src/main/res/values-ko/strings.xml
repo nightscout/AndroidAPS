@@ -274,7 +274,7 @@
     <string name="objectives_0_objective">표시설정과 모니터링설정을 완료하고, 기초주입과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
     <string name="objectives_1_objective">Open Loop를 시작한다.</string>
-    <string name="objectives_1_gate">Open Loop 모드에서 몇일간 사용하여보고, 임시기초주입을 여러번 수동으로 실행하여본다.</string>
+    <string name="objectives_1_gate">Open Loop 모드에서 몇일간 사용하여보고, 임시기초주입을 여러번 수동으로 실행하여본다. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">임시기초주입 추천기능을 포함해서, Open Loop에 대해 이해한다.</string>
     <string name="objectives_2_gate">이 경험을 토대로, 최대 기초주입량을 결정하고 이를 펌프와 설정에 입력한다.</string>
     <string name="objectives_3_objective">Closed Loop를 시작하고 저혈당인슐린 중지 기능을 사용해본다.</string>

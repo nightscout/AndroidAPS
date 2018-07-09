@@ -267,7 +267,7 @@
     <string name="objectives_0_objective">Paramétrez la visualisation et la surveillance des données, analysez les débits de base et les ratios</string>
     <string name="objectives_0_gate">Vérifiez que la G est disponible sur Nightscout, et les données d’insuline sur pompe ont été téléchargées</string>
     <string name="objectives_1_objective">Commencez par le système boucle ouverte</string>
-    <string name="objectives_1_gate">Utilisez le système Open Loop pour quelques jours, et activez manuellement plusieurs débits de base tempo</string>
+    <string name="objectives_1_gate">Utilisez le système Open Loop pour quelques jours, et activez manuellement plusieurs débits de base tempo. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Comprendre votre système boucle ouverte, y compris ses recommandations de débit de base tempo</string>
     <string name="objectives_2_gate">"Partant de ce constat, décidez quel est le débit de base maximum à choisir, et entrez le dans la pompe et les préférences "</string>
     <string name="objectives_3_objective">Commencez par utiliser la boucle fermée avec le système Low Glucose Suspend</string>

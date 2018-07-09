@@ -279,7 +279,7 @@
     <string name="objectives">Цели</string>
     <string name="objectives_0_gate">убедитесь что СК и данные помпы передаются в NS</string>
     <string name="objectives_0_objective">настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
-    <string name="objectives_1_gate">работа в режиме незамкнутого цикла и ручной подстройки величины временного базала</string>
+    <string name="objectives_1_gate">работа в режиме незамкнутого цикла и ручной подстройки величины временного базала. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_1_objective">старт незамкнутого цикла</string>
     <string name="objectives_2_gate">на основе полученного опыта определите макс величину базала и введите ее в помпу и настройки</string>
     <string name="objectives_2_objective">анализ вашего незамкнутого цикла включая рекомендации по врем базалу</string>

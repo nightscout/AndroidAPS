@@ -248,7 +248,7 @@
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Podávání %.2fU inzulínu</string>
     <string name="objectives_0_gate">Zkontrolovat, zda jsou glykémie a údaje z pumpy viditelné v Nightscoutu</string>
     <string name="objectives_0_objective">Nastavit vizualizaci a monitoring, analyzovat bazály a koeficienty</string>
-    <string name="objectives_1_gate">Provozovat několik dní otevřenou smyčku a ručně potvrzovat doporučené dočasné bazály</string>
+    <string name="objectives_1_gate">Provozovat několik dní otevřenou smyčku a ručně potvrzovat doporučené dočasné bazály. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_1_objective">Začít s otevřenou smyčkou</string>
     <string name="objectives_2_gate">Na základě předchozích zkušeností rozhodnout, jaký je třeba maximální bazál a nastavit ho v pumpě a v aplikaci</string>
     <string name="objectives_2_objective">Porozumět otevřené smyčce a doporučeným dočasným bazálům</string>

@@ -243,7 +243,7 @@
     <string name="objectives_0_objective">Se stabilesc vizualizările și monitorizarea și se analizează bazalele și valorile ratelor</string>
     <string name="objectives_0_gate">Verificați că vedeți glicemia în Nightscout și că datele despre insulină date de pompă sunt înregistrate în site</string>
     <string name="objectives_1_objective">Pornire cu buclă deschisă</string>
-    <string name="objectives_1_gate">Rulați modul buclă deschisă pentru câteva zile și faceți manual bazalele temporare sugerate</string>
+    <string name="objectives_1_gate">Rulați modul buclă deschisă pentru câteva zile și faceți manual bazalele temporare sugerate. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Trebuie să se înțeleagă modalitatea de funcționare a buclei deschise, incluzând recomandările de bazală temporară</string>
     <string name="objectives_2_gate">Pe baza acestei experiențe, decideți care va fi bazala maximă și setați această valoare în pompă și în preferințe</string>
     <string name="objectives_3_objective">Se începe etapa de buclă închisă cu Suspendarea Insulinei la Valori Glicemie Mici (Low Glucose Suspend = LGS)</string>

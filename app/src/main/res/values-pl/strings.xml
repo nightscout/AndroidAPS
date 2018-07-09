@@ -290,7 +290,7 @@
     <string name="objectives_0_objective">Konfigurowanie wizualizacji i monitorowania, analizowanie dawek bazowych i wartości</string>
     <string name="objectives_0_gate">Sprawdź czy BG (pomiary cukru) są dostępne w Nightscout, i dane pompy insulinowej są ładowane</string>
     <string name="objectives_1_objective">Uruchamiam otwartą pętle (OpenLoop)</string>
-    <string name="objectives_1_gate">Używaj Otwartą pętle (OpenLoop) przez kilka dni, i ręcznie wykonaj wiele dawek bazowych tymczasowych</string>
+    <string name="objectives_1_gate">Używaj Otwartą pętle (OpenLoop) przez kilka dni, i ręcznie wykonaj wiele dawek bazowych tymczasowych. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Zrozumienie działania otwartej pętli, wraz z jej rekomendacjami dawek tymczasowych</string>
     <string name="objectives_2_gate">Na podstawie tych doświadczeń zdecyduj jaka maksymalna baza powinna być ustawiona, i wprowadź ją w pompie i w ustawieniach AAPS</string>
     <string name="objectives_3_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>

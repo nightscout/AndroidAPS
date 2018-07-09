@@ -428,7 +428,7 @@
     <string name="nsclientinternal_url_title">Nightscout-URL</string>
     <string name="objectives_0_gate">Verifiziere, dass BZ- und Pumpen-Insulin-Daten in Nightscout erfolgreich hoch geladen werden</string>
     <string name="objectives_0_objective">Konfiguriere die Anzeige und das Monitoring (Nightscout) und analysiere Basal-Raten und Faktoren</string>
-    <string name="objectives_1_gate">Erprobe den Open Loop Modus für ein paar Tage und setze manuell temporäre Basal-Raten</string>
+    <string name="objectives_1_gate">Erprobe den Open Loop Modus für ein paar Tage und setze manuell temporäre Basal-Raten. Richte temp. und Standard temp. Ziele ein und nutze sie (z.B. für Bewegung, KEs zur Hypobehandlung</string>
     <string name="objectives_1_objective">Starte den Open Loop Modus</string>
     <string name="old_data">VERALTETE DATEN</string>
     <string name="ongoingnotificaction">Laufende Benachrichtigungen</string>
