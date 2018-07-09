@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -340,7 +340,7 @@
     <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
     <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
     <string name="objectives_1_objective">Starting on an open loop</string>
-    <string name="objectives_1_gate">Run in Open Loop mode for a few days, and manually enact lots of temp basals</string>
+    <string name="objectives_1_gate">Run in Open Loop mode for a few days and manually enact lots of temp basals. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Understanding your open loop, including its temp basal recommendations</string>
     <string name="objectives_2_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences</string>
     <string name="objectives_3_objective">Starting to close the loop with Low Glucose Suspend</string>
