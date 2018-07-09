@@ -1163,6 +1163,7 @@
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
+    <string name="generated_ecarbs_note">Generated eCarbs with amount: %1$dg, duration: %2$dh, delay: %3$dm</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
