@@ -269,7 +269,7 @@
     <string name="objectives_0_objective">Configuración de visualización y monitoreo, y el análisis de los basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_1_objective">Empezar con bucle abierto</string>
-    <string name="objectives_1_gate">Ejecutar en modo de Loop abierto durante unos días, y aceptar manualmente las basales temporales</string>
+    <string name="objectives_1_gate">Ejecutar en modo de Loop abierto durante unos días, y aceptar manualmente las basales temporales. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Entender el Loop abierto, incluidas las recomendaciones de basales temporales</string>
     <string name="objectives_2_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
     <string name="objectives_3_objective">Iniciar el bucle cerrado con suspensión con baja glucosa</string>

@@ -478,7 +478,7 @@
     <string name="objectives_2_objective">Förstå din open loop och hur den föreslår temp basaler</string>
     <string name="objectives_2_gate">Utifrån vad du nu lärt dig, besluta vilken max basal du vil ha. Ställ in det både i inställningarna i APS och i din pump.</string>
     <string name="objectives_1_objective">Starta med open loop</string>
-    <string name="objectives_1_gate">Starta med open loop och använd det några dagar. Försök att ge många föreslagna temp basaler.</string>
+    <string name="objectives_1_gate">Starta med open loop och använd det några dagar. Försök att ge många föreslagna temp basaler. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="absorption_maxtime_summary">Tid i timmar när alla kolhydradet förväntas vara absorberade</string>
     <string name="absorption_maxtime_title">Max absorptionstid för en måltid [tim]</string>
     <string name="absorptionsettings_title">Absorptionsinställningar</string>

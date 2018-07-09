@@ -271,7 +271,7 @@
     <string name="waitingforpump">Очаква помпата</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Ще достави %.2fЕ</string>
     <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
-    <string name="objectives_1_gate">Работете в Open Loop няколко дни и ръчно прилагайте на много временни базали</string>
+    <string name="objectives_1_gate">Работете в Open Loop няколко дни и ръчно прилагайте на много временни базали. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_1_objective">Стартиране на Open Loop </string>
     <string name="objectives_2_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
     <string name="objectives_2_objective">Разбиране на вашият Open Loop, включително препоръчваните временни базали</string>
