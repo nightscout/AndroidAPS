@@ -4,6 +4,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -86,8 +87,22 @@ public class FabricPrivacy {
         }
     }
 
+    public static void logAppStart() {
+        if (Config.NSCLIENT)
+            getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
+        else if (Config.G5UPLOADER)
+            getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
+        else if (Config.PUMPCONTROL)
+            getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
+        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
+            getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
+        else
+            getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
+
+    }
+
     public static void reportPluginStats() {
-        if (!FabricPrivacy.fabricEnabled()) return;
+        if (!fabricEnabled()) return;
 
         long lastUploadDay = SP.getLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), 0L);
 
