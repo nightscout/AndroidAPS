@@ -735,8 +735,8 @@
     <string name="enablesmb_summary">Benutze Super Micro Bolus anstelle von temporären Basal, um eine schnellere Wirkung zu erreichen.</string>
     <string name="unsafeusage">Unsichere Benutzung</string>
     <string name="time">Zeit</string>
-    <string name="thirdcarbsincrement">Dritter KH-Schritt</string>
-    <string name="thirdinsulinincrement">Dritter Insulin-Schritt</string>
+    <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
+    <string name="thirdinsulinincrement">Dritte Insulin-Erhöhung</string>
     <string name="loop_tbrsetbypump_label">Temp. Basal der Pumpe</string>
     <string name="subcategory">Unterkategorie</string>
     <string name="insight_stay_always_connected">Bleibe immer verbunden</string>
@@ -745,8 +745,8 @@
     <string name="start_activity_tt">Starte Aktivität TT</string>
     <string name="overview_show_sensitivity">Sensitivität</string>
     <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den G5 Kalibrierungs-Dialog.</string>
-    <string name="secondinsulinincrement">Zweiter Insulin-Schritt</string>
-    <string name="secondcarbsincrement">Zweiter KH-Schritt</string>
+    <string name="secondinsulinincrement">Zweite Insulin-Erhöhung</string>
+    <string name="secondcarbsincrement">Zweite KH-Erhöhung</string>
     <string name="second">Sekunde</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version. Closed Loop ist nicht verfügbar.</string>
     <string name="record_pump_site_change">Erfasse Katheter-Wechsel</string>
@@ -763,7 +763,7 @@
     <string name="enableuam_summary">Erkennung von unangekündigten Mahlzeiten</string>
     <string name="hypo_duration">Hypo-Dauer</string>
     <string name="hypo_target">Hypo-Zielwert</string>
-    <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
+    <string name="hasbgdata">BZ verfügbar von gewählter Quelle.</string>
     <string name="changed">Geändert</string>
     <string name="pump_stopped_uppercase">PUMPE GESTOPPT</string>
     <string name="insight_active_tbr">Aktive TBR</string>
@@ -774,18 +774,18 @@
     <string name="enablesmbwithtemptarget">Aktiviere SMB während temporären Zielwerten</string>
     <string name="wear_predictions_title">Vorhersagen</string>
     <string name="data_choices">Daten-Auswahl</string>
-    <string name="smbdisabledinpreferences">SMB in Einstellungen deaktiviert</string>
+    <string name="smbdisabledinpreferences">SMB in Einstellungen deaktiviert.</string>
     <string name="food_short">Mahlzeiten</string>
     <string name="hardlimit">Hartes Limit</string>
     <string name="readstatusfailed">Lesen des Status fehlgeschlagen</string>
     <string name="loopdisconnectedfor">Getrennt (%1$d m)</string>
     <string name="automatic_careportal_events">Automatische Careportal-Ereignisse</string>
-    <string name="firstinsulinincrement">Erster Insulin-Schritt</string>
-    <string name="firstcarbsincrement">Erster KH-Schritt</string>
+    <string name="firstinsulinincrement">Erste Insulin-Erhöhung</string>
+    <string name="firstcarbsincrement">Erste KH-Erhöhung</string>
     <string name="ns_chargingonly">Nur wenn geladen wird</string>
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
-    <string formatted="false" name="objectivenotstarted">Zielsetzung %d nicht gestartet</string>
-    <string formatted="false" name="objectivenotfinished">Zielsetzung %d nicht abgeschlossen</string>
+    <string formatted="false" name="objectivenotstarted">Zielsetzung %d nicht gestartet.</string>
+    <string formatted="false" name="objectivenotfinished">Zielsetzung %d nicht abgeschlossen.</string>
     <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
-    <string name="bolusrecordedonly">Bolus wird nur erfasst</string>
+    <string name="bolusrecordedonly">Bolus wird nur erfasst.</string>
 </resources>
