@@ -750,7 +750,7 @@
     <string name="second">Sekunde</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version. Closed Loop ist nicht verfügbar.</string>
     <string name="record_pump_site_change">Erfasse Katheter-Wechsel</string>
-    <string name="record_insulin_cartridge_change">Erfasse Resoirvoir-Wechsel</string>
+    <string name="record_insulin_cartridge_change">Erfasse Reservoir-Wechsel</string>
     <string name="insight_needs">benötigt</string>
     <string name="overview_show_deviations">Abweichungen</string>
     <string name="day">Tag</string>
