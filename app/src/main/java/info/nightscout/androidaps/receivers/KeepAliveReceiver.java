@@ -46,7 +46,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         LocalAlertUtils.shortenSnoozeInterval();
         LocalAlertUtils.checkStaleBGAlert();
         checkPump();
-        FabricPrivacy.reportPluginStats();
+        FabricPrivacy.uploadDailyStats();
 
         log.debug("KeepAlive received");
         wl.release();

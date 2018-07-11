@@ -196,7 +196,6 @@ public class MainApp extends Application {
         }
 
         NSUpload.uploadAppStart();
-        FabricPrivacy.logAppStart();
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (pump != null) {

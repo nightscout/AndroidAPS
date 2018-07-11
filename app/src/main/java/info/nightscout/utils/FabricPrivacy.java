@@ -87,21 +87,7 @@ public class FabricPrivacy {
         }
     }
 
-    public static void logAppStart() {
-        if (Config.NSCLIENT)
-            getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
-        else if (Config.G5UPLOADER)
-            getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
-        else if (Config.PUMPCONTROL)
-            getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
-            getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
-        else
-            getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
-
-    }
-
-    public static void reportPluginStats() {
+    public static void uploadDailyStats() {
         if (!fabricEnabled()) return;
 
         long lastUploadDay = SP.getLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), 0L);
@@ -113,15 +99,39 @@ public class FabricPrivacy {
         long today = date.getTime() - date.getTime() % 1000;
 
         if (today > lastUploadDay) {
-            CustomEvent pluginStats = new CustomEvent("PluginStats");
-            pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
-            for (PluginBase plugin : MainApp.getPluginsList()) {
-                if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
-                    pluginStats.putCustomAttribute(plugin.getName(), "enabled");
-                }
-            }
-            FabricPrivacy.getInstance().logCustom(pluginStats);
+            uploadAppUsageType();
+            uploadPluginStats();
+
             SP.putLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), today);
         }
     }
+
+    private static void uploadPluginStats() {
+        CustomEvent pluginStats = new CustomEvent("PluginStats");
+        pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
+        for (PluginBase plugin : MainApp.getPluginsList()) {
+            if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
+                pluginStats.putCustomAttribute(plugin.getName(), "enabled");
+            }
+        }
+
+        getInstance().logCustom(pluginStats);
+    }
+
+    private static void uploadAppUsageType() {
+        CustomEvent type = new CustomEvent("AppUsageType");
+        if (Config.NSCLIENT)
+            type.putCustomAttribute("type", "NSClient");
+        else if (Config.G5UPLOADER)
+            type.putCustomAttribute("type", "G5Uploader");
+        else if (Config.PUMPCONTROL)
+            type.putCustomAttribute("type", "PumpControl");
+        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
+            type.putCustomAttribute("type", "ClosedLoop");
+        else
+            type.putCustomAttribute("type", "OpenLoop");
+
+        getInstance().logCustom(type);
+    }
+
 }
