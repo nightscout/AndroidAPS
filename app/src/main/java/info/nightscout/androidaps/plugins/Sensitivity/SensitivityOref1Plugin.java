@@ -70,10 +70,9 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         }
 
         // the current
-        AutosensData current = IobCobCalculatorPlugin.getPlugin()
-                .getLastAutosensDataSynchronized("SensitivityOref1Plugin"); // this is running inside lock already
+        AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            log.debug("No current autosens data available");
+            log.debug("No autosens data available");
             return new AutosensResult();
         }
 
