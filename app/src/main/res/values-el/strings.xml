@@ -269,7 +269,7 @@
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της DanaR φορτώθηκαν</string>
     <string name="objectives_1_objective">Ξεκινήστε σε ανοιχτό κύκλωμα</string>
-    <string name="objectives_1_gate">Τρέξτε σε ανοιχτό κύκλωμα για λίγες ημέρες και χειροκίνητα κάντε πολλούς Προσ.Ρυθμ.</string>
+    <string name="objectives_1_gate">Τρέξτε σε ανοιχτό κύκλωμα για λίγες ημέρες και χειροκίνητα κάντε πολλούς Προσ.Ρυθμ. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσ.Ρυθμ.</string>
     <string name="objectives_2_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
     <string name="objectives_3_objective">"Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend) "</string>

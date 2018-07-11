@@ -310,7 +310,7 @@
     <string name="short_tabtitles">Abbreviare i titoli delle schede</string>
     <string name="simpleprofile">Semplice profilo</string>
     <string name="objectives_0_objective">Impostazione di visualizzazione, monitoraggio e analisi basali e rapporti</string>
-    <string name="objectives_1_gate">Eseguire in modalità Open Loop per alcuni giorni e impostare manualmente la basale tempor</string>
+    <string name="objectives_1_gate">Eseguire in modalità Open Loop per alcuni giorni e impostare manualmente la basale tempor. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_allowednumbers">Numero di telefono acettato</string>

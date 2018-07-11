@@ -95,19 +95,25 @@ public class DanaRUserOptionsActivity extends Activity {
         shutdown.setParams((double) pump.shutdownHour, 0d, 24d, 1d, new DecimalFormat("1"), true);
         lowReservoir.setParams((double) pump.lowReservoirRate, 10d, 60d, 10d, new DecimalFormat("10"), false);
         switch (pump.beepAndAlarm) {
-            case 1: pumpAlarmSound.setChecked(true);
+            case 0x01:
+                pumpAlarmSound.setChecked(true);
                 break;
-            case 2: pumpAlarmVibrate.setChecked(true);
+            case 0x02:
+                pumpAlarmVibrate.setChecked(true);
                 break;
-            case 3: pumpAlarmBoth.setChecked(true);
+            case 0x11:
+                pumpAlarmBoth.setChecked(true);
                 break;
-            case 5: pumpAlarmSound.setChecked(true);
+            case 0x101:
+                pumpAlarmSound.setChecked(true);
                 beep.setChecked(true);
                 break;
-            case 6: pumpAlarmVibrate.setChecked(true);
+            case 0x110:
+                pumpAlarmVibrate.setChecked(true);
                 beep.setChecked(true);
                 break;
-            case 7: pumpAlarmBoth.setChecked(true);
+            case 0x111:
+                pumpAlarmBoth.setChecked(true);
                 beep.setChecked(true);
                 break;
         }
