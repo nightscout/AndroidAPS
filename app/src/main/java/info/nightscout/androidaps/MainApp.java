@@ -194,18 +194,8 @@ public class MainApp extends Application {
 
             MainApp.getConfigBuilder().initialize();
         }
-        NSUpload.uploadAppStart();
 
-        if (Config.NSCLIENT)
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
-        else if (Config.G5UPLOADER)
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
-        else if (Config.PUMPCONTROL)
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
-        else
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
+        NSUpload.uploadAppStart();
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (pump != null) {
