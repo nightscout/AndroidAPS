@@ -111,7 +111,7 @@ public class FabricPrivacy {
         pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
         for (PluginBase plugin : MainApp.getPluginsList()) {
             if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
-                pluginStats.putCustomAttribute(plugin.getName(), "enabled");
+                pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
             }
         }
 
