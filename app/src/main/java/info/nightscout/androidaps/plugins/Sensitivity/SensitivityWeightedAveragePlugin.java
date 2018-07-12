@@ -13,16 +13,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.utils.Round;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 24.06.2017.
@@ -61,15 +58,14 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
-            if (Config.logAutosensData)
-                log.debug("No autosens data available");
+            log.debug("No autosens data available. lastDataTime=" + IobCobCalculatorPlugin.getPlugin().lastDataTime());
             return new AutosensResult();
         }
 
         AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
             if (Config.logAutosensData)
-                log.debug("No autosens data available");
+                log.debug("No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + IobCobCalculatorPlugin.getPlugin().lastDataTime());
             return new AutosensResult();
         }
 
@@ -134,7 +130,12 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         }
 
         if (data.size() == 0) {
+            if (Config.logAutosensData)
+                log.debug("Data size: " + data.size() + " fromTime: " + DateUtil.dateAndTimeString(fromTime) + " toTime: " + DateUtil.dateAndTimeString(toTime));
             return new AutosensResult();
+        } else {
+            if (Config.logAutosensData)
+                log.debug("Data size: " + data.size() + " fromTime: " + DateUtil.dateAndTimeString(fromTime) + " toTime: " + DateUtil.dateAndTimeString(toTime));
         }
 
         double weightedsum = 0;

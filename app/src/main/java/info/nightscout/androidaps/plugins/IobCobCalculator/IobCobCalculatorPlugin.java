@@ -456,6 +456,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
+    public String lastDataTime() {
+        if (autosensDataTable.size() > 0)
+            return DateUtil.dateAndTimeString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time);
+        else
+            return "autosensDataTable empty";
+    }
+
     public IobTotal[] calculateIobArrayInDia(Profile profile) {
         // predict IOB out to DIA plus 30m
         long time = System.currentTimeMillis();
