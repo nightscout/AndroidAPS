@@ -25,6 +25,8 @@ import java.util.concurrent.ScheduledFuture;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
@@ -32,6 +34,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPairingSuccess;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -421,14 +424,25 @@ public class BLEComm {
                                             SendPairingRequest();
                                         }
 
+                                    } else if (inputBuffer.length == 6 && inputBuffer[2] == 'P' && inputBuffer[3] == 'U' && inputBuffer[4] == 'M' && inputBuffer[5] == 'P') {
+                                        log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                        mSendQueue.clear();
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumperror)));
+                                        NSUpload.uploadError(MainApp.gs(R.string.pumperror));
+                                        Notification n = new Notification(Notification.PUMPERROR, MainApp.gs(R.string.pumperror), Notification.URGENT);
+                                        MainApp.bus().post(new EventNewNotification(n));
                                     } else if (inputBuffer.length == 6 && inputBuffer[2] == 'B' && inputBuffer[3] == 'U' && inputBuffer[4] == 'S' && inputBuffer[5] == 'Y') {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
                                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
                                     } else {
+                                        // ERROR in response, wrong serial number
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
                                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
+                                        SP.remove(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName);
+                                        Notification n = new Notification(Notification.WRONGSERIALNUMBER, MainApp.gs(R.string.wrongpassword), Notification.URGENT);
+                                        MainApp.bus().post(new EventNewNotification(n));
                                     }
                                     break;
                                 // 2nd packet, pairing key
