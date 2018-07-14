@@ -577,7 +577,7 @@
     <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="date">Datum</string>
-    <string name="default_temptargets">Feste temporäre Ziele</string>
+    <string name="default_temptargets">Vordefinierte temporäre Ziele</string>
     <string name="eatingsoon_duration">Bald essen - Dauer</string>
     <string name="eatingsoon_target">Bald essen - Ziel</string>
     <string name="emptyreservoir">Reservoir leer</string>
