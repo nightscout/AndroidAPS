@@ -543,10 +543,10 @@
     <string name="objectives_3_gate">Erprobe den Closed Loop Modus mit max IOB = 0 für ein paar Tage, ohne zu viele Unterzuckerungen zu haben.</string>
     <string name="objectives_3_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
     <string name="objectives_4_gate">Verwende es ein paar Tage und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst.</string>
-    <string name="objectives_4_objective">Stelle den Closed Loop fein ein, erhöhe max IOB über 0 und setze den Zielbereich langsam herunter.</string>
+    <string name="objectives_4_objective">Stelle den Closed Loop fein ein, erhöhe max IOB über 0 und setze den Zielbereich langsam herunter</string>
     <string name="objectives_5_gate">Loope eine Woche erfolgreich am Tag mit regelmäßiger Kohlenhydrat-Eingabe.</string>
     <string name="objectives_5_objective">Passe, falls notwendig, Basal und Faktoren an und aktiviere dann die Autosense-Funktion</string>
-    <string name="objectives_6_objective">Aktiviere zusätzliche Funktionen, wie z. B. den Mahlzeitenassistent</string>
+    <string name="objectives_6_objective">Aktiviere zusätzliche Funktionen wie z. B. den Mahlzeitenassistenten</string>
     <string name="nsalarm_urgentstaledata">Stark veraltete Daten</string>
     <string name="nsalarm_urgent_staledatavalue_label">Stark veraltete Daten seit [min]</string>
     <string name="nl_lang">Dutch</string>
