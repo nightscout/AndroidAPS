@@ -272,7 +272,7 @@
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
     <string name="configbuilder">Konfiguration</string>
-    <string name="minago">vor %d Min.</string>
+    <string name="minago">vor %d min</string>
     <string name="actions_shortname">AKT</string>
     <string name="wear_shortname">WEAR</string>
     <string name="virtualpump_shortname">VP</string>
@@ -338,7 +338,7 @@
     <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_insulinage_label">Insulinalter</string>
-    <string name="careportal_newnstreatment_duration_min_label">Dauer [Min.]</string>
+    <string name="careportal_newnstreatment_duration_min_label">Dauer [min]</string>
     <string name="paused">Pausiert</string>
     <string name="patientage">Patientenalter</string>
     <string name="patientage_summary">Bitte wähle das Pateintenalter, um die Sicherheits-Limits festzulegen</string>
@@ -355,7 +355,7 @@
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="superbolus">Superbolus</string>
-    <string name="suspendloopfor10h">Pausiere Loop für 10 h.</string>
+    <string name="suspendloopfor10h">Pausiere Loop für 10 h</string>
     <string name="array_of_elements">Insgesamt %d Einträge. Aktueller Wert:</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_pbage_label">Batteriealter</string>
@@ -397,9 +397,9 @@
     <string name="invalidprofile">Ungültiges oder defektes Profil!</string>
     <string name="iob">IOB</string>
     <string name="localprofile">Lokales Profil</string>
-    <string name="loopsuperbolusfor">Superbolus (%1$d Min.)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d min)</string>
     <string name="loopsuspended">Loop pausiert</string>
-    <string name="loopsuspendedfor">Pausiert (%1$d Min.)</string>
+    <string name="loopsuspendedfor">Pausiert (%1$d min)</string>
     <string name="mdtp_cancel">Abbrechen</string>
     <string name="mdtp_ok">OK</string>
     <string name="mgdl">mg/dl</string>
@@ -487,7 +487,7 @@
     <string name="insulin_shortname">INS</string>
     <string name="needwhitelisting">%1$s benötigt Batterie-Optimierungs-Whitelisting, um korrekt arbeiten zu können.</string>
     <string name="nsalarm_staledata">Veraltete Daten</string>
-    <string name="nsalarm_staledatavalue_label">Veraltete Daten seit [Min.]</string>
+    <string name="nsalarm_staledatavalue_label">Veraltete Daten seit [min]</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
     <string name="openapsma_maxbasal_title">Max IE/h, die als TBR gesetzt werden können</string>
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
@@ -520,7 +520,7 @@
     <string name="smscommunicator_tempbasalcanceled">TBR abgebrochen</string>
     <string name="smscommunicator_tempbasalcancelfailed">Das Abbrechen der TBR ist fehlgeschlagen.</string>
     <string name="smscommunicator_tempbasalfailed">Das Starten der TBR ist fehlgeschlagen.</string>
-    <string name="smscommunicator_tempbasalset">TBR mitl %1$.2f IE/h für %2$d Min. wurde erfolgreich gestartet.</string>
+    <string name="smscommunicator_tempbasalset">TBR mitl %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
     <string name="smscommunicator_unknowncommand">Unbekannter Befehl oder falsche Antwort</string>
     <string name="smscommunicator_wrongduration">Falsche Dauer</string>
     <string name="unlock_settings">Einstellungen freischalten</string>
@@ -548,7 +548,7 @@
     <string name="objectives_5_objective">Passe, falls notwendig, Basal und Faktoren an und aktiviere dann die Autosense-Funktion</string>
     <string name="objectives_6_objective">Aktiviere zusätzliche Funktionen, wie z. B. den Mahlzeitenassistent</string>
     <string name="nsalarm_urgentstaledata">Stark veraltete Daten</string>
-    <string name="nsalarm_urgent_staledatavalue_label">Stark veraltete Daten seit [Min.]</string>
+    <string name="nsalarm_urgent_staledatavalue_label">Stark veraltete Daten seit [min]</string>
     <string name="nl_lang">Dutch</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
@@ -609,7 +609,7 @@
     <string name="pump_unreachable">Pumpe ist nicht erreichbar</string>
     <string name="enable_missed_bg_readings_alert">Alarm, wenn keine Glukose-Daten empfangen werden</string>
     <string name="enable_pump_unreachable_alert">Alarm, wenn die Pumpe nicht erreichbar ist</string>
-    <string name="pump_unreachable_threshold">Pumpe ist nicht erreichbar Grenze [Min.]</string>
+    <string name="pump_unreachable_threshold">Pumpe ist nicht erreichbar Grenze [min]</string>
     <string name="combo_refresh">Aktualisieren</string>
     <string name="treatments_wizard_tt_label">TZ</string>
     <string name="tempbasal">TBR</string>
@@ -649,7 +649,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="combo_pump_activity_label">Aktivität</string>
-    <string name="combo_tbr_remaining">%1$d%% (%2$d Min. verbleibend)</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min verbleibend)</string>
     <string name="combo_no_pump_connection">Keine Verbindung zur Pumpe seit %1$d min</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_state_suspended_by_user">Gestoppt (Benutzer)</string>
