@@ -296,7 +296,7 @@
     <string name="wear">Wear</string>
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas.</string>
     <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle Signalrauschen haben.</string>
-    <string name="approachingdailylimit">Tagesinsulin-Limit ist erreicht.</string>
+    <string name="approachingdailylimit">Tagesinsulin-Limit wird bald erreicht.</string>
     <string name="calibrationsent">Kalibrierung an xDrip+ gesendet</string>
     <string name="child">Kind</string>
     <string name="clear_queue">Warteschlange leeren</string>
@@ -443,7 +443,7 @@
     <string name="overview_extendedbolus_cancel_button">Verlängerten Bolus abbrechen</string>
     <string name="overview_newtempbasal_basalabsolute">Basal Wert [IE/h]</string>
     <string name="profile">Profil</string>
-    <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlage</string>
+    <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlagen</string>
     <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
     <string name="profileswitch">Profilwechsel</string>
     <string name="pump">Pumpe</string>
@@ -732,7 +732,7 @@
     <string formatted="false" name="waitingfortimesynchronization">Warte auf Zeitsynchronisierung (%d Sek.)</string>
     <string name="insight_waiting_for_code">Warte auf Code-Bestätigung</string>
     <string name="ns_wifionly">Benutze nur WLAN Verbindung</string>
-    <string name="enablesmb_summary">Benutze Super Micro Bolus anstelle von temporären Basal, um eine schnellere Wirkung zu erreichen.</string>
+    <string name="enablesmb_summary">Benutze Super Micro Bolus anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="unsafeusage">Unsichere Benutzung</string>
     <string name="time">Zeit</string>
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
