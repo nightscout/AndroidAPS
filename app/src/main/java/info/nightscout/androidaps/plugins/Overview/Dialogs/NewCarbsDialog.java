@@ -33,7 +33,9 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -153,6 +155,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         LinearLayout notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = view.findViewById(R.id.newcarbs_notes);
+
+        BgReading bgReading = DatabaseHelper.actualBg();
+        if (bgReading != null && bgReading.value < 72) {
+            startHypoTTCheckbox.setOnCheckedChangeListener(null);
+            startHypoTTCheckbox.setChecked(true);
+            startHypoTTCheckbox.setOnClickListener(this);
+        }
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
