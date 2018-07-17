@@ -19,17 +19,17 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
-import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_User_Option;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
@@ -71,9 +71,12 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Complete;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_User_Option;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_User_Option;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -136,6 +139,19 @@ public class DanaRSService extends Service {
             bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus, bolusStep, maxBolus
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingtempbasalstatus)));
             bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+
+            danaRPump.lastConnection = System.currentTimeMillis();
+
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
+                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                    MainApp.bus().post(new EventProfileSwitchChange());
+                }
+            }
+
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
             bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
 
@@ -166,10 +182,9 @@ public class DanaRSService extends Service {
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
             }
-            danaRPump.lastConnection = System.currentTimeMillis();
 
             long now = System.currentTimeMillis();
-            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
+            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
                 bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware

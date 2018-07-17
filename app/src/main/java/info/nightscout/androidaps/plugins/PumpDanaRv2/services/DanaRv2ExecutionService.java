@@ -19,16 +19,15 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetUserOptions;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -46,6 +45,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetExtendedBolusStop
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTime;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetUserOptions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingActiveProfile;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingGlucose;
@@ -55,6 +55,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingProfileRatios
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingProfileRatiosAll;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingPumpTime;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingShippingInfo;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatus;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
@@ -67,7 +68,9 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetAPSTempBasalSta
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetHistoryEntry_v2;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusBolusExtended_v2;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusTempBasal_v2;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -189,6 +192,19 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(tempStatusMsg);
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingextendedbolusstatus)));
             mSerialIOThread.sendMessage(exStatusMsg);
+
+            mDanaRPump.lastConnection = System.currentTimeMillis();
+
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
+                mSerialIOThread.sendMessage(new MsgSettingBasal());
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                    MainApp.bus().post(new EventProfileSwitchChange());
+                }
+            }
+
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
             mSerialIOThread.sendMessage(new MsgSettingPumpTime());
             long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
@@ -218,10 +234,9 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
             }
-            mDanaRPump.lastConnection = System.currentTimeMillis();
 
             long now = System.currentTimeMillis();
-            if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
+            if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
