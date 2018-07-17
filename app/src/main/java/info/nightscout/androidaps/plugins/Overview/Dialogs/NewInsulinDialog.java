@@ -148,12 +148,29 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+        if (savedInstanceState != null) {
+//            log.debug("savedInstanceState in onCreate is:" + savedInstanceState.toString());
+            editInsulin.setValue(savedInstanceState.getDouble("editInsulin"));
+            editTime.setValue(savedInstanceState.getDouble("editTime"));
+        }
         return view;
     }
 
     private String toSignedString(double value) {
         String formatted = DecimalFormatter.toPumpSupportedBolus(value);
         return value > 0 ? "+" + formatted : formatted;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle insulinDialogState) {
+        insulinDialogState.putString("message", "This is my message to be reloaded");
+        insulinDialogState.putBoolean("startEatingSoonTTCheckbox", startEatingSoonTTCheckbox.isChecked());
+        insulinDialogState.putBoolean("recordOnlyCheckbox", recordOnlyCheckbox.isChecked());
+        insulinDialogState.putDouble("editTime", editTime.getValue());
+        insulinDialogState.putDouble("editInsulin", editInsulin.getValue());
+        insulinDialogState.putString("notesEdit",notesEdit.getText().toString());
+        log.debug("Instance state saved:"+insulinDialogState.toString());
+        super.onSaveInstanceState(insulinDialogState);
     }
 
     @Override
