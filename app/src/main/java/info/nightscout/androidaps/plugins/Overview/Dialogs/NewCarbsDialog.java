@@ -127,14 +127,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         startEatingSoonTTCheckbox = view.findViewById(R.id.newcarbs_eating_soon_tt);
         startEatingSoonTTCheckbox.setOnCheckedChangeListener(this);
         startHypoTTCheckbox = view.findViewById(R.id.newcarbs_hypo_tt);
-        BgReading bgReading = DatabaseHelper.actualBg();
-        if (bgReading != null && bgReading.value < 72) {
-            startHypoTTCheckbox.setChecked(true);
-            // see #onCheckedChanged
-            startHypoTTCheckbox.setOnClickListener(this);
-        }
-
-        startHypoTTCheckbox.setOnCheckedChangeListener(this);
 
         editTime = view.findViewById(R.id.newcarbs_time);
         editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
@@ -167,8 +159,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         if (bgReading != null && bgReading.value < 72) {
             startHypoTTCheckbox.setOnCheckedChangeListener(null);
             startHypoTTCheckbox.setChecked(true);
-            startHypoTTCheckbox.setOnClickListener(this);
         }
+        startHypoTTCheckbox.setOnClickListener(this);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
