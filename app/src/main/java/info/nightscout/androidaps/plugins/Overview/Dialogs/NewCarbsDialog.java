@@ -165,12 +165,32 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+
+        //recovering state if there is something
+        if (savedInstanceState != null) {
+            editCarbs.setValue(savedInstanceState.getDouble("editCarbs"));
+            editTime.setValue(savedInstanceState.getDouble("editTime"));
+            editDuration.setValue(savedInstanceState.getDouble("editDuration"));
+        }
         return view;
     }
 
     private String toSignedString(int value) {
         return value > 0 ? "+" + value : String.valueOf(value);
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle carbsDialogState) {
+        carbsDialogState.putBoolean("startActivityTTCheckbox",startActivityTTCheckbox.isChecked());
+        carbsDialogState.putBoolean("startEatingSoonTTCheckbox", startEatingSoonTTCheckbox.isChecked());
+        carbsDialogState.putBoolean("startHypoTTCheckbox", startHypoTTCheckbox.isChecked());
+        carbsDialogState.putDouble("editTime", editTime.getValue());
+        carbsDialogState.putDouble("editDuration", editDuration.getValue());
+        carbsDialogState.putDouble("editCarbs", editCarbs.getValue());
+        super.onSaveInstanceState(carbsDialogState);
+    }
+
 
     @Override
     public synchronized void onClick(View view) {
@@ -228,6 +248,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                 break;
         }
     }
+
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
