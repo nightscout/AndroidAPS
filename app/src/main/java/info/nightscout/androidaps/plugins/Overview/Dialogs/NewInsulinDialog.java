@@ -163,7 +163,6 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
     @Override
     public void onSaveInstanceState(Bundle insulinDialogState) {
-        insulinDialogState.putString("message", "This is my message to be reloaded");
         insulinDialogState.putBoolean("startEatingSoonTTCheckbox", startEatingSoonTTCheckbox.isChecked());
         insulinDialogState.putBoolean("recordOnlyCheckbox", recordOnlyCheckbox.isChecked());
         insulinDialogState.putDouble("editTime", editTime.getValue());
