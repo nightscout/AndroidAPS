@@ -183,6 +183,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.getPlugin().oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
+            lastAutosensResult.sensResult = "autosens disabled";
         }
 
         Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);

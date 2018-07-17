@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 
 import com.google.common.base.Joiner;
 
+import info.nightscout.utils.NSUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,6 +162,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         LinearLayout notesLayout = view.findViewById(R.id.newcarbs_notes_layout);
         notesLayout.setVisibility(SP.getBoolean(R.string.key_show_notes_entry_dialogs, false) ? View.VISIBLE : View.GONE);
         notesEdit = view.findViewById(R.id.newcarbs_notes);
+
+        BgReading bgReading = DatabaseHelper.actualBg();
+        if (bgReading != null && bgReading.value < 72) {
+            startHypoTTCheckbox.setOnCheckedChangeListener(null);
+            startHypoTTCheckbox.setChecked(true);
+            startHypoTTCheckbox.setOnClickListener(this);
+        }
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -403,6 +411,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                 CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes);
                             } else {
                                 CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes);
+                                NSUpload.uploadEvent(CareportalEvent.NOTE, now() - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset));
                             }
                         }
                     }

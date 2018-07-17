@@ -1200,15 +1200,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             } else {
                 basalText = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             }
-            baseBasalView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String fullText = MainApp.gs(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h\n";
-                    if (activeTemp != null) {
-                        fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
-                    }
-                    OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText, null);
+            baseBasalView.setOnClickListener(v -> {
+                String fullText = MainApp.gs(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h\n";
+                if (activeTemp != null) {
+                    fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
+                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText, null);
             });
 
         } else {
@@ -1237,22 +1234,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
                     extendedBolusText = DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + "U/h";
                 }
-                extendedBolusView.setText(extendedBolusText);
-                extendedBolusView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        OKDialog.show(getActivity(), MainApp.gs(R.string.extendedbolus), extendedBolus.toString(), null);
-                    }
-                });
-
             } else {
                 if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
                     extendedBolusText = extendedBolus.toString();
                 }
-                extendedBolusView.setText(extendedBolusText);
+            }
+            extendedBolusView.setText(extendedBolusText);
+            if (Config.NSCLIENT || Config.G5UPLOADER) {
+                extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extendedbolus), extendedBolus.toString(), null));
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(shorttextmode ? View.INVISIBLE : View.GONE);
+                extendedBolusView.setVisibility(Config.NSCLIENT || Config.G5UPLOADER ? View.INVISIBLE : View.GONE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }

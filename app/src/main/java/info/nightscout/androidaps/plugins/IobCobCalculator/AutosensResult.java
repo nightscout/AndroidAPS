@@ -14,7 +14,7 @@ public class AutosensResult {
     //default values to show when autosens algorithm is not called
     public double ratio = 1d;
     public double carbsAbsorbed = 0d;
-    public String sensResult = "autosens deactivated";
+    public String sensResult = "autosens not available";
     public String pastSensitivity = "";
     public String ratioLimit = "";
 

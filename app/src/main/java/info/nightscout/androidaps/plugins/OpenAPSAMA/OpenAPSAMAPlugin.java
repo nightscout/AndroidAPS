@@ -176,6 +176,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.getPlugin().oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
+            lastAutosensResult.sensResult = "autosens disabled";
         }
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "AMA data gathering", start);

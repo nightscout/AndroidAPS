@@ -210,6 +210,8 @@ public class DanaRSService extends Service {
             return result;
         }
 
+        SystemClock.sleep(1000);
+
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
             msg = new DanaRS_Packet_APS_History_Events(0);
