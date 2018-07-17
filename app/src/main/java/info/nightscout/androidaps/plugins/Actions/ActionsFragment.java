@@ -87,6 +87,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tempBasalCancel.setOnClickListener(this);
             fill.setOnClickListener(this);
             history.setOnClickListener(this);
+            history.setVisibility(MainApp.devBranch ? View.VISIBLE : View.GONE);
             tddStats.setOnClickListener(this);
 
             updateGUI();
