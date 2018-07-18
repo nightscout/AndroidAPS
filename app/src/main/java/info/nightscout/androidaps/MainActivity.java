@@ -344,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences);
+        menu.findItem(R.id.nav_historybrowser).setVisible(MainApp.devBranch);
         checkPluginPreferences(findViewById(R.id.pager));
         return true;
     }
