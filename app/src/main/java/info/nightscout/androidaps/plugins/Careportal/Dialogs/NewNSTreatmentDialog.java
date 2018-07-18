@@ -206,8 +206,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 double defaultDuration;
                 double defaultTarget = 0;
-                if (profile != null) {
+                if (profile != null && editTemptarget.getValue() == bg) {
                     defaultTarget = bg;
+                } else {
+                    //prevent changes on screen rotate
+                    defaultTarget = editTemptarget.getValue();
                 }
                 boolean erase = false;
 
@@ -222,6 +225,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 } else if (MainApp.gs(R.string.hypo).equals(reasonList.get(position))) {
                     defaultDuration = helper.determineHypoTTDuration();
                     defaultTarget = helper.determineHypoTT(units);
+                } else if (editDuration.getValue() != 0) {
+                    defaultDuration = editDuration.getValue();
                 } else {
                     defaultDuration = 0;
                     erase = true;
@@ -258,7 +263,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 if (sensorRadioButton.isChecked()) meterRadioButton.setChecked(true);
             }
         };
-
         editBg = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_bginput);
         editTemptarget = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_temptarget);
         if (profile == null) {
@@ -271,9 +275,14 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             editBg.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, bgTextWatcher);
             editTemptarget.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
         }
+
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits());
-            editBg.setValue(bg1);
+            if (savedInstanceState != null && savedInstanceState.getDouble("editBg") != bg1) {
+                editBg.setValue(savedInstanceState.getDouble("editBg"));
+            } else {
+                editBg.setValue(bg1);
+            }
         });
 
         Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
@@ -378,6 +387,25 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+        //recovering state if there is something
+        // only numberPickers and editTexts
+        if (savedInstanceState != null) {
+            editBg.setValue(savedInstanceState.getDouble("editBg"));
+            editTemptarget.setValue(savedInstanceState.getDouble("editTemptarget"));
+            notesEdit.setText(savedInstanceState.getString("notesEdit"));
+            editCarbs.setValue(savedInstanceState.getDouble("editCarbs"));
+            editCarbs.setValue(savedInstanceState.getDouble("editCarbs"));
+            editInsulin.setValue(savedInstanceState.getDouble("editInsulin"));
+            editDuration.setValue(savedInstanceState.getDouble("editDuration"));
+            editPercent.setValue(savedInstanceState.getDouble("editPercent"));
+            editAbsolute.setValue(savedInstanceState.getDouble("editAbsolute"));
+            editCarbTime.setValue(savedInstanceState.getDouble("editCarbTime"));
+            editPercentage.setValue(savedInstanceState.getDouble("editPercentage"));
+            editTimeshift.setValue(savedInstanceState.getDouble("editTimeshift"));
+            // time and date
+            dateButton.setText(savedInstanceState.getString("dateButton"));
+            timeButton.setText(savedInstanceState.getString("timeButton"));
+        }
         return view;
     }
 
@@ -770,6 +798,24 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         } else {
             log.error("No profile switch existing");
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString("notesEdit", notesEdit.getText().toString());
+        savedInstanceState.putString("dateButton", dateButton.getText().toString());
+        savedInstanceState.putString("timeButton", timeButton.getText().toString());
+        savedInstanceState.putDouble("editBg", editBg.getValue());
+        savedInstanceState.putDouble("editCarbs", editCarbs.getValue());
+        savedInstanceState.putDouble("editInsulin", editInsulin.getValue());
+        savedInstanceState.putDouble("editDuration", editDuration.getValue());
+        savedInstanceState.putDouble("editPercent", editPercent.getValue());
+        savedInstanceState.putDouble("editAbsolute", editAbsolute.getValue());
+        savedInstanceState.putDouble("editCarbTime", editCarbTime.getValue());
+        savedInstanceState.putDouble("editTemptarget", editTemptarget.getValue());
+        savedInstanceState.putDouble("editPercentage", editPercentage.getValue());
+        savedInstanceState.putDouble("editTimeshift", editTimeshift.getValue());
+        super.onSaveInstanceState(savedInstanceState);
     }
 
 }
