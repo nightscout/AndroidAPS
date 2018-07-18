@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Treatments;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
@@ -506,6 +508,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             i.putExtra("status", status);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MainApp.instance().startActivity(i);
+
+            CustomEvent customEvent = new CustomEvent("TreatmentClash");
+            customEvent.putCustomAttribute("status", status);
+            FabricPrivacy.getInstance().logCustom(customEvent);
         }
 
         return newRecordCreated;
