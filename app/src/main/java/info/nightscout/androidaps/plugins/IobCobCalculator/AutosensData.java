@@ -70,7 +70,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     public double avgDelta = 0d;
     public double avgDeviation = 0d;
 
-    public double autosensRatio = 1d;
+    public AutosensResult autosensResult = new AutosensResult();
     public double slopeFromMaxDeviation = 0;
     public double slopeFromMinDeviation = 999;
     public double usedMinCarbsImpact = 0d;
@@ -86,7 +86,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public String toString() {
-        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation =" + slopeFromMinDeviation;
+        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensResult.ratio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation =" + slopeFromMinDeviation;
     }
 
     public int minOld() {

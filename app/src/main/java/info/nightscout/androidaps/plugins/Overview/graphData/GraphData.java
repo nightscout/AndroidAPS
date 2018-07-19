@@ -490,9 +490,9 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
             if (autosensData != null) {
-                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio - 1, ratioScale));
-                maxRatioValueFound = Math.max(maxRatioValueFound, autosensData.autosensRatio - 1);
-                minRatioValueFound = Math.min(minRatioValueFound, autosensData.autosensRatio - 1);
+                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale));
+                maxRatioValueFound = Math.max(maxRatioValueFound, autosensData.autosensResult.ratio - 1);
+                minRatioValueFound = Math.min(minRatioValueFound, autosensData.autosensResult.ratio - 1);
             }
         }
 

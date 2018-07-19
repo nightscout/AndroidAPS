@@ -268,7 +268,7 @@ public class IobCobThread extends Thread {
                     AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime);
                     if (Config.logAutosensData)
                         log.debug("Sensitivity result: " + sensitivity.toString());
-                    autosensData.autosensRatio = sensitivity.ratio;
+                    autosensData.autosensResult = sensitivity;
                     if (Config.logAutosensData)
                         log.debug(autosensData.toString());
                 }

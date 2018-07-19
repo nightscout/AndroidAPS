@@ -137,6 +137,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     void loadBgData(long start) {
+        if (start < oldestDataAvailable()) {
+            start = oldestDataAvailable();
+            log.debug("Limiting BG data to oldest data available: " + DateUtil.dateAndTimeString(start));
+        }
         bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (start - 60 * 60 * 1000L * (24 + dia)), false);
         log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start));
     }
@@ -399,6 +403,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Nullable
     public AutosensData getLastAutosensDataSynchronized(String reason) {
+        while (thread != null && thread.getState() != Thread.State.TERMINATED) {
+            SystemClock.sleep(100);
+            log.debug("getLastAutosensDataSynchronized is waiting for calculation thread");
+        }
         synchronized (dataLock) {
             return getLastAutosensData(reason);
         }
