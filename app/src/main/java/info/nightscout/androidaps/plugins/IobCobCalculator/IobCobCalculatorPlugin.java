@@ -403,9 +403,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Nullable
     public AutosensData getLastAutosensDataSynchronized(String reason) {
-        while (thread != null && thread.getState() != Thread.State.TERMINATED) {
-            SystemClock.sleep(100);
-            log.debug("getLastAutosensDataSynchronized is waiting for calculation thread");
+        if  (thread != null && thread.getState() != Thread.State.TERMINATED) {
+            log.debug("getLastAutosensDataSynchronized is waiting for calculation thread: " + reason);
+            try {
+                thread.join(5000);
+            } catch (InterruptedException ignored) {
+            }
+            log.debug("getLastAutosensDataSynchronized finished waiting for calculation thread: " + reason);
         }
         synchronized (dataLock) {
             return getLastAutosensData(reason);
@@ -505,12 +509,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     public AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            return detectSensitivity(fromTime, toTime);
+            return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(fromTime, toTime);
         }
-    }
-
-    static AutosensResult detectSensitivity(long fromTime, long toTime) {
-        return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(fromTime, toTime);
     }
 
     public static JSONArray convertToJSONArray(IobTotal[] iobArray) {
