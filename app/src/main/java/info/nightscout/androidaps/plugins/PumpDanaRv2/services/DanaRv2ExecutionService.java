@@ -371,7 +371,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msg);
             MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-            lastHistoryFetched = carbtime - 60000;
+            lastHistoryFetched = Math.min(lastHistoryFetched, carbtime - T.mins(1).msecs());
         }
 
         final long bolusStart = System.currentTimeMillis();
@@ -455,7 +455,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         mSerialIOThread.sendMessage(msg);
         MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, time, amount, 0);
         mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-        lastHistoryFetched = time - 1;
+        lastHistoryFetched = Math.min(lastHistoryFetched, time - T.mins(1).msecs());
         return true;
     }
 
@@ -485,7 +485,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
         SystemClock.sleep(200);
         if (MsgHistoryEvents_v2.lastEventTimeLoaded != 0)
-            lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - 45 * 60 * 1000L; //always load last 45 min;
+            lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - T.mins(1).msecs();
         else
             lastHistoryFetched = 0;
         mDanaRPump.lastConnection = System.currentTimeMillis();

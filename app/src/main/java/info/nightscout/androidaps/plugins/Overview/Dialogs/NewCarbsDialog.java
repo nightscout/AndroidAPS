@@ -127,7 +127,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         startEatingSoonTTCheckbox = view.findViewById(R.id.newcarbs_eating_soon_tt);
         startEatingSoonTTCheckbox.setOnCheckedChangeListener(this);
         startHypoTTCheckbox = view.findViewById(R.id.newcarbs_hypo_tt);
-        startHypoTTCheckbox.setOnCheckedChangeListener(this);
 
         editTime = view.findViewById(R.id.newcarbs_time);
         editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
@@ -160,8 +159,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         if (bgReading != null && bgReading.value < 72) {
             startHypoTTCheckbox.setOnCheckedChangeListener(null);
             startHypoTTCheckbox.setChecked(true);
-            startHypoTTCheckbox.setOnClickListener(this);
         }
+        startHypoTTCheckbox.setOnClickListener(this);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -231,13 +230,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        // Logic to disable a selected radio when pressed. When a checked radio
-        // is pressed, no CheckChanged event is trigger, so register a Click event
+        // Logic to disable a selected radio when pressed: when a checked radio
+        // is pressed, no CheckChanged event is triggered, so register a Click event
         // when checking a radio. Since Click events come after CheckChanged events,
-        // the Click event is triggered immediately after this. Thus, set toggingTT
+        // the Click event is triggered immediately after this. Thus, set togglingTT
         // var to true, so that the first Click event fired after this is ignored.
         // Radios remove themselves from Click events once unchecked.
-        // Since radios are not in a group, manually update their state.
+        // Since radios are not in a group,  their state is manually updated here.
         switch (buttonView.getId()) {
             case R.id.newcarbs_activity_tt:
                 togglingTT = true;

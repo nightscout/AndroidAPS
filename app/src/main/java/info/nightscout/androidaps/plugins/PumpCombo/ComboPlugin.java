@@ -60,10 +60,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
@@ -498,7 +495,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 return deliverBolus(detailedBolusInfo);
             } else {
                 // no bolus required, carb only treatment
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 bolusingEvent.t = new Treatment();
@@ -689,7 +686,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
-            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi);
+            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
             if (!treatmentCreated) {
                 log.error("Adding treatment record overrode an existing record: " + dbi);
                 if (dbi.isSMB) {
@@ -1188,7 +1185,8 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-            if (TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi)) {
+            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) == null) {
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
                 updated = true;
             }
         }

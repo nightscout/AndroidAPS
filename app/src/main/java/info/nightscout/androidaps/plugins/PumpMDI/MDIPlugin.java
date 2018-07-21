@@ -136,7 +136,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         return result;
     }
 

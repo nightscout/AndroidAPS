@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -38,11 +40,13 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
@@ -465,7 +469,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     // return true if new record is created
     @Override
-    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
+    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
         treatment.source = detailedBolusInfo.source;
@@ -477,7 +481,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
-        boolean newRecordCreated = getService().createOrUpdate(treatment);
+        TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment);
+        boolean newRecordCreated = creatOrUpdateResult.newRecord;
         //log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
             Treatment carbsTreatment = new Treatment();
@@ -491,6 +496,24 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
         if (newRecordCreated && detailedBolusInfo.isValid)
             NSUpload.uploadTreatmentRecord(detailedBolusInfo);
+
+        if (!allowUpdate && !creatOrUpdateResult.success) {
+            log.error("Treatment could not be added to DB", new Exception());
+
+            String status = String.format(MainApp.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
+
+            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+            i.putExtra("soundid", R.raw.error);
+            i.putExtra("title", MainApp.gs(R.string.error_adding_treatment_title));
+            i.putExtra("status", status);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
+
+            CustomEvent customEvent = new CustomEvent("TreatmentClash");
+            customEvent.putCustomAttribute("status", status);
+            FabricPrivacy.getInstance().logCustom(customEvent);
+        }
+
         return newRecordCreated;
     }
 

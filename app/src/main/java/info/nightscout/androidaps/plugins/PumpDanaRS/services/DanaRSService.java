@@ -240,7 +240,7 @@ public class DanaRSService extends Service {
             SystemClock.sleep(100);
         }
         if (DanaRS_Packet_APS_History_Events.lastEventTimeLoaded != 0)
-            lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded - 45 * 60 * 1000L; // always load last 45 min
+            lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded - T.mins(1).msecs();
         else
             lastHistoryFetched = 0;
         log.debug("Events loaded");
@@ -272,7 +272,7 @@ public class DanaRSService extends Service {
 //            bleComm.sendMessage(msg);
             DanaRS_Packet_APS_Set_Event_History msgSetHistoryEntry_v2 = new DanaRS_Packet_APS_Set_Event_History(DanaRPump.CARBS, carbtime, carbs, 0);
             bleComm.sendMessage(msgSetHistoryEntry_v2);
-            lastHistoryFetched = carbtime - 60000;
+            lastHistoryFetched = Math.min(lastHistoryFetched, carbtime - T.mins(1).msecs());
         }
 
         final long bolusStart = System.currentTimeMillis();

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 import android.content.Context;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v4.util.LongSparseArray;
 
 import com.crashlytics.android.answers.CustomEvent;
@@ -68,6 +69,7 @@ public class IobCobThread extends Thread {
     public final void run() {
         mWakeLock.acquire();
         try {
+            log.debug("AUTOSENSDATA thread started: " + from);
             if (MainApp.getConfigBuilder() == null) {
                 log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
                 return; // app still initializing
@@ -268,16 +270,19 @@ public class IobCobThread extends Thread {
                     AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime);
                     if (Config.logAutosensData)
                         log.debug("Sensitivity result: " + sensitivity.toString());
-                    autosensData.autosensRatio = sensitivity.ratio;
+                    autosensData.autosensResult = sensitivity;
                     if (Config.logAutosensData)
                         log.debug(autosensData.toString());
                 }
             }
-            MainApp.bus().post(new EventAutosensCalculationFinished(cause));
-            log.debug("Finishing calculation thread: " + from);
+            new Thread(() -> {
+                SystemClock.sleep(1000);
+                MainApp.bus().post(new EventAutosensCalculationFinished(cause));
+            }).start();
         } finally {
             mWakeLock.release();
             MainApp.bus().post(new EventIobCalculationProgress(""));
+            log.debug("AUTOSENSDATA thread ended: " + from);
         }
     }
 

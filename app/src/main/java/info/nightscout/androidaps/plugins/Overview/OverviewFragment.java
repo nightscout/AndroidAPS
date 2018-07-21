@@ -879,7 +879,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     }
                                 });
                             } else {
-                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                             }
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                         }

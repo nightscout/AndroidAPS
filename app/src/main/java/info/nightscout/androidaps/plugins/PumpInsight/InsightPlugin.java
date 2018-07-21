@@ -61,7 +61,6 @@ import sugar.free.sightparser.applayer.descriptors.configuration_blocks.BRProfil
 import sugar.free.sightparser.applayer.messages.AppLayerMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.BolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.CancelBolusMessage;
-import sugar.free.sightparser.applayer.messages.remote_control.CancelTBRMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.ExtendedBolusMessage;
 import sugar.free.sightparser.applayer.messages.remote_control.StandardBolusMessage;
 import sugar.free.sightparser.applayer.messages.status.ActiveBolusesMessage;
@@ -456,7 +455,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             bolusingEvent.bolusId = bolusId;
             bolusingEvent.percent = 0;
             MainApp.bus().post(bolusingEvent);
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
         } else {
             log.debug("Failure to deliver treatment");
         }

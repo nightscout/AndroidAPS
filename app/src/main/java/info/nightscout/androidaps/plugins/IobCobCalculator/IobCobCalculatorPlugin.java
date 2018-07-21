@@ -137,6 +137,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     void loadBgData(long start) {
+        if (start < oldestDataAvailable()) {
+            start = oldestDataAvailable();
+            log.debug("Limiting BG data to oldest data available: " + DateUtil.dateAndTimeString(start));
+        }
         bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (start - 60 * 60 * 1000L * (24 + dia)), false);
         log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start));
     }
@@ -388,10 +392,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
             time = roundUpTime(previous);
             AutosensData data = autosensDataTable.get(time);
             if (data != null) {
-                //log.debug(">>> getAutosensData Cache hit " + data.log(time));
+                //log.debug(">>> AUTOSENSDATA Cache hit " + data.toString());
                 return data;
             } else {
-//                log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
+                //log.debug(">>> AUTOSENSDATA Cache miss " + new Date(time).toLocaleString());
                 return null;
             }
         }
@@ -399,6 +403,14 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Nullable
     public AutosensData getLastAutosensDataSynchronized(String reason) {
+        if  (thread != null && thread.isAlive()) {
+            log.debug("AUTOSENSDATA is waiting for calculation thread: " + reason);
+            try {
+                thread.join(5000);
+            } catch (InterruptedException ignored) {
+            }
+            log.debug("AUTOSENSDATA finished waiting for calculation thread: " + reason);
+        }
         synchronized (dataLock) {
             return getLastAutosensData(reason);
         }
@@ -452,6 +464,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             log.debug("AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastdata=" + DateUtil.dateAndTimeString(data.time));
             return null;
         } else {
+            log.debug("AUTOSENSDATA (" + reason + ") " + data.toString());
             return data;
         }
     }
@@ -497,12 +510,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     public AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            return detectSensitivity(fromTime, toTime);
+            return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(fromTime, toTime);
         }
-    }
-
-    static AutosensResult detectSensitivity(long fromTime, long toTime) {
-        return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(fromTime, toTime);
     }
 
     public static JSONArray convertToJSONArray(IobTotal[] iobArray) {
