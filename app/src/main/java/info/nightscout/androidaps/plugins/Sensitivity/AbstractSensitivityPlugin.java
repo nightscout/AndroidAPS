@@ -14,7 +14,7 @@ import info.nightscout.utils.SafeParse;
 
 public abstract class AbstractSensitivityPlugin extends PluginBase implements SensitivityInterface {
 
-    private static final Logger log = LoggerFactory.getLogger(SensitivityInterface.class);
+    private static final Logger log = LoggerFactory.getLogger("AUTOSENS");
 
     public AbstractSensitivityPlugin(PluginDescription pluginDescription) {
         super(pluginDescription);

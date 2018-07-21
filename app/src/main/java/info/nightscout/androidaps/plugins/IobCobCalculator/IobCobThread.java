@@ -42,7 +42,7 @@ import static info.nightscout.utils.DateUtil.now;
  */
 
 public class IobCobThread extends Thread {
-    private static Logger log = LoggerFactory.getLogger(IobCobThread.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
     private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;

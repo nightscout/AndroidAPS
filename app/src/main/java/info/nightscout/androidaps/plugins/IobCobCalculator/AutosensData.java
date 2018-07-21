@@ -26,7 +26,7 @@ import info.nightscout.utils.SP;
  */
 
 public class AutosensData implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(AutosensData.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
 
     public void setChartTime(long chartTime) {
         this.chartTime = chartTime;
@@ -86,7 +86,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public String toString() {
-        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensResult.ratio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation =" + slopeFromMinDeviation;
+        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensResult.ratio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation;
     }
 
     public int minOld() {

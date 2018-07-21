@@ -26,7 +26,7 @@ import info.nightscout.utils.SP;
  */
 
 public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
 
     private static SensitivityWeightedAveragePlugin plugin = null;
 

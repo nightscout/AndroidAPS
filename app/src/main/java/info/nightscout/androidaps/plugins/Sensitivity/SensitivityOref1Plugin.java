@@ -27,7 +27,7 @@ import info.nightscout.utils.DateUtil;
  */
 
 public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger(IobCobCalculatorPlugin.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
 
     static SensitivityOref1Plugin plugin = null;
 

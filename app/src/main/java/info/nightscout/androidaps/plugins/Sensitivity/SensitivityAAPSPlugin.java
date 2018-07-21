@@ -28,7 +28,7 @@ import info.nightscout.utils.SP;
  */
 
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
 
     static SensitivityAAPSPlugin plugin = null;
 

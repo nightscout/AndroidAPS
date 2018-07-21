@@ -43,7 +43,7 @@ import static java.util.Calendar.MINUTE;
  */
 
 public class IobCobOref1Thread extends Thread {
-    private static Logger log = LoggerFactory.getLogger(IobCobOref1Thread.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
     private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;

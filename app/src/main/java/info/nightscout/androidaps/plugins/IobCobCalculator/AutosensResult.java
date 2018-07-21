@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * Created by mike on 06.01.2017.
  */
 public class AutosensResult {
-    private static Logger log = LoggerFactory.getLogger(AutosensResult.class);
+    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
 
     //default values to show when autosens algorithm is not called
     public double ratio = 1d;
