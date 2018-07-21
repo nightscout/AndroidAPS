@@ -26,7 +26,6 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.ToastUtils;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
@@ -140,15 +139,12 @@ public class Treatment implements DataPointWithLabelInterface {
      */
     public boolean equalsRePumpHistory(Treatment other) {
         if (date != other.date) {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "date: " + date + " vs " +  other.date);
             return false;
         }
         if (insulin != other.insulin) {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "insulin: " + insulin + " vs " +  other.insulin);
             return false;
         }
         if (carbs != other.carbs) {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "carbs: " + carbs + " vs " +  other.carbs);
             return false;
         }
         return true;
