@@ -455,7 +455,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             bolusingEvent.bolusId = bolusId;
             bolusingEvent.percent = 0;
             MainApp.bus().post(bolusingEvent);
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
         } else {
             log.debug("Failure to deliver treatment");
         }
