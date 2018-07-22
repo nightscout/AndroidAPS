@@ -1168,6 +1168,7 @@
     <string name="error_adding_treatment_message" formatted="false">A treatment (insulin: %.2f, carbs: %d, at: %s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">Generated eCarbs with amount: %1$dg, duration: %2$dh, delay: %3$dm</string>
     <string name="key_plugin_stats_report_timestamp" translatable="false">key_plugin_stats_report_timestamp</string>
+    <string name="openaps_noasdata">No autosens data available</string>
 
     <plurals name="objective_days">
         <item quantity="one">%d day</item>
