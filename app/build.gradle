@@ -63,7 +63,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "1.60e-dev"
+        version "2.0a-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
