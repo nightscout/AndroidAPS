@@ -120,10 +120,12 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
         // when we have less than 8h worth of deviation data, add up to 90m of zero deviations
         // this dampens any large sensitivity changes detected based on too little data, without ignoring them completely
-        log.debug("Using most recent " + deviationsArray.size() + " deviations");
+        if (Config.logAutosensData)
+            log.debug("Using most recent " + deviationsArray.size() + " deviations");
         if (deviationsArray.size() < 96) {
             int pad = Math.round((1 - deviationsArray.size() / 96) * 18);
-            log.debug("Adding " + pad + " more zero deviations");
+            if (Config.logAutosensData)
+                log.debug("Adding " + pad + " more zero deviations");
             for (int d = 0; d < pad; d++) {
                 //process.stderr.write(".");
                 deviationsArray.add(0d);
