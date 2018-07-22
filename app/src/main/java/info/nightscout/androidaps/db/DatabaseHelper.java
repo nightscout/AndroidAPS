@@ -676,7 +676,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     .source(Source.NIGHTSCOUT);
             createOrUpdate(tempTarget);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -762,7 +762,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
             }
         } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -967,7 +967,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 createOrUpdate(tempBasal);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -1345,7 +1345,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvent._id = trJson.getString("_id");
             createOrUpdate(careportalEvent);
         } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -1520,7 +1520,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 profileSwitch.profilePlugin = trJson.getString("profilePlugin");
             createOrUpdate(profileSwitch);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
