@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.OpenAPSSMB;
 
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,7 +181,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
 
         startPart = new Date();
         if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
-            lastAutosensResult = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin").autosensResult;
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
+            if (autosensData == null) {
+                return;
+            }
+            lastAutosensResult = autosensData.autosensResult;
         } else {
             lastAutosensResult = new AutosensResult();
             lastAutosensResult.sensResult = "autosens disabled";
