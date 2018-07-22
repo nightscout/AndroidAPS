@@ -15,6 +15,8 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.Radio
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RLMessage;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.PumpMessage;
@@ -69,6 +71,9 @@ public abstract class RileyLinkCommunicationManager {
     }
 
 
+    private int timeoutCount = 0;
+
+
     // All pump communications go through this function.
     protected PumpMessage sendAndListen(RLMessage msg, int timeout_ms) {
 
@@ -76,17 +81,29 @@ public abstract class RileyLinkCommunicationManager {
             LOG.info("Sent:" + ByteUtil.shortHexString(msg.getTxData()));
         }
 
-        RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()), timeout_ms);
-        PumpMessage rval = new PumpMessage(resp.getRadioResponse().getPayload());
+        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()), timeout_ms);
+        PumpMessage rval = new PumpMessage(rfSpyResponse.getRadioResponse().getPayload());
         if (rval.isValid()) {
             // Mark this as the last time we heard from the pump.
             rememberLastGoodPumpCommunicationTime();
         } else {
-            LOG.warn("Response is invalid. !!!");
+            LOG.warn("Response is invalid. !!! - ", rfSpyResponse.wasInterrupted(), rfSpyResponse.wasTimeout());
+
+            if (rfSpyResponse.wasTimeout()) {
+                timeoutCount++;
+
+                if (timeoutCount >= 5) {
+                    RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.NoContactWithDevice);
+                    timeoutCount = 0;
+                    tuneForPump();
+                    //RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_quickTune);
+                }
+            }
+
         }
 
         if (showPumpMessages) {
-            LOG.info("Received:" + ByteUtil.shortHexString(resp.getRadioResponse().getPayload()));
+            LOG.info("Received:" + ByteUtil.shortHexString(rfSpyResponse.getRadioResponse().getPayload()));
         }
         return rval;
     }
@@ -130,6 +147,11 @@ public abstract class RileyLinkCommunicationManager {
 
 
     long nextWakeUpRequired = 0L;
+
+
+    public int getNotConnectedCount() {
+        return rfspy != null ? rfspy.notConnectedCount : 0;
+    }
 
 
     // FIXME change wakeup
@@ -219,7 +241,7 @@ public abstract class RileyLinkCommunicationManager {
             for (int j = 0; j < tries; j++) {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
-                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0, (byte) 0, (byte) 0, 3000, (byte) 0);
+                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0, (byte) 0, (byte) 0, 1500, (byte) 0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
@@ -239,12 +261,23 @@ public abstract class RileyLinkCommunicationManager {
             trial.averageRSSI = (double) (sumRSSI) / (double) (trial.tries);
             results.trials.add(trial);
         }
-        results.sort(); // sorts in ascending order
-        LOG.debug("Sorted scan results:");
+
+
+        StringBuilder stringBuilder = new StringBuilder("Scan results:\n");
+
         for (int k = 0; k < results.trials.size(); k++) {
             FrequencyTrial one = results.trials.get(k);
-            LOG.debug("Scan Result[{}]: Freq={}, avg RSSI = {}", k, one.frequencyMHz, one.averageRSSI);
+
+            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, "" + one.frequencyMHz, "" + one.averageRSSI));
+
+            //LOG.debug("Scan Result[{}]: Freq={}, avg RSSI = {}", k, one.frequencyMHz, one.averageRSSI);
         }
+
+        LOG.debug(stringBuilder.toString());
+
+        results.sort(); // sorts in ascending order
+
+
         FrequencyTrial bestTrial = results.trials.get(results.trials.size() - 1);
         results.bestFrequencyMHz = bestTrial.frequencyMHz;
         if (bestTrial.successes > 0) {
@@ -255,17 +288,6 @@ public abstract class RileyLinkCommunicationManager {
             return 0.0;
         }
     }
-
-
-    //    public RLMessage makeRLMessage(RLMessageType type) {
-    //        return makeRLMessage(type, null);
-    //    }
-
-
-    //public abstract RLMessage makeRLMessage(RLMessageType type, byte[] data);
-
-
-    //public abstract RLMessage makeRLMessage(byte[] data);
 
 
     public abstract byte[] createPumpMessageContent(RLMessageType type);
@@ -351,7 +373,7 @@ public abstract class RileyLinkCommunicationManager {
     private void rememberLastGoodPumpCommunicationTime() {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
-        SP.putLong(MedtronicConst.Prefs.LastGoodPumpCommunicationTime, lastGoodReceiverCommunicationTime);
+        SP.putLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, lastGoodReceiverCommunicationTime);
         MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
     }
 
@@ -359,7 +381,7 @@ public abstract class RileyLinkCommunicationManager {
     private long getLastGoodReceiverCommunicationTime() {
         // If we have a value of zero, we need to load from prefs.
         if (lastGoodReceiverCommunicationTime == 0L) {
-            lastGoodReceiverCommunicationTime = SP.getLong(MedtronicConst.Prefs.LastGoodPumpCommunicationTime, 0L);
+            lastGoodReceiverCommunicationTime = SP.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L);
             // Might still be zero, but that's fine.
         }
         double minutesAgo = (System.currentTimeMillis() - lastGoodReceiverCommunicationTime) / (1000.0 * 60.0);
@@ -373,4 +395,9 @@ public abstract class RileyLinkCommunicationManager {
     }
 
 
+    public void clearNotConnectedCount() {
+        if (rfspy != null) {
+            rfspy.notConnectedCount = 0;
+        }
+    }
 }

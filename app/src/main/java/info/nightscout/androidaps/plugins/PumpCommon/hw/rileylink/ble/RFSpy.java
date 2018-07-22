@@ -36,7 +36,7 @@ public class RFSpy {
 
     private RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
-    private int previousRegion = 0;
+    //private int previousRegion = 0;
     private RileyLinkTargetFrequency selectedTargetFrequency;
 
     private UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
@@ -72,17 +72,7 @@ public class RFSpy {
     }
 
 
-    // This gets the version from the BLE113, not from the CC1110.
-    // I.e., this gets the version from the BLE interface, not from the radio.
-    public String getVersion() {
-        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(radioServiceUUID, radioVersionUUID);
-        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            return StringUtil.fromBytes(result.value);
-        } else {
-            LOG.error("getVersion failed with code: " + result.resultCode);
-            return "(null)";
-        }
-    }
+    public int notConnectedCount = 0;
 
 
     // The caller has to know how long the RFSpy will be busy with what was sent to it.
@@ -109,11 +99,13 @@ public class RFSpy {
         RFSpyResponse resp = new RFSpyResponse(rawResponse);
         if (rawResponse == null) {
             LOG.error("writeToData: No response from RileyLink");
+            notConnectedCount++;
         } else {
             if (resp.wasInterrupted()) {
                 LOG.error("writeToData: RileyLink was interrupted");
             } else if (resp.wasTimeout()) {
                 LOG.error("writeToData: RileyLink reports timeout");
+                notConnectedCount++;
             } else if (resp.isOK()) {
                 LOG.warn("writeToData: RileyLink reports OK");
             } else {
@@ -148,6 +140,18 @@ public class RFSpy {
         return output;
     }
 
+
+    // This gets the version from the BLE113, not from the CC1110.
+    // I.e., this gets the version from the BLE interface, not from the radio.
+    public String getVersion() {
+        BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(radioServiceUUID, radioVersionUUID);
+        if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
+            return StringUtil.fromBytes(result.value);
+        } else {
+            LOG.error("getVersion failed with code: " + result.resultCode);
+            return "(null)";
+        }
+    }
 
     public RFSpyResponse getRadioVersion() {
         RFSpyResponse resp = writeToData(getCommandArray(RFSpyCommand.GetVersion, null), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);

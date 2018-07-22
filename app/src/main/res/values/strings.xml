@@ -1124,5 +1124,11 @@
     <string name="rileylink_error_pod_unreachable">Pod unreachable</string>
 
     <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string>
+    <string name="medtronic_pump_status_never_contacted">Never contacted</string>
+    <string name="medtronic_pump_status_waking_up">Waking up</string>
+    <string name="medtronic_pump_status_error_comm">Error with communication</string>
+    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>
+    <string name="medtronic_pump_status_problem_contacting">Problem contacting Pump</string>
+    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>
 
 </resources>

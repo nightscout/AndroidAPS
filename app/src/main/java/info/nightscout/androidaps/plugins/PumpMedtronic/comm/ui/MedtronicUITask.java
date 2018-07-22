@@ -216,4 +216,7 @@ public class MedtronicUITask {
     }
 
 
+    public boolean hasData() {
+        return (returnData != null);
+    }
 }

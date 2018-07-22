@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.ThreadUtil;
 
 /**
  * Created by geoff on 5/26/16.
- * Added: State handling, configuration of RF for different configuration ranges, connection handling
+ * Added: State handling, configuration of RF for different configuration ranges, connection handling - Andy
  */
 public class RileyLinkBLE {
 

@@ -34,7 +34,7 @@ public class InitializePumpManagerTask extends ServiceTask {
     public void run() {
 
         // FIXME
-        double lastGoodFrequency = SP.getDouble(MedtronicConst.Prefs.LastGoodPumpFrequency, 0.0);
+        double lastGoodFrequency = SP.getDouble(MedtronicConst.Statistics.LastGoodPumpFrequency, 0.0);
 
         if ((lastGoodFrequency > 0.0d) && RileyLinkUtil.getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
 
@@ -55,6 +55,7 @@ public class InitializePumpManagerTask extends ServiceTask {
             //RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_note_Idle), null);
         } else {
             RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+
         }
     }
 }

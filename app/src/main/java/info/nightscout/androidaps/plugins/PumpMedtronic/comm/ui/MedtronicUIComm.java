@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
@@ -90,4 +92,11 @@ public class MedtronicUIComm {
     }
 
 
+    public int getInvalidResponsesCount() {
+        return getCommunicationManager().getNotConnectedCount();
+    }
+
+    public void startTunning() {
+        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+    }
 }

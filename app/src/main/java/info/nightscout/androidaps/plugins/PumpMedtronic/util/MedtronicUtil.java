@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
+import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.MessageType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
@@ -34,6 +36,7 @@ public class MedtronicUtil extends RileyLinkUtil {
     private static RileyLinkMedtronicService medtronicService;
     private static MedtronicPumpStatus medtronicPumpStatus;
     private static MedtronicCommandType currentCommand;
+    private static Map<String, PumpSettingDTO> settings;
 
 
     public static LocalTime getTimeFrom30MinInterval(int interval) {
@@ -277,7 +280,7 @@ public class MedtronicUtil extends RileyLinkUtil {
         MedtronicUtil.currentCommand = currentCommand;
     }
 
-    public static MedtronicCommandType getCurrectCommand() {
+    public static MedtronicCommandType getCurrentCommand() {
         return MedtronicUtil.currentCommand;
     }
 
@@ -285,5 +288,13 @@ public class MedtronicUtil extends RileyLinkUtil {
         double diff = d1 - d2;
 
         return (Math.abs(diff) <= 0.000001);
+    }
+
+    public static void setSettings(Map<String, PumpSettingDTO> settings) {
+        MedtronicUtil.settings = settings;
+    }
+
+    public static Map<String, PumpSettingDTO> getSettings() {
+        return settings;
     }
 }

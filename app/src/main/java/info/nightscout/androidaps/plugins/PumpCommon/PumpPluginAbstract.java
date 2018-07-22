@@ -43,19 +43,20 @@ import info.nightscout.utils.DecimalFormatter;
 
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
-
+// FIXME remove PumpDriver instances, just keep methods that do something here
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
 
     protected PumpDescription pumpDescription = new PumpDescription();
-    protected PumpStatus pumpStatusData;
+    //protected PumpStatus pumpStatusData;
 
     protected PumpDriverInterface pumpDriver;
     protected PumpStatus pumpStatus;
     protected String internalName;
 
     protected ServiceConnection serviceConnection = null;
+    protected boolean serviceRunning = false;
 
 
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
@@ -125,6 +126,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         Intent intent = new Intent(context, getServiceClass());
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
+        serviceRunning = true;
+
         MainApp.bus().register(this);
         onStartCustomActions();
         super.onStart();
@@ -135,6 +138,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     protected void onStop() {
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(serviceConnection);
+
+        serviceRunning = false;
 
         MainApp.bus().unregister(this);
     }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
@@ -599,11 +599,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    public List<PumpSettingDTO> getPumpSettings() {
+    public Map<String, PumpSettingDTO> getPumpSettings() {
 
         Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.getSettings(MedtronicUtil.getMedtronicPumpModel()));
 
-        return responseObject == null ? null : (List<PumpSettingDTO>) responseObject;
+        return responseObject == null ? null : (Map<String, PumpSettingDTO>) responseObject;
     }
 
 
@@ -794,7 +794,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         //Integer resp = getRemainingBattery();
         //pumpStatus.batteryRemaining = resp == null ? -1 : resp;
 
-        pumpStatus.remainUnits = getRemainingInsulin();
+        //pumpStatus.remainUnits = getRemainingInsulin();
 
         /* current basal */
         //TempBasalPair basalRate = getCurrentBasalRate();
@@ -821,7 +821,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         // get pump time
         LocalDateTime clockResult = getPumpTime();
         if (clockResult != null) {
-            pumpStatus.time = clockResult.toDate();
+            //pumpStatus.time = clockResult.toDate();
         }
         // get last sync time
 

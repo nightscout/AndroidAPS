@@ -7,8 +7,8 @@ import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
@@ -199,32 +199,33 @@ public class MedtronicConverter {
     }
 
 
-    public List<PumpSettingDTO> decodeSettings512(byte[] rd) {
+    public Map<String, PumpSettingDTO> decodeSettings512(byte[] rd) {
 
-        List<PumpSettingDTO> outList = new ArrayList<>();
+        Map<String, PumpSettingDTO> map = new HashMap<>();
+        //List<PumpSettingDTO> outList = new ArrayList<>();
 
-        outList.add(new PumpSettingDTO("PCFG_AUTOOFF_TIMEOUT", "" + rd[0], PumpConfigurationGroup.General));
+        addSettingToMap("PCFG_AUTOOFF_TIMEOUT", "" + rd[0], PumpConfigurationGroup.General, map);
 
 
         if (rd[1] == 4) {
-            outList.add(new PumpSettingDTO("PCFG_ALARM_MODE", "Silent", PumpConfigurationGroup.Sound));
+            addSettingToMap("PCFG_ALARM_MODE", "Silent", PumpConfigurationGroup.Sound, map);
         } else {
-            outList.add(new PumpSettingDTO("PCFG_ALARM_MODE", "Normal", PumpConfigurationGroup.Sound));
-            outList.add(new PumpSettingDTO("PCFG_ALARM_BEEP_VOLUME", "" + rd[1], PumpConfigurationGroup.Sound));
+            addSettingToMap("PCFG_ALARM_MODE", "Normal", PumpConfigurationGroup.Sound, map);
+            addSettingToMap("PCFG_ALARM_BEEP_VOLUME", "" + rd[1], PumpConfigurationGroup.Sound, map);
         }
 
-        outList.add(new PumpSettingDTO("PCFG_AUDIO_BOLUS_ENABLED", parseResultEnable(rd[2]), PumpConfigurationGroup.Bolus));
+        addSettingToMap("PCFG_AUDIO_BOLUS_ENABLED", parseResultEnable(rd[2]), PumpConfigurationGroup.Bolus, map);
 
         if (rd[2] == 1) {
-            outList.add(new PumpSettingDTO("PCFG_AUDIO_BOLUS_STEP_SIZE", "" + decodeBolusInsulin(ByteUtil.asUINT8(rd[3])), PumpConfigurationGroup.Bolus));
+            addSettingToMap("PCFG_AUDIO_BOLUS_STEP_SIZE", "" + decodeBolusInsulin(ByteUtil.asUINT8(rd[3])), PumpConfigurationGroup.Bolus, map);
         }
 
-        outList.add(new PumpSettingDTO("PCFG_VARIABLE_BOLUS_ENABLED", parseResultEnable(rd[4]), PumpConfigurationGroup.Bolus));
-        outList.add(new PumpSettingDTO("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus));
-        outList.add(new PumpSettingDTO("PCFG_MAX_BASAL", "" + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[getSettingIndexMaxBasal()], rd[getSettingIndexMaxBasal() + 1])), PumpConfigurationGroup.Basal));
-        outList.add(new PumpSettingDTO("CFG_BASE_CLOCK_MODE", rd[getSettingIndexTimeDisplayFormat()] == 0 ? "12h" : "24h", PumpConfigurationGroup.General));
-        outList.add(new PumpSettingDTO("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] != 0 ? 50 : 100), PumpConfigurationGroup.Insulin));
-        outList.add(new PumpSettingDTO("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10]), PumpConfigurationGroup.Basal));
+        addSettingToMap("PCFG_VARIABLE_BOLUS_ENABLED", parseResultEnable(rd[4]), PumpConfigurationGroup.Bolus, map);
+        addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map);
+        addSettingToMap("PCFG_MAX_BASAL", "" + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[getSettingIndexMaxBasal()], rd[getSettingIndexMaxBasal() + 1])), PumpConfigurationGroup.Basal, map);
+        addSettingToMap("CFG_BASE_CLOCK_MODE", rd[getSettingIndexTimeDisplayFormat()] == 0 ? "12h" : "24h", PumpConfigurationGroup.General, map);
+        addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] != 0 ? 50 : 100), PumpConfigurationGroup.Insulin, map);
+        addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10]), PumpConfigurationGroup.Basal, map);
 
         if (rd[10] == 1) {
             String patt;
@@ -246,46 +247,51 @@ public class MedtronicConverter {
                     break;
             }
 
-            outList.add(new PumpSettingDTO("PCFG_ACTIVE_BASAL_PROFILE", patt, PumpConfigurationGroup.Basal));
+            addSettingToMap("PCFG_ACTIVE_BASAL_PROFILE", patt, PumpConfigurationGroup.Basal, map);
 
         }
 
-        outList.add(new PumpSettingDTO("CFG_MM_RF_ENABLED", parseResultEnable(rd[12]), PumpConfigurationGroup.General));
-        outList.add(new PumpSettingDTO("CFG_MM_BLOCK_ENABLED", parseResultEnable(rd[13]), PumpConfigurationGroup.General));
+        addSettingToMap("CFG_MM_RF_ENABLED", parseResultEnable(rd[12]), PumpConfigurationGroup.General, map);
+        addSettingToMap("CFG_MM_BLOCK_ENABLED", parseResultEnable(rd[13]), PumpConfigurationGroup.General, map);
 
-        outList.add(new PumpSettingDTO("PCFG_TEMP_BASAL_TYPE", rd[14] != 0 ? "Percent" : "Units", PumpConfigurationGroup.Basal));
+        addSettingToMap("PCFG_TEMP_BASAL_TYPE", rd[14] != 0 ? "Percent" : "Units", PumpConfigurationGroup.Basal, map);
 
         if (rd[14] == 1) {
-            outList.add(new PumpSettingDTO("PCFG_TEMP_BASAL_PERCENT", "" + rd[15], PumpConfigurationGroup.Basal));
+            addSettingToMap("PCFG_TEMP_BASAL_PERCENT", "" + rd[15], PumpConfigurationGroup.Basal, map);
         }
 
-        outList.add(new PumpSettingDTO("CFG_PARADIGM_LINK_ENABLE", parseResultEnable(rd[16]), PumpConfigurationGroup.General));
+        addSettingToMap("CFG_PARADIGM_LINK_ENABLE", parseResultEnable(rd[16]), PumpConfigurationGroup.General, map);
 
-        decodeInsulinActionSetting(rd, outList);
+        decodeInsulinActionSetting(rd, map);
 
-        return outList;
+        return map;
     }
 
 
-    public List<PumpSettingDTO> decodeSettings(byte[] rd) {
-        List<PumpSettingDTO> outList = decodeSettings512(rd);
+    public void addSettingToMap(String key, String value, PumpConfigurationGroup group, Map<String, PumpSettingDTO> map) {
+        map.put(key, new PumpSettingDTO(key, value, group));
+    }
 
-        outList.add(new PumpSettingDTO("PCFG_MM_RESERVOIR_WARNING_TYPE_TIME", rd[18] != 0 ? "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME" : "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS", PumpConfigurationGroup.Other));
 
-        outList.add(new PumpSettingDTO("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]), PumpConfigurationGroup.Other));
+    public Map<String, PumpSettingDTO> decodeSettings(byte[] rd) {
+        Map<String, PumpSettingDTO> map = decodeSettings512(rd);
 
-        outList.add(new PumpSettingDTO("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20]), PumpConfigurationGroup.Other));
+        addSettingToMap("PCFG_MM_RESERVOIR_WARNING_TYPE_TIME", rd[18] != 0 ? "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME" : "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS", PumpConfigurationGroup.Other, map);
+
+        addSettingToMap("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]), PumpConfigurationGroup.Other, map);
+
+        addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20]), PumpConfigurationGroup.Other, map);
 
 
         if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
 
-            outList.add(new PumpSettingDTO("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus));
-            outList.add(new PumpSettingDTO("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22]), PumpConfigurationGroup.Other));
-            outList.add(new PumpSettingDTO("PCFG_OTHER_DEVICE_ENABLE", parseResultEnable(rd[23]), PumpConfigurationGroup.Other));
-            outList.add(new PumpSettingDTO("PCFG_OTHER_DEVICE_PAIRED_STATE", parseResultEnable(rd[24]), PumpConfigurationGroup.Other));
+            addSettingToMap("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus, map);
+            addSettingToMap("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22]), PumpConfigurationGroup.Other, map);
+            addSettingToMap("PCFG_OTHER_DEVICE_ENABLE", parseResultEnable(rd[23]), PumpConfigurationGroup.Other, map);
+            addSettingToMap("PCFG_OTHER_DEVICE_PAIRED_STATE", parseResultEnable(rd[24]), PumpConfigurationGroup.Other, map);
         }
 
-        return outList;
+        return map;
     }
 
 
@@ -307,9 +313,9 @@ public class MedtronicConverter {
 
 
     // 512
-    public void decodeInsulinActionSetting(byte ai[], List<PumpSettingDTO> outList) {
+    public void decodeInsulinActionSetting(byte[] ai, Map<String, PumpSettingDTO> map) {
         if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_512_712)) {
-            outList.add(new PumpSettingDTO("PCFG_INSULIN_ACTION_TYPE", (ai[17] != 0 ? "Regular" : "Fast"), PumpConfigurationGroup.Insulin));
+            addSettingToMap("PCFG_INSULIN_ACTION_TYPE", (ai[17] != 0 ? "Regular" : "Fast"), PumpConfigurationGroup.Insulin, map);
         } else {
             int i = ai[17];
             String s = "";
@@ -323,7 +329,7 @@ public class MedtronicConverter {
                     s = "Curve: " + i;
             }
 
-            outList.add(new PumpSettingDTO("PCFG_INSULIN_ACTION_TYPE", s, PumpConfigurationGroup.Insulin));
+            addSettingToMap("PCFG_INSULIN_ACTION_TYPE", s, PumpConfigurationGroup.Insulin, map);
         }
     }
 

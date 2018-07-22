@@ -451,7 +451,7 @@ public abstract class RileyLinkService extends Service {
         double lastGoodFrequency = 0.0d;
 
         if (rileyLinkServiceData.lastGoodFrequency == null) {
-            lastGoodFrequency = SP.getDouble(MedtronicConst.Prefs.LastGoodPumpFrequency, 0.0d);
+            lastGoodFrequency = SP.getDouble(MedtronicConst.Statistics.LastGoodPumpFrequency, 0.0d);
         } else {
             lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
@@ -474,11 +474,13 @@ public abstract class RileyLinkService extends Service {
 
         if ((newFrequency != 0.0) && (newFrequency != lastGoodFrequency)) {
             LOG.info("Saving new pump frequency of {}MHz", newFrequency);
-            SP.putDouble(MedtronicConst.Prefs.LastGoodPumpFrequency, newFrequency);
+            SP.putDouble(MedtronicConst.Statistics.LastGoodPumpFrequency, newFrequency);
             rileyLinkServiceData.lastGoodFrequency = newFrequency;
             rileyLinkServiceData.tuneUpDone = true;
             rileyLinkServiceData.lastTuneUpTime = System.currentTimeMillis();
         }
+
+        getRileyLinkCommunicationManager().clearNotConnectedCount();
 
         if (newFrequency == 0.0d) {
             // error tuning pump, pump not present ??

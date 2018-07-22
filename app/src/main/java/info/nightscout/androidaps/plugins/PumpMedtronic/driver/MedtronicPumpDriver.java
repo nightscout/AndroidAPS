@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 /**
  * Created by andy on 4/28/18.
  */
-
+@Deprecated
 public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInterface*/ {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpDriver.class);

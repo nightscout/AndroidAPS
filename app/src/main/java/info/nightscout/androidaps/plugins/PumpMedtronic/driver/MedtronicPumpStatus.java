@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
@@ -35,11 +36,11 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     public String errorDescription = null;
     public String serialNumber;
-    public PumpType pumpType = null;
+    //public PumpType pumpType = null;
     public String pumpFrequency = null;
     public String rileyLinkAddress = null;
-    public Integer maxBolus;
-    public Integer maxBasal;
+    public Double maxBolus;
+    public Double maxBasal;
     private String[] frequencies;
     private boolean isFrequencyUS = false;
 
@@ -49,42 +50,27 @@ public class MedtronicPumpStatus extends PumpStatus {
     String regexSN = "[0-9]{6}";
 
     private Map<String, PumpType> medtronicPumpMap = null;
+    private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
 
     // statuses
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     public RileyLinkError rileyLinkError;
     public PumpDeviceState pumpDeviceState = PumpDeviceState.NeverContacted;
 
+    public MedtronicDeviceType medtronicDeviceType = null;
+
+
     // fixme
 
-
-//    public long getTimeIndex() {
-//        return (long) Math.ceil(time.getTime() / 60000d);
-//    }
-//
-//
-//    public void setTimeIndex(long timeIndex) {
-//        this.timeIndex = timeIndex;
-//    }
-//
-//
-//    public long timeIndex;
-//
-//    public Date time;
-
-    //public double remainingUnits = 0;
-    public int remainBattery = 0;
 
     public double currentBasal = 0;
 
     public int tempBasalInProgress = 0;
     public int tempBasalRatio = 0;
-    public double tempBasalAmount = 0.0d;
     public int tempBasalRemainMin = 0;
     public Date tempBasalStart;
-
-    //public Date last_bolus_time;   in main class
-    //public double last_bolus_amount = 0;
+    public Double tempBasalAmount = 0.0d;
+    public Integer tempBasalLength = 0;
 
 
     // fixme
@@ -102,7 +88,32 @@ public class MedtronicPumpStatus extends PumpStatus {
         this.reservoirRemainingUnits = 75d;
         this.batteryRemaining = 75;
 
-        if (this.medtronicPumpMap == null) createMedtronicPumpMap();
+        if (this.medtronicPumpMap == null)
+            createMedtronicPumpMap();
+
+        if (this.medtronicDeviceTypeMap == null)
+            createMedtronicDeviceTypeMap();
+
+        this.lastConnection = SP.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L);
+        Date d = new Date();
+        d.setTime(this.lastConnection);
+
+        this.lastDataTime = d;
+    }
+
+    private void createMedtronicDeviceTypeMap() {
+        medtronicDeviceTypeMap = new HashMap<>();
+        medtronicDeviceTypeMap.put("512", MedtronicDeviceType.Medtronic_512);
+        medtronicDeviceTypeMap.put("712", MedtronicDeviceType.Medtronic_712);
+        medtronicDeviceTypeMap.put("515", MedtronicDeviceType.Medtronic_515);
+        medtronicDeviceTypeMap.put("715", MedtronicDeviceType.Medtronic_715);
+
+        medtronicDeviceTypeMap.put("522", MedtronicDeviceType.Medtronic_522);
+        medtronicDeviceTypeMap.put("722", MedtronicDeviceType.Medtronic_722);
+        medtronicDeviceTypeMap.put("523", MedtronicDeviceType.Medtronic_523_Revel);
+        medtronicDeviceTypeMap.put("723", MedtronicDeviceType.Medtronic_723_Revel);
+        medtronicDeviceTypeMap.put("554", MedtronicDeviceType.Medtronic_554_Veo);
+        medtronicDeviceTypeMap.put("754", MedtronicDeviceType.Medtronic_754_Veo);
     }
 
 
@@ -137,6 +148,8 @@ public class MedtronicPumpStatus extends PumpStatus {
             if (this.medtronicPumpMap == null)
                 createMedtronicPumpMap();
 
+            if (this.medtronicDeviceTypeMap == null)
+                createMedtronicDeviceTypeMap();
 
             String serialNr = SP.getString(MedtronicConst.Prefs.PumpSerial, null);
 
@@ -169,6 +182,7 @@ public class MedtronicPumpStatus extends PumpStatus {
                     return;
                 } else {
                     this.pumpType = medtronicPumpMap.get(pumpTypePart);
+                    this.medtronicDeviceType = medtronicDeviceTypeMap.get(pumpTypePart);
 
                     if (pumpTypePart.startsWith("7"))
                         this.reservoirFullUnits = "300";
@@ -214,21 +228,9 @@ public class MedtronicPumpStatus extends PumpStatus {
             }
 
 
-            String value = SP.getString(MedtronicConst.Prefs.MaxBolus, "25");
+            maxBolus = checkParameterValue(MedtronicConst.Prefs.MaxBolus, "25.0", 25.0d);
 
-            maxBolus = Integer.parseInt(value);
-
-            if (maxBolus > 25) {
-                SP.putString(MedtronicConst.Prefs.MaxBolus, "25");
-            }
-
-            value = SP.getString(MedtronicConst.Prefs.MaxBasal, "35");
-
-            maxBasal = Integer.parseInt(value);
-
-            if (maxBasal > 35) {
-                SP.putString(MedtronicConst.Prefs.MaxBasal, "35");
-            }
+            maxBasal = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0d);
 
             startService();
 
@@ -251,6 +253,27 @@ public class MedtronicPumpStatus extends PumpStatus {
         }
 
         return (rileyLinkAddressChanged == false && serialChanged == false);
+    }
+
+
+    private double checkParameterValue(String key, String defaultValue, double defaultValueDouble) {
+        double val = 0.0d;
+
+        String value = SP.getString(key, defaultValue);
+
+        try {
+            val = Double.parseDouble(value);
+        } catch (Exception ex) {
+            LOG.error("Error parsing setting: {}, value found {}", key, value);
+            val = defaultValueDouble;
+        }
+
+        if (val > defaultValueDouble) {
+            SP.putString(MedtronicConst.Prefs.MaxBolus, "25.0");
+            val = defaultValueDouble;
+        }
+
+        return val;
     }
 
 

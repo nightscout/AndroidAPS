@@ -35,10 +35,14 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCommon.dialog.RileylinkSettingsActivity;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpValuesChanged;
@@ -185,14 +189,14 @@ public class MedtronicFragment extends SubscriberFragment {
 
                             MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
 
-                            if (eventStatusChange.rileyLinkServiceState != null)
-                                pumpStatus.rileyLinkServiceState = eventStatusChange.rileyLinkServiceState;
-
-                            if (eventStatusChange.rileyLinkError != null)
-                                pumpStatus.rileyLinkError = eventStatusChange.rileyLinkError;
-
-                            if (eventStatusChange.pumpDeviceState != null)
-                                pumpStatus.pumpDeviceState = eventStatusChange.pumpDeviceState;
+//                            if (eventStatusChange.rileyLinkServiceState != null)
+//                                pumpStatus.rileyLinkServiceState = eventStatusChange.rileyLinkServiceState;
+//
+//                            if (eventStatusChange.rileyLinkError != null)
+//                                pumpStatus.rileyLinkError = eventStatusChange.rileyLinkError;
+//
+//                            if (eventStatusChange.pumpDeviceState != null)
+//                                pumpStatus.pumpDeviceState = eventStatusChange.pumpDeviceState;
 
                             setDeviceStatus(pumpStatus);
                             //pumpStatusIconView.setTextColor(Color.WHITE);
@@ -207,6 +211,9 @@ public class MedtronicFragment extends SubscriberFragment {
 
 
     private void setDeviceStatus(MedtronicPumpStatus pumpStatus) {
+
+        pumpStatus.rileyLinkServiceState = (RileyLinkServiceState) checkStatusSet(pumpStatus.rileyLinkServiceState, RileyLinkUtil.getServiceState());
+
         if (pumpStatus.rileyLinkServiceState != null) {
 
             int resourceId = pumpStatus.rileyLinkServiceState.getResourceId(getTargetDevice());
@@ -214,7 +221,7 @@ public class MedtronicFragment extends SubscriberFragment {
             rileyLinkStatus.setTextSize(14);
 
             if (pumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted) {
-                rileyLinkStatus.setText("  " + getTranslation(resourceId));
+                rileyLinkStatus.setText(getTranslation(resourceId));
                 rileyLinkStatus.setTextSize(14);
             } else if (pumpStatus.rileyLinkServiceState.isConnecting()) {
                 rileyLinkStatus.setText("{fa-bluetooth-b spin}   " + getTranslation(resourceId));
@@ -226,48 +233,64 @@ public class MedtronicFragment extends SubscriberFragment {
             }
         }
 
+        pumpStatus.rileyLinkError = (RileyLinkError) checkStatusSet(pumpStatus.rileyLinkError, RileyLinkUtil.getError());
+
         if (pumpStatus.rileyLinkError != null) {
             int resourceId = pumpStatus.rileyLinkError.getResourceId(getTargetDevice());
             errorsView.setText(getTranslation(resourceId));
-        }
+        } else
+            errorsView.setText("-");
+
+
+        pumpStatus.pumpDeviceState = (PumpDeviceState) checkStatusSet(pumpStatus.pumpDeviceState, MedtronicUtil.getPumpDeviceState());
 
         if (pumpStatus.pumpDeviceState != null) {
             // TODO  Pump State
 
             switch (pumpStatus.pumpDeviceState) {
                 case Sleeping:
-                    pumpStatusIconView.setText("{fa-bed}   " + pumpStatus.pumpDeviceState.name());
+                    pumpStatusIconView.setText("{fa-bed}   "); // + pumpStatus.pumpDeviceState.name());
                     break;
 
                 case NeverContacted:
                 case WakingUp:
                 case ProblemContacting:
-                case InvalidConfiguration:
-                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                    break;
-
-                // FIXME
-                case Active:
-                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                    break;
-
-                // FIXME
                 case ErrorWhenCommunicating:
-                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                case TimeoutWhenCommunicating:
+                case InvalidConfiguration:
+                    pumpStatusIconView.setText("   " + getTranslation(pumpStatus.pumpDeviceState.getResourceId()));
                     break;
 
                 // FIXME
-                case TimeoutWhenCommunicating:
-                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                    break;
+                case Active: {
+                    MedtronicCommandType cmd = MedtronicUtil.getCurrentCommand();
+
+                    if (cmd == null)
+                        pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                    else
+                        pumpStatusIconView.setText("   " + cmd.name());
+
+                }
+                break;
+
+//                // FIXME
+//
+//                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+//                    break;
+//
+//                // FIXME
+//
+//                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+//                    break;
+                default:
+                    LOG.warn("Unknown pump state: " + pumpStatus.pumpDeviceState);
             }
+        } else {
+            pumpStatusIconView.setText("{fa-bed}   ");
         }
 
 
         if (queueView != null) {
-            // FIXME
-            //queueView.setVisibility(View.GONE);
-
             Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
             if (status.toString().equals("")) {
                 queueView.setVisibility(View.GONE);
@@ -278,6 +301,18 @@ public class MedtronicFragment extends SubscriberFragment {
         }
 
 
+    }
+
+
+    public Object checkStatusSet(Object object1, Object object2) {
+        if (object1 == null) {
+            return object1;
+        } else {
+            if (!object1.equals(object2)) {
+                return object2;
+            } else
+                return object1;
+        }
     }
 
 
@@ -326,13 +361,19 @@ public class MedtronicFragment extends SubscriberFragment {
 
                     setDeviceStatus(pumpStatus);
 
-                    if (pumpStatus.lastConnection != 0) {
-                        Long agoMsec = System.currentTimeMillis() - pumpStatus.lastConnection;
-                        int agoMin = (int) (agoMsec / 60d / 1000d);
-                        lastConnectionView.setText(DateUtil.timeString(pumpStatus.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
-                        SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
+                    // last connection
+                    String minAgo = DateUtil.minAgo(pumpStatus.lastConnection);
+                    long min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60;
+                    if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
+                        lastConnectionView.setText(R.string.combo_pump_connected_now);
+                        lastConnectionView.setTextColor(Color.WHITE);
+                    } else if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
+                        lastConnectionView.setText(MainApp.gs(R.string.combo_no_pump_connection, min));
+                        lastConnectionView.setTextColor(Color.RED);
+                    } else {
+                        lastConnectionView.setText(minAgo);
+                        lastConnectionView.setTextColor(Color.WHITE);
                     }
-
 
                     // last bolus
                     Double bolus = pumpStatus.lastBolusAmount;
@@ -354,10 +395,12 @@ public class MedtronicFragment extends SubscriberFragment {
                         lastBolusView.setText("");
                     }
 
-                    //dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
-                    //SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h");
 
+                    // base basal rate
+                    basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  " + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
+
+
+                    // FIXME temp basal - check - maybe set as combo ??
                     if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
                         if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
                             tempBasalView.setText(TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
@@ -373,12 +416,13 @@ public class MedtronicFragment extends SubscriberFragment {
                         }
                     }
 
-                    reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / " + pumpStatus.reservoirFullUnits + " U");
-                    SetWarnColor.setColorInverse(reservoirView, pumpStatus.reservoirRemainingUnits, 50d, 20d);
+                    // battery
                     batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}");
                     SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 51d, 26d);
-                    //iobView.setText(pump.iob + " U");
 
+                    // reservoir
+                    reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / " + pumpStatus.reservoirFullUnits + " " + MainApp.gs(R.string.insulin_unit_shortname));
+                    SetWarnColor.setColorInverse(reservoirView, pumpStatus.reservoirRemainingUnits, 50d, 20d);
 
                     errorsView.setText(pumpStatus.getErrorInfo());
 
