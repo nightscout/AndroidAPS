@@ -256,6 +256,12 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         // another treatment exists. Update it with the treatment coming from the pump
                         log.debug("TREATMENT: Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
                         long oldDate = existingTreatment.date;
+
+                        //preserve carbs
+                        if(existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0){
+                            treatment.carbs = existingTreatment.carbs;
+                        }
+
                         getDao().delete(existingTreatment); // need to delete/create because date may change too
                         existingTreatment.copyBasics(treatment);
                         getDao().create(existingTreatment);
@@ -273,6 +279,12 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     boolean sameSource = existingTreatment.source == treatment.source;
                     long oldDate = existingTreatment.date;
                     log.debug("TREATMENT: Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+
+                    //preserve carbs
+                    if(existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0){
+                        treatment.carbs = existingTreatment.carbs;
+                    }
+                    
                     getDao().delete(existingTreatment); // need to delete/create because date may change too
                     existingTreatment.copyFrom(treatment);
                     getDao().create(existingTreatment);
