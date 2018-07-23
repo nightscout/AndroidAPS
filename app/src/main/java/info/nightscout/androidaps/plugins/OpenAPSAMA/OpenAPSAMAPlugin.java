@@ -179,6 +179,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                 MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openaps_noasdata)));
                 return;
             }
+            lastAutosensResult = autosensData.autosensResult;
         } else {
             lastAutosensResult = new AutosensResult();
             lastAutosensResult.sensResult = "autosens disabled";
